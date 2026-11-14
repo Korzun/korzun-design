@@ -106,8 +106,9 @@ immediately as the proof, Bookplate afterwards.
 
 ### Package identity
 
-- Name: `@korzun/design`. Public, MIT or "all rights reserved" to match
-  Bookplate (owner's call; the package.json `license` field follows it).
+- Name: `@korzun/design`. Public on npm; license "all rights reserved" to match
+  Bookplate (`"license": "SEE LICENSE IN LICENSE"` with a LICENSE file saying
+  so). Owner's decision.
 - Version: starts at `0.1.0`. Pre-1.0 semver: minor bumps may break.
 - Repository: `github.com/Korzun/korzun-design`, public, default branch `main`.
 
@@ -366,22 +367,19 @@ project blocks or complicates it.
 - Wording of the philosophy doc, provided every rule carries its reason and
   nothing is invented that the code does not do.
 
-## Open to the owner
+## Decisions from the owner (2026-11-14)
 
-Resolved before building; recorded here once answered.
+1. **Scribe branch.** The migration is based on `plan-2-mcp-and-jobs` (PR #3)
+   and lands after it merges. Its new files (`assistants-card`, `jobs-card`,
+   `page/connect`, dashboard changes) are included in the import rewrite.
+2. **GitHub repository.** `Korzun/korzun-design` is created public by the
+   builder with `gh` and `main` pushed.
+3. **Toolchain.** Node 24 is installed user-locally on this machine (fnm or
+   nvm, no sudo) so lint and tests run during the build.
+4. **License.** All rights reserved, like Bookplate.
 
-0. **Which Scribe branch the migration lands on.** The local checkout is
-   `plan-2-mcp-and-jobs` (open PR #3, five commits ahead of `main`) and its new
-   files also import the shared UI. Basing the migration on `main` forces PR #3
-   to rebase through deleted directories; basing it on PR #3 stacks it behind
-   unmerged work.
-0a. **The GitHub repository** `Korzun/korzun-design` does not exist yet. CI,
-   the publish workflow and the `NPM_TOKEN` secret all hang off it.
-1. **Toolchain on this machine.** No Node here. Options: install Node 24
-   user-locally (fnm or nvm, no sudo), or do all building in CI and the
-   devcontainer. The former lets the builder run tests while working;
-   recommended.
-2. **npm account and the `@korzun` scope.** Someone has to own the scope and
-   create the `NPM_TOKEN` secret before the first tag. Can be done any time
-   before step "publish 0.1.0".
-3. **License** for the package: MIT, or all rights reserved like Bookplate.
+## Still open to the owner
+
+- **npm account and the `@korzun` scope.** Someone has to own the scope and
+  add the `NPM_TOKEN` repository secret before the first `v0.1.0` tag. Nothing
+  before the publish step depends on it.
