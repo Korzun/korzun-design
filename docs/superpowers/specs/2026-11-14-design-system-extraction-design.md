@@ -126,7 +126,7 @@ korzun-design/
     icon/                 one file per icon + props.ts + index.ts
     toast/                ToastProvider, useToast, Toast
     hooks/                use-minimize-on-scroll, use-pull-to-refresh, is-standalone
-    utils.ts              applyTransparency, copyToClipboard, isNumeric (only what src needs)
+    utils.ts              applyTransparency, isNumeric (only what src needs)
     test-utils.tsx        renderWithProviders (theme + toast + MemoryRouter); not exported
   gallery/                Vite dev app that renders every export; never published
   docs/
@@ -180,7 +180,11 @@ Controls: `action-menu-list`, `back-button`, `button`, `chips-input`,
 Components: `card`, `card-divider`, `card-row`, `collapsible-section`,
 `empty-state`, `meta-line`, `metadata`, `metadata-list`, `nav-desktop`,
 `nav-mobile` (with the `NavItem` type from `nav/types.ts`), `page`,
-`progress-indicator`, `pull-to-refresh`, `tag`, `theme-setting`, `top-fade`.
+`progress-indicator`, `tag`, `theme-setting`, `top-fade`.
+
+Not `pull-to-refresh`: the component calls `useApolloClient()` and refetches
+active queries, so by the rule above it is domain-bound and stays in Bookplate.
+Only its `usePullToRefresh` hook moves. (Builder's check; my call.)
 
 Icons: every file in `icon/` except `bookplate.tsx` and `bookplate-crest.tsx`,
 which are brand marks and stay in Bookplate.
@@ -190,8 +194,8 @@ Providers: `provider/theme` → `src/theme`, `provider/toast` → `src/toast`.
 Hooks: `lib/use-minimize-on-scroll`, `lib/use-pull-to-refresh`,
 `lib/is-standalone`.
 
-Utils: only `applyTransparency`, `copyToClipboard`, `isNumeric` (the three
-functions the moved modules import). Bookplate keeps its own `utils.ts`.
+Utils: only `applyTransparency` and `isNumeric` (the two functions the moved
+modules import). Bookplate keeps its own `utils.ts`.
 
 Each module's tests move with it. Scribe's extra tests for `empty-state` and
 `card-row` (Bookplate has none) move into the package too.
@@ -201,32 +205,48 @@ fixes, upload queue), `book-*`, `cover*`, `rating-*`, `chapter-progress`,
 `upload-*`, `fix-review`, `severity-counts`, `validation-detail-modal`,
 `edit-fix-modal`, `set-progress-modal`, `link-*`, `unlink-*`,
 `reset-password-button`, `password-result-modal`, `proportional-chapter-slider`,
-`subject-chips`, `brand-lockup`, `search-bar`, `theme-setting`'s neighbours like
+`pull-to-refresh` (the component; its hook moves), `subject-chips`, `brand-lockup`, `search-bar`, `theme-setting`'s neighbours like
 `email-setting`, and everything in `page/`, `router/`, `graphql/`, `gql/`.
 
-### Two decouplings the move requires
+### The decouplings the move requires
 
-Only two moved modules reach into Bookplate's app layer. Both get a prop.
+Only two moved modules reach into Bookplate's app layer; both get a prop. A
+third prop reconciles the one place Scribe's fork of `Page` differs in layout.
 
 1. **`ThemeProvider` reads the signed-in identity** from `~/lib/token`
    (`currentIdentity`, `TOKEN_CHANGED_EVENT`) to key the persisted theme
    setting per user (`theme-setting:<identity>`). The package's provider takes
-   `identity?: string | null` instead and keys storage the same way
-   (`theme-setting:<identity>`, falling back to the anonymous key when null, so
-   existing saved settings keep working). Each consumer wraps it in a
-   five-line local provider that subscribes to its own token lib and passes
-   `identity`. The per-user persistence tests move with the provider and drive
-   the prop directly.
+   `identity?: string | null` instead and keys storage exactly as today:
+   `theme-setting:<identity>` when signed in, and **no persistence at all when
+   `identity` is null**, so a signed-out session is forced back to `auto` and
+   the login screen never inherits a previous user's choice (the existing
+   "does not leak one user's choice to another" test encodes this and moves
+   unchanged). Saved settings keep working because the key format is
+   unchanged. Each consumer wraps the provider in a five-line local provider
+   that subscribes to its own token lib and passes `identity`. The package's
+   `renderWithProviders` takes an `identity` option so the per-user tests can
+   drive it.
 2. **`Page` sets `document.title` from `useLibraryName()`** (Bookplate) or a
    constant `'Scribe'` (Scribe's fork). The package's `Page` takes
    `documentTitle?: string` and sets `document.title` only when given.
    Everything else in Bookplate's `Page` (back button, header actions, footer
    actions, the held-open header row) moves as-is; Scribe's simpler fork is
-   superseded by it.
+   superseded by it. Scribe's test that the document title is set moves into
+   the package's `Page` test, asserting against `documentTitle`.
+3. **Mobile bottom clearance.** Bookplate's `Page` pads the mobile bottom by
+   `layout.navHeightMobile` plus spacing so content clears the floating bottom
+   nav; Scribe's fork has no nav and pads only by `space.xxxxxl` plus the safe
+   area. The package's `Page` takes `bottomNav?: boolean` (default `false`):
+   `true` adds the nav clearance exactly as Bookplate computes it today, `false`
+   gives Scribe's padding. Bookplate passes `bottomNav` when it migrates;
+   Scribe passes nothing and keeps its current look. My call, prompted by the
+   builder check; a CSS variable in the style of the existing
+   `--page-top-inset` would also work and the builder may prefer it.
 
 Nothing else changes behaviour. Where the two consumers' copies differ only in
 comments or local variable names (`empty-state`, `card-row`), Bookplate's text
-is taken.
+is taken. `createUseStyles` on the theme subpath is the existing re-export from
+react-jss, not a new wrapper.
 
 ### Dependencies
 
@@ -321,16 +341,16 @@ the owner's curation surface and is explicitly allowed to be rough.
    `@korzun/design/control` for the deleted controls (Scribe-only controls
    `codes-sheet` and `password-prompt-modal` keep `~/control`), `~/component`
    likewise, `~/icon` → `@korzun/design/icon`.
-5. Every `<Page>` gains `documentTitle="Scribe"`; the Page test asserting the
-   title keeps passing against the prop.
+5. Every `<Page>` gains `documentTitle="Scribe"`. No `<Page>` passes
+   `bottomNav`.
 6. Scribe's `test-utils.tsx` wraps with the package providers.
 7. `npm run lint && npm test` green; the app is visually unchanged in both
    modes on the login, setup and dashboard pages.
 
 ### Bookplate (deferred, but designed for)
 
-The identity wrapper and `documentTitle` prop are the only two seams Bookplate
-needs. Its migration is the same recipe as Scribe's over a larger file set, and
+The identity wrapper, `documentTitle` and `bottomNav` are the only seams
+Bookplate needs. Its migration is the same recipe as Scribe's over a larger file set, and
 its brand icons, `nav` shell and domain controls stay put. Nothing in this
 project blocks or complicates it.
 
@@ -350,6 +370,13 @@ project blocks or complicates it.
 
 Resolved before building; recorded here once answered.
 
+0. **Which Scribe branch the migration lands on.** The local checkout is
+   `plan-2-mcp-and-jobs` (open PR #3, five commits ahead of `main`) and its new
+   files also import the shared UI. Basing the migration on `main` forces PR #3
+   to rebase through deleted directories; basing it on PR #3 stacks it behind
+   unmerged work.
+0a. **The GitHub repository** `Korzun/korzun-design` does not exist yet. CI,
+   the publish workflow and the `NPM_TOKEN` secret all hang off it.
 1. **Toolchain on this machine.** No Node here. Options: install Node 24
    user-locally (fnm or nvm, no sudo), or do all building in CI and the
    devcontainer. The former lets the builder run tests while working;
