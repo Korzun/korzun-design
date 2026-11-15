@@ -3,7 +3,21 @@
   "version": "0.1.0",
   "type": "module",
   "license": "SEE LICENSE IN LICENSE",
-  "files": ["dist"],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Korzun/korzun-design.git"
+  },
+  "homepage": "https://github.com/Korzun/korzun-design#readme",
+  "bugs": {
+    "url": "https://github.com/Korzun/korzun-design/issues"
+  },
+  "files": [
+    "dist",
+    "src",
+    "!src/**/*.test.*",
+    "!src/test-utils.tsx",
+    "!src/setup.ts"
+  ],
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
@@ -49,14 +63,15 @@
     "test:scripts": "node --test \"scripts/**/*.test.mjs\"",
     "test:watch": "vitest",
     "lint": "oxlint src gallery scripts && oxfmt --check \"src/**/*.{ts,tsx}\" \"gallery/**/*.{ts,tsx}\" && tsc --noEmit",
-    "lint:fix": "oxlint src gallery scripts --fix && oxfmt \"src/**/*.{ts,tsx}\" \"gallery/**/*.{ts,tsx}\""
+    "lint:fix": "oxlint src gallery scripts --fix && oxfmt \"src/**/*.{ts,tsx}\" \"gallery/**/*.{ts,tsx}\"",
+    "prepack": "npm run build"
   },
   "peerDependencies": {
-    "classnames": "^2.5.1",
-    "react": "^19.2.8",
-    "react-dom": "^19.2.8",
-    "react-jss": "^10.10.0",
-    "react-router": "^8.3.0"
+    "classnames": "^2",
+    "react": "^19",
+    "react-dom": "^19",
+    "react-jss": "^10",
+    "react-router": "^8"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.6.3",

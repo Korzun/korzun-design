@@ -10,11 +10,11 @@ npm i @korzun/design react react-dom react-jss classnames react-router
 
 Peer dependencies:
 
-- `react` ^19.2.8
-- `react-dom` ^19.2.8
-- `react-jss` ^10.10.0
-- `classnames` ^2.5.1
-- `react-router` ^8.3.0
+- `react` ^19
+- `react-dom` ^19
+- `react-jss` ^10
+- `classnames` ^2
+- `react-router` ^8
 
 ## Providers
 
