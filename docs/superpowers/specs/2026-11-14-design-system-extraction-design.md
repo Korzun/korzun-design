@@ -374,8 +374,8 @@ project blocks or complicates it.
    `page/connect`, dashboard changes) are included in the import rewrite.
 2. **GitHub repository.** `Korzun/korzun-design` is created public by the
    builder with `gh` and `main` pushed.
-3. **Toolchain.** Node 24 is installed user-locally on this machine (fnm or
-   nvm, no sudo) so lint and tests run during the build.
+3. **Toolchain.** Node 24 is managed by mise: `mise.toml` and `.node-version`
+   are committed and `mise install` provisions it user-locally, no sudo.
 4. **License.** All rights reserved, like Bookplate.
 
 ## Still open to the owner

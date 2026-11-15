@@ -1,0 +1,4 @@
+# mise reads the Node version from .node-version so there is one pin for
+# both mise and actions/setup-node (node-version-file). Run `mise install`.
+[settings]
+idiomatic_version_file_enable_tools = ["node"]

@@ -12,7 +12,7 @@
 
 ## Global Constraints
 
-- Node `>=24`; `.node-version` and `engines.node` both say `24`.
+- Node `>=24`; `.node-version` (already committed, read by mise and by `actions/setup-node` via `node-version-file`) and `engines.node` both say `24`. `mise.toml` only enables idiomatic version files; it carries no version of its own.
 - Peer dependencies, never bundled: `react ^19`, `react-dom ^19`, `react-jss ^10`, `classnames ^2`, `react-router ^8`. `dependencies` stays empty.
 - Styles move byte-equivalent. Diff every copied `style.ts` against its Bookplate source: the only permitted differences are import paths, and in `component/page/style.ts` the `bottomNav` split described in Task 8.
 - Internal imports are relative and point at a module folder (`../../control/button`), never at a barrel (`../../control`). Bookplate's circular-import note in its `test-utils.tsx` is why.
@@ -20,7 +20,7 @@
 - Lint and format are Bookplate's: `.oxfmtrc.json` and `.oxlintrc.json` copied, with `internalPattern` removed and `src/gql/**` ignores dropped.
 - Every behaviour change bumps `version` and gets a `CHANGELOG.md` line. v0.1.0 is the first release.
 - Commit messages end with `Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>`.
-- Precondition for every task that runs `npm`: a Node 24 toolchain on the machine (`node -v` prints `v24.x`). The owner installs it (fnm or nvm, user-local) before execution starts; tasks do not install it.
+- Precondition for every task that runs `npm`: Node 24 via mise. `mise.toml` and `.node-version` are committed and `mise install` has been run on this machine (`node -v` prints `v24.22.3` through the mise shims). Tasks do not install or change the toolchain.
 - Precondition for Task 13 only: the `@korzun` npm scope is owned and `NPM_TOKEN` is set as a repository secret on `Korzun/korzun-design`.
 - Branching: Tasks 1–12 are done on a branch `extraction` off `main` and land through one or more PRs so `ci.yml` (Task 10) runs on them before Task 13 tags `main`. Task 14 has its own branch in the Scribe repo.
 
@@ -37,7 +37,7 @@
 ### Task 1: Package scaffold, toolchain config, utils, port script
 
 **Files:**
-- Create: `package.json`, `tsconfig.json`, `tsconfig.build.json`, `vite.config.ts`, `.node-version`, `.gitignore`, `.oxfmtrc.json`, `.oxlintrc.json`, `LICENSE`, `src/setup.ts`, `src/utils.ts`, `src/utils.test.ts`, `src/index.ts`, `scripts/port.mjs`, `scripts/port.test.mjs`
+- Create: `package.json`, `tsconfig.json`, `tsconfig.build.json`, `vite.config.ts`, `.gitignore`, `.oxfmtrc.json`, `.oxlintrc.json`, `LICENSE`, `src/setup.ts`, `src/utils.ts`, `src/utils.test.ts`, `src/index.ts`, `scripts/port.mjs`, `scripts/port.test.mjs`
 - Reference: `~/code/bookplate/app/client/package.json`, `~/code/bookplate/.oxfmtrc.json`, `~/code/bookplate/app/client/.oxlintrc.json`, `~/code/bookplate/app/client/src/setup.ts`, `~/code/bookplate/app/client/src/utils.ts` (+ `.test.ts`), `~/code/bookplate/.gitignore`
 
 **Interfaces:**
