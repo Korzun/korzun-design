@@ -1,0 +1,95 @@
+{
+  "name": "@korzun/design",
+  "version": "0.1.0",
+  "type": "module",
+  "license": "SEE LICENSE IN LICENSE",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Korzun/korzun-design.git"
+  },
+  "homepage": "https://github.com/Korzun/korzun-design#readme",
+  "bugs": {
+    "url": "https://github.com/Korzun/korzun-design/issues"
+  },
+  "files": [
+    "dist",
+    "src",
+    "!src/**/*.test.*",
+    "!src/test-utils.tsx",
+    "!src/setup.ts"
+  ],
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./theme": {
+      "types": "./dist/theme/index.d.ts",
+      "default": "./dist/theme/index.js"
+    },
+    "./control": {
+      "types": "./dist/control/index.d.ts",
+      "default": "./dist/control/index.js"
+    },
+    "./component": {
+      "types": "./dist/component/index.d.ts",
+      "default": "./dist/component/index.js"
+    },
+    "./icon": {
+      "types": "./dist/icon/index.d.ts",
+      "default": "./dist/icon/index.js"
+    },
+    "./toast": {
+      "types": "./dist/toast/index.d.ts",
+      "default": "./dist/toast/index.js"
+    },
+    "./hooks": {
+      "types": "./dist/hooks/index.d.ts",
+      "default": "./dist/hooks/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "sideEffects": false,
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "gallery": "vite --config gallery/vite.config.ts",
+    "smoke": "npm run build && bash scripts/smoke-exports.sh",
+    "build": "rm -rf dist && tsc -p tsconfig.build.json",
+    "test": "vitest run && npm run test:scripts",
+    "test:scripts": "node --test \"scripts/**/*.test.mjs\"",
+    "test:watch": "vitest",
+    "lint": "oxlint src gallery scripts && oxfmt --check \"src/**/*.{ts,tsx}\" \"gallery/**/*.{ts,tsx}\" && tsc --noEmit",
+    "lint:fix": "oxlint src gallery scripts --fix && oxfmt \"src/**/*.{ts,tsx}\" \"gallery/**/*.{ts,tsx}\"",
+    "prepack": "npm run build"
+  },
+  "peerDependencies": {
+    "classnames": "^2",
+    "react": "^19",
+    "react-dom": "^19",
+    "react-jss": "^10",
+    "react-router": "^8"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.1.0",
+    "@testing-library/user-event": "^14.5.2",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.3",
+    "classnames": "^2.5.1",
+    "jsdom": "^29.1.1",
+    "oxfmt": "^0.74.0",
+    "oxlint": "^1.74.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "react-jss": "^10.10.0",
+    "react-router": "^8.3.0",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.5",
+    "vitest": "^4.1.12"
+  }
+}

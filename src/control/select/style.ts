@@ -1,0 +1,192 @@
+import { createUseStyles, type Theme } from '../../theme/index.js';
+
+export const useStyle = createUseStyles((theme: Theme) => ({
+  root: {
+    // The outer panel, which carries a `bg.cardHeader` background in the
+    // `horizontal`/`vertical` layouts. With no label it is EXACTLY coincident
+    // with the trigger (`triggerWrapper` has `flexGrow: 1`), so its corners are
+    // what shows if they are rounder or squarer than the trigger's — rounding
+    // only the trigger left this poking out at the ends, reading as a shadow
+    // that had not followed the corners. Both take the surface modifier.
+    borderRadius: theme.radius.md,
+    '&$page': { borderRadius: theme.radius.lg },
+    '&$horizontal': {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'start',
+      gap: theme.space.md,
+      backgroundColor: theme.color.bg.cardHeader,
+      '& $label': {
+        marginTop: theme.space.md,
+        marginLeft: theme.space.sm,
+        minWidth: '6rem',
+        textAlign: 'left',
+      },
+      '& $triggerWrapper': { flexGrow: 1 },
+    },
+    '&$vertical': {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: theme.space.xs,
+      backgroundColor: theme.color.bg.cardHeader,
+      '& $label': {
+        marginTop: theme.space.xs,
+        marginLeft: theme.space.md,
+      },
+      '& $triggerWrapper': { flexGrow: 1 },
+    },
+    '&$inline': {
+      display: 'inline-flex',
+      alignItems: 'baseline',
+      gap: theme.space.md,
+    },
+  },
+  label: { ...theme.recipe.label },
+  triggerWrapper: {
+    position: 'relative',
+  },
+  // The two surfaces. `card` is the default and adds nothing — the control as
+  // it has always looked. `page` makes the select match `recipe.card.shell`
+  // (`radius.lg` + `shadow.cardStack`), so a select sitting directly on the
+  // page carries the same elevation as the cards beside it.
+  //
+  // BOTH `root` and `trigger` take the radius. `root` is exactly coincident
+  // with the trigger when there is no label (`triggerWrapper` has `flexGrow:1`),
+  // so leaving `root` at `radius.md` left its squarer corners poking out past
+  // the trigger's rounder ones — which reads as a shadow that has not followed
+  // the corners.
+  card: {},
+  page: {},
+  trigger: {
+    ...theme.recipe.input,
+    '&$page': {
+      borderRadius: theme.radius.lg,
+      boxShadow: theme.shadow.cardStack,
+    },
+    // Shared single-line control height so inputs/select/chips line up on one row.
+    height: theme.layout.controlHeight,
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.space.md,
+    cursor: 'pointer',
+    userSelect: 'none',
+    '-webkit-user-select': 'none',
+    '&:focus, &:focus-within': { borderColor: theme.color.border.focus },
+    '&$loading': {
+      cursor: 'default',
+      borderColor: theme.color.border.light,
+      color: theme.color.text.muted,
+      '&:hover': { borderColor: theme.color.border.light },
+      '&:focus, &:focus-within': { borderColor: theme.color.border.light },
+    },
+    '&$disabled': {
+      cursor: 'not-allowed',
+      '&:hover': { borderColor: theme.color.border.default },
+      '&:focus, &:focus-within': { borderColor: theme.color.border.default },
+    },
+  },
+  triggerText: {
+    flex: 1,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    fontSize: '0.80rem',
+    color: theme.color.text.primary,
+    '&$placeholder': { color: theme.color.text.faint },
+  },
+  searchInput: {
+    border: 'none',
+    outline: 'none',
+    background: 'transparent',
+    fontFamily: theme.fontFamily.body,
+    fontSize: '0.80rem',
+    color: theme.color.text.primary,
+    flex: 1,
+    minWidth: 0,
+    padding: 0,
+    '&::placeholder': { color: theme.color.text.faint },
+    [theme.breakpoint.mobile]: { fontSize: '1rem' },
+  },
+  clearButton: {
+    display: 'flex',
+    alignItems: 'center',
+    fontSize: '0.80rem',
+    lineHeight: 1,
+    color: theme.color.text.faint,
+    cursor: 'pointer',
+    flexShrink: 0,
+    '&:hover': { color: theme.color.text.primary },
+  },
+  chevron: {
+    display: 'flex',
+    alignItems: 'center',
+    flexShrink: 0,
+    color: theme.color.text.faint,
+    // Optical nudge down so the caret reads as vertically centered.
+    position: 'relative',
+    top: '1px',
+    transform: 'rotate(90deg)',
+    transition: `transform ${theme.transition.fast}`,
+    '&$open': { transform: 'rotate(-90deg)' },
+  },
+  dropdown: {
+    border: `1px solid ${theme.color.border.strong}`,
+    borderRadius: theme.radius.md,
+    backgroundColor: theme.color.bg.card,
+    boxShadow: theme.shadow.hoverLift,
+    overflow: 'hidden',
+  },
+  optionList: {
+    listStyle: 'none',
+    margin: 0,
+    padding: `${theme.space.xs} 0`,
+    maxHeight: '12.5rem',
+    overflowY: 'auto',
+  },
+  option: {
+    fontFamily: theme.fontFamily.body,
+    fontSize: '0.80rem',
+    padding: `${theme.space.md} ${theme.space.xxl}`,
+    cursor: 'pointer',
+    color: theme.color.text.primary,
+    '&:hover': { backgroundColor: theme.color.bg.cardHeader },
+    '&$highlighted': { backgroundColor: theme.color.brand.light },
+    '&$selected': { fontWeight: theme.fontWeight.semibold },
+    '&$emptyOption': {
+      color: theme.color.text.faint,
+      fontStyle: 'italic',
+      cursor: 'default',
+      '&:hover': { backgroundColor: 'transparent' },
+    },
+  },
+  optionDescription: {
+    marginTop: theme.space.xxs,
+    fontSize: theme.fontSize.sm,
+    fontWeight: 400,
+    color: theme.color.text.faint,
+    whiteSpace: 'normal',
+  },
+  matchHighlight: {
+    backgroundColor: theme.color.bg.selected,
+    borderRadius: theme.radius.sm,
+    padding: '0 1px',
+  },
+  createOption: {
+    color: theme.color.brand.default,
+    fontStyle: 'italic',
+  },
+  spinner: { ...theme.recipe.spinner },
+  // Empty modifier classes — referenced as $name in compound selectors above
+  danger: {},
+  loading: {},
+  disabled: { opacity: 0.5 },
+  open: {},
+  placeholder: {},
+  highlighted: {},
+  selected: {},
+  emptyOption: {},
+  // Layout variant classes
+  horizontal: {},
+  vertical: {},
+  inline: {},
+}));
