@@ -48,8 +48,8 @@
     "test": "vitest run && npm run test:scripts",
     "test:scripts": "node --test \"scripts/**/*.test.mjs\"",
     "test:watch": "vitest",
-    "lint": "oxlint src scripts && oxfmt --check \"src/**/*.{ts,tsx}\" && tsc --noEmit",
-    "lint:fix": "oxlint src scripts --fix && oxfmt \"src/**/*.{ts,tsx}\""
+    "lint": "oxlint src gallery scripts && oxfmt --check \"src/**/*.{ts,tsx}\" \"gallery/**/*.{ts,tsx}\" && tsc --noEmit",
+    "lint:fix": "oxlint src gallery scripts --fix && oxfmt \"src/**/*.{ts,tsx}\" \"gallery/**/*.{ts,tsx}\""
   },
   "peerDependencies": {
     "classnames": "^2.5.1",
