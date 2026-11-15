@@ -12,7 +12,7 @@ These are the rules the code already enforces, extracted from the source comment
 
 **Rule:** Lift cards and buttons with a hard offset shadow (`0px 2px 0px <colour>`), not a blurred one.
 
-**Why:** `src/theme/theme.ts` defines `shadow.cardStack`, `shadow.dangerStack` and `shadow.brandStack` as `0px 2px 0px` with a translucent colour, and `recipe.card.shell` and the button types in `src/control/button/style.ts` use them. Blurred shadows exist only where the surface is glass (`shadow.glass`, `shadow.glassActive`) or for a hover lift (`shadow.hoverLift`). In dark mode the stacks switch to `applyTransparency('#000', 0.4)`.
+**Why:** `src/theme/theme.ts` defines `shadow.cardStack`, `shadow.dangerStack` and `shadow.brandStack` as `0px 2px 0px` with a translucent colour, and `recipe.card.shell` and the button types in `src/control/button/style.ts` use them. Blurred shadows are kept for glass chrome (`shadow.glass`, `shadow.glassActive`, via `recipe.glass` and `recipe.glassHighlight`) and for floating surfaces, which take `shadow.hoverLift`: the toast (`src/toast/style.ts`) and the select and chips-input dropdowns (`src/control/select/style.ts`, `src/control/chips-input/style.ts`). `shadow.card` (`0 1px 3px`) is also blurred; it is defined in `src/theme/theme.ts` but no consumer outside it was found. In dark mode the stacks switch to `applyTransparency('#000', 0.4)`.
 
 ## Translucent hover scrims
 

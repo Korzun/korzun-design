@@ -2,6 +2,8 @@
 
 Every token lives in `src/theme/theme.ts`. The `Theme` interface declares the groups; `lightTheme` and `darkTheme` are both built by `buildTheme(mode)` and share every key, differing only in values. Consumers read tokens with `useTheme()` or inside `createUseStyles((theme: Theme) => ...)`. The groups below follow the order of the `Theme` type; the key lists are taken from it.
 
+The top-level `colorScheme` key holds the mode, `'light'` or `'dark'` (type `ThemeMode`), and is also the only non-group key of the type.
+
 ## color
 
 Surfaces, text, borders and state colours, mode-aware. Keys are grouped as follows.
@@ -52,7 +54,7 @@ Two values: `tight` (1) and `body` (1.3).
 
 ## shadow
 
-Mode-aware elevation. `card` is a soft one-pixel shadow; `cardStack`, `dangerStack` and `brandStack` are the hard `0px 2px 0px` offset shadows for cards and buttons; `hoverLift` lifts on hover; `glass` and `glassActive` belong to `recipe.glass` and `recipe.glassHighlight`. Keys: `card cardStack hoverLift dangerStack brandStack glass glassActive`.
+Mode-aware elevation. `card` is a soft one-pixel shadow (defined, with no consumer outside the theme); `cardStack`, `dangerStack` and `brandStack` are the hard `0px 2px 0px` offset shadows for cards and buttons; `hoverLift` is the elevation of floating surfaces (the toast and the select and chips-input dropdowns); `glass` and `glassActive` belong to `recipe.glass` and `recipe.glassHighlight`. Keys: `card cardStack hoverLift dangerStack brandStack glass glassActive`.
 
 ## transition
 
