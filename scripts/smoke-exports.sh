@@ -38,13 +38,13 @@ JSON
 cat >"$tmp/app/index.ts" <<'TS'
 import { applyTransparency } from '@korzun/design';
 import { Page } from '@korzun/design/component';
-import { Button } from '@korzun/design/control';
+import { Button, useModalDialog } from '@korzun/design/control';
 import { isStandalone } from '@korzun/design/hooks';
 import { CheckIcon } from '@korzun/design/icon';
 import { ThemeProvider } from '@korzun/design/theme';
 import { useToast } from '@korzun/design/toast';
 
-export const probe = [ThemeProvider, Button, Page, CheckIcon, useToast, isStandalone, applyTransparency];
+export const probe = [ThemeProvider, Button, useModalDialog, Page, CheckIcon, useToast, isStandalone, applyTransparency];
 TS
 
 cd "$tmp/app"

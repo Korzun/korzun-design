@@ -14,6 +14,7 @@ export { SegmentedControl } from './segmented-control';
 export { Switch } from './switch';
 export { TextArea } from './text-area';
 export { TextInput } from './text-input';
+export { useModalDialog } from './use-modal-dialog';
 
 export type { DateTimeInputProps } from './date-time-input';
 export type { ColumnDescriptor, FieldRow } from './field-list';
