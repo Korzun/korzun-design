@@ -169,7 +169,8 @@ export function ComponentsPage() {
       <Section title="Page">
         <p className={styles.caption}>
           The mobile padding difference (bottomNav clearance) shows at mobile widths; resize the
-          window below 640px to see it.
+          window below 640px to see it. `documentTitle` sets `document.title` (not restored on
+          unmount), so the demo leaves it out.
         </p>
         <div className={styles.frames}>
           <div className={styles.frame}>
@@ -178,7 +179,6 @@ export function ComponentsPage() {
               bottomNav
               back="/components"
               headerActions={[{ label: 'Action', onClick: () => {} }]}
-              documentTitle="Page with bottomNav"
             >
               <Card title="With bottomNav">
                 <CardRow>Page body</CardRow>

@@ -49,7 +49,7 @@ export const Providers = ({ children }: { children: React.ReactNode }) => {
 | Import | Contents |
 | --- | --- |
 | `@korzun/design` | everything |
-| `@korzun/design/theme` | `ThemeProvider`, `useTheme`, `useThemeSetting`, `GlobalStyles`, `createUseStyles`, `lightTheme`, `darkTheme`, types `Theme`, `ThemeMode`, `ThemeSetting`, `ThemeProviderProps` |
+| `@korzun/design/theme` | `ThemeProvider`, `useTheme`, `useThemeSetting`, `GlobalStyles`, `useThemeGlobalStyles`, `createUseStyles`, `lightTheme`, `darkTheme`, types `Theme`, `ThemeMode`, `ThemeSetting`, `ThemeProviderProps` |
 | `@korzun/design/control` | buttons, inputs, select, segmented control, popover, dialogs, page actions |
 | `@korzun/design/component` | card family, empty state, metadata, tag, page, nav layouts, theme setting |
 | `@korzun/design/icon` | all icons, `IconProps`, default icon prop sets |

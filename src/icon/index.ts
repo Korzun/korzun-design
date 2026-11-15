@@ -27,4 +27,5 @@ export { UserIcon } from './user.js';
 export { UsersIcon } from './users.js';
 export { XIcon } from './x.js';
 
+export { defaultFilledIconProps, defaultStrokeIconProps } from './props.js';
 export type { IconProps } from './props.js';

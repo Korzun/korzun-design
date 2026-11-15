@@ -135,6 +135,19 @@ describe('ThemeProvider', () => {
     expect(screen.getByTestId('mode')).toHaveTextContent('light');
   });
 
+  it('switches straight from one user to another without carrying the choice over', async () => {
+    const user = userEvent.setup();
+    const { rerender } = render(tree('alice'));
+    await user.click(screen.getByText('go dark'));
+    expect(screen.getByTestId('mode')).toHaveTextContent('dark');
+
+    rerender(tree('bob'));
+    expect(screen.getByTestId('setting')).toHaveTextContent('auto');
+    expect(screen.getByTestId('mode')).toHaveTextContent('light');
+    expect(localStorage.getItem('theme-setting:alice')).toBe('dark');
+    expect(localStorage.length).toBe(1);
+  });
+
   it('writes nothing to localStorage while signed out', async () => {
     const user = userEvent.setup();
     render(tree(null));

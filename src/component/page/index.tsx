@@ -27,8 +27,8 @@ type PageProps = PropsWithChildren<{
    */
   header?: React.ReactNode;
   footerActions?: FooterAction[];
-  /** Sets `document.title` while the page is mounted. Leave it out when the app
-   * manages the title itself. */
+  /** Sets `document.title` when given; the title is not restored on unmount. Leave it
+   * out when the app manages the title itself. */
   documentTitle?: string;
   /** Reserve space under the content for a floating bottom navigation bar
    * (`NavMobile`) on mobile. Default `false`. */
