@@ -24,6 +24,7 @@ const readSetting = (identity: string | null): ThemeSetting => {
 
 export type ThemeProviderProps = { children: ReactNode; identity?: string | null };
 export const ThemeProvider = ({ children, identity = null }: ThemeProviderProps) => {
+  const [scope, setScope] = useState(identity);
   const [setting, setSettingState] = useState<ThemeSetting>(() => readSetting(identity));
   const [systemDark, setSystemDark] = useState<boolean>(
     () => window.matchMedia(DARK_QUERY).matches
@@ -31,10 +32,12 @@ export const ThemeProvider = ({ children, identity = null }: ThemeProviderProps)
 
   // Re-scope whenever the consumer's identity changes: on sign-in restore that
   // user's saved choice; on sign-out (identity becomes null) the setting falls
-  // back to 'auto'.
-  useEffect(() => {
+  // back to 'auto'. Done during render rather than in an effect so no frame is
+  // ever painted with the previous identity's setting.
+  if (scope !== identity) {
+    setScope(identity);
     setSettingState(readSetting(identity));
-  }, [identity]);
+  }
 
   useEffect(() => {
     const mql = window.matchMedia(DARK_QUERY);

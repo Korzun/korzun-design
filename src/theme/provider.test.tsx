@@ -105,6 +105,8 @@ describe('ThemeProvider', () => {
     rerender(tree(null));
     expect(screen.getByTestId('setting')).toHaveTextContent('auto');
     expect(screen.getByTestId('mode')).toHaveTextContent('light'); // follows OS again
+    expect(localStorage.getItem('theme-setting:alice')).toBe('dark');
+    expect(localStorage.length).toBe(1);
   });
 
   it('restores the user’s saved choice when they log back in', async () => {
@@ -125,6 +127,8 @@ describe('ThemeProvider', () => {
     await user.click(screen.getByText('go dark'));
     rerender(tree(null));
     expect(screen.getByTestId('setting')).toHaveTextContent('auto');
+    expect(localStorage.getItem('theme-setting:alice')).toBe('dark');
+    expect(localStorage.length).toBe(1);
 
     rerender(tree('bob'));
     expect(screen.getByTestId('setting')).toHaveTextContent('auto');
