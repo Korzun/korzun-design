@@ -1,8 +1,8 @@
 import { screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
-import { renderWithProviders } from '../../test-utils';
-import { Tag } from './index';
+import { renderWithProviders } from '../../test-utils.js';
+import { Tag } from './index.js';
 
 describe('Tag', () => {
   it('renders the compact variant only when size="sm"', () => {

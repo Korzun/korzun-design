@@ -1,4 +1,4 @@
-import { createUseStyles, type Theme } from '../../theme';
+import { createUseStyles, type Theme } from '../../theme/index.js';
 
 export const useStyle = createUseStyles((theme: Theme) => {
   // Fade the whole frosted layer (translucent tint + blur) via a mask. Deliberately

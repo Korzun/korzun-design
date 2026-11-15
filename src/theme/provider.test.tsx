@@ -3,8 +3,8 @@ import userEvent from '@testing-library/user-event';
 import { act } from 'react';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import { Context } from './context';
-import { ThemeProvider } from './provider';
+import { Context } from './context.js';
+import { ThemeProvider } from './provider.js';
 
 // Controllable matchMedia: tests set `current.matches` and fire change listeners.
 const current = { matches: false, listeners: new Set<(e: { matches: boolean }) => void>() };

@@ -1,7 +1,7 @@
 import cx from 'classnames';
 import { Fragment } from 'react';
 
-import { useStyle } from './style';
+import { useStyle } from './style.js';
 
 /**
  * Hover/focus/touch handlers to spread onto a menu item — structurally

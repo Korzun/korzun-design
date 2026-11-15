@@ -1,6 +1,6 @@
 import { PropsWithChildren } from 'react';
 
-import { useStyle } from './style';
+import { useStyle } from './style.js';
 
 export type MetadataProps = PropsWithChildren<{ title: string }>;
 export const Metadata = ({ children, title }: MetadataProps) => {

@@ -1,8 +1,8 @@
 import { screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
-import { renderWithProviders } from '../../test-utils';
-import { CardDivider } from './index';
+import { renderWithProviders } from '../../test-utils.js';
+import { CardDivider } from './index.js';
 
 describe('CardDivider', () => {
   it('renders a separator with no label by default', () => {

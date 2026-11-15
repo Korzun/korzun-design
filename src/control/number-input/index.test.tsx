@@ -3,8 +3,8 @@ import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 
-import { renderWithProviders } from '../../test-utils';
-import { NumberInput } from './index';
+import { renderWithProviders } from '../../test-utils.js';
+import { NumberInput } from './index.js';
 
 describe('NumberInput', () => {
   it('calls onChange with the parsed number when a valid value is typed', async () => {

@@ -1,8 +1,8 @@
 import cx from 'classnames';
 import { ReactNode, useCallback, useEffect, useId, useState } from 'react';
 
-import { SpinnerIcon } from '../../icon';
-import { SwitchRadius, SwitchRadiusValue, useStyle } from './style';
+import { SpinnerIcon } from '../../icon/index.js';
+import { SwitchRadius, SwitchRadiusValue, useStyle } from './style.js';
 
 /**
  * How long a save may run before the switch admits to it.

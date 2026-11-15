@@ -1,8 +1,8 @@
 import cx from 'classnames';
 import { useCallback, useId, useState } from 'react';
 
-import { composeIsoDate, splitIsoDate } from './iso-date';
-import { useStyle } from './style';
+import { composeIsoDate, splitIsoDate } from './iso-date.js';
+import { useStyle } from './style.js';
 
 export type DateTimeInputProps = {
   label?: string;

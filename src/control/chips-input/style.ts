@@ -1,4 +1,4 @@
-import { createUseStyles, Theme } from '../../theme';
+import { createUseStyles, Theme } from '../../theme/index.js';
 
 type StyleProps = { chipColor: keyof Theme['color']['chip']; dense: boolean };
 

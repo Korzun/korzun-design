@@ -1,8 +1,8 @@
 import { fireEvent, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { renderWithProviders } from '../../test-utils';
-import { CardRow } from './index';
+import { renderWithProviders } from '../../test-utils.js';
+import { CardRow } from './index.js';
 
 describe('CardRow', () => {
   it('calls onClick on click, Enter and Space', () => {

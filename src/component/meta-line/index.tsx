@@ -1,7 +1,7 @@
 import cx from 'classnames';
 import type { ReactNode } from 'react';
 
-import { useStyle } from './style';
+import { useStyle } from './style.js';
 
 export type MetaLineProps = {
   /** The data to show, in order. Falsy entries are skipped. */

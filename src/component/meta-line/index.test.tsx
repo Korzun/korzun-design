@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import { metaItems, renderWithProviders } from '../../test-utils';
-import { MetaLine } from './index';
+import { metaItems, renderWithProviders } from '../../test-utils.js';
+import { MetaLine } from './index.js';
 
 const renderLine = renderWithProviders;
 

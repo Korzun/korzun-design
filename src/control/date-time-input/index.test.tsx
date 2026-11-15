@@ -1,8 +1,8 @@
 import { fireEvent } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { renderWithProviders } from '../../test-utils';
-import { DateTimeInput } from './index';
+import { renderWithProviders } from '../../test-utils.js';
+import { DateTimeInput } from './index.js';
 
 const dateInput = (container: HTMLElement) =>
   container.querySelector('input[type="date"]') as HTMLInputElement;

@@ -1,5 +1,5 @@
-import { createUseStyles, type Theme } from '../../theme';
-import { applyTransparency } from '../../utils';
+import { createUseStyles, type Theme } from '../../theme/index.js';
+import { applyTransparency } from '../../utils.js';
 
 export const useStyle = createUseStyles((theme: Theme) => ({
   root: {

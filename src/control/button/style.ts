@@ -1,5 +1,5 @@
-import { createUseStyles, type Theme } from '../../theme';
-import { applyTransparency } from '../../utils';
+import { createUseStyles, type Theme } from '../../theme/index.js';
+import { applyTransparency } from '../../utils.js';
 
 // A small handful of literals stay un-tokenized in this file by design:
 //   '#FFF'    — focus-ring border on colored backgrounds (intentional white-on-color)

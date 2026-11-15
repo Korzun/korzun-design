@@ -1,8 +1,8 @@
 import { useCallback } from 'react';
 import { useNavigate } from 'react-router';
 
-import { ChevronIcon } from '../../icon';
-import { useStyle } from './style';
+import { ChevronIcon } from '../../icon/index.js';
+import { useStyle } from './style.js';
 
 interface BackButtonProps {
   to: string;

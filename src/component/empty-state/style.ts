@@ -1,4 +1,4 @@
-import { createUseStyles, type Theme } from '../../theme';
+import { createUseStyles, type Theme } from '../../theme/index.js';
 
 export const useStyle = createUseStyles((theme: Theme) => ({
   // Lifted verbatim from `page/upload-request/style.ts`'s own empty state (itself a copy

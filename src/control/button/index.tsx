@@ -2,8 +2,8 @@ import cx from 'classnames';
 import { ComponentType, useCallback } from 'react';
 import { useFormStatus } from 'react-dom';
 
-import { IconProps, SpinnerIcon } from '../../icon';
-import { ButtonType, ButtonTypeValue, ButtonRadius, ButtonRadiusValue, useStyle } from './style';
+import { IconProps, SpinnerIcon } from '../../icon/index.js';
+import { ButtonType, ButtonTypeValue, ButtonRadius, ButtonRadiusValue, useStyle } from './style.js';
 
 type ButtonVariant =
   | { danger?: boolean; success?: false | undefined }

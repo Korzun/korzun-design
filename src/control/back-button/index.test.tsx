@@ -3,8 +3,8 @@ import userEvent from '@testing-library/user-event';
 import { Route, Routes, useLocation } from 'react-router';
 import { describe, expect, it } from 'vitest';
 
-import { renderWithProviders } from '../../test-utils';
-import { BackButton } from './index';
+import { renderWithProviders } from '../../test-utils.js';
+import { BackButton } from './index.js';
 
 function LibraryProbe() {
   const state = useLocation().state as { restoreScroll?: boolean } | null;

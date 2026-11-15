@@ -1,8 +1,8 @@
 import cx from 'classnames';
 import { useCallback, useState } from 'react';
 
-import { isNumeric } from '../../utils';
-import { useStyle } from './style';
+import { isNumeric } from '../../utils.js';
+import { useStyle } from './style.js';
 
 export type NumberInputProps = {
   label: string | undefined;

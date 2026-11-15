@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
-import { KeyIcon } from './key';
+import { KeyIcon } from './key.js';
 
 describe('KeyIcon', () => {
   it('renders an svg element', () => {

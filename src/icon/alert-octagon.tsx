@@ -1,4 +1,4 @@
-import { IconProps, defaultFilledIconProps } from './props';
+import { IconProps, defaultFilledIconProps } from './props.js';
 
 // https://tabler.io/icons?icon=alert-octagon
 export const AlertOctagonIcon = (props: IconProps) => {

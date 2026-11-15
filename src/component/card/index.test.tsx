@@ -1,8 +1,8 @@
 import { screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
-import { renderWithProviders } from '../../test-utils';
-import { Card } from './index';
+import { renderWithProviders } from '../../test-utils.js';
+import { Card } from './index.js';
 
 describe('Card', () => {
   it('renders footer content when a footer is provided', () => {

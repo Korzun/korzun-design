@@ -1,4 +1,4 @@
-import { applyTransparency } from '../utils';
+import { applyTransparency } from '../utils.js';
 
 export type ThemeMode = 'light' | 'dark';
 

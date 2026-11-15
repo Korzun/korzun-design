@@ -4,8 +4,8 @@ import { MemoryRouter } from 'react-router';
 
 // Import the provider module files, not their barrels: barrel imports sit inside
 // circular-import cycles in Bookplate and poison module loading (see Bookplate's test-utils).
-import { ThemeProvider } from './theme/provider';
-import { ToastProvider } from './toast/provider';
+import { ThemeProvider } from './theme/provider.js';
+import { ToastProvider } from './toast/provider.js';
 
 interface RenderWithProvidersOptions extends Omit<RenderOptions, 'wrapper'> {
   identity?: string | null;

@@ -2,8 +2,8 @@ import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 
-import { renderWithProviders } from '../../test-utils';
-import { ActionMenuList, type PageActionItem } from './index';
+import { renderWithProviders } from '../../test-utils.js';
+import { ActionMenuList, type PageActionItem } from './index.js';
 
 describe('ActionMenuList', () => {
   it('renders items and calls onSelect with the clicked item', async () => {

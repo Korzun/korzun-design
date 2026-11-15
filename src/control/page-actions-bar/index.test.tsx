@@ -2,9 +2,9 @@ import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 
-import { renderWithProviders } from '../../test-utils';
-import { type PageActionItem } from '../action-menu-list';
-import { PageActionsBar } from './index';
+import { renderWithProviders } from '../../test-utils.js';
+import { type PageActionItem } from '../action-menu-list/index.js';
+import { PageActionsBar } from './index.js';
 
 function makeItems(): PageActionItem[] {
   return [

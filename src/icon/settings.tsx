@@ -1,4 +1,4 @@
-import { IconProps, defaultStrokeIconProps } from './props';
+import { IconProps, defaultStrokeIconProps } from './props.js';
 
 // https://tabler.io/icons?icon=settings
 export const SettingsIcon = (props: IconProps) => {

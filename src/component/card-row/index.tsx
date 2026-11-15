@@ -1,7 +1,7 @@
 import cx from 'classnames';
 import { PropsWithChildren, useCallback } from 'react';
 
-import { useStyle } from './style';
+import { useStyle } from './style.js';
 
 export type CardRowProps = PropsWithChildren<{
   onClick?: () => void;

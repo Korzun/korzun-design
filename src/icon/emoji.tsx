@@ -1,6 +1,6 @@
 import { useId } from 'react';
 
-import { IconProps } from './props';
+import { IconProps } from './props.js';
 
 const defaultProps = { className: '', height: 24, width: 24 };
 

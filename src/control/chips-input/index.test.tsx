@@ -2,8 +2,8 @@ import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import type { FormEvent } from 'react';
 
-import { renderWithProviders } from '../../test-utils';
-import { ChipsInput } from './index';
+import { renderWithProviders } from '../../test-utils.js';
+import { ChipsInput } from './index.js';
 
 it('renders existing values as chips', () => {
   renderWithProviders(

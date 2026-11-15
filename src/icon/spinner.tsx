@@ -1,4 +1,4 @@
-import { IconProps, defaultStrokeIconProps } from './props';
+import { IconProps, defaultStrokeIconProps } from './props.js';
 
 export const SpinnerIcon = (props: IconProps) => {
   const {

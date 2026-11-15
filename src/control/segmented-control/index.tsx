@@ -1,8 +1,8 @@
 import cx from 'classnames';
 import { type CSSProperties, type KeyboardEvent, useRef } from 'react';
 
-import type { IconProps } from '../../icon';
-import { useStyle } from './style';
+import type { IconProps } from '../../icon/index.js';
+import { useStyle } from './style.js';
 
 export type SegmentedOption<V extends string> = {
   value: V;

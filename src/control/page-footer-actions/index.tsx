@@ -1,5 +1,5 @@
-import { Button } from '../button';
-import { useStyle } from './style';
+import { Button } from '../button/index.js';
+import { useStyle } from './style.js';
 
 export interface FooterAction {
   label: string;

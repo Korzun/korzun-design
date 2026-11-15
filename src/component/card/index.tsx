@@ -1,8 +1,8 @@
 import cx from 'classnames';
 import { PropsWithChildren, ReactNode, ReactElement, useCallback, useState } from 'react';
 
-import { ChevronCircleIcon } from '../../icon';
-import { useStyle } from './style';
+import { ChevronCircleIcon } from '../../icon/index.js';
+import { useStyle } from './style.js';
 
 export type Props = PropsWithChildren<{
   className?: string;

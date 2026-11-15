@@ -2,9 +2,9 @@ import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 
-import { HandOkIcon, ThumbDownIcon } from '../../icon';
-import { renderWithProviders } from '../../test-utils';
-import { SegmentedControl } from './index';
+import { HandOkIcon, ThumbDownIcon } from '../../icon/index.js';
+import { renderWithProviders } from '../../test-utils.js';
+import { SegmentedControl } from './index.js';
 
 const options = [
   { value: 'light', label: 'Light' },

@@ -1,9 +1,9 @@
 import cx from 'classnames';
 import { useCallback, useState } from 'react';
 
-import { IconProps } from '../../icon';
-import { Button } from '../button';
-import { useStyle } from './style';
+import { IconProps } from '../../icon/index.js';
+import { Button } from '../button/index.js';
+import { useStyle } from './style.js';
 
 type Action = {
   icon: React.ComponentType<IconProps>;

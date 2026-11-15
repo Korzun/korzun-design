@@ -3,10 +3,10 @@ import { createUseStyles, ThemeProvider, type Theme } from '@korzun/design/theme
 import { ToastProvider } from '@korzun/design/toast';
 import { BrowserRouter, Navigate, NavLink, Route, Routes } from 'react-router';
 
-import { ComponentsPage } from './page/components';
-import { ControlsPage } from './page/controls';
-import { IconsPage } from './page/icons';
-import { TokensPage } from './page/tokens';
+import { ComponentsPage } from './page/components.js';
+import { ControlsPage } from './page/controls.js';
+import { IconsPage } from './page/icons.js';
+import { TokensPage } from './page/tokens.js';
 
 const useStyle = createUseStyles((theme: Theme) => ({
   root: {

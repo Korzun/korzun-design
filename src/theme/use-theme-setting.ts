@@ -1,6 +1,6 @@
 import { use } from 'react';
 
-import { Context, type ThemeSetting } from './context';
+import { Context, type ThemeSetting } from './context.js';
 
 export type UseThemeSetting = [ThemeSetting, (setting: ThemeSetting) => void];
 

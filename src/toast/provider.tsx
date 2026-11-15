@@ -1,9 +1,9 @@
 import { type ReactNode, useCallback, useLayoutEffect, useReducer, useRef } from 'react';
 
-import { Context } from './context';
-import { toastReducer } from './reducer';
-import { useStyle } from './style';
-import { Toast } from './toast';
+import { Context } from './context.js';
+import { toastReducer } from './reducer.js';
+import { useStyle } from './style.js';
+import { Toast } from './toast.js';
 
 const TOAST_DURATION = 4000;
 

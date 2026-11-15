@@ -1,4 +1,4 @@
-import { IconProps, defaultFilledIconProps } from './props';
+import { IconProps, defaultFilledIconProps } from './props.js';
 
 // https://tabler.io/icons?icon=circle-x
 export const CircleXIcon = (props: IconProps) => {

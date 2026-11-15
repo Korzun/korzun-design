@@ -1,8 +1,8 @@
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import { renderWithProviders } from '../../test-utils';
-import { TextArea } from './index';
+import { renderWithProviders } from '../../test-utils.js';
+import { TextArea } from './index.js';
 
 it('renders a textarea element', () => {
   renderWithProviders(<TextArea name="desc" value="hello" />);

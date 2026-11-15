@@ -2,8 +2,8 @@ import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 
-import { renderWithProviders } from '../../test-utils';
-import { Select } from './index';
+import { renderWithProviders } from '../../test-utils.js';
+import { Select } from './index.js';
 
 const options = ['Fantasy', 'Horror', 'Science Fiction', 'Thriller'];
 

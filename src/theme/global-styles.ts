@@ -1,6 +1,6 @@
 import { createUseStyles } from 'react-jss';
 
-import type { Theme } from './theme';
+import type { Theme } from './theme.js';
 
 const useGlobalStyles = createUseStyles((theme: Theme) => ({
   '@global': {

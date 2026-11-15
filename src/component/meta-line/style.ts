@@ -1,4 +1,4 @@
-import { createUseStyles, type Theme } from '../../theme';
+import { createUseStyles, type Theme } from '../../theme/index.js';
 
 /**
  * Width of one " · " separator cell. In `em` so it scales with whatever font

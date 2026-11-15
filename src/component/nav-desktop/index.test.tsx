@@ -1,10 +1,10 @@
 import { screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
-import { BookIcon, SettingsIcon, UploadIcon } from '../../icon';
-import { renderWithProviders } from '../../test-utils';
-import type { NavItem } from '../nav-types';
-import { NavDesktop } from './index';
+import { BookIcon, SettingsIcon, UploadIcon } from '../../icon/index.js';
+import { renderWithProviders } from '../../test-utils.js';
+import type { NavItem } from '../nav-types.js';
+import { NavDesktop } from './index.js';
 
 const items: NavItem[] = [
   { to: '/library', label: 'Library', Icon: BookIcon, active: true },

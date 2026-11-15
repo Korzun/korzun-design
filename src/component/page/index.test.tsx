@@ -1,8 +1,8 @@
 import { screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { renderWithProviders } from '../../test-utils';
-import { Page } from './index';
+import { renderWithProviders } from '../../test-utils.js';
+import { Page } from './index.js';
 
 describe('Page', () => {
   afterEach(() => {

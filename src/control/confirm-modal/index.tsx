@@ -1,9 +1,9 @@
 import { PropsWithChildren, useCallback } from 'react';
 
-import { IconProps } from '../../icon';
-import { Button } from '../button';
-import { useModalDialog } from '../use-modal-dialog';
-import { useStyle } from './style';
+import { IconProps } from '../../icon/index.js';
+import { Button } from '../button/index.js';
+import { useModalDialog } from '../use-modal-dialog/index.js';
+import { useStyle } from './style.js';
 
 type ConfirmModalProps = PropsWithChildren<{
   cancelText?: string;

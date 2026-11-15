@@ -1,4 +1,4 @@
-import { applyTransparency, isNumeric } from './utils';
+import { applyTransparency, isNumeric } from './utils.js';
 
 describe('applyTransparency', () => {
   it('converts a 6-digit hex colour', () => {

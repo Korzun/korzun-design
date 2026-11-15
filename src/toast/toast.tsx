@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 
-import { CheckIcon, InfoCircleIcon, XIcon } from '../icon';
-import { useStyle } from './style';
+import { CheckIcon, InfoCircleIcon, XIcon } from '../icon/index.js';
+import { useStyle } from './style.js';
 
 interface Props {
   id: number;

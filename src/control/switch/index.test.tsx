@@ -4,8 +4,8 @@ import userEvent from '@testing-library/user-event';
 import { act } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { renderWithProviders } from '../../test-utils';
-import { Switch } from './index';
+import { renderWithProviders } from '../../test-utils.js';
+import { Switch } from './index.js';
 
 describe('Switch', () => {
   it('renders with role="switch" and correct aria-checked', () => {

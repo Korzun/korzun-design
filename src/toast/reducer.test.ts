@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { toastReducer, type ToastEntry } from './reducer';
+import { toastReducer, type ToastEntry } from './reducer.js';
 
 describe('toastReducer', () => {
   it('carries the toast type through an add (including info)', () => {

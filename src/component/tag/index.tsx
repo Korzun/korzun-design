@@ -1,6 +1,6 @@
 import cx from 'classnames';
 
-import { useStyle } from './style';
+import { useStyle } from './style.js';
 
 interface TagProps {
   children: React.ReactNode;

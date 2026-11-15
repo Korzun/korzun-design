@@ -3,8 +3,8 @@ import { fireEvent, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeAll, describe, expect, it, vi } from 'vitest';
 
-import { renderWithProviders } from '../../test-utils';
-import { ConfirmModal } from './index';
+import { renderWithProviders } from '../../test-utils.js';
+import { ConfirmModal } from './index.js';
 
 beforeAll(() => {
   HTMLDialogElement.prototype.showModal = vi.fn();

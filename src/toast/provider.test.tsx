@@ -1,9 +1,9 @@
 import { act, fireEvent, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { renderWithProviders } from '../test-utils';
-import { useToast } from './hook/use-toast';
-import { ToastProvider } from './provider';
+import { renderWithProviders } from '../test-utils.js';
+import { useToast } from './hook/use-toast.js';
+import { ToastProvider } from './provider.js';
 
 const Trigger = () => {
   const showToast = useToast();

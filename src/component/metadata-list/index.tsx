@@ -1,5 +1,5 @@
-import { Metadata as MetadataComponent } from '../metadata';
-import { useStyle } from './style';
+import { Metadata as MetadataComponent } from '../metadata/index.js';
+import { useStyle } from './style.js';
 
 export type Metadata = { title: string; value: string | React.ReactNode };
 type MetadataListProps = { metadata: Metadata[] };

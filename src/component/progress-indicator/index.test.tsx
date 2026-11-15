@@ -2,8 +2,8 @@
 import { screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
-import { renderWithProviders } from '../../test-utils';
-import { ProgressIndicator } from './index';
+import { renderWithProviders } from '../../test-utils.js';
+import { ProgressIndicator } from './index.js';
 
 describe('ProgressIndicator', () => {
   it('renders "Not started" when value is 0', () => {

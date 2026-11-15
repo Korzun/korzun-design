@@ -4,7 +4,7 @@ import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { GalleryRoutes } from './app';
+import { GalleryRoutes } from './app.js';
 
 const mount = (path: string) =>
   render(

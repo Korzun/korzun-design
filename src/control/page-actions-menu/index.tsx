@@ -1,13 +1,13 @@
 import { useCallback, useRef, useState } from 'react';
 
-import { MoreIcon } from '../../icon';
+import { MoreIcon } from '../../icon/index.js';
 import {
   ActionMenuList,
   type PageActionIntentProps,
   type PageActionItem,
-} from '../action-menu-list';
-import { useDismiss } from '../action-menu-list/use-dismiss';
-import { useStyle } from './style';
+} from '../action-menu-list/index.js';
+import { useDismiss } from '../action-menu-list/use-dismiss.js';
+import { useStyle } from './style.js';
 
 export type { PageActionIntentProps, PageActionItem };
 

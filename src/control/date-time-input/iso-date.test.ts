@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { composeIsoDate, splitIsoDate } from './iso-date';
+import { composeIsoDate, splitIsoDate } from './iso-date.js';
 
 describe('splitIsoDate', () => {
   it('returns empty parts for an empty or missing value', () => {

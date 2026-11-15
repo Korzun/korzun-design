@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react';
 
-import { renderWithProviders } from '../../test-utils';
-import { TextInput } from './index';
+import { renderWithProviders } from '../../test-utils.js';
+import { TextInput } from './index.js';
 
 const counter = /^\d+\/\d+$/;
 

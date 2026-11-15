@@ -2,8 +2,8 @@ import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 
-import { renderWithProviders } from '../../test-utils';
-import { PageActionsMenu, type PageActionItem } from './index';
+import { renderWithProviders } from '../../test-utils.js';
+import { PageActionsMenu, type PageActionItem } from './index.js';
 
 function makeItems(overrides: Partial<PageActionItem> = {}): PageActionItem[] {
   return [

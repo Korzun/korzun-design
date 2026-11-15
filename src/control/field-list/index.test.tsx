@@ -1,8 +1,8 @@
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import { renderWithProviders } from '../../test-utils';
-import { FieldList, type FieldRow } from './index';
+import { renderWithProviders } from '../../test-utils.js';
+import { FieldList, type FieldRow } from './index.js';
 
 const singleTextColumn = [{ type: 'text' as const, key: 'value', placeholder: 'Subject' }];
 

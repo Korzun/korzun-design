@@ -1,6 +1,6 @@
 import { PropsWithChildren, ReactNode, useCallback, useState } from 'react';
 
-import { useStyle } from './style';
+import { useStyle } from './style.js';
 
 type StandaloneSectionProps = PropsWithChildren<{
   actions?: ReactNode[];

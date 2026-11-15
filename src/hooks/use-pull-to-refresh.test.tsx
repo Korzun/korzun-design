@@ -1,7 +1,7 @@
 import { act, fireEvent, renderHook } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { PULL_THRESHOLD, usePullToRefresh } from './use-pull-to-refresh';
+import { PULL_THRESHOLD, usePullToRefresh } from './use-pull-to-refresh.js';
 
 // jsdom never scrolls, so the position is faked. `scrollY` is an accessor on
 // `window`, hence `defineProperty` rather than an assignment. A NEGATIVE value

@@ -1,9 +1,9 @@
 import { type ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import { ThemeProvider as JssThemeProvider } from 'react-jss';
 
-import { Context, type ThemeSetting } from './context';
-import { GlobalStyles } from './global-styles';
-import { darkTheme, lightTheme, type ThemeMode } from './theme';
+import { Context, type ThemeSetting } from './context.js';
+import { GlobalStyles } from './global-styles.js';
+import { darkTheme, lightTheme, type ThemeMode } from './theme.js';
 
 const STORAGE_PREFIX = 'theme-setting:';
 const DARK_QUERY = '(prefers-color-scheme: dark)';

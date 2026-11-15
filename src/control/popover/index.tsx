@@ -10,7 +10,7 @@ import {
 } from 'react';
 import { createPortal } from 'react-dom';
 
-import { useStyle } from './style';
+import { useStyle } from './style.js';
 
 type Position = { top: number; left: number; width: number };
 

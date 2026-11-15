@@ -1,4 +1,4 @@
-import { useStyle } from './style';
+import { useStyle } from './style.js';
 
 type ProgressIndicatorProps = {
   value: number;

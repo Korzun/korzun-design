@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
-import { MoreIcon } from './more';
+import { MoreIcon } from './more.js';
 
 describe('MoreIcon', () => {
   it('renders an svg element', () => {

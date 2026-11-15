@@ -1,6 +1,6 @@
 import type { ReactElement } from 'react';
 
-import type { IconProps } from '../icon';
+import type { IconProps } from '../icon/index.js';
 
 /** A single navigation destination, shared by the desktop and mobile layouts. */
 export interface NavItem {

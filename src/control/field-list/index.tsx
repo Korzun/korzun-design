@@ -1,8 +1,8 @@
-import { RowRemoveIcon } from '../../icon';
-import { Button } from '../button';
-import { NumberInput } from '../number-input';
-import { TextInput } from '../text-input';
-import { useStyle } from './style';
+import { RowRemoveIcon } from '../../icon/index.js';
+import { Button } from '../button/index.js';
+import { NumberInput } from '../number-input/index.js';
+import { TextInput } from '../text-input/index.js';
+import { useStyle } from './style.js';
 
 export type ColumnDescriptor =
   | { type: 'text'; key: string; placeholder?: string; validate?: (v: string) => boolean }

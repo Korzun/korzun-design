@@ -1,10 +1,10 @@
 import cx from 'classnames';
 import { useId, useRef, useState } from 'react';
 
-import { XIcon } from '../../icon';
-import type { Theme } from '../../theme';
-import { Popover } from '../popover';
-import { useStyle } from './style';
+import { XIcon } from '../../icon/index.js';
+import type { Theme } from '../../theme/index.js';
+import { Popover } from '../popover/index.js';
+import { useStyle } from './style.js';
 
 export type ChipColor = keyof Theme['color']['chip'];
 

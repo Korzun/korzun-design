@@ -1,8 +1,8 @@
 import { screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
-import { renderWithProviders } from '../../test-utils';
-import { EmptyState } from './index';
+import { renderWithProviders } from '../../test-utils.js';
+import { EmptyState } from './index.js';
 
 describe('EmptyState', () => {
   it('renders the title and, when given, the second line', () => {

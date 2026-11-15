@@ -1,4 +1,4 @@
-import { useStyle } from './style';
+import { useStyle } from './style.js';
 
 // Mobile-only scrim: a fixed frosted-glass layer at the top of the viewport that blurs
 // scrolling content beneath the device status bar and fades out below it (Safari-style).

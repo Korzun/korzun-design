@@ -2,11 +2,11 @@ import cx from 'classnames';
 import { PropsWithChildren, useEffect } from 'react';
 import { Fragment } from 'react/jsx-runtime';
 
-import { BackButton } from '../../control/back-button';
-import { PageActionsBar } from '../../control/page-actions-bar';
-import { PageActionsMenu, type PageActionItem } from '../../control/page-actions-menu';
-import { PageFooterActions, type FooterAction } from '../../control/page-footer-actions';
-import { useStyle, PageType, PageTypeValue } from './style';
+import { BackButton } from '../../control/back-button/index.js';
+import { PageActionsBar } from '../../control/page-actions-bar/index.js';
+import { PageActionsMenu, type PageActionItem } from '../../control/page-actions-menu/index.js';
+import { PageFooterActions, type FooterAction } from '../../control/page-footer-actions/index.js';
+import { useStyle, PageType, PageTypeValue } from './style.js';
 
 type PageProps = PropsWithChildren<{
   type?: PageTypeValue;

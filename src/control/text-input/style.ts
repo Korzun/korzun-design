@@ -1,4 +1,4 @@
-import { createUseStyles, Theme } from '../../theme';
+import { createUseStyles, Theme } from '../../theme/index.js';
 
 export const useStyle = createUseStyles((theme: Theme) => ({
   root: {

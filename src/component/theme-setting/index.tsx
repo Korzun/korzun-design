@@ -1,6 +1,6 @@
-import { SegmentedControl } from '../../control/segmented-control';
-import { useThemeSetting } from '../../theme';
-import { Card } from '../card';
+import { SegmentedControl } from '../../control/segmented-control/index.js';
+import { useThemeSetting } from '../../theme/index.js';
+import { Card } from '../card/index.js';
 
 const OPTIONS = [
   { value: 'light', label: 'Light' },

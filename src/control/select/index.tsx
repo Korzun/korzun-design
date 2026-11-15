@@ -1,9 +1,9 @@
 import cx from 'classnames';
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 
-import { ChevronIcon, SpinnerIcon } from '../../icon';
-import { Popover } from '../popover';
-import { useStyle } from './style';
+import { ChevronIcon, SpinnerIcon } from '../../icon/index.js';
+import { Popover } from '../popover/index.js';
+import { useStyle } from './style.js';
 
 export type SelectOption = string | { label: string; value: string; description?: string };
 

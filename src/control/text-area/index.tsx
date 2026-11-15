@@ -1,7 +1,7 @@
 import cx from 'classnames';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { useStyle } from './style';
+import { useStyle } from './style.js';
 
 export type TextAreaProps = {
   autoResize?: boolean;

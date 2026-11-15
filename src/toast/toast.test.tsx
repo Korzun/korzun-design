@@ -1,8 +1,8 @@
 import { screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { renderWithProviders } from '../test-utils';
-import { Toast } from './toast';
+import { renderWithProviders } from '../test-utils.js';
+import { Toast } from './toast.js';
 
 function renderToast(type: 'success' | 'error' | 'info') {
   return renderWithProviders(

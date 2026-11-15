@@ -2,8 +2,8 @@ import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it } from 'vitest';
 
-import { renderWithProviders } from '../../test-utils';
-import { ThemeSetting } from './index';
+import { renderWithProviders } from '../../test-utils.js';
+import { ThemeSetting } from './index.js';
 
 describe('ThemeSetting', () => {
   afterEach(() => localStorage.clear());

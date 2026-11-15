@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { defaultTheme, lightTheme, darkTheme } from './theme';
+import { defaultTheme, lightTheme, darkTheme } from './theme.js';
 
 describe('defaultTheme glass tokens', () => {
   it('exposes a full-capsule pill radius', () => {

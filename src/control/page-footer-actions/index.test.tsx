@@ -2,8 +2,8 @@ import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 
-import { renderWithProviders } from '../../test-utils';
-import { PageFooterActions, type FooterAction } from './index';
+import { renderWithProviders } from '../../test-utils.js';
+import { PageFooterActions, type FooterAction } from './index.js';
 
 function makeItems(): FooterAction[] {
   return [
