@@ -1,7 +1,9 @@
-// Copies a file or folder from Bookplate's client source into this repo and rewrites its
-// `~/` alias imports to relative paths.
+// Copies a file or folder from Bookplate's client source into this repo, rewrites its `~/`
+// alias imports to relative paths, then gives every relative specifier an explicit `.js` or
+// `/index.js` ending so the emitted ESM resolves under Node.
 //
 // Usage: node scripts/port.mjs <bookplate-relative-path> <dest-relative-path>
+//        node scripts/port.mjs --extensions-only <dest-relative-path>
 import { cpSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { homedir } from 'node:os';
 import path from 'node:path';
@@ -56,6 +58,47 @@ export const rewriteImports = (source, destFile) => {
   return output;
 };
 
+// Matches relative specifiers (`./x`, `../x`, `.`, `..`) in the same statement shapes.
+const RELATIVE_PATTERN = /(\bfrom\s*|\bimport\s*\(?\s*)(['"])(\.\.?(?:\/[^'"]*)?)\2/g;
+
+// Specifiers that already name a file Node can load as written.
+const SUFFIXED = /\.(?:[cm]?js|jsx|json|css|svg|png|jpe?g|gif|webp|woff2?)$/;
+
+// `exists(path)` takes a repo-root-relative POSIX path and returns 'file', 'dir' or null.
+export const addExtensions = (source, destFile, exists) => {
+  const unresolved = [];
+  const dir = path.posix.dirname(destFile);
+  const isFile = (candidate) => exists(candidate) === 'file';
+  const output = source.replace(RELATIVE_PATTERN, (match, lead, quote, specifier) => {
+    if (SUFFIXED.test(specifier)) return match;
+    const base = path.posix.join(dir, specifier);
+    if (isFile(`${base}.ts`) || isFile(`${base}.tsx`)) {
+      return `${lead}${quote}${specifier}.js${quote}`;
+    }
+    if (exists(base) === 'dir' && (isFile(`${base}/index.ts`) || isFile(`${base}/index.tsx`))) {
+      return `${lead}${quote}${specifier.replace(/\/$/, '')}/index.js${quote}`;
+    }
+    unresolved.push(`UNRESOLVED ${destFile}: ${specifier}`);
+    return match;
+  });
+  if (unresolved.length > 0) {
+    const error = new Error(unresolved.join('\n'));
+    error.output = output;
+    throw error;
+  }
+  return output;
+};
+
+const existsOnDisk = (relative) => {
+  try {
+    const stats = statSync(path.join(REPO_ROOT, relative));
+    if (stats.isFile()) return 'file';
+    return stats.isDirectory() ? 'dir' : null;
+  } catch {
+    return null;
+  }
+};
+
 const sourceFiles = (target) => {
   if (statSync(target).isFile()) return /\.tsx?$/.test(target) ? [target] : [];
   return readdirSync(target, { recursive: true })
@@ -63,28 +106,41 @@ const sourceFiles = (target) => {
     .filter((file) => statSync(file).isFile() && /\.tsx?$/.test(file));
 };
 
+// Runs each pass over every source file under `destination`, printing misses; 1 if any.
+const rewriteTree = (destination, passes) => {
+  let failed = false;
+  for (const file of sourceFiles(destination)) {
+    const destFile = path.relative(REPO_ROOT, file).split(path.sep).join('/');
+    let source = readFileSync(file, 'utf8');
+    for (const pass of passes) {
+      try {
+        source = pass(source, destFile);
+      } catch (error) {
+        if (typeof error.output !== 'string') throw error;
+        source = error.output;
+        console.error(error.message);
+        failed = true;
+      }
+    }
+    writeFileSync(file, source);
+  }
+  return failed ? 1 : 0;
+};
+
+const withExtensions = (source, destFile) => addExtensions(source, destFile, existsOnDisk);
+
 const main = (from, to) => {
+  if (from === '--extensions-only' && to) {
+    return rewriteTree(path.resolve(REPO_ROOT, to), [withExtensions]);
+  }
   if (!from || !to) {
     console.error('Usage: node scripts/port.mjs <bookplate-relative-path> <dest-relative-path>');
+    console.error('       node scripts/port.mjs --extensions-only <dest-relative-path>');
     return 1;
   }
   const destination = path.resolve(REPO_ROOT, to);
   cpSync(path.join(BOOKPLATE_SRC, from), destination, { recursive: true });
-
-  let failed = false;
-  for (const file of sourceFiles(destination)) {
-    const destFile = path.relative(REPO_ROOT, file).split(path.sep).join('/');
-    const source = readFileSync(file, 'utf8');
-    try {
-      writeFileSync(file, rewriteImports(source, destFile));
-    } catch (error) {
-      if (typeof error.output !== 'string') throw error;
-      writeFileSync(file, error.output);
-      console.error(error.message);
-      failed = true;
-    }
-  }
-  return failed ? 1 : 0;
+  return rewriteTree(destination, [rewriteImports, withExtensions]);
 };
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
