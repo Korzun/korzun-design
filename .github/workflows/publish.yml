@@ -4,6 +4,11 @@ on:
   push:
     tags: ['v*.*.*']
 
+# npm trusted publishing: the job authenticates to npm with GitHub's OIDC token
+# (`id-token: write`), so no npm token is stored in the repo. npm generates the
+# provenance attestation automatically for OIDC publishes from a public repo.
+# The trusted publisher (this repo, this workflow file name) is configured on
+# npmjs.com under the package's Settings → Trusted publishing.
 permissions:
   contents: read
   id-token: write
@@ -21,10 +26,11 @@ jobs:
           node-version-file: .node-version
           cache: npm
           registry-url: https://registry.npmjs.org
+      # Trusted publishing needs npm >= 11.5.1; Node 24 bundles a newer npm, this
+      # step just makes the requirement explicit in the log.
+      - run: npm --version
       - run: npm ci
       - run: npm run lint
       - run: npm test
       - run: npm run smoke
-      - run: npm publish --access public --provenance
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - run: npm publish --access public

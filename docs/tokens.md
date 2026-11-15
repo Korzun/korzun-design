@@ -87,7 +87,7 @@ JSS-spreadable style fragments (`...theme.recipe.x`), not components.
 
 ## Slated for curation
 
-Both groups below move into the package byte-for-byte in 0.1.0 and are due for a decision before the API settles.
+Both groups below move into the package byte-for-byte in 0.0.1 and are due for a decision before the API settles.
 
 - `color.chip.*`: eight colourways (`status author series subject book entryType user rating`) named after Bookplate's metadata chips, not after a general role.
 - `size.metadataValue`: `15rem`, a width named after Bookplate's metadata display.
