@@ -1,0 +1,46 @@
+{
+  "name": "@korzun/design",
+  "version": "0.1.0",
+  "type": "module",
+  "license": "SEE LICENSE IN LICENSE",
+  "files": ["dist"],
+  "sideEffects": false,
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "gallery": "vite --config gallery/vite.config.ts",
+    "build": "rm -rf dist && tsc -p tsconfig.build.json",
+    "test": "vitest run && npm run test:scripts",
+    "test:scripts": "node --test \"scripts/**/*.test.mjs\"",
+    "test:watch": "vitest",
+    "lint": "oxlint src scripts && oxfmt --check \"src/**/*.{ts,tsx}\" && tsc --noEmit",
+    "lint:fix": "oxlint src scripts --fix && oxfmt \"src/**/*.{ts,tsx}\""
+  },
+  "peerDependencies": {
+    "classnames": "^2.5.1",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "react-jss": "^10.10.0",
+    "react-router": "^8.3.0"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.1.0",
+    "@testing-library/user-event": "^14.5.2",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.3",
+    "classnames": "^2.5.1",
+    "jsdom": "^29.1.1",
+    "oxfmt": "^0.74.0",
+    "oxlint": "^1.74.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "react-jss": "^10.10.0",
+    "react-router": "^8.3.0",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.5",
+    "vitest": "^4.1.12"
+  }
+}
