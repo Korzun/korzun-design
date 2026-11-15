@@ -1,0 +1,354 @@
+import { createUseStyles, type Theme } from '../../theme';
+
+export const useStyle = createUseStyles((theme: Theme) => {
+  // Shared so the real tab row and the blue reveal row lay out identically (and
+  // therefore stay pixel-aligned). The grid gives every tab an equal width (sized to
+  // the widest label), so the lens has a constant width and simply slides between tabs.
+  const grid = {
+    display: 'inline-grid',
+    gridAutoFlow: 'column',
+    gridAutoColumns: '1fr',
+    alignItems: 'center',
+    gap: theme.space.xs,
+    padding: theme.space.xs,
+  } as const;
+
+  const tab = {
+    display: 'flex', // block-level so each tab stretches to fill its equal grid column
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    rowGap: theme.space.xxs,
+    padding: `${theme.space.sm} ${theme.space.lg}`,
+    fontSize: '0.80rem', // nav-specific size; not on the global fontSize scale
+  } as const;
+
+  /**
+   * The nav's inset on all three open sides: how far it floats above the
+   * bottom edge, and how far the capsule and its accessory sit in from the
+   * left and right. One distance framing the whole bar rather than three
+   * unrelated ones.
+   *
+   * One expression reused rather than values that happen to agree: it
+   * resolves differently per device (a browser tab has no bottom inset, so
+   * `env()` is 0 and this falls to the fixed floor; in standalone the home
+   * indicator dominates), and hard-coded side padding would match on a
+   * desktop screenshot while drifting apart on the device where the inset
+   * actually does something.
+   */
+  const bottomInset = `max(${theme.space.xxxl}, calc(env(safe-area-inset-bottom) - ${theme.space.xl}))`;
+
+  /**
+   * One of the pill's circle shapes: a single icon centred in whatever the
+   * pill's box currently is. Shared by the route-collapsed link and the
+   * scroll-minimized button so the two circles are the same circle.
+   */
+  const circle = {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+    zIndex: 2,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    cursor: 'pointer',
+    userSelect: 'none',
+    '-webkit-user-select': 'none',
+    transition: `opacity ${theme.transition.fast}`,
+  } as const;
+
+  return {
+    root: {
+      position: 'fixed',
+      bottom: 0,
+      left: 0,
+      width: '100vw',
+      zIndex: theme.zIndex.sticky,
+      // The side padding below is INSIDE the 100vw above; without this the
+      // nav would be two insets wider than the viewport and put a horizontal
+      // scrollbar on every page. There is no global `border-box` reset in
+      // this app, so it is declared here.
+      boxSizing: 'border-box',
+      display: 'flex',
+      // STRETCH, so both pills share one height however much each contains.
+      // A collapsed pill's circle is its own measured height, and a side with
+      // nothing to expand into (a reader's settings side) would otherwise be
+      // shorter than the bar beside it.
+      alignItems: 'stretch',
+      // Pushed to opposite edges: the capsule takes one side and its
+      // accessory the other, each inset by the same distance the bar floats
+      // above the bottom.
+      justifyContent: 'space-between',
+      paddingLeft: bottomInset,
+      paddingRight: bottomInset,
+      // A floor, not the spacing: `space-between` sets the real gap. This
+      // only stops the two touching if the capsule ever grows wide enough to
+      // close the distance itself.
+      gap: bottomInset,
+      // One rule, both contexts (no iOS-unreliable display-mode query): a browser tab has
+      // no bottom safe-area inset, so env() ≈ 0 and this resolves to the fixed floor
+      // (room for the frosted shadow); in standalone the home-indicator inset dominates
+      // and the pill dips toward it while staying clear.
+      paddingBottom: bottomInset,
+      [theme.breakpoint.normal]: {
+        display: 'none',
+      },
+    },
+    /**
+     * One side of the bar, and the thing that actually morphs.
+     *
+     * It holds BOTH shapes — the capsule of destinations and the single
+     * collapsed link — and animates its own width between them, clipping
+     * whichever is too wide to fit. That is the difference between a morph and
+     * a cross-fade: there is one element throughout, so the capsule is seen to
+     * shrink into the circle rather than being swapped for it.
+     *
+     * The frosted glass lives HERE rather than on the capsule now, so the
+     * visible surface is the pill itself and follows the width. It remains a
+     * SIBLING of the lens, never an ancestor — Safari and Firefox trap
+     * positioned descendants of a `backdrop-filter` element in a stacking
+     * sandbox where they stop repainting, which is the same reason the glass
+     * was a separate layer before.
+     */
+    pill: {
+      position: 'relative',
+      flexShrink: 0,
+      boxSizing: 'border-box',
+      borderRadius: theme.radius.pill,
+      // Clips the shape that is currently too wide for the pill. Without it a
+      // collapsed pill would show a slice of its capsule rather than a circle.
+      overflow: 'hidden',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    /**
+     * Added one frame after the first measurement. The width is set from the
+     * DOM, so on the very first render it changes from `auto` to a number —
+     * and with the transition already on, every pill would animate itself down
+     * to a circle on arrival, as if the bar collapsed as the page loaded.
+     */
+    pillReady: {
+      transition: `width ${theme.transition.spring}`,
+      '@media (prefers-reduced-motion: reduce)': {
+        // The capsule and circle still swap, they just stop sliding between
+        // the two widths — matching `lensReady`/`revealReady` below.
+        transition: 'none',
+      },
+    },
+    /** Only a hook for tests and future styling; the width does the work. */
+    pillCollapsed: {},
+
+    /** The collapsed shape: one icon, centred, filling the circle. */
+    collapsedLink: {
+      ...circle,
+      color: theme.color.text.primary,
+      textDecoration: 'none',
+    },
+    collapsedActive: {
+      color: theme.color.brand.default,
+    },
+    /**
+     * The minimized shape: the same circle, holding whatever the capsule had
+     * selected. Unlit by default — a plain glyph on the bare pill, like the
+     * route-collapsed circle — because a capsule with NO selected tab (a reader
+     * on Settings, whose main group is still the expanded side) minimizes to
+     * its stand-in glyph, and that must not claim to be selected. A button, so
+     * the native button chrome goes.
+     */
+    minimizedButton: {
+      ...circle,
+      boxSizing: 'border-box',
+      borderRadius: theme.radius.pill,
+      margin: 0,
+      padding: 0,
+      // Longhands, not `border`/`background` shorthands: `minimizedActive`
+      // below sets the matching longhands, and a shorthand here would reset
+      // the lot in environments that resolve the two in declaration order.
+      borderStyle: 'none',
+      backgroundColor: 'transparent',
+      font: 'inherit',
+      color: theme.color.text.primary,
+      '-webkit-tap-highlight-color': 'transparent',
+    },
+    /**
+     * …and lit when it IS the selected tab carried into the circle: the
+     * selected tab's surface — `glassHighlight`, the raised, lighter glass the
+     * lens paints over the pill — and the active colour for the glyph. Without
+     * the surface the circle read as an empty pill with a blue icon, a
+     * different thing from the lit tab it replaced.
+     *
+     * The highlight sits over the pill's own `glass` layer exactly as the lens
+     * does over the capsule; it is the pill's full box, so the whole circle is
+     * lens, not a smaller disc inside a plain one. Its own border follows the
+     * circle's radius, set above.
+     */
+    minimizedActive: {
+      ...theme.recipe.glassHighlight,
+      color: theme.color.brand.default,
+    },
+    /**
+     * Faded rather than unmounted: the two shapes swap while the pill is still
+     * mid-width, so both have to be drawable at once. `pointerEvents` matters
+     * independently of opacity — a transparent link still takes the tap.
+     */
+    collapsedHidden: {
+      opacity: 0,
+      pointerEvents: 'none',
+    },
+    capsuleHidden: {
+      opacity: 0,
+      pointerEvents: 'none',
+      transition: `opacity ${theme.transition.fast}`,
+    },
+
+    // Plain positioning/layout container. It deliberately has NO backdrop-filter:
+    // the frosted glass lives in a separate `glass` layer so the lens and links are
+    // its siblings, not its descendants (see `glass` below).
+    capsule: {
+      ...grid,
+      position: 'relative',
+      marginBottom: 0,
+      // Its NATURAL width, whatever the pill around it is currently set to.
+      // Without this the grid would shrink to fit a collapsing pill, the
+      // measured `capsuleWidth` would shrink with it, and the pill would chase
+      // a width that keeps moving.
+      width: 'max-content',
+      transition: `opacity ${theme.transition.fast}`,
+    },
+
+    // Frosted-glass background as its own layer behind everything. The backdrop-filter
+    // MUST live here and NOT on an ancestor of the lens/links: Safari and Firefox trap
+    // positioned descendants of a backdrop-filter element in a stacking sandbox where
+    // they don't repaint/animate. As a sibling, the lens morphs freely.
+    glass: {
+      ...theme.recipe.glass,
+      position: 'absolute',
+      top: 0,
+      right: 0,
+      bottom: 0,
+      left: 0,
+      zIndex: 0,
+      boxSizing: 'border-box',
+      borderRadius: theme.radius.pill,
+      pointerEvents: 'none',
+    },
+    // The active-tab lens. Vertical extent is fixed here (top/bottom insets ⇒ always
+    // concentric with the capsule); horizontal position + width come from inline style
+    // (measured from the active tab). The base rule only transitions opacity, so the
+    // first placement jumps into position (no slide-in from the corner). The `lensReady`
+    // modifier — added one frame after mount, decoupled from any position change — turns
+    // on the morph transition.
+    lens: {
+      ...theme.recipe.glassHighlight,
+      position: 'absolute',
+      zIndex: 1,
+      left: 0,
+      top: theme.space.xs,
+      bottom: theme.space.xs,
+      boxSizing: 'border-box',
+      borderRadius: theme.radius.pill,
+      opacity: 0,
+      pointerEvents: 'none',
+      willChange: 'transform',
+      transition: `opacity ${theme.transition.fast}`,
+    },
+    // Tabs are equal width, so only position changes between tabs — animate transform
+    // only (compositor-accelerated, so it stays smooth even while a new page loads on
+    // the main thread). Applied to the lens AND the blue reveal so they move in lockstep.
+    lensReady: {
+      transition: `transform ${theme.transition.spring}, opacity ${theme.transition.fast}`,
+      '@media (prefers-reduced-motion: reduce)': {
+        transition: `opacity ${theme.transition.fast}`,
+      },
+    },
+    // The real, interactive tabs — kept for layout (they size the capsule), clicks, and
+    // aria-current — but rendered transparent. The visible gray + blue come from the two
+    // absolute overlays below, so they share one rounding and overlap perfectly.
+    item: {
+      ...tab,
+      position: 'relative',
+      zIndex: 2,
+      color: 'transparent',
+      textDecoration: 'none',
+      cursor: 'pointer',
+      userSelect: 'none',
+      '-webkit-user-select': 'none',
+    },
+    // The two visible text rows. Both are absolute, shrink-to-fit at the capsule origin,
+    // with the same grid — so the browser rounds them to the exact same device pixels and
+    // `reveal` (blue) overlays `grayLayer` with no sub-pixel fringe. `reveal` is clipped to
+    // a lens-shaped window (set inline) that animates across it; `grayLayer` is always full.
+    grayLayer: {
+      ...grid,
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      zIndex: 3,
+      color: theme.color.text.primary,
+      pointerEvents: 'none',
+    },
+    reveal: {
+      ...grid,
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      zIndex: 4,
+      color: theme.color.brand.default,
+      pointerEvents: 'none',
+      opacity: 0,
+      willChange: 'clip-path',
+      transition: `opacity ${theme.transition.fast}`,
+    },
+    revealReady: {
+      transition: `clip-path ${theme.transition.spring}, opacity ${theme.transition.fast}`,
+      '@media (prefers-reduced-motion: reduce)': {
+        transition: `opacity ${theme.transition.fast}`,
+      },
+    },
+    layerItem: {
+      ...tab,
+    },
+    // The positioning context for the badge — the icon alone, not the whole
+    // item. The previous `top: 2px; right: 10px` was measured against the
+    // item's capsule, so it tracked the capsule's geometry rather than the
+    // icon's.
+    iconWrap: {
+      position: 'relative',
+      display: 'inline-flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    // A real pill, matching `nav-desktop`. This style used to be shared with
+    // the dot below — an 8x8 box with no padding — so a numeric badge was
+    // squeezed into a dot and clipped.
+    badge: {
+      position: 'absolute',
+      top: '-6px',
+      right: '-8px',
+      minWidth: '16px',
+      height: '16px',
+      padding: `0 ${theme.space.xs}`,
+      boxSizing: 'border-box',
+      borderRadius: theme.radius.pill,
+      backgroundColor: theme.color.danger.default,
+      color: theme.color.bg.page,
+      fontSize: '0.65rem',
+      lineHeight: '16px',
+      textAlign: 'center',
+      pointerEvents: 'none',
+    },
+    badgeDot: {
+      position: 'absolute',
+      top: '-3px',
+      right: '-4px',
+      width: '8px',
+      height: '8px',
+      borderRadius: theme.radius.pill,
+      backgroundColor: theme.color.danger.default,
+      pointerEvents: 'none',
+    },
+  };
+});
