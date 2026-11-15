@@ -4,12 +4,46 @@
   "type": "module",
   "license": "SEE LICENSE IN LICENSE",
   "files": ["dist"],
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./theme": {
+      "types": "./dist/theme/index.d.ts",
+      "default": "./dist/theme/index.js"
+    },
+    "./control": {
+      "types": "./dist/control/index.d.ts",
+      "default": "./dist/control/index.js"
+    },
+    "./component": {
+      "types": "./dist/component/index.d.ts",
+      "default": "./dist/component/index.js"
+    },
+    "./icon": {
+      "types": "./dist/icon/index.d.ts",
+      "default": "./dist/icon/index.js"
+    },
+    "./toast": {
+      "types": "./dist/toast/index.d.ts",
+      "default": "./dist/toast/index.js"
+    },
+    "./hooks": {
+      "types": "./dist/hooks/index.d.ts",
+      "default": "./dist/hooks/index.js"
+    },
+    "./package.json": "./package.json"
+  },
   "sideEffects": false,
   "engines": {
     "node": ">=24"
   },
   "scripts": {
     "gallery": "vite --config gallery/vite.config.ts",
+    "smoke": "npm run build && bash scripts/smoke-exports.sh",
     "build": "rm -rf dist && tsc -p tsconfig.build.json",
     "test": "vitest run && npm run test:scripts",
     "test:scripts": "node --test \"scripts/**/*.test.mjs\"",
