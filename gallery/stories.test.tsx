@@ -3,7 +3,15 @@ import { ToastProvider } from '@korzun/design/toast';
 import { render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 
-import { collectStories, resolveArgs, stories, toKebab } from './stories.js';
+import {
+  collectStories,
+  resolveArgs,
+  stories,
+  storyTree,
+  toKebab,
+  type StoryEntry,
+  type StoryGroup,
+} from './stories.js';
 
 const Comp = () => <div />;
 
@@ -88,6 +96,29 @@ describe('resolveArgs', () => {
     expect(args).toMatchObject({ label: 'a', n: 2 });
     (args.onClick as (x: number) => void)(7);
     expect(seen).toEqual([['onClick', [7]]]);
+  });
+});
+
+describe('storyTree', () => {
+  it('groups by path alphabetically with nested groups before entries', () => {
+    const entries = collectStories({
+      '/b.stories.tsx': { default: { title: 'Control / Button' }, Default: Comp, Primary: Comp },
+      '/c.stories.tsx': { default: { title: 'Component / Card' }, Default: Comp },
+      '/i.stories.tsx': { default: { title: 'Icon' }, Grid: Comp },
+      '/k.stories.tsx': { default: { title: 'Control' }, Intro: Comp },
+    });
+    const tree = storyTree(entries);
+    expect(tree.map((g) => g.label)).toEqual(['Component', 'Control', 'Icon']);
+    const control = tree[1];
+    expect(control.children.map((c) => ('label' in c ? c.label : c.id))).toEqual([
+      'Button',
+      'control/intro',
+    ]);
+    const button = control.children[0] as StoryGroup;
+    expect(button.children.map((c) => (c as StoryEntry).id)).toEqual([
+      'control/button/default',
+      'control/button/primary',
+    ]);
   });
 });
 
