@@ -1,6 +1,6 @@
 import { storyById, type StoryEntry } from '@gallery/stories';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
-import { useEffect, useState, type ReactElement } from 'react';
+import { useEffect, useMemo, useState, type ReactElement } from 'react';
 import { useParams, useSearchParams } from 'react-router';
 
 import { useThemeSetting } from '../../src/theme/index.js';
@@ -44,7 +44,8 @@ const StoryViewBody = ({ entry }: { entry: StoryEntry }): ReactElement => {
   const theme: ThemeValue = setting;
   const widthParam = params.get('width');
   const width: WidthPreset = isWidthPreset(widthParam) ? widthParam : 'fill';
-  const overrides = parseArgsParam(params.get('args'));
+  const rawArgs = params.get('args');
+  const overrides = useMemo(() => parseArgsParam(rawArgs), [rawArgs]);
 
   const update = (key: string, value: string | null) => {
     const next = new URLSearchParams(params);

@@ -28,13 +28,18 @@ export const Canvas = ({ entry, theme, width, overrides, onAction }: CanvasProps
     latest.current = { theme, overrides, onAction };
   });
 
-  const push = () => {
+  const pushArgs = () => {
     const target = frame.current?.contentWindow;
-    if (!target) return;
-    postToWindow(target, { type: 'gallery:args', args: latest.current.overrides });
-    postToWindow(target, { type: 'gallery:theme', theme: latest.current.theme });
+    if (target) postToWindow(target, { type: 'gallery:args', args: latest.current.overrides });
   };
-
+  const pushTheme = () => {
+    const target = frame.current?.contentWindow;
+    if (target) postToWindow(target, { type: 'gallery:theme', theme: latest.current.theme });
+  };
+  const push = () => {
+    pushArgs();
+    pushTheme();
+  };
   useEffect(() => {
     const onMessage = (event: MessageEvent) => {
       if (event.origin !== window.location.origin) return;
@@ -49,7 +54,8 @@ export const Canvas = ({ entry, theme, width, overrides, onAction }: CanvasProps
     return () => window.removeEventListener('message', onMessage);
   }, []);
 
-  useEffect(push, [overrides, theme]);
+  useEffect(pushArgs, [overrides]);
+  useEffect(pushTheme, [theme]);
 
   const src = `${import.meta.env.BASE_URL}#/preview/${entry.id}?theme=${theme}&args=${encodeURIComponent(JSON.stringify(overrides))}`;
 

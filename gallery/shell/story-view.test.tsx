@@ -125,7 +125,22 @@ describe('StoryView', () => {
     );
     expect(spy).toHaveBeenCalledWith({ type: 'gallery:args', args: {} }, window.location.origin);
     spy.mockClear();
+    // Neither a logged action nor a width change may re-push.
+    act(() => {
+      window.dispatchEvent(
+        new MessageEvent('message', {
+          origin: window.location.origin,
+          source: iframe.contentWindow,
+          data: { type: 'gallery:action', name: 'onClick', args: [] },
+        })
+      );
+    });
+    await userEvent.click(screen.getByRole('radio', { name: 'Phone' }));
+    expect(screen.getByText(/onClick/)).toBeInTheDocument();
+    expect(iframe).toHaveStyle({ width: '414px' });
+    expect(spy).not.toHaveBeenCalled();
     await userEvent.click(screen.getByLabelText('disabled'));
+    expect(spy).toHaveBeenCalledTimes(1);
     expect(spy).toHaveBeenCalledWith(
       { type: 'gallery:args', args: { disabled: true } },
       window.location.origin
