@@ -29,18 +29,17 @@ export const Validated: Story<Props> = (args) => {
       value={value}
       onChange={setValue}
       validate={(v) => v.length > 0}
-      layout="vertical"
     />
   );
 };
-Validated.args = { label: 'Validated (must not be empty)' };
+Validated.args = { label: 'Validated (must not be empty)', layout: 'vertical' };
 
 export const Password: Story<Props> = (args) => (
-  <TextInput {...args} name="pw" password value="secret" onChange={() => {}} layout="vertical" />
+  <TextInput {...args} name="pw" password value="secret" onChange={() => {}} />
 );
-Password.args = { label: 'Password' };
+Password.args = { label: 'Password', layout: 'vertical' };
 
 export const Placeholder: Story<Props> = (args) => (
-  <TextInput {...args} name="ph" value="" onChange={() => {}} placeholder="Type here" />
+  <TextInput {...args} name="ph" value="" onChange={() => {}} />
 );
-Placeholder.args = { label: 'Placeholder' };
+Placeholder.args = { label: 'Placeholder', placeholder: 'Type here' };

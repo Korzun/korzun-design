@@ -15,14 +15,21 @@ export default {
     type: { control: 'select', options: ['default', 'primary', 'text', 'link', 'dashed'] },
     disabled: { control: 'boolean' },
     loading: { control: 'boolean' },
-    danger: { control: 'boolean' },
     onClick: { control: 'action' },
   },
 } satisfies StoryDefault<Props>;
 
+// `success` excludes `danger` in ButtonProps, so Success fixes it and the
+// other stories carry the control.
+const dangerControl = { danger: { control: 'boolean' } } as const;
+
 export const Default: Story<Props> = (args) => <Button {...args} />;
-export const Primary: Story<Props> = (args) => <Button {...args} type="primary" />;
+Default.argTypes = dangerControl;
+export const Primary: Story<Props> = (args) => <Button {...args} />;
+Primary.args = { type: 'primary' };
+Primary.argTypes = dangerControl;
 export const Success: Story<Props> = (args) => <Button {...args} danger={false} success />;
 export const WithIcons: Story<Props> = (args) => (
   <Button {...args} prefix={SearchIcon} suffix={SettingsIcon} />
 );
+WithIcons.argTypes = dangerControl;

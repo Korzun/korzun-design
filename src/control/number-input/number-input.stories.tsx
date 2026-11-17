@@ -21,6 +21,6 @@ export const Default: Story<Props> = (args) => {
 
 export const Vertical: Story<Props> = (args) => {
   const [value, setValue] = useState<number | undefined>(42);
-  return <NumberInput {...args} name="num-v" value={value} onChange={setValue} layout="vertical" />;
+  return <NumberInput {...args} name="num-v" value={value} onChange={setValue} />;
 };
-Vertical.args = { label: 'Vertical' };
+Vertical.args = { label: 'Vertical', layout: 'vertical' };

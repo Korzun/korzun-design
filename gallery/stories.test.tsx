@@ -1,6 +1,6 @@
 import { ThemeProvider } from '@korzun/design/theme';
 import { ToastProvider } from '@korzun/design/toast';
-import { render } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 
 import {
@@ -159,6 +159,61 @@ describe('every story mounts', () => {
     for (const s of stories)
       for (const [k, t] of Object.entries(s.argTypes))
         if (t.control !== 'action') expect(s.args, `${s.id}.${k}`).toHaveProperty(k);
+  });
+});
+
+describe('panel controls stay live', () => {
+  const html = (s: StoryEntry, overrides: Record<string, unknown>) => {
+    const Story = s.component;
+    const { container, unmount } = render(
+      <MemoryRouter>
+        <ThemeProvider identity="gallery">
+          <ToastProvider>
+            <Story {...resolveArgs(s, overrides, () => {})} />
+          </ToastProvider>
+        </ThemeProvider>
+      </MemoryRouter>
+    );
+    const out = container.innerHTML;
+    unmount();
+    return out;
+  };
+  const byId = (id: string) => stories.find((s) => s.id === id)!;
+
+  // A story that hardcodes a prop after {...args} leaves that control inert.
+  it.each([
+    ['control/button/primary', 'type', 'link'],
+    ['control/button/default', 'danger', true],
+    ['control/number-input/vertical', 'layout', 'horizontal'],
+    ['control/text-input/validated', 'layout', 'horizontal'],
+    ['control/text-input/password', 'layout', 'horizontal'],
+    ['control/text-input/placeholder', 'placeholder', 'Other'],
+  ] as const)('%s responds to %s', (id, key, value) => {
+    const s = byId(id);
+    expect(s.argTypes, `${id} exposes ${key}`).toHaveProperty(key);
+    expect(html(s, { [key]: value })).not.toBe(html(s, {}));
+  });
+
+  it('a story that must fix a prop does not offer its control', () => {
+    expect(byId('control/button/success').argTypes).not.toHaveProperty('danger');
+  });
+
+  it('progress-indicator exposes value only where it is used', () => {
+    expect(byId('component/progress-indicator/default').argTypes).not.toHaveProperty('value');
+    expect(byId('component/progress-indicator/single').argTypes).toHaveProperty('value');
+  });
+
+  it('popover content takes its surface from the theme, not inline colours', async () => {
+    const Story = byId('control/popover/default').component;
+    render(
+      <ThemeProvider identity="gallery">
+        <Story {...resolveArgs(byId('control/popover/default'), {}, () => {})} />
+      </ThemeProvider>
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Toggle popover' }));
+    const content = await screen.findByText('Popover content');
+    expect(content).not.toHaveAttribute('style');
+    expect(content.className).not.toBe('');
   });
 });
 

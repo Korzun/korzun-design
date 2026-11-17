@@ -13,12 +13,10 @@ const useStyle = createUseStyles((theme: Theme) => ({
 export default {
   title: 'Component / ProgressIndicator',
   args: { value: 0.5, size: 48 },
-  argTypes: {
-    value: { control: 'number', min: 0, max: 1, step: 0.05 },
-    size: { control: 'number' },
-  },
+  argTypes: { size: { control: 'number' } },
 } satisfies StoryDefault<Props>;
 
+// Default fixes `value` per indicator, so only Single exposes it.
 export const Default: Story<Props> = ({ value: _value, ...args }) => {
   const styles = useStyle();
   return (
@@ -33,3 +31,4 @@ export const Default: Story<Props> = ({ value: _value, ...args }) => {
 export const Single: Story<Props> = (args) => (
   <ProgressIndicator {...args} ariaLabel={`${args.value * 100}%`} />
 );
+Single.argTypes = { value: { control: 'number', min: 0, max: 1, step: 0.05 } };
