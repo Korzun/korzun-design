@@ -15,7 +15,8 @@
     "types": ["vitest/globals", "vite/client"],
     "paths": {
       "@korzun/design": ["./src/index.ts"],
-      "@korzun/design/*": ["./src/*/index.ts"]
+      "@korzun/design/*": ["./src/*/index.ts"],
+      "@gallery/*": ["./gallery/*"]
     }
   },
   "include": ["src", "gallery", "scripts"]

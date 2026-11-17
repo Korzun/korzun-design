@@ -14,6 +14,9 @@ shopt -s nullglob
 tarballs=("$tmp"/*.tgz)
 shopt -u nullglob
 [ "${#tarballs[@]}" = 1 ] || { echo "smoke: expected one tarball from npm pack, found ${#tarballs[@]}"; exit 1; }
+if tar -tzf "${tarballs[0]}" | grep -E '\.(stories|test)\.[cm]?[jt]sx?$'; then
+  echo "smoke: tarball contains story or test files"; exit 1
+fi
 tarball="$(basename "${tarballs[0]}")"
 
 peer() { node -p "require('$repo/package.json').peerDependencies['$1']"; }

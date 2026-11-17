@@ -15,6 +15,7 @@
     "dist",
     "src",
     "!src/**/*.test.*",
+    "!src/**/*.stories.*",
     "!src/test-utils.tsx",
     "!src/setup.ts"
   ],
