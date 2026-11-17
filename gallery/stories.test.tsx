@@ -161,3 +161,21 @@ describe('every story mounts', () => {
         if (t.control !== 'action') expect(s.args, `${s.id}.${k}`).toHaveProperty(k);
   });
 });
+
+describe('coverage', () => {
+  const modules = Object.keys(import.meta.glob('../src/{control,component}/*/index.{ts,tsx}'));
+  const storyFiles = Object.keys(import.meta.glob('../src/**/*.stories.tsx'));
+  const exempt = ['control/action-menu-list', 'control/use-modal-dialog', 'component/metadata'];
+  it.each(modules.map((m) => [m.replace(/^\.\.\/src\/(.*)\/index\.tsx?$/, '$1')]))(
+    '%s has a stories file',
+    (dir) => {
+      if (exempt.includes(dir)) return;
+      expect(storyFiles.some((f) => f.startsWith(`../src/${dir}/`))).toBe(true);
+    }
+  );
+  it('has icon and toast stories', () => {
+    expect(storyFiles).toEqual(
+      expect.arrayContaining(['../src/icon/icons.stories.tsx', '../src/toast/toast.stories.tsx'])
+    );
+  });
+});
