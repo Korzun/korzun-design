@@ -15,6 +15,7 @@
     "dist",
     "src",
     "!src/**/*.test.*",
+    "!src/**/*.stories.*",
     "!src/test-utils.tsx",
     "!src/setup.ts"
   ],
@@ -57,6 +58,8 @@
   },
   "scripts": {
     "gallery": "vite --config gallery/vite.config.ts",
+    "gallery:build": "vite build --config gallery/vite.config.ts",
+    "gallery:build:pages": "vite build --config gallery/vite.config.ts --mode pages",
     "smoke": "npm run build && bash scripts/smoke-exports.sh",
     "build": "rm -rf dist && tsc -p tsconfig.build.json",
     "test": "vitest run && npm run test:scripts",

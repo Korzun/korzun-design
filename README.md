@@ -60,7 +60,9 @@ The root export is everything, flat. The `ThemeSetting` type is exported from th
 
 ## Gallery
 
-`npm run gallery` renders every export in light and dark. It is for development only and is not published.
+`npm run gallery` starts the story explorer on the LAN; `npm run gallery:build` writes a static copy to `gallery-dist/`. Every push to `main` deploys it to https://korzun.github.io/korzun-design/. It is for development only and is not published to npm.
+
+Each control and component has a `*.stories.tsx` beside it: a default export with a `title`, default `args`, and `argTypes` (`boolean`, `text`, `number`, `select`, `action`), and one named export per story. Stories import their own module relatively and may import helpers from `@gallery/*`.
 
 ## Development
 

@@ -1,94 +1,84 @@
-import { ThemeSetting } from '@korzun/design/component';
 import { createUseStyles, ThemeProvider, type Theme } from '@korzun/design/theme';
 import { ToastProvider } from '@korzun/design/toast';
-import { BrowserRouter, Navigate, NavLink, Route, Routes } from 'react-router';
+import { useState, type ReactElement } from 'react';
+import { HashRouter, Navigate, Outlet, Route, Routes, useLocation } from 'react-router';
 
-import { ComponentsPage } from './page/components.js';
-import { ControlsPage } from './page/controls.js';
-import { IconsPage } from './page/icons.js';
+import { AllStories } from './all.js';
+import { StoryNotFound } from './not-found.js';
 import { TokensPage } from './page/tokens.js';
+import { Preview, PreviewNavigatedAway } from './preview.js';
+import { Sidebar } from './shell/sidebar.js';
+import { StoryView } from './shell/story-view.js';
+import { stories } from './stories.js';
 
 const useStyle = createUseStyles((theme: Theme) => ({
   root: {
     display: 'flex',
-    minHeight: '100vh',
+    height: '100vh',
     fontFamily: theme.fontFamily.body,
     color: theme.color.text.primary,
     backgroundColor: theme.color.bg.page,
   },
-  sidebar: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: theme.space.md,
-    width: 180,
-    padding: theme.space.xxl,
-    borderRight: `1px solid ${theme.color.border.default}`,
-    flexShrink: 0,
-  },
-  brand: { fontWeight: theme.fontWeight.bold, marginBottom: theme.space.xl },
-  link: {
-    padding: `${theme.space.md} ${theme.space.xl}`,
-    borderRadius: theme.radius.md,
-    color: theme.color.text.secondary,
-    textDecoration: 'none',
-    '&:hover': { backgroundColor: theme.color.bg.hover },
-  },
-  active: { backgroundColor: theme.color.bg.selected, color: theme.color.text.primary },
   content: {
     flex: 1,
     minWidth: 0,
+    overflowY: 'auto',
     padding: theme.space.xxxxl,
-    display: 'flex',
-    flexDirection: 'column',
-    gap: theme.space.xxxl,
+    boxSizing: 'border-box',
   },
 }));
 
-const LINKS = [
-  { to: '/tokens', label: 'Tokens' },
-  { to: '/controls', label: 'Controls' },
-  { to: '/components', label: 'Components' },
-  { to: '/icons', label: 'Icons' },
-];
-
-export function GalleryRoutes() {
+const ShellBody = (): ReactElement => {
   const styles = useStyle();
   return (
     <div className={styles.root}>
-      <nav className={styles.sidebar}>
-        <div className={styles.brand}>@korzun/design</div>
-        {LINKS.map(({ to, label }) => (
-          <NavLink
-            key={to}
-            to={to}
-            className={({ isActive }) => `${styles.link} ${isActive ? styles.active : ''}`}
-          >
-            {label}
-          </NavLink>
-        ))}
-      </nav>
-      <div className={styles.content}>
-        <ThemeSetting />
-        <Routes>
-          <Route path="/" element={<Navigate to="/tokens" replace />} />
-          <Route path="/tokens" element={<TokensPage />} />
-          <Route path="/controls" element={<ControlsPage />} />
-          <Route path="/components" element={<ComponentsPage />} />
-          <Route path="/icons" element={<IconsPage />} />
-        </Routes>
-      </div>
+      <Sidebar />
+      <main className={styles.content}>
+        <Outlet />
+      </main>
     </div>
   );
-}
+};
 
-export function App() {
+const Shell = (): ReactElement => (
+  <ThemeProvider identity="gallery">
+    <ToastProvider>
+      <ShellBody />
+    </ToastProvider>
+  </ThemeProvider>
+);
+
+const ShellNotFound = (): ReactElement => <StoryNotFound id={useLocation().pathname} />;
+
+export const GalleryRoutes = (): ReactElement => {
+  const { pathname } = useLocation();
+  // A window opened on a preview (the canvas iframe, a screenshot link) stays
+  // a preview: links inside a story must not load the shell into the frame.
+  const [previewHome] = useState(() => (pathname.startsWith('/preview/') ? pathname : null));
+
+  if (previewHome)
+    return (
+      <Routes>
+        <Route path="/preview/*" element={<Preview />} />
+        <Route path="*" element={<PreviewNavigatedAway home={previewHome} />} />
+      </Routes>
+    );
   return (
-    <BrowserRouter>
-      <ThemeProvider identity="gallery">
-        <ToastProvider>
-          <GalleryRoutes />
-        </ToastProvider>
-      </ThemeProvider>
-    </BrowserRouter>
+    <Routes>
+      <Route path="/" element={<Navigate to={`/story/${stories[0].id}`} replace />} />
+      <Route path="/preview/*" element={<Preview />} />
+      <Route element={<Shell />}>
+        <Route path="/story/*" element={<StoryView />} />
+        <Route path="/all" element={<AllStories />} />
+        <Route path="/tokens" element={<TokensPage />} />
+        <Route path="*" element={<ShellNotFound />} />
+      </Route>
+    </Routes>
   );
-}
+};
+
+export const App = (): ReactElement => (
+  <HashRouter>
+    <GalleryRoutes />
+  </HashRouter>
+);
