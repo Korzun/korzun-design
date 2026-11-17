@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.0.2 — 2026-11-17
+
+- No code changes. First release published through npm trusted publishing (GitHub Actions OIDC, with provenance); 0.0.1 was published by hand to create the package.
+- Publish workflow skips `npm publish` when the tagged version is already on the registry, so re-running a release tag is safe.
+
 ## 0.0.1 — 2026-11-15
 
 - Theme tokens and light/dark themes; `ThemeProvider` takes an `identity` prop (replaces Bookplate's token coupling).
