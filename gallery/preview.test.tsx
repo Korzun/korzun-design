@@ -1,5 +1,5 @@
 import { act, fireEvent, render, screen } from '@testing-library/react';
-import { MemoryRouter, Route, Routes } from 'react-router';
+import { Link, MemoryRouter, Route, Routes } from 'react-router';
 
 import { parseArgsParam, serializeActionArgs } from './messages.js';
 import { Preview } from './preview.js';
@@ -93,6 +93,30 @@ describe('Preview', () => {
       expect.objectContaining({ type: 'gallery:action', name: 'onClick' }),
       window.location.origin
     );
+  });
+  it('remounts per story id: new URL args apply and live overrides do not leak', () => {
+    const args = (children: string) => encodeURIComponent(JSON.stringify({ children }));
+    render(
+      <MemoryRouter initialEntries={[`/preview/control/button/default?args=${args('One')}`]}>
+        <Link to={`/preview/control/button/primary?args=${args('Two')}`}>go</Link>
+        <Routes>
+          <Route path="/preview/*" element={<Preview parentWindow={null} />} />
+        </Routes>
+      </MemoryRouter>
+    );
+    expect(screen.getByRole('button', { name: 'One' })).toBeInTheDocument();
+    act(() => {
+      window.dispatchEvent(
+        new MessageEvent('message', {
+          origin: window.location.origin,
+          data: { type: 'gallery:args', args: { children: 'Live' } },
+        })
+      );
+    });
+    expect(screen.getByRole('button', { name: 'Live' })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('link', { name: 'go' }));
+    expect(screen.getByRole('button', { name: 'Two' })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Live' })).toBeNull();
   });
   it('shows not-found for an unknown id', () => {
     mount('/preview/nope/nothing');

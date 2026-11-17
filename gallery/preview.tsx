@@ -13,7 +13,7 @@ import {
   type ThemeValue,
 } from './messages.js';
 import { StoryNotFound } from './not-found.js';
-import { resolveArgs, storyById } from './stories.js';
+import { resolveArgs, storyById, type StoryEntry } from './stories.js';
 
 const ThemeSync = ({ theme }: { theme: ThemeValue }) => {
   const setSetting = useThemeSetting()[1];
@@ -25,14 +25,18 @@ const ThemeSync = ({ theme }: { theme: ThemeValue }) => {
 
 const defaultParent = (): Window | null => (window.parent === window ? null : window.parent);
 
-export const Preview = ({ parentWindow = defaultParent() }: { parentWindow?: Window | null }) => {
-  const id = useParams()['*'] ?? '';
-  const [params] = useSearchParams();
-  const rawTheme = params.get('theme');
-  const rawArgs = params.get('args');
+type PreviewStoryProps = {
+  entry: StoryEntry;
+  initialArgs: Record<string, unknown>;
+  initialTheme: ThemeValue | null;
+  parentWindow: Window | null;
+};
 
-  const [overrides, setOverrides] = useState(() => parseArgsParam(rawArgs));
-  const [theme, setTheme] = useState<ThemeValue | null>(isThemeValue(rawTheme) ? rawTheme : null);
+// Stateful part of the preview. The parent keys it on the story id, so a hash
+// navigation to another story remounts it with state read from the new URL.
+const PreviewStory = ({ entry, initialArgs, initialTheme, parentWindow }: PreviewStoryProps) => {
+  const [overrides, setOverrides] = useState(initialArgs);
+  const [theme, setTheme] = useState<ThemeValue | null>(initialTheme);
 
   useEffect(() => {
     const onMessage = (event: MessageEvent) => {
@@ -62,13 +66,11 @@ export const Preview = ({ parentWindow = defaultParent() }: { parentWindow?: Win
     [parentWindow]
   );
 
-  const entry = storyById(id);
   const resolved = useMemo(
-    () => (entry ? resolveArgs(entry, overrides, onAction) : null),
+    () => resolveArgs(entry, overrides, onAction),
     [entry, overrides, onAction]
   );
 
-  if (!entry || !resolved) return <StoryNotFound id={id} />;
   const Story = entry.component;
   return (
     <ThemeProvider identity="gallery-preview">
@@ -77,5 +79,23 @@ export const Preview = ({ parentWindow = defaultParent() }: { parentWindow?: Win
         <Story {...resolved} />
       </ToastProvider>
     </ThemeProvider>
+  );
+};
+
+export const Preview = ({ parentWindow = defaultParent() }: { parentWindow?: Window | null }) => {
+  const id = useParams()['*'] ?? '';
+  const [params] = useSearchParams();
+  const rawTheme = params.get('theme');
+  const entry = storyById(id);
+
+  if (!entry) return <StoryNotFound id={id} />;
+  return (
+    <PreviewStory
+      key={id}
+      entry={entry}
+      initialArgs={parseArgsParam(params.get('args'))}
+      initialTheme={isThemeValue(rawTheme) ? rawTheme : null}
+      parentWindow={parentWindow}
+    />
   );
 };
