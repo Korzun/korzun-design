@@ -105,14 +105,22 @@ describe('storyTree', () => {
       '/b.stories.tsx': { default: { title: 'Control / Button' }, Default: Comp, Primary: Comp },
       '/c.stories.tsx': { default: { title: 'Component / Card' }, Default: Comp },
       '/i.stories.tsx': { default: { title: 'Icon' }, Grid: Comp },
-      '/k.stories.tsx': { default: { title: 'Control' }, Intro: Comp },
+      '/k.stories.tsx': { default: { title: 'Control' }, Alpha: Comp },
     });
-    const tree = storyTree(entries);
+    const tree = storyTree(
+      [
+        'icon/grid',
+        'control/alpha',
+        'control/button/default',
+        'control/button/primary',
+        'component/card/default',
+      ].map((id) => entries.find((e) => e.id === id)!)
+    );
     expect(tree.map((g) => g.label)).toEqual(['Component', 'Control', 'Icon']);
     const control = tree[1];
     expect(control.children.map((c) => ('label' in c ? c.label : c.id))).toEqual([
       'Button',
-      'control/intro',
+      'control/alpha',
     ]);
     const button = control.children[0] as StoryGroup;
     expect(button.children.map((c) => (c as StoryEntry).id)).toEqual([
