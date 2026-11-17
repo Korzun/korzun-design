@@ -19,6 +19,8 @@ const useStyle = createUseStyles((theme: Theme) => ({
     boxSizing: 'border-box',
   },
   brand: { fontWeight: theme.fontWeight.bold, marginBottom: theme.space.xl },
+  search: { display: 'flex', flexDirection: 'column', gap: theme.space.sm },
+  searchLabel: { color: theme.color.text.secondary },
   tree: { display: 'flex', flexDirection: 'column', gap: theme.space.sm, flex: 1 },
   nested: { paddingLeft: theme.space.xl },
   footer: { display: 'flex', flexDirection: 'column', gap: theme.space.md },
@@ -74,11 +76,12 @@ export const Sidebar = ({ entries = stories }: { entries?: StoryEntry[] }): Reac
   return (
     <nav aria-label="Stories" className={styles.sidebar}>
       <div className={styles.brand}>@korzun/design</div>
-      {/* TextInput does not tie its label to the input (no htmlFor); an outer label names it. */}
-      <label>
+      {/* TextInput does not tie its label to the input (no htmlFor); this outer label names it. */}
+      <label className={styles.search}>
+        <span className={styles.searchLabel}>Search</span>
         <TextInput
           name="search"
-          label="Search"
+          placeholder="Search stories"
           layout="inline"
           value={search}
           onChange={(v) => setSearch(v ?? '')}
