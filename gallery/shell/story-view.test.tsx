@@ -44,6 +44,7 @@ describe('StoryView', () => {
       expect.stringContaining('#/preview/control/button/default?theme=')
     );
     expect(screen.getByLabelText('disabled')).toBeInTheDocument();
+    expect(screen.getByText('disabled')).toBeVisible();
     expect(screen.getByLabelText('type')).toBeInTheDocument();
   });
 

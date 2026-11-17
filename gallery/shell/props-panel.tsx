@@ -12,6 +12,7 @@ const useStyle = createUseStyles((theme: Theme) => ({
   panel: { display: 'flex', flexDirection: 'column', gap: theme.space.md, padding: theme.space.xl },
   heading: { margin: 0, fontSize: 'inherit', fontWeight: theme.fontWeight.bold },
   row: { display: 'flex', flexDirection: 'column', gap: theme.space.sm },
+  switchRow: { display: 'flex', alignItems: 'center', gap: theme.space.md },
   name: { color: theme.color.text.secondary },
   empty: { color: theme.color.text.secondary, margin: 0 },
 }));
@@ -40,7 +41,7 @@ export const PropsPanel = ({ entry, values, onChange }: PropsPanelProps): ReactE
     const value = values[name];
     switch (argType.control) {
       case 'boolean':
-        // Switch names itself from `ariaLabel`; no outer label needed.
+        // Switch names itself from `ariaLabel`; the span beside it is the visible name.
         return (
           <Switch
             name={name}
@@ -91,8 +92,9 @@ export const PropsPanel = ({ entry, values, onChange }: PropsPanelProps): ReactE
       )}
       {rows.map(([name, argType]) =>
         argType.control === 'boolean' ? (
-          <div key={name} className={styles.row}>
+          <div key={name} className={styles.switchRow}>
             {renderControl(name, argType)}
+            <span className={styles.name}>{name}</span>
           </div>
         ) : argType.control === 'select' ? (
           // Closed, Select renders no labelable element, so the group names it.

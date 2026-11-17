@@ -23,6 +23,18 @@ describe('Sidebar', () => {
     expect(screen.getByRole('link', { name: 'Tokens' })).toHaveAttribute('href', '/tokens');
   });
 
+  it('stacks story links as list items inside a list', () => {
+    mount();
+    const links = screen
+      .getAllByRole('link')
+      .filter((l) => l.getAttribute('href')?.startsWith('/story/'));
+    expect(links.length).toBeGreaterThan(0);
+    for (const link of links) {
+      expect(link.parentElement?.tagName).toBe('LI');
+      expect(link.parentElement?.parentElement?.tagName).toBe('UL');
+    }
+  });
+
   it('filters by search text', async () => {
     mount();
     await userEvent.type(screen.getByLabelText('Search'), 'toast');

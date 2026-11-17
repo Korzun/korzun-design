@@ -24,7 +24,12 @@ const useStyle = createUseStyles((theme: Theme) => ({
   tree: { display: 'flex', flexDirection: 'column', gap: theme.space.sm, flex: 1 },
   nested: { paddingLeft: theme.space.xl },
   footer: { display: 'flex', flexDirection: 'column', gap: theme.space.md },
+  list: { listStyle: 'none', padding: 0, margin: 0 },
   link: {
+    display: 'block',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
     padding: `${theme.space.md} ${theme.space.xl}`,
     borderRadius: theme.radius.md,
     color: theme.color.text.secondary,
@@ -59,9 +64,11 @@ export const Sidebar = ({ entries = stories }: { entries?: StoryEntry[] }): Reac
   const renderNode = (node: StoryGroup | StoryEntry, prefix: string): ReactElement => {
     if (!isGroup(node)) {
       return (
-        <NavLink key={node.id} to={`/story/${node.id}${storyQuery}`} className={linkClass}>
-          {node.name}
-        </NavLink>
+        <li key={node.id}>
+          <NavLink to={`/story/${node.id}${storyQuery}`} className={linkClass}>
+            {node.name}
+          </NavLink>
+        </li>
       );
     }
     const groupId = prefix ? `${prefix}/${toKebab(node.label)}` : toKebab(node.label);
@@ -73,7 +80,12 @@ export const Sidebar = ({ entries = stories }: { entries?: StoryEntry[] }): Reac
         open={forced || (toggled[groupId] ?? false)}
         onOpenToggle={() => setToggled((prev) => ({ ...prev, [groupId]: !prev[groupId] }))}
       >
-        <div className={styles.nested}>{node.children.map((c) => renderNode(c, groupId))}</div>
+        <div className={styles.nested}>
+          <ul className={styles.list}>
+            {node.children.filter((c) => !isGroup(c)).map((c) => renderNode(c, groupId))}
+          </ul>
+          {node.children.filter(isGroup).map((c) => renderNode(c, groupId))}
+        </div>
       </CollapsibleSection>
     );
   };
