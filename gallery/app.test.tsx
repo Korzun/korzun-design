@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
-import { MemoryRouter } from 'react-router';
+import userEvent from '@testing-library/user-event';
+import { Link, MemoryRouter } from 'react-router';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { GalleryRoutes } from './app.js';
@@ -50,6 +51,33 @@ describe('gallery routes', () => {
   it('renders the preview route without the sidebar', () => {
     mount('/preview/control/button/default');
     expect(screen.queryByRole('link', { name: 'All' })).toBeNull();
+    expect(screen.getByRole('button', { name: 'Save' })).toBeInTheDocument();
+  });
+  it('shows not-found inside the shell for an unknown path', () => {
+    mount('/nope');
+    expect(screen.getByText(/Story not found/)).toHaveTextContent('/nope');
+    expect(screen.getByRole('link', { name: 'All' })).toBeInTheDocument();
+  });
+
+  it('keeps a preview window a preview when a story links outside it', async () => {
+    render(
+      <MemoryRouter initialEntries={['/preview/control/button/default']}>
+        <Link to="/">to root</Link>
+        <Link to="/books">to books</Link>
+        <GalleryRoutes />
+      </MemoryRouter>
+    );
+    await userEvent.click(screen.getByRole('link', { name: 'to root' }));
+    expect(screen.queryByRole('link', { name: 'All' })).toBeNull();
+    expect(screen.queryByRole('heading', { level: 1 })).toBeNull();
+    expect(screen.getByText(/The story navigated to/)).toHaveTextContent('/');
+    await userEvent.click(screen.getByRole('link', { name: 'to books' }));
+    expect(screen.getByText(/The story navigated to/)).toHaveTextContent('/books');
+    expect(screen.getByRole('link', { name: 'Back to the story' })).toHaveAttribute(
+      'href',
+      '/preview/control/button/default'
+    );
+    await userEvent.click(screen.getByRole('link', { name: 'Back to the story' }));
     expect(screen.getByRole('button', { name: 'Save' })).toBeInTheDocument();
   });
 });

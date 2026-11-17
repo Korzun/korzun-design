@@ -1,7 +1,7 @@
 import { ThemeProvider } from '@korzun/design/theme';
 import { ToastProvider } from '@korzun/design/toast';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useParams, useSearchParams } from 'react-router';
+import { Link, useLocation, useParams, useSearchParams } from 'react-router';
 
 import { useThemeSetting } from '../src/theme/use-theme-setting.js';
 import {
@@ -97,5 +97,20 @@ export const Preview = ({ parentWindow = defaultParent() }: { parentWindow?: Win
       initialTheme={isThemeValue(rawTheme) ? rawTheme : null}
       parentWindow={parentWindow}
     />
+  );
+};
+
+// Shown when a story inside the preview frame links somewhere outside the
+// preview (a back button to "/", a nav item): the frame must never render the
+// shell or a blank page. `home` is the preview the frame was opened on.
+export const PreviewNavigatedAway = ({ home }: { home: string }) => {
+  const { pathname } = useLocation();
+  return (
+    <div>
+      <p>
+        The story navigated to <code>{pathname}</code>
+      </p>
+      <Link to={home}>Back to the story</Link>
+    </div>
   );
 };
