@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState, type ReactElement } from 'react';
 import { useParams, useSearchParams } from 'react-router';
 
 import { useThemeSetting } from '../../src/theme/index.js';
-import { isThemeValue, parseArgsParam, type ThemeValue } from '../messages.js';
+import { isThemeValue, parseArgsParam, restoreClearedArgs, type ThemeValue } from '../messages.js';
 import { StoryNotFound } from '../not-found.js';
 import { ActionsLog, type ActionRecord } from './actions-log.js';
 import { Canvas } from './canvas.js';
@@ -35,9 +35,12 @@ const StoryViewBody = ({ entry }: { entry: StoryEntry }): ReactElement => {
   const [records, setRecords] = useState<ActionRecord[]>([]);
 
   // A deep link's ?theme= wins once, on mount; after that the setting leads.
-  useEffect(() => {
+  const [deepLinkTheme] = useState(() => {
     const fromUrl = params.get('theme');
-    if (isThemeValue(fromUrl) && fromUrl !== setting) setSetting(fromUrl);
+    return isThemeValue(fromUrl) ? fromUrl : null;
+  });
+  useEffect(() => {
+    if (deepLinkTheme && deepLinkTheme !== setting) setSetting(deepLinkTheme);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -60,7 +63,8 @@ const StoryViewBody = ({ entry }: { entry: StoryEntry }): ReactElement => {
   };
 
   const onChange = (name: string, value: unknown) => {
-    const merged = { ...overrides, [name]: value };
+    // A cleared control is kept as null so the default does not snap back.
+    const merged = { ...overrides, [name]: value === undefined ? null : value };
     update('args', Object.keys(merged).length === 0 ? null : JSON.stringify(merged));
   };
 
@@ -80,12 +84,17 @@ const StoryViewBody = ({ entry }: { entry: StoryEntry }): ReactElement => {
         <Canvas
           entry={entry}
           theme={theme}
+          initialTheme={deepLinkTheme ?? theme}
           width={width}
           overrides={overrides}
           onAction={onAction}
         />
         <div className={styles.side}>
-          <PropsPanel entry={entry} values={{ ...entry.args, ...overrides }} onChange={onChange} />
+          <PropsPanel
+            entry={entry}
+            values={{ ...entry.args, ...restoreClearedArgs(overrides) }}
+            onChange={onChange}
+          />
           <ActionsLog records={records} onClear={() => setRecords([])} />
         </div>
       </div>

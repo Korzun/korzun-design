@@ -33,4 +33,12 @@ describe('Sidebar', () => {
         .map((l) => l.getAttribute('href'))
     ).toEqual(['/story/toast/toast/default']);
   });
+
+  it('carries the width preset, and only it, into story links', () => {
+    mount('/story/control/button/default?width=414&theme=dark&args=%7B%7D');
+    expect(screen.getByRole('link', { name: 'Primary' })).toHaveAttribute(
+      'href',
+      '/story/control/button/primary?width=414'
+    );
+  });
 });

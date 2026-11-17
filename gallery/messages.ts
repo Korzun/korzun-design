@@ -34,6 +34,9 @@ export const isPreviewToShell = (data: unknown): data is PreviewToShell => {
 const serializeValue = (value: unknown): unknown => {
   if (value === undefined) return null;
   if (value instanceof Event) return { type: value.type };
+  // React's synthetic events are not Events; they carry the native one.
+  if (isRecord(value) && 'nativeEvent' in value && typeof value.type === 'string')
+    return { type: value.type };
   if (isValidElement(value)) return '<Element>';
   try {
     const json = JSON.stringify(value);
@@ -48,6 +51,13 @@ export const serializeActionArgs = (args: unknown[]): unknown[] => args.map(seri
 export const postToWindow = (target: Window, message: ShellToPreview | PreviewToShell): void => {
   target.postMessage(message, window.location.origin);
 };
+
+// A control the user cleared is stored as `null` in ?args= (JSON drops
+// `undefined`, which would let the default snap back); render it as undefined.
+export const restoreClearedArgs = (overrides: Record<string, unknown>): Record<string, unknown> =>
+  Object.fromEntries(
+    Object.entries(overrides).map(([key, value]) => [key, value === null ? undefined : value])
+  );
 
 export const parseArgsParam = (raw: string | null): Record<string, unknown> => {
   if (raw === null) return {};

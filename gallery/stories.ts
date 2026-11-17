@@ -1,5 +1,6 @@
 import type { ReactElement } from 'react';
 
+import { restoreClearedArgs } from './messages.js';
 import type { ArgType } from './story.js';
 
 export type StoryEntry = {
@@ -84,7 +85,7 @@ export const resolveArgs = (
   overrides: Record<string, unknown>,
   onAction: (name: string, args: unknown[]) => void
 ): Record<string, unknown> => {
-  const args: Record<string, unknown> = { ...entry.args, ...overrides };
+  const args: Record<string, unknown> = { ...entry.args, ...restoreClearedArgs(overrides) };
   for (const [key, type] of Object.entries(entry.argTypes)) {
     if (type.control === 'action') args[key] = (...a: unknown[]) => onAction(key, a);
   }

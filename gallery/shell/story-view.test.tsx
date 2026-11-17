@@ -47,16 +47,39 @@ describe('StoryView', () => {
     expect(screen.getByLabelText('type')).toBeInTheDocument();
   });
 
-  it('writes a changed boolean into ?args= and the iframe src', async () => {
+  it('writes a changed boolean into ?args= and pushes it, leaving the iframe src alone', async () => {
     mount('/story/control/button/default');
+    const iframe = screen.getByTitle<HTMLIFrameElement>('Story preview');
+    const srcBefore = iframe.getAttribute('src');
+    const spy = vi.spyOn(iframe.contentWindow!, 'postMessage').mockImplementation(() => {});
     await userEvent.click(screen.getByLabelText('disabled'));
     expect(screen.getByTestId('loc')).toHaveTextContent(
       'args=' + encodeURIComponent(JSON.stringify({ disabled: true }))
     );
-    expect(screen.getByTitle('Story preview')).toHaveAttribute(
-      'src',
-      expect.stringContaining(encodeURIComponent('{"disabled":true}'))
+    expect(spy).toHaveBeenCalledWith(
+      { type: 'gallery:args', args: { disabled: true } },
+      window.location.origin
     );
+    // A src change would add a browser history entry per panel edit.
+    expect(iframe).toHaveAttribute('src', srcBefore);
+  });
+
+  it('keeps a wide width preset at its exact width without shrinking', () => {
+    mount('/story/control/button/default?width=1024');
+    const style = screen.getByTitle('Story preview').style;
+    expect(style.width).toBe('1024px');
+    expect(style.flexShrink).toBe('0');
+  });
+
+  it('stores a cleared number control as null and shows it empty', async () => {
+    mount('/story/component/progress-indicator/single');
+    const size = screen.getByLabelText('size');
+    expect(size).toHaveValue('48');
+    await userEvent.clear(size);
+    expect(screen.getByTestId('loc')).toHaveTextContent(
+      'args=' + encodeURIComponent(JSON.stringify({ size: null }))
+    );
+    expect(screen.getByLabelText('size')).toHaveValue('');
   });
 
   it('falls back to defaults on malformed ?args=', () => {

@@ -1,7 +1,7 @@
 import { stories, storyTree, toKebab, type StoryEntry, type StoryGroup } from '@gallery/stories';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { useState, type ReactElement } from 'react';
-import { NavLink, useLocation } from 'react-router';
+import { NavLink, useLocation, useSearchParams } from 'react-router';
 
 import { CollapsibleSection } from '../../src/component/collapsible-section/index.js';
 import { TextInput } from '../../src/control/text-input/index.js';
@@ -39,6 +39,7 @@ const isGroup = (node: StoryGroup | StoryEntry): node is StoryGroup => 'label' i
 export const Sidebar = ({ entries = stories }: { entries?: StoryEntry[] }): ReactElement => {
   const styles = useStyle();
   const { pathname } = useLocation();
+  const [params] = useSearchParams();
   const [search, setSearch] = useState('');
   const [toggled, setToggled] = useState<Record<string, boolean>>({});
 
@@ -48,13 +49,17 @@ export const Sidebar = ({ entries = stories }: { entries?: StoryEntry[] }): Reac
     ? entries.filter((e) => `${e.title} / ${e.name}`.toLowerCase().includes(needle))
     : entries;
 
+  // The width preset carries over between stories; args and theme do not.
+  const width = params.get('width');
+  const storyQuery = width ? `?${new URLSearchParams({ width }).toString()}` : '';
+
   const linkClass = ({ isActive }: { isActive: boolean }) =>
     `${styles.link} ${isActive ? styles.active : ''}`;
 
   const renderNode = (node: StoryGroup | StoryEntry, prefix: string): ReactElement => {
     if (!isGroup(node)) {
       return (
-        <NavLink key={node.id} to={`/story/${node.id}`} className={linkClass}>
+        <NavLink key={node.id} to={`/story/${node.id}${storyQuery}`} className={linkClass}>
           {node.name}
         </NavLink>
       );

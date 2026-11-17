@@ -1,7 +1,7 @@
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { Link, MemoryRouter, Route, Routes } from 'react-router';
 
-import { parseArgsParam, serializeActionArgs } from './messages.js';
+import { parseArgsParam, restoreClearedArgs, serializeActionArgs } from './messages.js';
 import { Preview } from './preview.js';
 import { stories } from './stories.js';
 
@@ -22,6 +22,16 @@ describe('messages', () => {
     expect(typeof out[2]).toBe('string');
     expect(out[3]).toBe(3);
     expect(() => JSON.stringify(out)).not.toThrow();
+  });
+  it('serializeActionArgs reduces React synthetic events to their type', () => {
+    const cyc: Record<string, unknown> = {};
+    cyc.self = cyc;
+    const synthetic = { type: 'click', nativeEvent: {}, target: cyc };
+    expect(serializeActionArgs([synthetic])).toEqual([{ type: 'click' }]);
+  });
+  it('restoreClearedArgs maps null to undefined and keeps other values', () => {
+    expect(restoreClearedArgs({ a: null, b: 0, c: 'x' })).toEqual({ a: undefined, b: 0, c: 'x' });
+    expect('a' in restoreClearedArgs({ a: null })).toBe(true);
   });
 });
 
