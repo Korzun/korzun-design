@@ -145,6 +145,7 @@ Main view layout, desktop:
 - `npm run gallery:build`: `vite build --config gallery/vite.config.ts`, output `gallery-dist/` (gitignored). `base` comes from `GALLERY_BASE` env (default `/`; Pages sets `/korzun-design/`).
 - `.github/workflows/gallery.yml`: on push to `main` and on `workflow_dispatch`, `npm ci`, `npm run gallery:build` with `GALLERY_BASE=/korzun-design/`, then `actions/configure-pages`, `actions/upload-pages-artifact`, `actions/deploy-pages` with pinned SHAs like the other workflows. `permissions: pages: write, id-token: write`. The repo is public, so Pages is available on the free plan. **Owner step, before the PR merges:** enable Pages in the repo settings with source "GitHub Actions"; otherwise the first run on `main` fails and `main` shows red until it is enabled and the workflow is re-dispatched. URL: `https://korzun.github.io/korzun-design/`.
 - **Assistant's call:** Pages is in scope as the last task because it is the piece that makes "look at it from anywhere" true; it can be dropped by skipping that task.
+- Amendment (2026-11-17): the base is selected with Vite `--mode pages` (`npm run gallery:build:pages`) rather than a `GALLERY_BASE` env var; functionally equivalent, chosen so `gallery/vite.config.ts` needs no `process` access.
 
 ### Migration of the current gallery
 

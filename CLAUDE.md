@@ -8,7 +8,7 @@ Folders: `src/theme` tokens and provider; `src/control` inputs and actions; `src
 
 - Extraction before curation: 0.0.1 ships Bookplate's code as-is; cleanups and redesigns come after, so the port stays reviewable.
 - Styles move byte-equivalent from Bookplate (`~/code/bookplate/app/client/src`); the only diff is import lines, so Bookplate's look cannot drift.
-- Every new or changed control and component gets a test and a stories file (`<module>.stories.tsx` beside it; `gallery/stories.test.tsx` fails when one is missing), so behaviour and appearance are both covered.
+- Every new or changed control and component gets a test (five upstream modules ship without tests today: popover, use-modal-dialog, metadata, metadata-list, top-fade) and a stories file (`<module>.stories.tsx` beside it; `gallery/stories.test.tsx` fails when one is missing), so behaviour and appearance are both covered.
 - Stories and gallery code never ship: `files`, `tsconfig.build.json`, and the smoke test all exclude `*.stories.*`.
 - Bump `version` and add a CHANGELOG line with every behaviour change, so consumers can tell what an upgrade does.
 - Relative imports only, pointing at a module folder, never at the `control` or `component` barrel, except stories, which may import `@gallery/*`; barrel imports caused circular-import failures before.
