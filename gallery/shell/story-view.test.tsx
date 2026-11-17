@@ -3,7 +3,7 @@ import { ToastProvider } from '@korzun/design/toast';
 import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { StoryView } from './story-view.js';
 
@@ -101,5 +101,34 @@ describe('StoryView', () => {
   it('shows not-found for an unknown id', () => {
     mount('/story/nope/nothing');
     expect(screen.getByText(/Story not found/)).toBeInTheDocument();
+  });
+
+  it('posts args and theme to the preview on ready and on change', async () => {
+    mount('/story/control/button/default?theme=dark');
+    const iframe = screen.getByTitle<HTMLIFrameElement>('Story preview');
+    const target = iframe.contentWindow!;
+    // A src change makes jsdom navigate and swap the window; browsers keep it for a hash-only change.
+    vi.spyOn(iframe, 'contentWindow', 'get').mockReturnValue(target);
+    const spy = vi.spyOn(target, 'postMessage').mockImplementation(() => {});
+    act(() => {
+      window.dispatchEvent(
+        new MessageEvent('message', {
+          origin: window.location.origin,
+          source: iframe.contentWindow,
+          data: { type: 'gallery:ready' },
+        })
+      );
+    });
+    expect(spy).toHaveBeenCalledWith(
+      { type: 'gallery:theme', theme: 'dark' },
+      window.location.origin
+    );
+    expect(spy).toHaveBeenCalledWith({ type: 'gallery:args', args: {} }, window.location.origin);
+    spy.mockClear();
+    await userEvent.click(screen.getByLabelText('disabled'));
+    expect(spy).toHaveBeenCalledWith(
+      { type: 'gallery:args', args: { disabled: true } },
+      window.location.origin
+    );
   });
 });
