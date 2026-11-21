@@ -39,9 +39,9 @@ through. There is no `style` prop.
 // A form's fields.
 <form noValidate onSubmit={onSubmit}>
   <Stack gap="md">
-    <TextInput label="Title" value={title} onChange={setTitle} />
-    <TextInput label="Author" value={author} onChange={setAuthor} />
-    <Button type="primary" htmlType="submit">Save</Button>
+    <TextInput name="title" label="Title" value={title} onChange={setTitle} />
+    <TextInput name="author" label="Author" value={author} onChange={setAuthor} />
+    <Button type="primary" submit>Save</Button>
   </Stack>
 </form>
 
