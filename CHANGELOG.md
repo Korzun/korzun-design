@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.0 — 2026-11-21
+
+- New `Stack` (vertical flex column; `gap`, default `md`), `Inline` (horizontal row; `gap` default `sm`, `justify` including `between`), `Text` (`size`, `tone`, `weight`; unset props inherit), and `Heading` (`level` 1–4), so layout and text are set with props instead of style files.
+- New `fontWeight.regular` (400) token.
+- AGENTS.md rule 1 now says layout and text go through these props.
+- No visual change to existing components.
+
 ## 0.1.0 — 2026-11-21
 
 - `Tag` status tones: `success`, `warning` (yellow, stronger fill), `danger`, `info` (brand blue). New `color.warning` and `color.info` solid colours. Status tones report state; label tones name things. No visual change to existing tags.
