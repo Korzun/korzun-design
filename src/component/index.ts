@@ -3,6 +3,7 @@ export { CardDivider, type CardDividerAlign, type CardDividerProps } from './car
 export { CardRow, type CardRowProps } from './card-row/index.js';
 export { CollapsibleSection, type CollapsibleSectionProps } from './collapsible-section/index.js';
 export { EmptyState, type EmptyStateProps } from './empty-state/index.js';
+export { Heading, type HeadingProps } from './heading/index.js';
 export { Inline, type InlineProps } from './inline/index.js';
 export { MetaLine, type MetaLineProps } from './meta-line/index.js';
 export { MetadataList, type Metadata, type MetadataListProps } from './metadata-list/index.js';
