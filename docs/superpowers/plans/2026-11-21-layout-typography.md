@@ -97,7 +97,7 @@ Both roots: `display: 'flex'`, Stack `flexDirection: 'column'`, Inline `flexDire
 - `applies className` → element `classList.contains('extra')`.
 
 `src/component/inline/index.test.tsx`:
-- `defaults to a row div with gap sm, centred, start, no wrap` → `flexDirection 'row'`, `gap === lightTheme.space.sm`, `alignItems 'center'`, `justifyContent` `'flex-start'` (or `'start'`; assert whichever the implementation emits, but it must be one class from a `justify-start` rule), `flexWrap` not `'wrap'`.
+- `defaults to a row div with gap sm, centred, start, no wrap` → `flexDirection 'row'`, `gap === lightTheme.space.sm`, `alignItems 'center'`, `justifyContent 'flex-start'` (the `justify-start` rule emits `flex-start`), `flexWrap` not `'wrap'`.
 - `justify between` → `justifyContent 'space-between'`; `center`, `end` → `center`, `flex-end`.
 - `align` each of `start end baseline stretch` → `flex-start flex-end baseline stretch`.
 - `wrap` → `flexWrap 'wrap'`.
