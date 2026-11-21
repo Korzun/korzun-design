@@ -26,9 +26,21 @@ No `className`, no `ariaLabel`.
 `TagTone` is `keyof Theme['color']['chip']`, so the tones are **domain names**,
 not colour names. Pick by what the tag *is*:
 
+Status tones report a state:
+
 | Tone | Use for |
 |---|---|
-| `status` | A state (Pending, Active, Read only). |
+| `success` | Something went well (Published, Paid). |
+| `warning` | Needs attention soon (Overdue, Expiring). |
+| `danger` | Something failed or is blocked (Failed, Rejected). |
+| `info` | Neutral news (Scheduled, New). |
+| `neutral` | A state with no category ("no change"): quiet grey. |
+
+Label tones name a kind of thing:
+
+| Tone | Use for |
+|---|---|
+| `status` | A generic state label (Pending, Active, Read only). Prefer a status tone above when the state has a meaning. |
 | `author` | A person who wrote something. |
 | `series` | A series name. |
 | `subject` | A subject / genre / keyword. The default. |
@@ -36,7 +48,9 @@ not colour names. Pick by what the tag *is*:
 | `entryType` | The kind of an entry or record. |
 | `user` | An app user / account. |
 | `rating` | A rating value. |
-| `neutral` | A state with no category ("no change"): quiet grey. |
+
+Note the name clash: `status` is a label tone (one of the eight above), not one
+of the status tones.
 
 Each tone has its own `text`, `bg`, and `border` in both light and dark themes.
 A consumer's theme can't add tones; the list is fixed by the `Theme` type.
@@ -63,7 +77,10 @@ A consumer's theme can't add tones; the list is fixed by the `Theme` type.
 
 - Do choose `tone` by meaning, so the same kind of thing is the same colour
   everywhere.
+- Do use `tone="warning"` for "Overdue".
 - Do use `size="sm"` inside text rows and lists.
 - Don't use `neutral` just to make a tag grey when it has a category.
+- Don't use `subject` or `author` to mean warning or success.
+- Don't use `info` to look like a link.
 - Don't nest a clickable Tag inside another clickable element (Button, a
   clickable Card); both would fire.

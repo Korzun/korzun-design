@@ -61,8 +61,10 @@ export const useStyle = createUseStyles((theme: Theme) => ({
 | `color.border` | `default`, `strong`, `light`, `focus`, `hover`, `danger`, `glass`, `glassActive`, `faint`, `loading`, `success`, `section` | Cards and dividers use `strong`; inputs use `default` |
 | `color.brand` | `default`, `hover`, `active`, `light`, `outline`, `loading*`, `linkHover` | The primary action colour |
 | `color.danger` | `default`, `hover`, `active`, `light`, `outline`, `loading*` | Destructive actions and errors |
-| `color.success` | (a string) | There are no warning or info colours yet |
-| `color.chip.<tone>` | `{ text, bg, border }` for `status`, `author`, `series`, `subject`, `book`, `entryType`, `user`, `rating`, `neutral` | Used by `Tag` |
+| `color.success` | (a string) | Solid green |
+| `color.warning` | (a string) | Solid amber |
+| `color.info` | (a string) | Solid blue, the mode's `brand.default` |
+| `color.chip.<tone>` | `{ text, bg, border }` for 13 tones. Status tones: `success`, `warning`, `danger`, `info`, `neutral`. Label tones: `status`, `author`, `series`, `subject`, `book`, `entryType`, `user`, `rating` | Used by `Tag` |
 | `color.overlay` | `backdrop` | Modal backdrop |
 | `color.gray` / `blue` / `red` | primitive scales | Don't use these in app code; use the semantic tokens above |
 | `space` | `xxxs` 0.1rem, `xxs` 0.125, `xs` 0.25, `sm` 0.375, `md` 0.5, `lg` 0.625, `xl` 0.75, `xxl` 1, `xxxl` 1.25, `xxxxl` 1.5, `xxxxxl` 2rem | `md` is the default gap between stacked fields |
