@@ -42,7 +42,7 @@ These are the rules the code already enforces, extracted from the source comment
 
 **Rule:** Express shared styling as a `Recipe` object that styles spread (`...theme.recipe.glass`), not as a component.
 
-**Why:** `src/theme/theme.ts`: "Recipes are JSS-spreadable fragments. Loose typing lets them include pseudo-selectors (`&:hover`) and nested rules without fighting JSS's TS surface." The `Recipe` type is deliberately loose for the same reason. `recipe.input`, `focusRing`, `label`, `spinner`, `glass`, `glassHighlight`, `modal.*` and `card.*` are all plain objects, and consumers such as `src/control/button/style.ts` spread them (`...theme.recipe.focusRing`).
+**Why:** `src/theme/theme.ts`: "Recipes are JSS-spreadable fragments. Loose typing lets them include pseudo-selectors (`&:hover`) and nested rules without fighting JSS's TS surface." The `Recipe` type is deliberately loose for the same reason. `recipe.input`, `focusRing`, `label`, `spinner`, `glass`, `glassHighlight`, `row`, `modal.*` and `card.*` are all plain objects, and consumers such as `src/control/button/style.ts` spread them (`...theme.recipe.focusRing`).
 
 ## Measured layout numbers live in tokens
 

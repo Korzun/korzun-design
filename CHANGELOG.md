@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.0.6 — 2026-11-21
+
+First curation release: corners now follow the depth rule in `docs/corners.md`.
+
+- `CardRow` drops its off-scale `12px` corner and takes `radius.lg` from the card shell, since a row sits on the page background. Its stories now render it on the page, not inside a `Card`. **Visible change:** the corners get rounder (12px to 16px).
+- `Card size="small"` writes its corner as `calc(radius.md + 1px)`: md plus its 1px inset, concentric with its flush `md` children. Same 9px as before, now derived from the token.
+- New `theme.recipe.row`: the shaded field row (`bg.cardHeader`, `radius.md`, padding `md lg md sm`), for custom rows beside form fields. `Switch`'s horizontal layout now uses it and looks the same.
+
 ## 0.0.5 — 2026-11-21
 
 - No runtime changes. Every exported control and component now exports its props type from `/control`, `/component`, and the root:

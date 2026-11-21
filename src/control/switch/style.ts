@@ -142,9 +142,7 @@ export const useStyle = createUseStyles((theme: Theme) => ({
     alignItems: 'center',
     gap: theme.space.md,
     width: '100%',
-    backgroundColor: theme.color.bg.cardHeader,
-    borderRadius: theme.radius.md,
-    padding: `${theme.space.md} ${theme.space.lg} ${theme.space.md} ${theme.space.sm}`,
+    ...theme.recipe.row,
     '& $content': {
       display: 'flex',
       flexDirection: 'column',

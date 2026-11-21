@@ -78,6 +78,7 @@ JSS-spreadable style fragments (`...theme.recipe.x`), not components.
 - `recipe.spinner`: a 1em rotating indicator using the `theme-rotation` keyframes.
 - `recipe.glass`: frosted, blurred chrome with a solid fallback where backdrop blur is unsupported.
 - `recipe.glassHighlight`: the active or pressed fill that sits on top of glass.
+- `recipe.row`: the shaded field row (`bg.cardHeader` fill, `radius.md`, padding `space.md space.lg space.md space.sm`) that `Switch`'s horizontal layout uses; spread it for any custom row that sits beside form fields in a card.
 - `recipe.modal.dialog`: the shared dialog shell (one width, backdrop, mobile margins and safe-area insets).
 - `recipe.modal.header`: dialog title row.
 - `recipe.modal.footer`: dialog action row.

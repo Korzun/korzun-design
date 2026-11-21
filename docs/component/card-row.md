@@ -2,12 +2,13 @@
 
 `import { CardRow, type CardRowProps } from '@korzun/design/component'`
 
-A compact bordered row (card background, 6px padding) for stacking items inside
-a `Card` body. Optionally clickable.
+A compact card-shell row (card background, border, stacked shadow, 6px
+padding) that sits on the page background, for a stack of list items. Optionally
+clickable.
 
-Use something else for: a list of rows each sitting on the page background
-(Bookplate uses `<Card size="small" onClick>` per row), a section split
-(`CardDivider`), a key/value line (`MetadataList`).
+Use something else for: rows inside a `Card` body (a shaded row built on
+`theme.recipe.row`), a section split (`CardDivider`), a key/value line
+(`MetadataList`). Bookplate itself lists items with `<Card size="small" onClick>`.
 
 ## Props
 
@@ -30,20 +31,19 @@ No `className`, no `ariaLabel`, no `role`.
 
 ## Corners
 
-Hard-codes `borderRadius: '12px'` (its own source comment says "10px"), off
-the radius scale. By the [corner rule](../corners.md) a row inside a card
-should be `radius.md`. Known inconsistency, don't copy the value.
+`radius.lg` from `recipe.card.shell`: a row sits on the page background. Content
+inside it steps down to `md`. See [corners](../corners.md).
 
 ## Examples
 
 ```tsx
-<Card title="Recent uploads">
+<Page documentTitle="Uploads">
   {uploads.map((u) => (
     <CardRow key={u.id} onClick={() => open(u.id)}>
       {u.fileName}
     </CardRow>
   ))}
-</Card>
+</Page>
 
 // Accessible alternative: the action is a real control.
 <CardRow>
@@ -53,6 +53,5 @@ should be `radius.md`. Known inconsistency, don't copy the value.
 
 ## Do / don't
 
-- Do use it only inside a `Card` body.
+- Do place it on the page background, not inside a `Card`.
 - Don't rely on `onClick` as the only way to reach an action from the keyboard.
-- Don't copy its 12px radius into your own styles; use `theme.radius.md`.
