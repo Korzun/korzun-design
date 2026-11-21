@@ -16,13 +16,20 @@ const base = {
 
 describe('computePosition', () => {
   it('defaults match today', () => {
-    expect(computePosition(base)).toEqual({ top: 134, left: 100, width: 200, side: 'bottom' });
+    expect(computePosition(base)).toEqual({
+      top: 134,
+      bottom: undefined,
+      left: 100,
+      width: 200,
+      side: 'bottom',
+    });
   });
 
-  it('places on top when side is top', () => {
+  it('places on top when side is top, anchored by its bottom edge', () => {
     const a = { top: 400, bottom: 430, left: 100, right: 300, width: 200 };
     expect(computePosition({ ...base, anchor: a, side: 'top' })).toEqual({
-      top: 246,
+      top: undefined,
+      bottom: 404,
       left: 100,
       width: 200,
       side: 'top',
@@ -33,7 +40,8 @@ describe('computePosition', () => {
     const a = { top: 700, bottom: 730, left: 100, right: 300, width: 200 };
     const r = computePosition({ ...base, anchor: a });
     expect(r.side).toBe('top');
-    expect(r.top).toBe(546);
+    expect(r.bottom).toBe(104);
+    expect(r.top).toBeUndefined();
   });
 
   it('flips top to bottom', () => {
@@ -41,6 +49,7 @@ describe('computePosition', () => {
     const r = computePosition({ ...base, anchor: a, side: 'top' });
     expect(r.side).toBe('bottom');
     expect(r.top).toBe(84);
+    expect(r.bottom).toBeUndefined();
   });
 
   it('takes the side with more room when neither fits', () => {
@@ -48,6 +57,17 @@ describe('computePosition', () => {
     const content = { width: 200, height: 250 };
     expect(computePosition({ ...base, viewport: v, content }).side).toBe('bottom');
     expect(computePosition({ ...base, viewport: v, content, side: 'top' }).side).toBe('bottom');
+  });
+
+  it('keeps the preferred side on a tie when neither fits', () => {
+    // Anchor 135..165 in a 300px viewport: 131px of room on each side.
+    const a = { top: 135, bottom: 165, left: 100, right: 300, width: 200 };
+    const v = { width: 1000, height: 300 };
+    const content = { width: 200, height: 250 };
+    expect(computePosition({ ...base, anchor: a, viewport: v, content }).side).toBe('bottom');
+    expect(computePosition({ ...base, anchor: a, viewport: v, content, side: 'top' }).side).toBe(
+      'top'
+    );
   });
 
   it('aligns center', () => {
@@ -102,5 +122,17 @@ describe('computePosition', () => {
       content: { width: 400, height: 150 },
     });
     expect(r.left).toBe(4);
+  });
+
+  it('does not clamp a matchWidth popover off a full-width anchor', () => {
+    const a = { top: 100, bottom: 130, left: 0, right: 320, width: 320 };
+    const r = computePosition({ ...base, anchor: a, viewport: { width: 320, height: 800 } });
+    expect(r.left).toBe(0);
+    expect(r.width).toBe(320);
+  });
+
+  it('lines a matchWidth popover up with an anchor inside the edge margin', () => {
+    const a = { top: 100, bottom: 130, left: 2, right: 202, width: 200 };
+    expect(computePosition({ ...base, anchor: a }).left).toBe(2);
   });
 });

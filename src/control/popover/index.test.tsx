@@ -8,9 +8,10 @@ import { Popover, type PopoverProps } from './index.js';
 type RectInit = { top: number; bottom: number; left: number; right: number; width: number };
 
 const DEFAULT_ANCHOR: RectInit = { top: 100, bottom: 130, left: 100, right: 300, width: 200 };
-const CONTENT = { width: 200, height: 150 };
+const DEFAULT_CONTENT = { width: 200, height: 150 };
 
 let anchorRect: RectInit = DEFAULT_ANCHOR;
+let contentSize = DEFAULT_CONTENT;
 const originalWidth = window.innerWidth;
 const originalHeight = window.innerHeight;
 
@@ -25,6 +26,7 @@ const toDomRect = (r: RectInit) =>
 
 beforeEach(() => {
   anchorRect = DEFAULT_ANCHOR;
+  contentSize = DEFAULT_CONTENT;
   window.innerWidth = 1000;
   window.innerHeight = 800;
   vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (
@@ -33,10 +35,10 @@ beforeEach(() => {
     if (this.dataset.testid === 'anchor') return toDomRect(anchorRect);
     return toDomRect({
       top: 0,
-      bottom: CONTENT.height,
+      bottom: contentSize.height,
       left: 0,
-      right: CONTENT.width,
-      width: CONTENT.width,
+      right: contentSize.width,
+      width: contentSize.width,
     });
   });
 });
@@ -88,12 +90,31 @@ describe('Popover', () => {
       expect(el.style.visibility).not.toBe('hidden');
     });
 
-    it('opens above with side="top"', () => {
+    it('opens above with side="top", anchored by its bottom edge', () => {
       anchorRect = { top: 400, bottom: 430, left: 100, right: 300, width: 200 };
       renderWithProviders(<Harness side="top" />);
       const el = wrapper();
-      expect(el.style.top).toBe('246px');
+      expect(el.style.bottom).toBe('404px');
+      expect(el.style.top).toBe('');
       expect(el).toHaveAttribute('data-side', 'top');
+    });
+
+    it('aligns end with matchWidth={false}', () => {
+      contentSize = { width: 100, height: 150 };
+      renderWithProviders(<Harness align="end" matchWidth={false} />);
+      const el = wrapper();
+      expect(el.style.left).toBe('200px');
+      expect(el.style.width).toBe('');
+    });
+
+    it('does not hide the first render from focus: an autoFocus child gets focus', () => {
+      renderWithProviders(
+        <Harness>
+          <div>content</div>
+          <input aria-label="search" autoFocus />
+        </Harness>
+      );
+      expect(document.activeElement).toBe(screen.getByRole('textbox', { name: 'search' }));
     });
 
     it('flips above when there is no room below', () => {
@@ -110,6 +131,65 @@ describe('Popover', () => {
         fireEvent.scroll(window);
       });
       expect(wrapper()).toHaveAttribute('data-side', 'top');
+    });
+  });
+
+  describe('content resize', () => {
+    type Observer = {
+      callback: () => void;
+      observe: ReturnType<typeof vi.fn>;
+      disconnect: ReturnType<typeof vi.fn>;
+    };
+    let observers: Observer[];
+    const original = window.ResizeObserver;
+
+    beforeEach(() => {
+      observers = [];
+      window.ResizeObserver = class {
+        observe = vi.fn();
+        unobserve = vi.fn();
+        disconnect = vi.fn();
+        constructor(public callback: () => void) {
+          observers.push(this);
+        }
+      } as unknown as typeof ResizeObserver;
+    });
+
+    afterEach(() => {
+      window.ResizeObserver = original;
+    });
+
+    const resize = () =>
+      act(() => {
+        observers.forEach((o) => o.callback());
+      });
+
+    it('observes the content and keeps a top-side popover attached as it grows', () => {
+      anchorRect = { top: 400, bottom: 430, left: 100, right: 300, width: 200 };
+      renderWithProviders(<Harness side="top" />);
+      const el = wrapper();
+      expect(observers.some((o) => o.observe.mock.calls.some(([t]) => t === el))).toBe(true);
+      contentSize = { width: 200, height: 300 };
+      resize();
+      expect(el.style.bottom).toBe('404px');
+      expect(el.style.top).toBe('');
+      expect(el).toHaveAttribute('data-side', 'top');
+    });
+
+    it('re-measures on a content resize, including the flip decision', () => {
+      anchorRect = { top: 470, bottom: 500, left: 100, right: 300, width: 200 };
+      renderWithProviders(<Harness />);
+      expect(wrapper()).toHaveAttribute('data-side', 'bottom');
+      contentSize = { width: 200, height: 350 };
+      resize();
+      expect(wrapper()).toHaveAttribute('data-side', 'top');
+    });
+
+    it('disconnects on close', () => {
+      const { rerender } = renderWithProviders(<Harness />);
+      expect(observers.length).toBeGreaterThan(0);
+      rerender(<Harness open={false} />);
+      expect(observers.every((o) => o.disconnect.mock.calls.length > 0)).toBe(true);
     });
   });
 
@@ -135,7 +215,7 @@ describe('Popover', () => {
       expect(onClose).not.toHaveBeenCalled();
     });
 
-    it('prevents default so an enclosing dialog stays open', () => {
+    it('calls preventDefault on the Escape keydown (what keeps a native dialog from cancelling)', () => {
       renderWithProviders(<Harness onClose={vi.fn()} />);
       expect(escape(document.body).defaultPrevented).toBe(true);
     });

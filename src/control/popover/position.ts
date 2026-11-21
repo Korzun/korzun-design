@@ -4,13 +4,25 @@ export type PopoverSide = 'bottom' | 'top';
 export type PopoverAlign = 'start' | 'center' | 'end';
 /** Viewport-relative rectangle, as from getBoundingClientRect. */
 export type Rect = { top: number; bottom: number; left: number; right: number; width: number };
-/** Resolved popover position; `side` is the side actually used after flipping. */
-export type Placement = { top: number; left: number; width: number | undefined; side: PopoverSide };
+/**
+ * Resolved popover position; `side` is the side actually used after flipping.
+ * Exactly one of `top` / `bottom` is set: the bottom side is anchored by its
+ * top edge (CSS `top`), the top side by its bottom edge (CSS `bottom`, measured
+ * from the viewport's bottom), so content that grows or shrinks while open
+ * stays attached to the anchor.
+ */
+export type Placement = {
+  top: number | undefined;
+  bottom: number | undefined;
+  left: number;
+  width: number | undefined;
+  side: PopoverSide;
+};
 
 /**
  * Pure placement: picks the side (flipping when the preferred side does not
  * fit and the other has more room), aligns horizontally, and clamps to the
- * viewport horizontally.
+ * viewport horizontally unless `matchWidth` (then it lines up with the anchor).
  */
 export function computePosition({
   anchor,
@@ -37,15 +49,18 @@ export function computePosition({
   const room = (s: PopoverSide) => (s === 'bottom' ? roomBelow : roomAbove);
   const other: PopoverSide = side === 'bottom' ? 'top' : 'bottom';
   const used = room(side) >= h || room(other) <= room(side) ? side : other;
-  const top = used === 'bottom' ? anchor.bottom + gap : anchor.top - gap - h;
+  const top = used === 'bottom' ? anchor.bottom + gap : undefined;
+  const bottom = used === 'top' ? viewport.height - anchor.top + gap : undefined;
 
   let left: number;
   if (align === 'start') left = anchor.left;
   else if (align === 'center') left = anchor.left + anchor.width / 2 - w / 2;
   else left = anchor.right - w;
 
-  left =
-    w > viewport.width - 2 * gap ? gap : Math.max(gap, Math.min(left, viewport.width - w - gap));
+  if (!matchWidth) {
+    left =
+      w > viewport.width - 2 * gap ? gap : Math.max(gap, Math.min(left, viewport.width - w - gap));
+  }
 
-  return { top, left, width: matchWidth ? anchor.width : undefined, side: used };
+  return { top, bottom, left, width: matchWidth ? anchor.width : undefined, side: used };
 }

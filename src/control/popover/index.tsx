@@ -51,9 +51,12 @@ export type PopoverProps = {
  * having to opt out of clipping.
  *
  * Opens on `side` (default below) and flips when that side has no room; aligns
- * per `align` and clamps horizontally to the viewport. The wrapper carries
- * `data-side` with the side actually used. It renders hidden until measured,
- * then re-measures on scroll (capture phase) and resize.
+ * per `align` and clamps horizontally to the viewport (only without
+ * `matchWidth`). The wrapper carries `data-side` with the side actually used.
+ * On the top side it is anchored by CSS `bottom`, so it stays attached as its
+ * content changes height. The first render is transparent (`opacity: 0`, still
+ * focusable) until measured, then it re-measures on scroll (capture phase),
+ * window resize, and content resize (`ResizeObserver`, where available).
  *
  * With `onClose`, Escape closes it unless the keydown was already
  * `defaultPrevented`; it calls `preventDefault` so an enclosing `<dialog>`
@@ -102,9 +105,12 @@ export const Popover = ({
     // Capture-phase scroll so nested scroll containers reposition too.
     window.addEventListener('scroll', handle, true);
     window.addEventListener('resize', handle);
+    const observer = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(handle) : undefined;
+    if (observer && contentRef.current) observer.observe(contentRef.current);
     return () => {
       window.removeEventListener('scroll', handle, true);
       window.removeEventListener('resize', handle);
+      observer?.disconnect();
       setPlacement(null);
     };
   }, [open, updatePosition]);
@@ -140,8 +146,15 @@ export const Popover = ({
       data-side={placement?.side}
       style={
         placement
-          ? { top: placement.top, left: placement.left, width: placement.width }
-          : { top: 0, left: 0, visibility: 'hidden' }
+          ? {
+              top: placement.top,
+              bottom: placement.bottom,
+              left: placement.left,
+              width: placement.width,
+            }
+          : // Never painted: the layout effect measures and re-renders first.
+            // Opacity, not visibility, so an autoFocus child can take focus.
+            { top: 0, left: 0, opacity: 0 }
       }
     >
       {children}
