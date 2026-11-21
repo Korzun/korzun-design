@@ -27,7 +27,12 @@ export {
   type FooterAction,
   type PageFooterActionsProps,
 } from './page-footer-actions/index.js';
-export { Popover, type PopoverProps } from './popover/index.js';
+export {
+  Popover,
+  type PopoverAlign,
+  type PopoverProps,
+  type PopoverSide,
+} from './popover/index.js';
 export { Select, type SelectOption, type SelectProps } from './select/index.js';
 export {
   SegmentedControl,

@@ -3,7 +3,7 @@
 `import { Popover } from '@korzun/design/control'`
 
 A positioning primitive: renders `children` in a portal on `document.body`,
-`position: fixed` directly beneath an anchor element, so a dropdown can escape
+`position: fixed` below or above an anchor element, so a dropdown can escape
 ancestors that clip overflow (rounded cards). It paints **nothing** itself: no
 background, border, shadow, or radius. `Select` and `ChipsInput` build their
 dropdowns on it.
@@ -15,21 +15,37 @@ Use something else for: a modal (`useModalDialog`), page action menus
 
 | Prop | Type | Default | Notes |
 |---|---|---|---|
-| `anchorRef` | `RefObject<HTMLElement \| null>` | (required) | Element to sit under. Left edges align. |
+| `anchorRef` | `RefObject<HTMLElement \| null>` | (required) | Element to place against. |
 | `open` | `boolean` | (required) | When `false`, renders nothing. Fully controlled. |
 | `children` | `ReactNode` | (required) | Your surface: give it its own background, border, radius. |
-| `gap` | `number` | `4` | Pixels between the anchor's bottom and the popover. |
+| `side` | `'bottom' \| 'top'` | `'bottom'` | Preferred side; flips to the other side when this one has no room. |
+| `align` | `'start' \| 'center' \| 'end'` | `'start'` | Horizontal alignment to the anchor's left edge, centre, or right edge. |
+| `gap` | `number` | `4` | Pixels between the anchor and the popover; also the margin kept from the viewport's left and right edges. |
 | `matchWidth` | `boolean` | `true` | Width = anchor width. `false` lets content size itself. |
-| `onClose` | `() => void` | | Called on a mousedown outside both anchor and content. Omit to opt out. Receives no event. |
+| `onClose` | `() => void` | | Called on a mousedown outside both anchor and content, and on Escape (see below). Omit to opt out of both. Receives no event. |
 | `className` | `string` | | Applied to the fixed wrapper. Override with `'&&'`, never `!important`. |
 
 ## Behaviour to know
 
-- **No Escape handling and no focus management.** Add your own keydown handler
-  if Escape should close it.
-- Always opens below the anchor; it does not flip up or clamp to the viewport.
-  It repositions on window resize and on any scroll (capture phase).
-- First paint is skipped until the anchor is measured, so it never flashes at 0,0.
+- **Flip.** It opens on `side`. If the content does not fit on that side and
+  the other side has more room, it opens on the other side. When neither side
+  fits it keeps whichever has more room.
+- **Clamp.** `left` is clamped so the content stays `gap` pixels inside the
+  viewport's left and right edges; content wider than the viewport pins to
+  `gap`. There is no vertical clamp.
+- **`data-side`.** The wrapper carries `data-side="bottom"` or `"top"`: the side
+  actually used after flipping. Style against it (an arrow, an animation
+  origin) rather than against the `side` prop.
+- It re-measures, flip decision included, on window resize and on any scroll
+  (capture phase), so it stays attached to a scrolled anchor.
+- It renders hidden (`visibility: hidden`) until measured in a layout effect,
+  so it never flashes at 0,0 or on the wrong side.
+- **Escape.** With `onClose`, an Escape keydown anywhere in the document calls
+  `onClose`, unless the event is already `defaultPrevented` (a control such as
+  `Select` handled it first). It calls `preventDefault()` on the key, so an
+  enclosing native `<dialog>` does not also fire `cancel` and close.
+- **No focus management.** Focus stays where it was; return it yourself if
+  closing should move it.
 - z-index is `theme.zIndex.sticky` (1000). Inside a modal `<dialog>` opened with
   `showModal()`, a body portal sits outside the dialog's top layer, so it is
   likely hidden behind the dialog and inert. Test before using it there.
@@ -71,4 +87,6 @@ const [open, setOpen] = useState(false);
 
 - Do wrap a `Button` in a `<div ref>` to anchor it; `Button` takes no ref.
 - Do give the content its own surface and radius; the wrapper is transparent.
-- Don't expect it to close on Escape or on selection; that is your code.
+- Do call `preventDefault()` in your own Escape handler if you close the
+  popover yourself, so `onClose` is not called a second time.
+- Don't expect it to close on selection; that is your code.

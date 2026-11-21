@@ -106,10 +106,13 @@ Behaviour:
 - **Horizontal clamp.** Clamp `left` so the content stays inside the viewport
   with a small margin (`gap`). This is not full "shift" logic.
 - **Escape.** While open with `onClose`, Escape calls `onClose`.
-  - Listen on `document` in the bubble phase, so a control that already
-    handles Escape (Select does) can `stopPropagation` if it needs to.
-  - If Popover consumes the key, it calls `stopPropagation`, so an enclosing
-    `<dialog>` doesn't close too.
+  - Listen on `document` in the bubble phase. Skip the key if it is already
+    `defaultPrevented`: a control that handles Escape itself (Select does)
+    calls `preventDefault`, so `onClose` is not called twice.
+  - When Popover consumes the key, it calls `preventDefault`, so an enclosing
+    `<dialog>` doesn't close too. `preventDefault` on keydown is what stops a
+    native `<dialog>`'s `cancel`; `stopPropagation` from a document listener
+    would not.
 - **Defaults** reproduce today's position exactly: below, left-aligned, `gap`
   4, `matchWidth`.
 
