@@ -1,6 +1,6 @@
 {
   "name": "@korzun/design",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "type": "module",
   "license": "SEE LICENSE IN LICENSE",
   "repository": {
@@ -12,6 +12,9 @@
     "url": "https://github.com/Korzun/korzun-design/issues"
   },
   "files": [
+    "AGENTS.md",
+    "docs",
+    "!docs/superpowers",
     "dist",
     "src",
     "!src/**/*.test.*",

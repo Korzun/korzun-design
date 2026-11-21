@@ -58,6 +58,14 @@ export const Providers = ({ children }: { children: React.ReactNode }) => {
 
 The root export is everything, flat. The `ThemeSetting` type is exported from the root as `ThemeSettingValue`, because the `ThemeSetting` component takes the name; from `@korzun/design/theme` it is still `ThemeSetting`.
 
+## Coding agents
+
+The package ships `AGENTS.md` and per-module docs in `docs/`, written for LLM coding agents. Point your app's agent at them by adding this line to its `CLAUDE.md` or `AGENTS.md`:
+
+```
+@node_modules/@korzun/design/AGENTS.md
+```
+
 ## Gallery
 
 `npm run gallery` starts the story explorer on the LAN; `npm run gallery:build` writes a static copy to `gallery-dist/`. Every push to `main` deploys it to https://korzun.github.io/korzun-design/. It is for development only and is not published to npm.
