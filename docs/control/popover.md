@@ -20,7 +20,7 @@ Use something else for: a modal (`useModalDialog`), page action menus
 | `children` | `ReactNode` | (required) | Your surface: give it its own background, border, radius. |
 | `side` | `'bottom' \| 'top'` | `'bottom'` | Preferred side; flips to the other side when this one has no room. |
 | `align` | `'start' \| 'center' \| 'end'` | `'start'` | Horizontal alignment to the anchor's left edge, centre, or right edge. |
-| `gap` | `number` | `4` | Pixels between the anchor and the popover; also the margin kept from the viewport's left and right edges. |
+| `gap` | `number` | `4` | Pixels between the anchor and the popover; also the margin kept from the viewport's left and right edges when `matchWidth` is false. |
 | `matchWidth` | `boolean` | `true` | Width = anchor width. `false` lets content size itself. |
 | `onClose` | `() => void` | | Called on a mousedown outside both anchor and content, and on Escape (see below). Omit to opt out of both. Receives no event. |
 | `className` | `string` | | Applied to the fixed wrapper. Override with `'&&'`, never `!important`. |

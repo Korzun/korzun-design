@@ -18,8 +18,9 @@ these two pieces.
   from the nine domain tones in light and dark mode.
 - Popover takes `side` and `align`, flips when there's no room, and closes on
   Escape.
-- No visible change for current users of `Tag` or `Popover` (Select,
-  ChipsInput) on the defaults.
+- No visible change for current users of `Tag`. `Popover` (Select,
+  ChipsInput) keeps today's position on the defaults whenever there is room
+  below; near the bottom of the viewport it now opens upward.
 
 ## Non-goals
 
