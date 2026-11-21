@@ -17,6 +17,12 @@ shopt -u nullglob
 if tar -tzf "${tarballs[0]}" | grep -E '\.(stories|test)\.[cm]?[jt]sx?$'; then
   echo "smoke: tarball contains story or test files"; exit 1
 fi
+listing="$(tar -tzf "${tarballs[0]}")"
+grep -qx 'package/AGENTS.md' <<<"$listing" || { echo "smoke: tarball is missing AGENTS.md"; exit 1; }
+while IFS= read -r doc; do
+  grep -qx "package/$doc" <<<"$listing" || { echo "smoke: tarball is missing $doc"; exit 1; }
+done < <(find docs -name '*.md' -not -path 'docs/superpowers/*' | sort)
+if grep -q '^package/docs/superpowers/' <<<"$listing"; then echo "smoke: tarball contains docs/superpowers"; exit 1; fi
 tarball="$(basename "${tarballs[0]}")"
 
 peer() { node -p "require('$repo/package.json').peerDependencies['$1']"; }
