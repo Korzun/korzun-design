@@ -4,22 +4,41 @@ import { NumberInput } from '../number-input/index.js';
 import { TextInput } from '../text-input/index.js';
 import { useStyle } from './style.js';
 
+/**
+ * One column of a `FieldList`: a `TextInput` (`'text'`) or `NumberInput`
+ * (`'number'`) per row, keyed by `key`. `validate` receives the raw text.
+ */
 export type ColumnDescriptor =
   | { type: 'text'; key: string; placeholder?: string; validate?: (v: string) => boolean }
   | { type: 'number'; key: string; placeholder?: string; validate?: (v: string) => boolean };
 
+/** A `FieldList` row: a stable unique `_key` plus one value per column key. */
 export type FieldRow = { _key: string } & Record<string, string | number | undefined>;
 
-type FieldListProps = {
+export type FieldListProps = {
+  /** Text of the dashed add button ("Add identifier"). */
   addLabel: string;
+  /** One input per column per row; inputs have no labels, so use `placeholder`. */
   columns: ColumnDescriptor[];
+  /** Append a row with a fresh `_key`. Receives no event. */
   onAdd: () => void;
+  /**
+   * `string` from a text column, `number` from a number column, `undefined`
+   * when emptied. Not called while that field's `validate` fails.
+   */
   onChange: (rowKey: string, fieldKey: string, newValue: string | number | undefined) => void;
+  /** Remove the row with this `_key`. */
   onRemove: (rowKey: string) => void;
+  /** `fieldName` is `${rowKey}.${columnKey}`. Fires only when validity flips. */
   onValidChange?: (fieldName: string, isValid: boolean) => void;
+  /** `_key` must be stable and unique: it is the React key and part of each input's `name`. */
   rows: FieldRow[];
 };
 
+/**
+ * Editable list of rows, each a set of text/number inputs with a remove button,
+ * plus a dashed add button. Belongs in a `Card` body (add button is `radius="card"`).
+ */
 export const FieldList = ({
   addLabel,
   columns,

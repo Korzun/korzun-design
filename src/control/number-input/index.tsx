@@ -5,16 +5,28 @@ import { isNumeric } from '../../utils.js';
 import { useStyle } from './style.js';
 
 export type NumberInputProps = {
+  /** Required key: pass `label={undefined}` for none. Not linked to the input (no `htmlFor`). */
   label: string | undefined;
+  /** Default `'horizontal'`; `horizontal`/`vertical` paint a card-header row. */
   layout?: 'horizontal' | 'vertical' | 'inline';
+  /** The input's `name` and the key passed to `onValidChange`. */
   name: string;
+  /** Receives `parseFloat(text)`, or `undefined` when emptied; not called while `validate` fails. */
   onChange?: (newValue: number | undefined) => void;
+  /** Called with `name` and the new validity; fires only when validity flips. */
   onValidChange?: (fieldName: string, newValid: boolean) => void;
+  /** Placeholder text for the input. */
   placeholder?: string;
+  /** Receives the raw text. Replacing it drops the default empty-or-numeric check, so include one. */
   validate?: (newValue: string) => boolean;
+  /** Current number. Re-syncs into the field only when the prop changes. */
   value: number | undefined;
 };
 
+/**
+ * Text field that reports a number: a plain `<input>` (no `type="number"`)
+ * that calls `onChange` with the parsed value while the text validates.
+ */
 export const NumberInput = ({
   label,
   layout = 'horizontal',

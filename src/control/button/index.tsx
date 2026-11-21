@@ -6,10 +6,18 @@ import { IconProps, SpinnerIcon } from '../../icon/index.js';
 import { ButtonType, ButtonTypeValue, ButtonRadius, ButtonRadiusValue, useStyle } from './style.js';
 
 type ButtonVariant =
-  | { danger?: boolean; success?: false | undefined }
-  | { success?: boolean; danger?: false | undefined };
+  | {
+      /** Red treatment for destructive actions. Mutually exclusive with `success`. */
+      danger?: boolean;
+      success?: false | undefined;
+    }
+  | {
+      /** Green treatment. Mutually exclusive with `danger`. */
+      success?: boolean;
+      danger?: false | undefined;
+    };
 
-type ButtonProps = React.PropsWithChildren<
+export type ButtonProps = React.PropsWithChildren<
   {
     /**
      * Accessible name when the visible children are not distinguishing enough
@@ -19,23 +27,49 @@ type ButtonProps = React.PropsWithChildren<
     ariaLabel?: string;
     /** For a disclosure button: the state of what it controls, and its id. */
     ariaExpanded?: boolean;
+    /** For a disclosure button: the id of the element it controls. */
     ariaControls?: string;
+    /** Extra class; win specificity with `'&&'` in your sheet, never `!important`. */
     className?: string;
+    /** Greys the button out and blocks clicks. */
     disabled?: boolean;
+    /** Id of the `<form>` to submit, for a `submit` button outside its form. */
     form?: string;
+    /** Shows a spinner in place of the icons and blocks clicks. */
     loading?: boolean;
-    // Applies to the default (div) mode only. In submit mode it is ignored:
-    // native form submission (driven by the associated <form>) fires instead.
+    /**
+     * Applies to the default (div) mode only. In submit mode it is ignored:
+     * native form submission (driven by the associated <form>) fires instead.
+     * Receives no event.
+     */
     onClick?: () => void;
+    /** Icon component shown before the label (`prefix={SearchIcon}`), not an element. */
     prefix?: ComponentType<IconProps>;
+    /** The surface the button sits on: `'background'` (default), `'card'`, `'inset'`, `'modal'`. */
     radius?: ButtonRadiusValue;
+    /**
+     * Render a native `<button type="submit">`; also spins while the enclosing
+     * form action is pending. `onClick` is then ignored.
+     */
     submit?: boolean;
+    /** Icon component shown after the label (`suffix={ChevronIcon}`), not an element. */
     suffix?: ComponentType<IconProps>;
+    /** Passed through; forced to -1 while disabled or loading (div mode). */
     tabIndex?: number;
+    /** Native tooltip; passed through. */
     title?: string;
+    /**
+     * Visual variant (`'default'`, `'primary'`, `'text'`, `'link'`, `'dashed'`),
+     * not the HTML `type`. Use `submit` for a submit button.
+     */
     type?: ButtonTypeValue;
   } & ButtonVariant
 >;
+
+/**
+ * Clickable action with a visual variant, optional icons, and a loading state.
+ * Renders a `<div role="button">`, or a native submit `<button>` when `submit` is set.
+ */
 export const Button = ({
   ariaLabel,
   ariaExpanded,

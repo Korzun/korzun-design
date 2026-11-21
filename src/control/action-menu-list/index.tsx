@@ -22,12 +22,19 @@ export interface PageActionIntentProps {
   onTouchStart: () => void;
 }
 
+/** One page action, shared by `PageActionsBar` and `PageActionsMenu`. */
 export interface PageActionItem {
+  /** Button or menu text. Must be unique: it is the React key. */
   label: string;
+  /** Receives no event. In a menu, the menu closes first. */
   onClick: () => void;
+  /** Red text or treatment. Styling only; it does not add a separator. */
   danger?: boolean;
+  /** Greys the item out and blocks selection. */
   disabled?: boolean;
+  /** `PageActionsBar` only: render as an inline Button instead of in the overflow menu. */
   primary?: boolean;
+  /** `PageActionsBar` primary items only: side of the bar; anything but `'leading'` is trailing. */
   align?: 'leading' | 'trailing';
   /** Fires ahead of `onClick`, on intent to click — see
    * `PageActionIntentProps`. Used to prefetch what selecting this item is

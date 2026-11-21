@@ -4,10 +4,18 @@ import { useNavigate } from 'react-router';
 import { ChevronIcon } from '../../icon/index.js';
 import { useStyle } from './style.js';
 
-interface BackButtonProps {
+export interface BackButtonProps {
+  /**
+   * Path to navigate to. Pushes a new history entry (it does not go back in
+   * history), asking the destination to restore its scroll position.
+   */
   to: string;
 }
 
+/**
+ * Round glass "Back" button that navigates to `to`. Mobile-only (hidden at
+ * 641px and up); needs a react-router router. Prefer `Page back="…"`.
+ */
 export function BackButton({ to }: BackButtonProps) {
   const styles = useStyle();
   const navigate = useNavigate();

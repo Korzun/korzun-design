@@ -6,25 +6,42 @@ import type { Theme } from '../../theme/index.js';
 import { Popover } from '../popover/index.js';
 import { useStyle } from './style.js';
 
+/** A chip colour family: a key of `theme.color.chip` (`'subject'`, `'user'`, `'neutral'`, …). */
 export type ChipColor = keyof Theme['color']['chip'];
 
 export type ChipsInputProps = {
+  /** The chips. Controlled: you own the array. */
   value: string[];
+  /** Suggestion pool (pass `[]` for none); chosen values are hidden, matching is case-insensitive substring. */
   suggestions: string[];
+  /** Receives the whole new array, not an event. */
   onChange: (values: string[]) => void;
+  /** Shown only while there are no chips. */
   placeholder?: string;
+  /** Enter or Tab adds the typed text as a chip (default `true`); `false` allows suggestions only. */
   allowCustom?: boolean;
+  /** Disables typing and the chip remove buttons. */
   disabled?: boolean;
+  /** Field label. Ignored in the default `block` layout; set `layout` to show it. */
   label?: string;
+  /** `'block'` (default) is the bare box with no label; `'horizontal'`/`'vertical'` add the label row. */
   layout?: 'horizontal' | 'vertical' | 'block';
+  /** Set on the text input only: form data gets the half-typed text, not the chips. */
   name?: string;
+  /** Chip colour family from `theme.color.chip`. Default `'subject'`. */
   chipColor?: ChipColor;
-  // Matches the control's height to a standard form input (removes the roomier
-  // min-height and slims the chips). Used when the field sits inline with other
-  // inputs, e.g. the device form; the book-edit Subjects field leaves it off.
+  /**
+   * Matches the control's height to a standard form input (removes the roomier
+   * min-height and slims the chips). Used when the field sits inline with other
+   * inputs, e.g. the device form; the book-edit Subjects field leaves it off.
+   */
   dense?: boolean;
 };
 
+/**
+ * Controlled tag field: chips inside an input box with a filtered suggestion
+ * dropdown. Enter adds a chip; Backspace on an empty field removes the last.
+ */
 export const ChipsInput = ({
   value,
   suggestions,

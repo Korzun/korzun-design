@@ -8,9 +8,17 @@ import { PageActionsMenu, type PageActionItem } from '../../control/page-actions
 import { PageFooterActions, type FooterAction } from '../../control/page-footer-actions/index.js';
 import { useStyle, PageType, PageTypeValue } from './style.js';
 
-type PageProps = PropsWithChildren<{
+export type { PageTypeValue };
+
+export type PageProps = PropsWithChildren<{
+  /** `'default'` (default) or `'minimal'`, which drops all layout styles and the header row. */
   type?: PageTypeValue;
+  /** Route path for the back button. **Mobile only**: there is no back button on desktop. */
   back?: string;
+  /**
+   * Page-level actions. Desktop: `primary` items as buttons, the rest in a "More…" menu.
+   * Mobile: all in a floating menu.
+   */
   headerActions?: PageActionItem[];
   /** Overrides the overflow trigger's label (default "More…") on the desktop
    * action bar — e.g. "Actions" when every action lives in the menu. */
@@ -26,6 +34,7 @@ type PageProps = PropsWithChildren<{
    * slot it lines up with every other page's actions instead.
    */
   header?: React.ReactNode;
+  /** Sticky footer buttons. */
   footerActions?: FooterAction[];
   /** Sets `document.title` when given; the title is not restored on unmount. Leave it
    * out when the app manages the title itself. */
@@ -35,6 +44,7 @@ type PageProps = PropsWithChildren<{
   bottomNav?: boolean;
 }>;
 
+/** The `<main>` of every screen: a centred column of Cards, plus back button, header and footer actions. */
 export const Page = ({
   children,
   type = PageType.default as PageTypeValue,

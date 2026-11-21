@@ -4,7 +4,7 @@ import type { ReactNode } from 'react';
 import { useStyle } from './style.js';
 
 export type MetaLineProps = {
-  /** The data to show, in order. Falsy entries are skipped. */
+  /** The data to show, in order. `null`, `undefined` and `false` are skipped; `''` and `0` are kept. */
   items: ReactNode[];
   /** Applied to the outer element; the font size and colour set here reach every item. */
   className?: string;

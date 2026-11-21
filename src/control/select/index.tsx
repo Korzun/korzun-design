@@ -5,21 +5,31 @@ import { ChevronIcon, SpinnerIcon } from '../../icon/index.js';
 import { Popover } from '../popover/index.js';
 import { useStyle } from './style.js';
 
+/** A `Select` option: a plain string (label and value alike), or `{ label, value, description? }`. */
 export type SelectOption = string | { label: string; value: string; description?: string };
 
 type InternalOption = { label: string; value: string; description?: string; _isCreate?: boolean };
 
 export type SelectProps = {
+  /** With a search query that matches no label exactly, offers an "Add: *query*" option. */
   allowCreate?: boolean;
-  // Show the inline "clear" (✕) control when a value is selected (default true).
+  /** Show the inline "clear" (✕) control when a value is selected (default true). */
   clearable?: boolean;
+  /** Faded; can't open; no clear button. */
   disabled?: boolean;
+  /** Visible label; it targets the search box, not the closed trigger. */
   label?: string;
+  /** Default `'horizontal'`; `horizontal`/`vertical` paint a card-header row. */
   layout?: 'horizontal' | 'vertical' | 'inline';
+  /** Shows a spinner and "Loading…"; can't open. */
   loading?: boolean;
+  /** Only lands on the search box while open: form data never carries the selection. */
   name: string;
+  /** Receives the option's `value`, `undefined` from clear, or the trimmed typed text from "Add:"; not an event. */
   onChange?: (value: string | undefined) => void;
+  /** Strings or `{ label, value, description? }` objects, mixed freely. */
   options: SelectOption[];
+  /** Shown when nothing is selected. Default `'Select…'`. */
   placeholder?: string;
   /**
    * Which surface this select sits on, which decides its corner radius AND its
@@ -37,7 +47,9 @@ export type SelectProps = {
    * because here the radius is a consequence, not the choice.
    */
   surface?: 'card' | 'page';
+  /** Opening swaps the trigger for a search box (default `true`); `false` is a plain list, arrow keys only. */
   searchable?: boolean;
+  /** Controlled selection; a value not in `options` displays as the raw string. */
   value: string | undefined;
 };
 
@@ -58,6 +70,10 @@ function highlight(text: string, query: string, className: string): React.ReactN
   );
 }
 
+/**
+ * Controlled single-value picker with an optional search box and "Add:" entry,
+ * its list in a `Popover`. No hidden input: submit `value` from state.
+ */
 export const Select = ({
   allowCreate = false,
   clearable = true,

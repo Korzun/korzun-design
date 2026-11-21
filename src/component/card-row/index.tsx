@@ -4,8 +4,14 @@ import { PropsWithChildren, useCallback } from 'react';
 import { useStyle } from './style.js';
 
 export type CardRowProps = PropsWithChildren<{
+  /**
+   * Adds a pointer cursor; fires on click and Enter/Space. The row is not focusable, so keys only
+   * reach it from a focused child.
+   */
   onClick?: () => void;
 }>;
+
+/** A compact bordered row for stacking items inside a `Card` body. Optionally clickable. */
 export const CardRow = ({ children, onClick }: CardRowProps) => {
   const styles = useStyle();
 

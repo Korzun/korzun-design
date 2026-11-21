@@ -26,8 +26,7 @@ Use something else for: a modal with its own form or more than two actions
 | `loading` | `boolean` | `false` | Spinner on Confirm; disables both buttons; Escape and backdrop clicks are ignored (`canDismiss = !loading`). |
 | `confirmDisabled` | `boolean` | `false` | Disables only Confirm (e.g. until a checkbox is ticked). |
 
-No `className`. The props type is not exported; use
-`ComponentProps<typeof ConfirmModal>` if you need it.
+No `className`. The props type is exported as `ConfirmModalProps`.
 
 ## Behaviour to know
 

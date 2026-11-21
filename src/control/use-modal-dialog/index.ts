@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { type RefObject, useEffect, useRef } from 'react';
 
 /**
  * Drives a native `<dialog>` from an `isOpen` flag and wires up ESC-to-dismiss.
@@ -21,8 +21,17 @@ import { useEffect, useRef } from 'react';
  * released over the backdrop also clicks the `<dialog>` — and must not close
  * it. Modals keep their own `onClick` only to stop the click bubbling to a
  * clickable ancestor; they no longer decide dismissal.
+ *
+ * @param isOpen The single source of truth: `true` calls `showModal()`, `false` calls `close()`.
+ * @param onDismiss Called on Escape and a backdrop click; receives no event and closes nothing itself.
+ * @param canDismiss When `false`, Escape and backdrop clicks are swallowed; pass `!loading`. Default `true`.
+ * @returns A ref to attach to a `<dialog>` that stays mounted.
  */
-export function useModalDialog(isOpen: boolean, onDismiss: () => void, canDismiss = true) {
+export function useModalDialog(
+  isOpen: boolean,
+  onDismiss: () => void,
+  canDismiss = true
+): RefObject<HTMLDialogElement | null> {
   const ref = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {

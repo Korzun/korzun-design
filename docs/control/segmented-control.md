@@ -22,8 +22,8 @@ Use something else for: many options or long labels (`Select`), on/off
 | `showLabels` | `boolean` | `true` | `false` hides captions, **only for options with an `Icon`**; text-only options always show their label. |
 | `surface` | `'card' \| 'row'` | `'card'` | `card`: paints its own `bg.track` rail. `row`: transparent, for a control sitting inside a shaded field row. |
 
-No `className`, no `name` (not a form field). The segment type is not exported;
-declare options `as const` or type them inline.
+No `className`, no `name` (not a form field). Type options with the exported `SegmentedOption<V>`
+(and props with `SegmentedControlProps<V>`).
 
 ## Keyboard
 

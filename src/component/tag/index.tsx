@@ -4,15 +4,18 @@ import { type TagTone, useStyle } from './style.js';
 
 export type { TagTone };
 
-interface TagProps {
+export interface TagProps {
+  /** The label. */
   children: React.ReactNode;
+  /** Makes it a button (focusable, Enter/Space, pointer cursor). Receives no event. */
   onClick?: () => void;
-  /** `sm` renders a compact chip that fits within a normal text line height. */
+  /** `sm` renders a compact chip that fits within a normal text line height. Default `'md'`. */
   size?: 'sm' | 'md';
-  /** Colour, from the theme's `color.chip` tokens. `neutral` is a quiet grey. */
+  /** Colour, from the theme's `color.chip` tokens (default `'subject'`). `neutral` is a quiet grey. */
   tone?: TagTone;
 }
 
+/** A small coloured chip for a category, status, or value. Optionally clickable. */
 export const Tag = ({ children, onClick, size = 'md', tone = 'subject' }: TagProps) => {
   const style = useStyle();
   return (

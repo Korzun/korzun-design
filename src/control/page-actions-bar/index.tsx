@@ -1,11 +1,21 @@
 import { useCallback, useRef, useState } from 'react';
 
-import { ActionMenuList, type PageActionItem } from '../action-menu-list/index.js';
+import {
+  ActionMenuList,
+  type PageActionIntentProps,
+  type PageActionItem,
+} from '../action-menu-list/index.js';
 import { useDismiss } from '../action-menu-list/use-dismiss.js';
 import { Button } from '../button/index.js';
 import { useStyle } from './style.js';
 
-interface PageActionsBarProps {
+export type { PageActionIntentProps, PageActionItem };
+
+export interface PageActionsBarProps {
+  /**
+   * `primary` items render as inline Buttons (`align: 'leading'` on the left),
+   * the rest in the overflow menu. Labels must be unique.
+   */
   items: PageActionItem[];
   /** Visible label (and accessible name) for the overflow trigger. Defaults to
    * "More…" — pass e.g. "Actions" on a page whose whole action set lives in the
@@ -13,6 +23,10 @@ interface PageActionsBarProps {
   actionsLabel?: string;
 }
 
+/**
+ * Desktop page-header action row: primary items as inline Buttons, the rest
+ * behind a "More…" overflow menu. Usually rendered by `Page headerActions`.
+ */
 export function PageActionsBar({ items, actionsLabel }: PageActionsBarProps) {
   const styles = useStyle();
   const [open, setOpen] = useState(false);

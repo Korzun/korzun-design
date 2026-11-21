@@ -5,9 +5,13 @@ import { composeIsoDate, splitIsoDate } from './iso-date.js';
 import { useStyle } from './style.js';
 
 export type DateTimeInputProps = {
+  /** Linked to the date input; the time input is labelled `${label} time` (or `Time`). */
   label?: string;
+  /** Default `'horizontal'`; `horizontal`/`vertical` paint a card-header row. */
   layout?: 'horizontal' | 'vertical' | 'inline';
+  /** The date input's `name`; the time input is `${name}Time`. Form data holds two fields, not the composed value. */
   name: string;
+  /** Receives the recomposed ISO string (time in UTC), or `undefined` when the date is cleared; not an event. */
   onChange?: (newValue: string | undefined) => void;
   /**
    * An ISO 8601 date string as the server stores it: a bare date, a

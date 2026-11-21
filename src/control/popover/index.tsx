@@ -14,12 +14,14 @@ import { useStyle } from './style.js';
 
 type Position = { top: number; left: number; width: number };
 
-type Props = {
+export type PopoverProps = {
   /** Element the popover aligns to (positioned directly beneath it). */
   anchorRef: RefObject<HTMLElement | null>;
   /** Whether the popover is rendered. */
   open: boolean;
+  /** Your surface: give it its own background, border, and radius. */
   children: ReactNode;
+  /** Applied to the fixed wrapper; win specificity with `'&&'`, never `!important`. */
   className?: string;
   /** Vertical gap between the anchor and the popover, in pixels. */
   gap?: number;
@@ -37,6 +39,8 @@ type Props = {
  * coordinates directly under `anchorRef`. This lets dropdowns escape ancestors
  * that clip overflow (e.g. cards with rounded corners) without those ancestors
  * having to opt out of clipping.
+ *
+ * No Escape handling or focus management, and it never flips above the anchor.
  */
 export const Popover = ({
   anchorRef,
@@ -46,7 +50,7 @@ export const Popover = ({
   gap = 4,
   matchWidth = true,
   onClose,
-}: Props) => {
+}: PopoverProps) => {
   const style = useStyle();
   const contentRef = useRef<HTMLDivElement>(null);
   const [position, setPosition] = useState<Position | null>(null);

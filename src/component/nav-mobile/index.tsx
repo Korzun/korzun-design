@@ -16,9 +16,12 @@ import { useStyle } from './style.js';
  * instead of one bar fading out while a different one fades in.
  */
 export interface NavPill {
-  /** Destinations shown while this side is expanded. */
+  /** Destinations shown while this side is expanded. `[]` makes the side permanently a circle. */
   items: NavItem[];
-  /** The single destination it collapses to. */
+  /**
+   * The single destination it collapses to. Its `label` is the circle's `aria-label`; its
+   * `badge` shows only while collapsed; its `active` lights the circle.
+   */
   collapsed: NavItem;
 }
 
@@ -27,7 +30,7 @@ export interface NavMobileProps {
   main: NavPill;
   /** The right-hand side: settings. */
   settings: NavPill;
-  /** Which side is expanded; the other is a circle. */
+  /** Which side is expanded; the other is a circle. Derive it from the route. */
   expanded: 'main' | 'settings';
 }
 
@@ -71,6 +74,11 @@ const sameBox = (a: LensBox | null, b: LensBox | null): boolean =>
 // animating — so the two never fight: a side is a circle when it is not the
 // expanded side OR the bar is minimized. The other side's circle is left as it
 // is, like the search button iOS keeps beside its minimized bar.
+/**
+ * The bottom navigation on phones: two frosted pills, one expanded into tabs and one a
+ * circle; scrolling down minimizes it. Must render inside a react-router router, and every
+ * `Page` under it needs `bottomNav`.
+ */
 export const NavMobile = ({ main, settings, expanded }: NavMobileProps) => {
   const styles = useStyle();
   const { key } = useLocation();
