@@ -37,17 +37,17 @@ import { applyTransparency } from '@korzun/design';
 
 export const useStyle = createUseStyles((theme: Theme) => ({
   root: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: theme.space.md,
-    color: theme.color.text.primary,
+    padding: theme.space.md,
+    border: `1px solid ${theme.color.border.default}`,
+    backgroundColor: theme.color.bg.card,
   },
-  hint: { fontSize: theme.fontSize.sm, color: theme.color.text.muted },
   highlight: { backgroundColor: applyTransparency(theme.color.brand.default, 0.12) },
-  [theme.breakpoint.mobile]: { root: { gap: theme.space.sm } },
+  [theme.breakpoint.mobile]: { root: { padding: theme.space.sm } },
 }));
 ```
 
+- Style files are for padding, borders, backgrounds, and one-offs. Lay out with
+  `Stack`/`Inline` and set text with `Text`/`Heading`.
 - `applyTransparency(color, alpha)` turns a hex or rgb token into an `rgba()`
   string. Use it for tints instead of writing an rgba literal.
 - Media queries: use the `theme.breakpoint.mobile` / `.normal` strings as keys.
