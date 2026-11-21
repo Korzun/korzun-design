@@ -82,4 +82,4 @@ Every component exports its props type as `<Name>Props` (`ButtonProps`,
 
 [docs]|theme.md: provider, createUseStyles, token summary, recipes|corners.md: radius by nesting depth|patterns.md: screens, forms in cards, modals, overrides|tokens.md: every token key in detail|philosophy.md: design rules and why|icon.md|toast.md|hooks.md
 [docs/control]|{back-button,button,chips-input,confirm-modal,date-time-input,field-list,number-input,page-actions-bar,page-actions-menu,page-footer-actions,popover,segmented-control,select,switch,text-area,text-input,use-modal-dialog}.md
-[docs/component]|{card,card-divider,card-row,collapsible-section,empty-state,inline,meta-line,metadata-list,nav-desktop,nav-mobile,page,progress-indicator,stack,tag,theme-setting,top-fade}.md
+[docs/component]|{card,card-divider,card-row,collapsible-section,empty-state,inline,meta-line,metadata-list,nav-desktop,nav-mobile,page,progress-indicator,stack,tag,text,theme-setting,top-fade}.md
