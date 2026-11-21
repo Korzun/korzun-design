@@ -30,25 +30,38 @@ Use something else for: a modal (`useModalDialog`), page action menus
 - **Flip.** It opens on `side`. If the content does not fit on that side and
   the other side has more room, it opens on the other side. When neither side
   fits it keeps whichever has more room.
-- **Clamp.** `left` is clamped so the content stays `gap` pixels inside the
-  viewport's left and right edges; content wider than the viewport pins to
-  `gap`. There is no vertical clamp.
+- **Clamp.** Only when `matchWidth` is false: `left` is clamped so the
+  content stays `gap` pixels inside the viewport's left and right edges;
+  content wider than the viewport pins to `gap`. With `matchWidth` (the
+  default) it lines up with the anchor exactly, edge margin or not. There is
+  no vertical clamp.
+- **Top side is anchored by its bottom edge** (CSS `bottom`), so a popover
+  above its anchor stays attached when its content grows or shrinks.
 - **`data-side`.** The wrapper carries `data-side="bottom"` or `"top"`: the side
   actually used after flipping. Style against it (an arrow, an animation
   origin) rather than against the `side` prop.
-- It re-measures, flip decision included, on window resize and on any scroll
-  (capture phase), so it stays attached to a scrolled anchor.
-- It renders hidden (`visibility: hidden`) until measured in a layout effect,
-  so it never flashes at 0,0 or on the wrong side.
+- It re-measures, flip decision included, on window resize, on any scroll
+  (capture phase), and when its content resizes (`ResizeObserver`, where the
+  browser has it), so it stays attached to a scrolled anchor and to content
+  that changes size.
+- Its first render is transparent (`opacity: 0`) and is measured in a layout
+  effect before paint, so it never flashes at 0,0 or on the wrong side. It is
+  not `visibility: hidden`, so an `autoFocus` child takes focus on mount.
 - **Escape.** With `onClose`, an Escape keydown anywhere in the document calls
   `onClose`, unless the event is already `defaultPrevented` (a control such as
   `Select` handled it first). It calls `preventDefault()` on the key, so an
   enclosing native `<dialog>` does not also fire `cancel` and close.
+- **Nested popovers.** Each open popover listens on the document, so with
+  nested popovers Escape is taken by the one opened first (the outermost),
+  not the innermost. A proper layer stack comes with `Menu`.
 - **No focus management.** Focus stays where it was; return it yourself if
   closing should move it.
 - z-index is `theme.zIndex.sticky` (1000). Inside a modal `<dialog>` opened with
   `showModal()`, a body portal sits outside the dialog's top layer, so it is
   likely hidden behind the dialog and inert. Test before using it there.
+  The reverse also bites: an open popover left behind a `showModal()` dialog
+  still takes Escape first, so the dialog does not close. Close popovers
+  before opening a dialog.
 - Clicking the anchor does not count as "outside", so a toggle button on the
   anchor works without racing `onClose`.
 

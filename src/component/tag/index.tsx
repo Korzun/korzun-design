@@ -11,7 +11,7 @@ export interface TagProps {
   onClick?: () => void;
   /** `sm` renders a compact chip that fits within a normal text line height. Default `'md'`. */
   size?: 'sm' | 'md';
-  /** Colour, from the theme's `color.chip` tokens. Status tones (`success`, `warning`, `danger`, `info`, `neutral`) report state; label tones (the rest) name a kind of thing. Default `subject`. */
+  /** Colour, from the theme's `color.chip` tokens. Status tones (`success`, `warning`, `danger`, `info`, `neutral`) report state; label tones (the rest) name a kind of thing. `status` is a legacy label tone despite its name; for a state use `success`/`warning`/`danger`/`info`, or `neutral` when it carries no meaning. Default `subject`. */
   tone?: TagTone;
 }
 

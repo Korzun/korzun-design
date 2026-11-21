@@ -23,8 +23,10 @@ No `className`, no `ariaLabel`.
 
 ## Choosing a tone
 
-`TagTone` is `keyof Theme['color']['chip']`, so the tones are **domain names**,
-not colour names. Pick by what the tag *is*:
+`TagTone` is `keyof Theme['color']['chip']`. There are two groups: label tones
+are **domain names** (what kind of thing the tag names) and status tones are
+**meanings** (what state it reports). Neither group is a set of colour names:
+never pick a tone for its colour. Pick by what the tag *is*:
 
 Status tones report a state:
 
@@ -40,7 +42,7 @@ Label tones name a kind of thing:
 
 | Tone | Use for |
 |---|---|
-| `status` | A generic state label (Pending, Active, Read only). Prefer a status tone above when the state has a meaning. |
+| `status` | Legacy; kept for Bookplate's existing chips. Don't pick it for new state tags. |
 | `author` | A person who wrote something. |
 | `series` | A series name. |
 | `subject` | A subject / genre / keyword. The default. |
@@ -49,8 +51,7 @@ Label tones name a kind of thing:
 | `user` | An app user / account. |
 | `rating` | A rating value. |
 
-Note the name clash: `status` is a label tone (one of the eight above), not one
-of the status tones.
+Note the name clash: `status` is a legacy label tone despite its name; for a state use `success`/`warning`/`danger`/`info`, or `neutral` when it carries no meaning.
 
 Each tone has its own `text`, `bg`, and `border` in both light and dark themes.
 A consumer's theme can't add tones; the list is fixed by the `Theme` type.
@@ -66,8 +67,8 @@ A consumer's theme can't add tones; the list is fixed by the `Theme` type.
 // Compact chips in a review row (inside a card).
 {fix.toChips.map((c) => <Tag key={c} size="sm">{c}</Tag>)}
 
-// A status, in neutral or status tone.
-<Tag size="sm" tone="status">{write ? 'Read & write' : 'Read only'}</Tag>
+// A state with no meaning to signal: neutral.
+<Tag size="sm" tone="neutral">{write ? 'Read & write' : 'Read only'}</Tag>
 
 // A clickable author chip that filters the list.
 <Tag tone="author" onClick={() => setFilter({ author: name })}>{name}</Tag>
@@ -81,6 +82,8 @@ A consumer's theme can't add tones; the list is fixed by the `Theme` type.
 - Do use `size="sm"` inside text rows and lists.
 - Don't use `neutral` just to make a tag grey when it has a category.
 - Don't use `subject` or `author` to mean warning or success.
-- Don't use `info` to look like a link.
+- Don't use `info` to look like a link (it shares a hue with links; use
+  `Button type="link"` for actions).
+- Don't use `status` for a new state tag; it is a legacy label tone.
 - Don't nest a clickable Tag inside another clickable element (Button, a
   clickable Card); both would fire.

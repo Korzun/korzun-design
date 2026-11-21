@@ -6,10 +6,12 @@
 - `Popover`:
   - `side` (`bottom`/`top`) and `align` (`start`/`center`/`end`).
   - Flips when the preferred side has no room.
-  - Stays inside the viewport horizontally.
+  - Stays inside the viewport horizontally, unless `matchWidth` (then it lines up with the anchor exactly).
+  - On the top side it is anchored by its bottom edge, and it re-measures when its content resizes (`ResizeObserver`), so it stays attached as content grows or shrinks.
+  - The provisional first render is transparent rather than hidden, so an `autoFocus` child takes focus.
   - Exposes `data-side`.
   - Escape calls `onClose` unless already handled, without closing a surrounding dialog.
-  - Defaults unchanged, so `Select` and `ChipsInput` look the same.
+  - Defaults keep the same position when there is room below; `Select` and `ChipsInput` now open upward near the bottom of the viewport.
 - New types: `PopoverSide`, `PopoverAlign`.
 
 ## 0.0.6 — 2026-11-21

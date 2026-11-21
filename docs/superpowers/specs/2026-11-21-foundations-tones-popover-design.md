@@ -86,7 +86,9 @@ The user chose these from side-by-side mockups.
   tones into **status** (`success`, `warning`, `danger`, `info`, plus
   `neutral`) and **label** (the domain tones).
 - New rule: a tag that reports state uses a status tone. A tag that names a
-  thing uses a label tone.
+  thing uses a label tone. `status` is a legacy label tone despite its name;
+  for a state use `success`/`warning`/`danger`/`info`, or `neutral` when it
+  carries no meaning.
 
 ### Popover
 
@@ -101,10 +103,23 @@ Behaviour:
 - **Flip.** After the content renders, measure its height. If the preferred
   side doesn't fit in the viewport and the other side has more room, use the
   other side.
-  - Recompute on scroll (capture phase) and resize, as today.
+  - Recompute on scroll (capture phase) and resize, as today, and on content
+    resize through a `ResizeObserver` on the content (guarded where the
+    browser lacks it, disconnected on close).
   - The chosen side is exposed as `data-side` on the wrapper, for styling.
-- **Horizontal clamp.** Clamp `left` so the content stays inside the viewport
-  with a small margin (`gap`). This is not full "shift" logic.
+  - When neither side fits and both have equal room, keep the preferred side.
+- **Anchoring.** The bottom side is positioned with CSS `top`
+  (`anchor.bottom + gap`); the top side with CSS `bottom`
+  (`viewport.height - anchor.top + gap`), never a computed `top`. So content
+  that grows or shrinks while open stays attached to the anchor instead of
+  detaching or overlapping it. Exactly one of `top` / `bottom` is set.
+- **First render.** Rendered at 0,0 with `opacity: 0` until the layout effect
+  measures it (never painted). Not `visibility: hidden`, which would stop an
+  `autoFocus` child from taking focus on mount.
+- **Horizontal clamp.** Only when `matchWidth` is false: clamp `left` so the
+  content stays inside the viewport with a small margin (`gap`). With
+  `matchWidth` the anchor is on screen, so the popover lines up with it
+  exactly. This is not full "shift" logic.
 - **Escape.** While open with `onClose`, Escape calls `onClose`.
   - Listen on `document` in the bubble phase. Skip the key if it is already
     `defaultPrevented`: a control that handles Escape itself (Select does)
@@ -113,8 +128,9 @@ Behaviour:
     `<dialog>` doesn't close too. `preventDefault` on keydown is what stops a
     native `<dialog>`'s `cancel`; `stopPropagation` from a document listener
     would not.
-- **Defaults** reproduce today's position exactly: below, left-aligned, `gap`
-  4, `matchWidth`.
+- **Defaults** reproduce today's position exactly when there is room below:
+  below, left-aligned, `gap` 4, `matchWidth`. Near the viewport bottom they
+  now flip upward.
 
 ### Release
 
