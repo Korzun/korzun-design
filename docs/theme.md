@@ -38,7 +38,6 @@ import { applyTransparency } from '@korzun/design';
 export const useStyle = createUseStyles((theme: Theme) => ({
   root: {
     padding: theme.space.md,
-    border: `1px solid ${theme.color.border.default}`,
     backgroundColor: theme.color.bg.card,
   },
   highlight: { backgroundColor: applyTransparency(theme.color.brand.default, 0.12) },
@@ -46,7 +45,7 @@ export const useStyle = createUseStyles((theme: Theme) => ({
 }));
 ```
 
-- Style files are for padding, borders, backgrounds, and one-offs. Lay out with
+- Style files are for padding, borders, backgrounds, and one-offs (borders come from the border tokens). Lay out with
   `Stack`/`Inline` and set text with `Text`/`Heading`.
 - `applyTransparency(color, alpha)` turns a hex or rgb token into an `rgba()`
   string. Use it for tints instead of writing an rgba literal.

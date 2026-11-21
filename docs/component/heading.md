@@ -46,7 +46,8 @@ level default.
 - The margin is reset to 0 and the line height is the theme's `tight` value;
   space headings with `Stack` `gap`.
 - `truncate` adds `overflow: hidden`, an ellipsis, `white-space: nowrap` and
-  `min-width: 0`, so a truncated Heading can shrink inside an `Inline` or `Stack`.
+  `min-width: 0` and `max-width: 100%`, so a truncated Heading clips inside an
+  `Inline` or `Stack` with any `align`.
 - Override with `className` at `'&&'` specificity, never `!important`.
 
 ## Examples

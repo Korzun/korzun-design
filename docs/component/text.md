@@ -36,11 +36,12 @@ through. There is no `style` prop.
   theme's `color.text.*`; `danger` and `success` use the chip text colours.
 - `danger` and `success` are for inline error and confirmation text. A boxed
   Alert comes later.
-- `truncate` adds `overflow: hidden`, an ellipsis, `white-space: nowrap` and
-  `min-width: 0`, so a truncated Text can shrink inside an `Inline` or `Stack`.
+- `truncate` adds `overflow: hidden`, an ellipsis, `white-space: nowrap`,
+  `min-width: 0` and `max-width: 100%`, so a truncated Text clips inside an
+  `Inline` or `Stack` with any `align`, and a `Stack` or `Inline` nested in a
+  row shrinks too (both roots have `min-width: 0`).
 - On `span`, `strong`, `em` and `label`, `truncate` also makes the element
-  `inline-block` with `max-width: 100%`, because inline elements ignore
-  overflow. `p` and `div` keep their block display.
+  `inline-block`, because inline elements ignore overflow. `p` and `div` keep their block display.
 - `as="p"` has its margin reset to 0; space paragraphs with `Stack` `gap`.
 - Override with `className` at `'&&'` specificity, never `!important`.
 
@@ -62,6 +63,16 @@ through. There is no `style` prop.
 // A title that shrinks next to an action.
 <Inline justify="between">
   <Text truncate weight="semibold">{book.title}</Text>
+  <Button type="primary">Open</Button>
+</Inline>
+
+// A stacked title and meta line beside an action: the title truncates, the
+// Stack shrinks with the row.
+<Inline justify="between">
+  <Stack gap="none">
+    <Text truncate weight="semibold">{book.title}</Text>
+    <Text size="sm" tone="muted">{book.author}</Text>
+  </Stack>
   <Button type="primary">Open</Button>
 </Inline>
 
