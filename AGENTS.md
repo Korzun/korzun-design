@@ -44,7 +44,11 @@ Every component exports its props type as `<Name>Props` (`ButtonProps`,
    sibling `style.ts`. Colours, spacing, font sizes, radii, shadows, and z-index
    all come from `theme.*`; use `applyTransparency(token, alpha)` for tints. No
    literal hex, px, or rem values, no inline `style={{…}}` with literals, and no
-   other CSS-in-JS or Tailwind. See [theme](docs/theme.md).
+   other CSS-in-JS or Tailwind. See [theme](docs/theme.md). **Tags that report
+   state use a status tone**; label tones (`subject`, `author`, …) name
+   things. `status` is a legacy label tone despite its name; for a state use
+   `success`/`warning`/`danger`/`info`, or `neutral` when it carries no
+   meaning.
 2. **Corners follow depth.** On the page background use `lg`. Inside a card or
    modal use `md`. Inside one of those use `sm`. A flush child takes its
    parent's radius. Popovers, menus, and toasts use `md`, and their items `sm`.

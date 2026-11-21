@@ -46,7 +46,7 @@ No `className`.
       { title: 'Slug', value: device.slug },
       { title: 'Cover size', value: `${device.coverWidth}×${device.coverHeight}` },
       { title: 'Grayscale cover', value: device.bwCover ? 'Yes' : 'No' },
-      { title: 'Status', value: <Tag size="sm" tone="status">Active</Tag> },
+      { title: 'Status', value: <Tag size="sm" tone="success">Active</Tag> },
     ]}
   />
 </Card>

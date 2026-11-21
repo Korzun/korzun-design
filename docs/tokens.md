@@ -14,11 +14,11 @@ Surfaces, text, borders and state colours, mode-aware. Keys are grouped as follo
 - `color.text`: `primary secondary muted faint onPrimary onDanger description`
 - `color.bg`: `page card cardHeader track input footer glass glassFallback glassActive selected hover success placeholder`. `track` must read against both `page` and `card`; `hover` is a translucent scrim; `glass*` feed `recipe.glass`.
 - `color.border`: `default strong light focus hover danger glass glassActive faint loading success section`
-- `color.success`: a single value.
+- `color.success`, `color.warning`, `color.info`: a single value each.
 - `color.brand`: `default hover active light outline loading loadingHover loadingActive linkHover`
 - `color.danger`: `default hover active light outline loading loadingHover loadingActive`
 - `color.overlay`: `backdrop`
-- `color.chip`: eight tinted label colourways, each `{ text, bg, border }`: `status author series subject book entryType user rating`. See Slated for curation.
+- `color.chip`: thirteen tinted colourways, each `{ text, bg, border }`. Status tones: `success warning danger info neutral`. Label tones: `status author series subject book entryType user rating` (the `status` label tone is not a status tone). See Slated for curation.
 
 ## space
 
@@ -90,7 +90,7 @@ JSS-spreadable style fragments (`...theme.recipe.x`), not components.
 
 Both groups below move into the package byte-for-byte in 0.0.1 and are due for a decision before the API settles.
 
-- `color.chip.*`: eight colourways (`status author series subject book entryType user rating`) named after Bookplate's metadata chips, not after a general role.
+- `color.chip.*`: the eight label colourways (`status author series subject book entryType user rating`) are named after Bookplate's metadata chips, not after a general role.
 - `size.metadataValue`: `15rem`, a width named after Bookplate's metadata display.
 
 No other token name or comment in `src/theme/theme.ts` is clearly Bookplate-specific. Two comments mention app internals (`floatingControlTopBase` refers to the admin picker and `router/nav-layout-style`), but the tokens themselves are generic.

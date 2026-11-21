@@ -256,3 +256,49 @@ describe('recipe.row', () => {
     }
   });
 });
+
+describe('status tones', () => {
+  it('every chip has text, bg and border in both modes', () => {
+    for (const theme of [lightTheme, darkTheme]) {
+      for (const [tone, chip] of Object.entries(theme.color.chip)) {
+        expect(Object.keys(chip).sort(), tone).toEqual(['bg', 'border', 'text']);
+        expect(chip.text && chip.bg && chip.border, tone).toBeTruthy();
+      }
+    }
+  });
+  it('has the four status chips', () => {
+    for (const theme of [lightTheme, darkTheme]) {
+      expect(Object.keys(theme.color.chip)).toEqual(
+        expect.arrayContaining(['success', 'warning', 'danger', 'info'])
+      );
+    }
+  });
+  it('warning chip uses the picked yellow', () => {
+    expect(lightTheme.color.chip.warning).toEqual({
+      text: '#854d0e',
+      bg: 'rgba(234,179,8,0.16)',
+      border: 'rgba(202,138,4,0.40)',
+    });
+    expect(darkTheme.color.chip.warning).toEqual({
+      text: '#FDE047',
+      bg: 'rgba(234,179,8,0.20)',
+      border: 'rgba(234,179,8,0.42)',
+    });
+  });
+  it('info chip is built from brand blue', () => {
+    expect(lightTheme.color.chip.info.text).toBe(lightTheme.color.blue[700]);
+    expect(darkTheme.color.chip.info.text).toBe(darkTheme.color.blue[300]);
+  });
+  it('success and danger chips derive from the theme colours', () => {
+    expect(lightTheme.color.chip.success.text).toBe('#15803d');
+    expect(darkTheme.color.chip.success.text).toBe('#86EFAC');
+    expect(lightTheme.color.chip.danger.text).toBe(lightTheme.color.red[700]);
+    expect(darkTheme.color.chip.danger.text).toBe(darkTheme.color.red[400]);
+  });
+  it('solid warning and info colours', () => {
+    expect(lightTheme.color.warning).toBe('#ca8a04');
+    expect(darkTheme.color.warning).toBe('#EAB308');
+    expect(lightTheme.color.info).toBe(lightTheme.color.brand.default);
+    expect(darkTheme.color.info).toBe(darkTheme.color.brand.default);
+  });
+});

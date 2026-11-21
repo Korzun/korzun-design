@@ -49,6 +49,14 @@ describe('Tag', () => {
     expectTone(screen.getByText('No change'), lightTheme.color.chip.neutral);
   });
 
+  it.each(['success', 'warning', 'danger', 'info'] as const)(
+    'renders the %s status tone',
+    (tone) => {
+      renderWithProviders(<Tag tone={tone}>{tone}</Tag>);
+      expectTone(screen.getByText(tone), lightTheme.color.chip[tone]);
+    }
+  );
+
   it('keeps size and onClick working with a tone', () => {
     const onClick = vi.fn();
     renderWithProviders(

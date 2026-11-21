@@ -52,3 +52,26 @@ export const Tones: Story<Props> = ({ onClick }) => (
     ))}
   </div>
 );
+
+export const StatusTones: Story<Props> = ({ onClick }) => (
+  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', alignItems: 'center' }}>
+    <Tag tone="success" onClick={onClick}>
+      Published
+    </Tag>
+    <Tag tone="warning" onClick={onClick}>
+      Overdue
+    </Tag>
+    <Tag tone="danger" onClick={onClick}>
+      Failed
+    </Tag>
+    <Tag tone="info" onClick={onClick}>
+      Scheduled
+    </Tag>
+    <Tag tone="neutral" onClick={onClick}>
+      No change
+    </Tag>
+    <Tag tone="subject" onClick={onClick}>
+      Subject
+    </Tag>
+  </div>
+);

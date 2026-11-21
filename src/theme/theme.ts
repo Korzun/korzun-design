@@ -95,6 +95,10 @@ export interface Theme {
       section: string;
     };
     success: string;
+    /** Solid warning colour for icons and accents. */
+    warning: string;
+    /** Solid info colour for icons and accents. */
+    info: string;
     brand: {
       default: string;
       hover: string;
@@ -129,6 +133,11 @@ export interface Theme {
       // Quiet grey for states that carry no category (e.g. "no change"), built
       // from the mode's muted text colour.
       neutral: { text: string; bg: string; border: string };
+      // Status tones for state, as opposed to the label tones above.
+      success: { text: string; bg: string; border: string };
+      warning: { text: string; bg: string; border: string };
+      danger: { text: string; bg: string; border: string };
+      info: { text: string; bg: string; border: string };
     };
   };
   space: {
@@ -267,6 +276,8 @@ function buildTheme(mode: ThemeMode): Theme {
       section: '#E6E6E9',
     },
     success: '#16a34a',
+    warning: '#ca8a04',
+    info: blue[500],
     brand: {
       default: blue[500],
       hover: blue[400],
@@ -306,6 +317,22 @@ function buildTheme(mode: ThemeMode): Theme {
         text: gray[600],
         bg: applyTransparency(gray[600], 0.08),
         border: applyTransparency(gray[600], 0.22),
+      },
+      success: {
+        text: '#15803d',
+        bg: applyTransparency('#16a34a', 0.08),
+        border: applyTransparency('#16a34a', 0.22),
+      },
+      warning: { text: '#854d0e', bg: 'rgba(234,179,8,0.16)', border: 'rgba(202,138,4,0.40)' },
+      danger: {
+        text: red[700],
+        bg: applyTransparency(red[500], 0.08),
+        border: applyTransparency(red[500], 0.22),
+      },
+      info: {
+        text: blue[700],
+        bg: applyTransparency(blue[500], 0.08),
+        border: applyTransparency(blue[500], 0.24),
       },
     },
   };
@@ -359,6 +386,8 @@ function buildTheme(mode: ThemeMode): Theme {
       section: '#2B2C30',
     },
     success: '#22C55E',
+    warning: '#EAB308',
+    info: blue[400],
     brand: {
       default: blue[400],
       hover: blue[300],
@@ -399,6 +428,22 @@ function buildTheme(mode: ThemeMode): Theme {
         text: darkMuted,
         bg: applyTransparency(darkMuted, 0.16),
         border: applyTransparency(darkMuted, 0.3),
+      },
+      success: {
+        text: '#86EFAC',
+        bg: applyTransparency('#22C55E', 0.16),
+        border: applyTransparency('#22C55E', 0.3),
+      },
+      warning: { text: '#FDE047', bg: 'rgba(234,179,8,0.20)', border: 'rgba(234,179,8,0.42)' },
+      danger: {
+        text: red[400],
+        bg: applyTransparency(red[500], 0.16),
+        border: applyTransparency(red[500], 0.3),
+      },
+      info: {
+        text: blue[300],
+        bg: applyTransparency(blue[400], 0.18),
+        border: applyTransparency(blue[400], 0.36),
       },
     },
   };
