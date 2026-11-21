@@ -74,6 +74,7 @@ describe('Heading', () => {
     );
     expect(css(getByTestId('h')).textOverflow).toBe('ellipsis');
     expect(css(getByTestId('h')).whiteSpace).toBe('nowrap');
+    expect(css(getByTestId('h')).maxWidth).toBe('100%');
   });
 
   it('passes through attributes, ref and className', () => {

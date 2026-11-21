@@ -18,6 +18,7 @@ describe('Stack', () => {
     expect(computed.flexDirection).toBe('column');
     expect(computed.gap).toBe(lightTheme.space.md);
     expect(computed.alignItems).toBe('stretch');
+    expect(computed.minWidth).toBe('0px');
   });
 
   it.each(spaceKeys)('gap %s uses the space token', (key) => {

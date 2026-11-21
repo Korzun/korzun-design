@@ -86,6 +86,26 @@ export const Truncate: Story<Props> = () => (
         <button type="button">Open</button>
       </Inline>
     </div>
+    <div style={{ width: '12rem', border: '1px dashed currentColor' }}>
+      <Stack align="start">
+        <Text as="p" truncate>
+          {long}
+        </Text>
+      </Stack>
+    </div>
+    <div style={{ width: '16rem', border: '1px dashed currentColor' }}>
+      <Inline justify="between">
+        <Stack gap="none">
+          <Text truncate weight="semibold">
+            {long}
+          </Text>
+          <Text size="sm" tone="muted">
+            Meta line
+          </Text>
+        </Stack>
+        <button type="button">Open</button>
+      </Inline>
+    </div>
   </Stack>
 );
 

@@ -2,7 +2,7 @@ import { createUseStyles, type Theme } from '../../theme/index.js';
 import { gapRules } from '../stack/gap.js';
 
 export const useStyle = createUseStyles((theme: Theme) => ({
-  root: { display: 'flex', flexDirection: 'row' },
+  root: { display: 'flex', flexDirection: 'row', minWidth: 0 },
   list: { margin: 0, padding: 0, listStyle: 'none' },
   wrap: { flexWrap: 'wrap' },
   'align-start': { alignItems: 'flex-start' },

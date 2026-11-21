@@ -19,6 +19,7 @@ describe('Inline', () => {
     expect(css(el).alignItems).toBe('center');
     expect(css(el).justifyContent).toBe('flex-start');
     expect(css(el).flexWrap).not.toBe('wrap');
+    expect(css(el).minWidth).toBe('0px');
   });
 
   it.each([

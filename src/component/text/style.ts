@@ -50,11 +50,12 @@ const typographyRules = (theme: Theme) => ({
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
     minWidth: 0,
+    // A start, centre or end aligned flex item sizes to its content, so cap it.
+    maxWidth: '100%',
   },
   // Inline elements ignore overflow and width, so they become inline-block.
   truncateInline: {
     display: 'inline-block',
-    maxWidth: '100%',
     verticalAlign: 'bottom',
   },
 });

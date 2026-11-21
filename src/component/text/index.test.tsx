@@ -109,6 +109,7 @@ describe('Text', () => {
     expect(c.whiteSpace).toBe('nowrap');
     expect(c.minWidth).toBe('0px');
     expect(c.display).toBe('inline-block');
+    expect(c.maxWidth).toBe('100%');
   });
 
   it('truncate on a div keeps block display', () => {
@@ -119,6 +120,7 @@ describe('Text', () => {
     );
     expect(css(getByTestId('t')).display).not.toBe('inline-block');
     expect(css(getByTestId('t')).overflow).toBe('hidden');
+    expect(css(getByTestId('t')).maxWidth).toBe('100%');
   });
 
   it('truncated Text inside Inline can shrink', () => {
