@@ -29,7 +29,7 @@ export type PopoverProps = {
   children: ReactNode;
   /** Applied to the fixed wrapper; win specificity with `'&&'`, never `!important`. */
   className?: string;
-  /** Vertical gap between the anchor and the popover, in pixels; also the viewport edge margin. */
+  /** Vertical gap between the anchor and the popover, in pixels; also the viewport edge margin when `matchWidth` is false. */
   gap?: number;
   /** Match the popover width to the anchor width (default true). */
   matchWidth?: boolean;
