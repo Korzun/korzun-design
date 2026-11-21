@@ -10,6 +10,6 @@ export { NavMobile, type NavMobileProps, type NavPill } from './nav-mobile/index
 export type { NavItem } from './nav-types.js';
 export { Page } from './page/index.js';
 export { ProgressIndicator } from './progress-indicator/index.js';
-export { Tag } from './tag/index.js';
+export { Tag, type TagTone } from './tag/index.js';
 export { ThemeSetting } from './theme-setting/index.js';
 export { TopFade } from './top-fade/index.js';

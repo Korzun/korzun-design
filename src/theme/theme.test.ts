@@ -127,6 +127,17 @@ describe('new semantic tokens — dark values exist and differ from light', () =
     expect(darkTheme.color.chip.entryType.bg).not.toBe(lightTheme.color.chip.entryType.bg);
     expect(darkTheme.color.chip.entryType.border).not.toBe(lightTheme.color.chip.entryType.border);
   });
+  it('chip.neutral dark differs from light', () => {
+    expect(darkTheme.color.chip.neutral.text).not.toBe(lightTheme.color.chip.neutral.text);
+    expect(darkTheme.color.chip.neutral.bg).not.toBe(lightTheme.color.chip.neutral.bg);
+    expect(darkTheme.color.chip.neutral.border).not.toBe(lightTheme.color.chip.neutral.border);
+  });
+  it('chip.neutral is built from each mode’s muted text colour', () => {
+    expect(lightTheme.color.chip.neutral.text).toBe(lightTheme.color.text.muted);
+    expect(lightTheme.color.chip.neutral.bg).toBe('rgba(110, 110, 110, 0.08)');
+    expect(lightTheme.color.chip.neutral.border).toBe('rgba(110, 110, 110, 0.22)');
+    expect(darkTheme.color.chip.neutral.text).toBe(darkTheme.color.text.muted);
+  });
   it('chip.user dark differs from light', () => {
     expect(darkTheme.color.chip.user.text).not.toBe(lightTheme.color.chip.user.text);
     expect(darkTheme.color.chip.user.bg).not.toBe(lightTheme.color.chip.user.bg);
