@@ -1,20 +1,25 @@
 import cx from 'classnames';
 
-import { useStyle } from './style.js';
+import { type TagTone, useStyle } from './style.js';
+
+export type { TagTone };
 
 interface TagProps {
   children: React.ReactNode;
   onClick?: () => void;
   /** `sm` renders a compact chip that fits within a normal text line height. */
   size?: 'sm' | 'md';
+  /** Colour, from the theme's `color.chip` tokens. `neutral` is a quiet grey. */
+  tone?: TagTone;
 }
 
-export const Tag = ({ children, onClick, size = 'md' }: TagProps) => {
+export const Tag = ({ children, onClick, size = 'md', tone = 'subject' }: TagProps) => {
   const style = useStyle();
   return (
     <span
       className={cx(
         style.root,
+        style[`tone-${tone}`],
         size === 'sm' && style.sm,
         onClick !== undefined && style.clickable
       )}

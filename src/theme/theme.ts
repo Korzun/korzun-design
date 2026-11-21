@@ -126,6 +126,9 @@ export interface Theme {
       entryType: { text: string; bg: string; border: string };
       user: { text: string; bg: string; border: string };
       rating: { text: string; bg: string; border: string };
+      // Quiet grey for states that carry no category (e.g. "no change"), built
+      // from the mode's muted text colour.
+      neutral: { text: string; bg: string; border: string };
     };
   };
   space: {
@@ -297,9 +300,15 @@ function buildTheme(mode: ThemeMode): Theme {
       },
       user: { text: '#a23a95', bg: 'rgba(162,58,149,0.08)', border: 'rgba(162,58,149,0.22)' },
       rating: { text: '#b5451b', bg: 'rgba(181,69,27,0.08)', border: 'rgba(181,69,27,0.22)' },
+      neutral: {
+        text: gray[600],
+        bg: applyTransparency(gray[600], 0.08),
+        border: applyTransparency(gray[600], 0.22),
+      },
     },
   };
 
+  const darkMuted = '#9CA1AB';
   const darkColor: Theme['color'] = {
     gray,
     blue,
@@ -307,7 +316,7 @@ function buildTheme(mode: ThemeMode): Theme {
     text: {
       primary: '#F5F5F7',
       secondary: '#C8CBD2',
-      muted: '#9CA1AB',
+      muted: darkMuted,
       faint: '#6E7480',
       onPrimary: '#FFFFFF',
       onDanger: '#FFFFFF',
@@ -383,6 +392,12 @@ function buildTheme(mode: ThemeMode): Theme {
       },
       user: { text: '#E7A6DA', bg: 'rgba(162,58,149,0.16)', border: 'rgba(162,58,149,0.30)' },
       rating: { text: '#F2A07B', bg: 'rgba(181,69,27,0.18)', border: 'rgba(181,69,27,0.32)' },
+      // Dark chips run stronger alphas (0.16 / 0.30) than light (0.08 / 0.22).
+      neutral: {
+        text: darkMuted,
+        bg: applyTransparency(darkMuted, 0.16),
+        border: applyTransparency(darkMuted, 0.3),
+      },
     },
   };
 
