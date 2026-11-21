@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.1.0 — 2026-11-21
+
+- `Tag` status tones: `success`, `warning` (yellow, stronger fill), `danger`, `info` (brand blue). New `color.warning` and `color.info` solid colours. Status tones report state; label tones name things. No visual change to existing tags.
+- `Popover`:
+  - `side` (`bottom`/`top`) and `align` (`start`/`center`/`end`).
+  - Flips when the preferred side has no room.
+  - Stays inside the viewport horizontally.
+  - Exposes `data-side`.
+  - Escape calls `onClose` unless already handled, without closing a surrounding dialog.
+  - Defaults unchanged, so `Select` and `ChipsInput` look the same.
+- New types: `PopoverSide`, `PopoverAlign`.
+
 ## 0.0.6 — 2026-11-21
 
 First curation release: corners now follow the depth rule in `docs/corners.md`.
