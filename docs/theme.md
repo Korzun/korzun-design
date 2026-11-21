@@ -89,6 +89,7 @@ Recipes are style fragments that you spread into a rule: `{ ...theme.recipe.inpu
 | `recipe.focusRing` | Transparent 2px outline; set `outlineColor: theme.color.brand.outline` on `'&:focus'` |
 | `recipe.spinner` | 1em rotating box; apply to `SpinnerIcon` |
 | `recipe.glass` / `glassHighlight` | Frosted translucent surface (floating chrome) and its active state |
+| `recipe.row` | The shaded field row a control sits in inside a card: `bg.cardHeader`, `md` corners, padding `md lg md sm`. Use it for custom rows next to form fields |
 | `recipe.card.shell` / `header` / `footer` | The Card surface (`lg`), its header bar, and its footer bar |
 | `recipe.modal.dialog` / `header` / `footer` | A `<dialog>` surface (`lg`, shared width, backdrop), its title, and its button bar |
 

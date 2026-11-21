@@ -201,6 +201,8 @@ export interface Theme {
     spinner: Recipe;
     glass: Recipe;
     glassHighlight: Recipe;
+    /** The shaded field row (`bg.cardHeader`, `md` corners) a control sits in inside a card. */
+    row: Recipe;
     modal: {
       dialog: Recipe;
       header: Recipe;
@@ -567,6 +569,11 @@ function buildTheme(mode: ThemeMode): Theme {
       borderWidth: '1px',
       borderColor: color.border.glassActive,
       boxShadow: shadow.glassActive,
+    },
+    row: {
+      backgroundColor: color.bg.cardHeader,
+      borderRadius: radius.md,
+      padding: `${space.md} ${space.lg} ${space.md} ${space.sm}`,
     },
     modal: {
       dialog: {

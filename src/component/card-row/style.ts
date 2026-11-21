@@ -5,7 +5,7 @@ export const useStyle = createUseStyles((theme: Theme) => ({
     ...theme.recipe.card.shell,
     backgroundColor: theme.color.bg.card,
     padding: '6px', // row-specific compact padding
-    borderRadius: '12px', // row-specific 10px radius (not on theme scale)
+    // Corners come from recipe.card.shell (radius.lg): a row sits on the page background.
   },
   clickable: {
     cursor: 'pointer',

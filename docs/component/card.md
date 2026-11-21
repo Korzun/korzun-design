@@ -20,7 +20,7 @@ a disclosure section with no card chrome (`CollapsibleSection`), a modal
 | `subTitle` | `string` | | Small faint text after the title. |
 | `headerAction` | `ReactNode \| ReactElement[]` | | Right side of the header. Clicks and keys here do **not** bubble to `onClick` / the collapse toggle. |
 | `footer` | `ReactNode` | | Grey footer bar, children right-aligned. Clicks do not bubble to `onClick`. Hidden while a collapsible card is collapsed. |
-| `size` | `'small' \| 'large'` | `'large'` | `large`: body padding `space.xl`. `small`: body padding `1px` and a 9px corner (see below). |
+| `size` | `'small' \| 'large'` | `'large'` | `large`: body padding `space.xl`. `small`: body padding `1px` and a `calc(md + 1px)` corner (see below). |
 | `isCollapsible` | `boolean` | `false` | Header becomes a `role="button"` toggle (Enter/Space) with a rotating chevron before the title. |
 | `defaultCollapsed` | `boolean` | **`true`** | **A collapsible card starts collapsed unless you pass `defaultCollapsed={false}`.** Uncontrolled; there is no `open` prop. |
 | `onClick` | `() => void` | | Whole-card click; adds a pointer cursor. See the keyboard caveat below. |
@@ -44,8 +44,8 @@ The header renders only if one of `title`, `subTitle`, `headerAction`,
 
 The shell uses `radius.lg`: a Card sits on the page background. Buttons inside
 (body or footer) take `radius="card"`. See [corners](../corners.md).
-`size="small"` hard-codes `borderRadius: '9px'`, off the radius scale: known
-inconsistency, don't copy the value.
+`size="small"` insets its body by only 1px, so its corner is `calc(radius.md + 1px)`
+(9px): concentric with the `md`-cornered covers and rows flush inside it.
 
 ## Examples
 

@@ -21,7 +21,7 @@ Find where the element sits, then read its radius from this table:
 | Where the element sits | Radius | Examples |
 |---|---|---|
 | On the page background | `lg` | `Card`, modal dialog (`recipe.modal.dialog`), a standalone `Button` (default `radius`), `<Select surface="page">` |
-| Inside a card or modal | `md` | inputs (`recipe.input`), `Button radius="card"` / `"modal"`, `Tag`, shaded rows, inset boxes |
+| Inside a card or modal | `md` | inputs (`recipe.input`), `Button radius="card"` / `"modal"`, `Tag`, shaded rows (`recipe.row`), inset boxes |
 | Inside one of those | `sm` | a chip inside an input, `Button radius="inset"` inside an inset box, a menu item, a Switch track in a shaded row |
 | Flush with its parent (zero inset, edges touch) | the parent's radius | an unlabelled Select's trigger, an input filling its row |
 | Inset 4px or less from its parent | `calc(parent − inset)` | a Switch thumb 2px inside a 4px track is 2px |
@@ -63,6 +63,6 @@ const useStyles = createUseStyles((theme: Theme) => ({
 ```
 
 - Never write a literal `borderRadius` (`'12px'`, `'50%'`). The only
-  non-token form allowed is `calc(theme.radius.X - Npx)` for tight insets.
-- Known off-scale values in the library (don't copy them): `CardRow` uses
-  `12px`, and `Card size="small"` uses `9px`.
+  non-token form allowed is `calc(theme.radius.X ± Npx)` for tight insets.
+- A 1px inset works the other way too: `Card size="small"` is
+  `calc(radius.md + 1px)` so its flush `md` children stay concentric.

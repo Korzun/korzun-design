@@ -244,3 +244,15 @@ describe('bg.track separates the segmented-control track from what it sits on', 
     expect(lightTheme.color.bg.track).toBe(lightTheme.color.gray[100]);
   });
 });
+
+describe('recipe.row', () => {
+  it('is the shaded field row: cardHeader fill, md corners, md/lg/md/sm padding', () => {
+    for (const theme of [lightTheme, darkTheme]) {
+      expect(theme.recipe.row).toEqual({
+        backgroundColor: theme.color.bg.cardHeader,
+        borderRadius: theme.radius.md,
+        padding: `${theme.space.md} ${theme.space.lg} ${theme.space.md} ${theme.space.sm}`,
+      });
+    }
+  });
+});
