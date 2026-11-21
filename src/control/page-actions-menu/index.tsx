@@ -11,10 +11,15 @@ import { useStyle } from './style.js';
 
 export type { PageActionIntentProps, PageActionItem };
 
-interface PageActionsMenuProps {
+export interface PageActionsMenuProps {
+  /** All items appear in the menu, in order; `primary` and `align` are ignored here. Labels must be unique. */
   items: PageActionItem[];
 }
 
+/**
+ * Mobile page-header "More actions" button that opens a glass menu of
+ * `items`. Usually rendered by `Page headerActions`.
+ */
 export function PageActionsMenu({ items }: PageActionsMenuProps) {
   const styles = useStyle();
   const [open, setOpen] = useState(false);

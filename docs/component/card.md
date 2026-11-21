@@ -78,5 +78,4 @@ inconsistency, don't copy the value.
   collapsible card; they are unreachable while it is collapsed.
 - Don't nest Cards; use `CardDivider` to split one card into sections.
 - Don't expect `isCollapsible` cards to start open; pass `defaultCollapsed={false}`.
-- Don't use the `Props` type from the module file; it is not exported from the
-  `component` barrel. Use `ComponentProps<typeof Card>`.
+- Do use the exported `CardProps` type when wrapping Card.

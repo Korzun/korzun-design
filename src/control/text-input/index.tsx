@@ -5,28 +5,53 @@ import { IconProps } from '../../icon/index.js';
 import { Button } from '../button/index.js';
 import { useStyle } from './style.js';
 
+/** Trailing icon button of a `TextInput`. Broken: `action` is never called. */
 type Action = {
+  /** Icon component, not an element. */
   icon: React.ComponentType<IconProps>;
+  /** Never wired up: clicking the icon does nothing. */
   action: () => void;
+  /** Red icon. */
   danger?: boolean;
 };
+
+export type { Action as TextInputAction };
+
 export type TextInputProps = {
+  /** Broken, do not use: the icon button is drawn but its `action` callback is never wired up. */
   action?: Action;
+  /** Passed through to the input. */
   autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters';
+  /** Passed through to the input. */
   autoComplete?: React.HTMLInputAutoCompleteAttribute | undefined;
+  /** Visible label. Not linked to the input (no `htmlFor`). */
   label?: string;
+  /** Default `'horizontal'`; `horizontal`/`vertical` paint a card-header row, `inline` paints nothing. */
   layout?: 'horizontal' | 'vertical' | 'inline';
+  /** Native limit, plus an `n/max` counter once within `max(10% of max, 10)` characters. */
   maxLength?: number;
+  /** The input's `name` (form data) and the key passed to `onValidChange`. */
   name: string;
+  /** Receives the string, or `undefined` when emptied; not an event. Not called while `validate` fails. */
   onChange?: (newValue: string | undefined) => void;
+  /** Passed through; unlike `onChange`, this one receives the event. */
   onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
+  /** Called with `name` and the new validity; fires only when validity flips. */
   onValidChange?: (fieldName: string, newValid: boolean) => void;
+  /** Renders `type="password"`. */
   password?: boolean;
+  /** Placeholder text for the input. */
   placeholder?: string;
+  /** Receives the raw text on each keystroke; `false` turns label and border red. Default accepts all. */
   validate?: (newValue: string) => boolean;
+  /** Typed as required (pass `undefined` for empty). Re-syncs into the field only when the prop changes. */
   value: string | undefined;
 };
 
+/**
+ * Single-line text field. Keeps its own text and re-syncs from `value` only
+ * when the prop changes; `onChange` is skipped while `validate` fails.
+ */
 export const TextInput = ({
   autoCapitalize,
   autoComplete,

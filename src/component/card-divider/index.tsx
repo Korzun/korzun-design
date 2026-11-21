@@ -3,24 +3,33 @@ import type { ReactNode } from 'react';
 
 import { useStyle } from './style.js';
 
+/** Where a divider's label or actions sit on the line. */
 export type CardDividerAlign = 'left' | 'center' | 'right';
 
 export type CardDividerProps = {
-  // Optional label. Without it (and without actions) the divider is a plain full-width line.
+  /** Optional label. Without it (and without actions) the divider is a plain full-width line. */
   children?: ReactNode;
-  // Where the label sits. Left/right hug that edge with a short stub of line poking past;
-  // center leaves equal line on both sides.
+  /**
+   * Where the label sits (default `'left'`). Left/right hug that edge with a short stub of line
+   * poking past; center leaves equal line on both sides.
+   */
   align?: CardDividerAlign;
-  // Optional actions rendered on the divider line (e.g. a bulk-action button).
+  /** Optional actions rendered on the divider line (e.g. a bulk-action button). */
   actions?: ReactNode;
-  // Where the actions sit. When actions share a position with the label they stack in the
-  // same group — label first, then actions.
+  /**
+   * Where the actions sit (default `'right'`). When actions share a position with the label they
+   * stack in the same group — label first, then actions.
+   */
   actionsAlign?: CardDividerAlign;
 };
 
 const isPresent = (node: ReactNode): boolean =>
   node !== undefined && node !== null && node !== false;
 
+/**
+ * A rule splitting one `Card` body into sections, optionally labelled. Full-bleed: assumes the
+ * `space.xl` padding of a `size="large"` card body.
+ */
 export const CardDivider = ({
   children,
   align = 'left',

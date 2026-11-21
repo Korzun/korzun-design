@@ -1,6 +1,7 @@
 import { useStyle } from './style.js';
 
-type ProgressIndicatorProps = {
+export type ProgressIndicatorProps = {
+  /** A **fraction from 0 to 1**, not a percentage (`0.42` shows "42%"). Clamped to 0–1. */
   value: number;
   /**
    * Required, not defaulted (2026-08-13 final review, M-1): `role=
@@ -12,6 +13,7 @@ type ProgressIndicatorProps = {
    * ${title}`.
    */
   ariaLabel: string;
+  /** Width and height of the SVG in px (default 40). The label's font size does not scale. */
   size?: number;
 };
 
@@ -28,6 +30,7 @@ const sectorPath = (pct: number): string => {
   return `M ${CX} ${CY} L ${CX} ${CY - R_INNER} A ${R_INNER} ${R_INNER} 0 ${largeArc} 1 ${x} ${y} Z`;
 };
 
+/** A small pie-style progress mark plus a "Not started" / "N%" / "Completed" label. */
 export const ProgressIndicator = ({ value, ariaLabel, size = 40 }: ProgressIndicatorProps) => {
   const style = useStyle();
   const clamped = Math.min(100, Math.max(0, value * 100));

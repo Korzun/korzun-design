@@ -39,7 +39,9 @@ function useDelayedFlag(active: boolean, delayMs: number): boolean {
   return elapsed;
 }
 
-type SwitchProps = {
+export type { SwitchRadiusValue };
+
+export type SwitchProps = {
   /**
    * Accessible name when the visible `label` is absent because something
    * OUTSIDE the switch already carries it — a grid's row and column headers,
@@ -47,10 +49,18 @@ type SwitchProps = {
    * machine key (`BOOK_REQUEST_FULFILLED:EMAIL`), not a name.
    */
   ariaLabel?: string;
+  /** Controlled on/off state. */
   checked: boolean;
+  /** Helper text under the label, linked by `aria-describedby`. */
   description?: ReactNode;
+  /** Fades the switch and removes it from the tab order. */
   disabled?: boolean;
+  /** Visible label and accessible name (`ariaLabel` wins over it). */
   label?: string;
+  /**
+   * `'default'`: track then label, inline. `'horizontal'`: full-width shaded
+   * row, track on the right; the whole row toggles, description included.
+   */
   layout?: 'default' | 'horizontal';
   /**
    * A save driven by this switch is in flight. The thumb becomes a spinner
@@ -63,7 +73,9 @@ type SwitchProps = {
    * where the click is taking it.
    */
   loading?: boolean;
+  /** Not a form field (no hidden input); only the last-resort accessible name. */
   name: string;
+  /** Receives the new value, not an event. Not called while `disabled` or `loading`. */
   onChange: (checked: boolean) => void;
   /**
    * The corner shape of the track, named for what the switch sits in. Defaults
@@ -74,6 +86,10 @@ type SwitchProps = {
   radius?: SwitchRadiusValue;
 };
 
+/**
+ * Controlled on/off toggle with an optional label and description. Enter and
+ * Space toggle; clicks don't propagate to a clickable parent row.
+ */
 export const Switch = ({
   ariaLabel,
   checked,

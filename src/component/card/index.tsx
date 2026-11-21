@@ -4,18 +4,30 @@ import { PropsWithChildren, ReactNode, ReactElement, useCallback, useState } fro
 import { ChevronCircleIcon } from '../../icon/index.js';
 import { useStyle } from './style.js';
 
-export type Props = PropsWithChildren<{
+export type CardProps = PropsWithChildren<{
+  /** On the outer element. Override with `'&&'` specificity, never `!important`. */
   className?: string;
+  /** Starts a collapsible card collapsed. Defaults to **true**: pass `false` to start open. Uncontrolled. */
   defaultCollapsed?: boolean;
+  /** Grey footer bar, right-aligned. Clicks don't bubble to `onClick`. Hidden while collapsed. */
   footer?: ReactNode;
+  /** Right side of the header. Clicks and keys here don't bubble to `onClick` or the collapse toggle. */
   headerAction?: ReactNode | ReactElement[];
+  /** Header becomes a `role="button"` toggle (Enter/Space) with a chevron. Collapsed content unmounts. */
   isCollapsible?: boolean;
+  /** Whole-card click. The card is not focusable; Enter/Space bubbling from any focused child fires it. */
   onClick?: () => void;
+  /** Header click. Ignored when `isCollapsible` (the header toggles instead); its presence renders a header. */
   onClickHeader?: () => void;
+  /** `'large'` (default): `space.xl` body padding. `'small'`: 1px body padding, for list rows. */
   size?: 'small' | 'large';
+  /** Small faint text after the title. */
   subTitle?: string;
+  /** Header title. */
   title?: string | ReactNode;
 }>;
+
+/** The bordered surface each feature on a screen lives in: optional header, padded body, optional footer. */
 export const Card = ({
   children,
   className,
@@ -28,7 +40,7 @@ export const Card = ({
   size = 'large',
   subTitle,
   title,
-}: Props) => {
+}: CardProps) => {
   const style = useStyle();
   const [isExpanded, setIsExpanded] = useState<boolean>(!defaultCollapsed);
   const handleToggle = useCallback(() => setIsExpanded((prev) => !prev), []);

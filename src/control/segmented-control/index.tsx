@@ -4,17 +4,23 @@ import { type CSSProperties, type KeyboardEvent, useRef } from 'react';
 import type { IconProps } from '../../icon/index.js';
 import { useStyle } from './style.js';
 
+/** One segment of a `SegmentedControl`. */
 export type SegmentedOption<V extends string> = {
+  /** The value passed to `onChange` when this segment is picked. */
   value: V;
   /** The segment's accessible name, and its visible text unless `showLabels` is off. */
   label: string;
-  /** Drawn above the label, which then becomes a small caption under it. */
+  /**
+   * Icon component (`Icon: SearchIcon`), not an element. Drawn above the label,
+   * which then becomes a small caption under it.
+   */
   Icon?: (props: IconProps) => React.JSX.Element;
 };
 
 type BaseProps<V extends string> = {
-  /** The group's accessible name, e.g. the setting or field it edits. */
+  /** The group's accessible name, e.g. the setting or field it edits. Not rendered visibly. */
   label: string;
+  /** The segments, in order. Declare them `as const` or type them as `SegmentedOption<V>`. */
   options: ReadonlyArray<SegmentedOption<V>>;
   /** The checked option; `null` (or a value no option has) checks nothing and draws no lens. */
   value: V | null;
@@ -32,7 +38,7 @@ type BaseProps<V extends string> = {
   surface?: 'card' | 'row';
 };
 
-type SegmentedControlProps<V extends string> = BaseProps<V> &
+export type SegmentedControlProps<V extends string> = BaseProps<V> &
   (
     | {
         /** Clicking (or Space/Enter on) the checked segment, Backspace and Delete clear the value. */
@@ -41,6 +47,7 @@ type SegmentedControlProps<V extends string> = BaseProps<V> &
         onChange?: (value: V | null) => void;
       }
     | {
+        /** Off by default: clicking the checked segment does nothing and there is no way to clear. */
         clearable?: false;
         /** Absent means read-only: the control shows the value and ignores input. */
         onChange?: (value: V) => void;

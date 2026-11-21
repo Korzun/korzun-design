@@ -6,9 +6,9 @@ import { useStyle } from './style.js';
 export type EmptyStateProps = {
   /** The one line that says what is not here. */
   title: string;
-  /** The optional second line: what to do about it, or why it is empty. */
+  /** The optional second line: what to do about it, or why it is empty. Only `undefined` omits it. */
   children?: ReactNode;
-  /** Tints the title — for a load FAILURE, not for an honestly empty list. */
+  /** Tints the title — for a load FAILURE, not for an honestly empty list. Default `false`. */
   danger?: boolean;
 };
 

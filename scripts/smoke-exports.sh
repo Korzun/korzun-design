@@ -51,13 +51,14 @@ JSON
 
 cat >"$tmp/app/index.ts" <<'TS'
 import { applyTransparency } from '@korzun/design';
-import { Page } from '@korzun/design/component';
-import { Button, useModalDialog } from '@korzun/design/control';
+import { Page, type CardProps } from '@korzun/design/component';
+import { Button, useModalDialog, type ButtonProps } from '@korzun/design/control';
 import { isStandalone } from '@korzun/design/hooks';
 import { CheckIcon } from '@korzun/design/icon';
 import { ThemeProvider } from '@korzun/design/theme';
 import { useToast } from '@korzun/design/toast';
 
+export const typeProbe: [ButtonProps['radius'], CardProps['size']] = ['card', 'small'];
 export const probe = [ThemeProvider, Button, useModalDialog, Page, CheckIcon, useToast, isStandalone, applyTransparency];
 TS
 

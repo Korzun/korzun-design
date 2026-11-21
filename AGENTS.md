@@ -34,6 +34,9 @@ To load this guide in a consuming app, add this line to its `CLAUDE.md` or
 | `@korzun/design` | everything above, flat, plus `applyTransparency`; the `ThemeSetting` type is renamed `ThemeSettingValue` here |
 
 Import only from these entry points, never from `dist/…` or `src/…` paths.
+Every component exports its props type as `<Name>Props` (`ButtonProps`,
+`CardProps`, …), and every prop has a JSDoc comment, so hover or read the
+`.d.ts` for details.
 
 ## Rules
 
