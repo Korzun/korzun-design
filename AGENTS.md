@@ -23,15 +23,15 @@ To load this guide in a consuming app, add this line to its `CLAUDE.md` or
 
 ## Imports
 
-| Import | Contents |
-|---|---|
-| `@korzun/design/theme` | `ThemeProvider`, `useTheme`, `useThemeSetting`, `createUseStyles`, `Theme`, `lightTheme`, `darkTheme` |
-| `@korzun/design/control` | buttons, inputs, select, switch, segmented control, popover, `ConfirmModal`, `useModalDialog`, page actions |
+| Import                     | Contents                                                                                                                    |
+| -------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| `@korzun/design/theme`     | `ThemeProvider`, `useTheme`, `useThemeSetting`, `createUseStyles`, `Theme`, `lightTheme`, `darkTheme`                       |
+| `@korzun/design/control`   | buttons, inputs, select, switch, segmented control, popover, `ConfirmModal`, `useModalDialog`, page actions                 |
 | `@korzun/design/component` | `Page`, `Card` family, `Stack`, `Inline`, `Text`, `Heading`, `EmptyState`, `Tag`, metadata, navs, `ThemeSetting`, `TopFade` |
-| `@korzun/design/icon` | `*Icon` components, `IconProps` |
-| `@korzun/design/toast` | `ToastProvider`, `useToast` |
-| `@korzun/design/hooks` | `useMinimizeOnScroll`, `usePullToRefresh`, `isStandalone` |
-| `@korzun/design` | everything above, flat, plus `applyTransparency`; the `ThemeSetting` type is renamed `ThemeSettingValue` here |
+| `@korzun/design/icon`      | `*Icon` components, `IconProps`                                                                                             |
+| `@korzun/design/toast`     | `ToastProvider`, `useToast`                                                                                                 |
+| `@korzun/design/hooks`     | `useMinimizeOnScroll`, `usePullToRefresh`, `isStandalone`                                                                   |
+| `@korzun/design`           | everything above, flat, plus `applyTransparency`; the `ThemeSetting` type is renamed `ThemeSettingValue` here               |
 
 Import only from these entry points, never from `dist/…` or `src/…` paths.
 Every component exports its props type as `<Name>Props` (`ButtonProps`,
@@ -85,4 +85,4 @@ Every component exports its props type as `<Name>Props` (`ButtonProps`,
 
 [docs]|theme.md: provider, createUseStyles, token summary, recipes|corners.md: radius by nesting depth|patterns.md: screens, forms in cards, modals, overrides|tokens.md: every token key in detail|philosophy.md: design rules and why|icon.md|toast.md|hooks.md
 [docs/control]|{back-button,button,chips-input,confirm-modal,date-time-input,field-list,number-input,page-actions-bar,page-actions-menu,page-footer-actions,popover,segmented-control,select,switch,text-area,text-input,use-modal-dialog}.md
-[docs/component]|{card,card-divider,card-row,collapsible-section,empty-state,heading,inline,meta-line,metadata-list,nav-desktop,nav-mobile,page,progress-indicator,stack,tag,text,theme-setting,top-fade}.md
+[docs/component]|{card,card-divider,card-row,collapsible-section,empty-state,heading,inline,meta-line,metadata-list,nav-desktop,nav-mobile,page,progress-indicator,spinner,stack,tag,text,theme-setting,top-fade}.md
