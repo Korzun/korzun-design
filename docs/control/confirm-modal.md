@@ -2,13 +2,13 @@
 
 `import { ConfirmModal } from '@korzun/design/control'`
 
-A ready-made yes/no modal built on [`Dialog`](dialog.md): a
-title, a body (`children`), and a footer with a text Cancel and a primary
-Confirm button. It is always mounted and fully controlled by `isOpen`.
+A ready-made yes/no modal built on [`Dialog`](dialog.md): a title, a body
+(`children`), and a footer with a text Cancel and a primary Confirm button. It
+is always mounted and fully controlled by `isOpen`.
 
 Use something else for: a modal with its own form or more than two actions
-(use [`Dialog`](dialog.md) for anything that is not yes/no), or a non-blocking notice
-(toast).
+(use [`Dialog`](dialog.md) for anything that is not yes/no), or a non-blocking
+notice (toast).
 
 ## Props
 

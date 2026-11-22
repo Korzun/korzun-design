@@ -24,6 +24,11 @@ describe('ErrorMessage', () => {
     expect(el.textContent).toBe('Bad input');
   });
 
+  it('lets role be overridden', () => {
+    const { getByRole } = renderWithProviders(<ErrorMessage role="status">Saving</ErrorMessage>);
+    expect(getByRole('status')).toHaveTextContent('Saving');
+  });
+
   it.each([null, undefined, false, ''])('renders nothing when children is %j', (children) => {
     const { container, queryByRole } = renderWithProviders(<ErrorMessage>{children}</ErrorMessage>);
     // The provider wraps children in a div; the message adds nothing inside it.

@@ -74,6 +74,23 @@ an optional footer. Put form errors in the form's `Stack` with `ErrorMessage`,
 and show loading with `Spinner` (or `loading` on the Button).
 
 ```tsx
+const [open, setOpen] = useState(false);
+const [saving, setSaving] = useState(false);
+const [error, setError] = useState<string>();
+
+async function save(formData: FormData) {
+  setSaving(true);
+  setError(undefined);
+  try {
+    await updateProgress(Number(formData.get('page')));
+    setOpen(false);
+  } catch {
+    setError('Could not save. Try again.');
+  } finally {
+    setSaving(false);
+  }
+}
+
 <Dialog
   open={open}
   onClose={() => setOpen(false)}
@@ -95,6 +112,8 @@ and show loading with `Spinner` (or `loading` on the Button).
 </Dialog>
 ```
 
+- A panel that loads on its own shows a `Spinner`:
+  `<Stack align="center"><Spinner label="Loading books" /></Stack>`.
 - Buttons in the footer default to `radius="modal"`; don't set it.
 - `Dialog` stays mounted: toggle `open`, never render it conditionally.
 - Escape and backdrop clicks call `onClose`, unless `canDismiss` is false.

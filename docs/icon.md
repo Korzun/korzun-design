@@ -70,7 +70,7 @@ options={[{ value: 'grid', label: 'Grid', Icon: BooksIcon }]} // SegmentedContro
 | `RowRemoveIcon` | stroke | A table row with an X under it (remove row). |
 | `SearchIcon` | stroke | Magnifying glass. |
 | `SettingsIcon` | stroke | Gear. |
-| `SpinnerIcon` | stroke | A quarter arc. **Does not spin by itself**: add `theme.recipe.spinner` in a class. |
+| `SpinnerIcon` | stroke | A quarter arc. **Does not spin by itself**; use `Spinner` (component) for a ready-made loader. |
 | `ThumbDownIcon` | emoji | 👎 silhouette (rating 1, "Bad"). |
 | `UploadIcon` | stroke | Arrow up out of a tray. |
 | `UserIcon` | stroke | One person. |
@@ -89,9 +89,9 @@ the others but their exact shape depends on the OS emoji font; they ignore
 <CheckIcon width={15} height={15} aria-hidden className={styles.checkIcon} />
 Book is valid
 
-// A spinning loader with an accessible name.
-const useStyle = createUseStyles((theme: Theme) => ({ spinner: theme.recipe.spinner }));
-<SpinnerIcon role="status" aria-label="Loading" className={styles.spinner} />
+// A spinning loader with an accessible name: use `Spinner` from
+// `@korzun/design/component`, not a hand-built SpinnerIcon.
+<Spinner label="Loading books" />
 ```
 
 ## Do / don't

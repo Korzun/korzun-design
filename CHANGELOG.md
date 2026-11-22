@@ -7,7 +7,7 @@
 - New `Spinner` (component): a loading indicator that takes the surrounding text colour and size.
 - `ConfirmModal` is rebuilt on `Dialog`. No API or visual change; it is now named by its title (`aria-labelledby`).
 - `Popover` renders inside an open `<dialog>` that contains its anchor, so `Select` and `ChipsInput` work in modals.
-- Buttons in a `Dialog` footer default to `radius="modal"`; an explicit `radius` still wins.
+- Buttons in a `Dialog` footer default to `radius="modal"`; an explicit `radius` still wins. The radius applies to the footer only (a Dialog nested in a footer is unaffected), and `footer={0}` no longer renders a stray `0`.
 - Guidance: AGENTS.md rules 3, 7 and 10 and the imports table, and `patterns.md`, now teach `Dialog`, `ErrorMessage` and `Spinner`; `Dialog` is no longer listed as missing.
 
 ## 0.2.0 — 2026-11-21

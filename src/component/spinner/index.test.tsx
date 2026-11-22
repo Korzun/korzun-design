@@ -21,6 +21,7 @@ describe('Spinner', () => {
     const { queryByRole, container } = renderWithProviders(<Spinner decorative label="x" />);
     expect(queryByRole('status')).toBeNull();
     expect(container.querySelector('svg')?.getAttribute('aria-hidden')).toBe('true');
+    expect(container.querySelector('[aria-hidden="true"]:has(svg)')).not.toBeNull();
   });
 
   it('size resolves the font-size token', () => {

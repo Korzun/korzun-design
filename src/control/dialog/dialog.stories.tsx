@@ -2,6 +2,7 @@ import { FRUITS } from '@gallery/fixtures';
 import type { Story, StoryDefault } from '@gallery/story';
 import { useState, type ComponentProps } from 'react';
 
+import { Stack } from '../../component/stack/index.js';
 import { Button } from '../button/index.js';
 import { Select } from '../select/index.js';
 import { TextInput } from '../text-input/index.js';
@@ -105,15 +106,17 @@ export const WithForm: Story<Props> = ({ open: _open, onClose: _onClose, ...args
           </>
         }
       >
-        <TextInput name="name" label="Name" layout="vertical" value={name} onChange={setName} />
-        <Select
-          name="fruit"
-          label="Fruit"
-          layout="vertical"
-          options={FRUITS}
-          value={fruit}
-          onChange={setFruit}
-        />
+        <Stack gap="md">
+          <TextInput name="name" label="Name" layout="vertical" value={name} onChange={setName} />
+          <Select
+            name="fruit"
+            label="Fruit"
+            layout="vertical"
+            options={FRUITS}
+            value={fruit}
+            onChange={setFruit}
+          />
+        </Stack>
       </Dialog>
     </>
   );

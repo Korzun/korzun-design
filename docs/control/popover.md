@@ -8,7 +8,7 @@ ancestors that clip overflow (rounded cards). It paints **nothing** itself: no
 background, border, shadow, or radius. `Select` and `ChipsInput` build their
 dropdowns on it.
 
-Use something else for: a modal (`useModalDialog`), page action menus
+Use something else for: a modal (`Dialog`), page action menus
 (`PageActionsMenu`, `PageActionsBar`), choosing from a list (`Select`).
 
 ## Props
@@ -27,6 +27,9 @@ Use something else for: a modal (`useModalDialog`), page action menus
 
 ## Behaviour to know
 
+- **Content mounts one commit after `open` flips.** An effect keyed on `open`
+  that reaches into the content must wait for it: use a ref callback or
+  `autoFocus` instead.
 - **Flip.** It opens on `side`. If the content does not fit on that side and
   the other side has more room, it opens on the other side. When neither side
   fits it keeps whichever has more room.

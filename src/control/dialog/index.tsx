@@ -51,11 +51,13 @@ export function Dialog({
       onClick={stopClick}
     >
       <div className={styles.dialog} onClick={stopClick}>
-        <div id={titleId} className={styles.header}>
-          {title}
-        </div>
-        <div className={styles.body}>{children}</div>
-        {footer && (
+        <ButtonRadiusContext.Provider value={undefined}>
+          <div id={titleId} className={styles.header}>
+            {title}
+          </div>
+          <div className={styles.body}>{children}</div>
+        </ButtonRadiusContext.Provider>
+        {footer != null && footer !== false && footer !== '' && (
           <div className={styles.footer} data-dialog-footer="">
             <ButtonRadiusContext.Provider value={ButtonRadius.Modal}>
               {footer}

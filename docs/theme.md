@@ -88,7 +88,7 @@ Recipes are style fragments that you spread into a rule: `{ ...theme.recipe.inpu
 | `recipe.input` | Text-input chrome: font, `md` radius, border, hover and focus colours, iOS 16px floor; `&$danger` turns the border red if your sheet declares a `danger: {}` class |
 | `recipe.label` | Field label: semibold, `md`, muted; `&$danger` |
 | `recipe.focusRing` | Transparent 2px outline; set `outlineColor: theme.color.brand.outline` on `'&:focus'` |
-| `recipe.spinner` | 1em rotating box; apply to `SpinnerIcon` |
+| `recipe.spinner` | 1em rotating box. `Spinner` is the normal way to show a spinner; use the recipe only for a custom rotating element |
 | `recipe.glass` / `glassHighlight` | Frosted translucent surface (floating chrome) and its active state |
 | `recipe.row` | The shaded field row a control sits in inside a card: `bg.cardHeader`, `md` corners, padding `md lg md sm`. Use it for custom rows next to form fields |
 | `recipe.card.shell` / `header` / `footer` | The Card surface (`lg`), its header bar, and its footer bar |

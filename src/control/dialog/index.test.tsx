@@ -143,6 +143,32 @@ describe('Dialog', () => {
     expect(radiusOf('Nested')).toBe(radiusOf('Standalone modal'));
   });
 
+  it.each([false, '', null])('renders no footer bar for footer=%j', (footer) => {
+    const { container } = renderWithProviders(
+      <Dialog open onClose={() => {}} title="T" footer={footer as React.ReactNode} />
+    );
+    expect(container.querySelector('[data-dialog-footer]')).toBeNull();
+  });
+
+  it('a Dialog nested in a footer does not leak the modal radius to its body', () => {
+    renderWithProviders(
+      <>
+        <Button>Standalone default</Button>
+        <Dialog
+          open
+          onClose={() => {}}
+          title="Outer"
+          footer={
+            <Dialog open onClose={() => {}} title="Inner">
+              <Button>Inner body</Button>
+            </Dialog>
+          }
+        />
+      </>
+    );
+    expect(radiusOf('Inner body')).toBe(radiusOf('Standalone default'));
+  });
+
   it('a click inside does not bubble to a clickable parent', async () => {
     const user = userEvent.setup();
     const spy = vi.fn();
