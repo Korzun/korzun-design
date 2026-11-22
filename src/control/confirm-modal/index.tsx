@@ -2,7 +2,7 @@ import { PropsWithChildren, useCallback } from 'react';
 
 import { IconProps } from '../../icon/index.js';
 import { Button } from '../button/index.js';
-import { useModalDialog } from '../use-modal-dialog/index.js';
+import { Dialog } from '../dialog/index.js';
 import { useStyle } from './style.js';
 
 export type ConfirmModalProps = PropsWithChildren<{
@@ -53,27 +53,25 @@ export function ConfirmModal({
   const handleConfirm = useCallback(() => {
     onConfirm();
   }, [onConfirm]);
-  // Escape dismisses the modal, except while the action is in flight — the
-  // Cancel button is disabled then, so Escape is gated to match.
-  const modalRef = useModalDialog(isOpen, handleCancel, !loading);
-  const handleClickDialog = useCallback((event: React.MouseEvent) => {
-    event.stopPropagation();
-  }, []);
 
   return (
-    <dialog ref={modalRef} className={styles.root} onClick={handleClickDialog}>
-      <div className={styles.dialog} onClick={handleClickDialog}>
-        <div className={styles.header}>
+    <Dialog
+      open={isOpen}
+      onClose={handleCancel}
+      canDismiss={!loading}
+      title={
+        <>
           {Icon && (
             <div className={styles.icon}>
               <Icon className={danger ? styles.iconDanger : undefined} />
             </div>
           )}
           {title}
-        </div>
-        <div className={styles.body}>{children}</div>
-        <div className={styles.footer}>
-          <Button onClick={handleCancel} disabled={loading} type="text" radius="modal">
+        </>
+      }
+      footer={
+        <>
+          <Button onClick={handleCancel} disabled={loading} type="text">
             {cancelText}
           </Button>
           <Button
@@ -82,12 +80,13 @@ export function ConfirmModal({
             loading={loading}
             type="primary"
             danger={danger}
-            radius="modal"
           >
             {confirmText}
           </Button>
-        </div>
-      </div>
-    </dialog>
+        </>
+      }
+    >
+      {children}
+    </Dialog>
   );
 }
