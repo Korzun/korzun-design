@@ -6,7 +6,7 @@ A small pie-style progress mark (a brand-coloured sector inside a ring) followed
 by a text label: "Not started" at 0, "N%" in between, "Completed" at 100%. The
 SVG is a `role="progressbar"` with `aria-valuenow` 0–100.
 
-Use something else for: an indeterminate wait (`SpinnerIcon`, or `loading` on
+Use something else for: an indeterminate wait (`Spinner`, or `loading` on
 a `Button`), a pull-to-refresh indicator (`usePullToRefresh`).
 
 ## Props

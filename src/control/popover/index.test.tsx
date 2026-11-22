@@ -1,8 +1,9 @@
 import { act, fireEvent, screen } from '@testing-library/react';
-import { useRef, type ReactNode } from 'react';
+import { useEffect, useRef, type ReactNode } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { renderWithProviders } from '../../test-utils.js';
+import { Dialog } from '../dialog/index.js';
 import { Popover, type PopoverProps } from './index.js';
 
 type RectInit = { top: number; bottom: number; left: number; right: number; width: number };
@@ -247,6 +248,119 @@ describe('Popover', () => {
       fireEvent.mouseDown(screen.getByText('content'));
       fireEvent.mouseDown(screen.getByTestId('anchor'));
       expect(onClose).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('portal target', () => {
+    const InDialog = ({ open, dialogOpen = true }: { open: boolean; dialogOpen?: boolean }) => {
+      const anchor = useRef<HTMLDivElement>(null);
+      return (
+        <dialog open={dialogOpen}>
+          <div ref={anchor} data-testid="anchor" />
+          <Popover anchorRef={anchor} open={open}>
+            <div>content</div>
+          </Popover>
+        </dialog>
+      );
+    };
+
+    it('portals into an open dialog that contains the anchor', () => {
+      const { rerender } = renderWithProviders(<InDialog open={false} />);
+      rerender(<InDialog open />);
+      expect(screen.getByText('content').closest('dialog')).toBe(document.querySelector('dialog'));
+    });
+
+    it('mounting open inside a dialog mounts the child once, in the dialog', () => {
+      const mounts = vi.fn();
+      const Child = () => {
+        useEffect(() => mounts(), []);
+        return <div>content</div>;
+      };
+      const Mounted = () => {
+        const anchor = useRef<HTMLDivElement>(null);
+        return (
+          <dialog open>
+            <div ref={anchor} data-testid="anchor" />
+            <Popover anchorRef={anchor} open>
+              <Child />
+            </Popover>
+          </dialog>
+        );
+      };
+      renderWithProviders(<Mounted />);
+      expect(screen.getByText('content').closest('dialog')).toBe(document.querySelector('dialog'));
+      expect(mounts).toHaveBeenCalledTimes(1);
+    });
+
+    it('portals to document.body outside a dialog', () => {
+      renderWithProviders(<Harness />);
+      expect(wrapper().parentElement).toBe(document.body);
+    });
+
+    it('portals to document.body when the containing dialog is closed', () => {
+      const { rerender } = renderWithProviders(<InDialog open={false} dialogOpen={false} />);
+      rerender(<InDialog open dialogOpen={false} />);
+      expect(wrapper().parentElement).toBe(document.body);
+    });
+
+    describe('inside a Dialog', () => {
+      beforeEach(() => {
+        HTMLDialogElement.prototype.showModal = vi.fn(function (this: HTMLDialogElement) {
+          this.setAttribute('open', '');
+        });
+        HTMLDialogElement.prototype.close = vi.fn();
+      });
+
+      const InModal = ({
+        open,
+        onDialogClose,
+        onClose,
+      }: {
+        open: boolean;
+        onDialogClose: () => void;
+        onClose: () => void;
+      }) => {
+        const anchor = useRef<HTMLDivElement>(null);
+        return (
+          <Dialog open onClose={onDialogClose} title="T">
+            <div ref={anchor} data-testid="anchor" />
+            <Popover anchorRef={anchor} open={open} onClose={onClose}>
+              <div>content</div>
+            </Popover>
+          </Dialog>
+        );
+      };
+
+      const setup = () => {
+        const onDialogClose = vi.fn();
+        const onClose = vi.fn();
+        const { rerender } = renderWithProviders(
+          <InModal open={false} onDialogClose={onDialogClose} onClose={onClose} />
+        );
+        rerender(<InModal open onDialogClose={onDialogClose} onClose={onClose} />);
+        return { onDialogClose, onClose };
+      };
+
+      it('Escape closes the popover and not the Dialog', () => {
+        const { onDialogClose, onClose } = setup();
+        expect(screen.getByText('content').closest('dialog')).toHaveAttribute('open');
+        const event = escape(document);
+        expect(onClose).toHaveBeenCalledOnce();
+        // jsdom never turns keydown into a native cancel; defaultPrevented is
+        // what stops a real browser's dialog cancel.
+        expect(event.defaultPrevented).toBe(true);
+        expect(onDialogClose).not.toHaveBeenCalled();
+      });
+
+      // jsdom does not model the backdrop path (the dialog's own mousedown+click
+      // target); this checks only that content events do not reach onClose.
+      it('clicking popover content does not close the Dialog', () => {
+        const { onDialogClose, onClose } = setup();
+        fireEvent.mouseDown(screen.getByText('content'));
+        fireEvent.click(screen.getByText('content'));
+        expect(onDialogClose).not.toHaveBeenCalled();
+        expect(onClose).not.toHaveBeenCalled();
+      });
     });
   });
 });

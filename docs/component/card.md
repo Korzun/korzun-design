@@ -9,7 +9,7 @@ also be a whole clickable list row (`size="small"` with `onClick`).
 
 Use something else for: a "nothing here" block on the bare page (`EmptyState`),
 a disclosure section with no card chrome (`CollapsibleSection`), a modal
-(`ConfirmModal` / `useModalDialog` in `@korzun/design/control`).
+(`Dialog` / `ConfirmModal` in `@korzun/design/control`).
 
 ## Props
 

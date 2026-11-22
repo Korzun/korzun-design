@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { beforeAll, describe, expect, it, vi } from 'vitest';
 
 import { renderWithProviders } from '../../test-utils.js';
+import { Button } from '../button/index.js';
 import { ConfirmModal } from './index.js';
 
 beforeAll(() => {
@@ -79,5 +80,30 @@ describe('ConfirmModal', () => {
     expect(screen.getByRole('button', { name: 'Confirm', hidden: true })).not.toHaveAttribute(
       'aria-disabled'
     );
+  });
+
+  it('is named by its title', () => {
+    // jsdom drops the name when the labelled dialog is closed (display: none), so open it as a browser would.
+    vi.mocked(HTMLDialogElement.prototype.showModal).mockImplementationOnce(function (
+      this: HTMLDialogElement
+    ) {
+      this.setAttribute('open', '');
+    });
+    renderWithProviders(<ConfirmModal isOpen title="Delete book" />);
+    expect(screen.getByRole('dialog', { name: 'Delete book', hidden: true })).toBeInTheDocument();
+  });
+
+  it('footer buttons keep the modal radius', () => {
+    renderWithProviders(
+      <>
+        <ConfirmModal isOpen />
+        <Button type="text" radius="modal">
+          Standalone
+        </Button>
+      </>
+    );
+    const radiusOf = (name: string) =>
+      getComputedStyle(screen.getByText(name).closest('[role="button"]')!).borderRadius;
+    expect(radiusOf('Cancel')).toBe(radiusOf('Standalone'));
   });
 });

@@ -2,13 +2,13 @@
 
 `import { ConfirmModal } from '@korzun/design/control'`
 
-A ready-made yes/no modal on a native `<dialog>` (via `useModalDialog`): a
-title, a body (`children`), and a footer with a text Cancel and a primary
-Confirm button. It is always mounted and fully controlled by `isOpen`.
+A ready-made yes/no modal built on [`Dialog`](dialog.md): a title, a body
+(`children`), and a footer with a text Cancel and a primary Confirm button. It
+is always mounted and fully controlled by `isOpen`.
 
 Use something else for: a modal with its own form or more than two actions
-(build it on [`useModalDialog`](use-modal-dialog.md)), a non-blocking notice
-(toast).
+(use [`Dialog`](dialog.md) for anything that is not yes/no), or a non-blocking
+notice (toast).
 
 ## Props
 
@@ -30,7 +30,7 @@ No `className`. The props type is exported as `ConfirmModalProps`.
 
 ## Behaviour to know
 
-- Footer buttons already use `radius="modal"`; the dialog uses
+- Footer buttons already get `radius="modal"` from `Dialog`; the dialog uses
   `recipe.modal.dialog` (`radius.lg`, it sits on the page). See
   [corners](../corners.md).
 - `onCancel` is the single dismissal path, so whatever you do there runs for

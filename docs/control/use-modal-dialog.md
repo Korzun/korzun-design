@@ -4,11 +4,11 @@
 
 A hook that drives a native `<dialog>` from an `isOpen` boolean: it calls
 `showModal()` / `close()` for you and routes Escape and backdrop clicks to
-`onDismiss`. It is the base for every modal in the library (`ConfirmModal`
-uses it). There is no general `Dialog` component; build custom modals with
-this hook plus the `theme.recipe.modal.*` styles.
+`onDismiss`. It is the base under [`Dialog`](dialog.md) (and so `ConfirmModal`).
+Reach for `Dialog` first; this hook remains for modals `Dialog` cannot express,
+built from this hook plus the `theme.recipe.modal.*` styles.
 
-Use something else for: a plain yes/no confirmation (`ConfirmModal`), a
+Use something else for: a plain yes/no confirmation (`ConfirmModal`), or a
 dropdown or non-modal floating layer (`Popover`).
 
 ## Signature

@@ -87,7 +87,7 @@ export const PullToRefreshIndicator = () => {
   return (
     <div style={style}>
       {phase === 'refreshing'
-        ? <SpinnerIcon role="status" aria-label="Refreshing" className={styles.spinner} />
+        ? <Spinner label="Refreshing" />
         : <ChevronIcon aria-hidden className={phase === 'armed' ? styles.up : styles.down} />}
     </div>
   );

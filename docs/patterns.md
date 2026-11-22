@@ -69,30 +69,57 @@ is in flight; it disables Cancel and blocks Escape and backdrop dismissal.
 
 ## A custom modal
 
-There is no general `Dialog` component yet. Build one on `useModalDialog` and
-the modal recipes:
+Use `Dialog` for anything that is not a yes/no question: a title, a body, and
+an optional footer. Put form errors in the form's `Stack` with `ErrorMessage`,
+and show loading with `Spinner` (or `loading` on the Button).
 
 ```tsx
-const ref = useModalDialog(isOpen, onClose, !saving); // canDismiss = !saving
-return (
-  <dialog ref={ref} className={styles.dialog} onClick={(e) => e.stopPropagation()}>
-    <div className={styles.header}>Edit progress</div>
-    <div className={styles.body}>…</div>
-    <div className={styles.footer}>
-      <Button type="text" radius="modal" onClick={onClose} disabled={saving}>Cancel</Button>
-      <Button type="primary" radius="modal" loading={saving} onClick={save}>Save</Button>
-    </div>
-  </dialog>
-);
-// style.ts:
-// dialog: { ...theme.recipe.modal.dialog }, header: { ...theme.recipe.modal.header },
-// body: { padding: `0 ${theme.space.xxl} ${theme.space.xxl}` },
-// footer: { ...theme.recipe.modal.footer }
+const [open, setOpen] = useState(false);
+const [saving, setSaving] = useState(false);
+const [error, setError] = useState<string>();
+
+async function save(formData: FormData) {
+  setSaving(true);
+  setError(undefined);
+  try {
+    await updateProgress(Number(formData.get('page')));
+    setOpen(false);
+  } catch {
+    setError('Could not save. Try again.');
+  } finally {
+    setSaving(false);
+  }
+}
+
+<Dialog
+  open={open}
+  onClose={() => setOpen(false)}
+  title="Edit progress"
+  canDismiss={!saving}
+  footer={
+    <>
+      <Button type="text" onClick={() => setOpen(false)} disabled={saving}>Cancel</Button>
+      <Button type="primary" submit form="edit-progress" loading={saving}>Save</Button>
+    </>
+  }
+>
+  <form id="edit-progress" action={save}>
+    <Stack gap="md">
+      <NumberInput name="page" label="Page" value={page} onChange={setPage} />
+      <ErrorMessage>{error}</ErrorMessage>
+    </Stack>
+  </form>
+</Dialog>
 ```
 
-- `useModalDialog` owns open and close. Never call `showModal()` or `close()`
-  yourself, and never render the `<dialog>` conditionally: it must stay mounted.
-- Escape and backdrop clicks call `onDismiss`, unless `canDismiss` is false.
+- A panel that loads on its own shows a `Spinner`:
+  `<Stack align="center"><Spinner label="Loading books" /></Stack>`.
+- Buttons in the footer default to `radius="modal"`; don't set it.
+- `Dialog` stays mounted: toggle `open`, never render it conditionally.
+- Escape and backdrop clicks call `onClose`, unless `canDismiss` is false.
+- `Select` and `ChipsInput` work inside a `Dialog`.
+- Only for a custom native `<dialog>` that `Dialog` can't express, build on
+  `useModalDialog` (see [use-modal-dialog](control/use-modal-dialog.md)).
 
 ## Notifications
 
