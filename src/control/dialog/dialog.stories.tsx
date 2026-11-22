@@ -83,10 +83,6 @@ export const NotDismissable: Story<Props> = ({ open: _open, onClose: _onClose, .
   );
 };
 
-/**
- * The Select's list is expected not to open correctly inside a Dialog yet:
- * Popover-in-dialog support lands in a later task.
- */
 export const WithForm: Story<Props> = ({ open: _open, onClose: _onClose, ...args }) => {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState<string | undefined>('');

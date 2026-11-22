@@ -56,12 +56,12 @@ Use something else for: a modal (`useModalDialog`), page action menus
   not the innermost. A proper layer stack comes with `Menu`.
 - **No focus management.** Focus stays where it was; return it yourself if
   closing should move it.
-- z-index is `theme.zIndex.sticky` (1000). Inside a modal `<dialog>` opened with
-  `showModal()`, a body portal sits outside the dialog's top layer, so it is
-  likely hidden behind the dialog and inert. Test before using it there.
-  The reverse also bites: an open popover left behind a `showModal()` dialog
-  still takes Escape first, so the dialog does not close. Close popovers
-  before opening a dialog.
+- z-index is `theme.zIndex.sticky` (1000). Inside an open `<dialog>` it portals
+  into that dialog, so it shows in the top layer; this also matches a non-modal
+  `show()` dialog. The anchor must already be mounted when the popover opens
+  (open it after mount, as a toggle does). An open popover left behind a
+  `showModal()` dialog still takes Escape first, so the dialog does not close.
+  Close popovers before opening a dialog.
 - Clicking the anchor does not count as "outside", so a toggle button on the
   anchor works without racing `onClose`.
 

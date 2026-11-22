@@ -45,8 +45,9 @@ export type PopoverProps = {
 };
 
 /**
- * Renders `children` in a portal on `document.body`, positioned with `fixed`
- * coordinates against `anchorRef`. This lets dropdowns escape ancestors that
+ * Renders `children` in a portal on `document.body` (or, when the anchor sits
+ * inside an open `<dialog>`, into that dialog so it shows in the top layer),
+ * positioned with `fixed` coordinates against `anchorRef`. This lets dropdowns escape ancestors that
  * clip overflow (e.g. cards with rounded corners) without those ancestors
  * having to opt out of clipping.
  *
@@ -139,6 +140,9 @@ export const Popover = ({
 
   if (!open) return null;
 
+  // Inside an open <dialog> (modal or not) a body portal would sit behind its top layer.
+  const target = anchorRef.current?.closest('dialog[open]') ?? document.body;
+
   return createPortal(
     <div
       ref={contentRef}
@@ -159,6 +163,6 @@ export const Popover = ({
     >
       {children}
     </div>,
-    document.body
+    target
   );
 };
