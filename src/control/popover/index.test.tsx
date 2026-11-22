@@ -1,5 +1,5 @@
 import { act, fireEvent, screen } from '@testing-library/react';
-import { useRef, type ReactNode } from 'react';
+import { useEffect, useRef, type ReactNode } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { renderWithProviders } from '../../test-utils.js';
@@ -270,6 +270,28 @@ describe('Popover', () => {
       expect(screen.getByText('content').closest('dialog')).toBe(document.querySelector('dialog'));
     });
 
+    it('mounting open inside a dialog mounts the child once, in the dialog', () => {
+      const mounts = vi.fn();
+      const Child = () => {
+        useEffect(() => mounts(), []);
+        return <div>content</div>;
+      };
+      const Mounted = () => {
+        const anchor = useRef<HTMLDivElement>(null);
+        return (
+          <dialog open>
+            <div ref={anchor} data-testid="anchor" />
+            <Popover anchorRef={anchor} open>
+              <Child />
+            </Popover>
+          </dialog>
+        );
+      };
+      renderWithProviders(<Mounted />);
+      expect(screen.getByText('content').closest('dialog')).toBe(document.querySelector('dialog'));
+      expect(mounts).toHaveBeenCalledTimes(1);
+    });
+
     it('portals to document.body outside a dialog', () => {
       renderWithProviders(<Harness />);
       expect(wrapper().parentElement).toBe(document.body);
@@ -330,6 +352,8 @@ describe('Popover', () => {
         expect(onDialogClose).not.toHaveBeenCalled();
       });
 
+      // jsdom does not model the backdrop path (the dialog's own mousedown+click
+      // target); this checks only that content events do not reach onClose.
       it('clicking popover content does not close the Dialog', () => {
         const { onDialogClose, onClose } = setup();
         fireEvent.mouseDown(screen.getByText('content'));

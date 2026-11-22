@@ -46,8 +46,8 @@ export type PopoverProps = {
 
 /**
  * Renders `children` in a portal on `document.body` (or, when the anchor sits
- * inside an open `<dialog>`, into that dialog so it shows in the top layer),
- * positioned with `fixed` coordinates against `anchorRef`. This lets dropdowns escape ancestors that
+ * inside an open `<dialog>` at the moment it opens, into that dialog so it
+ * shows in the top layer), positioned with `fixed` coordinates against `anchorRef`. This lets dropdowns escape ancestors that
  * clip overflow (e.g. cards with rounded corners) without those ancestors
  * having to opt out of clipping.
  *
@@ -77,6 +77,7 @@ export const Popover = ({
   const style = useStyle();
   const contentRef = useRef<HTMLDivElement>(null);
   const [placement, setPlacement] = useState<Placement | null>(null);
+  const [target, setTarget] = useState<Element | null>(null);
 
   const updatePosition = useCallback(() => {
     const anchor = anchorRef.current;
@@ -99,8 +100,16 @@ export const Popover = ({
     );
   }, [anchorRef, gap, matchWidth, side, align]);
 
+  // Resolved once per opening: inside an open <dialog> (modal or not) a body
+  // portal would sit behind its top layer.
   useLayoutEffect(() => {
     if (!open) return;
+    setTarget(anchorRef.current?.closest('dialog[open]') ?? document.body);
+    return () => setTarget(null);
+  }, [open, anchorRef]);
+
+  useLayoutEffect(() => {
+    if (!open || !target) return;
     updatePosition();
     const handle = () => updatePosition();
     // Capture-phase scroll so nested scroll containers reposition too.
@@ -114,14 +123,14 @@ export const Popover = ({
       observer?.disconnect();
       setPlacement(null);
     };
-  }, [open, updatePosition]);
+  }, [open, target, updatePosition]);
 
   useEffect(() => {
     if (!open || !onClose) return;
     const handleMouseDown = (event: MouseEvent) => {
-      const target = event.target as Node;
-      if (anchorRef.current?.contains(target)) return;
-      if (contentRef.current?.contains(target)) return;
+      const pressed = event.target as Node;
+      if (anchorRef.current?.contains(pressed)) return;
+      if (contentRef.current?.contains(pressed)) return;
       onClose();
     };
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -138,10 +147,7 @@ export const Popover = ({
     };
   }, [open, onClose, anchorRef]);
 
-  if (!open) return null;
-
-  // Inside an open <dialog> (modal or not) a body portal would sit behind its top layer.
-  const target = anchorRef.current?.closest('dialog[open]') ?? document.body;
+  if (!open || !target) return null;
 
   return createPortal(
     <div

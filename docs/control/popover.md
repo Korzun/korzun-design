@@ -13,17 +13,17 @@ Use something else for: a modal (`useModalDialog`), page action menus
 
 ## Props
 
-| Prop | Type | Default | Notes |
-|---|---|---|---|
-| `anchorRef` | `RefObject<HTMLElement \| null>` | (required) | Element to place against. |
-| `open` | `boolean` | (required) | When `false`, renders nothing. Fully controlled. |
-| `children` | `ReactNode` | (required) | Your surface: give it its own background, border, radius. |
-| `side` | `'bottom' \| 'top'` | `'bottom'` | Preferred side; flips to the other side when this one has no room. |
-| `align` | `'start' \| 'center' \| 'end'` | `'start'` | Horizontal alignment to the anchor's left edge, centre, or right edge. |
-| `gap` | `number` | `4` | Pixels between the anchor and the popover; also the margin kept from the viewport's left and right edges when `matchWidth` is false. |
-| `matchWidth` | `boolean` | `true` | Width = anchor width. `false` lets content size itself. |
-| `onClose` | `() => void` | | Called on a mousedown outside both anchor and content, and on Escape (see below). Omit to opt out of both. Receives no event. |
-| `className` | `string` | | Applied to the fixed wrapper. Override with `'&&'`, never `!important`. |
+| Prop         | Type                             | Default    | Notes                                                                                                                                |
+| ------------ | -------------------------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `anchorRef`  | `RefObject<HTMLElement \| null>` | (required) | Element to place against.                                                                                                            |
+| `open`       | `boolean`                        | (required) | When `false`, renders nothing. Fully controlled.                                                                                     |
+| `children`   | `ReactNode`                      | (required) | Your surface: give it its own background, border, radius.                                                                            |
+| `side`       | `'bottom' \| 'top'`              | `'bottom'` | Preferred side; flips to the other side when this one has no room.                                                                   |
+| `align`      | `'start' \| 'center' \| 'end'`   | `'start'`  | Horizontal alignment to the anchor's left edge, centre, or right edge.                                                               |
+| `gap`        | `number`                         | `4`        | Pixels between the anchor and the popover; also the margin kept from the viewport's left and right edges when `matchWidth` is false. |
+| `matchWidth` | `boolean`                        | `true`     | Width = anchor width. `false` lets content size itself.                                                                              |
+| `onClose`    | `() => void`                     |            | Called on a mousedown outside both anchor and content, and on Escape (see below). Omit to opt out of both. Receives no event.        |
+| `className`  | `string`                         |            | Applied to the fixed wrapper. Override with `'&&'`, never `!important`.                                                              |
 
 ## Behaviour to know
 
@@ -58,8 +58,8 @@ Use something else for: a modal (`useModalDialog`), page action menus
   closing should move it.
 - z-index is `theme.zIndex.sticky` (1000). Inside an open `<dialog>` it portals
   into that dialog, so it shows in the top layer; this also matches a non-modal
-  `show()` dialog. The anchor must already be mounted when the popover opens
-  (open it after mount, as a toggle does). An open popover left behind a
+  `show()` dialog. The target is resolved each time the popover opens, so it
+  also works when it mounts already open. An open popover left behind a
   `showModal()` dialog still takes Escape first, so the dialog does not close.
   Close popovers before opening a dialog.
 - Clicking the anchor does not count as "outside", so a toggle button on the
