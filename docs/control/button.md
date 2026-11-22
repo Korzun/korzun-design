@@ -16,7 +16,7 @@ the header (`PageActionsBar`, `PageActionsMenu`), sticky footer actions
 |---|---|---|---|
 | `children` | `ReactNode` | | Label. |
 | `type` | `'default' \| 'primary' \| 'text' \| 'link' \| 'dashed'` | `'default'` | **Visual variant, not the HTML `type`.** Use `submit` for a submit button. |
-| `radius` | `'background' \| 'card' \| 'inset' \| 'modal'` | `'background'` | The surface the button sits on; see [corners](../corners.md). |
+| `radius` | `'background' \| 'card' \| 'inset' \| 'modal'` | `'background'` | The surface the button sits on; see [corners](../corners.md). In a `Dialog` footer it defaults to `modal`. |
 | `danger` | `boolean` | `false` | Red treatment. Mutually exclusive with `success` (type error). |
 | `success` | `boolean` | `false` | Green treatment. Mutually exclusive with `danger`. |
 | `loading` | `boolean` | `false` | Shows a spinner in place of the icons; blocks clicks. |

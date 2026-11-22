@@ -26,7 +26,7 @@ To load this guide in a consuming app, add this line to its `CLAUDE.md` or
 | Import                     | Contents                                                                                                                    |
 | -------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
 | `@korzun/design/theme`     | `ThemeProvider`, `useTheme`, `useThemeSetting`, `createUseStyles`, `Theme`, `lightTheme`, `darkTheme`                       |
-| `@korzun/design/control`   | buttons, inputs, select, switch, segmented control, popover, `ConfirmModal`, `useModalDialog`, page actions                 |
+| `@korzun/design/control`   | buttons, inputs, select, switch, segmented control, popover, `ConfirmModal`, `Dialog`, `useModalDialog`, page actions                 |
 | `@korzun/design/component` | `Page`, `Card` family, `Stack`, `Inline`, `Text`, `Heading`, `EmptyState`, `Tag`, metadata, navs, `ThemeSetting`, `TopFade` |
 | `@korzun/design/icon`      | `*Icon` components, `IconProps`                                                                                             |
 | `@korzun/design/toast`     | `ToastProvider`, `useToast`                                                                                                 |
@@ -68,9 +68,9 @@ Every component exports its props type as `<Name>Props` (`ButtonProps`,
 6. **Screens are a `Page` holding a stack of `Card`s,** one per feature. Form
    fields keep their default `horizontal` layout, and every field needs a
    `name`. See [patterns](docs/patterns.md).
-7. **Modals:** use `ConfirmModal` for yes/no. Build anything else on
-   `useModalDialog(isOpen, onDismiss, canDismiss)` with a native `<dialog>`
-   that stays mounted, and pass `canDismiss={!loading}`.
+7. **Modals:** use `ConfirmModal` for yes/no and `Dialog` for anything else
+   (title, body, optional footer; pass `canDismiss={!loading}`). Reach for
+   `useModalDialog` only for a custom native `<dialog>`.
 8. **Accessibility:** give repeated row actions an `ariaLabel` ("Remove
    Kindle"). Don't wrap library controls in `<button>` or `<a>`; they are
    already interactive.
@@ -84,5 +84,5 @@ Every component exports its props type as `<Name>Props` (`ButtonProps`,
 ## Docs index
 
 [docs]|theme.md: provider, createUseStyles, token summary, recipes|corners.md: radius by nesting depth|patterns.md: screens, forms in cards, modals, overrides|tokens.md: every token key in detail|philosophy.md: design rules and why|icon.md|toast.md|hooks.md
-[docs/control]|{back-button,button,chips-input,confirm-modal,date-time-input,field-list,number-input,page-actions-bar,page-actions-menu,page-footer-actions,popover,segmented-control,select,switch,text-area,text-input,use-modal-dialog}.md
+[docs/control]|{back-button,button,chips-input,confirm-modal,date-time-input,dialog,field-list,number-input,page-actions-bar,page-actions-menu,page-footer-actions,popover,segmented-control,select,switch,text-area,text-input,use-modal-dialog}.md
 [docs/component]|{card,card-divider,card-row,collapsible-section,empty-state,error-message,heading,inline,meta-line,metadata-list,nav-desktop,nav-mobile,page,progress-indicator,spinner,stack,tag,text,theme-setting,top-fade}.md

@@ -8,6 +8,7 @@ export {
 export { ChipsInput, type ChipColor, type ChipsInputProps } from './chips-input/index.js';
 export { ConfirmModal, type ConfirmModalProps } from './confirm-modal/index.js';
 export { DateTimeInput, type DateTimeInputProps } from './date-time-input/index.js';
+export { Dialog, type DialogProps } from './dialog/index.js';
 export {
   FieldList,
   type ColumnDescriptor,

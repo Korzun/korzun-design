@@ -1,8 +1,9 @@
 import cx from 'classnames';
-import { ComponentType, useCallback } from 'react';
+import { ComponentType, useCallback, useContext } from 'react';
 import { useFormStatus } from 'react-dom';
 
 import { IconProps, SpinnerIcon } from '../../icon/index.js';
+import { ButtonRadiusContext } from './radius-context.js';
 import { ButtonType, ButtonTypeValue, ButtonRadius, ButtonRadiusValue, useStyle } from './style.js';
 
 type ButtonVariant =
@@ -82,7 +83,7 @@ export const Button = ({
   loading = false,
   onClick = () => {},
   prefix: Prefix,
-  radius = ButtonRadius.Background as ButtonRadiusValue,
+  radius: radiusProp,
   submit = false,
   suffix: Suffix,
   success = false,
@@ -91,6 +92,9 @@ export const Button = ({
   type = ButtonType.Default as ButtonTypeValue,
 }: ButtonProps) => {
   const styles = useStyle();
+  // An explicit `radius` wins; otherwise a surface (Dialog footer) may supply one.
+  const radiusFromContext = useContext(ButtonRadiusContext);
+  const radius = radiusProp ?? radiusFromContext ?? (ButtonRadius.Background as ButtonRadiusValue);
   // Safe to call unconditionally: outside a <form> action, useFormStatus
   // returns a default { pending: false }. Only consulted in submit mode.
   const { pending } = useFormStatus();
