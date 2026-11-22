@@ -48,8 +48,9 @@ export type PopoverProps = {
  * Renders `children` in a portal on `document.body` (or, when the anchor sits
  * inside an open `<dialog>` at the moment it opens, into that dialog so it
  * shows in the top layer), positioned with `fixed` coordinates against
- * `anchorRef`. This lets dropdowns escape ancestors that clip overflow (e.g. cards with rounded corners) without those ancestors
- * having to opt out of clipping.
+ * `anchorRef`. This lets dropdowns escape ancestors that clip overflow (e.g.
+ * cards with rounded corners) without those ancestors having to opt out of
+ * clipping.
  *
  * Opens on `side` (default below) and flips when that side has no room; aligns
  * per `align` and clamps horizontally to the viewport (only without
