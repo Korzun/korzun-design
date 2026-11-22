@@ -3,6 +3,8 @@ export { CardDivider, type CardDividerAlign, type CardDividerProps } from './car
 export { CardRow, type CardRowProps } from './card-row/index.js';
 export { CollapsibleSection, type CollapsibleSectionProps } from './collapsible-section/index.js';
 export { EmptyState, type EmptyStateProps } from './empty-state/index.js';
+export { Heading, type HeadingProps } from './heading/index.js';
+export { Inline, type InlineProps } from './inline/index.js';
 export { MetaLine, type MetaLineProps } from './meta-line/index.js';
 export { MetadataList, type Metadata, type MetadataListProps } from './metadata-list/index.js';
 export { NavDesktop, type NavDesktopProps } from './nav-desktop/index.js';
@@ -10,6 +12,8 @@ export { NavMobile, type NavMobileProps, type NavPill } from './nav-mobile/index
 export type { NavItem } from './nav-types.js';
 export { Page, type PageProps, type PageTypeValue } from './page/index.js';
 export { ProgressIndicator, type ProgressIndicatorProps } from './progress-indicator/index.js';
+export { Stack, type StackProps } from './stack/index.js';
 export { Tag, type TagProps, type TagTone } from './tag/index.js';
+export { Text, type TextProps } from './text/index.js';
 export { ThemeSetting, type ThemeSettingProps } from './theme-setting/index.js';
 export { TopFade, type TopFadeProps } from './top-fade/index.js';

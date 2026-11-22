@@ -9,7 +9,7 @@ line. The separators are CSS (`::before`), not text, so screen readers read
 only the data.
 
 Use something else for: labelled key/value pairs (`MetadataList`), a row's
-primary title (your own styled element).
+primary title (`Text` or `Heading`).
 
 ## Props
 
@@ -25,36 +25,32 @@ primary title (your own styled element).
   separator with nothing (or `0`) after it; filter them yourself.
 - A single datum wider than the line ellipsizes instead of wrapping.
 - MetaLine sets no font size or colour of its own except the separator colour
-  (`text.muted`); style the line via `className`.
+  (`text.muted`); wrap it in `Text` to set the rest.
 - Items are keyed by index.
 
 ## Examples
 
 ```tsx
 // A book row's secondary line.
-<div className={styles.title}>{book.title}</div>
-<MetaLine
-  items={[
-    book.author,
-    book.series && `${book.series.name} #${book.seriesIndex}`,
-    book.progress !== undefined && `${Math.round(book.progress * 100)}%`,
-  ]}
-  className={styles.meta}
-/>
+<Text weight="semibold">{book.title}</Text>
+<Text as="div" size="sm" tone="faint">
+  <MetaLine
+    items={[
+      book.author,
+      book.series && `${book.series.name} #${book.seriesIndex}`,
+      book.progress !== undefined && `${Math.round(book.progress * 100)}%`,
+    ]}
+  />
+</Text>
 
 // Elements are fine as items.
 <MetaLine items={[<time dateTime={iso}>{formatted}</time>, device.label]} />
 ```
 
-```ts
-// The sheet for `className`: size and colour for the whole line.
-meta: { fontSize: theme.fontSize.sm, color: theme.color.text.faint },
-```
-
 ## Do / don't
 
 - Do pass conditional data as `cond && value`; `false` is skipped.
-- Do set typography through `className`.
+- Do set typography by wrapping the line in `Text` (`size`, `tone`); the items inherit it.
 - Don't join data into one string with your own " · ": wrapping then breaks
   inside a datum and the dots are read aloud.
 - Don't pass empty strings; they leave a stray separator.

@@ -27,7 +27,7 @@ To load this guide in a consuming app, add this line to its `CLAUDE.md` or
 |---|---|
 | `@korzun/design/theme` | `ThemeProvider`, `useTheme`, `useThemeSetting`, `createUseStyles`, `Theme`, `lightTheme`, `darkTheme` |
 | `@korzun/design/control` | buttons, inputs, select, switch, segmented control, popover, `ConfirmModal`, `useModalDialog`, page actions |
-| `@korzun/design/component` | `Page`, `Card` family, `EmptyState`, `Tag`, metadata, navs, `ThemeSetting`, `TopFade` |
+| `@korzun/design/component` | `Page`, `Card` family, `Stack`, `Inline`, `Text`, `Heading`, `EmptyState`, `Tag`, metadata, navs, `ThemeSetting`, `TopFade` |
 | `@korzun/design/icon` | `*Icon` components, `IconProps` |
 | `@korzun/design/toast` | `ToastProvider`, `useToast` |
 | `@korzun/design/hooks` | `useMinimizeOnScroll`, `usePullToRefresh`, `isStandalone` |
@@ -48,7 +48,10 @@ Every component exports its props type as `<Name>Props` (`ButtonProps`,
    state use a status tone**; label tones (`subject`, `author`, …) name
    things. `status` is a legacy label tone despite its name; for a state use
    `success`/`warning`/`danger`/`info`, or `neutral` when it carries no
-   meaning.
+   meaning. Lay out with `Stack`/`Inline` and set text with `Text`/`Heading`.
+   Don't write `display: 'flex'`, `gap`, `fontSize`, `fontWeight`, or text
+   `color` in style files for that. Style files are for padding, borders,
+   backgrounds, and one-offs.
 2. **Corners follow depth.** On the page background use `lg`. Inside a card or
    modal use `md`. Inside one of those use `sm`. A flush child takes its
    parent's radius. Popovers, menus, and toasts use `md`, and their items `sm`.
@@ -74,7 +77,7 @@ Every component exports its props type as `<Name>Props` (`ButtonProps`,
 9. **Overrides:** pass `className` where the module doc says it is accepted,
    and win specificity with `'&&'`. Never use `!important`, and never target
    internal class names.
-10. **Missing pieces:** there is no `Stack`, `Text`, `Heading`, general
+10. **Missing pieces:** there is no general
     `Dialog`, `Tabs`, `Tooltip`, `Checkbox`, or `Alert` yet. Build them in app
     code from tokens following these rules, and don't pull in another UI library.
 
@@ -82,4 +85,4 @@ Every component exports its props type as `<Name>Props` (`ButtonProps`,
 
 [docs]|theme.md: provider, createUseStyles, token summary, recipes|corners.md: radius by nesting depth|patterns.md: screens, forms in cards, modals, overrides|tokens.md: every token key in detail|philosophy.md: design rules and why|icon.md|toast.md|hooks.md
 [docs/control]|{back-button,button,chips-input,confirm-modal,date-time-input,field-list,number-input,page-actions-bar,page-actions-menu,page-footer-actions,popover,segmented-control,select,switch,text-area,text-input,use-modal-dialog}.md
-[docs/component]|{card,card-divider,card-row,collapsible-section,empty-state,meta-line,metadata-list,nav-desktop,nav-mobile,page,progress-indicator,tag,theme-setting,top-fade}.md
+[docs/component]|{card,card-divider,card-row,collapsible-section,empty-state,heading,inline,meta-line,metadata-list,nav-desktop,nav-mobile,page,progress-indicator,stack,tag,text,theme-setting,top-fade}.md

@@ -25,7 +25,7 @@ export const SettingsPage = () => (
 
 ## A form in a card
 
-- Fields go in the card body, in a column with `gap: theme.space.md`. Keep each
+- Fields go in the card body, in a `<Stack gap="md">`. Keep each
   input's default `horizontal` layout (label and control on one shaded row).
 - Every field needs a `name`. It is required, and it is the key passed to
   `onValidChange`.
@@ -39,9 +39,11 @@ export const SettingsPage = () => (
     <Button type="primary" radius="card" submit form="change-password">Save</Button>
   }
 >
-  <form id="change-password" className={styles.fields} action={save}>
-    <TextInput name="current" label="Current" password value={current} onChange={setCurrent} />
-    <TextInput name="next" label="New" password value={next} onChange={setNext} />
+  <form id="change-password" action={save}>
+    <Stack gap="md">
+      <TextInput name="current" label="Current" password value={current} onChange={setCurrent} />
+      <TextInput name="next" label="New" password value={next} onChange={setNext} />
+    </Stack>
   </form>
 </Card>
 ```
@@ -109,8 +111,25 @@ Never use `!important`, and never target the library's internal class names.
 
 ## Layout and text
 
-There are no `Stack`, `Text`, or `Heading` components yet. Write a small
-`createUseStyles` rule using tokens: `display: 'flex'`, `gap: theme.space.*`,
-`fontSize: theme.fontSize.*`, `fontWeight: theme.fontWeight.*`,
-`color: theme.color.text.*`. Don't use inline `style={{…}}` objects with
-literal values.
+Use `Stack` and `Inline` for layout and `Text` and `Heading` for text, not
+style files. Recipes:
+
+- Body text: a bare `<Text>`; it takes the surrounding look.
+- Meta line: `<Text size="sm" tone="muted">`.
+- Caption: `<Text size="xs" tone="faint">`.
+- Section title: `<Heading level={2}>`.
+- Spread row: `<Inline justify="between">`.
+
+```tsx
+<Stack gap="md">
+  <Heading level={2}>Devices</Heading>
+  <Inline justify="between">
+    <Text>Kindle</Text>
+    <Text size="sm" tone="muted">Synced today</Text>
+  </Inline>
+  <Text size="xs" tone="faint">Up to five devices.</Text>
+</Stack>
+```
+
+See [stack](component/stack.md), [inline](component/inline.md),
+[text](component/text.md), and [heading](component/heading.md).

@@ -176,7 +176,13 @@ export interface Theme {
     xxl: string;
   };
   fontFamily: { body: string; mono: string };
-  fontWeight: { medium: number; semibold: number; bold: number; extrabold: number };
+  fontWeight: {
+    regular: number;
+    medium: number;
+    semibold: number;
+    bold: number;
+    extrabold: number;
+  };
   lineHeight: { tight: number; body: number };
   shadow: {
     card: string;
@@ -508,7 +514,13 @@ function buildTheme(mode: ThemeMode): Theme {
     body: 'system-ui, sans-serif',
     mono: "'Cascadia Code', 'Fira Code', monospace",
   };
-  const fontWeight: Theme['fontWeight'] = { medium: 500, semibold: 600, bold: 700, extrabold: 800 };
+  const fontWeight: Theme['fontWeight'] = {
+    regular: 400,
+    medium: 500,
+    semibold: 600,
+    bold: 700,
+    extrabold: 800,
+  };
   const lineHeight: Theme['lineHeight'] = { tight: 1, body: 1.3 };
 
   const lightShadow: Theme['shadow'] = {

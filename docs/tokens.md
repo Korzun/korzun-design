@@ -46,7 +46,7 @@ Two stacks: `body` (`system-ui, sans-serif`) and `mono`.
 
 ## fontWeight
 
-Numeric weights: `medium semibold bold extrabold` (500, 600, 700, 800).
+Numeric weights: `regular medium semibold bold extrabold` (400, 500, 600, 700, 800).
 
 ## lineHeight
 

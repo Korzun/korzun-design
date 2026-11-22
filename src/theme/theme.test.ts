@@ -302,3 +302,10 @@ describe('status tones', () => {
     expect(darkTheme.color.info).toBe(darkTheme.color.brand.default);
   });
 });
+
+describe('fontWeight.regular token', () => {
+  it('has a regular font weight of 400', () => {
+    expect(lightTheme.fontWeight.regular).toBe(400);
+    expect(darkTheme.fontWeight.regular).toBe(400);
+  });
+});

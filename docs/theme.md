@@ -37,17 +37,16 @@ import { applyTransparency } from '@korzun/design';
 
 export const useStyle = createUseStyles((theme: Theme) => ({
   root: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: theme.space.md,
-    color: theme.color.text.primary,
+    padding: theme.space.md,
+    backgroundColor: theme.color.bg.card,
   },
-  hint: { fontSize: theme.fontSize.sm, color: theme.color.text.muted },
   highlight: { backgroundColor: applyTransparency(theme.color.brand.default, 0.12) },
-  [theme.breakpoint.mobile]: { root: { gap: theme.space.sm } },
+  [theme.breakpoint.mobile]: { root: { padding: theme.space.sm } },
 }));
 ```
 
+- Style files are for padding, borders, backgrounds, and one-offs (borders come from the border tokens). Lay out with
+  `Stack`/`Inline` and set text with `Text`/`Heading`.
 - `applyTransparency(color, alpha)` turns a hex or rgb token into an `rgba()`
   string. Use it for tints instead of writing an rgba literal.
 - Media queries: use the `theme.breakpoint.mobile` / `.normal` strings as keys.
@@ -70,7 +69,7 @@ export const useStyle = createUseStyles((theme: Theme) => ({
 | `space` | `xxxs` 0.1rem, `xxs` 0.125, `xs` 0.25, `sm` 0.375, `md` 0.5, `lg` 0.625, `xl` 0.75, `xxl` 1, `xxxl` 1.25, `xxxxl` 1.5, `xxxxxl` 2rem | `md` is the default gap between stacked fields |
 | `radius` | `sm` 4px, `md` 8px, `lg` 16px, `circle`, `pill` | Chosen by nesting depth; see [corners](corners.md) |
 | `fontSize` | `xxs` 0.6rem, `xs` 0.7, `sm` 0.75, `md` 0.875, `lg` 1, `xl` 1.25, `xxl` 1.75rem | Control text is `'0.80rem'`, the one sanctioned literal (already applied by `recipe.input` and Button) |
-| `fontWeight` | `medium` 500, `semibold` 600, `bold` 700, `extrabold` 800 | |
+| `fontWeight` | `regular` 400, `medium` 500, `semibold` 600, `bold` 700, `extrabold` 800 | |
 | `lineHeight` | `tight` 1, `body` 1.3 | |
 | `fontFamily` | `body`, `mono` | |
 | `shadow` | `card`, `cardStack`, `hoverLift`, `dangerStack`, `brandStack`, `glass`, `glassActive` | Floating layers use `hoverLift` |
