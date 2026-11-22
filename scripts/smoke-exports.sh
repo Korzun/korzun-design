@@ -51,8 +51,8 @@ JSON
 
 cat >"$tmp/app/index.ts" <<'TS'
 import { applyTransparency } from '@korzun/design';
-import { Page, type CardProps, type HeadingProps, type InlineProps, type StackProps, type TagTone, type TextProps } from '@korzun/design/component';
-import { Button, useModalDialog, type ButtonProps, type PopoverSide } from '@korzun/design/control';
+import { Page, type CardProps, type ErrorMessageProps, type HeadingProps, type InlineProps, type SpinnerProps, type StackProps, type TagTone, type TextProps } from '@korzun/design/component';
+import { Button, useModalDialog, type ButtonProps, type DialogProps, type PopoverSide } from '@korzun/design/control';
 import { isStandalone } from '@korzun/design/hooks';
 import { CheckIcon } from '@korzun/design/icon';
 import { ThemeProvider } from '@korzun/design/theme';
@@ -61,6 +61,7 @@ import { useToast } from '@korzun/design/toast';
 export const typeProbe: [ButtonProps['radius'], CardProps['size']] = ['card', 'small'];
 export const toneProbe: [TagTone, PopoverSide] = ['warning', 'top'];
 export const layoutProbe: [StackProps['gap'], InlineProps['justify'], TextProps['tone'], HeadingProps['level']] = ['none', 'between', 'muted', 2];
+export const feedbackProbe: [DialogProps['canDismiss'], ErrorMessageProps['as'], SpinnerProps['size']] = [false, 'div', 'xl'];
 export const probe = [ThemeProvider, Button, useModalDialog, Page, CheckIcon, useToast, isStandalone, applyTransparency];
 TS
 

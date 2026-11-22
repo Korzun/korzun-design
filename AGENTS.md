@@ -23,15 +23,15 @@ To load this guide in a consuming app, add this line to its `CLAUDE.md` or
 
 ## Imports
 
-| Import                     | Contents                                                                                                                    |
-| -------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| `@korzun/design/theme`     | `ThemeProvider`, `useTheme`, `useThemeSetting`, `createUseStyles`, `Theme`, `lightTheme`, `darkTheme`                       |
-| `@korzun/design/control`   | buttons, inputs, select, switch, segmented control, popover, `ConfirmModal`, `Dialog`, `useModalDialog`, page actions                 |
-| `@korzun/design/component` | `Page`, `Card` family, `Stack`, `Inline`, `Text`, `Heading`, `EmptyState`, `Tag`, metadata, navs, `ThemeSetting`, `TopFade` |
-| `@korzun/design/icon`      | `*Icon` components, `IconProps`                                                                                             |
-| `@korzun/design/toast`     | `ToastProvider`, `useToast`                                                                                                 |
-| `@korzun/design/hooks`     | `useMinimizeOnScroll`, `usePullToRefresh`, `isStandalone`                                                                   |
-| `@korzun/design`           | everything above, flat, plus `applyTransparency`; the `ThemeSetting` type is renamed `ThemeSettingValue` here               |
+| Import                     | Contents                                                                                                                                               |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `@korzun/design/theme`     | `ThemeProvider`, `useTheme`, `useThemeSetting`, `createUseStyles`, `Theme`, `lightTheme`, `darkTheme`                                                  |
+| `@korzun/design/control`   | buttons, inputs, select, switch, segmented control, popover, `ConfirmModal`, `Dialog`, `useModalDialog`, page actions                                  |
+| `@korzun/design/component` | `Page`, `Card` family, `Stack`, `Inline`, `Text`, `Heading`, `EmptyState`, `ErrorMessage`, `Spinner`, `Tag`, metadata, navs, `ThemeSetting`, `TopFade` |
+| `@korzun/design/icon`      | `*Icon` components, `IconProps`                                                                                                                        |
+| `@korzun/design/toast`     | `ToastProvider`, `useToast`                                                                                                                            |
+| `@korzun/design/hooks`     | `useMinimizeOnScroll`, `usePullToRefresh`, `isStandalone`                                                                                              |
+| `@korzun/design`           | everything above, flat, plus `applyTransparency`; the `ThemeSetting` type is renamed `ThemeSettingValue` here                                          |
 
 Import only from these entry points, never from `dist/…` or `src/…` paths.
 Every component exports its props type as `<Name>Props` (`ButtonProps`,
@@ -58,7 +58,8 @@ Every component exports its props type as `<Name>Props` (`ButtonProps`,
    Step down one token per level; don't subtract padding. Never write a
    literal `borderRadius`. See [corners](docs/corners.md).
 3. **Buttons take the surface they sit on:** `radius="card"` inside a Card,
-   `radius="modal"` in a modal footer, no `radius` on the page background.
+   `radius="modal"` in a modal footer (Buttons in a `Dialog` footer get it
+   automatically), no `radius` on the page background.
 4. **Button `type` is a visual variant** (`default`, `primary`, `text`, `link`,
    `dashed`), not the HTML attribute. For a submit button use `submit` (and
    `form="id"` when the button is outside its form). `onClick` is ignored on a
@@ -77,9 +78,10 @@ Every component exports its props type as `<Name>Props` (`ButtonProps`,
 9. **Overrides:** pass `className` where the module doc says it is accepted,
    and win specificity with `'&&'`. Never use `!important`, and never target
    internal class names.
-10. **Missing pieces:** there is no general
-    `Dialog`, `Tabs`, `Tooltip`, `Checkbox`, or `Alert` yet. Build them in app
-    code from tokens following these rules, and don't pull in another UI library.
+10. **Feedback and missing pieces:** show error lines with `ErrorMessage` and
+    loading with `Spinner`. There is no `Tabs`, `Tooltip`, `Checkbox`, or
+    `Alert` yet. Build them in app code from tokens following these rules, and
+    don't pull in another UI library.
 
 ## Docs index
 
