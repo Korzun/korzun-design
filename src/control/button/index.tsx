@@ -1,5 +1,5 @@
 import cx from 'classnames';
-import { ComponentType, useCallback, useContext } from 'react';
+import { ComponentType, Ref, useCallback, useContext } from 'react';
 import { useFormStatus } from 'react-dom';
 
 import { IconProps, SpinnerIcon } from '../../icon/index.js';
@@ -30,6 +30,8 @@ export type ButtonProps = React.PropsWithChildren<
     ariaExpanded?: boolean;
     /** For a disclosure button: the id of the element it controls. */
     ariaControls?: string;
+    /** Announces that the button opens a popup of this kind (`'menu'` for a menu trigger). */
+    ariaHasPopup?: 'menu' | 'listbox' | 'dialog' | boolean;
     /** Extra class; win specificity with `'&&'` in your sheet, never `!important`. */
     className?: string;
     /** Greys the button out and blocks clicks. */
@@ -48,6 +50,8 @@ export type ButtonProps = React.PropsWithChildren<
     prefix?: ComponentType<IconProps>;
     /** The surface the button sits on: `'background'` (default), `'card'`, `'inset'`, `'modal'`. */
     radius?: ButtonRadiusValue;
+    /** Ref to the root element (the `<div role="button">`, or the `<button>` in submit mode), e.g. to `.focus()` it. */
+    ref?: Ref<HTMLElement>;
     /**
      * Render a native `<button type="submit">`; also spins while the enclosing
      * form action is pending. `onClick` is then ignored.
@@ -55,7 +59,10 @@ export type ButtonProps = React.PropsWithChildren<
     submit?: boolean;
     /** Icon component shown after the label (`suffix={ChevronIcon}`), not an element. */
     suffix?: ComponentType<IconProps>;
-    /** Passed through; forced to -1 while disabled or loading (div mode). */
+    /**
+     * Defaults to 0 so the div-mode button is keyboard-focusable; an explicit
+     * value wins, except it is forced to -1 while disabled or loading (div mode).
+     */
     tabIndex?: number;
     /** Native tooltip; passed through. */
     title?: string;
@@ -75,6 +82,7 @@ export const Button = ({
   ariaLabel,
   ariaExpanded,
   ariaControls,
+  ariaHasPopup,
   children,
   className: classNameProp,
   danger = false,
@@ -84,6 +92,7 @@ export const Button = ({
   onClick = () => {},
   prefix: Prefix,
   radius: radiusProp,
+  ref,
   submit = false,
   suffix: Suffix,
   success = false,
@@ -146,6 +155,8 @@ export const Button = ({
         aria-label={ariaLabel}
         aria-expanded={ariaExpanded}
         aria-controls={ariaControls}
+        aria-haspopup={ariaHasPopup}
+        ref={ref as Ref<HTMLButtonElement>}
         form={form}
         className={className}
         disabled={disabled || busy}
@@ -168,8 +179,10 @@ export const Button = ({
       aria-label={ariaLabel}
       aria-expanded={ariaExpanded}
       aria-controls={ariaControls}
+      aria-haspopup={ariaHasPopup}
+      ref={ref as Ref<HTMLDivElement>}
       aria-disabled={nonInteractive || undefined}
-      tabIndex={nonInteractive ? -1 : tabIndex}
+      tabIndex={nonInteractive ? -1 : (tabIndex ?? 0)}
       className={className}
       onClick={handleClick}
       onKeyDown={handleKeyDown}

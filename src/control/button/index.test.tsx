@@ -1,5 +1,6 @@
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { createRef } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
 import { renderWithProviders } from '../../test-utils.js';
@@ -61,9 +62,50 @@ describe('Button', () => {
     renderWithProviders(<Button tabIndex={3}>Save</Button>);
     expect(screen.getByRole('button', { name: 'Save' })).toHaveAttribute('tabindex', '3');
   });
+
+  it('is keyboard-focusable by default', () => {
+    renderWithProviders(<Button>Save</Button>);
+    const button = screen.getByRole('button', { name: 'Save' });
+    expect(button).toHaveAttribute('tabindex', '0');
+    button.focus();
+    expect(document.activeElement).toBe(button);
+  });
+
+  it('disabled stays out of the tab order', () => {
+    renderWithProviders(<Button disabled>Save</Button>);
+    expect(screen.getByRole('button', { name: 'Save' })).toHaveAttribute('tabindex', '-1');
+  });
+
+  it('an explicit tabIndex wins', () => {
+    renderWithProviders(<Button tabIndex={-1}>Save</Button>);
+    expect(screen.getByRole('button', { name: 'Save' })).toHaveAttribute('tabindex', '-1');
+  });
+
+  it('forwards ref to the root element', () => {
+    const ref = createRef<HTMLElement>();
+    renderWithProviders(<Button ref={ref}>Save</Button>);
+    expect(ref.current).toBe(screen.getByRole('button', { name: 'Save' }));
+  });
+
+  it('renders aria-haspopup', () => {
+    renderWithProviders(<Button ariaHasPopup="menu">Save</Button>);
+    expect(screen.getByRole('button', { name: 'Save' })).toHaveAttribute('aria-haspopup', 'menu');
+  });
 });
 
 describe('Button submit mode', () => {
+  it('forwards ref in submit mode', () => {
+    const ref = createRef<HTMLElement>();
+    renderWithProviders(
+      <Button submit ref={ref}>
+        Save
+      </Button>
+    );
+    const button = screen.getByRole('button', { name: 'Save' });
+    expect(ref.current).toBe(button);
+    expect(button).toHaveAttribute('type', 'submit');
+  });
+
   it('renders a native submit button and associates via the form attribute', () => {
     renderWithProviders(
       <Button submit form="my-form">
