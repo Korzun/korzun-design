@@ -8,6 +8,9 @@ list in a [`Popover`](popover.md) anchored to it, and handles focus and the
 keyboard. Describe the items as data in `items`. There are no child
 components and no style file to write.
 
+[`PageActionsBar`](page-actions-bar.md) and [`PageActionsMenu`](page-actions-menu.md)
+are built on Menu.
+
 Use something else for: choosing a value ([`Select`](select.md)), page-header
 actions ([`PageActionsBar`](page-actions-bar.md) on desktop,
 [`PageActionsMenu`](page-actions-menu.md) on mobile).

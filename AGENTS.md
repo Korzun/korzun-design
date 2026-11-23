@@ -72,6 +72,9 @@ Every component exports its props type as `<Name>Props` (`ButtonProps`,
 7. **Modals:** use `ConfirmModal` for yes/no and `Dialog` for anything else
    (title, body, optional footer; pass `canDismiss={!loading}`). Reach for
    `useModalDialog` only for a custom native `<dialog>`.
+   A list of actions or links behind a button is a `Menu` (`items` array;
+   `to` for links, `onClick` for actions). Never hand-build `role="menu"` or a
+   dropdown of buttons.
 8. **Accessibility:** give repeated row actions an `ariaLabel` ("Remove
    Kindle"). Don't wrap library controls in `<button>` or `<a>`; they are
    already interactive.
