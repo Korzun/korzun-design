@@ -3,7 +3,8 @@
 `import { Button } from '@korzun/design/control'`
 
 A clickable action with a visual variant, optional icons, and a loading state.
-Renders a `<div role="button">` (keyboard: Enter and Space) unless `submit` is
+Renders a `<div role="button">` (keyboard: Enter and Space, which it
+preventDefaults, so Space does not scroll the page) unless `submit` is
 set, in which case it renders a native `<button type="submit">`.
 
 Use something else for: navigating back (`BackButton`), page-level actions in

@@ -142,6 +142,9 @@ export const Button = ({
     (event: React.KeyboardEvent<HTMLDivElement>) => {
       if (!disabled && !busy && (event.key === 'Enter' || event.key === ' ')) {
         event.stopPropagation();
+        // The key is handled: no page scroll on Space, and no keypress
+        // activating whatever onClick moved focus to (a menu's first item).
+        event.preventDefault();
         onClick();
       }
     },

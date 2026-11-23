@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react';
+import { fireEvent, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createRef } from 'react';
 import { describe, expect, it, vi } from 'vitest';
@@ -56,6 +56,17 @@ describe('Button', () => {
     button.focus();
     await user.keyboard('{Enter}');
     expect(onClick).not.toHaveBeenCalled();
+  });
+
+  it('Enter and Space activate it and preventDefault the keydown', () => {
+    const onClick = vi.fn();
+    renderWithProviders(<Button onClick={onClick}>Save</Button>);
+    const button = screen.getByRole('button', { name: 'Save' });
+    // fireEvent returns false when the event was preventDefaulted.
+    expect(fireEvent.keyDown(button, { key: 'Enter' })).toBe(false);
+    expect(fireEvent.keyDown(button, { key: ' ' })).toBe(false);
+    expect(fireEvent.keyDown(button, { key: 'a' })).toBe(true);
+    expect(onClick).toHaveBeenCalledTimes(2);
   });
 
   it('honors the incoming tabIndex when interactive', () => {

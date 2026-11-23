@@ -15,6 +15,15 @@ export {
   type FieldListProps,
   type FieldRow,
 } from './field-list/index.js';
+export {
+  Menu,
+  type MenuActionItem,
+  type MenuIntentProps,
+  type MenuItem,
+  type MenuLinkItem,
+  type MenuProps,
+  type MenuTriggerProps,
+} from './menu/index.js';
 export { NumberInput, type NumberInputProps } from './number-input/index.js';
 export { PageActionsBar, type PageActionsBarProps } from './page-actions-bar/index.js';
 export {
