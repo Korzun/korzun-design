@@ -124,6 +124,15 @@ export function Menu({
         case 'End':
           focusAt(last);
           break;
+        case ' ': {
+          // A <button> item activates on Space natively; an <a> only on Enter.
+          const focused = document.activeElement;
+          if (focused instanceof HTMLAnchorElement && menuRef.current?.contains(focused)) {
+            event.preventDefault();
+            if (focused.getAttribute('aria-disabled') !== 'true') focused.click();
+          }
+          break;
+        }
         case 'Escape':
           // Handled here, so the layer stack skips it (it ignores defaultPrevented).
           event.preventDefault();

@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { useRef, useState } from 'react';
 import { Route, Routes } from 'react-router';
@@ -202,6 +202,49 @@ describe('Menu', () => {
     await user.keyboard('{Enter}');
     expect(screen.getAllByText('B page')).toHaveLength(1);
     expect(renders).toHaveBeenCalledTimes(1);
+  });
+
+  it('Space on a link item navigates once', async () => {
+    const user = userEvent.setup();
+    const renders = vi.fn();
+    const BPage = () => {
+      renders();
+      return <p>B page</p>;
+    };
+    renderWithProviders(
+      <Routes>
+        <Route
+          path="/"
+          element={<Menu trigger={trigger} items={[{ label: 'Go to B', to: '/b' }]} />}
+        />
+        <Route path="/b" element={<BPage />} />
+      </Routes>
+    );
+    await openMenu(user);
+    expect(screen.getByRole('menuitem', { name: 'Go to B' })).toHaveFocus();
+    expect(fireEvent.keyDown(document.activeElement!, { key: ' ' })).toBe(false);
+    expect(await screen.findByText('B page')).toBeInTheDocument();
+    expect(renders).toHaveBeenCalledTimes(1);
+  });
+
+  it('Space on a disabled link does not navigate', async () => {
+    const user = userEvent.setup();
+    const items: MenuItem[] = [
+      { label: 'Stay', onClick: vi.fn() },
+      { label: 'Go to B', to: '/b', disabled: true },
+    ];
+    renderWithProviders(
+      <Routes>
+        <Route path="/" element={<Menu trigger={trigger} items={items} />} />
+        <Route path="/b" element={<p>B page</p>} />
+      </Routes>
+    );
+    await openMenu(user);
+    const link = screen.getByRole('menuitem', { name: 'Go to B' });
+    link.focus();
+    expect(fireEvent.keyDown(link, { key: ' ' })).toBe(false);
+    expect(screen.queryByText('B page')).toBeNull();
+    expect(screen.getByRole('menu')).toBeInTheDocument();
   });
 
   it('a disabled link does not navigate and is skipped by arrows', async () => {
