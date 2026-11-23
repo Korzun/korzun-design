@@ -1,6 +1,6 @@
 # Popover
 
-`import { Popover } from '@korzun/design/control'`
+`import { Popover, type PopoverGap } from '@korzun/design/control'`
 
 A positioning primitive: renders `children` in a portal on `document.body`,
 `position: fixed` below or above an anchor element, so a dropdown can escape
@@ -13,17 +13,20 @@ Use something else for: a modal (`Dialog`), page action menus
 
 ## Props
 
-| Prop         | Type                             | Default    | Notes                                                                                                                                |
-| ------------ | -------------------------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| `anchorRef`  | `RefObject<HTMLElement \| null>` | (required) | Element to place against.                                                                                                            |
-| `open`       | `boolean`                        | (required) | When `false`, renders nothing. Fully controlled.                                                                                     |
-| `children`   | `ReactNode`                      | (required) | Your surface: give it its own background, border, radius.                                                                            |
-| `side`       | `'bottom' \| 'top'`              | `'bottom'` | Preferred side; flips to the other side when this one has no room.                                                                   |
-| `align`      | `'start' \| 'center' \| 'end'`   | `'start'`  | Horizontal alignment to the anchor's left edge, centre, or right edge.                                                               |
-| `gap`        | `number \| string`               | `4`        | Space between the anchor and the popover: pixels, or a CSS length in `px` or `rem` (`theme.space.sm`), resolved at each measurement. Also the margin kept from the viewport's left and right edges when `matchWidth` is false. |
-| `matchWidth` | `boolean`                        | `true`     | Width = anchor width. `false` lets content size itself.                                                                              |
-| `onClose`    | `() => void`                     |            | Called on a mousedown outside both anchor and content, and on Escape (see below), innermost open layer first. Omit to opt out of both. Receives no event.        |
-| `className`  | `string`                         |            | Applied to the fixed wrapper. Override with `'&&'`, never `!important`.                                                              |
+| Prop         | Type                             | Default    | Notes                                                                                                                                                                                                                                                                                                                            |
+| ------------ | -------------------------------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `anchorRef`  | `RefObject<HTMLElement \| null>` | (required) | Element to place against.                                                                                                                                                                                                                                                                                                        |
+| `open`       | `boolean`                        | (required) | When `false`, renders nothing. Fully controlled.                                                                                                                                                                                                                                                                                 |
+| `children`   | `ReactNode`                      | (required) | Your surface: give it its own background, border, radius.                                                                                                                                                                                                                                                                        |
+| `side`       | `'bottom' \| 'top'`              | `'bottom'` | Preferred side; flips to the other side when this one has no room.                                                                                                                                                                                                                                                               |
+| `align`      | `'start' \| 'center' \| 'end'`   | `'start'`  | Horizontal alignment to the anchor's left edge, centre, or right edge.                                                                                                                                                                                                                                                           |
+| `gap`        | `PopoverGap`                     | `4`        | `number` (pixels), or a string in `px` or `rem` (`'6px'`, `'0.375rem'`), resolved at each measurement. Space between the anchor and the popover; also the margin kept from the viewport's left and right edges when `matchWidth` is false. Theme space values are typed `string`, so pass one as `theme.space.sm as PopoverGap`. |
+| `matchWidth` | `boolean`                        | `true`     | Width = anchor width. `false` lets content size itself.                                                                                                                                                                                                                                                                          |
+| `onClose`    | `() => void`                     |            | Called on a mousedown outside both anchor and content, and on Escape (see below), innermost open layer first. Omit to opt out of both. Receives no event.                                                                                                                                                                        |
+| `className`  | `string`                         |            | Applied to the fixed wrapper. Override with `'&&'`, never `!important`.                                                                                                                                                                                                                                                          |
+
+`PopoverGap` is `` number | `${number}px` | `${number}rem` ``; TypeScript rejects
+other units.
 
 ## Behaviour to know
 
@@ -52,7 +55,10 @@ Use something else for: a modal (`Dialog`), page action menus
   not `visibility: hidden`, so an `autoFocus` child takes focus on mount.
 - **Escape and outside pointer-down close the innermost open layer first.**
   With `onClose`, an open popover joins a layer stack shared with other
-  popovers and open `Dialog`s, in the order they opened.
+  popovers and open `Dialog`s, in the order they opened. A popover registers
+  once its portal target resolves, one commit after each opening, so a
+  `Dialog` that mounts already open together with an already-open popover
+  inside it still sits below that popover.
   - An Escape keydown anywhere in the document goes to the top layer only,
     unless the event is already `defaultPrevented` (a control such as
     `Select` handled it first). A popover on top calls `onClose` and
@@ -105,7 +111,7 @@ const [open, setOpen] = useState(false);
 
 ## Do / don't
 
-- Do wrap a `Button` in a `<div ref>` to anchor it; `Button` takes no ref.
+- Do anchor to a `Button` through its `ref`, or wrap any element in a `<div ref>`.
 - Do give the content its own surface and radius; the wrapper is transparent.
 - Do call `preventDefault()` in your own Escape handler if you close the
   popover yourself, so `onClose` is not called a second time.

@@ -29,9 +29,27 @@ actions ([`PageActionsBar`](page-actions-bar.md) on desktop,
 The props type is exported as `MenuProps`.
 
 `MenuTriggerProps` is `{ ref, onClick, ariaExpanded, ariaControls, ariaHasPopup: 'menu' }`,
-shaped for [`Button`](button.md), so `{...p}` needs no glue. For any other
-element, attach `ref`, call `onClick` on click, and map the rest to
-`aria-expanded`, `aria-controls` and `aria-haspopup`.
+shaped for [`Button`](button.md), so `{...p}` needs no glue. `ref` is a
+callback ref (`(node: HTMLElement | null) => void`), so it attaches to any
+element without a cast. `ariaControls` is the menu's id while open and
+`undefined` while closed. For any other element, pass `ref={p.ref}`, call
+`onClick` on click, and map the rest to `aria-expanded`, `aria-controls` and
+`aria-haspopup`:
+
+```tsx
+trigger={(p) => (
+  <button
+    ref={p.ref}
+    type="button"
+    aria-expanded={p.ariaExpanded}
+    aria-controls={p.ariaControls}
+    aria-haspopup={p.ariaHasPopup}
+    onClick={p.onClick}
+  >
+    More
+  </button>
+)}
+```
 
 ## Items
 
@@ -45,7 +63,7 @@ Fields on both kinds:
 | `label` | `string` | Visible text. Unique within the menu. |
 | `Icon` | `ComponentType<IconProps>` | Leading icon component (`HomeIcon`), not an element. Drawn at the text size, hidden from assistive tech. |
 | `danger` | `boolean` | Red text. Styling only; it does not add a separator. |
-| `disabled` | `boolean` | Greyed out, cannot be activated, skipped by arrow keys. |
+| `disabled` | `boolean` | Greyed out, cannot be activated, skipped by arrow keys. A disabled link renders without `href`, so middle-click cannot open it either. |
 | `separatorBefore` | `boolean` | Divider above this item. Ignored on the first item. |
 | `intentProps` | `MenuIntentProps` | `{ onMouseEnter, onFocus, onTouchStart }`, spread onto the item, e.g. to prefetch. |
 
@@ -70,7 +88,7 @@ Link item (`MenuLinkItem`):
 | Home / End | First / last enabled item. |
 | Enter, Space (or a click) | Activates the item: the menu closes, focus returns to the trigger, then the action runs or the link navigates. |
 | Escape | Closes the menu and returns focus to the trigger. |
-| Tab / Shift+Tab | Closes the menu; focus moves to the element after / before the trigger. |
+| Tab / Shift+Tab | Closes the menu; focus moves to the tabbable element after / before the trigger, skipping inert and hidden ones. Inside an open `<dialog>` it stays within the dialog; with nothing there, focus returns to the trigger. |
 | Pointer-down outside | Closes the menu without moving focus. |
 
 ## Behaviour to know
