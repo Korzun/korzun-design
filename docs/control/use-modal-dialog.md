@@ -33,6 +33,10 @@ Returns a ref to attach to the `<dialog>`.
 
 - Escape fires the dialog's `cancel` event; the hook always calls
   `preventDefault()` so the browser never closes the dialog behind React's back.
+- While open, the dialog joins the layer stack shared with `Popover`s. A
+  popover left open beneath it neither takes its Escape (the dialog's own
+  `cancel` runs) nor closes on a press inside the dialog. A popover opened
+  inside the dialog takes Escape before the dialog does.
 - A backdrop click counts only when **both** mousedown and mouseup land on the
   `<dialog>` element itself (its content lives in a child). Dragging a text
   selection out of an input onto the backdrop does not dismiss.

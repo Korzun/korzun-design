@@ -5,7 +5,7 @@ import { test } from 'node:test';
 import { fileURLToPath } from 'node:url';
 
 const repo = join(dirname(fileURLToPath(import.meta.url)), '..');
-const internal = ['control/action-menu-list', 'component/metadata'];
+const internal = ['control/action-menu-list', 'control/layer-stack', 'component/metadata'];
 
 const moduleDirs = (area) =>
   readdirSync(join(repo, 'src', area), { withFileTypes: true })

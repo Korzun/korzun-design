@@ -27,6 +27,9 @@ The props type is exported as `DialogProps`.
 
 - Escape and a backdrop press-and-release both call `onClose`; it is the
   single dismissal path. `canDismiss={false}` blocks both.
+- Escape goes to the innermost open layer first: a `Select` list or other
+  popover open inside the dialog closes before the dialog, and a dialog opened
+  over a still-open popover closes before that popover.
 - Always mounted: toggle `open`, don't render it conditionally.
 - Focus is native: `showModal()` moves focus into the dialog and restores it
   on close.

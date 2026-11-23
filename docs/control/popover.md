@@ -20,9 +20,9 @@ Use something else for: a modal (`Dialog`), page action menus
 | `children`   | `ReactNode`                      | (required) | Your surface: give it its own background, border, radius.                                                                            |
 | `side`       | `'bottom' \| 'top'`              | `'bottom'` | Preferred side; flips to the other side when this one has no room.                                                                   |
 | `align`      | `'start' \| 'center' \| 'end'`   | `'start'`  | Horizontal alignment to the anchor's left edge, centre, or right edge.                                                               |
-| `gap`        | `number`                         | `4`        | Pixels between the anchor and the popover; also the margin kept from the viewport's left and right edges when `matchWidth` is false. |
+| `gap`        | `number \| string`               | `4`        | Space between the anchor and the popover: pixels, or a CSS length in `px` or `rem` (`theme.space.sm`), resolved at each measurement. Also the margin kept from the viewport's left and right edges when `matchWidth` is false. |
 | `matchWidth` | `boolean`                        | `true`     | Width = anchor width. `false` lets content size itself.                                                                              |
-| `onClose`    | `() => void`                     |            | Called on a mousedown outside both anchor and content, and on Escape (see below). Omit to opt out of both. Receives no event.        |
+| `onClose`    | `() => void`                     |            | Called on a mousedown outside both anchor and content, and on Escape (see below), innermost open layer first. Omit to opt out of both. Receives no event.        |
 | `className`  | `string`                         |            | Applied to the fixed wrapper. Override with `'&&'`, never `!important`.                                                              |
 
 ## Behaviour to know
@@ -50,21 +50,25 @@ Use something else for: a modal (`Dialog`), page action menus
 - Its first render is transparent (`opacity: 0`) and is measured in a layout
   effect before paint, so it never flashes at 0,0 or on the wrong side. It is
   not `visibility: hidden`, so an `autoFocus` child takes focus on mount.
-- **Escape.** With `onClose`, an Escape keydown anywhere in the document calls
-  `onClose`, unless the event is already `defaultPrevented` (a control such as
-  `Select` handled it first). It calls `preventDefault()` on the key, so an
-  enclosing native `<dialog>` does not also fire `cancel` and close.
-- **Nested popovers.** Each open popover listens on the document, so with
-  nested popovers Escape is taken by the one opened first (the outermost),
-  not the innermost. A proper layer stack comes with `Menu`.
+- **Escape and outside pointer-down close the innermost open layer first.**
+  With `onClose`, an open popover joins a layer stack shared with other
+  popovers and open `Dialog`s, in the order they opened.
+  - An Escape keydown anywhere in the document goes to the top layer only,
+    unless the event is already `defaultPrevented` (a control such as
+    `Select` handled it first). A popover on top calls `onClose` and
+    `preventDefault()`s the key, so an enclosing native `<dialog>` does not
+    also fire `cancel` and close. A `Dialog` on top keeps the key: its own
+    `cancel` closes it, and the popover beneath stays open.
+  - A mousedown closes every layer above the one it lands in (every layer,
+    when it lands outside them all), top first. A press in a nested popover
+    closes neither it nor its parent; a press inside a `Dialog` opened over a
+    popover does not close that popover.
 - **No focus management.** Focus stays where it was; return it yourself if
   closing should move it.
 - z-index is `theme.zIndex.sticky` (1000). Inside an open `<dialog>` it portals
   into that dialog, so it shows in the top layer; this also matches a non-modal
   `show()` dialog. The target is resolved each time the popover opens, so it
-  also works when it mounts already open. An open popover left behind a
-  `showModal()` dialog still takes Escape first, so the dialog does not close.
-  Close popovers before opening a dialog.
+  also works when it mounts already open.
 - Clicking the anchor does not count as "outside", so a toggle button on the
   anchor works without racing `onClose`.
 
