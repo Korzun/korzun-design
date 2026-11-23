@@ -9,7 +9,8 @@ it yourself: pass `headerActions` (and `actionsLabel`) to `Page`, which puts it
 in the header row.
 
 Use something else for: mobile (`PageActionsMenu`), bottom-of-page form actions
-(`PageFooterActions`), a one-off button inside a card (`Button`).
+(`PageFooterActions`), a one-off button inside a card (`Button`). For any
+other actions-behind-a-button, use `Menu`.
 
 ## Props
 
@@ -35,9 +36,18 @@ No `className`.
 
 ## Behaviour to know
 
-The menu closes on item select (before `onClick` runs), Escape, or an outside
-mousedown. The trigger is a native `<button>` with `aria-haspopup="menu"` and
-`aria-expanded`. No arrow-key navigation in the menu.
+- The overflow is a `Menu` (`surface="solid" align="end"`), so it has Menu's
+  keyboard behaviour. Opening focuses the first enabled item. Up and Down move
+  through enabled items and wrap; Home and End jump to the ends; Enter and
+  Space activate.
+- Selecting an item closes the menu, returns focus to the trigger, then calls
+  `onClick`. Escape closes and returns focus to the trigger. Tab closes and
+  moves on from the trigger. A mousedown outside closes without moving focus.
+- Escape and outside presses go to the innermost open layer first: a Select
+  opened over the menu closes before the menu does.
+- The trigger is a native `<button>` with `aria-haspopup="menu"`,
+  `aria-expanded` and `aria-controls`. The menu renders in a `Popover`,
+  `space.sm` under the trigger, right-aligned to it.
 
 ## Example
 

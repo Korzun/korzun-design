@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import type { PageActionItem } from '../action-menu-list/index.js';
+import type { PageActionItem } from '../page-actions-menu/item.js';
 import type { MenuActionItem, MenuItem } from './types.js';
 
 // Type-level checks; `tsc --noEmit` (in lint) enforces the @ts-expect-error lines.

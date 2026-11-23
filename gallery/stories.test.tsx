@@ -220,12 +220,7 @@ describe('panel controls stay live', () => {
 describe('coverage', () => {
   const modules = Object.keys(import.meta.glob('../src/{control,component}/*/index.{ts,tsx}'));
   const storyFiles = Object.keys(import.meta.glob('../src/**/*.stories.tsx'));
-  const exempt = [
-    'control/action-menu-list',
-    'control/layer-stack',
-    'control/use-modal-dialog',
-    'component/metadata',
-  ];
+  const exempt = ['control/layer-stack', 'control/use-modal-dialog', 'component/metadata'];
   it.each(modules.map((m) => [m.replace(/^\.\.\/src\/(.*)\/index\.tsx?$/, '$1')]))(
     '%s has a stories file',
     (dir) => {

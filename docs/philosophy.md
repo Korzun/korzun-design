@@ -18,7 +18,7 @@ These are the rules the code already enforces, extracted from the source comment
 
 **Rule:** Paint hover state with a translucent scrim (`color.bg.hover`), never an opaque grey.
 
-**Why:** `src/theme/theme.ts` (`color.bg.hover`, light mode): "A translucent scrim, not an opaque grey: hover has to read on whatever surface it lands on. The old '#f0f0f0' was lighter than the modal footer (gray[100]) it was painted over, so hovering a text button there produced no visible change at all." Light mode is black at 0.07 opacity, dark mode white at 0.12. `src/control/button/style.ts` and `src/control/action-menu-list/style.ts` both use it.
+**Why:** `src/theme/theme.ts` (`color.bg.hover`, light mode): "A translucent scrim, not an opaque grey: hover has to read on whatever surface it lands on. The old '#f0f0f0' was lighter than the modal footer (gray[100]) it was painted over, so hovering a text button there produced no visible change at all." Light mode is black at 0.07 opacity, dark mode white at 0.12. `src/control/button/style.ts` and `src/control/menu/style.ts` both use it.
 
 ## A 16px floor on mobile form controls
 
@@ -30,7 +30,7 @@ These are the rules the code already enforces, extracted from the source comment
 
 **Rule:** Build floating chrome from `recipe.glass`, which must degrade to a near-opaque fill where backdrop blur is unavailable.
 
-**Why:** `recipe.glass` in `src/theme/theme.ts` blurs and saturates the backdrop with `color.bg.glass`, and inside `@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)))` swaps the background to `color.bg.glassFallback` (0.92 opacity against 0.6 for the glass itself). `src/control/action-menu-list/style.ts`, `src/control/page-actions-menu/style.ts` and `src/control/back-button/style.ts` spread it. `recipe.glassHighlight` is the pressed or active counterpart, used by `src/component/nav-mobile/style.ts`.
+**Why:** `recipe.glass` in `src/theme/theme.ts` blurs and saturates the backdrop with `color.bg.glass`, and inside `@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)))` swaps the background to `color.bg.glassFallback` (0.92 opacity against 0.6 for the glass itself). `src/control/menu/style.ts`, `src/control/page-actions-menu/style.ts` and `src/control/back-button/style.ts` spread it. `recipe.glassHighlight` is the pressed or active counterpart, used by `src/component/nav-mobile/style.ts`.
 
 ## The `track` token must read against both `page` and `card`
 

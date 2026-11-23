@@ -13,7 +13,6 @@ export const useStyle = createUseStyles((theme: Theme) => ({
     flexGrow: 1,
   },
   more: {
-    position: 'relative',
     display: 'inline-flex',
   },
   // Native button styled to match the default Button variant, so it can carry
@@ -53,11 +52,5 @@ export const useStyle = createUseStyles((theme: Theme) => ({
       borderColor: theme.color.brand.active,
       color: theme.color.brand.active,
     },
-  },
-  popoverAnchor: {
-    position: 'absolute',
-    top: `calc(100% + ${theme.space.sm})`,
-    right: 0,
-    zIndex: theme.zIndex.sticky,
   },
 }));

@@ -1,9 +1,9 @@
-import { screen } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 
 import { renderWithProviders } from '../../test-utils.js';
-import { type PageActionItem } from '../action-menu-list/index.js';
+import { type PageActionItem } from '../page-actions-menu/item.js';
 import { PageActionsBar } from './index.js';
 
 function makeItems(): PageActionItem[] {
@@ -74,5 +74,37 @@ describe('PageActionsBar', () => {
     expect(screen.getByRole('menu')).toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: 'outside' }));
     expect(screen.queryByRole('menu')).not.toBeInTheDocument();
+  });
+  it('opening focuses the first item', async () => {
+    const user = userEvent.setup();
+    renderWithProviders(<PageActionsBar items={makeItems()} />);
+    await user.click(screen.getByRole('button', { name: 'More actions' }));
+    await waitFor(() =>
+      expect(screen.getByRole('menuitem', { name: 'Regen chapters' })).toHaveFocus()
+    );
+  });
+
+  it('ArrowDown moves focus', async () => {
+    const user = userEvent.setup();
+    renderWithProviders(<PageActionsBar items={makeItems()} />);
+    await user.click(screen.getByRole('button', { name: 'More actions' }));
+    await waitFor(() =>
+      expect(screen.getByRole('menuitem', { name: 'Regen chapters' })).toHaveFocus()
+    );
+    await user.keyboard('{ArrowDown}');
+    expect(screen.getByRole('menuitem', { name: 'Delete book' })).toHaveFocus();
+  });
+
+  it('Escape returns focus to the trigger', async () => {
+    const user = userEvent.setup();
+    renderWithProviders(<PageActionsBar items={makeItems()} />);
+    const trigger = screen.getByRole('button', { name: 'More actions' });
+    await user.click(trigger);
+    await waitFor(() =>
+      expect(screen.getByRole('menuitem', { name: 'Regen chapters' })).toHaveFocus()
+    );
+    await user.keyboard('{Escape}');
+    expect(screen.queryByRole('menu')).not.toBeInTheDocument();
+    expect(trigger).toHaveFocus();
   });
 });
