@@ -287,6 +287,15 @@ describe('Popover', () => {
       renderWithProviders(<Harness gap="10px" />);
       expect(wrapper().style.top).toBe(`${DEFAULT_ANCHOR.bottom + 10}px`);
     });
+
+    it('gap rejects other units at the type level', () => {
+      // `tsc --noEmit` (in lint) enforces the @ts-expect-error lines.
+      // @ts-expect-error em is not a supported unit
+      const em = <Harness gap="1em" />;
+      // @ts-expect-error a bare unitless string is not a number
+      const unitless = <Harness gap="6" />;
+      expect([em, unitless]).toHaveLength(2);
+    });
   });
 
   describe('outside click', () => {

@@ -13,6 +13,9 @@ import { useStyle } from './style.js';
 
 export type { PopoverAlign, PopoverSide } from './position.js';
 
+/** A popover gap: pixels, or a CSS length in `px` or `rem`. */
+export type PopoverGap = number | `${number}px` | `${number}rem`;
+
 export type PopoverProps = {
   /** Element the popover aligns to (placed below or above it, per `side`). */
   anchorRef: RefObject<HTMLElement | null>;
@@ -24,10 +27,10 @@ export type PopoverProps = {
   className?: string;
   /**
    * Vertical gap between the anchor and the popover: a number of pixels, or a
-   * CSS length string in `px` or `rem` (such as `theme.space.sm`), resolved at
+   * CSS length string in `px` or `rem` (`'6px'`, `'0.375rem'`), resolved at
    * each measurement. Also the viewport edge margin when `matchWidth` is false.
    */
-  gap?: number | string;
+  gap?: PopoverGap;
   /** Match the popover width to the anchor width (default true). */
   matchWidth?: boolean;
   /** Preferred side; flips to the other side when this one has no room. */
@@ -43,11 +46,11 @@ export type PopoverProps = {
   onClose?: () => void;
 };
 
-// A `rem` string against the root font size; any other string is read as pixels.
-const resolveGap = (gap: number | string): number => {
+// A `rem` string against the root font size; a `px` string as pixels.
+const resolveGap = (gap: PopoverGap): number => {
   if (typeof gap === 'number') return gap;
   const value = parseFloat(gap);
-  if (!gap.trim().endsWith('rem')) return value;
+  if (!gap.endsWith('rem')) return value;
   return value * parseFloat(getComputedStyle(document.documentElement).fontSize);
 };
 
@@ -134,8 +137,8 @@ export const Popover = ({
     };
   }, [open, target, updatePosition]);
 
-  // Gated on `target`, so it registers one commit after mounting: a Dialog
-  // opening in the same commit as a popover inside it still sits below it.
+  // Gated on `target`, so it registers one commit after each opening: a
+  // Dialog opening in the same commit as a popover inside it still sits below it.
   useLayer(open && !!onClose && !!target, {
     onEscape: onClose,
     contains: (node) => !!(anchorRef.current?.contains(node) || contentRef.current?.contains(node)),

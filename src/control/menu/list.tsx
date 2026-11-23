@@ -1,11 +1,5 @@
 import cx from 'classnames';
-import {
-  Fragment,
-  type KeyboardEvent,
-  type MouseEvent,
-  type RefObject,
-  useLayoutEffect,
-} from 'react';
+import { Fragment, type KeyboardEvent, type RefObject, useLayoutEffect } from 'react';
 import { Link } from 'react-router';
 
 import { useStyle } from './style.js';
@@ -38,7 +32,7 @@ interface MenuListProps {
 
 /**
  * The menu surface and its items: action items are `<button>`s, link items
- * react-router `<Link>`s, all `role="menuitem"` with `tabIndex={-1}` (Menu
+ * react-router `<Link>`s (a disabled link is a bare `<a>` with no href), all `role="menuitem"` with `tabIndex={-1}` (Menu
  * moves focus with `.focus()`). The root takes `tabIndex={-1}` too, so it can
  * hold focus when every item is disabled.
  *
@@ -95,17 +89,24 @@ export function MenuList({
             {item.separatorBefore && index > 0 && (
               <div className={styles.separator} role="separator" />
             )}
-            {item.to !== undefined ? (
+            {item.to !== undefined && item.disabled ? (
+              // No href, so middle-click and open-in-new-tab cannot reach it.
+              <a
+                role="menuitem"
+                tabIndex={-1}
+                className={cx(className, styles.link)}
+                aria-disabled="true"
+                {...item.intentProps}
+              >
+                {content}
+              </a>
+            ) : item.to !== undefined ? (
               <Link
                 to={item.to}
                 role="menuitem"
                 tabIndex={-1}
                 className={cx(className, styles.link)}
-                aria-disabled={item.disabled || undefined}
-                onClick={(event: MouseEvent<HTMLAnchorElement>) => {
-                  if (item.disabled) event.preventDefault();
-                  else onLink();
-                }}
+                onClick={onLink}
                 {...item.intentProps}
               >
                 {content}

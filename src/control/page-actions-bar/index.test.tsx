@@ -45,6 +45,16 @@ describe('PageActionsBar', () => {
     expect(screen.queryByRole('menu')).not.toBeInTheDocument();
   });
 
+  it('hovering an overflow item fires its intentProps.onMouseEnter', async () => {
+    const user = userEvent.setup();
+    const intentProps = { onMouseEnter: vi.fn(), onFocus: vi.fn(), onTouchStart: vi.fn() };
+    const items: PageActionItem[] = [{ label: 'Regen chapters', onClick: vi.fn(), intentProps }];
+    renderWithProviders(<PageActionsBar items={items} />);
+    await user.click(screen.getByRole('button', { name: 'More actions' }));
+    await user.hover(screen.getByRole('menuitem', { name: 'Regen chapters' }));
+    expect(intentProps.onMouseEnter).toHaveBeenCalled();
+  });
+
   it('omits the More trigger when there are no overflow actions', () => {
     const items: PageActionItem[] = [
       { label: 'Edit metadata', onClick: vi.fn(), primary: true, align: 'trailing' },

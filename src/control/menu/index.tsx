@@ -10,7 +10,7 @@ import {
 import { flushSync } from 'react-dom';
 
 import { useTheme } from '../../theme/index.js';
-import { Popover } from '../popover/index.js';
+import { Popover, type PopoverGap } from '../popover/index.js';
 import { enabledItems, MenuList } from './list.js';
 import type { MenuActionItem, MenuProps } from './types.js';
 
@@ -24,18 +24,34 @@ export type {
   MenuTriggerProps,
 } from './types.js';
 
-const TABBABLE =
-  'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+const TABBABLE = [
+  'a[href]',
+  'button:not([disabled])',
+  'input:not([disabled])',
+  'select:not([disabled])',
+  'textarea:not([disabled])',
+  '[tabindex]',
+]
+  .map((selector) => `${selector}:not([tabindex="-1"])`)
+  .join(', ');
+
+// Inert and hidden subtrees take no focus. Where the browser can tell
+// (`checkVisibility`; jsdom cannot), unrendered elements are skipped too.
+const focusable = (el: HTMLElement) =>
+  !el.closest('[inert], [hidden]') &&
+  (typeof el.checkVisibility !== 'function' || el.checkVisibility());
 
 // The tabbable element after (or before) `from` in document order, skipping
-// anything inside `from` or `skip`, and `from`'s own ancestors.
+// anything inside `from` or `skip`, and `from`'s own ancestors. Inside an
+// open <dialog> only its descendants count: a modal makes the rest inert.
 const tabbableBeside = (
   from: HTMLElement,
   backwards: boolean,
   skip: HTMLElement | null
 ): HTMLElement | undefined => {
-  const candidates = Array.from(document.querySelectorAll<HTMLElement>(TABBABLE)).filter(
-    (el) => !from.contains(el) && !el.contains(from) && !skip?.contains(el)
+  const scope = from.closest('dialog[open]') ?? document;
+  const candidates = Array.from(scope.querySelectorAll<HTMLElement>(TABBABLE)).filter(
+    (el) => !from.contains(el) && !el.contains(from) && !skip?.contains(el) && focusable(el)
   );
   const following = (el: HTMLElement) =>
     (from.compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING) !== 0;
@@ -64,7 +80,11 @@ export function Menu({
 }: MenuProps): ReactElement {
   const theme = useTheme();
   const [open, setOpen] = useState(false);
+  // Filled by the callback ref the trigger receives; the Popover anchors to it.
   const triggerRef = useRef<HTMLElement | null>(null);
+  const setTriggerNode = useCallback((node: HTMLElement | null) => {
+    triggerRef.current = node;
+  }, []);
   const menuRef = useRef<HTMLDivElement | null>(null);
   const menuId = useId();
   const fallbackTriggerId = useId();
@@ -155,17 +175,19 @@ export function Menu({
   return (
     <>
       {trigger({
-        ref: triggerRef,
+        ref: setTriggerNode,
         onClick: toggle,
         ariaExpanded: open,
-        ariaControls: menuId,
+        // Only while open: closed, the id names nothing in the document.
+        ariaControls: open ? menuId : undefined,
         ariaHasPopup: 'menu',
       })}
       <Popover
         anchorRef={triggerRef}
         open={open}
         matchWidth={false}
-        gap={theme.space.sm}
+        // Theme space values are rem strings typed as plain `string`.
+        gap={theme.space.sm as PopoverGap}
         side={side}
         align={align}
         onClose={dismiss}

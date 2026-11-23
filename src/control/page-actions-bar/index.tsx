@@ -1,5 +1,3 @@
-import type { Ref } from 'react';
-
 import { Button } from '../button/index.js';
 import { Menu } from '../menu/index.js';
 import type { PageActionIntentProps, PageActionItem } from '../page-actions-menu/item.js';
@@ -53,7 +51,7 @@ export function PageActionsBar({ items, actionsLabel }: PageActionsBarProps) {
             items={overflow}
             trigger={({ ref, onClick, ariaExpanded, ariaControls, ariaHasPopup }) => (
               <button
-                ref={ref as Ref<HTMLButtonElement>}
+                ref={ref}
                 type="button"
                 className={styles.moreTrigger}
                 aria-label={triggerAriaLabel}

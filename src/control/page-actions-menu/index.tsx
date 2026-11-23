@@ -1,5 +1,3 @@
-import type { Ref } from 'react';
-
 import { MoreIcon } from '../../icon/index.js';
 import { Menu } from '../menu/index.js';
 import type { PageActionIntentProps, PageActionItem } from './item.js';
@@ -28,7 +26,7 @@ export function PageActionsMenu({ items }: PageActionsMenuProps) {
         items={items}
         trigger={({ ref, onClick, ariaExpanded, ariaControls, ariaHasPopup }) => (
           <button
-            ref={ref as Ref<HTMLButtonElement>}
+            ref={ref}
             type="button"
             className={styles.trigger}
             aria-label="More actions"

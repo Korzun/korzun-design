@@ -88,7 +88,16 @@ describe('Button', () => {
   });
 
   it('an explicit tabIndex wins', () => {
-    renderWithProviders(<Button tabIndex={-1}>Save</Button>);
+    renderWithProviders(<Button tabIndex={2}>Save</Button>);
+    expect(screen.getByRole('button', { name: 'Save' })).toHaveAttribute('tabindex', '2');
+  });
+
+  it('loading forces tabIndex -1', () => {
+    renderWithProviders(
+      <Button loading tabIndex={2}>
+        Save
+      </Button>
+    );
     expect(screen.getByRole('button', { name: 'Save' })).toHaveAttribute('tabindex', '-1');
   });
 

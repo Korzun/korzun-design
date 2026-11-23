@@ -2,12 +2,13 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { useRef, useState } from 'react';
 import { Route, Routes } from 'react-router';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { HomeIcon } from '../../icon/index.js';
 import { renderWithProviders } from '../../test-utils.js';
 import { ThemeProvider } from '../../theme/provider.js';
 import { Button } from '../button/index.js';
+import { Dialog } from '../dialog/index.js';
 import { Popover } from '../popover/index.js';
 import { Menu, type MenuItem, type MenuProps } from './index.js';
 
@@ -31,6 +32,8 @@ describe('Menu', () => {
     const button = screen.getByRole('button', { name: 'Sort' });
     expect(button).toHaveAttribute('aria-haspopup', 'menu');
     expect(button).toHaveAttribute('aria-expanded', 'false');
+    // No aria-controls while closed: the id it would name is not in the document.
+    expect(button).not.toHaveAttribute('aria-controls');
     expect(screen.queryByRole('menu')).toBeNull();
   });
 
@@ -163,6 +166,75 @@ describe('Menu', () => {
     expect(screen.getByRole('button', { name: 'Before' })).toHaveFocus();
   });
 
+  it('Tab skips inert, hidden and tabindex="-1" elements', async () => {
+    const user = userEvent.setup();
+    renderWithProviders(
+      <>
+        <Menu trigger={trigger} items={actions()} />
+        <div inert>
+          <button type="button">Inert</button>
+        </div>
+        <div hidden>
+          <button type="button">Hidden</button>
+        </div>
+        <button type="button" tabIndex={-1}>
+          Untabbable
+        </button>
+        <a href="/x" tabIndex={-1}>
+          Untabbable link
+        </a>
+        <button type="button">Next</button>
+      </>
+    );
+    await openMenu(user);
+    await user.keyboard('{Tab}');
+    expect(screen.queryByRole('menu')).toBeNull();
+    expect(screen.getByRole('button', { name: 'Next' })).toHaveFocus();
+  });
+
+  describe('inside a modal Dialog', () => {
+    beforeEach(() => {
+      HTMLDialogElement.prototype.showModal = vi.fn(function (this: HTMLDialogElement) {
+        this.setAttribute('open', '');
+      });
+      HTMLDialogElement.prototype.close = vi.fn(function (this: HTMLDialogElement) {
+        this.removeAttribute('open');
+      });
+    });
+
+    const InDialog = () => (
+      <>
+        <button type="button">Page before</button>
+        <Dialog open onClose={() => {}} title="Book">
+          <Menu trigger={trigger} items={actions()} />
+          <div inert>
+            <button type="button">Inert</button>
+          </div>
+          <button type="button">In dialog</button>
+        </Dialog>
+        <button type="button">Page after</button>
+      </>
+    );
+
+    it('Tab lands on the next element inside the dialog', async () => {
+      const user = userEvent.setup();
+      renderWithProviders(<InDialog />);
+      await openMenu(user);
+      await user.keyboard('{Tab}');
+      expect(screen.queryByRole('menu')).toBeNull();
+      expect(screen.getByRole('button', { name: 'In dialog' })).toHaveFocus();
+    });
+
+    it('Shift+Tab never leaves the dialog: with nothing before the trigger, focus returns to it', async () => {
+      const user = userEvent.setup();
+      renderWithProviders(<InDialog />);
+      await openMenu(user);
+      await user.keyboard('{Shift>}{Tab}{/Shift}');
+      expect(screen.queryByRole('menu')).toBeNull();
+      expect(screen.getByRole('button', { name: 'Sort' })).toHaveFocus();
+    });
+  });
+
   it('a mousedown outside closes without moving focus', async () => {
     const user = userEvent.setup();
     renderWithProviders(
@@ -269,6 +341,20 @@ describe('Menu', () => {
     expect(screen.queryByText('B page')).toBeNull();
   });
 
+  it('a disabled link has no href, so middle-click cannot open it', async () => {
+    const user = userEvent.setup();
+    const items: MenuItem[] = [
+      { label: 'Stay', onClick: vi.fn() },
+      { label: 'Go to B', to: '/b', disabled: true },
+    ];
+    renderWithProviders(<Menu trigger={trigger} items={items} />);
+    await openMenu(user);
+    const link = screen.getByRole('menuitem', { name: 'Go to B' });
+    expect(link.tagName).toBe('A');
+    expect(link).not.toHaveAttribute('href');
+    expect(link).toHaveAttribute('tabindex', '-1');
+  });
+
   it('icon renders aria-hidden before the label', async () => {
     const user = userEvent.setup();
     renderWithProviders(
@@ -309,6 +395,21 @@ describe('Menu', () => {
     const remove = screen.getByRole('menuitem', { name: 'Delete' });
     expect(remove.className.split(' ').some((c) => c.startsWith('itemDanger'))).toBe(true);
     expect(edit.className.split(' ').some((c) => c.startsWith('itemDanger'))).toBe(false);
+  });
+
+  it('danger alone adds no separator', async () => {
+    const user = userEvent.setup();
+    const items: MenuItem[] = [
+      { label: 'Edit', onClick: vi.fn() },
+      { label: 'Delete', onClick: vi.fn(), danger: true },
+    ];
+    renderWithProviders(<Menu trigger={trigger} items={items} />);
+    const menu = await openMenu(user);
+    expect(screen.queryByRole('separator')).toBeNull();
+    expect(Array.from(menu.children).map((n) => n.getAttribute('role'))).toEqual([
+      'menuitem',
+      'menuitem',
+    ]);
   });
 
   it("opening a second Menu's trigger closes the first", async () => {

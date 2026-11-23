@@ -1,4 +1,4 @@
-import type { ComponentType, ReactNode, RefObject } from 'react';
+import type { ComponentType, ReactNode } from 'react';
 
 import type { IconProps } from '../../icon/index.js';
 import type { PopoverAlign, PopoverSide } from '../popover/index.js';
@@ -55,14 +55,18 @@ export type MenuItem = MenuActionItem | MenuLinkItem;
 
 /** What `trigger` receives; spread it onto the element that opens the menu (a `Button` takes it as-is). */
 export interface MenuTriggerProps {
-  /** Attach to the trigger element; the menu anchors to it and returns focus to it. */
-  ref: RefObject<HTMLElement | null>;
+  /**
+   * Callback ref: attach it to the trigger element (`<button ref={p.ref}>`,
+   * `<a ref={p.ref}>`, or a `Button` through the spread). The menu anchors to
+   * that element and returns focus to it.
+   */
+  ref: (node: HTMLElement | null) => void;
   /** Toggles the menu. */
   onClick: () => void;
   /** Whether the menu is open. */
   ariaExpanded: boolean;
-  /** The id of the `role="menu"` element. */
-  ariaControls: string;
+  /** The id of the `role="menu"` element while open; `undefined` while closed. */
+  ariaControls: string | undefined;
   /** Always `'menu'`. */
   ariaHasPopup: 'menu';
 }

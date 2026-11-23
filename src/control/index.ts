@@ -40,6 +40,7 @@ export {
 export {
   Popover,
   type PopoverAlign,
+  type PopoverGap,
   type PopoverProps,
   type PopoverSide,
 } from './popover/index.js';
