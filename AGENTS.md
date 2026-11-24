@@ -23,15 +23,15 @@ To load this guide in a consuming app, add this line to its `CLAUDE.md` or
 
 ## Imports
 
-| Import                     | Contents                                                                                                                                               |
-| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `@korzun/design/theme`     | `ThemeProvider`, `useTheme`, `useThemeSetting`, `createUseStyles`, `Theme`, `lightTheme`, `darkTheme`                                                  |
-| `@korzun/design/control`   | buttons, inputs, select, switch, segmented control, popover, `ConfirmModal`, `Dialog`, `useModalDialog`, page actions                                  |
+| Import                     | Contents                                                                                                                                                        |
+| -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `@korzun/design/theme`     | `ThemeProvider`, `useTheme`, `useThemeSetting`, `createUseStyles`, `Theme`, `lightTheme`, `darkTheme`                                                           |
+| `@korzun/design/control`   | buttons, inputs, select, switch, segmented control, popover, `ConfirmModal`, `Dialog`, `useModalDialog`, page actions                                           |
 | `@korzun/design/component` | `Page`, `Alert`, `Card` family, `Stack`, `Inline`, `Text`, `Heading`, `EmptyState`, `ErrorMessage`, `Spinner`, `Tag`, metadata, navs, `ThemeSetting`, `TopFade` |
-| `@korzun/design/icon`      | `*Icon` components, `IconProps`                                                                                                                        |
-| `@korzun/design/toast`     | `ToastProvider`, `useToast`                                                                                                                            |
-| `@korzun/design/hooks`     | `useMinimizeOnScroll`, `usePullToRefresh`, `isStandalone`                                                                                              |
-| `@korzun/design`           | everything above, flat, plus `applyTransparency`; the `ThemeSetting` type is renamed `ThemeSettingValue` here                                          |
+| `@korzun/design/icon`      | `*Icon` components, `IconProps`                                                                                                                                 |
+| `@korzun/design/toast`     | `ToastProvider`, `useToast`                                                                                                                                     |
+| `@korzun/design/hooks`     | `useMinimizeOnScroll`, `usePullToRefresh`, `isStandalone`                                                                                                       |
+| `@korzun/design`           | everything above, flat, plus `applyTransparency`; the `ThemeSetting` type is renamed `ThemeSettingValue` here                                                   |
 
 Import only from these entry points, never from `dist/…` or `src/…` paths.
 Every component exports its props type as `<Name>Props` (`ButtonProps`,
@@ -56,10 +56,12 @@ Every component exports its props type as `<Name>Props` (`ButtonProps`,
    modal use `md`. Inside one of those use `sm`. A flush child takes its
    parent's radius. Popovers, menus, and toasts use `md`, and their items `sm`.
    Step down one token per level; don't subtract padding. Never write a
-   literal `borderRadius`. See [corners](docs/corners.md).
-3. **Buttons take the surface they sit on:** `radius="card"` inside a Card,
-   `radius="modal"` in a modal footer (Buttons in a `Dialog` footer get it
-   automatically), no `radius` on the page background.
+   literal `borderRadius`. Library components do this for you; see
+   [corners](docs/corners.md).
+3. **Don't pass `radius` or `surface` by default.** `Button`, `Select`, `Card`,
+   `CardRow` and `Alert` take their corners from where they sit (`Page` 0,
+   `Card`/`Dialog` 1, `Popover` 2). Pass `radius`/`surface` only to override. For a
+   hand-made box with controls inside, wrap them in `Surface`.
 4. **Button `type` is a visual variant** (`default`, `primary`, `text`, `link`,
    `dashed`), not the HTML attribute. For a submit button use `submit` (and
    `form="id"` when the button is outside its form). `onClick` is ignored on a
@@ -83,8 +85,8 @@ Every component exports its props type as `<Name>Props` (`ButtonProps`,
     internal class names.
 11. **Feedback and missing pieces:** show error lines with `ErrorMessage`,
     boxed status messages with `Alert`, and loading with `Spinner`. There is no
-    `Tabs`, `Tooltip`, or `Checkbox` yet. Build them in app code from tokens following these rules, and
-    don't pull in another UI library.
+    `Tabs`, `Tooltip`, or `Checkbox` yet. Build them in app code from tokens
+    following these rules, and don't pull in another UI library.
 
 ## Docs index
 

@@ -10,7 +10,7 @@ after your form.
 
 Use something else for: header actions (`PageActionsBar` / `PageActionsMenu`
 via `Page headerActions`), a Card's own submit (`Button` in the Card `footer`),
-modal buttons (`Button radius="modal"`).
+modal buttons (`Dialog` footer).
 
 ## Props
 

@@ -55,7 +55,7 @@ the header (`PageActionsBar`, `PageActionsMenu`), sticky footer actions
 <Card
   title="Change password"
   footer={
-    <Button type="primary" radius="card" submit form="change-password">
+    <Button type="primary" submit form="change-password">
       Save
     </Button>
   }
@@ -63,9 +63,9 @@ the header (`PageActionsBar`, `PageActionsMenu`), sticky footer actions
   <form id="change-password" action={save}>…</form>
 </Card>
 
-// A modal footer.
-<Button type="text" radius="modal" onClick={onCancel}>Cancel</Button>
-<Button type="primary" danger radius="modal" loading={deleting} onClick={onConfirm}>
+// A modal footer (inside Dialog, so corners follow depth; no radius prop).
+<Button type="text" onClick={onCancel}>Cancel</Button>
+<Button type="primary" danger loading={deleting} onClick={onConfirm}>
   Delete
 </Button>
 ```

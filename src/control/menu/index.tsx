@@ -186,7 +186,6 @@ export function Menu({
         anchorRef={triggerRef}
         open={open}
         matchWidth={false}
-        // Theme space values are rem strings typed as plain `string`.
         gap={theme.space.sm}
         side={side}
         align={align}

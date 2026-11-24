@@ -1,4 +1,4 @@
-import { createContext, useContext, type PropsWithChildren } from 'react';
+import { createContext, useContext, type PropsWithChildren, type ReactNode } from 'react';
 
 import { useTheme } from '../../theme/index.js';
 import type { Theme } from '../../theme/theme.js';
@@ -20,7 +20,10 @@ export const radiusForDepth = (radius: Theme['radius'], depth: number): string =
 /** Clamps a depth to the 0, 1, 2 range used to look up style classes. */
 export const depthClass = (depth: number): 0 | 1 | 2 => Math.min(depth, 2) as 0 | 1 | 2;
 
-export type SurfaceProps = PropsWithChildren<{}>;
+export interface SurfaceProps {
+  /** The hand-made box's contents; Buttons and Selects inside follow the deeper level. */
+  children?: ReactNode;
+}
 
 /**
  * A hand-made box that holds library controls: everything inside sits one
@@ -31,7 +34,7 @@ export const Surface = ({ children }: SurfaceProps) => {
   return <SurfaceDepthProvider depth={depth + 1}>{children}</SurfaceDepthProvider>;
 };
 
-/** The corner radius that matches the current depth, for a hand-made box inside a `Surface`. */
+/** The corner radius that matches the current depth, for a box at the current depth. Call it from the component that draws the box, outside that box's own `Surface`. */
 export const useSurfaceRadius = (): string => {
   const theme = useTheme();
   return radiusForDepth(theme.radius, useSurfaceDepth() ?? 0);

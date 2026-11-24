@@ -1,4 +1,5 @@
 import { createUseStyles, type Theme } from '../../theme/index.js';
+
 const tone = (chip: Theme['color']['chip']['warning']) => ({
   backgroundColor: chip.bg,
   borderColor: chip.border,

@@ -465,7 +465,7 @@ describe('Select surface follows depth', () => {
     expect(triggerStyle().borderRadius).toBe('8px');
   });
 
-  it('is 4px two levels in (inset)', () => {
+  it('is 4px two levels in (inset), on the root panel too', () => {
     renderWithProviders(
       <Page>
         <Surface>
@@ -474,6 +474,8 @@ describe('Select surface follows depth', () => {
       </Page>
     );
     expect(triggerStyle().borderRadius).toBe('4px');
+    const root = screen.getByRole('button', { name: 'Apple' }).parentElement!.parentElement!;
+    expect(getComputedStyle(root).borderRadius).toBe('4px');
   });
 
   it('explicit surface="card" wins directly on a Page', () => {

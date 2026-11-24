@@ -7,7 +7,7 @@ export const useStyle = createUseStyles((theme: Theme) => ({
     padding: '6px', // row-specific compact padding
   },
   // Corners follow the depth the row sits at (lg, md, sm).
-  depth0: {},
+  depth0: {}, // depth 0 keeps the shell's radius.lg
   depth1: { borderRadius: theme.radius.md },
   depth2: { borderRadius: theme.radius.sm },
   clickable: {

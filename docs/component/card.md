@@ -56,7 +56,7 @@ automatically (8px in a Card on a Page). See [corners](../corners.md).
 <Card
   title="Device password"
   headerAction={<Button type="link" onClick={regenerate}>Regenerate</Button>}
-  footer={<Button type="primary" radius="card" submit form="device-pw">Save</Button>}
+  footer={<Button type="primary" submit form="device-pw">Save</Button>}
 >
   <form id="device-pw" action={save}>…</form>
 </Card>
@@ -77,7 +77,7 @@ automatically (8px in a Card on a Page). See [corners](../corners.md).
 - Do give each feature on a screen its own Card, stacked directly in `<Page>`.
 - Do put row actions that must not fire by accident in `footer` of a
   collapsible card; they are unreachable while it is collapsed.
-- Nested Cards step down their corners; prefer `CardDivider` to split one card into sections.
-- Do set `radius="card"` on Buttons inside a Card, except `type="link"`.
+- Don't nest Cards just to group content; use `CardDivider`. When you do nest, corners step down automatically.
+- Don't set `radius` on Buttons inside a Card: it follows depth, and an explicit `radius="card"` would stay 8px inside a nested Card, breaking the concentric corners.
 - Don't expect `isCollapsible` cards to start open; pass `defaultCollapsed={false}`.
 - Do use the exported `CardProps` type when wrapping Card.

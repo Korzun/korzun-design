@@ -21,6 +21,9 @@ set of fields (`TextInput` / `NumberInput` directly).
 | `onValidChange` | `(fieldName: string, valid: boolean) => void` | | `fieldName` is `` `${rowKey}.${columnKey}` ``. Fires only when validity flips. |
 | `addLabel` | `string` | (required) | Text of the add button ("Add identifier"). |
 
+The add button follows surface depth: 16px directly on a Page, 8px in a Card
+or Dialog, 4px deeper (8px outside any Page or Dialog).
+
 No `className`.
 
 `ColumnDescriptor` is

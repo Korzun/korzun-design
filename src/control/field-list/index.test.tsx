@@ -206,6 +206,11 @@ describe('add button radius', () => {
     expect(radius()).toBe('8px');
   });
 
+  it('add button is 16px directly on a Page (depth 0)', () => {
+    renderWithProviders(<Page>{list}</Page>);
+    expect(radius()).toBe('16px');
+  });
+
   it('add button is 4px inside Page > Surface > Surface', () => {
     renderWithProviders(
       <Page>

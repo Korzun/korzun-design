@@ -32,20 +32,39 @@ Find where the element sits, then read its radius from this table:
 padding: a Card has 13px of inset, but the inputs inside it are `md` (8px), not
 16 − 13 = 3px. Exact subtraction applies only to tight insets of 4px or less.
 
-## Picking the prop
+## It's automatic
 
-Components take the radius as the **surface they sit on**, not as a size:
+Components read their corners from the **surface depth** they sit at, so you
+pass no radius prop:
 
-| Component | Prop | Values |
+| Depth | Radius | Where |
 |---|---|---|
-| `Button` | `radius` | `background` (lg, the default), `card` (md), `modal` (md), `inset` (sm) |
-| `Select` | `surface` | `page` (lg), `card` (md) |
-| `Switch` | `radius` | `inset` (sm track), `pill` |
+| 0 | `lg` (16px) | On the page background, inside a `Page` |
+| 1 | `md` (8px) | Inside a `Card`, `CardRow`, `Alert` or `Dialog` on the page |
+| 2+ | `sm` (4px) | One more level in; deeper levels stay `sm` |
+| none | each component's old default | No `Page` or `Dialog` above it (tests, bare stories) |
 
-- Every `Button` inside a `Card` (body or footer) gets `radius="card"`. Leaving
-  it out gives a 16px button inside a 16px card: a bug.
-- Every `Button` in a modal footer gets `radius="modal"`.
-- `type="link"` buttons have no padding or background, so radius doesn't apply.
+Who provides depth:
+
+- `Page` provides 0, to its header, content and footer actions.
+- `Dialog` provides 1 to its header, body and footer.
+- `Card`, `CardRow` and `Alert` each provide one level deeper than where
+  they sit, so a Card in a Card steps down.
+- `Popover` (and so `Menu` and the `Select` list) provides a fixed 2: a
+  floating layer is `md` and its items `sm`, whatever opened it.
+
+What follows depth with no prop: `Button`, `Select`, `Card`, `CardRow`,
+`Alert`. For a hand-made box that holds Buttons or Selects, wrap its contents
+in `<Surface>` and read its own radius with `useSurfaceRadius()`; see
+[surface](component/surface.md).
+
+An explicit prop (`Button radius`, `Select surface`) is an **override** and
+always wins over depth. It pins that radius even where depth would step down,
+which breaks concentricity, so set it only when the surface really is different
+(`radius="background"` on a Button that must stay round inside a Card).
+
+`Switch` still takes `radius` (`inset` or `pill`) by hand, and `type="link"`
+buttons have no padding or background, so radius doesn't apply.
 
 ## In your own styles
 

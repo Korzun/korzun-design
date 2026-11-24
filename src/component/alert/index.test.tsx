@@ -40,7 +40,6 @@ describe('Alert', () => {
       </Alert>
     );
     const svg = screen.getByRole('status').querySelector('svg')!;
-    expect(svg).not.toBeNull();
     expect(svg.compareDocumentPosition(screen.getByText('Heads up'))).toBe(
       Node.DOCUMENT_POSITION_FOLLOWING
     );

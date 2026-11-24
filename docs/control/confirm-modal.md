@@ -30,7 +30,7 @@ No `className`. The props type is exported as `ConfirmModalProps`.
 
 ## Behaviour to know
 
-- Footer buttons already get `radius="modal"` from `Dialog`; the dialog uses
+- Footer buttons already get `md` corners from `Dialog`'s depth; the dialog uses
   `recipe.modal.dialog` (`radius.lg`, it sits on the page). See
   [corners](../corners.md).
 - `onCancel` is the single dismissal path, so whatever you do there runs for

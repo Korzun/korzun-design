@@ -51,11 +51,11 @@ JSON
 
 cat >"$tmp/app/index.ts" <<'TS'
 import { applyTransparency } from '@korzun/design';
-import { Page, type CardProps, type ErrorMessageProps, type HeadingProps, type InlineProps, type SpinnerProps, type StackProps, type TagTone, type TextProps } from '@korzun/design/component';
+import { Alert, Page, Surface, useSurfaceRadius, type AlertProps, type AlertTone, type CardProps, type ErrorMessageProps, type HeadingProps, type InlineProps, type SpinnerProps, type StackProps, type TagTone, type TextProps } from '@korzun/design/component';
 import { Button, Menu, useModalDialog, type ButtonProps, type DialogProps, type MenuItem, type MenuProps, type PopoverSide } from '@korzun/design/control';
 import { isStandalone } from '@korzun/design/hooks';
 import { CheckIcon } from '@korzun/design/icon';
-import { ThemeProvider } from '@korzun/design/theme';
+import { ThemeProvider, type SpaceValue, type Theme } from '@korzun/design/theme';
 import { useToast } from '@korzun/design/toast';
 
 export const typeProbe: [ButtonProps['radius'], CardProps['size']] = ['card', 'small'];
@@ -63,7 +63,8 @@ export const toneProbe: [TagTone, PopoverSide] = ['warning', 'top'];
 export const layoutProbe: [StackProps['gap'], InlineProps['justify'], TextProps['tone'], HeadingProps['level']] = ['none', 'between', 'muted', 2];
 export const feedbackProbe: [DialogProps['canDismiss'], ErrorMessageProps['as'], SpinnerProps['size']] = [false, 'div', 'xl'];
 export const menuProbe: [MenuItem, MenuProps['surface']] = [{ label: 'Open', to: '/x' }, 'glass'];
-export const probe = [ThemeProvider, Button, Menu, useModalDialog, Page, CheckIcon, useToast, isStandalone, applyTransparency];
+export const surfaceProbe: [AlertTone, AlertProps['title'], SpaceValue, Theme['space']['sm']] = ['warning', 'Overdue', '1rem', '0.5rem'];
+export const probe = [Alert, Surface, useSurfaceRadius, ThemeProvider, Button, Menu, useModalDialog, Page, CheckIcon, useToast, isStandalone, applyTransparency];
 TS
 
 cd "$tmp/app"

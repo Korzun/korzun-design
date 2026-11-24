@@ -1,3 +1,4 @@
+import { screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
 import { renderWithProviders } from '../../test-utils.js';
@@ -24,6 +25,13 @@ describe('surface depth', () => {
     );
     expect(getByTestId('probe').textContent).toBe('0');
     expect(getByTestId('header').textContent).toBe('0');
+  });
+
+  it('Page footerActions buttons are 16px, the page-level look', () => {
+    renderWithProviders(<Page footerActions={[{ label: 'Save', onClick: () => {} }]} />);
+    expect(getComputedStyle(screen.getByRole('button', { name: 'Save' })).borderRadius).toBe(
+      '16px'
+    );
   });
 
   it('Page type="minimal" also provides depth 0', () => {
