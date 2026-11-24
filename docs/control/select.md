@@ -17,7 +17,7 @@ several values (`ChipsInput`), on/off (`Switch`).
 | `value` | `string \| undefined` | (required) | Controlled. A value not in `options` displays as the raw string. |
 | `options` | `SelectOption[]` | (required) | `string`, or `{ label, value, description? }`. Mix freely. |
 | `onChange` | `(value: string \| undefined) => void` | no-op | Receives the option's `value`, `undefined` from the clear button, or the trimmed typed text from "Add:". Not an event. |
-| `surface` | `'card' \| 'page'` | `'card'` | Sets radius **and** elevation together; see "Choosing a surface". |
+| `surface` | `'card' \| 'page' \| 'inset'` | follows depth | Sets radius **and** elevation together; unset, it follows the surface depth. See "Choosing a surface". |
 | `label` | `string` | | Visible label. |
 | `layout` | `'horizontal' \| 'vertical' \| 'inline'` | `'horizontal'` | `horizontal`/`vertical` paint a `bg.cardHeader` row. |
 | `placeholder` | `string` | `'Select…'` | Shown when nothing is selected. |
@@ -33,10 +33,13 @@ No `className`.
 
 Follow [corners](../corners.md):
 
-- Inside a `Card` or a modal: omit it (`'card'`, `radius.md`, no shadow).
-- Directly on the page background (e.g. a global picker above the cards):
-  `surface="page"` (`radius.lg` + `shadow.cardStack`, like a card).
-- There is no `sm` option for a select nested inside an inset box.
+- Usually omit it: the default follows where the select sits. Directly on a
+  `Page` it is `'page'`; in a card or dialog (and outside any surface) it is
+  `'card'`; two or more surfaces deep it is `'inset'`.
+- `'card'`: `radius.md`, no shadow.
+- `'page'`: `radius.lg` + `shadow.cardStack`, like a card.
+- `'inset'`: `radius.sm`, no shadow, for a select nested inside an inset box.
+- Pass `surface` only to override the depth.
 
 ## Forms
 
@@ -83,4 +86,4 @@ option, not the current value.
 - Do pass `clearable={false}` when an empty value is invalid.
 - Do test before using inside a modal `<dialog>`: the dropdown portals outside
   the dialog's top layer (see [popover](popover.md)).
-- Don't pass `surface="page"` inside a card.
+- Don't pass `surface="page"` inside a card; let the depth decide.

@@ -2,6 +2,8 @@ import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 
+import { Page } from '../../component/page/index.js';
+import { Surface } from '../../component/surface/index.js';
 import { renderWithProviders } from '../../test-utils.js';
 import { Select } from './index.js';
 
@@ -433,5 +435,49 @@ describe('Select', () => {
       expect(screen.getByRole('button', { name: 'Contain' })).toBeInTheDocument();
       expect(screen.queryByText('Fit inside the size.')).not.toBeInTheDocument();
     });
+  });
+});
+
+describe('Select surface follows depth', () => {
+  const triggerStyle = () => getComputedStyle(screen.getByRole('button', { name: 'Apple' }));
+  const select = (surface?: 'card' | 'page' | 'inset') => (
+    <Select name="fruit" options={['Apple']} value="Apple" surface={surface} />
+  );
+
+  it('is the card look outside any surface (8px, no shadow)', () => {
+    renderWithProviders(select());
+    expect(triggerStyle().borderRadius).toBe('8px');
+    expect(triggerStyle().boxShadow).toBe('');
+  });
+
+  it('takes the page look directly on a Page (16px)', () => {
+    renderWithProviders(<Page>{select()}</Page>);
+    expect(triggerStyle().borderRadius).toBe('16px');
+    expect(triggerStyle().boxShadow).not.toBe('');
+  });
+
+  it('is 8px inside Page > Surface', () => {
+    renderWithProviders(
+      <Page>
+        <Surface>{select()}</Surface>
+      </Page>
+    );
+    expect(triggerStyle().borderRadius).toBe('8px');
+  });
+
+  it('is 4px two levels in (inset)', () => {
+    renderWithProviders(
+      <Page>
+        <Surface>
+          <Surface>{select()}</Surface>
+        </Surface>
+      </Page>
+    );
+    expect(triggerStyle().borderRadius).toBe('4px');
+  });
+
+  it('explicit surface="card" wins directly on a Page', () => {
+    renderWithProviders(<Page>{select('card')}</Page>);
+    expect(triggerStyle().borderRadius).toBe('8px');
   });
 });
