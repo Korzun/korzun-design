@@ -2,6 +2,7 @@ import cx from 'classnames';
 import { PropsWithChildren, ReactNode, ReactElement, useCallback, useState } from 'react';
 
 import { ChevronCircleIcon } from '../../icon/index.js';
+import { depthClass, SurfaceDepthProvider, useSurfaceDepth } from '../surface/index.js';
 import { useStyle } from './style.js';
 
 export type CardProps = PropsWithChildren<{
@@ -42,6 +43,7 @@ export const Card = ({
   title,
 }: CardProps) => {
   const style = useStyle();
+  const depth = useSurfaceDepth() ?? 0;
   const [isExpanded, setIsExpanded] = useState<boolean>(!defaultCollapsed);
   const handleToggle = useCallback(() => setIsExpanded((prev) => !prev), []);
 
@@ -71,65 +73,67 @@ export const Card = ({
 
   return (
     <div
-      className={cx(style.root, style[size], className, {
+      className={cx(style.root, style[`depth${depthClass(depth)}`], style[size], className, {
         [style.clickable]: onClick !== undefined,
       })}
       onClick={onClick}
       onKeyDown={handleKeyDown}
     >
-      {(title || subTitle || headerAction || onClickHeader || isCollapsible) && (
-        <div
-          className={cx(style.header, {
-            [style.collapsed]: !visibleChildren,
-            [style.clickable]: onClickHeader !== undefined || isCollapsible,
-          })}
-          onClick={isCollapsible ? handleToggle : (onClickHeader ?? undefined)}
-          onKeyDown={handleHeaderKeyDown}
-          role={isCollapsible ? 'button' : undefined}
-          tabIndex={isCollapsible ? 0 : undefined}
-          aria-expanded={isCollapsible ? isExpanded : undefined}
-        >
-          {(title || subTitle) && (
-            <div className={style.titleGroup}>
-              {title &&
-                (isCollapsible ? (
-                  <div className={style.titleWrapper}>
-                    <ChevronCircleIcon
-                      className={cx(
-                        style.chevron,
-                        isExpanded ? style.chevronExpanded : style.chevronCollapsed
-                      )}
-                    />
+      <SurfaceDepthProvider depth={depth + 1}>
+        {(title || subTitle || headerAction || onClickHeader || isCollapsible) && (
+          <div
+            className={cx(style.header, {
+              [style.collapsed]: !visibleChildren,
+              [style.clickable]: onClickHeader !== undefined || isCollapsible,
+            })}
+            onClick={isCollapsible ? handleToggle : (onClickHeader ?? undefined)}
+            onKeyDown={handleHeaderKeyDown}
+            role={isCollapsible ? 'button' : undefined}
+            tabIndex={isCollapsible ? 0 : undefined}
+            aria-expanded={isCollapsible ? isExpanded : undefined}
+          >
+            {(title || subTitle) && (
+              <div className={style.titleGroup}>
+                {title &&
+                  (isCollapsible ? (
+                    <div className={style.titleWrapper}>
+                      <ChevronCircleIcon
+                        className={cx(
+                          style.chevron,
+                          isExpanded ? style.chevronExpanded : style.chevronCollapsed
+                        )}
+                      />
+                      <div className={style.title}>{title}</div>
+                    </div>
+                  ) : (
                     <div className={style.title}>{title}</div>
-                  </div>
-                ) : (
-                  <div className={style.title}>{title}</div>
-                ))}
-              {subTitle && <div className={style.subTitle}>{subTitle}</div>}
-            </div>
-          )}
-          <div className={style.spacer} />
-          {headerAction && (
-            <div
-              className={style.headerAction}
-              onClick={(e) => e.stopPropagation()}
-              onKeyDown={(e) => e.stopPropagation()}
-            >
-              {headerAction}
-            </div>
-          )}
-        </div>
-      )}
-      {visibleChildren && <div className={cx(style.content, style[size])}>{visibleChildren}</div>}
-      {footer && (!isCollapsible || isExpanded) && (
-        <div
-          className={style.footer}
-          onClick={(e) => e.stopPropagation()}
-          onKeyDown={(e) => e.stopPropagation()}
-        >
-          {footer}
-        </div>
-      )}
+                  ))}
+                {subTitle && <div className={style.subTitle}>{subTitle}</div>}
+              </div>
+            )}
+            <div className={style.spacer} />
+            {headerAction && (
+              <div
+                className={style.headerAction}
+                onClick={(e) => e.stopPropagation()}
+                onKeyDown={(e) => e.stopPropagation()}
+              >
+                {headerAction}
+              </div>
+            )}
+          </div>
+        )}
+        {visibleChildren && <div className={cx(style.content, style[size])}>{visibleChildren}</div>}
+        {footer && (!isCollapsible || isExpanded) && (
+          <div
+            className={style.footer}
+            onClick={(e) => e.stopPropagation()}
+            onKeyDown={(e) => e.stopPropagation()}
+          >
+            {footer}
+          </div>
+        )}
+      </SurfaceDepthProvider>
     </div>
   );
 };
