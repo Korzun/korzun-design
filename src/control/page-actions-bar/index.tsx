@@ -1,12 +1,6 @@
-import { useCallback, useRef, useState } from 'react';
-
-import {
-  ActionMenuList,
-  type PageActionIntentProps,
-  type PageActionItem,
-} from '../action-menu-list/index.js';
-import { useDismiss } from '../action-menu-list/use-dismiss.js';
 import { Button } from '../button/index.js';
+import { Menu } from '../menu/index.js';
+import type { PageActionIntentProps, PageActionItem } from '../page-actions-menu/item.js';
 import { useStyle } from './style.js';
 
 export type { PageActionIntentProps, PageActionItem };
@@ -25,14 +19,10 @@ export interface PageActionsBarProps {
 
 /**
  * Desktop page-header action row: primary items as inline Buttons, the rest
- * behind a "More…" overflow menu. Usually rendered by `Page headerActions`.
+ * behind a "More…" overflow `Menu`. Usually rendered by `Page headerActions`.
  */
 export function PageActionsBar({ items, actionsLabel }: PageActionsBarProps) {
   const styles = useStyle();
-  const [open, setOpen] = useState(false);
-  const moreRef = useRef<HTMLDivElement>(null);
-  const close = useCallback(() => setOpen(false), []);
-  useDismiss(open, close, moreRef);
 
   const triggerLabel = actionsLabel ?? 'More…';
   const triggerAriaLabel = actionsLabel ?? 'More actions';
@@ -41,11 +31,6 @@ export function PageActionsBar({ items, actionsLabel }: PageActionsBarProps) {
   const leading = primary.filter((item) => item.align === 'leading');
   const trailing = primary.filter((item) => item.align !== 'leading');
   const overflow = items.filter((item) => !item.primary);
-
-  const handleSelect = useCallback((item: PageActionItem) => {
-    setOpen(false);
-    item.onClick();
-  }, []);
 
   const renderButton = (item: PageActionItem) => (
     <Button key={item.label} onClick={item.onClick} disabled={item.disabled} danger={item.danger}>
@@ -59,22 +44,26 @@ export function PageActionsBar({ items, actionsLabel }: PageActionsBarProps) {
       <div className={styles.spacer} />
       {trailing.map(renderButton)}
       {overflow.length > 0 && (
-        <div className={styles.more} ref={moreRef}>
-          <button
-            type="button"
-            className={styles.moreTrigger}
-            aria-label={triggerAriaLabel}
-            aria-haspopup="menu"
-            aria-expanded={open}
-            onClick={() => setOpen((value) => !value)}
-          >
-            {triggerLabel}
-          </button>
-          {open && (
-            <div className={styles.popoverAnchor}>
-              <ActionMenuList items={overflow} surface="solid" onSelect={handleSelect} />
-            </div>
-          )}
+        <div className={styles.more}>
+          <Menu
+            surface="solid"
+            align="end"
+            items={overflow}
+            trigger={({ ref, onClick, ariaExpanded, ariaControls, ariaHasPopup }) => (
+              <button
+                ref={ref}
+                type="button"
+                className={styles.moreTrigger}
+                aria-label={triggerAriaLabel}
+                aria-haspopup={ariaHasPopup}
+                aria-expanded={ariaExpanded}
+                aria-controls={ariaControls}
+                onClick={onClick}
+              >
+                {triggerLabel}
+              </button>
+            )}
+          />
         </div>
       )}
     </div>

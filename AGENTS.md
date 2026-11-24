@@ -72,13 +72,16 @@ Every component exports its props type as `<Name>Props` (`ButtonProps`,
 7. **Modals:** use `ConfirmModal` for yes/no and `Dialog` for anything else
    (title, body, optional footer; pass `canDismiss={!loading}`). Reach for
    `useModalDialog` only for a custom native `<dialog>`.
-8. **Accessibility:** give repeated row actions an `ariaLabel` ("Remove
+8. **Menus:** a list of actions or links behind a button is a `Menu` (`items`
+   array; `to` for links, `onClick` for actions). Never hand-build
+   `role="menu"` or a dropdown of buttons.
+9. **Accessibility:** give repeated row actions an `ariaLabel` ("Remove
    Kindle"). Don't wrap library controls in `<button>` or `<a>`; they are
    already interactive.
-9. **Overrides:** pass `className` where the module doc says it is accepted,
-   and win specificity with `'&&'`. Never use `!important`, and never target
-   internal class names.
-10. **Feedback and missing pieces:** show error lines with `ErrorMessage` and
+10. **Overrides:** pass `className` where the module doc says it is accepted,
+    and win specificity with `'&&'`. Never use `!important`, and never target
+    internal class names.
+11. **Feedback and missing pieces:** show error lines with `ErrorMessage` and
     loading with `Spinner`. There is no `Tabs`, `Tooltip`, `Checkbox`, or
     `Alert` yet. Build them in app code from tokens following these rules, and
     don't pull in another UI library.
@@ -86,5 +89,5 @@ Every component exports its props type as `<Name>Props` (`ButtonProps`,
 ## Docs index
 
 [docs]|theme.md: provider, createUseStyles, token summary, recipes|corners.md: radius by nesting depth|patterns.md: screens, forms in cards, modals, overrides|tokens.md: every token key in detail|philosophy.md: design rules and why|icon.md|toast.md|hooks.md
-[docs/control]|{back-button,button,chips-input,confirm-modal,date-time-input,dialog,field-list,number-input,page-actions-bar,page-actions-menu,page-footer-actions,popover,segmented-control,select,switch,text-area,text-input,use-modal-dialog}.md
+[docs/control]|{back-button,button,chips-input,confirm-modal,date-time-input,dialog,field-list,menu,number-input,page-actions-bar,page-actions-menu,page-footer-actions,popover,segmented-control,select,switch,text-area,text-input,use-modal-dialog}.md
 [docs/component]|{card,card-divider,card-row,collapsible-section,empty-state,error-message,heading,inline,meta-line,metadata-list,nav-desktop,nav-mobile,page,progress-indicator,spinner,stack,tag,text,theme-setting,top-fade}.md

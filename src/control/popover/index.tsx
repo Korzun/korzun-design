@@ -1,15 +1,8 @@
 import cx from 'classnames';
-import {
-  ReactNode,
-  RefObject,
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from 'react';
+import { ReactNode, RefObject, useCallback, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
+import { useLayer } from '../layer-stack/index.js';
 import {
   computePosition,
   type Placement,
@@ -20,6 +13,9 @@ import { useStyle } from './style.js';
 
 export type { PopoverAlign, PopoverSide } from './position.js';
 
+/** A popover gap: pixels, or a CSS length in `px` or `rem`. */
+export type PopoverGap = number | `${number}px` | `${number}rem`;
+
 export type PopoverProps = {
   /** Element the popover aligns to (placed below or above it, per `side`). */
   anchorRef: RefObject<HTMLElement | null>;
@@ -29,8 +25,12 @@ export type PopoverProps = {
   children: ReactNode;
   /** Applied to the fixed wrapper; win specificity with `'&&'`, never `!important`. */
   className?: string;
-  /** Vertical gap between the anchor and the popover, in pixels; also the viewport edge margin when `matchWidth` is false. */
-  gap?: number;
+  /**
+   * Vertical gap between the anchor and the popover: a number of pixels, or a
+   * CSS length string in `px` or `rem` (`'6px'`, `'0.375rem'`), resolved at
+   * each measurement. Also the viewport edge margin when `matchWidth` is false.
+   */
+  gap?: PopoverGap;
   /** Match the popover width to the anchor width (default true). */
   matchWidth?: boolean;
   /** Preferred side; flips to the other side when this one has no room. */
@@ -39,9 +39,19 @@ export type PopoverProps = {
   align?: PopoverAlign;
   /**
    * Called on a pointer-down outside both the anchor and the popover content,
-   * and on an Escape keydown no control has already handled. Omit to opt out.
+   * and on an Escape keydown no control has already handled. Escape and
+   * outside pointer-down close the innermost open layer first (a nested
+   * popover before its parent, a Dialog opened over it before it). Omit to opt out.
    */
   onClose?: () => void;
+};
+
+// A `rem` string against the root font size; a `px` string as pixels.
+const resolveGap = (gap: PopoverGap): number => {
+  if (typeof gap === 'number') return gap;
+  const value = parseFloat(gap);
+  if (!gap.endsWith('rem')) return value;
+  return value * parseFloat(getComputedStyle(document.documentElement).fontSize);
 };
 
 /**
@@ -60,9 +70,10 @@ export type PopoverProps = {
  * focusable) until measured, then it re-measures on scroll (capture phase),
  * window resize, and content resize (`ResizeObserver`, where available).
  *
- * With `onClose`, Escape closes it unless the keydown was already
- * `defaultPrevented`; it calls `preventDefault` so an enclosing `<dialog>`
- * does not also cancel. No focus management.
+ * With `onClose`, it joins the layer stack: Escape and outside pointer-down
+ * close the innermost open layer first. Escape is ignored when the keydown was
+ * already `defaultPrevented`, and is `preventDefault`ed so an enclosing
+ * `<dialog>` does not also cancel. No focus management.
  */
 export const Popover = ({
   anchorRef,
@@ -95,7 +106,7 @@ export const Popover = ({
         viewport: { width: window.innerWidth, height: window.innerHeight },
         side,
         align,
-        gap,
+        gap: resolveGap(gap),
         matchWidth,
       })
     );
@@ -126,27 +137,13 @@ export const Popover = ({
     };
   }, [open, target, updatePosition]);
 
-  useEffect(() => {
-    if (!open || !onClose) return;
-    const handleMouseDown = (event: MouseEvent) => {
-      const pressed = event.target as Node;
-      if (anchorRef.current?.contains(pressed)) return;
-      if (contentRef.current?.contains(pressed)) return;
-      onClose();
-    };
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key !== 'Escape' || event.defaultPrevented) return;
-      // preventDefault on keydown is what stops a native <dialog> from cancelling.
-      event.preventDefault();
-      onClose();
-    };
-    document.addEventListener('mousedown', handleMouseDown);
-    document.addEventListener('keydown', handleKeyDown);
-    return () => {
-      document.removeEventListener('mousedown', handleMouseDown);
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [open, onClose, anchorRef]);
+  // Gated on `target`, so it registers one commit after each opening: a
+  // Dialog opening in the same commit as a popover inside it still sits below it.
+  useLayer(open && !!onClose && !!target, {
+    onEscape: onClose,
+    contains: (node) => !!(anchorRef.current?.contains(node) || contentRef.current?.contains(node)),
+    onOutsidePointerDown: onClose,
+  });
 
   if (!open || !target) return null;
 

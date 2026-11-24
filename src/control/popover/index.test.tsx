@@ -234,6 +234,70 @@ describe('Popover', () => {
     });
   });
 
+  describe('nested popovers', () => {
+    const Nested = ({ onOuter, onInner }: { onOuter: () => void; onInner: () => void }) => {
+      const outer = useRef<HTMLDivElement>(null);
+      const inner = useRef<HTMLDivElement>(null);
+      return (
+        <>
+          <div ref={outer} data-testid="anchor">
+            anchor
+          </div>
+          <Popover anchorRef={outer} open onClose={onOuter}>
+            <div ref={inner}>outer content</div>
+            <Popover anchorRef={inner} open onClose={onInner}>
+              <div>inner content</div>
+            </Popover>
+          </Popover>
+        </>
+      );
+    };
+
+    it('nested popovers: Escape closes the inner one only', () => {
+      const onOuter = vi.fn();
+      const onInner = vi.fn();
+      renderWithProviders(<Nested onOuter={onOuter} onInner={onInner} />);
+      expect(escape(document.body).defaultPrevented).toBe(true);
+      expect(onInner).toHaveBeenCalledTimes(1);
+      expect(onOuter).not.toHaveBeenCalled();
+    });
+
+    it('nested popovers: a mousedown in the inner content closes neither', () => {
+      const onOuter = vi.fn();
+      const onInner = vi.fn();
+      renderWithProviders(<Nested onOuter={onOuter} onInner={onInner} />);
+      fireEvent.mouseDown(screen.getByText('inner content'));
+      expect(onInner).not.toHaveBeenCalled();
+      expect(onOuter).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('gap', () => {
+    afterEach(() => {
+      document.documentElement.style.fontSize = '';
+    });
+
+    it('gap accepts a rem string', () => {
+      document.documentElement.style.fontSize = '16px';
+      renderWithProviders(<Harness gap="0.375rem" />);
+      expect(wrapper().style.top).toBe(`${DEFAULT_ANCHOR.bottom + 6}px`);
+    });
+
+    it('gap accepts a px string', () => {
+      renderWithProviders(<Harness gap="10px" />);
+      expect(wrapper().style.top).toBe(`${DEFAULT_ANCHOR.bottom + 10}px`);
+    });
+
+    it('gap rejects other units at the type level', () => {
+      // `tsc --noEmit` (in lint) enforces the @ts-expect-error lines.
+      // @ts-expect-error em is not a supported unit
+      const em = <Harness gap="1em" />;
+      // @ts-expect-error a bare unitless string is not a number
+      const unitless = <Harness gap="6" />;
+      expect([em, unitless]).toHaveLength(2);
+    });
+  });
+
   describe('outside click', () => {
     it('calls onClose on a mousedown outside', () => {
       const onClose = vi.fn();
@@ -360,6 +424,14 @@ describe('Popover', () => {
         fireEvent.click(screen.getByText('content'));
         expect(onDialogClose).not.toHaveBeenCalled();
         expect(onClose).not.toHaveBeenCalled();
+      });
+
+      it('mounted open together with its Dialog, Escape still closes the popover first', () => {
+        const onDialogClose = vi.fn();
+        const onClose = vi.fn();
+        renderWithProviders(<InModal open onDialogClose={onDialogClose} onClose={onClose} />);
+        expect(escape(document).defaultPrevented).toBe(true);
+        expect(onClose).toHaveBeenCalledOnce();
       });
     });
   });

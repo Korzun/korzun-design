@@ -67,6 +67,23 @@ is in flight; it disables Cancel and blocks Escape and backdrop dismissal.
 </ConfirmModal>
 ```
 
+## Row or card actions menu
+
+Use `Menu` for a list of actions or links behind a button. Spread the trigger
+props onto a `Button`; put a link first, and a destructive action last behind
+a separator.
+
+```tsx
+<Menu
+  align="end"
+  items={[
+    { label: 'Open reader', to: `/books/${id}/read`, Icon: BookIcon },
+    { label: 'Delete', onClick: () => setConfirming(true), danger: true, separatorBefore: true },
+  ]}
+  trigger={(p) => <Button {...p} ariaLabel="Book actions">Actions</Button>}
+/>
+```
+
 ## A custom modal
 
 Use `Dialog` for anything that is not a yes/no question: a title, a body, and

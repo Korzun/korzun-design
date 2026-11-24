@@ -1,5 +1,7 @@
 import { type RefObject, useEffect, useRef } from 'react';
 
+import { useLayer } from '../layer-stack/index.js';
+
 /**
  * Drives a native `<dialog>` from an `isOpen` flag and wires up ESC-to-dismiss.
  *
@@ -22,6 +24,9 @@ import { type RefObject, useEffect, useRef } from 'react';
  * it. Modals keep their own `onClick` only to stop the click bubbling to a
  * clickable ancestor; they no longer decide dismissal.
  *
+ * While open, the dialog is a layer on the layer stack: a popover opened
+ * beneath it neither takes its Escape nor closes on a press inside it.
+ *
  * @param isOpen The single source of truth: `true` calls `showModal()`, `false` calls `close()`.
  * @param onDismiss Called on Escape and a backdrop click; receives no event and closes nothing itself.
  * @param canDismiss When `false`, Escape and backdrop clicks are swallowed; pass `!loading`. Default `true`.
@@ -33,6 +38,10 @@ export function useModalDialog(
   canDismiss = true
 ): RefObject<HTMLDialogElement | null> {
   const ref = useRef<HTMLDialogElement>(null);
+
+  // A pass-through layer: Escape stays with the native cancel below, and it
+  // stops the outside-click walk, so a press inside never closes a popover beneath.
+  useLayer(isOpen, { contains: (node) => ref.current?.contains(node) ?? false });
 
   useEffect(() => {
     const element = ref.current;

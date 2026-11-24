@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -81,5 +81,37 @@ describe('PageActionsMenu', () => {
     await user.click(screen.getByRole('button', { name: 'More actions' }));
     // makeItems() = 1 plain + 1 flagged separatorBefore → 2 menuitems + 1 separator
     expect(screen.getByRole('menu').children).toHaveLength(3);
+  });
+  it('opening focuses the first item', async () => {
+    const user = userEvent.setup();
+    renderWithProviders(<PageActionsMenu items={makeItems()} />);
+    await user.click(screen.getByRole('button', { name: 'More actions' }));
+    await waitFor(() =>
+      expect(screen.getByRole('menuitem', { name: 'Edit metadata' })).toHaveFocus()
+    );
+  });
+
+  it('ArrowDown moves focus', async () => {
+    const user = userEvent.setup();
+    renderWithProviders(<PageActionsMenu items={makeItems()} />);
+    await user.click(screen.getByRole('button', { name: 'More actions' }));
+    await waitFor(() =>
+      expect(screen.getByRole('menuitem', { name: 'Edit metadata' })).toHaveFocus()
+    );
+    await user.keyboard('{ArrowDown}');
+    expect(screen.getByRole('menuitem', { name: 'Delete book' })).toHaveFocus();
+  });
+
+  it('Escape returns focus to the trigger', async () => {
+    const user = userEvent.setup();
+    renderWithProviders(<PageActionsMenu items={makeItems()} />);
+    const trigger = screen.getByRole('button', { name: 'More actions' });
+    await user.click(trigger);
+    await waitFor(() =>
+      expect(screen.getByRole('menuitem', { name: 'Edit metadata' })).toHaveFocus()
+    );
+    await user.keyboard('{Escape}');
+    expect(screen.queryByRole('menu')).not.toBeInTheDocument();
+    expect(trigger).toHaveFocus();
   });
 });

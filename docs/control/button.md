@@ -3,7 +3,8 @@
 `import { Button } from '@korzun/design/control'`
 
 A clickable action with a visual variant, optional icons, and a loading state.
-Renders a `<div role="button">` (keyboard: Enter and Space) unless `submit` is
+Renders a `<div role="button">` (keyboard: Enter and Space, which it
+preventDefaults, so Space does not scroll the page) unless `submit` is
 set, in which case it renders a native `<button type="submit">`.
 
 Use something else for: navigating back (`BackButton`), page-level actions in
@@ -27,8 +28,11 @@ the header (`PageActionsBar`, `PageActionsMenu`), sticky footer actions
 | `prefix` / `suffix` | `ComponentType<IconProps>` | | An icon **component** (`prefix={SearchIcon}`), not an element. |
 | `ariaLabel` | `string` | | Required when the label alone is ambiguous, e.g. repeated "Remove" buttons in a list. |
 | `ariaExpanded` / `ariaControls` | `boolean` / `string` | | For disclosure buttons. |
+| `ariaHasPopup` | `'menu' \| 'listbox' \| 'dialog'` / `boolean` | | Announces the popup the button opens (`'menu'` for a menu trigger). Rendered in both modes. |
+| `ref` | `Ref<HTMLElement>` | | Ref to the root element (the `<div role="button">`, or the `<button>` in submit mode), e.g. to `.focus()` it. A plain prop; no `forwardRef`. |
 | `className` | `string` | | Override with `'&&'` specificity in your sheet, never `!important`. |
-| `title`, `tabIndex` | | | Passed through. |
+| `title` | `string` | | Passed through. |
+| `tabIndex` | `number` | `0` (div mode) | The div-mode button is keyboard-focusable by default; an explicit value wins, except it is forced to `-1` while `disabled` or `loading`. Submit mode uses the native `<button>`, so it is passed through. |
 
 ## Choosing a variant
 

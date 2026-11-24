@@ -48,4 +48,23 @@ export const useStyle = createUseStyles((theme: Theme) => ({
     margin: `${theme.space.xxs} calc(${theme.space.xs} * -1)`,
     backgroundColor: theme.color.border.strong,
   },
+  // A link item: block box like the button, no underline, and a disabled look
+  // from aria-disabled, since an anchor has no :disabled state.
+  link: {
+    display: 'block',
+    boxSizing: 'border-box',
+    textDecoration: 'none',
+    '&[aria-disabled="true"]': { opacity: 0.5, cursor: 'default' },
+  },
+  // After `link`, so its flex display wins on a link with an icon.
+  itemWithIcon: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.space.sm,
+  },
+  icon: {
+    width: '1em',
+    height: '1em',
+    flexShrink: 0,
+  },
 }));

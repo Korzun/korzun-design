@@ -1,10 +1,13 @@
-import { fireEvent, screen } from '@testing-library/react';
+import { act, fireEvent, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { useRef } from 'react';
 import { beforeEach, describe, expect, it, vi, type Mock } from 'vitest';
 
 import { Inline } from '../../component/inline/index.js';
 import { renderWithProviders } from '../../test-utils.js';
 import { Button } from '../button/index.js';
+import { Popover } from '../popover/index.js';
+import { Select } from '../select/index.js';
 import { Dialog } from './index.js';
 
 let showModal: Mock<() => void>;
@@ -188,5 +191,93 @@ describe('Dialog', () => {
       <Dialog open onClose={() => {}} title="T" className="custom" />
     );
     expect(container.querySelector('dialog')).toHaveClass('custom');
+  });
+
+  describe('layer stack', () => {
+    beforeEach(() => {
+      // Open as a browser would, so the dialog and its contents are rendered.
+      showModal.mockImplementation(function (this: HTMLDialogElement) {
+        this.setAttribute('open', '');
+      });
+    });
+
+    const PopoverThenDialog = ({
+      dialogOpen,
+      onPopoverClose,
+    }: {
+      dialogOpen: boolean;
+      onPopoverClose: () => void;
+    }) => {
+      const anchor = useRef<HTMLDivElement>(null);
+      return (
+        <>
+          <div ref={anchor}>anchor</div>
+          <Popover anchorRef={anchor} open onClose={onPopoverClose}>
+            <div>popover content</div>
+          </Popover>
+          <Dialog open={dialogOpen} onClose={() => {}} title="T">
+            <p>Inside</p>
+          </Dialog>
+        </>
+      );
+    };
+
+    const setup = () => {
+      const onPopoverClose = vi.fn();
+      const { rerender } = renderWithProviders(
+        <PopoverThenDialog dialogOpen={false} onPopoverClose={onPopoverClose} />
+      );
+      rerender(<PopoverThenDialog dialogOpen onPopoverClose={onPopoverClose} />);
+      return onPopoverClose;
+    };
+
+    it('a Dialog opened over an open Popover: Escape does not close the popover', () => {
+      const onPopoverClose = setup();
+      const event = new KeyboardEvent('keydown', {
+        key: 'Escape',
+        bubbles: true,
+        cancelable: true,
+      });
+      act(() => {
+        screen.getByText('Inside').dispatchEvent(event);
+      });
+      expect(onPopoverClose).not.toHaveBeenCalled();
+      // Not prevented, so a real browser's native cancel closes the Dialog.
+      expect(event.defaultPrevented).toBe(false);
+    });
+
+    it('a mousedown inside an open Dialog does not close a popover beneath it', () => {
+      const onPopoverClose = setup();
+      fireEvent.mouseDown(screen.getByText('Inside'));
+      expect(onPopoverClose).not.toHaveBeenCalled();
+    });
+
+    it('a Select list inside a Dialog: first Escape closes the list, Dialog onClose not called', async () => {
+      const user = userEvent.setup();
+      const onClose = vi.fn();
+      renderWithProviders(
+        <Dialog open onClose={onClose} title="T">
+          <Select
+            name="genre"
+            options={['Fantasy', 'Horror']}
+            value={undefined}
+            placeholder="Pick…"
+          />
+        </Dialog>
+      );
+      screen.getByRole('button', { name: 'Pick…' }).focus();
+      await user.keyboard('{ArrowDown}');
+      expect(screen.getByRole('listbox')).toBeInTheDocument();
+      const prevented: boolean[] = [];
+      const record = (e: KeyboardEvent) => prevented.push(e.defaultPrevented);
+      window.addEventListener('keydown', record);
+      await user.keyboard('{Escape}');
+      window.removeEventListener('keydown', record);
+      expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+      // jsdom never turns keydown into a native cancel; a prevented keydown is
+      // what stops a real browser's dialog cancel.
+      expect(prevented).toEqual([true]);
+      expect(onClose).not.toHaveBeenCalled();
+    });
   });
 });
