@@ -1,3 +1,4 @@
+export { Alert, type AlertProps, type AlertTone } from './alert/index.js';
 export { Card, type CardProps } from './card/index.js';
 export { CardDivider, type CardDividerAlign, type CardDividerProps } from './card-divider/index.js';
 export { CardRow, type CardRowProps } from './card-row/index.js';

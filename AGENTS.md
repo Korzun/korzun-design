@@ -27,7 +27,7 @@ To load this guide in a consuming app, add this line to its `CLAUDE.md` or
 | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `@korzun/design/theme`     | `ThemeProvider`, `useTheme`, `useThemeSetting`, `createUseStyles`, `Theme`, `lightTheme`, `darkTheme`                                                  |
 | `@korzun/design/control`   | buttons, inputs, select, switch, segmented control, popover, `ConfirmModal`, `Dialog`, `useModalDialog`, page actions                                  |
-| `@korzun/design/component` | `Page`, `Card` family, `Stack`, `Inline`, `Text`, `Heading`, `EmptyState`, `ErrorMessage`, `Spinner`, `Tag`, metadata, navs, `ThemeSetting`, `TopFade` |
+| `@korzun/design/component` | `Page`, `Alert`, `Card` family, `Stack`, `Inline`, `Text`, `Heading`, `EmptyState`, `ErrorMessage`, `Spinner`, `Tag`, metadata, navs, `ThemeSetting`, `TopFade` |
 | `@korzun/design/icon`      | `*Icon` components, `IconProps`                                                                                                                        |
 | `@korzun/design/toast`     | `ToastProvider`, `useToast`                                                                                                                            |
 | `@korzun/design/hooks`     | `useMinimizeOnScroll`, `usePullToRefresh`, `isStandalone`                                                                                              |
@@ -81,13 +81,13 @@ Every component exports its props type as `<Name>Props` (`ButtonProps`,
 10. **Overrides:** pass `className` where the module doc says it is accepted,
     and win specificity with `'&&'`. Never use `!important`, and never target
     internal class names.
-11. **Feedback and missing pieces:** show error lines with `ErrorMessage` and
-    loading with `Spinner`. There is no `Tabs`, `Tooltip`, `Checkbox`, or
-    `Alert` yet. Build them in app code from tokens following these rules, and
+11. **Feedback and missing pieces:** show error lines with `ErrorMessage`,
+    boxed status messages with `Alert`, and loading with `Spinner`. There is no
+    `Tabs`, `Tooltip`, or `Checkbox` yet. Build them in app code from tokens following these rules, and
     don't pull in another UI library.
 
 ## Docs index
 
 [docs]|theme.md: provider, createUseStyles, token summary, recipes|corners.md: radius by nesting depth|patterns.md: screens, forms in cards, modals, overrides|tokens.md: every token key in detail|philosophy.md: design rules and why|icon.md|toast.md|hooks.md
 [docs/control]|{back-button,button,chips-input,confirm-modal,date-time-input,dialog,field-list,menu,number-input,page-actions-bar,page-actions-menu,page-footer-actions,popover,segmented-control,select,switch,text-area,text-input,use-modal-dialog}.md
-[docs/component]|{card,card-divider,card-row,collapsible-section,empty-state,error-message,heading,inline,meta-line,metadata-list,nav-desktop,nav-mobile,page,progress-indicator,spinner,stack,surface,tag,text,theme-setting,top-fade}.md
+[docs/component]|{alert,card,card-divider,card-row,collapsible-section,empty-state,error-message,heading,inline,meta-line,metadata-list,nav-desktop,nav-mobile,page,progress-indicator,spinner,stack,surface,tag,text,theme-setting,top-fade}.md
