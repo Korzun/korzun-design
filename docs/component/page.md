@@ -14,22 +14,23 @@ Use something else for: a sign-in or splash screen with no chrome
 
 ## Props
 
-| Prop | Type | Default | Notes |
-|---|---|---|---|
-| `children` | `ReactNode` | | The Card stack. Direct children get the column gap. |
-| `type` | `'default' \| 'minimal'` | `'default'` | `minimal` drops all layout styles (no width, margin, padding, gap) and the header row. |
-| `back` | `string` | | Route path for the back button. **Mobile only**: there is no back button on desktop. Navigates with `state: { restoreScroll: true }` (needs a react-router router). |
-| `headerActions` | `PageActionItem[]` | | Page-level actions (type from `@korzun/design/control`). Desktop: items with `primary: true` render as buttons, the rest in a "More…" overflow menu. Mobile: all in a floating menu. |
-| `actionsLabel` | `string` | `'More…'` | Label of the desktop overflow trigger. |
-| `header` | `ReactNode` | | Page's own header-row content (a search bar, a mode toggle), leading the desktop actions bar in the same row. Ignored on `minimal`. |
-| `footerActions` | `FooterAction[]` | | Sticky footer buttons (type from `@korzun/design/control`): `{ label, onClick, disabled?, loading?, danger?, emphasis?, align?, submit?, form? }`. |
-| `documentTitle` | `string` | | Sets `document.title`. **Not restored on unmount.** Omit when the app manages titles. |
-| `bottomNav` | `boolean` | `false` | Mobile: extra bottom padding to clear a floating `NavMobile`. |
+| Prop            | Type                     | Default     | Notes                                                                                                                                                                                |
+| --------------- | ------------------------ | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `children`      | `ReactNode`              |             | The Card stack. Direct children get the column gap.                                                                                                                                  |
+| `type`          | `'default' \| 'minimal'` | `'default'` | `minimal` drops all layout styles (no width, margin, padding, gap) and the header row.                                                                                               |
+| `back`          | `string`                 |             | Route path for the back button. **Mobile only**: there is no back button on desktop. Navigates with `state: { restoreScroll: true }` (needs a react-router router).                  |
+| `headerActions` | `PageActionItem[]`       |             | Page-level actions (type from `@korzun/design/control`). Desktop: items with `primary: true` render as buttons, the rest in a "More…" overflow menu. Mobile: all in a floating menu. |
+| `actionsLabel`  | `string`                 | `'More…'`   | Label of the desktop overflow trigger.                                                                                                                                               |
+| `header`        | `ReactNode`              |             | Page's own header-row content (a search bar, a mode toggle), leading the desktop actions bar in the same row. Ignored on `minimal`.                                                  |
+| `footerActions` | `FooterAction[]`         |             | Sticky footer buttons (type from `@korzun/design/control`): `{ label, onClick, disabled?, loading?, danger?, emphasis?, align?, submit?, form? }`.                                   |
+| `documentTitle` | `string`                 |             | Sets `document.title`. **Not restored on unmount.** Omit when the app manages titles.                                                                                                |
+| `bottomNav`     | `boolean`                | `false`     | Mobile: extra bottom padding to clear a floating `NavMobile`.                                                                                                                        |
 
 No `className`.
 
 ## Surprising behaviour
 
+- Page marks everything inside it (header, content, footer actions, every `type`) as surface depth 0, so controls and cards inside pick their corner radius from where they sit; see `Surface`.
 - **The header row is always reserved on default pages**, even with no actions
   and no `header` (min-height `2.25rem` on desktop), so content starts at the
   same height on every page. On mobile the row collapses (`display: contents`).

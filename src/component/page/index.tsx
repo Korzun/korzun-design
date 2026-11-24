@@ -6,6 +6,7 @@ import { BackButton } from '../../control/back-button/index.js';
 import { PageActionsBar } from '../../control/page-actions-bar/index.js';
 import { PageActionsMenu, type PageActionItem } from '../../control/page-actions-menu/index.js';
 import { PageFooterActions, type FooterAction } from '../../control/page-footer-actions/index.js';
+import { SurfaceDepthProvider } from '../surface/index.js';
 import { useStyle, PageType, PageTypeValue } from './style.js';
 
 export type { PageTypeValue };
@@ -68,29 +69,31 @@ export const Page = ({
   return (
     <Fragment>
       <main className={cx(styles[type], { [styles.bottomNav]: bottomNav })}>
-        {hasControls && (
-          <div className={styles.controlsRow}>
-            {back !== undefined && <BackButton to={back} />}
-            {hasHeaderActions && <PageActionsMenu items={headerActions} />}
-          </div>
-        )}
-        {/* Rendered for every default page, EMPTY INCLUDED — holding the row
-            open is what keeps pages with and without actions starting their
-            content at the same height. A minimal page (login, loading, the
-            forced password change) has no nav, no actions and nothing to line
-            up with, so it gets no row. */}
-        {type === PageType.default && (
-          <header className={styles.headerRow}>
-            {header}
-            {hasHeaderActions && (
-              <PageActionsBar items={headerActions} actionsLabel={actionsLabel} />
-            )}
-          </header>
-        )}
-        {children}
-        {footerActions !== undefined && footerActions.length > 0 && (
-          <PageFooterActions items={footerActions} />
-        )}
+        <SurfaceDepthProvider depth={0}>
+          {hasControls && (
+            <div className={styles.controlsRow}>
+              {back !== undefined && <BackButton to={back} />}
+              {hasHeaderActions && <PageActionsMenu items={headerActions} />}
+            </div>
+          )}
+          {/* Rendered for every default page, EMPTY INCLUDED — holding the row
+              open is what keeps pages with and without actions starting their
+              content at the same height. A minimal page (login, loading, the
+              forced password change) has no nav, no actions and nothing to line
+              up with, so it gets no row. */}
+          {type === PageType.default && (
+            <header className={styles.headerRow}>
+              {header}
+              {hasHeaderActions && (
+                <PageActionsBar items={headerActions} actionsLabel={actionsLabel} />
+              )}
+            </header>
+          )}
+          {children}
+          {footerActions !== undefined && footerActions.length > 0 && (
+            <PageFooterActions items={footerActions} />
+          )}
+        </SurfaceDepthProvider>
       </main>
     </Fragment>
   );
