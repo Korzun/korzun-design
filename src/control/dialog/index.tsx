@@ -1,8 +1,7 @@
 import cx from 'classnames';
 import { type ReactNode, useCallback, useId } from 'react';
 
-import { ButtonRadiusContext } from '../button/radius-context.js';
-import { ButtonRadius } from '../button/style.js';
+import { SurfaceDepthProvider } from '../../component/surface/index.js';
 import { useModalDialog } from '../use-modal-dialog/index.js';
 import { useStyle } from './style.js';
 
@@ -15,7 +14,7 @@ export type DialogProps = {
   title: ReactNode;
   /** Body content, in secondary text colour. */
   children?: ReactNode;
-  /** Action row. Buttons inside default to `radius="modal"`. No footer bar is drawn when omitted. */
+  /** Action row. No footer bar is drawn when omitted. */
   footer?: ReactNode;
   /** When `false`, Escape and backdrop clicks are ignored (pass `!loading`). Default `true`. */
   canDismiss?: boolean;
@@ -25,7 +24,7 @@ export type DialogProps = {
 
 /**
  * Modal dialog on a native `<dialog>`: title, body, optional footer. Always
- * mounted; controlled by `open`. Footer Buttons default to the modal radius.
+ * mounted; controlled by `open`. Everything inside is one surface level in, so Buttons are 8px.
  */
 export function Dialog({
   open,
@@ -51,19 +50,17 @@ export function Dialog({
       onClick={stopClick}
     >
       <div className={styles.dialog} onClick={stopClick}>
-        <ButtonRadiusContext.Provider value={undefined}>
+        <SurfaceDepthProvider depth={1}>
           <div id={titleId} className={styles.header}>
             {title}
           </div>
           <div className={styles.body}>{children}</div>
-        </ButtonRadiusContext.Provider>
-        {footer != null && footer !== false && footer !== '' && (
-          <div className={styles.footer} data-dialog-footer="">
-            <ButtonRadiusContext.Provider value={ButtonRadius.Modal}>
+          {footer != null && footer !== false && footer !== '' && (
+            <div className={styles.footer} data-dialog-footer="">
               {footer}
-            </ButtonRadiusContext.Provider>
-          </div>
-        )}
+            </div>
+          )}
+        </SurfaceDepthProvider>
       </div>
     </dialog>
   );

@@ -100,7 +100,7 @@ describe('Dialog', () => {
     expect(container.querySelector('[data-dialog-footer]')).toHaveTextContent('Foot');
   });
 
-  it('footer Buttons default to the modal radius', () => {
+  it('footer Buttons are 8px and an explicit radius wins', () => {
     renderWithProviders(
       <>
         <Button radius="modal">Standalone modal</Button>
@@ -123,8 +123,18 @@ describe('Dialog', () => {
     );
     expect(radiusOf('Foot default')).toBe(radiusOf('Standalone modal'));
     expect(radiusOf('Foot inset')).toBe(radiusOf('Standalone inset'));
-    expect(radiusOf('Body default')).toBe(radiusOf('Standalone default'));
-    expect(radiusOf('Standalone modal')).not.toBe(radiusOf('Standalone default'));
+    expect(radiusOf('Body default')).toBe(radiusOf('Standalone modal'));
+    expect(radiusOf('Standalone modal')).toBe('8px');
+    expect(radiusOf('Standalone default')).toBe('16px');
+  });
+
+  it('body Buttons are 8px', () => {
+    renderWithProviders(
+      <Dialog open onClose={() => {}} title="T">
+        <Button>Body one</Button>
+      </Dialog>
+    );
+    expect(radiusOf('Body one')).toBe('8px');
   });
 
   it('nested footer Button still gets the modal radius', () => {
@@ -153,7 +163,7 @@ describe('Dialog', () => {
     expect(container.querySelector('[data-dialog-footer]')).toBeNull();
   });
 
-  it('a Dialog nested in a footer does not leak the modal radius to its body', () => {
+  it('a Dialog nested in a footer keeps its body Buttons at 8px', () => {
     renderWithProviders(
       <>
         <Button>Standalone default</Button>
@@ -169,7 +179,7 @@ describe('Dialog', () => {
         />
       </>
     );
-    expect(radiusOf('Inner body')).toBe(radiusOf('Standalone default'));
+    expect(radiusOf('Inner body')).toBe('8px');
   });
 
   it('a click inside does not bubble to a clickable parent', async () => {

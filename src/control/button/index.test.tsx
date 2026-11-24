@@ -3,6 +3,8 @@ import userEvent from '@testing-library/user-event';
 import { createRef } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
+import { Page } from '../../component/page/index.js';
+import { Surface } from '../../component/surface/index.js';
 import { renderWithProviders } from '../../test-utils.js';
 import { Button } from './index.js';
 
@@ -181,5 +183,58 @@ describe('Button submit mode', () => {
     const button = screen.getByRole('button', { name: 'Go' });
     expect(button.tagName).toBe('BUTTON');
     expect(getComputedStyle(button).backgroundColor).toBe('rgba(0, 0, 0, 0)');
+  });
+});
+
+describe('radius follows surface depth', () => {
+  const radiusOf = () => getComputedStyle(screen.getByRole('button', { name: 'Go' })).borderRadius;
+
+  it('is 16px outside any surface', () => {
+    renderWithProviders(<Button>Go</Button>);
+    expect(radiusOf()).toBe('16px');
+  });
+
+  it('is 16px directly on a Page', () => {
+    renderWithProviders(
+      <Page>
+        <Button>Go</Button>
+      </Page>
+    );
+    expect(radiusOf()).toBe('16px');
+  });
+
+  it('is 8px inside Page > Surface', () => {
+    renderWithProviders(
+      <Page>
+        <Surface>
+          <Button>Go</Button>
+        </Surface>
+      </Page>
+    );
+    expect(radiusOf()).toBe('8px');
+  });
+
+  it('is 4px two levels in', () => {
+    renderWithProviders(
+      <Page>
+        <Surface>
+          <Surface>
+            <Button>Go</Button>
+          </Surface>
+        </Surface>
+      </Page>
+    );
+    expect(radiusOf()).toBe('4px');
+  });
+
+  it('an explicit radius="background" wins inside Page > Surface (16px)', () => {
+    renderWithProviders(
+      <Page>
+        <Surface>
+          <Button radius="background">Go</Button>
+        </Surface>
+      </Page>
+    );
+    expect(radiusOf()).toBe('16px');
   });
 });

@@ -2,7 +2,9 @@ import { act, fireEvent, screen } from '@testing-library/react';
 import { useEffect, useRef, type ReactNode } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { Page } from '../../component/page/index.js';
 import { renderWithProviders } from '../../test-utils.js';
+import { Button } from '../button/index.js';
 import { Dialog } from '../dialog/index.js';
 import { Popover, type PopoverProps } from './index.js';
 
@@ -80,6 +82,19 @@ const escape = (target: EventTarget) => {
 };
 
 describe('Popover', () => {
+  it('a Button inside the popover is 4px even when its anchor sits directly on a Page', () => {
+    renderWithProviders(
+      <Page>
+        <Harness>
+          <Button>Inside</Button>
+        </Harness>
+      </Page>
+    );
+    expect(getComputedStyle(screen.getByRole('button', { name: 'Inside' })).borderRadius).toBe(
+      '4px'
+    );
+  });
+
   describe('placement', () => {
     it('keeps the default position: below, left-aligned, anchor width', () => {
       renderWithProviders(<Harness />);

@@ -31,9 +31,8 @@ only if it is a `number`; a numeric string displays as empty.
 
 ## Behaviour to know
 
-- The add button is hard-wired to `radius="card"`, so FieldList belongs in a
-  `Card` body (or a modal). On the page background its corners will be one step
-  too square.
+- The add button is 8px outside any surface and follows surface depth inside
+  one (a Card body, a Dialog, a Popover).
 - Inputs have no labels; use `placeholder` to say what each column is.
 - Every remove button is titled "Remove row" (its accessible name); they are not
   distinguished per row.

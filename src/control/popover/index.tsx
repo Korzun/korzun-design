@@ -2,6 +2,7 @@ import cx from 'classnames';
 import { ReactNode, RefObject, useCallback, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
+import { SurfaceDepthProvider } from '../../component/surface/index.js';
 import { useLayer } from '../layer-stack/index.js';
 import {
   computePosition,
@@ -74,6 +75,9 @@ const resolveGap = (gap: PopoverGap): number => {
  * close the innermost open layer first. Escape is ignored when the keydown was
  * already `defaultPrevented`, and is `preventDefault`ed so an enclosing
  * `<dialog>` does not also cancel. No focus management.
+ *
+ * The content is two surface levels in, so Buttons and Selects inside it are
+ * `radius.sm`, wherever the anchor sits.
  */
 export const Popover = ({
   anchorRef,
@@ -165,7 +169,7 @@ export const Popover = ({
             { top: 0, left: 0, opacity: 0 }
       }
     >
-      {children}
+      <SurfaceDepthProvider depth={2}>{children}</SurfaceDepthProvider>
     </div>,
     target
   );

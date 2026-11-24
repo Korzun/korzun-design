@@ -80,6 +80,9 @@ other units.
 
 ## Styling the surface
 
+Content is two surface levels in: Buttons and Selects inside a popover are 4px,
+wherever the anchor sits.
+
 A popover is a floating layer: corners `radius.md` with `shadow.hoverLift` (or
 `recipe.glass`), and the items inside it `radius.sm`. See
 [corners](../corners.md).

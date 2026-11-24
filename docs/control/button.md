@@ -17,7 +17,7 @@ the header (`PageActionsBar`, `PageActionsMenu`), sticky footer actions
 |---|---|---|---|
 | `children` | `ReactNode` | | Label. |
 | `type` | `'default' \| 'primary' \| 'text' \| 'link' \| 'dashed'` | `'default'` | **Visual variant, not the HTML `type`.** Use `submit` for a submit button. |
-| `radius` | `'background' \| 'card' \| 'inset' \| 'modal'` | `'background'` | The surface the button sits on; see [corners](../corners.md). In a `Dialog` footer it defaults to `modal`. |
+| `radius` | `'background' \| 'card' \| 'inset' \| 'modal'` | follows depth | The surface the button sits on; see [corners](../corners.md). Radius follows where it sits (16px on a page or outside any surface, 8px in a Card or Dialog, 4px in a Popover or nested Card); pass `radius` only to override. |
 | `danger` | `boolean` | `false` | Red treatment. Mutually exclusive with `success` (type error). |
 | `success` | `boolean` | `false` | Green treatment. Mutually exclusive with `danger`. |
 | `loading` | `boolean` | `false` | Shows a spinner in place of the icons; blocks clicks. |
@@ -72,8 +72,8 @@ the header (`PageActionsBar`, `PageActionsMenu`), sticky footer actions
 
 ## Do / don't
 
-- Do set `radius="card"` on every Button inside a `Card` (body or footer) and
-  `radius="modal"` inside a modal, except `type="link"`.
+- Don't set `radius` to match the surface; it follows depth. Pass it only to
+  override.
 - Do give repeated row actions a distinguishing `ariaLabel` ("Remove Kindle").
 - Don't pass `type="submit"`: it is not a valid variant. Use `submit`.
 - Don't pass `onClick` to a submit button and expect it to run.

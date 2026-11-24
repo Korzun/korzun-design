@@ -1,6 +1,8 @@
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
+import { Page } from '../../component/page/index.js';
+import { Surface } from '../../component/surface/index.js';
 import { renderWithProviders } from '../../test-utils.js';
 import { FieldList, type FieldRow } from './index.js';
 
@@ -183,4 +185,35 @@ it('forwards onValidChange with true when field recovers from invalid', async ()
   await user.clear(screen.getByDisplayValue('hello'));
   await user.type(screen.getByPlaceholderText('Subject'), 'x');
   expect(onValidChange).toHaveBeenCalledWith('key-1.value', true);
+});
+
+describe('add button radius', () => {
+  const list = (
+    <FieldList
+      addLabel="Add subject"
+      columns={singleTextColumn}
+      rows={[]}
+      onAdd={vi.fn()}
+      onRemove={vi.fn()}
+      onChange={vi.fn()}
+    />
+  );
+  const radius = () =>
+    getComputedStyle(screen.getByRole('button', { name: 'Add subject' })).borderRadius;
+
+  it('add button is 8px outside any surface', () => {
+    renderWithProviders(list);
+    expect(radius()).toBe('8px');
+  });
+
+  it('add button is 4px inside Page > Surface > Surface', () => {
+    renderWithProviders(
+      <Page>
+        <Surface>
+          <Surface>{list}</Surface>
+        </Surface>
+      </Page>
+    );
+    expect(radius()).toBe('4px');
+  });
 });
