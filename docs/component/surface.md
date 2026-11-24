@@ -37,9 +37,9 @@ it one level deeper.
 | 0     | `radius.lg`                  | on the page background                   |
 | 1     | `radius.md`                  | inside a Card or Dialog                  |
 | 2+    | `radius.sm`                  | inside a surface inside a Card or Dialog |
-| none  | each component's own default | no Page or Dialog above it               |
+| none  | each component's own default | no Page, Dialog, Card, CardRow, Alert or Surface above it |
 
-Depth never goes below `sm`; deeper nesting stays at `sm`.
+Depth never goes below `sm`; deeper nesting stays at `sm`. Hand-drawn boxes are invisible to depth, so wrap their contents in `Surface`.
 
 ## Examples
 

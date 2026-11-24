@@ -45,6 +45,15 @@ describe('Alert', () => {
     );
   });
 
+  it('renders no heading for an empty title', () => {
+    renderWithProviders(
+      <Alert tone="info" title="">
+        Body
+      </Alert>
+    );
+    expect(screen.getByRole('status').querySelector('span')).toBeNull();
+  });
+
   it('applies className to the root', () => {
     renderWithProviders(
       <Alert tone="info" className="extra">

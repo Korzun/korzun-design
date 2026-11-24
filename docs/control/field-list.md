@@ -22,7 +22,7 @@ set of fields (`TextInput` / `NumberInput` directly).
 | `addLabel` | `string` | (required) | Text of the add button ("Add identifier"). |
 
 The add button follows surface depth: 16px directly on a Page, 8px in a Card
-or Dialog, 4px deeper (8px outside any Page or Dialog).
+or Dialog, 4px deeper (8px with no Page, Dialog, Card, CardRow, Alert or Surface above it).
 
 No `className`.
 

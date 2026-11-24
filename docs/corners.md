@@ -42,7 +42,7 @@ pass no radius prop:
 | 0 | `lg` (16px) | On the page background, inside a `Page` |
 | 1 | `md` (8px) | Inside a `Card`, `CardRow`, `Alert` or `Dialog` on the page |
 | 2+ | `sm` (4px) | One more level in; deeper levels stay `sm` |
-| none | each component's old default | No `Page` or `Dialog` above it (tests, bare stories) |
+| none | each component's old default | No `Page`, `Dialog`, `Card`, `CardRow`, `Alert` or `Surface` above it (tests, bare stories) |
 
 Who provides depth:
 
@@ -57,6 +57,8 @@ What follows depth with no prop: `Button`, `Select`, `Card`, `CardRow`,
 `Alert`. For a hand-made box that holds Buttons or Selects, wrap its contents
 in `<Surface>` and read its own radius with `useSurfaceRadius()`; see
 [surface](component/surface.md).
+
+Hand-drawn boxes (your own `recipe.card.shell` or `recipe.row` styles, a `useModalDialog` modal) are invisible to depth: wrap their contents in `Surface`.
 
 An explicit prop (`Button radius`, `Select surface`) is an **override** and
 always wins over depth. It pins that radius even where depth would step down,

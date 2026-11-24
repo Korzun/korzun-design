@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { useRef } from 'react';
 import { beforeEach, describe, expect, it, vi, type Mock } from 'vitest';
 
+import { Card } from '../../component/card/index.js';
 import { Inline } from '../../component/inline/index.js';
 import { renderWithProviders } from '../../test-utils.js';
 import { Button } from '../button/index.js';
@@ -135,6 +136,17 @@ describe('Dialog', () => {
       </Dialog>
     );
     expect(radiusOf('Body one')).toBe('8px');
+  });
+
+  it('a Dialog inside a Card resets its contents to depth 1', () => {
+    renderWithProviders(
+      <Card title="Card">
+        <Dialog open onClose={() => {}} title="T">
+          <Button>In dialog</Button>
+        </Dialog>
+      </Card>
+    );
+    expect(radiusOf('In dialog')).toBe('8px');
   });
 
   it('nested footer Button still gets the modal radius', () => {

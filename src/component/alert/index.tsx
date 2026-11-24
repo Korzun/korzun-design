@@ -35,10 +35,10 @@ export const Alert = ({ tone, title, children, Icon, action, className }: AlertP
     >
       <SurfaceDepthProvider depth={depth + 1}>
         <div className={styles.text}>
-          {(title != null || Icon) && (
+          {(title || Icon) && (
             <div className={styles.heading}>
               {Icon && <Icon className={styles.icon} aria-hidden="true" />}
-              {title != null && <span>{title}</span>}
+              {title && <span>{title}</span>}
             </div>
           )}
           {children != null && <div className={styles.body}>{children}</div>}
