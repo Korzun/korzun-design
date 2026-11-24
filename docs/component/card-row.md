@@ -3,7 +3,7 @@
 `import { CardRow, type CardRowProps } from '@korzun/design/component'`
 
 A compact card-shell row (card background, border, stacked shadow, 6px
-padding) that sits on the page background, for a stack of list items. Optionally
+padding) that sits on the page or in a Card, for a stack of list items. Optionally
 clickable.
 
 Use something else for: rows inside a `Card` body (a shaded row built on
@@ -31,8 +31,8 @@ No `className`, no `ariaLabel`, no `role`.
 
 ## Corners
 
-`radius.lg` from `recipe.card.shell`: a row sits on the page background. Content
-inside it steps down to `md`. See [corners](../corners.md).
+Follows depth: 16px (`radius.lg`) on the page, 8px (`md`) in a Card, `sm`
+deeper. Content inside it steps down one level. See [corners](../corners.md).
 
 ## Examples
 
@@ -53,5 +53,5 @@ inside it steps down to `md`. See [corners](../corners.md).
 
 ## Do / don't
 
-- Do place it on the page background, not inside a `Card`.
+- Place it on the page or inside a `Card`; its corners follow.
 - Don't rely on `onClick` as the only way to reach an action from the keyboard.

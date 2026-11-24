@@ -34,9 +34,9 @@ The props type is exported as `DialogProps`.
 - Focus is native: `showModal()` moves focus into the dialog and restores it
   on close.
 - Clicks inside the dialog do not bubble to clickable ancestors.
-- Buttons in `footer` default to `radius="modal"`, including nested ones
-  (inside an `Inline`). An explicit `radius` on a Button still wins. Buttons
-  in the body keep the usual default.
+- Content is one surface level in: Buttons in the body, header and `footer`
+  (including nested ones inside an `Inline`) default to 8px. An explicit
+  `radius` on a Button still wins.
 
 ## Example
 
@@ -64,6 +64,6 @@ const [open, setOpen] = useState(false);
 
 - Do use [`ConfirmModal`](confirm-modal.md) for yes/no questions.
 - Do pass `canDismiss={!loading}` while a request runs.
-- Don't set `radius="modal"` on footer Buttons by hand; the footer does it.
+- Don't set `radius` on Buttons inside a Dialog by hand; the depth does it.
 - Don't write your own modal style files; build on `Dialog`.
 - Don't render it conditionally (`{open && <Dialog …/>}`); toggle `open`.

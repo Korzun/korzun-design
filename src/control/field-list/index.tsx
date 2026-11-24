@@ -1,3 +1,4 @@
+import { useSurfaceDepth } from '../../component/surface/index.js';
 import { RowRemoveIcon } from '../../icon/index.js';
 import { Button } from '../button/index.js';
 import { NumberInput } from '../number-input/index.js';
@@ -37,7 +38,7 @@ export type FieldListProps = {
 
 /**
  * Editable list of rows, each a set of text/number inputs with a remove button,
- * plus a dashed add button. Belongs in a `Card` body (add button is `radius="card"`).
+ * plus a dashed add button. Belongs in a `Card` body (the add button is 8px outside any surface and follows depth inside one).
  */
 export const FieldList = ({
   addLabel,
@@ -49,6 +50,7 @@ export const FieldList = ({
   rows,
 }: FieldListProps) => {
   const style = useStyle();
+  const depth = useSurfaceDepth();
 
   return (
     <div className={style.root}>
@@ -89,7 +91,7 @@ export const FieldList = ({
           </div>
         ))}
       </div>
-      <Button type="dashed" onClick={onAdd} radius="card">
+      <Button type="dashed" onClick={onAdd} radius={depth === undefined ? 'card' : undefined}>
         {addLabel}
       </Button>
     </div>

@@ -1,6 +1,7 @@
 import cx from 'classnames';
 import { PropsWithChildren, useCallback } from 'react';
 
+import { depthClass, SurfaceDepthProvider, useSurfaceDepth } from '../surface/index.js';
 import { useStyle } from './style.js';
 
 export type CardRowProps = PropsWithChildren<{
@@ -11,9 +12,10 @@ export type CardRowProps = PropsWithChildren<{
   onClick?: () => void;
 }>;
 
-/** A compact bordered row for stacking items inside a `Card` body. Optionally clickable. */
+/** A compact bordered row; its corners follow where it sits. */
 export const CardRow = ({ children, onClick }: CardRowProps) => {
   const styles = useStyle();
+  const depth = useSurfaceDepth() ?? 0;
 
   const handleBookKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLDivElement>) => {
@@ -28,11 +30,13 @@ export const CardRow = ({ children, onClick }: CardRowProps) => {
 
   return (
     <div
-      className={cx(styles.root, { [styles.clickable]: onClick !== undefined })}
+      className={cx(styles.root, styles[`depth${depthClass(depth)}`], {
+        [styles.clickable]: onClick !== undefined,
+      })}
       onClick={onClick}
       onKeyDown={handleBookKeyDown}
     >
-      {children}
+      <SurfaceDepthProvider depth={depth + 1}>{children}</SurfaceDepthProvider>
     </div>
   );
 };

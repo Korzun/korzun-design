@@ -22,7 +22,7 @@ export default {
     disabled: { control: 'boolean' },
     loading: { control: 'boolean' },
     allowCreate: { control: 'boolean' },
-    surface: { control: 'select', options: ['card', 'page'] },
+    surface: { control: 'select', options: ['card', 'page', 'inset'] },
   },
 } satisfies StoryDefault<Props>;
 
@@ -46,3 +46,9 @@ export const Loading: Story<Props> = (args) => (
   <Select {...args} name="sel-load" options={FRUITS} value={undefined} />
 );
 Loading.args = { label: 'Loading', loading: true };
+
+export const Inset: Story<Props> = (args) => {
+  const [value, setValue] = useState<string | undefined>('Banana');
+  return <Select {...args} name="sel-inset" options={FRUITS} value={value} onChange={setValue} />;
+};
+Inset.args = { label: 'Inset', surface: 'inset' };

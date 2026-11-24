@@ -1,6 +1,7 @@
 import cx from 'classnames';
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 
+import { depthClass, useSurfaceDepth } from '../../component/surface/index.js';
 import { ChevronIcon, SpinnerIcon } from '../../icon/index.js';
 import { Popover } from '../popover/index.js';
 import { useStyle } from './style.js';
@@ -35,18 +36,25 @@ export type SelectProps = {
    * Which surface this select sits on, which decides its corner radius AND its
    * elevation together — they are one decision, not two.
    *
-   * `'card'` (default) is the control as it has always looked: `radius.md`, no
-   * shadow, because the card around it already provides both.
+   * Unset, it follows where the select sits: `'page'` directly on a `Page`,
+   * `'card'` in a card or dialog (and outside any surface), `'inset'` two or
+   * more surfaces deep.
+   *
+   * `'card'` is the control as it has always looked: `radius.md`, no shadow,
+   * because the card around it already provides both.
    *
    * `'page'` matches `theme.recipe.card.shell` — `radius.lg` plus
    * `shadow.cardStack` — so a select sitting directly on the page reads as its
    * own raised surface alongside the cards it shares that page with, instead of
    * a flat control missing the elevation everything around it has.
    *
+   * `'inset'` takes `radius.sm` with no shadow, for a select nested inside an
+   * inset box.
+   *
    * Named for the surface rather than for `radius` (as `Button`'s own prop is),
    * because here the radius is a consequence, not the choice.
    */
-  surface?: 'card' | 'page';
+  surface?: 'card' | 'page' | 'inset';
   /** Opening swaps the trigger for a search box (default `true`); `false` is a plain list, arrow keys only. */
   searchable?: boolean;
   /** Controlled selection; a value not in `options` displays as the raw string. */
@@ -70,6 +78,8 @@ function highlight(text: string, query: string, className: string): React.ReactN
   );
 }
 
+const surfaceByDepth = ['page', 'card', 'inset'] as const;
+
 /**
  * Controlled single-value picker with an optional search box and "Add:" entry,
  * its list in a `Popover`. No hidden input: submit `value` from state.
@@ -85,11 +95,15 @@ export const Select = ({
   onChange = () => {},
   options,
   placeholder = 'Select…',
-  surface = 'card',
+  surface: surfaceProp,
   searchable = true,
   value,
 }: SelectProps) => {
   const style = useStyle();
+  // Depth 0 is a Page, 1 a card or dialog, 2 and deeper an inset box; outside any
+  // surface it stays the card look. An explicit `surface` wins.
+  const depth = useSurfaceDepth();
+  const surface = surfaceProp ?? (depth === undefined ? 'card' : surfaceByDepth[depthClass(depth)]);
   // Per-instance DOM id so label/input association stays unique when two forms
   // sharing a `name` mount at once (e.g. the device create + edit forms).
   const inputId = useId();

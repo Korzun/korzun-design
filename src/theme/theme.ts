@@ -44,6 +44,9 @@ const red = {
 type Recipe = { [key: string]: Recipe | string | number };
 
 // ─── Theme interface ───
+// A rem length, so a space value can feed props that only accept rem (Popover `gap`).
+export type SpaceValue = `${number}rem`;
+
 export interface Theme {
   colorScheme: ThemeMode;
   color: {
@@ -141,17 +144,17 @@ export interface Theme {
     };
   };
   space: {
-    xxxs: string;
-    xxs: string;
-    xs: string;
-    sm: string;
-    md: string;
-    lg: string;
-    xl: string;
-    xxl: string;
-    xxxl: string;
-    xxxxl: string;
-    xxxxxl: string;
+    xxxs: SpaceValue;
+    xxs: SpaceValue;
+    xs: SpaceValue;
+    sm: SpaceValue;
+    md: SpaceValue;
+    lg: SpaceValue;
+    xl: SpaceValue;
+    xxl: SpaceValue;
+    xxxl: SpaceValue;
+    xxxxl: SpaceValue;
+    xxxxxl: SpaceValue;
   };
   radius: { sm: string; md: string; lg: string; circle: string; pill: string };
   size: { metadataValue: string };

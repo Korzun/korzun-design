@@ -73,7 +73,8 @@ footer: { ...theme.recipe.modal.footer },
 - Do keep the `onClick={(e) => e.stopPropagation()}` on the `<dialog>` when it
   is rendered inside a clickable ancestor (a card row); it only stops bubbling,
   dismissal is the hook's job.
-- Do use `radius="modal"` on Buttons inside, and `md` corners for any inset
+- Do also pass `surface="card"` on `Select`s inside (or prefer `Dialog`): a modal declared at page level sits at depth 0, so an unset `Select` would take the page look (16px and shadow). Hand-drawn boxes are invisible to depth.
+- Do set `radius="modal"` on Buttons inside: this hook provides no surface depth (unlike `Dialog`), so it is an explicit override here. Use `md` corners for any inset
   surface inside (see [corners](../corners.md)).
 - Don't put a `Select` or `ChipsInput` in a modal without testing it: their
   dropdowns portal to `document.body`, outside the dialog's top layer (see

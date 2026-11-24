@@ -10,6 +10,7 @@ export const useStyle = createUseStyles((theme: Theme) => ({
     // that had not followed the corners. Both take the surface modifier.
     borderRadius: theme.radius.md,
     '&$page': { borderRadius: theme.radius.lg },
+    '&$inset': { borderRadius: theme.radius.sm },
     '&$horizontal': {
       display: 'flex',
       flexDirection: 'row',
@@ -48,7 +49,8 @@ export const useStyle = createUseStyles((theme: Theme) => ({
   // The two surfaces. `card` is the default and adds nothing — the control as
   // it has always looked. `page` makes the select match `recipe.card.shell`
   // (`radius.lg` + `shadow.cardStack`), so a select sitting directly on the
-  // page carries the same elevation as the cards beside it.
+  // page carries the same elevation as the cards beside it. `inset` takes
+  // `radius.sm` and no shadow, for a select nested inside an inset box.
   //
   // BOTH `root` and `trigger` take the radius. `root` is exactly coincident
   // with the trigger when there is no label (`triggerWrapper` has `flexGrow:1`),
@@ -57,12 +59,14 @@ export const useStyle = createUseStyles((theme: Theme) => ({
   // the corners.
   card: {},
   page: {},
+  inset: {},
   trigger: {
     ...theme.recipe.input,
     '&$page': {
       borderRadius: theme.radius.lg,
       boxShadow: theme.shadow.cardStack,
     },
+    '&$inset': { borderRadius: theme.radius.sm },
     // Shared single-line control height so inputs/select/chips line up on one row.
     height: theme.layout.controlHeight,
     display: 'flex',

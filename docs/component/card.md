@@ -42,10 +42,12 @@ The header renders only if one of `title`, `subTitle`, `headerAction`,
 
 ## Corners
 
-The shell uses `radius.lg`: a Card sits on the page background. Buttons inside
-(body or footer) take `radius="card"`. See [corners](../corners.md).
+The corner follows depth: `radius.lg` on the page, `md` for a Card inside a
+Card, `sm` deeper. A Card provides the next depth to its header, body and
+footer, so nested Cards step down and Buttons inside take the matching radius
+automatically (8px in a Card on a Page). See [corners](../corners.md).
 `size="small"` insets its body by only 1px, so its corner is `calc(radius.md + 1px)`
-(9px): concentric with the `md`-cornered covers and rows flush inside it.
+(9px) on a page and `calc(radius.sm + 1px)` (5px) inside a Card: concentric with the `md`-cornered covers and rows flush inside it.
 
 ## Examples
 
@@ -54,7 +56,7 @@ The shell uses `radius.lg`: a Card sits on the page background. Buttons inside
 <Card
   title="Device password"
   headerAction={<Button type="link" onClick={regenerate}>Regenerate</Button>}
-  footer={<Button type="primary" radius="card" submit form="device-pw">Save</Button>}
+  footer={<Button type="primary" submit form="device-pw">Save</Button>}
 >
   <form id="device-pw" action={save}>…</form>
 </Card>
@@ -73,9 +75,9 @@ The shell uses `radius.lg`: a Card sits on the page background. Buttons inside
 ## Do / don't
 
 - Do give each feature on a screen its own Card, stacked directly in `<Page>`.
-- Do set `radius="card"` on Buttons inside a Card, except `type="link"`.
 - Do put row actions that must not fire by accident in `footer` of a
   collapsible card; they are unreachable while it is collapsed.
-- Don't nest Cards; use `CardDivider` to split one card into sections.
+- Don't nest Cards just to group content; use `CardDivider`. When you do nest, corners step down automatically.
+- Don't set `radius` on Buttons inside a Card: it follows depth, and an explicit `radius="card"` would stay 8px inside a nested Card, breaking the concentric corners.
 - Don't expect `isCollapsible` cards to start open; pass `defaultCollapsed={false}`.
 - Do use the exported `CardProps` type when wrapping Card.

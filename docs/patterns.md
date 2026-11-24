@@ -29,14 +29,13 @@ export const SettingsPage = () => (
   input's default `horizontal` layout (label and control on one shaded row).
 - Every field needs a `name`. It is required, and it is the key passed to
   `onValidChange`.
-- The submit button goes in the `footer`: `type="primary"`, `radius="card"`,
-  `submit`, and `form` set to the id of the `<form>` in the body.
+- The submit button goes in the `footer`: `type="primary"`, `submit`, and `form` set to the id of the `<form>` in the body.
 
 ```tsx
 <Card
   title="Change password"
   footer={
-    <Button type="primary" radius="card" submit form="change-password">Save</Button>
+    <Button type="primary" submit form="change-password">Save</Button>
   }
 >
   <form id="change-password" action={save}>
@@ -65,6 +64,19 @@ is in flight; it disables Cancel and blocks Escape and backdrop dismissal.
 >
   This can't be undone.
 </ConfirmModal>
+```
+
+## Status banner in a card
+
+An `Alert` inside a `Card` is one step squarer than the Card, and its action
+Button one step squarer again. No radius props anywhere.
+
+```tsx
+<Card title="Frame">
+  <Alert tone="warning" title="Frame is overdue" action={<Button onClick={retry}>Retry</Button>}>
+    No check-in for 2h 14m.
+  </Alert>
+</Card>
 ```
 
 ## Row or card actions menu
@@ -131,7 +143,7 @@ async function save(formData: FormData) {
 
 - A panel that loads on its own shows a `Spinner`:
   `<Stack align="center"><Spinner label="Loading books" /></Stack>`.
-- Buttons in the footer default to `radius="modal"`; don't set it.
+- Buttons in the footer get Dialog's corners from depth; don't set `radius`.
 - `Dialog` stays mounted: toggle `open`, never render it conditionally.
 - Escape and backdrop clicks call `onClose`, unless `canDismiss` is false.
 - `Select` and `ChipsInput` work inside a `Dialog`.

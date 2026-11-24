@@ -8,7 +8,7 @@ announce it when it appears.
 
 Use something else for: static red copy that is always on screen
 (`<Text tone="danger">`, which uses the darker chip red and no `role`), or a
-boxed alert (an Alert component comes later).
+boxed message with a tone and an action (`Alert`).
 
 ## Props
 

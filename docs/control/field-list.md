@@ -21,6 +21,9 @@ set of fields (`TextInput` / `NumberInput` directly).
 | `onValidChange` | `(fieldName: string, valid: boolean) => void` | | `fieldName` is `` `${rowKey}.${columnKey}` ``. Fires only when validity flips. |
 | `addLabel` | `string` | (required) | Text of the add button ("Add identifier"). |
 
+The add button follows surface depth: 16px directly on a Page, 8px in a Card
+or Dialog, 4px deeper (8px with no Page, Dialog, Card, CardRow, Alert or Surface above it).
+
 No `className`.
 
 `ColumnDescriptor` is
@@ -31,9 +34,8 @@ only if it is a `number`; a numeric string displays as empty.
 
 ## Behaviour to know
 
-- The add button is hard-wired to `radius="card"`, so FieldList belongs in a
-  `Card` body (or a modal). On the page background its corners will be one step
-  too square.
+- The add button is 8px outside any surface and follows surface depth inside
+  one (a Card body, a Dialog, a Popover).
 - Inputs have no labels; use `placeholder` to say what each column is.
 - Every remove button is titled "Remove row" (its accessible name); they are not
   distinguished per row.

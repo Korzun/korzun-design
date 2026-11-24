@@ -41,7 +41,7 @@ No `className`. `null`, `undefined` and `false` count as absent for both
   <form action={create}>
     <TextInput … />
     <CardDivider />
-    <Button type="primary" radius="card" submit>Request</Button>
+    <Button type="primary" submit>Request</Button>
   </form>
 </Card>
 

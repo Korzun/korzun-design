@@ -1,9 +1,9 @@
 import cx from 'classnames';
-import { ComponentType, Ref, useCallback, useContext } from 'react';
+import { ComponentType, Ref, useCallback } from 'react';
 import { useFormStatus } from 'react-dom';
 
+import { depthClass, useSurfaceDepth } from '../../component/surface/index.js';
 import { IconProps, SpinnerIcon } from '../../icon/index.js';
-import { ButtonRadiusContext } from './radius-context.js';
 import { ButtonType, ButtonTypeValue, ButtonRadius, ButtonRadiusValue, useStyle } from './style.js';
 
 type ButtonVariant =
@@ -48,7 +48,7 @@ export type ButtonProps = React.PropsWithChildren<
     onClick?: () => void;
     /** Icon component shown before the label (`prefix={SearchIcon}`), not an element. */
     prefix?: ComponentType<IconProps>;
-    /** The surface the button sits on: `'background'` (default), `'card'`, `'inset'`, `'modal'`. */
+    /** The surface the button sits on: `'background'`, `'card'`, `'inset'`, `'modal'`. Unset, it follows where the button sits (16px on a page, 8px in a card or dialog, 4px deeper, 16px outside any surface). */
     radius?: ButtonRadiusValue;
     /** Ref to the root element (the `<div role="button">`, or the `<button>` in submit mode), e.g. to `.focus()` it. */
     ref?: Ref<HTMLElement>;
@@ -73,6 +73,13 @@ export type ButtonProps = React.PropsWithChildren<
     type?: ButtonTypeValue;
   } & ButtonVariant
 >;
+
+// Depth 0 sits on the page, 1 in a card or dialog, 2 and deeper inside a popover or nested card.
+const radiusByDepth = [
+  ButtonRadius.Background,
+  ButtonRadius.Card,
+  ButtonRadius.Inset,
+] as ButtonRadiusValue[];
 
 /**
  * Clickable action with a visual variant, optional icons, and a loading state.
@@ -101,9 +108,9 @@ export const Button = ({
   type = ButtonType.Default as ButtonTypeValue,
 }: ButtonProps) => {
   const styles = useStyle();
-  // An explicit `radius` wins; otherwise a surface (Dialog footer) may supply one.
-  const radiusFromContext = useContext(ButtonRadiusContext);
-  const radius = radiusProp ?? radiusFromContext ?? (ButtonRadius.Background as ButtonRadiusValue);
+  // An explicit `radius` wins; otherwise the radius follows the surface depth.
+  const depth = useSurfaceDepth() ?? 0;
+  const radius = radiusProp ?? radiusByDepth[depthClass(depth)];
   // Safe to call unconditionally: outside a <form> action, useFormStatus
   // returns a default { pending: false }. Only consulted in submit mode.
   const { pending } = useFormStatus();

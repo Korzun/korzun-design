@@ -3,9 +3,18 @@ import { createUseStyles, type Theme } from '../../theme/index.js';
 export const useStyle = createUseStyles((theme: Theme) => ({
   root: {
     ...theme.recipe.card.shell,
-    // A small card insets its content by 1px, so it is md + 1px: concentric with the
-    // md-cornered children (covers, rows) that sit flush inside it.
-    '&$small': { borderRadius: `calc(${theme.radius.md} + 1px)` },
+  },
+  // Corners follow the depth the card sits at (lg, md, sm). A small card insets its content
+  // by 1px, so on a page it is md + 1px: concentric with the md-cornered children (covers,
+  // rows) that sit flush inside it; deeper it is sm + 1px.
+  depth0: { '&$small': { borderRadius: `calc(${theme.radius.md} + 1px)` } },
+  depth1: {
+    borderRadius: theme.radius.md,
+    '&$small': { borderRadius: `calc(${theme.radius.sm} + 1px)` },
+  },
+  depth2: {
+    borderRadius: theme.radius.sm,
+    '&$small': { borderRadius: `calc(${theme.radius.sm} + 1px)` },
   },
   header: {
     ...theme.recipe.card.header,

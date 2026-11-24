@@ -10,7 +10,7 @@ import {
 import { flushSync } from 'react-dom';
 
 import { useTheme } from '../../theme/index.js';
-import { Popover, type PopoverGap } from '../popover/index.js';
+import { Popover } from '../popover/index.js';
 import { enabledItems, MenuList } from './list.js';
 import type { MenuActionItem, MenuProps } from './types.js';
 
@@ -186,8 +186,7 @@ export function Menu({
         anchorRef={triggerRef}
         open={open}
         matchWidth={false}
-        // Theme space values are rem strings typed as plain `string`.
-        gap={theme.space.sm as PopoverGap}
+        gap={theme.space.sm}
         side={side}
         align={align}
         onClose={dismiss}
