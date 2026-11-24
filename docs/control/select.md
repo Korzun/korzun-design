@@ -76,8 +76,8 @@ option, not the current value.
 <Select name="seriesName" label="Name" value={series || undefined}
   options={seriesNames} loading={seriesLoading} allowCreate onChange={setSeries} />
 
-// On the page background, no label.
-<Select name="library" surface="page" value={libraryId} options={libraries}
+// Directly on a Page, no label: gets the page look (16px, shadow) from depth.
+<Select name="library" value={libraryId} options={libraries}
   onChange={setLibraryId} placeholder="Select user…" />
 ```
 

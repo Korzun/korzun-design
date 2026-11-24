@@ -20,9 +20,9 @@ Find where the element sits, then read its radius from this table:
 
 | Where the element sits | Radius | Examples |
 |---|---|---|
-| On the page background | `lg` | `Card`, modal dialog (`recipe.modal.dialog`), a standalone `Button` (default `radius`), `<Select surface="page">` |
-| Inside a card or modal | `md` | inputs (`recipe.input`), `Button radius="card"` / `"modal"`, `Tag`, shaded rows (`recipe.row`), inset boxes |
-| Inside one of those | `sm` | a chip inside an input, `Button radius="inset"` inside an inset box, a menu item, a Switch track in a shaded row |
+| On the page background | `lg` | `Card`, modal dialog (`recipe.modal.dialog`), `Button`, `Select` and `CardRow` directly on a `Page` (automatic) |
+| Inside a card or modal | `md` | inputs (`recipe.input`), Buttons and Selects in a Card or Dialog (automatic), `Tag`, shaded rows (`recipe.row`), inset boxes |
+| Inside one of those | `sm` | a chip inside an input, Buttons and Selects in a nested Card, inset box (`Surface`) or Popover (automatic), a menu item, a Switch track in a shaded row |
 | Flush with its parent (zero inset, edges touch) | the parent's radius | an unlabelled Select's trigger, an input filling its row |
 | Inset 4px or less from its parent | `calc(parent − inset)` | a Switch thumb 2px inside a 4px track is 2px |
 | A small control with no nearby corner | `pill` / `circle` | a Switch in a full-width card header |
