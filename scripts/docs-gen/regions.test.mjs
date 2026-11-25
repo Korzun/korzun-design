@@ -148,7 +148,7 @@ test('tokens: colors, recipes, omitted when none', () => {
       '| `theme.shadow.raised` | `recipe` | `recipe` |',
     ].join('\n')
   );
-  assert.equal(renderRegion('tokens', mod()), '');
+  assert.equal(renderRegion('tokens', mod()), '## Tokens\n\nThis module has no styles of its own.');
 });
 
 test('changelog: bullets, nested sub-bullets, empty', () => {
@@ -211,4 +211,27 @@ test('stripRegions removes markers and contents', () => {
   assert.ok(!out.includes('## Props'));
   assert.ok(out.includes('Intro.') && out.includes('Between.') && out.includes('Outro.'));
   assert.ok(!/\n{3,}/.test(out));
+});
+
+test('empty examples and props render a placeholder', () => {
+  assert.equal(renderRegion('examples', mod()), '## Examples\n\nNo examples yet.');
+  assert.equal(
+    renderRegion('props', mod()),
+    '## Props\n\nThis module takes no props; see Usage for its API.'
+  );
+});
+
+test('no region is empty or heading-only for a bare module', () => {
+  for (const name of REGIONS) {
+    const out = renderRegion(name, mod());
+    const body = out.replace(/^#+ .*$/gm, '').trim();
+    assert.ok(body.length > 0, name);
+  }
+  const out = replaceRegions(doc(), mod(), 'b.md');
+  for (const name of REGIONS) {
+    const m = out.match(
+      new RegExp(`<!-- generated:${name} -->([\\s\\S]*?)<!-- /generated:${name} -->`)
+    );
+    assert.ok(m[1].replace(/^#+ .*$/gm, '').trim().length > 0, name);
+  }
 });

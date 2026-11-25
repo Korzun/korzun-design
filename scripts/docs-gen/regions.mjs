@@ -38,6 +38,7 @@ function renderImport(mod) {
 }
 
 function renderExamples(mod) {
+  if (mod.examples.length === 0) return '## Examples\n\nNo examples yet.';
   const parts = ['## Examples'];
   for (const ex of mod.examples) {
     parts.push(`### ${ex.title}`);
@@ -98,6 +99,9 @@ function renderProps(mod) {
   const objects = mod.tables.filter((t) => t.kind === 'object');
   const aliases = mod.tables.filter((t) => t.kind === 'alias');
   const linkable = new Set([...objects, ...aliases].map((t) => t.name));
+  if (mod.tables.length === 0) {
+    return '## Props\n\nThis module takes no props; see Usage for its API.';
+  }
   const parts = ['## Props'];
   for (const t of propsTables) {
     parts.push(...tableBlock(t, linkable, propsTables.length > 1));
@@ -111,7 +115,7 @@ function renderProps(mod) {
 }
 
 function renderTokens(mod) {
-  if (mod.tokens.length === 0) return '';
+  if (mod.tokens.length === 0) return '## Tokens\n\nThis module has no styles of its own.';
   const rows = mod.tokens.map((t) => {
     const light = t.kind === 'recipe' ? 'recipe' : t.light;
     const dark = t.kind === 'recipe' ? 'recipe' : t.dark;
@@ -179,7 +183,7 @@ export function replaceRegions(md, mod, file) {
   for (const s of spans) {
     const content = renderRegion(s.name, mod);
     out += md.slice(cursor, s.contentStart);
-    out += content ? `\n\n${content}\n\n` : '\n\n';
+    out += `\n\n${content}\n\n`;
     cursor = s.end;
   }
   return out + md.slice(cursor);
