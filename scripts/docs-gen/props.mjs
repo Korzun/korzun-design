@@ -23,6 +23,7 @@ function createLoader(readFile) {
       decls: new Map(),
       imports: new Map(),
       reexports: new Map(),
+      exportAll: [],
     };
     for (const stmt of program.body) {
       if (stmt.type === 'ImportDeclaration') {
@@ -32,6 +33,10 @@ function createLoader(readFile) {
             file.imports.set(s.local.name, { from, name: s.imported.name ?? s.imported.value });
           }
         }
+        continue;
+      }
+      if (stmt.type === 'ExportAllDeclaration' && !stmt.exported) {
+        file.exportAll.push(String(stmt.source.value));
         continue;
       }
       const decl = stmt.type === 'ExportNamedDeclaration' ? stmt.declaration : stmt;
@@ -78,9 +83,16 @@ function createLoader(readFile) {
     const local = file.decls.get(name);
     if (local) return { file, decl: local };
     const link = file.imports.get(name) ?? file.reexports.get(name);
-    if (!link) return null;
-    const target = locate(file, link.from);
-    return target ? resolveName(load(target), link.name, seen) : null;
+    if (link) {
+      const target = locate(file, link.from);
+      return target ? resolveName(load(target), link.name, seen) : null;
+    }
+    for (const from of file.exportAll) {
+      const target = locate(file, from);
+      const hit = target && resolveName(load(target), name, seen);
+      if (hit) return hit;
+    }
+    return null;
   }
 
   return { load, resolveName };
@@ -128,11 +140,14 @@ function createFlattener(loader) {
         return literalRows(node, file);
       case 'TSIntersectionType': {
         const rows = new Map();
+        const failed = [];
         for (const part of node.types) {
           const sub = flattenNode(part, file, depth + 1);
-          if (!sub) return null;
-          for (const [k, v] of sub) rows.set(k, v);
+          if (!sub) failed.push(part);
+          else for (const [k, v] of sub) rows.set(k, v);
         }
+        if (failed.length === node.types.length) return null;
+        for (const part of failed) skip(skipName(part, file));
         return rows;
       }
       case 'TSUnionType':
@@ -144,6 +159,43 @@ function createFlattener(loader) {
     }
   }
 
+  const isObjectShaped = (n) =>
+    n.type === 'TSTypeLiteral' ||
+    n.type === 'TSIntersectionType' ||
+    (n.type === 'TSParenthesizedType' && isObjectShaped(n.typeAnnotation));
+
+  // Source text of a type, with the package's own non-generic, non-object aliases
+  // substituted by their text. React/DOM, generic and object-shaped types stay by name.
+  function inlineType(node, file, depth) {
+    const plain = () => squash(file.src.slice(node.start, node.end));
+    if (depth > 20) return plain();
+    if (node.type === 'TSUnionType') {
+      const parts = [];
+      for (const t of node.types) {
+        for (const piece of inlineType(t, file, depth + 1).split(' | ')) {
+          if (!parts.includes(piece)) parts.push(piece);
+        }
+      }
+      return parts.join(' | ');
+    }
+    if (
+      node.type === 'TSTypeReference' &&
+      node.typeName.type === 'Identifier' &&
+      !node.typeArguments
+    ) {
+      const found = loader.resolveName(file, node.typeName.name);
+      const decl = found?.decl;
+      if (
+        decl?.type === 'TSTypeAliasDeclaration' &&
+        !decl.typeParameters?.params?.length &&
+        !isObjectShaped(decl.typeAnnotation)
+      ) {
+        return inlineType(decl.typeAnnotation, found.file, depth + 1);
+      }
+    }
+    return plain();
+  }
+
   function literalRows(node, file) {
     const rows = new Map();
     for (const m of node.members ?? node.body) {
@@ -153,7 +205,7 @@ function createFlattener(loader) {
       const ann = m.typeAnnotation?.typeAnnotation;
       const row = {
         name,
-        type: ann ? squash(file.src.slice(ann.start, ann.end)) : 'any',
+        type: ann ? inlineType(ann, file, 0) : 'any',
         required: !m.optional,
         description: doc.description,
       };
@@ -193,6 +245,25 @@ function createFlattener(loader) {
     }
     return rows;
   }
+
+  // Name of an external type that was left out of a table, looking through Omit/Pick-style wrappers.
+  function skipName(node, file) {
+    if (node.type === 'TSParenthesizedType') return skipName(node.typeAnnotation, file);
+    if (node.type === 'TSTypeReference') {
+      const args = node.typeArguments?.params ?? [];
+      const tn = node.typeName;
+      const wrapper =
+        tn.type === 'Identifier' && ['Omit', 'Pick', 'Partial', 'Required'].includes(tn.name);
+      if (wrapper && args.length) return skipName(args[0], file);
+      return squash(file.src.slice(tn.start, tn.end));
+    }
+    return squash(file.src.slice(node.start, node.end));
+  }
+
+  let skipped = [];
+  const skip = (name) => {
+    if (!skipped.includes(name)) skipped.push(name);
+  };
 
   function literalKeys(node) {
     if (node.type === 'TSLiteralType' && typeof node.literal.value === 'string') {
@@ -236,17 +307,29 @@ function createFlattener(loader) {
     }
     const rows = new Map();
     for (const ext of decl.extends ?? []) {
-      if (ext.expression?.type !== 'Identifier' || ext.typeArguments) return null;
-      const found = loader.resolveName(file, ext.expression.name);
-      const sub = found && flattenDecl(found.decl, found.file, depth + 1);
-      if (!sub) return null;
+      const ref = {
+        type: 'TSTypeReference',
+        typeName: ext.expression,
+        typeArguments: ext.typeArguments,
+        start: ext.start,
+        end: ext.end,
+      };
+      const sub = flattenNode(ref, file, depth + 1);
+      if (!sub) {
+        skip(skipName(ref, file));
+        continue;
+      }
       for (const [k, v] of sub) rows.set(k, v);
     }
     for (const [k, v] of literalRows(decl.body, file)) rows.set(k, v);
     return rows;
   }
 
-  return flattenDecl;
+  return (decl, file) => {
+    skipped = [];
+    const rows = flattenDecl(decl, file, 0);
+    return { rows, skipped: rows ? skipped : [] };
+  };
 }
 
 const byName = (a, b) => {
@@ -265,21 +348,23 @@ const byName = (a, b) => {
  */
 export function extractTypeTables(dtsPath, names, readFile = defaultRead) {
   const loader = createLoader(readFile);
-  const flattenDecl = createFlattener(loader);
+  const flatten = createFlattener(loader);
   const entry = loader.load(resolve(dtsPath));
   return names.map((name) => {
     const found = loader.resolveName(entry, name);
     if (!found) throw new Error(`type ${name} not found from ${dtsPath}`);
     const { decl, file } = found;
-    const rows = flattenDecl(decl, file, 0);
+    const { rows, skipped } = flatten(decl, file);
     if (!rows) {
       const body = decl.type === 'TSTypeAliasDeclaration' ? decl.typeAnnotation : decl;
       return { name, kind: 'alias', rows: [], text: file.src.slice(body.start, body.end) };
     }
-    return {
+    const out = {
       name,
       kind: name.endsWith('Props') ? 'props' : 'object',
       rows: [...rows.values()].sort(byName),
     };
+    if (skipped.length) out.extends = skipped;
+    return out;
   });
 }

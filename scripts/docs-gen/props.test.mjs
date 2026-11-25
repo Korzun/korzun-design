@@ -19,8 +19,8 @@ export type ButtonProps = { type?: ButtonTypeValue };`,
     'ButtonProps',
     { '/x/style.d.ts': `export type ButtonTypeValue = 'default' | 'primary';` }
   );
-  // The type stays as written; the alias is only followed to find declarations.
-  assert.equal(row(t, 'type').type, 'ButtonTypeValue');
+  assert.equal(row(t, 'type').type, "'default' | 'primary'");
+  // The alias itself is still reachable as its own table.
   const alias = extractTypeTables(
     '/x/a.d.ts',
     ['ButtonTypeValue'],
@@ -169,6 +169,77 @@ test(
     assert.equal(names[0], 'children');
     assert.deepEqual(names.slice(1), [...names.slice(1)].sort());
     assert.equal(row(t, 'danger').type, 'boolean');
-    assert.equal(row(t, 'type').type, 'ButtonTypeValue');
+    assert.equal(row(t, 'type').type, "'default' | 'primary' | 'text' | 'link' | 'dashed'");
+  }
+);
+
+test('object-shaped, generic and external alias references stay by name', () => {
+  const t = table(
+    `import { ComponentType } from 'react';
+type Box = { w: number };
+type Wrap<T> = T[];
+export type XProps = { a?: Box; b?: Wrap<string>; c?: ComponentType<{}>; d?: Gap | null };
+type Gap = 'sm' | 'lg';`,
+    'XProps'
+  );
+  assert.equal(row(t, 'a').type, 'Box');
+  assert.equal(row(t, 'b').type, 'Wrap<string>');
+  assert.equal(row(t, 'c').type, 'ComponentType<{}>');
+  assert.equal(row(t, 'd').type, "'sm' | 'lg' | null");
+});
+
+test('external extends are skipped, own rows kept, names recorded', () => {
+  const t = table(
+    `import type { HTMLAttributes } from 'react';
+export interface StackProps extends Omit<HTMLAttributes<HTMLElement>, 'style'> {
+  /** Space between children. */
+  gap?: 'sm';
+}`,
+    'StackProps'
+  );
+  assert.equal(t.kind, 'props');
+  assert.deepEqual(
+    t.rows.map((r) => r.name),
+    ['gap']
+  );
+  assert.deepEqual(t.extends, ['HTMLAttributes']);
+});
+
+test('external intersection part is skipped, own rows kept', () => {
+  const t = table(
+    `export type XProps = { a: string } & React.HTMLAttributes<HTMLElement>;`,
+    'XProps'
+  );
+  assert.deepEqual(
+    t.rows.map((r) => r.name),
+    ['a']
+  );
+  assert.deepEqual(t.extends, ['React.HTMLAttributes']);
+});
+
+test('export * barrels are searched when resolving a name', () => {
+  const [t] = extractTypeTables(
+    '/x/index.d.ts',
+    ['XProps'],
+    files({
+      '/x/index.d.ts': `export * from './a.js';\nexport * from './loop.js';`,
+      '/x/loop.d.ts': `export * from './index.js';`,
+      '/x/a.d.ts': `export type XProps = { a: string };`,
+    })
+  );
+  assert.deepEqual(
+    t.rows.map((r) => r.name),
+    ['a']
+  );
+});
+
+test(
+  'real StackProps has gap and records HTMLAttributes',
+  { skip: !existsSync('dist/component/stack/index.d.ts') && 'dist missing; run npm run build' },
+  () => {
+    const [t] = extractTypeTables('dist/component/stack/index.d.ts', ['StackProps']);
+    assert.equal(t.kind, 'props');
+    assert.ok(row(t, 'gap'));
+    assert.ok(t.extends.includes('HTMLAttributes'));
   }
 );
