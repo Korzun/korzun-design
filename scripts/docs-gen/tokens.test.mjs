@@ -1,0 +1,43 @@
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+import { test } from 'node:test';
+import { pathToFileURL } from 'node:url';
+
+import { collectTokenPaths, resolveTokens } from './tokens.mjs';
+
+const root = resolve(import.meta.dirname, '../..');
+
+test('collects member paths from the real button style', () => {
+  const paths = collectTokenPaths(
+    readFileSync(resolve(root, 'src/control/button/style.ts'), 'utf8')
+  );
+  assert.ok(paths.includes('color.text.primary'));
+  assert.ok(paths.includes('recipe.focusRing'));
+  assert.deepEqual(paths, [...new Set(paths)].sort());
+  assert.ok(paths.every((p) => !p.startsWith('theme.')));
+});
+
+test('stops at computed access and keeps shared prefixes', () => {
+  const src = `const s = (theme) => ({ a: theme.space[gap], b: theme.space.md, c: theme.color[k].x, d: theme.radius.lg });`;
+  assert.deepEqual(collectTokenPaths(src), ['color', 'radius.lg', 'space', 'space.md']);
+});
+
+test('resolves tokens against the built themes', async () => {
+  const { lightTheme, darkTheme } = await import(
+    pathToFileURL(resolve(root, 'dist/theme/theme.js')).href
+  );
+  const rows = resolveTokens(
+    ['color.text.primary', 'recipe.focusRing', 'space.md', 'nope.x'],
+    lightTheme,
+    darkTheme
+  );
+  const [text, recipe, space, nope] = rows;
+  assert.equal(text.kind, 'color');
+  assert.equal(typeof text.light, 'string');
+  assert.notEqual(text.light, text.dark);
+  assert.equal(recipe.kind, 'recipe');
+  assert.equal(recipe.light, null);
+  assert.equal(space.kind, 'value');
+  assert.equal(nope.light, null);
+});
