@@ -22,6 +22,29 @@ export const barrelExports = (text) => {
   return { values, types };
 };
 
+// One entry per `export { ... } from '<from>'` statement, so callers can group
+// names by the module they come from. `from` is '' for a local `export { A }`.
+export const barrelStatements = (text) => {
+  const out = [];
+  const re = /export\s+(type\s+)?\{([^}]*)\}(?:\s*from\s*['"]([^'"]+)['"])?/g;
+  for (const [, typeOnly, list, from = ''] of text.matchAll(re)) {
+    const values = [];
+    const types = [];
+    for (const raw of list.split(',')) {
+      const spec = raw.trim();
+      if (!spec) continue;
+      const name = spec
+        .replace(/^type\s+/, '')
+        .split(/\s+as\s+/)
+        .pop()
+        .trim();
+      (typeOnly || spec.startsWith('type ') ? types : values).push(name);
+    }
+    out.push({ from, values, types });
+  }
+  return out;
+};
+
 export const BARREL_AREAS = ['control', 'component', 'theme', 'toast', 'icon', 'hooks'];
 
 // Every runtime value the package barrels export: the valid changelog tags
