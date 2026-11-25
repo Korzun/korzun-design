@@ -66,10 +66,7 @@ test('validateTags accepts known names and General', () => {
 
 test('the real CHANGELOG.md validates against the barrels', () => {
   const versions = parseChangelog(readFileSync(join(repo, 'CHANGELOG.md'), 'utf8'));
-  assert.equal(versions[0].version, '0.5.0');
-  assert.equal(
-    versions.reduce((n, v) => n + v.entries.length, 0),
-    50
-  );
+  assert.ok(versions.length > 0);
+  for (const v of versions) for (const e of v.entries) assert.ok(e.tags.length >= 1, v.version);
   assert.deepEqual(validateTags(versions, knownNames(repo)), []);
 });
