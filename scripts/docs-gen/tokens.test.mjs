@@ -31,11 +31,21 @@ test(
   async () => {
     const { lightTheme, darkTheme } = await import(pathToFileURL(themePath).href);
     const rows = resolveTokens(
-      ['color.text.primary', 'recipe.focusRing', 'space.md', 'nope.x', 'color.chip.danger'],
+      [
+        'color.text.primary',
+        'recipe.focusRing',
+        'space.md',
+        'nope.x',
+        'color.chip.danger',
+        'fontWeight.bold',
+      ],
       lightTheme,
       darkTheme
     );
-    const [text, recipe, space, ...chip] = rows;
+    const fw = rows.find((r) => r.path.startsWith('fontWeight.'));
+    assert.match(fw.light, /^\d+$/);
+    assert.equal(fw.kind, 'value');
+    const [text, recipe, space, ...chip] = rows.filter((r) => !r.path.startsWith('fontWeight.'));
     assert.equal(text.kind, 'color');
     assert.equal(typeof text.light, 'string');
     assert.notEqual(text.light, text.dark);

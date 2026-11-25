@@ -82,7 +82,8 @@ function leafPaths(path, light, dark) {
  * @returns {TokenRow[]}
  */
 export function resolveTokens(paths, light, dark) {
-  const str = (v) => (typeof v === 'string' ? v : null);
+  const str = (v) =>
+    typeof v === 'string' ? v : typeof v === 'number' || typeof v === 'boolean' ? String(v) : null;
   const row = (path) => {
     const l = str(lookup(light, path));
     const d = str(lookup(dark, path));
