@@ -235,3 +235,15 @@ test('no region is empty or heading-only for a bare module', () => {
     assert.ok(m[1].replace(/^#+ .*$/gm, '').trim().length > 0, name);
   }
 });
+
+test('props: zero-row table renders placeholder, or just its Also accepts line', () => {
+  const empty = { name: 'XProps', kind: 'props', rows: [] };
+  assert.equal(
+    renderRegion('props', mod({ tables: [empty] })),
+    '## Props\n\nThis module takes no props; see Usage for its API.'
+  );
+  assert.equal(
+    renderRegion('props', mod({ tables: [{ ...empty, extends: ['HTMLAttributes'] }] })),
+    '## Props\n\nAlso accepts: \`HTMLAttributes\`.'
+  );
+});

@@ -99,9 +99,6 @@ function renderProps(mod) {
   const objects = mod.tables.filter((t) => t.kind === 'object');
   const aliases = mod.tables.filter((t) => t.kind === 'alias');
   const linkable = new Set([...objects, ...aliases].map((t) => t.name));
-  if (mod.tables.length === 0) {
-    return '## Props\n\nThis module takes no props; see Usage for its API.';
-  }
   const parts = ['## Props'];
   for (const t of propsTables) {
     parts.push(...tableBlock(t, linkable, propsTables.length > 1));
@@ -110,6 +107,9 @@ function renderProps(mod) {
   if (aliases.length > 0) {
     const text = aliases.map((t) => `type ${t.name} = ${(t.text ?? '').trim()};`).join('\n');
     parts.push('### Types', `\`\`\`ts\n${text}\n\`\`\``);
+  }
+  if (parts.every((p) => /^#+ [^\n]*$/.test(p))) {
+    return '## Props\n\nThis module takes no props; see Usage for its API.';
   }
   return parts.join('\n\n');
 }
