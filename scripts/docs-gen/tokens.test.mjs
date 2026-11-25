@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { test } from 'node:test';
 import { pathToFileURL } from 'node:url';
@@ -23,21 +23,25 @@ test('stops at computed access and keeps shared prefixes', () => {
   assert.deepEqual(collectTokenPaths(src), ['color', 'radius.lg', 'space', 'space.md']);
 });
 
-test('resolves tokens against the built themes', async () => {
-  const { lightTheme, darkTheme } = await import(
-    pathToFileURL(resolve(root, 'dist/theme/theme.js')).href
-  );
-  const rows = resolveTokens(
-    ['color.text.primary', 'recipe.focusRing', 'space.md', 'nope.x'],
-    lightTheme,
-    darkTheme
-  );
-  const [text, recipe, space, nope] = rows;
-  assert.equal(text.kind, 'color');
-  assert.equal(typeof text.light, 'string');
-  assert.notEqual(text.light, text.dark);
-  assert.equal(recipe.kind, 'recipe');
-  assert.equal(recipe.light, null);
-  assert.equal(space.kind, 'value');
-  assert.equal(nope.light, null);
-});
+const themePath = resolve(root, 'dist/theme/theme.js');
+
+test(
+  'resolves tokens against the built themes',
+  { skip: !existsSync(themePath) && 'dist missing; run npm run build' },
+  async () => {
+    const { lightTheme, darkTheme } = await import(pathToFileURL(themePath).href);
+    const rows = resolveTokens(
+      ['color.text.primary', 'recipe.focusRing', 'space.md', 'nope.x'],
+      lightTheme,
+      darkTheme
+    );
+    const [text, recipe, space, nope] = rows;
+    assert.equal(text.kind, 'color');
+    assert.equal(typeof text.light, 'string');
+    assert.notEqual(text.light, text.dark);
+    assert.equal(recipe.kind, 'recipe');
+    assert.equal(recipe.light, null);
+    assert.equal(space.kind, 'value');
+    assert.equal(nope.light, null);
+  }
+);
