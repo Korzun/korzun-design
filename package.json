@@ -67,7 +67,7 @@
     "docs:gen": "npm run build && node scripts/docs-gen/cli.mjs",
     "docs:check": "node scripts/docs-gen/cli.mjs --check",
     "build": "rm -rf dist && tsc -p tsconfig.build.json",
-    "test": "vitest run && npm run test:scripts",
+    "test": "npm run build && vitest run && npm run test:scripts && npm run docs:check",
     "test:scripts": "node --test \"scripts/**/*.test.mjs\"",
     "test:watch": "vitest",
     "lint": "oxlint src gallery scripts && oxfmt --check \"src/**/*.{ts,tsx}\" \"gallery/**/*.{ts,tsx}\" && tsc --noEmit",
