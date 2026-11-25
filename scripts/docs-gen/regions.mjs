@@ -26,11 +26,16 @@ function anchor(name) {
     .replace(/[^a-z0-9_-]/g, '');
 }
 
-function renderImport(mod) {
-  const names = [
+/** Import specifiers as written in an import line: `A, B, type C`. Empty when none. */
+export function importNames(mod) {
+  return [
     ...[...mod.values].sort(byName),
     ...[...mod.types].sort(byName).map((t) => `type ${t}`),
-  ];
+  ].join(', ');
+}
+
+function renderImport(mod) {
+  const names = importNames(mod) === '' ? [] : importNames(mod).split(', ');
   if (names.length === 0) return `\`import '${mod.entry}'\``;
   const line = `import { ${names.join(', ')} } from '${mod.entry}'`;
   if (line.length <= MAX_LINE) return `\`${line}\``;

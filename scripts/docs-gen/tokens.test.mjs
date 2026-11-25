@@ -31,17 +31,22 @@ test(
   async () => {
     const { lightTheme, darkTheme } = await import(pathToFileURL(themePath).href);
     const rows = resolveTokens(
-      ['color.text.primary', 'recipe.focusRing', 'space.md', 'nope.x'],
+      ['color.text.primary', 'recipe.focusRing', 'space.md', 'nope.x', 'color.chip.danger'],
       lightTheme,
       darkTheme
     );
-    const [text, recipe, space, nope] = rows;
+    const [text, recipe, space, ...chip] = rows;
     assert.equal(text.kind, 'color');
     assert.equal(typeof text.light, 'string');
     assert.notEqual(text.light, text.dark);
     assert.equal(recipe.kind, 'recipe');
     assert.equal(recipe.light, null);
     assert.equal(space.kind, 'value');
-    assert.equal(nope.light, null);
+    assert.ok(!rows.some((r) => r.path === 'nope.x'));
+    assert.ok(chip.length > 0);
+    for (const r of chip) {
+      assert.match(r.path, /^color\.chip\.danger\./);
+      assert.ok(r.light !== null || r.dark !== null);
+    }
   }
 );

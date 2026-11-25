@@ -1,6 +1,6 @@
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
-import { join } from 'node:path';
+import { join, posix } from 'node:path';
 
 import { barrelStatements, knownNames } from './barrels.mjs';
 import { parseChangelog, validateTags } from './changelog.mjs';
@@ -9,7 +9,7 @@ import { readExample } from './examples.mjs';
 import { parseFrontMatter } from './front-matter.mjs';
 import { listModules } from './inventory.mjs';
 import { extractTypeTables } from './props.mjs';
-import { replaceRegions, stripRegions } from './regions.mjs';
+import { importNames, replaceRegions, stripRegions } from './regions.mjs';
 import { collectTokenPaths, resolveTokens } from './tokens.mjs';
 
 /** @typedef {import('./types.js').ModuleInfo} ModuleInfo */
@@ -39,12 +39,8 @@ function checkCategory(file, category, allowGuide) {
 
 /** The single-line import form, same naming and ordering as the import region. */
 function importLine(mod) {
-  const names = [
-    ...[...mod.values].sort(byName),
-    ...[...mod.types].sort(byName).map((t) => `type ${t}`),
-  ];
-  if (names.length === 0) return `import '${mod.entry}'`;
-  return `import { ${names.join(', ')} } from '${mod.entry}'`;
+  const names = importNames(mod);
+  return names ? `import { ${names} } from '${mod.entry}'` : `import '${mod.entry}'`;
 }
 
 /** Source file of component `name`: index.tsx, or the barrel's `from` for area modules. */
@@ -74,6 +70,29 @@ function withDefaults(repo, mod, tables) {
     }
   }
   return tables;
+}
+
+/** Token paths from a style file and the relative modules it imports, transitively within src/. */
+function styleTokenPaths(repo, entry) {
+  const seen = new Set();
+  const paths = new Set();
+  const visit = (rel) => {
+    if (seen.has(rel)) return;
+    seen.add(rel);
+    const source = readIf(join(repo, rel));
+    if (source === null) return;
+    for (const p of collectTokenPaths(source)) paths.add(p);
+    for (const [, spec] of source.matchAll(/(?:from|import)\s*['"](\.{1,2}\/[^'"]+)['"]/g)) {
+      const base = posix.normalize(posix.join(posix.dirname(rel), spec.replace(/\.js$/, '')));
+      if (!base.startsWith('src/')) continue;
+      const hit = [`${base}.ts`, `${base}.tsx`, `${base}/index.ts`, `${base}/index.tsx`].find((f) =>
+        existsSync(join(repo, f))
+      );
+      if (hit) visit(hit);
+    }
+  };
+  visit(entry);
+  return [...paths].sort();
 }
 
 function loadThemes(repo) {
@@ -181,11 +200,11 @@ export function generate(repo, { strict = false } = {}) {
       skel,
       extractTypeTables(join(repo, skel.dtsDir, 'index.d.ts'), skel.types)
     );
-    const style = readIf(join(repo, skel.srcDir, 'style.ts'));
+    const stylePaths = styleTokenPaths(repo, `${skel.srcDir}/style.ts`);
     let tokens = [];
-    if (style !== null) {
+    if (stylePaths.length > 0) {
       themes ??= loadThemes(repo);
-      tokens = resolveTokens(collectTokenPaths(style), themes.light, themes.dark);
+      tokens = resolveTokens(stylePaths, themes.light, themes.dark);
     }
     const values = new Set(skel.values);
     const entries = changelog.flatMap((v) =>

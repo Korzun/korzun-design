@@ -52,7 +52,30 @@ function lookup(obj, path) {
   return cur;
 }
 
+const isPlainObject = (v) => v !== null && typeof v === 'object' && !Array.isArray(v);
+
+/** Leaf paths under `path` in either theme, sorted. */
+function leafPaths(path, light, dark) {
+  const out = new Set();
+  const visit = (prefix, l, d) => {
+    const keys = new Set([
+      ...Object.keys(isPlainObject(l) ? l : {}),
+      ...Object.keys(isPlainObject(d) ? d : {}),
+    ]);
+    for (const key of keys) {
+      const lv = isPlainObject(l) ? l[key] : undefined;
+      const dv = isPlainObject(d) ? d[key] : undefined;
+      if (isPlainObject(lv) || isPlainObject(dv)) visit(`${prefix}.${key}`, lv, dv);
+      else out.add(`${prefix}.${key}`);
+    }
+  };
+  visit(path, lookup(light, path), lookup(dark, path));
+  return [...out].sort();
+}
+
 /**
+ * Recipes keep one row each. Any other path that resolves to an object
+ * expands into one row per leaf; paths that resolve to nothing are dropped.
  * @param {string[]} paths
  * @param {object} light
  * @param {object} dark
@@ -60,7 +83,7 @@ function lookup(obj, path) {
  */
 export function resolveTokens(paths, light, dark) {
   const str = (v) => (typeof v === 'string' ? v : null);
-  return paths.map((path) => {
+  const row = (path) => {
     const l = str(lookup(light, path));
     const d = str(lookup(dark, path));
     const kind = path.startsWith('recipe.')
@@ -69,5 +92,22 @@ export function resolveTokens(paths, light, dark) {
         ? 'color'
         : 'value';
     return { path, kind, light: l, dark: d };
-  });
+  };
+  const seen = new Set();
+  const rows = [];
+  for (const path of paths) {
+    const isRecipe = path.startsWith('recipe.');
+    const expanded =
+      !isRecipe && (isPlainObject(lookup(light, path)) || isPlainObject(lookup(dark, path)))
+        ? leafPaths(path, light, dark)
+        : [path];
+    for (const p of expanded) {
+      if (seen.has(p)) continue;
+      seen.add(p);
+      const r = row(p);
+      if (r.kind !== 'recipe' && r.light === null && r.dark === null) continue;
+      rows.push(r);
+    }
+  }
+  return rows;
 }
