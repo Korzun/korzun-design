@@ -113,14 +113,15 @@ function createLoader(readFile) {
 /**
  * Text of the JSDoc block directly above `node`, split into description and
  * tags. With `keywords`, `export`/`declare` may sit between the two (a type
- * declaration's own comment precedes its `export`).
+ * declaration's own comment precedes its `export`). `@member <name> <note>`
+ * (on a type) collects a note for one of its members' rows.
  */
 function readDoc(file, node, keywords = false) {
   const between = keywords ? /^\s*(?:(?:export|declare)\s+)*$/ : /^\s*$/;
   const comment = file.comments.find(
     (c) => c.end <= node.start && between.test(file.src.slice(c.end, node.start))
   );
-  const out = { description: '', default: undefined, deprecated: false };
+  const out = { description: '', default: undefined, deprecated: false, members: [] };
   if (!comment) return out;
   const lines = comment.value
     .replace(/^\*/, '')
@@ -134,10 +135,17 @@ function readDoc(file, node, keywords = false) {
       tag = m[1];
       if (tag === 'default') out.default = m[2];
       else if (tag === 'deprecated') out.deprecated = true;
+      else if (tag === 'member') {
+        const [, name = '', text = ''] = /^(\S*)\s*(.*)$/.exec(m[2]);
+        out.members.push({ name, text });
+      }
     } else if (tag === null) {
       if (line) desc.push(line);
     } else if (tag === 'default' && line) {
       out.default = `${out.default} ${line}`.trim();
+    } else if (tag === 'member' && line) {
+      const note = out.members.at(-1);
+      note.text = `${note.text} ${line}`.trim();
     }
   }
   out.description = desc.join(' ');
@@ -540,7 +548,13 @@ export function extractTypeTables(dtsPath, names, readFile = defaultRead) {
   const { flatten, aliasText } = createFlattener(loader, exported);
   return resolved.map(({ name, decl, file }) => {
     const { rows, skipped } = flatten(decl, file);
-    const { description } = readDoc(file, decl, true);
+    const { description, members } = readDoc(file, decl, true);
+    for (const note of members) {
+      const target = rows?.get(note.name);
+      if (!target) throw new Error(`${name}: @member ${note.name}: no such member`);
+      const text = [target.description, note.text].filter(Boolean).join(' ');
+      rows.set(note.name, { ...target, description: text });
+    }
     let out;
     if (!rows) {
       const body = decl.type === 'TSTypeAliasDeclaration' ? decl.typeAnnotation : decl;
