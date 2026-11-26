@@ -16,9 +16,9 @@ export type DialogProps = {
   children?: ReactNode;
   /** Action row. No footer bar is drawn when omitted. */
   footer?: ReactNode;
-  /** When `false`, Escape and backdrop clicks are ignored (pass `!loading`). Default `true`. */
+  /** When `false`, Escape and backdrop clicks are ignored; pass `!loading` while a request runs. */
   canDismiss?: boolean;
-  /** Extra class on the `<dialog>` element. */
+  /** Extra class on the `<dialog>` element. Win specificity with `'&&'`, never `!important`. */
   className?: string;
 };
 
