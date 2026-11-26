@@ -36,12 +36,21 @@ describe('buildLlmsTxt', () => {
     );
   });
 
-  it('orders Start here, the categories by the closed list, then Guides and Optional', () => {
+  it('orders Start here, the categories by the closed list, then Guides, Recipes and Optional', () => {
     const headings = text.split('\n').filter((l) => l.startsWith('## '));
     const present = CATEGORIES.filter((c) => siteData.modules.some((m) => m.category === c));
     expect(headings).toEqual(
-      ['Start here', ...present, 'Guides', 'Optional'].map((title) => `## ${title}`)
+      ['Start here', ...present, 'Guides', 'Recipes', 'Optional'].map((title) => `## ${title}`)
     );
+  });
+
+  it('lists every recipe with its doc link and description', () => {
+    expect(siteData.recipes.length).toBeGreaterThan(0);
+    for (const recipe of siteData.recipes)
+      expect(section('Recipes')).toContain(
+        `- [${recipe.title}](${site}${recipe.docPath}): ${recipe.description}`
+      );
+    expect(section('Recipes')).toContain(`(${site}docs/recipes/login.md)`);
   });
 
   it('lists every guide and the full file', () => {

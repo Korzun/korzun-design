@@ -48,6 +48,12 @@ const a = 1;
 
 test('an unknown @viewport value throws', () => {
   assert.throws(() => readExample('01-a.tsx', `/** T\n * @viewport tablet\n */\nx`), {
-    message: 'Example 01-a.tsx: @viewport must be "mobile", not "tablet"',
+    message: 'Example 01-a.tsx: @viewport must be "mobile" or "screen", not "tablet"',
   });
+});
+
+test('@viewport screen marks a full-height screen example', () => {
+  const ex = readExample('recipes/login/01-sign-in.tsx', `/** Sign in\n * @viewport screen\n */\nx`);
+  assert.equal(ex.viewport, 'screen');
+  assert.equal(ex.description, '');
 });

@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.6.0 — 2026-11-26
+
+- [lightTheme, darkTheme] New `theme.layout.formWidth` (`400px`): the width of a standalone form column such as sign-in, narrower than a dialog.
+- [General] Recipes: worked assemblies of library parts with live previews, shipped as `docs/recipes/*.md` and indexed in AGENTS.md. First recipe: Sign in (`docs/recipes/login.md`).
+
 ## 0.5.2 — 2026-11-26
 
 - [TextInput, TextArea, NumberInput] The visible `label` is linked to its field (`htmlFor` and a generated `id`), so it names the field and clicking it focuses the field. A new `ariaLabel` prop names a field that has no visible `label`; with a `label` it is ignored.

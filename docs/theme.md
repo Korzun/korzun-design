@@ -307,7 +307,7 @@ The token object that `useTheme` returns and `createUseStyles` passes to a style
 | `fontFamily` (required) | `{ body: string; mono: string; }` |  |  |
 | `fontSize` (required) | `{ xxs: string; xs: string; sm: string; md: string; lg: string; xl: string; xxl: string; }` |  |  |
 | `fontWeight` (required) | `{ regular: number; medium: number; semibold: number; bold: number; extrabold: number; }` |  |  |
-| `layout` (required) | `{ navHeightMobile: string; modalWidth: string; controlHeight: string; floatingControlTopBase: string; }` |  |  |
+| `layout` (required) | `{ navHeightMobile, modalWidth, formWidth, controlHeight, floatingControlTopBase }` |  |  |
 | `lineHeight` (required) | `{ tight: number; body: number; }` |  |  |
 | `radius` (required) | `{ sm: string; md: string; lg: string; circle: string; pill: string; }` |  |  |
 | `recipe` (required) | `{ input, focusRing, label, spinner, glass, glassHighlight, row, modal, card }` |  |  |
@@ -341,6 +341,7 @@ This module has no styles of its own.
 
 ## Changelog
 
+- **0.6.0** (2026-11-26): New `theme.layout.formWidth` (`400px`): the width of a standalone form column such as sign-in, narrower than a dialog.
 - **0.2.0** (2026-11-21): New `fontWeight.regular` (400) token.
 - **0.1.0** (2026-11-21): `Tag` status tones: `success`, `warning` (yellow, stronger fill), `danger`, `info` (brand blue). New `color.warning` and `color.info` solid colours. Status tones report state; label tones name things. No visual change to existing tags.
 - **0.0.6** (2026-11-21): New `theme.recipe.row`: the shaded field row (`bg.cardHeader`, `radius.md`, padding `md lg md sm`), for custom rows beside form fields. `Switch`'s horizontal layout now uses it and looks the same.

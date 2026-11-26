@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router';
 
 import { CATEGORIES } from '../../scripts/docs-gen/categories.mjs';
-import { siteData } from '../data.js';
+import { moduleOwner, siteData } from '../data.js';
 import { MOBILE_WIDTH } from '../frame-url.js';
 import { Thumbnail } from '../part/thumbnail.js';
 import { OverviewPage } from './overview.js';
@@ -48,8 +48,13 @@ describe('OverviewPage', () => {
     const button = siteData.modules.find((m) => m.slug === 'button')!;
     const { container } = render(
       <ThemeProvider identity="test">
-        <Thumbnail mod={{ ...button, examples: [{ ...button.examples[0], viewport: 'mobile' }] }} />
-        <Thumbnail mod={button} />
+        <Thumbnail
+          owner={moduleOwner({
+            ...button,
+            examples: [{ ...button.examples[0]!, viewport: 'mobile' }],
+          })}
+        />
+        <Thumbnail owner={moduleOwner(button)} />
       </ThemeProvider>
     );
     const [phone, wide] = container.querySelectorAll('iframe');

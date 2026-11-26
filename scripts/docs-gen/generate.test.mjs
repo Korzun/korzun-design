@@ -423,7 +423,7 @@ test(
   () => {
     const root = mkdtempSync(join(tmpdir(), 'docs-gen-real-'));
     roots.push(root);
-    for (const p of ['package.json', 'src', 'dist', 'docs', 'AGENTS.md', 'CHANGELOG.md']) {
+    for (const p of ['package.json', 'src', 'dist', 'docs', 'recipes', 'AGENTS.md', 'CHANGELOG.md']) {
       cpSync(join(realRepo, p), join(root, p), { recursive: true });
     }
     const site = JSON.parse(generate(root).get('gallery/generated/site-data.json'));
@@ -524,3 +524,81 @@ test('--check exits 0 when current, 1 after a JSDoc edit', () => {
 function symlinkNodeModules(root) {
   spawnSync('ln', ['-s', join(realRepo, 'node_modules'), join(root, 'node_modules')]);
 }
+
+const RECIPE_DOC = `---
+title: Sign in
+description: A sign-in screen.
+category: Recipe
+---
+
+# Sign in
+
+Why prose.
+
+<!-- generated:examples -->
+<!-- /generated:examples -->
+`;
+
+function recipeFixture({ doc = true, folder = true } = {}) {
+  const root = fixture();
+  if (doc) put(root, 'docs/recipes/login.md', RECIPE_DOC);
+  if (folder) put(root, 'recipes/login/01-sign-in.tsx', '/** Sign in */\nexport default () => null;\n');
+  return root;
+}
+
+test('collects a recipe: site data and its examples region', () => {
+  const files = generate(recipeFixture());
+  const doc = files.get('docs/recipes/login.md');
+  assert.ok(doc.startsWith('---\ntitle: Sign in'));
+  assert.match(doc, /### Sign in/);
+  assert.match(doc, /```tsx\nexport default \(\) => null;\n```/);
+  const site = JSON.parse(files.get('gallery/generated/site-data.json'));
+  assert.equal(site.recipes.length, 1);
+  const r = site.recipes[0];
+  assert.equal(r.slug, 'login');
+  assert.equal(r.docPath, 'docs/recipes/login.md');
+  assert.equal(r.title, 'Sign in');
+  assert.equal(r.description, 'A sign-in screen.');
+  assert.equal(r.examples[0].file, 'recipes/login/01-sign-in.tsx');
+  assert.ok(r.body.startsWith('Why prose.'));
+  assert.ok(!r.body.includes('generated:'));
+  assert.ok(!site.guides.some((g) => g.slug === 'login'));
+});
+
+test('a recipe doc fed back is stable', () => {
+  const root = recipeFixture();
+  const a = generate(root).get('docs/recipes/login.md');
+  put(root, 'docs/recipes/login.md', a);
+  assert.equal(generate(root).get('docs/recipes/login.md'), a);
+});
+
+test('a recipe doc with no examples throws', () => {
+  assert.throws(
+    () => generate(recipeFixture({ folder: false })),
+    /docs\/recipes\/login\.md: no examples in recipes\/login\//
+  );
+});
+
+test('a recipe folder with no doc throws', () => {
+  assert.throws(
+    () => generate(recipeFixture({ doc: false })),
+    /recipes\/login\/: no docs\/recipes\/login\.md/
+  );
+});
+
+test('category Recipe outside docs/recipes throws', () => {
+  const root = fixture();
+  put(root, 'docs/stray.md', RECIPE_DOC);
+  assert.throws(() => generate(root), /docs\/stray\.md: category Recipe belongs in docs\/recipes\//);
+});
+
+test('a doc in docs/recipes must have category Recipe', () => {
+  const root = recipeFixture();
+  put(root, 'docs/recipes/login.md', RECIPE_DOC.replace('category: Recipe', 'category: Guide'));
+  assert.throws(() => generate(root), /docs\/recipes\/login\.md: category must be Recipe/);
+});
+
+test('a fixture without recipes/ gives recipes: []', () => {
+  const site = JSON.parse(generate(fixture()).get('gallery/generated/site-data.json'));
+  assert.deepEqual(site.recipes, []);
+});

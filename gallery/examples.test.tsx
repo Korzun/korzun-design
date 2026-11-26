@@ -22,7 +22,9 @@ describe('examples', () => {
   }
 
   it('lists every example file in the generated site data', () => {
-    const listed = new Set(siteData.modules.flatMap((m) => m.examples.map((e) => e.file)));
+    const listed = new Set(
+      [...siteData.modules, ...siteData.recipes].flatMap((o) => o.examples.map((e) => e.file))
+    );
     expect(Object.keys(exampleComponents).filter((file) => !listed.has(file))).toEqual([]);
   });
 });

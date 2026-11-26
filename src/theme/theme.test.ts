@@ -309,3 +309,10 @@ describe('fontWeight.regular token', () => {
     expect(darkTheme.fontWeight.regular).toBe(400);
   });
 });
+
+describe('layout.formWidth', () => {
+  it('is 400px, narrower than a dialog, in both themes', () => {
+    expect(lightTheme.layout.formWidth).toBe('400px');
+    expect(darkTheme.layout.formWidth).toBe('400px');
+  });
+});

@@ -251,9 +251,10 @@ const close = (name) => `<!-- /generated:${name} -->`;
  * @param {ModuleInfo} mod
  * @param {string} file used in error messages
  * @param {{ typeDocs?: Map<string, string> }} [ctx] passed to each region's renderer
+ * @param {readonly string[]} [names] the regions this doc has, in REGIONS order (a recipe has only `examples`)
  */
-export function replaceRegions(md, mod, file, ctx = {}) {
-  const spans = REGIONS.map((name) => {
+export function replaceRegions(md, mod, file, ctx = {}, names = REGIONS) {
+  const spans = names.map((name) => {
     const start = md.indexOf(open(name));
     if (start === -1) throw new Error(`${file}: missing ${open(name)}`);
     const contentStart = start + open(name).length;

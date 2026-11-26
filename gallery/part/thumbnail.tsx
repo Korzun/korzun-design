@@ -1,7 +1,7 @@
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import cx from 'classnames';
 
-import type { ModuleInfo } from '../../scripts/docs-gen/types.js';
+import type { ExampleOwner } from '../data.js';
 import { frameSrc, MOBILE_WIDTH, useFrameTheme } from '../frame-url.js';
 
 // The frame lays out larger than the box and is scaled down to fit, so the
@@ -38,15 +38,15 @@ const useStyle = createUseStyles((theme: Theme) => ({
 }));
 
 export type ThumbnailProps = {
-  /** The module whose first example the thumbnail shows. */
-  mod: ModuleInfo;
+  /** The module or recipe whose first example the thumbnail shows. */
+  owner: ExampleOwner;
 };
 
-/** A lazy, non-interactive, scaled-down live render of a module's first example. */
-export const Thumbnail = ({ mod }: ThumbnailProps) => {
+/** A lazy, non-interactive, scaled-down live render of the first example of a module or recipe. */
+export const Thumbnail = ({ owner }: ThumbnailProps) => {
   const styles = useStyle();
   const [theme, onLoad] = useFrameTheme();
-  const first = mod.examples[0];
+  const first = owner.examples[0];
   if (!first) return <div className={styles.box} />;
 
   return (
@@ -54,8 +54,8 @@ export const Thumbnail = ({ mod }: ThumbnailProps) => {
       <iframe
         className={cx(styles.frame, first.viewport === 'mobile' && styles.mobile)}
         data-viewport={first.viewport}
-        src={frameSrc(mod.slug, first.slug, theme, 'center')}
-        title={`${mod.title}: ${first.title}`}
+        src={frameSrc(owner.framePath, first.slug, theme, 'center')}
+        title={`${owner.title}: ${first.title}`}
         loading="lazy"
         tabIndex={-1}
         aria-hidden

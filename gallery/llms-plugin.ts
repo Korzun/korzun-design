@@ -20,7 +20,7 @@ const item = (title: string, url: string, description: string) =>
 /**
  * `llms.txt` in the llmstxt.org format: the package name, a summary, AGENTS.md
  * under `## Start here`, one link per documented module grouped by category,
- * the guides, and the full file under `## Optional`. Links are absolute under
+ * the guides, the recipes, and the full file under `## Optional`. Links are absolute under
  * `siteUrl`.
  */
 export const buildLlmsTxt = (data: SiteData, siteUrl: string): string => {
@@ -46,6 +46,10 @@ export const buildLlmsTxt = (data: SiteData, siteUrl: string): string => {
   sections.push({
     title: 'Guides',
     items: data.guides.map((g) => item(g.title, `${siteUrl}${g.docPath}`, g.description)),
+  });
+  sections.push({
+    title: 'Recipes',
+    items: data.recipes.map((r) => item(r.title, `${siteUrl}${r.docPath}`, r.description)),
   });
   sections.push({
     title: 'Optional',
