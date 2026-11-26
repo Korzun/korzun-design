@@ -111,7 +111,7 @@ export default function Sizes() {
 
 ### Decorative
 
-Alone, a spinner needs a `label` that names the load: it is a `role="status"` that a screen reader announces. Beside text that already names the load, set `decorative` so it is hidden from assistive tech; `label` is then ignored.
+Beside text that already names the load, set `decorative` so the spinner is hidden from assistive tech and `label` is ignored. With it off, the spinner is a `role="status"` that a screen reader announces by its `label`, here a second time.
 
 ```tsx
 import { Inline, Spinner, Stack, Text } from '@korzun/design/component';
