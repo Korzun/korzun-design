@@ -132,7 +132,7 @@ describe('ExampleBlock code', () => {
       <ThemeProvider identity="test">
         <ToastProvider>
           <MemoryRouter>
-            <ExampleBlock mod={button} example={button.examples[0]} />
+            <ExampleBlock owner={moduleOwner(button)} example={button.examples[0]!} />
           </MemoryRouter>
         </ToastProvider>
       </ThemeProvider>
