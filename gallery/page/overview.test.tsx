@@ -61,7 +61,7 @@ describe('OverviewPage', () => {
   it('filters by the search box and says when nothing matches', async () => {
     mount();
     const search = screen.getByRole('textbox', { name: 'Search components' });
-    await userEvent.type(search, 'alert');
+    await userEvent.type(search, 'tinted');
     expect(screen.getAllByRole('heading', { level: 2 }).map((h) => h.textContent)).toEqual([
       'Feedback',
     ]);
