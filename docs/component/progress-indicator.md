@@ -29,6 +29,8 @@ a `Button`), a pull-to-refresh indicator (`usePullToRefresh`).
   "100%" next to a sliver or near-full pie (e.g. `0.996` shows "100%", not
   "Completed").
 - Passing a percentage (`42`) clamps to 1 and shows "Completed".
+- A value that is not a finite number (`NaN`, or `undefined` from a cleared
+  field) shows "Not started".
 
 ### Styling
 
@@ -195,7 +197,7 @@ export default function InARow() {
 | --- | --- | --- | --- |
 | `ariaLabel` (required) | `string` |  | Accessible name of the progressbar: say what progress it is (`Reading progress for ${title}`), because a bare "42%" means nothing out of context. Not used at exactly 0 or 1, where no progressbar renders. |
 | `size` | `number` | `40` | Width and height of the SVG in px. The label's font size is fixed (`fontSize.sm`) and does not scale. |
-| `value` (required) | `number` |  | A **fraction from 0 to 1**, not a percentage (`0.42` shows "42%"). Clamped to 0–1, so `42` shows "Completed". |
+| `value` (required) | `number` |  | A **fraction from 0 to 1**, not a percentage (`0.42` shows "42%"). Clamped to 0–1, so `42` shows "Completed"; a value that is not a finite number (`NaN`, `undefined`, `Infinity`) shows "Not started". |
 
 <!-- /generated:props -->
 
@@ -216,6 +218,6 @@ export default function InARow() {
 
 ## Changelog
 
-No changes yet.
+- **0.5.2** (2026-11-26): A `value` that is not a finite number (`NaN`, `undefined`, `Infinity`) shows "Not started" instead of "NaN%".
 
 <!-- /generated:changelog -->

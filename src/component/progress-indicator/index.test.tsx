@@ -63,3 +63,15 @@ describe('ProgressIndicator', () => {
     ).toBeInTheDocument();
   });
 });
+
+describe('ProgressIndicator with a value that is not a finite number', () => {
+  it.each([Number.NaN, undefined as unknown as number, Infinity, -Infinity])(
+    'shows "Not started" for %s, never NaN%%',
+    (value) => {
+      renderWithProviders(<ProgressIndicator value={value} ariaLabel="Progress" />);
+      expect(screen.getByText('Not started')).toBeInTheDocument();
+      expect(screen.queryByText(/NaN/)).not.toBeInTheDocument();
+      expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
+    }
+  );
+});

@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.5.2 — 2026-11-26
+
+- [TextInput, TextArea, NumberInput] The visible `label` is linked to its field (`htmlFor` and a generated `id`), so it names the field and clicking it focuses the field. A new `ariaLabel` prop names a field that has no visible `label`; with a `label` it is ignored.
+- [TextInput] `action` works: clicking its icon button calls `action.action`. `TextInputAction` gains an optional `ariaLabel` naming that button.
+- [CollapsibleSection] Clicks and Enter/Space inside an action no longer reach the header, so no action toggles the section and a native button or link keeps its key press. Actions sit in a `display: contents` wrapper, so the layout is unchanged.
+- [ProgressIndicator] A `value` that is not a finite number (`NaN`, `undefined`, `Infinity`) shows "Not started" instead of "NaN%".
+
 ## 0.5.1 — 2026-11-26
 
 - [General] Docs: every module doc has front matter and generated import, examples, props, tokens and changelog sections; prop notes moved into JSDoc; docs site with overview, component pages, llms.txt and llms-full.txt replaces the story gallery. The props types of `Card`, `CardRow`, `CollapsibleSection`, `ConfirmModal`, `Page` and `Button` declare `children` explicitly, so it has a doc line; the types are equivalent, no change for callers.

@@ -1,7 +1,7 @@
 /** Actions
- * `actions` is an array of keyed elements shown at the header's right end. A
- * `Button` stops its click and key press from reaching the header, so Add does
- * not toggle the section.
+ * `actions` is an array of keyed elements shown at the header's right end. Clicks
+ * and key presses inside an action stay with it, so Add does not toggle the
+ * section.
  */
 import { CollapsibleSection, Stack, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';

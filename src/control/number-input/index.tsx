@@ -1,11 +1,13 @@
 import cx from 'classnames';
-import { useCallback, useState } from 'react';
+import { useCallback, useId, useState } from 'react';
 
 import { isNumeric } from '../../utils.js';
 import { useStyle } from './style.js';
 
 export type NumberInputProps = {
-  /** Required key: pass `label={undefined}` for none. Not linked to the input (no `htmlFor`). */
+  /** Accessible name of the input when `label` is `undefined`. With a `label`, the label names it and this is ignored. */
+  ariaLabel?: string;
+  /** Required key: pass `label={undefined}` for none. Linked to the input so it names it. */
   label: string | undefined;
   /** `horizontal` and `vertical` paint a shaded card-header row with `md` corners; `inline` paints nothing. */
   layout?: 'horizontal' | 'vertical' | 'inline';
@@ -31,6 +33,7 @@ export type NumberInputProps = {
  * that calls `onChange` with the parsed value while the text validates.
  */
 export const NumberInput = ({
+  ariaLabel,
   label,
   layout = 'horizontal',
   name,
@@ -41,6 +44,7 @@ export const NumberInput = ({
   value,
 }: NumberInputProps) => {
   const style = useStyle();
+  const id = useId();
 
   const [isValid, setIsValid] = useState<boolean>(true);
   const [internalValue, setInternalValue] = useState<string | undefined>(
@@ -76,9 +80,13 @@ export const NumberInput = ({
   return (
     <div className={cx(style.root, style[layout])}>
       {label && (
-        <label className={cx(style.label, { [`${style.danger}`]: !isValid })}>{label}</label>
+        <label htmlFor={id} className={cx(style.label, { [`${style.danger}`]: !isValid })}>
+          {label}
+        </label>
       )}
       <input
+        aria-label={label ? undefined : ariaLabel}
+        id={id}
         name={name}
         className={cx(style.input, { [`${style.danger}`]: !isValid })}
         onChange={handleValueChange}

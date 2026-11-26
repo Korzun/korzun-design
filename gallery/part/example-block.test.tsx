@@ -81,3 +81,21 @@ describe('ExampleBlock', () => {
     expect(getComputedStyle(wide).width).toBe('100%');
   });
 });
+
+describe('ExampleBlock code', () => {
+  it('shows the example code highlighted, text unchanged', () => {
+    const { container, getByRole } = render(
+      <ThemeProvider identity="test">
+        <ToastProvider>
+          <MemoryRouter>
+            <ExampleBlock mod={button} example={button.examples[0]} />
+          </MemoryRouter>
+        </ToastProvider>
+      </ThemeProvider>
+    );
+    fireEvent.click(getByRole('button', { name: 'Show code' }));
+    const code = container.querySelector('pre code')!;
+    expect(code.textContent).toBe(button.examples[0].code);
+    expect(code.querySelector('[style*="--code-token-keyword"]')).not.toBeNull();
+  });
+});

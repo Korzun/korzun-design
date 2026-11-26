@@ -5,6 +5,7 @@ import { useMemo, type MouseEvent } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 
 import { anchor } from '../../scripts/docs-gen/slug.mjs';
+import { highlight, useHighlightStyle } from './highlight.js';
 
 // Schemes a rendered link may use; any other (`javascript:`, `data:`) becomes `#`.
 const SAFE_SCHEMES = new Set(['http:', 'https:', 'mailto:']);
@@ -81,6 +82,12 @@ const render = (source: string, from: string, inline: boolean, route: string): s
       heading({ tokens, depth }: Tokens.Heading) {
         const id = slug(plainText(tokens));
         return `<h${depth} id="${id}">${this.parser.parseInline(tokens)}</h${depth}>\n`;
+      },
+      // Fenced code is highlighted; unfenced or unknown-language code is only escaped.
+      code({ text, lang }: Tokens.Code) {
+        // Only word characters reach the class attribute.
+        const language = (lang ?? '').split(/\s/)[0]!.replace(/[^\w-]/g, '') || 'plaintext';
+        return `<pre><code class="language-${language}">${highlight(text, language)}</code></pre>\n`;
       },
       // The docs have no raw HTML; any that appears shows as text, never as markup.
       html({ text }: Tokens.HTML | Tokens.Tag) {
@@ -177,6 +184,7 @@ export const Markdown = ({
   className,
 }: MarkdownProps) => {
   const styles = useStyle();
+  const tokens = useHighlightStyle();
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const html = useMemo(
@@ -202,7 +210,7 @@ export const Markdown = ({
   const Tag = inline ? 'span' : 'div';
   return (
     <Tag
-      className={cx(styles.text, !inline && styles.root, className)}
+      className={cx(styles.text, !inline && styles.root, tokens.tokens, className)}
       onClick={onClick}
       // Repo docs and JSDoc, with raw HTML escaped and link schemes allowlisted above.
       dangerouslySetInnerHTML={{ __html: html }}

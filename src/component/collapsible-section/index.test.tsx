@@ -86,3 +86,65 @@ describe('CollapsibleSection', () => {
     expect(screen.getByText('3 items')).toBeInTheDocument();
   });
 });
+
+describe('CollapsibleSection actions', () => {
+  it('a native button action fires without toggling the section', async () => {
+    const onAction = vi.fn();
+    const onOpenToggle = vi.fn();
+    renderWithProviders(
+      <CollapsibleSection
+        title="Shelf"
+        onOpenToggle={onOpenToggle}
+        actions={[
+          <button key="add" type="button" onClick={onAction}>
+            Add
+          </button>,
+        ]}
+      >
+        <p>Body</p>
+      </CollapsibleSection>
+    );
+    await userEvent.click(screen.getByRole('button', { name: 'Add' }));
+    expect(onAction).toHaveBeenCalledTimes(1);
+    expect(onOpenToggle).not.toHaveBeenCalled();
+    expect(screen.queryByText('Body')).not.toBeInTheDocument();
+  });
+
+  it('Enter and Space on a focused action reach the action, not the header', async () => {
+    const onAction = vi.fn();
+    const onOpenToggle = vi.fn();
+    renderWithProviders(
+      <CollapsibleSection
+        title="Shelf"
+        onOpenToggle={onOpenToggle}
+        actions={[
+          <button key="add" type="button" onClick={onAction}>
+            Add
+          </button>,
+        ]}
+      />
+    );
+    screen.getByRole('button', { name: 'Add' }).focus();
+    await userEvent.keyboard('{Enter}');
+    await userEvent.keyboard(' ');
+    expect(onAction).toHaveBeenCalledTimes(2);
+    expect(onOpenToggle).not.toHaveBeenCalled();
+  });
+
+  it('a link action does not toggle the section', async () => {
+    const onOpenToggle = vi.fn();
+    renderWithProviders(
+      <CollapsibleSection
+        title="Shelf"
+        onOpenToggle={onOpenToggle}
+        actions={[
+          <a key="all" href="#all">
+            All
+          </a>,
+        ]}
+      />
+    );
+    await userEvent.click(screen.getByRole('link', { name: 'All' }));
+    expect(onOpenToggle).not.toHaveBeenCalled();
+  });
+});

@@ -1,12 +1,14 @@
 import cx from 'classnames';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useId, useRef, useState } from 'react';
 
 import { useStyle } from './style.js';
 
 export type TextAreaProps = {
   /** Grows to fit content, so it never scrolls. The minimum height is 7rem with it and 10rem without, set inline so a class can't lower it. */
   autoResize?: boolean;
-  /** Visible label. Not linked to the textarea (no `htmlFor`). */
+  /** Accessible name of the textarea when there is no visible `label`. With a `label`, the label names it and this is ignored. */
+  ariaLabel?: string;
+  /** Visible label, linked to the textarea so it names it. */
   label?: string;
   /** `horizontal` and `vertical` paint a shaded card-header row with `md` corners; `inline` paints nothing. */
   layout?: 'horizontal' | 'vertical' | 'inline';
@@ -33,6 +35,7 @@ export type TextAreaProps = {
  * Keeps its own text and re-syncs from `value` only when the prop changes.
  */
 export const TextArea = ({
+  ariaLabel,
   autoResize = false,
   label,
   layout = 'horizontal',
@@ -46,6 +49,7 @@ export const TextArea = ({
   variant = 'outlined',
 }: TextAreaProps) => {
   const style = useStyle();
+  const id = useId();
   const ref = useRef<HTMLTextAreaElement>(null);
 
   const [isValid, setIsValid] = useState<boolean>(true);
@@ -92,11 +96,15 @@ export const TextArea = ({
   return (
     <div className={cx(style.root, style[layout])}>
       {label && (
-        <label className={cx(style.label, { [`${style.danger}`]: !isValid })}>{label}</label>
+        <label htmlFor={id} className={cx(style.label, { [`${style.danger}`]: !isValid })}>
+          {label}
+        </label>
       )}
       <div className={style.textareaWrapper}>
         <textarea
+          aria-label={label ? undefined : ariaLabel}
           className={cx(style.input, style[variant], { [style.autoResize]: autoResize })}
+          id={id}
           maxLength={maxLength}
           name={name}
           onChange={handleValueChange}

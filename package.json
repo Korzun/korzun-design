@@ -1,6 +1,6 @@
 {
   "name": "@korzun/design",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "type": "module",
   "license": "SEE LICENSE IN LICENSE",
   "repository": {
@@ -98,6 +98,7 @@
     "react-dom": "^19.2.8",
     "react-jss": "^10.10.0",
     "react-router": "^8.3.0",
+    "shiki": "^4.6.0",
     "typescript": "^7.0.2",
     "vite": "^8.3.5",
     "vitest": "^4.1.12"

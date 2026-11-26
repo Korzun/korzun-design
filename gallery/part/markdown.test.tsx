@@ -124,3 +124,20 @@ describe('Markdown', () => {
     expect(fireEvent.click(link)).toBe(true);
   });
 });
+
+describe('Markdown fenced code', () => {
+  it('highlights a tsx fence', () => {
+    const { container } = mount('```tsx\nconst n = 1;\n```');
+    const code = container.querySelector('pre code')!;
+    expect(code).toHaveClass('language-tsx');
+    expect(code.querySelector('[style*="--code-token-keyword"]')).toHaveTextContent('const');
+  });
+
+  it('escapes a fence in an unknown language and keeps its info string out of the markup', () => {
+    const { container } = mount('```x" onclick="alert(1)\n<b>hi</b>\n```');
+    const code = container.querySelector('pre code')!;
+    expect(code.getAttribute('onclick')).toBeNull();
+    expect(code.querySelector('b')).toBeNull();
+    expect(code).toHaveTextContent('<b>hi</b>');
+  });
+});

@@ -1,16 +1,18 @@
 import cx from 'classnames';
-import { useCallback, useState } from 'react';
+import { useCallback, useId, useState } from 'react';
 
 import { IconProps } from '../../icon/index.js';
 import { Button } from '../button/index.js';
 import { useStyle } from './style.js';
 
-/** Trailing icon button of a `TextInput`. Broken: `action` is never called. */
+/** Trailing icon button of a `TextInput`. */
 type Action = {
   /** Icon component, not an element. */
   icon: React.ComponentType<IconProps>;
-  /** Never wired up: clicking the icon does nothing. */
+  /** Called when the icon button is clicked. */
   action: () => void;
+  /** Accessible name of the icon button (`Clear search`); an icon alone has none. */
+  ariaLabel?: string;
   /** Red icon. */
   danger?: boolean;
 };
@@ -18,13 +20,15 @@ type Action = {
 export type { Action as TextInputAction };
 
 export type TextInputProps = {
-  /** Broken, do not use: the icon button is drawn but its `action` callback is never wired up. */
+  /** An icon button inside the field's right end, such as clear or reveal. */
   action?: Action;
+  /** Accessible name of the input when there is no visible `label`. With a `label`, the label names it and this is ignored. */
+  ariaLabel?: string;
   /** Passed through to the input. */
   autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters';
   /** Passed through to the input. */
   autoComplete?: React.HTMLInputAutoCompleteAttribute | undefined;
-  /** Visible label. Not linked to the input (no `htmlFor`). */
+  /** Visible label, linked to the input so it names it. */
   label?: string;
   /** `horizontal` and `vertical` paint a shaded card-header row with `md` corners; `inline` paints nothing. */
   layout?: 'horizontal' | 'vertical' | 'inline';
@@ -56,6 +60,7 @@ export const TextInput = ({
   autoCapitalize,
   autoComplete,
   action,
+  ariaLabel,
   label,
   layout = 'horizontal',
   maxLength,
@@ -69,6 +74,7 @@ export const TextInput = ({
   value = '',
 }: TextInputProps) => {
   const style = useStyle();
+  const id = useId();
 
   const [isValid, setIsValid] = useState<boolean>(true);
   const [internalValue, setInternalValue] = useState<string | undefined>(value);
@@ -109,15 +115,21 @@ export const TextInput = ({
 
   return (
     <div className={cx(style.root, style[layout])}>
-      {label && <label className={cx(style.label, { [style.danger]: !isValid })}>{label}</label>}
+      {label && (
+        <label htmlFor={id} className={cx(style.label, { [style.danger]: !isValid })}>
+          {label}
+        </label>
+      )}
       <div className={style.inputContainer}>
         <input
           autoCapitalize={autoCapitalize}
+          aria-label={label ? undefined : ariaLabel}
           autoComplete={autoComplete}
           className={cx(style.input, {
             [style.danger]: !isValid,
             [style.isAction]: action !== undefined,
           })}
+          id={id}
           maxLength={maxLength}
           name={name}
           onChange={handleValueChange}
@@ -128,7 +140,12 @@ export const TextInput = ({
         />
         {action && (
           <div className={cx(style.action)}>
-            <Button type="link" danger={action.danger}>
+            <Button
+              type="link"
+              danger={action.danger}
+              ariaLabel={action.ariaLabel}
+              onClick={action.action}
+            >
               <action.icon height={20} width={20} strokeWidth={2} />
             </Button>
           </div>

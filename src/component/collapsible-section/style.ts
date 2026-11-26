@@ -33,4 +33,8 @@ export const useStyle = createUseStyles((theme: Theme) => ({
   spacer: {
     flexGrow: 1,
   },
+  // Keeps each action a flex item of the header, as before the wrapper existed.
+  actions: {
+    display: 'contents',
+  },
 }));
