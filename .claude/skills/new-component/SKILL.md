@@ -13,9 +13,9 @@ has one checklist slot per section; an empty slot means the work is not done.
 Below, `<area>` is `control` or `component`, `<slug>` the kebab-case folder
 (`checkbox`), `<Name>` the exported value (`Checkbox`).
 
-**This branch supersedes two CLAUDE.md lines.** Examples replace stories: write
-no `*.stories.tsx` (nothing reads it any more). The doc format is the one from
-the `document-component` skill, not the old `# Name` + Props table.
+**Examples replace stories; CLAUDE.md's stories rule is obsolete.** Write no
+`*.stories.tsx` (nothing reads it). The doc format is the one from the
+`document-component` skill, not the old `# Name` + Props table.
 
 Read the red flags (§9) before you start. Then read, end to end:
 `AGENTS.md` (rules 1, 2, 6, 9, 10, 11), `src/control/button/` and
@@ -49,11 +49,12 @@ When a module disagrees with an AGENTS rule, the rule wins.
   No literal hex, px or rem. A size that must track the text uses `em`
   (`'1em'`). A literal you cannot replace goes in a comment block at the top of
   the file, one line each with its reason, as Button's `style.ts` does.
-- Composition uses `Stack`/`Inline` for layout and `Text`/`Heading` for text,
-  in `index.tsx`. `display`, `gap`, `fontSize`, `fontWeight` and text `color`
-  appear in `style.ts` only for the module's own root element when that
-  element cannot hold a `div` (a `<label>` or `<button>`); a one-line comment
-  says so.
+- Layout is `Stack`/`Inline` and text is `Text`/`Heading`, composed in
+  `index.tsx`; `style.ts` never sets `gap`, `fontSize`, `fontWeight` or text
+  `color`. Inside a `<label>` or `<button>` root use `<Inline as="span">` and
+  `<Text as="span">`, or make the root itself `<Text as="label">`. `display`
+  on the root element is allowed only when no `as` value can express it, with a
+  one-line comment saying why.
 - Corners follow depth. Read `useSurfaceDepth()` and pick a class with
   `depthClass(depth)` as Button and Select do, or draw a box with
   `useSurfaceRadius()`. A fixed radius is allowed only for a glyph smaller than
@@ -95,8 +96,9 @@ module doc.
 
 ## 2. Document it (REQUIRED: the `document-component` skill)
 
-Follow `document-component` §1 to §4 and §6 exactly, with these changes for a
-module that has no old doc (its §7 is replaced by §7 below):
+Follow `document-component` §1–§4 exactly; verification is §6 below, which
+replaces its §6 (and §7 below replaces its §7). Changes for a module that has
+no old doc:
 - Its §1.1 and §5 do not apply (no old doc, no stories). The audit table's Old
   note column says "none"; the coverage row for the old `## Example` says
   "new module".
@@ -109,10 +111,10 @@ module that has no old doc (its §7 is replaced by §7 below):
 
 ## 3. AGENTS.md
 
-- Imports table: add `<Name>` to the row for its entry point, in that row's
-  style (the control row lists lowercase words, the component row backticked
-  names). oxfmt does not format Markdown: if the row grows past the column,
-  widen the header, the separator and every row by hand so the pipes align.
+- Imports table: add `<Name>` to the row for its entry point, matching the
+  neighbouring entries in that row (their case and backticks). oxfmt does not
+  format Markdown: if the row grows past the column, widen the header, the
+  separator and every row by hand so the pipes align.
 - Rule 11: if it says `<Name>` does not exist yet, remove `<Name>` from that
   sentence (keep the others).
 - The `[docs/…]|…` index lines are written by `docs:gen`; never edit them.
@@ -127,15 +129,21 @@ the import with a use in one of the `…Probe` tuples (a prop's type, as
 ## 5. Version and CHANGELOG
 
 ```
-git describe --tags --abbrev=0     # latest release, e.g. v0.5.0
+git describe --tags --abbrev=0 --match 'v*'   # latest release, e.g. v0.5.0
 node -p "require('./package.json').version"
+grep -m1 '^## ' CHANGELOG.md                 # top heading
 ```
-- Version ahead of the tag (unreleased): add the bullet under that version's
-  heading. If the unreleased bump is only a patch over the tag
-  (v0.5.0 → 0.5.1), raise it to the next minor (0.6.0): `npm version 0.6.0
-  --no-git-tag-version` and rename the heading.
-- Version equal to the tag: `npm version minor --no-git-tag-version` and add a
-  new `## X.Y.0 — $(date +%F)` heading at the top.
+The release is unreleased when `package.json`'s version or the top
+`## X.Y.Z` heading is above the tag.
+- Unreleased: add the bullet under that version's heading; if the version is
+  ahead but there is no heading for it, create `## X.Y.Z — $(date +%F)` at the
+  top. If the unreleased version is only a patch over the tag (v0.5.0 →
+  0.5.1), raise it to the next minor: `npm version <next minor>
+  --no-git-tag-version` and rename the heading to match.
+- Not unreleased (version and top heading equal the tag):
+  `npm version minor --no-git-tag-version` and add a new
+  `## X.Y.0 — $(date +%F)` heading at the top.
+- `package.json` and the top heading name the same version when you finish.
 
 Bullet: ``- [<Name>] New `<Name>` (<area>): <what it renders and its main
 props>.`` The tag is the value name, so the site links it.
@@ -182,7 +190,7 @@ props>.`` The tag is the value name, so the site links it.
 
 | Thought | Reality | Do instead |
 |---|---|---|
-| "CLAUDE.md says every control gets a stories file." | On this branch examples replace stories; a stories file is dead code. | Write `examples/`; no `*.stories.tsx`. |
+| "CLAUDE.md says every control gets a stories file." | Examples replace stories; that rule is obsolete and a stories file is dead code. | Write `examples/`; no `*.stories.tsx`. |
 | "Switch does it this way" (literal px, `display`/`gap`, fixed radius). | Old modules predate the rules; copying them copies the violation. | Follow the AGENTS rule; a needed literal gets a comment with its reason. |
 | "I'll write the doc like `switch.md`." | A doc without front matter never reaches the site, and nothing fails. | Use `document-component`'s template; check `site-data.json` (§6.2). |
 | "A hand Props table is clearer." | It duplicates the JSDoc and drifts. | JSDoc every prop; the generated region renders it. |

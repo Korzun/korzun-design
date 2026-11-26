@@ -174,9 +174,8 @@ showing all values side by side, each labelled with its value.
 
 ## 5. Delete stories
 
-`git rm src/<area>/<module>/*.stories.tsx`. Examples replace stories. On this
-branch this supersedes CLAUDE.md's per-control stories rule (Task 15 updates
-CLAUDE.md).
+`git rm src/<area>/<module>/*.stories.tsx`. Examples replace stories;
+CLAUDE.md's stories rule is obsolete.
 
 ## 6. Verify (REQUIRED, in order)
 
