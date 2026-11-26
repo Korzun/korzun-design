@@ -190,8 +190,9 @@ function findNodes(node, test, out = []) {
  * reader can import.
  */
 function createFlattener(loader, exported = new Map()) {
-  // Source text of `node`, with references to renamed exports printed by their exported name.
-  function renamedText(node, file) {
+  // Source text of `node`, with references to renamed exports printed by their
+  // exported name; whitespace squashed unless `layout` keeps it (an alias block).
+  function renamedText(node, file, layout = false) {
     const refs = findNodes(
       node,
       (n) => n.type === 'TSTypeReference' && n.typeName?.type === 'Identifier'
@@ -207,7 +208,8 @@ function createFlattener(loader, exported = new Map()) {
       text += file.src.slice(cursor, tn.start) + name;
       cursor = tn.end;
     }
-    return unReact(squash(text + file.src.slice(cursor, node.end)));
+    const out = text + file.src.slice(cursor, node.end);
+    return unReact(layout ? out : squash(out));
   }
 
   // The members of an object-shaped type node, with the file they are written in, or null.
@@ -505,7 +507,7 @@ function createFlattener(loader, exported = new Map()) {
   const aliasText = (node, file) => {
     const parts = node.type === 'TSUnionType' ? node.types : [node];
     const resolves = parts.some((t) => keyofText(t, file));
-    return resolves ? inlineType(node, file, 0) : unReact(file.src.slice(node.start, node.end));
+    return resolves ? inlineType(node, file, 0) : renamedText(node, file, true);
   };
   return { flatten, aliasText };
 }
@@ -570,4 +572,23 @@ export function extractTypeTables(dtsPath, names, readFile = defaultRead) {
     if (description) out.description = description;
     return out;
   });
+}
+
+/**
+ * The .d.ts file that declares each requested exported type, following
+ * re-exports, so a type several modules export has one defining module.
+ * @param {string} dtsPath
+ * @param {string[]} names
+ * @param {(p: string) => string} [readFile]
+ * @returns {Map<string, string>} type name -> absolute path of its declaring file
+ */
+export function declarationFiles(dtsPath, names, readFile = defaultRead) {
+  const loader = createLoader(readFile);
+  const entry = loader.load(resolve(dtsPath));
+  const out = new Map();
+  for (const name of names) {
+    const found = loader.resolveName(entry, name);
+    if (found) out.set(name, found.file.path);
+  }
+  return out;
 }

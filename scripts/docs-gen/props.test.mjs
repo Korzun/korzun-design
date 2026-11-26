@@ -541,6 +541,19 @@ export type XProps = { action?: Action; items?: Item[]; on?: (item: Item, a: Act
   assert.equal(row(t, 'on').type, '(item: ListItem, a: TextInputAction) => void');
 });
 
+test('an alias block prints a locally renamed type under its exported name', () => {
+  const src = `type Action = { danger?: boolean };
+export type { Action as TextInputAction };
+export type ActionOrName = Action | string;`;
+  const [alias] = extractTypeTables(
+    '/x/a.d.ts',
+    ['ActionOrName', 'TextInputAction'],
+    files({ '/x/a.d.ts': src })
+  );
+  assert.equal(alias.kind, 'alias');
+  assert.equal(alias.text, 'TextInputAction | string');
+});
+
 test('Record keeps its type arguments in Also accepts', () => {
   const t = table(
     `export type FieldRow = { _key: string } & Record<string, string | number | undefined>;`,
