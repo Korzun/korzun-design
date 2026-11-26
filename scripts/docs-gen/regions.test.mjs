@@ -460,3 +460,10 @@ test('tableAnchors: headed tables, aliases at the Types block, so other docs can
     ['MenuProps', 'MenuIntentProps', 'MenuItem', 'Align']
   );
 });
+
+test('replaceRegions: a second marker pair throws with file name instead of staying stale', () => {
+  const twice = `${doc()}\n<!-- generated:tokens -->\nstale\n<!-- /generated:tokens -->\n`;
+  assert.throws(() => replaceRegions(twice, mod(), 'docs/b.md'), {
+    message: 'docs/b.md: duplicate <!-- generated:tokens -->',
+  });
+});

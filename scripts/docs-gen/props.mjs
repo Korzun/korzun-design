@@ -3,6 +3,8 @@ import { dirname, resolve } from 'node:path';
 
 import { parseSync } from 'oxc-parser';
 
+import { parseOrThrow } from './parse.mjs';
+
 /** @typedef {import('./types.js').PropRow} PropRow */
 /** @typedef {import('./types.js').TypeTable} TypeTable */
 
@@ -15,7 +17,7 @@ function createLoader(readFile) {
   function load(path) {
     if (cache.has(path)) return cache.get(path);
     const src = readFile(path);
-    const { program, comments } = parseSync(path, src, { lang: 'dts' });
+    const { program, comments } = parseOrThrow(path, src, 'dts');
     const file = {
       path,
       src,

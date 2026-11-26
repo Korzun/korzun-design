@@ -1,4 +1,4 @@
-import { parseSync } from 'oxc-parser';
+import { parseOrThrow } from './parse.mjs';
 
 /** @typedef {import('./types.js').TokenRow} TokenRow */
 
@@ -38,7 +38,7 @@ function themeGroup(type) {
  */
 export function collectTokenPaths(source, file = 'style.ts') {
   const lang = file.endsWith('.tsx') ? 'tsx' : 'ts';
-  const { program } = parseSync(file, source, { lang });
+  const { program } = parseOrThrow(file, source, lang);
   const inner = new Set();
   const members = [];
   const groups = new Map();

@@ -2,8 +2,6 @@ import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { join, posix, sep } from 'node:path';
 
-import { parseSync } from 'oxc-parser';
-
 import { barrelStatements, knownNames } from './barrels.mjs';
 import { CATEGORIES } from './categories.mjs';
 import { parseChangelog, validateTags } from './changelog.mjs';
@@ -12,6 +10,7 @@ import { docFiles } from './doc-files.mjs';
 import { readExample } from './examples.mjs';
 import { parseFrontMatter } from './front-matter.mjs';
 import { listModules } from './inventory.mjs';
+import { parseOrThrow } from './parse.mjs';
 import { componentPropsTypes, declarationFiles, extractTypeTables } from './props.mjs';
 import {
   importNames,
@@ -76,7 +75,7 @@ function withDefaults(repo, mod, tables) {
  * no styles and are left out.
  */
 function valueImports(file, source) {
-  const { program } = parseSync(file, source, { lang: file.endsWith('x') ? 'tsx' : 'ts' });
+  const { program } = parseOrThrow(file, source, file.endsWith('x') ? 'tsx' : 'ts');
   const specs = [];
   for (const st of program.body) {
     if (!st.source || !String(st.source.value).startsWith('.')) continue;

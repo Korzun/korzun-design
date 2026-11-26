@@ -1,3 +1,5 @@
+import { anchor } from './slug.mjs';
+
 /** @typedef {import('./types.js').ModuleInfo} ModuleInfo */
 /** @typedef {import('./types.js').PropRow} PropRow */
 /** @typedef {import('./types.js').TypeTable} TypeTable */
@@ -26,13 +28,6 @@ function code(text) {
   const fence = '`'.repeat(longest + 1);
   const pad = /^`|`$/.test(body) ? ' ' : '';
   return `${fence}${pad}${body}${pad}${fence}`;
-}
-
-function anchor(name) {
-  return name
-    .toLowerCase()
-    .replace(/\s+/g, '-')
-    .replace(/[^a-z0-9_-]/g, '');
 }
 
 /**
@@ -264,6 +259,10 @@ export function replaceRegions(md, mod, file, ctx = {}) {
     const contentStart = start + open(name).length;
     const end = md.indexOf(close(name), contentStart);
     if (end === -1) throw new Error(`${file}: missing ${close(name)}`);
+    // A second pair would keep its stale content silently.
+    if (md.indexOf(open(name), contentStart) !== -1 || md.indexOf(close(name), end + 1) !== -1) {
+      throw new Error(`${file}: duplicate ${open(name)}`);
+    }
     return { name, start, contentStart, end };
   });
   for (let i = 1; i < spans.length; i++) {

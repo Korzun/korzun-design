@@ -1,4 +1,4 @@
-import { parseSync } from 'oxc-parser';
+import { parseOrThrow } from './parse.mjs';
 
 /** Find the function node declared as `function Name` or `const Name = (...) =>`. */
 function findComponent(program, name) {
@@ -63,7 +63,7 @@ function propsNames(target) {
  * @returns {Record<string, string>}
  */
 export function readDefaults(tsxSource, componentName) {
-  const { program } = parseSync('component.tsx', tsxSource, { lang: 'tsx' });
+  const { program } = parseOrThrow('component.tsx', tsxSource, 'tsx');
   const fn = findComponent(program, componentName);
   const pattern = fn?.params?.[0];
   const target = pattern?.type === 'AssignmentPattern' ? pattern.left : pattern;
