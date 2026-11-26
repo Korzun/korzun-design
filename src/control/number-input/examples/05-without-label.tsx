@@ -1,6 +1,6 @@
 /** Without a label
  * `label` is a required key: pass `label={undefined}` when there is no visible
- * label, and describe the field with a `placeholder`.
+ * label, name the field with `ariaLabel`, and describe it with a `placeholder`.
  */
 import { Inline, Text } from '@korzun/design/component';
 import { NumberInput } from '@korzun/design/control';
@@ -14,6 +14,7 @@ export default function WithoutLabel() {
         name="quantity"
         layout="inline"
         label={undefined}
+        ariaLabel="Quantity"
         placeholder="Quantity"
         value={quantity}
         onChange={setQuantity}

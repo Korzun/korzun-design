@@ -1,7 +1,7 @@
 import { useStyle } from './style.js';
 
 export type ProgressIndicatorProps = {
-  /** A **fraction from 0 to 1**, not a percentage (`0.42` shows "42%"). Clamped to 0–1, so `42` shows "Completed". */
+  /** A **fraction from 0 to 1**, not a percentage (`0.42` shows "42%"). Clamped to 0–1, so `42` shows "Completed"; a value that is not a finite number (`NaN`, `undefined`, `Infinity`) shows "Not started". */
   value: number;
   /** Accessible name of the progressbar: say what progress it is (`Reading progress for ${title}`), because a bare "42%" means nothing out of context. Not used at exactly 0 or 1, where no progressbar renders. */
   ariaLabel: string;
@@ -25,7 +25,8 @@ const sectorPath = (pct: number): string => {
 /** A small pie-style progress mark plus a "Not started" / "N%" / "Completed" label. */
 export const ProgressIndicator = ({ value, ariaLabel, size = 40 }: ProgressIndicatorProps) => {
   const style = useStyle();
-  const clamped = Math.min(100, Math.max(0, value * 100));
+  // NaN or undefined (a cleared field) would otherwise print "NaN%".
+  const clamped = Number.isFinite(value) ? Math.min(100, Math.max(0, value * 100)) : 0;
 
   return (
     <div className={style.root}>

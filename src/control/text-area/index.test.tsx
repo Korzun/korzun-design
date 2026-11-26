@@ -70,3 +70,13 @@ it('does not show counter when remaining characters exceed threshold', () => {
   renderWithProviders(<TextArea name="desc" value={'a'.repeat(850)} maxLength={1000} />);
   expect(screen.queryByText(/\d+\/\d+/)).not.toBeInTheDocument();
 });
+
+it('names the textarea after its visible label', () => {
+  renderWithProviders(<TextArea name="notes" label="Notes" value={undefined} />);
+  expect(screen.getByRole('textbox', { name: 'Notes' })).toBeInTheDocument();
+});
+
+it('names a label-less textarea with ariaLabel', () => {
+  renderWithProviders(<TextArea name="notes" ariaLabel="Notes" value={undefined} />);
+  expect(screen.getByRole('textbox', { name: 'Notes' })).toBeInTheDocument();
+});

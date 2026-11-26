@@ -467,7 +467,7 @@ test(
     assert.equal(t.kind, 'object');
     assert.deepEqual(
       t.rows.map((r) => r.name),
-      ['action', 'danger', 'icon']
+      ['action', 'ariaLabel', 'danger', 'icon']
     );
   }
 );

@@ -30,3 +30,36 @@ it('renders no counter when maxLength is not set', () => {
   renderWithProviders(<TextInput name="name" value={'a'.repeat(95)} />);
   expect(screen.queryByText(counter)).not.toBeInTheDocument();
 });
+
+it('names the input after its visible label', () => {
+  renderWithProviders(<TextInput name="title" label="Title" value={undefined} />);
+  expect(screen.getByRole('textbox', { name: 'Title' })).toBeInTheDocument();
+});
+
+it('names a label-less input with ariaLabel', () => {
+  renderWithProviders(<TextInput name="q" ariaLabel="Search books" value={undefined} />);
+  expect(screen.getByRole('textbox', { name: 'Search books' })).toBeInTheDocument();
+});
+
+it('gives two inputs with the same label distinct names', () => {
+  renderWithProviders(
+    <>
+      <TextInput name="a" label="Title" value={undefined} />
+      <TextInput name="b" label="Title" value={undefined} />
+    </>
+  );
+  const [first, second] = screen.getAllByRole('textbox', { name: 'Title' });
+  expect(first).not.toBe(second);
+  expect(first!.id).not.toBe(second!.id);
+});
+
+it('calls the action when its icon button is clicked', async () => {
+  const { default: userEvent } = await import('@testing-library/user-event');
+  const action = vi.fn();
+  const Icon = () => <svg />;
+  renderWithProviders(
+    <TextInput name="q" value={undefined} action={{ icon: Icon, action, ariaLabel: 'Clear' }} />
+  );
+  await userEvent.click(screen.getByRole('button', { name: 'Clear' }));
+  expect(action).toHaveBeenCalledTimes(1);
+});

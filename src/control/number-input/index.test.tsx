@@ -59,3 +59,17 @@ describe('NumberInput', () => {
     expect(screen.getByDisplayValue('99')).toBeInTheDocument();
   });
 });
+
+describe('NumberInput accessible name', () => {
+  it('names the input after its visible label', () => {
+    renderWithProviders(<NumberInput name="year" label="Year" value={undefined} />);
+    expect(screen.getByRole('textbox', { name: 'Year' })).toBeInTheDocument();
+  });
+
+  it('names a label-less input with ariaLabel', () => {
+    renderWithProviders(
+      <NumberInput name="year" label={undefined} ariaLabel="Year" value={undefined} />
+    );
+    expect(screen.getByRole('textbox', { name: 'Year' })).toBeInTheDocument();
+  });
+});
