@@ -48,6 +48,18 @@ const a = 1;
 
 test('an unknown @viewport value throws', () => {
   assert.throws(() => readExample('01-a.tsx', `/** T\n * @viewport tablet\n */\nx`), {
-    message: 'Example 01-a.tsx: @viewport must be "mobile", not "tablet"',
+    message: 'Example 01-a.tsx: @viewport must be "mobile" or "desktop", not "tablet"',
   });
+});
+
+test('preview.tsx reads as the module preview: slug "preview", order 0', () => {
+  const ex = readExample('src/control/button/examples/preview.tsx', `/** Preview */\nx\n`);
+  assert.equal(ex.slug, 'preview');
+  assert.equal(ex.order, 0);
+  assert.equal(ex.title, 'Preview');
+});
+
+test('@viewport desktop marks a desktop-only example', () => {
+  const ex = readExample('src/control/x/examples/preview.tsx', `/** Preview\n * @viewport desktop\n */\nx\n`);
+  assert.equal(ex.viewport, 'desktop');
 });

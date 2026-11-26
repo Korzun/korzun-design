@@ -1,5 +1,5 @@
 {
-  "version": "0.5.2",
+  "version": "0.6.0",
   "modules": [
     {
       "id": "control/back-button",
@@ -37,6 +37,15 @@
           "viewport": "mobile"
         }
       ],
+      "preview": {
+        "file": "src/control/back-button/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { BackButton } from '@korzun/design/control';\n\nexport default function Preview() {\n  return <BackButton to=\"/library\" />;\n}\n",
+        "viewport": "mobile"
+      },
       "tables": [
         {
           "name": "BackButtonProps",
@@ -155,6 +164,14 @@
           "code": "import { Button, Dialog } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function DialogFooter() {\n  const [open, setOpen] = useState(false);\n  const [deleting, setDeleting] = useState(false);\n  const close = () => {\n    setDeleting(false);\n    setOpen(false);\n  };\n  const confirm = () => {\n    setDeleting(true);\n    setTimeout(close, 1000);\n  };\n  return (\n    <>\n      <Button danger onClick={() => setOpen(true)}>\n        Delete book\n      </Button>\n      <Dialog\n        open={open}\n        onClose={close}\n        canDismiss={!deleting}\n        title=\"Delete this book?\"\n        footer={\n          <>\n            <Button type=\"text\" disabled={deleting} onClick={close}>\n              Cancel\n            </Button>\n            <Button type=\"primary\" danger loading={deleting} onClick={confirm}>\n              Delete\n            </Button>\n          </>\n        }\n      >\n        It is removed from every device. This cannot be undone.\n      </Dialog>\n    </>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/control/button/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { Inline } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\n\nexport default function Preview() {\n  return (\n    <Inline>\n      <Button type=\"primary\" onClick={() => {}}>\n        Primary\n      </Button>\n      <Button onClick={() => {}}>Default</Button>\n    </Inline>\n  );\n}\n"
+      },
       "tables": [
         {
           "name": "ButtonProps",
@@ -663,6 +680,14 @@
           "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button, ChipsInput, Dialog } from '@korzun/design/control';\nimport { useState } from 'react';\n\nconst SUBJECTS = ['Astronomy', 'Biology', 'Cooking', 'History', 'Poetry', 'Travel'];\n\nexport default function InDialog() {\n  const [open, setOpen] = useState(false);\n  const [subjects, setSubjects] = useState<string[]>([]);\n  return (\n    <Stack>\n      <Button onClick={() => setOpen(true)}>Edit subjects</Button>\n      <Text tone=\"muted\">Subjects: {subjects.join(', ') || 'none'}</Text>\n      <Dialog\n        open={open}\n        onClose={() => setOpen(false)}\n        title=\"Edit subjects\"\n        footer={\n          <Button type=\"primary\" onClick={() => setOpen(false)}>\n            Done\n          </Button>\n        }\n      >\n        <ChipsInput\n          value={subjects}\n          suggestions={SUBJECTS}\n          onChange={setSubjects}\n          placeholder=\"Add subject…\"\n        />\n      </Dialog>\n    </Stack>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/control/chips-input/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { ChipsInput } from '@korzun/design/control';\nimport { createUseStyles } from '@korzun/design/theme';\nimport { useState } from 'react';\n\nconst useStyle = createUseStyles({ box: { width: 300 } });\n\nconst SUBJECTS = ['Astronomy', 'Biology', 'Cooking', 'History', 'Poetry', 'Travel'];\n\nexport default function Preview() {\n  const styles = useStyle();\n  const [subjects, setSubjects] = useState(['History', 'Poetry']);\n  return (\n    <div className={styles.box}>\n      <ChipsInput\n        value={subjects}\n        suggestions={SUBJECTS}\n        onChange={setSubjects}\n        placeholder=\"Add subject…\"\n      />\n    </div>\n  );\n}\n"
+      },
       "tables": [
         {
           "name": "ChipsInputProps",
@@ -706,7 +731,7 @@
               "name": "layout",
               "type": "'horizontal' | 'vertical' | 'block'",
               "required": false,
-              "description": "`'block'` is the bare box, with no label. `'horizontal'` and `'vertical'` add a label on a `bg.cardHeader` row (`radius.md`), like the other fields.",
+              "description": "`'block'` is the bare box, with no label. `'horizontal'` and `'vertical'` add a label on a `bg.cardHeader` row, like the other fields. Corners follow surface depth ([corners](../corners.md)); chips are a step squarer than the box.",
               "default": "'block'"
             },
             {
@@ -1075,6 +1100,12 @@
           "dark": "1"
         },
         {
+          "path": "radius.lg",
+          "kind": "value",
+          "light": "16px",
+          "dark": "16px"
+        },
+        {
           "path": "radius.md",
           "kind": "value",
           "light": "8px",
@@ -1130,6 +1161,21 @@
         }
       ],
       "changelog": [
+        {
+          "version": "0.6.0",
+          "date": "2026-11-26",
+          "tags": [
+            "TextInput",
+            "TextArea",
+            "NumberInput",
+            "DateTimeInput",
+            "ChipsInput",
+            "SegmentedControl",
+            "Tag",
+            "Switch"
+          ],
+          "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.5.2 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px."
+        },
         {
           "version": "0.3.0",
           "date": "2026-11-22",
@@ -1204,6 +1250,14 @@
           "code": "import { Inline, Stack } from '@korzun/design/component';\nimport { Button, ConfirmModal, Switch } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function ConfirmDisabled() {\n  const [isOpen, setIsOpen] = useState(false);\n  const [understood, setUnderstood] = useState(false);\n  const close = () => {\n    setIsOpen(false);\n    setUnderstood(false);\n  };\n  return (\n    <Inline>\n      <Button onClick={() => setIsOpen(true)}>Reset library</Button>\n      <ConfirmModal\n        isOpen={isOpen}\n        title=\"Reset library?\"\n        confirmText=\"Reset\"\n        confirmDisabled={!understood}\n        danger\n        onCancel={close}\n        onConfirm={close}\n      >\n        <Stack>\n          Every book is removed from this device.\n          <Switch\n            name=\"understood\"\n            label=\"I understand\"\n            checked={understood}\n            onChange={setUnderstood}\n          />\n        </Stack>\n      </ConfirmModal>\n    </Inline>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/control/confirm-modal/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { ConfirmModal } from '@korzun/design/control';\n\nexport default function Preview() {\n  return (\n    <ConfirmModal\n      isOpen\n      title=\"Sync library?\"\n      confirmText=\"Sync now\"\n      cancelText=\"Not now\"\n      onCancel={() => {}}\n      onConfirm={() => {}}\n    >\n      This checks every connected device for new books.\n    </ConfirmModal>\n  );\n}\n"
+      },
       "tables": [
         {
           "name": "ConfirmModalProps",
@@ -1363,6 +1417,14 @@
           "code": "import { Card, Stack, Text } from '@korzun/design/component';\nimport { Button, DateTimeInput, TextInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function InACard() {\n  const [title, setTitle] = useState<string | undefined>('Dune');\n  const [publishDate, setPublishDate] = useState<string | undefined>('2023-06-06T16:30:00Z');\n  const [sent, setSent] = useState<string | null>(null);\n  return (\n    <Card\n      title=\"Publication\"\n      footer={\n        <Button\n          type=\"primary\"\n          onClick={() => setSent(`${title ?? ''}, ${publishDate ?? 'no date'}`)}\n        >\n          Save\n        </Button>\n      }\n    >\n      <Stack>\n        <TextInput name=\"title\" label=\"Title\" value={title} onChange={setTitle} />\n        <DateTimeInput\n          name=\"publishDate\"\n          label=\"Publish date\"\n          value={publishDate}\n          onChange={setPublishDate}\n        />\n        {sent !== null && <Text tone=\"success\">Sent: {sent}</Text>}\n      </Stack>\n    </Card>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/control/date-time-input/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { DateTimeInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Preview() {\n  const [value, setValue] = useState<string | undefined>('2023-06-06T09:30');\n  return (\n    <DateTimeInput\n      name=\"publishDate\"\n      label=\"Publish date\"\n      layout=\"vertical\"\n      value={value}\n      onChange={setValue}\n    />\n  );\n}\n"
+      },
       "tables": [
         {
           "name": "DateTimeInputProps",
@@ -1378,7 +1440,7 @@
               "name": "layout",
               "type": "'horizontal' | 'vertical' | 'inline'",
               "required": false,
-              "description": "`'horizontal'` and `'vertical'` paint a shaded row (`bg.cardHeader`, `radius.md`); `'inline'` paints none.",
+              "description": "`'horizontal'` and `'vertical'` paint a shaded row (`bg.cardHeader`) with corners that follow surface depth ([corners](../corners.md)); `'inline'` paints none.",
               "default": "'horizontal'"
             },
             {
@@ -1429,10 +1491,22 @@
           "dark": "2.0625rem"
         },
         {
+          "path": "radius.lg",
+          "kind": "value",
+          "light": "16px",
+          "dark": "16px"
+        },
+        {
           "path": "radius.md",
           "kind": "value",
           "light": "8px",
           "dark": "8px"
+        },
+        {
+          "path": "radius.sm",
+          "kind": "value",
+          "light": "4px",
+          "dark": "4px"
         },
         {
           "path": "recipe.input",
@@ -1471,7 +1545,23 @@
           "dark": "1"
         }
       ],
-      "changelog": []
+      "changelog": [
+        {
+          "version": "0.6.0",
+          "date": "2026-11-26",
+          "tags": [
+            "TextInput",
+            "TextArea",
+            "NumberInput",
+            "DateTimeInput",
+            "ChipsInput",
+            "SegmentedControl",
+            "Tag",
+            "Switch"
+          ],
+          "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.5.2 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px."
+        }
+      ]
     },
     {
       "id": "control/dialog",
@@ -1523,6 +1613,14 @@
           "code": "import { Inline, Stack, Text } from '@korzun/design/component';\nimport { Button, Dialog, Select, TextInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nconst SHELVES = ['Reading', 'To read', 'Finished', 'Abandoned'];\n\nexport default function Form() {\n  const [open, setOpen] = useState(false);\n  const [saving, setSaving] = useState(false);\n  const [note, setNote] = useState<string | undefined>('');\n  const [shelf, setShelf] = useState<string | undefined>('Reading');\n  const [saved, setSaved] = useState('nothing yet');\n  const save = () => {\n    setSaving(true);\n    setTimeout(() => {\n      setSaved(`${shelf ?? 'no shelf'}, note “${note ?? ''}”`);\n      setSaving(false);\n      setOpen(false);\n    }, 1000);\n  };\n  return (\n    <Stack>\n      <Inline>\n        <Button onClick={() => setOpen(true)}>Edit book</Button>\n        <Text tone=\"muted\">Saved: {saved}</Text>\n      </Inline>\n      <Dialog\n        open={open}\n        onClose={() => setOpen(false)}\n        canDismiss={!saving}\n        title=\"Edit book\"\n        footer={\n          <>\n            <Button type=\"text\" disabled={saving} onClick={() => setOpen(false)}>\n              Cancel\n            </Button>\n            <Button type=\"primary\" loading={saving} onClick={save}>\n              Save\n            </Button>\n          </>\n        }\n      >\n        <Stack>\n          <TextInput name=\"note\" label=\"Note\" layout=\"vertical\" value={note} onChange={setNote} />\n          <Select\n            name=\"shelf\"\n            label=\"Shelf\"\n            layout=\"vertical\"\n            options={SHELVES}\n            value={shelf}\n            onChange={setShelf}\n          />\n        </Stack>\n      </Dialog>\n    </Stack>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/control/dialog/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { Button, Dialog } from '@korzun/design/control';\n\nexport default function Preview() {\n  return (\n    <Dialog\n      open\n      onClose={() => {}}\n      title=\"Fixes waiting\"\n      footer={\n        <>\n          <Button type=\"text\" onClick={() => {}}>\n            Cancel\n          </Button>\n          <Button type=\"primary\" onClick={() => {}}>\n            Save\n          </Button>\n        </>\n      }\n    >\n      Three metadata fixes are waiting for review.\n    </Dialog>\n  );\n}\n"
+      },
       "tables": [
         {
           "name": "DialogProps",
@@ -1746,6 +1844,14 @@
           "code": "import { Card, Stack, Text } from '@korzun/design/component';\nimport { FieldList, type FieldRow } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function NumberAndValidation() {\n  const [rows, setRows] = useState<FieldRow[]>([\n    { _key: crypto.randomUUID(), name: 'Dune', qty: 2 },\n  ]);\n  const [invalid, setInvalid] = useState<string[]>([]);\n  return (\n    <Card title=\"Order\">\n      <Stack>\n        <FieldList\n          addLabel=\"Add item\"\n          columns={[\n            {\n              type: 'text',\n              key: 'name',\n              placeholder: 'Title (letters only)',\n              validate: (text) => /^[A-Za-z ]*$/.test(text),\n            },\n            { type: 'number', key: 'qty', placeholder: 'Quantity' },\n          ]}\n          rows={rows}\n          onAdd={() => setRows((r) => [...r, { _key: crypto.randomUUID() }])}\n          onRemove={(key) => setRows((r) => r.filter((row) => row._key !== key))}\n          onChange={(key, field, value) =>\n            setRows((r) => r.map((row) => (row._key === key ? { ...row, [field]: value } : row)))\n          }\n          onValidChange={(field, valid) =>\n            setInvalid((names) => (valid ? names.filter((n) => n !== field) : [...names, field]))\n          }\n        />\n        <Text tone=\"muted\">\n          Stored: {rows.map((row) => `${row.name ?? '–'} × ${row.qty ?? '–'}`).join(', ') || 'none'}\n        </Text>\n        <Text tone={invalid.length > 0 ? 'danger' : 'muted'}>\n          {invalid.length > 0\n            ? `Invalid: ${invalid.map((name) => name.split('.')[1]).join(', ')}`\n            : 'All fields valid'}\n        </Text>\n      </Stack>\n    </Card>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/control/field-list/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { FieldList, type FieldRow } from '@korzun/design/control';\nimport { createUseStyles } from '@korzun/design/theme';\nimport { useState } from 'react';\n\nconst useStyle = createUseStyles({ box: { width: 360 } });\n\nexport default function Preview() {\n  const styles = useStyle();\n  const [identifiers, setIdentifiers] = useState<FieldRow[]>([\n    { _key: 'isbn', scheme: 'isbn', value: '9780441172719' },\n  ]);\n  return (\n    <div className={styles.box}>\n      <FieldList\n        addLabel=\"Add identifier\"\n        columns={[\n          { type: 'text', key: 'scheme', placeholder: 'Scheme (e.g. isbn)' },\n          { type: 'text', key: 'value', placeholder: 'Value' },\n        ]}\n        rows={identifiers}\n        onAdd={() => setIdentifiers((r) => [...r, { _key: crypto.randomUUID() }])}\n        onRemove={(key) => setIdentifiers((r) => r.filter((row) => row._key !== key))}\n        onChange={(key, field, value) =>\n          setIdentifiers((r) =>\n            r.map((row) => (row._key === key ? { ...row, [field]: value } : row))\n          )\n        }\n      />\n    </div>\n  );\n}\n"
+      },
       "tables": [
         {
           "name": "FieldListProps",
@@ -1990,6 +2096,14 @@
           "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button, Dialog, Menu } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function InDialog() {\n  const [open, setOpen] = useState(false);\n  const [chosen, setChosen] = useState('nothing yet');\n  return (\n    <>\n      <Button onClick={() => setOpen(true)}>Open dialog</Button>\n      <Dialog open={open} onClose={() => setOpen(false)} title=\"Edit book\">\n        <Stack>\n          <Menu\n            trigger={(p) => <Button {...p}>Actions</Button>}\n            items={[\n              { label: 'Rename', onClick: () => setChosen('Rename') },\n              { label: 'Duplicate', onClick: () => setChosen('Duplicate') },\n              { label: 'Delete', danger: true, onClick: () => setChosen('Delete') },\n            ]}\n          />\n          <Text tone=\"muted\">Chosen: {chosen}</Text>\n        </Stack>\n      </Dialog>\n    </>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/control/menu/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { Button, Menu, type MenuTriggerProps } from '@korzun/design/control';\nimport { createUseStyles } from '@korzun/design/theme';\nimport { useEffect, useRef } from 'react';\n\n// Tall enough for the open list, so the centred thumbnail keeps it in frame.\nconst useStyle = createUseStyles({ box: { height: 170 } });\n\n// Opens the menu once on mount (the ref survives Strict Mode's second effect run).\nfunction OpenTrigger(props: MenuTriggerProps) {\n  const { onClick } = props;\n  const opened = useRef(false);\n  useEffect(() => {\n    if (opened.current) return;\n    opened.current = true;\n    onClick();\n    // Opening focuses the first item; drop that ring, the thumbnail is not interactive.\n    requestAnimationFrame(() => (document.activeElement as HTMLElement | null)?.blur());\n  }, [onClick]);\n  return <Button {...props}>Sort by</Button>;\n}\n\nexport default function Preview() {\n  const styles = useStyle();\n  return (\n    <div className={styles.box}>\n      <Menu\n        trigger={(p) => <OpenTrigger {...p} />}\n        items={[\n          { label: 'Title', onClick: () => {} },\n          { label: 'Author', onClick: () => {} },\n          { label: 'Date added', onClick: () => {} },\n        ]}\n      />\n    </div>\n  );\n}\n"
+      },
       "tables": [
         {
           "name": "MenuProps",
@@ -2490,6 +2604,14 @@
           "code": "import { Inline, Text } from '@korzun/design/component';\nimport { NumberInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function WithoutLabel() {\n  const [quantity, setQuantity] = useState<number | undefined>(undefined);\n  return (\n    <Inline>\n      <NumberInput\n        name=\"quantity\"\n        layout=\"inline\"\n        label={undefined}\n        ariaLabel=\"Quantity\"\n        placeholder=\"Quantity\"\n        value={quantity}\n        onChange={setQuantity}\n      />\n      <Text tone=\"muted\">Quantity: {quantity === undefined ? 'none' : quantity}</Text>\n    </Inline>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/control/number-input/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { NumberInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Preview() {\n  const [pages, setPages] = useState<number | undefined>(42);\n  return <NumberInput name=\"pages\" label=\"Pages\" value={pages} onChange={setPages} />;\n}\n"
+      },
       "tables": [
         {
           "name": "NumberInputProps",
@@ -2511,7 +2633,7 @@
               "name": "layout",
               "type": "'horizontal' | 'vertical' | 'inline'",
               "required": false,
-              "description": "`horizontal` and `vertical` paint a shaded card-header row with `md` corners; `inline` paints nothing.",
+              "description": "`horizontal` and `vertical` paint a shaded card-header row with corners that follow surface depth ([corners](../corners.md)); `inline` paints nothing.",
               "default": "'horizontal'"
             },
             {
@@ -2571,10 +2693,22 @@
           "dark": "2.0625rem"
         },
         {
+          "path": "radius.lg",
+          "kind": "value",
+          "light": "16px",
+          "dark": "16px"
+        },
+        {
           "path": "radius.md",
           "kind": "value",
           "light": "8px",
           "dark": "8px"
+        },
+        {
+          "path": "radius.sm",
+          "kind": "value",
+          "light": "4px",
+          "dark": "4px"
         },
         {
           "path": "recipe.input",
@@ -2608,6 +2742,21 @@
         }
       ],
       "changelog": [
+        {
+          "version": "0.6.0",
+          "date": "2026-11-26",
+          "tags": [
+            "TextInput",
+            "TextArea",
+            "NumberInput",
+            "DateTimeInput",
+            "ChipsInput",
+            "SegmentedControl",
+            "Tag",
+            "Switch"
+          ],
+          "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.5.2 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px."
+        },
         {
           "version": "0.5.2",
           "date": "2026-11-26",
@@ -2670,6 +2819,15 @@
           "code": "import { Card, Page, Text } from '@korzun/design/component';\nimport { useState } from 'react';\n\nexport default function InPage() {\n  const [message, setMessage] = useState('Nothing chosen yet.');\n  return (\n    <Page\n      headerActions={[\n        {\n          label: 'Read',\n          onClick: () => setMessage('Read chosen'),\n          primary: true,\n          align: 'leading',\n        },\n        { label: 'Edit', onClick: () => setMessage('Edit chosen'), primary: true },\n        { label: 'Download', onClick: () => setMessage('Download chosen') },\n        {\n          label: 'Delete',\n          onClick: () => setMessage('Delete chosen'),\n          danger: true,\n          separatorBefore: true,\n        },\n      ]}\n    >\n      <Card title=\"Dune\">\n        <Text>{message}</Text>\n      </Card>\n    </Page>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/control/page-actions-bar/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { PageActionsBar } from '@korzun/design/control';\n\nexport default function Preview() {\n  return (\n    <PageActionsBar\n      items={[\n        { label: 'Read', onClick: () => {}, primary: true, align: 'leading' },\n        { label: 'Edit', onClick: () => {}, primary: true },\n        { label: 'Download', onClick: () => {} },\n        { label: 'Delete', onClick: () => {}, danger: true, separatorBefore: true },\n      ]}\n    />\n  );\n}\n",
+        "viewport": "desktop"
+      },
       "tables": [
         {
           "name": "PageActionsBarProps",
@@ -2831,6 +2989,15 @@
           "viewport": "mobile"
         }
       ],
+      "preview": {
+        "file": "src/control/page-actions-menu/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { PageActionsMenu } from '@korzun/design/control';\nimport { createUseStyles } from '@korzun/design/theme';\nimport { useEffect, useRef } from 'react';\n\n// Tall enough for the open list, so the centred thumbnail keeps it in frame.\nconst useStyle = createUseStyles({ box: { height: 190 } });\n\nexport default function Preview() {\n  const styles = useStyle();\n  const box = useRef<HTMLDivElement>(null);\n  const opened = useRef(false);\n  // Opens the menu once on mount (the ref survives Strict Mode's second effect run).\n  useEffect(() => {\n    if (opened.current) return;\n    opened.current = true;\n    box.current?.querySelector('button')?.click();\n    // Opening focuses the first item; drop that ring, the thumbnail is not interactive.\n    requestAnimationFrame(() => (document.activeElement as HTMLElement | null)?.blur());\n  }, []);\n  return (\n    <div ref={box} className={styles.box}>\n      <PageActionsMenu\n        items={[\n          { label: 'Edit', onClick: () => {} },\n          { label: 'Download', onClick: () => {} },\n          { label: 'Share', onClick: () => {} },\n        ]}\n      />\n    </div>\n  );\n}\n",
+        "viewport": "mobile"
+      },
       "tables": [
         {
           "name": "PageActionsMenuProps",
@@ -3027,6 +3194,14 @@
           "code": "import { Card, Stack, Text } from '@korzun/design/component';\nimport { PageFooterActions, TextInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function SubmitAForm() {\n  const [title, setTitle] = useState<string | undefined>('Dune');\n  const [author, setAuthor] = useState<string | undefined>('Frank Herbert');\n  const [saving, setSaving] = useState(false);\n  const [status, setStatus] = useState('Not saved');\n  const hasInvalidFields = !title?.trim() || !author?.trim();\n  return (\n    <Stack>\n      <form\n        id=\"book-form\"\n        action={async (data) => {\n          setSaving(true);\n          await new Promise((resolve) => setTimeout(resolve, 1500));\n          setSaving(false);\n          setStatus(`Saved ${String(data.get('title'))}`);\n        }}\n      >\n        <Stack>\n          <Card title=\"Details\">\n            <TextInput name=\"title\" label=\"Title\" value={title} onChange={setTitle} />\n          </Card>\n          <Card title=\"Identifiers\">\n            <TextInput name=\"author\" label=\"Author\" value={author} onChange={setAuthor} />\n          </Card>\n        </Stack>\n      </form>\n      <PageFooterActions\n        items={[\n          { label: 'Cancel', onClick: () => setStatus('Cancelled'), disabled: saving },\n          {\n            label: saving ? 'Saving…' : 'Save',\n            onClick: () => {},\n            submit: true,\n            form: 'book-form',\n            emphasis: true,\n            loading: saving,\n            disabled: hasInvalidFields,\n          },\n        ]}\n      />\n      <Text tone=\"muted\">{status}</Text>\n    </Stack>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/control/page-footer-actions/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { PageFooterActions } from '@korzun/design/control';\n\nexport default function Preview() {\n  return (\n    <PageFooterActions\n      items={[\n        { label: 'Cancel', onClick: () => {} },\n        { label: 'Save', onClick: () => {}, emphasis: true },\n      ]}\n    />\n  );\n}\n"
+      },
       "tables": [
         {
           "name": "PageFooterActionsProps",
@@ -3198,6 +3373,14 @@
           "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button, Popover } from '@korzun/design/control';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\nimport { useRef, useState } from 'react';\n\nconst useStyle = createUseStyles((theme: Theme) => ({\n  panel: {\n    backgroundColor: theme.color.bg.card,\n    border: `1px solid ${theme.color.border.strong}`,\n    borderRadius: theme.radius.md,\n    boxShadow: theme.shadow.hoverLift,\n    padding: theme.space.md,\n  },\n}));\n\nexport default function WithoutOnClose() {\n  const styles = useStyle();\n  const anchor = useRef<HTMLElement>(null);\n  const [open, setOpen] = useState(true);\n  return (\n    <Stack align=\"start\">\n      <Button ref={anchor} onClick={() => setOpen((value) => !value)}>\n        {open ? 'Hide' : 'Show'}\n      </Button>\n      <Popover anchorRef={anchor} open={open} matchWidth={false}>\n        <div className={styles.panel}>\n          <Text>Press Escape or click outside: it stays</Text>\n        </div>\n      </Popover>\n      <Text tone=\"muted\">Open: {open ? 'yes' : 'no'}</Text>\n    </Stack>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/control/popover/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { Stack } from '@korzun/design/component';\nimport { Button, Popover } from '@korzun/design/control';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\nimport { useRef } from 'react';\n\nconst useStyle = createUseStyles((theme: Theme) => ({\n  // Tall enough for the open panel, so the centred thumbnail keeps it in frame.\n  box: { height: 175 },\n  panel: {\n    backgroundColor: theme.color.bg.card,\n    border: `1px solid ${theme.color.border.strong}`,\n    borderRadius: theme.radius.md,\n    boxShadow: theme.shadow.hoverLift,\n    padding: theme.space.xs,\n  },\n}));\n\nexport default function Preview() {\n  const styles = useStyle();\n  const anchor = useRef<HTMLElement>(null);\n  return (\n    <Stack align=\"start\" className={styles.box}>\n      <Button ref={anchor} onClick={() => {}}>\n        Filters\n      </Button>\n      <Popover anchorRef={anchor} open matchWidth={false} onClose={() => {}}>\n        <div className={styles.panel}>\n          <Stack gap=\"xxs\">\n            <Button type=\"text\" onClick={() => {}}>\n              Unread\n            </Button>\n            <Button type=\"text\" onClick={() => {}}>\n              Finished\n            </Button>\n            <Button type=\"text\" onClick={() => {}}>\n              Favourites\n            </Button>\n          </Stack>\n        </div>\n      </Popover>\n    </Stack>\n  );\n}\n"
+      },
       "tables": [
         {
           "name": "PopoverProps",
@@ -3484,6 +3667,14 @@
           "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button, Dialog, Select } from '@korzun/design/control';\nimport { useState } from 'react';\n\nconst SHELVES = ['To read', 'Reading', 'Finished'];\n\nexport default function InDialog() {\n  const [open, setOpen] = useState(false);\n  const [shelf, setShelf] = useState<string | undefined>('To read');\n  return (\n    <Stack>\n      <Button onClick={() => setOpen(true)}>Move book</Button>\n      <Text tone=\"muted\">Shelf: {shelf ?? 'none'}</Text>\n      <Dialog\n        open={open}\n        onClose={() => setOpen(false)}\n        title=\"Move to shelf\"\n        footer={\n          <Button type=\"primary\" onClick={() => setOpen(false)}>\n            Done\n          </Button>\n        }\n      >\n        <Select name=\"shelf\" label=\"Shelf\" value={shelf} options={SHELVES} onChange={setShelf} />\n      </Dialog>\n    </Stack>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/control/select/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { Select } from '@korzun/design/control';\nimport { useState } from 'react';\n\nconst FRUITS = ['Apple', 'Banana', 'Cherry', 'Fig', 'Grape', 'Mango', 'Pear'];\n\nexport default function Preview() {\n  const [fruit, setFruit] = useState<string | undefined>('Banana');\n  return <Select name=\"fruit\" label=\"Fruit\" value={fruit} options={FRUITS} onChange={setFruit} />;\n}\n"
+      },
       "tables": [
         {
           "name": "SelectProps",
@@ -3854,7 +4045,7 @@
         "SegmentedOption"
       ],
       "importLine": "import { SegmentedControl, type SegmentedControlProps, type SegmentedOption } from '@korzun/design/control'",
-      "body": "A row of equal-width radio segments in a track, with a lens that slides to the\nchecked one. Options can be text, or an icon over a small caption. Optionally\nclearable, and read-only when `onChange` is omitted. Generic over the value\ntype: `V extends string`.\n\nUse something else for: many options or long labels (`Select`), on/off\n(`Switch`), actions (`Button`).\n\n## Usage\n\n### Behaviour\n\nNo `className`, no `name` (not a form field). Type options with the exported\n`SegmentedOption<V>` (and props with `SegmentedControlProps<V>`).\n\n### Keyboard\n\nOn the group: ArrowRight/ArrowUp and ArrowLeft/ArrowDown step one option and do\nnot wrap; Home/End jump to the ends; digits 1–9 pick that option; Backspace and\nDelete clear when `clearable`. Modified keys (Ctrl/Cmd/Alt) are left alone.\n\n### Choosing a surface\n\nThe track and lens are always `radius.md` (see [corners](../corners.md)), so the\ncontrol belongs inside a card or modal.\n\n- Directly in a `Card` body: omit `surface` (`'card'`).\n- Inside a shaded `bg.cardHeader` row you built (label left, control right):\n  `surface=\"row\"`, so the row itself is the track and the lens is flush with it.\n\n## Do / don't\n\n- Do keep it to a handful of short options; segments are equal columns.\n- Do pass `clearable` whenever `null` is a valid answer, or the user can never\n  get back to it.\n- Don't pass `onChange={() => {}}` to show a value; omit `onChange` for read-only.",
+      "body": "A row of equal-width radio segments in a track, with a lens that slides to the\nchecked one. Options can be text, or an icon over a small caption. Optionally\nclearable, and read-only when `onChange` is omitted. Generic over the value\ntype: `V extends string`.\n\nUse something else for: many options or long labels (`Select`), on/off\n(`Switch`), actions (`Button`).\n\n## Usage\n\n### Behaviour\n\nNo `className`, no `name` (not a form field). Type options with the exported\n`SegmentedOption<V>` (and props with `SegmentedControlProps<V>`).\n\n### Keyboard\n\nOn the group: ArrowRight/ArrowUp and ArrowLeft/ArrowDown step one option and do\nnot wrap; Home/End jump to the ends; digits 1–9 pick that option; Backspace and\nDelete clear when `clearable`. Modified keys (Ctrl/Cmd/Alt) are left alone.\n\n### Choosing a surface\n\nThe track and lens take the radius of the surface depth they sit at (see\n[corners](../corners.md)): `md` in a card or modal, `lg` directly on a `Page`,\n`sm` two or more levels in.\n\n- Directly in a `Card` body: omit `surface` (`'card'`).\n- Inside a shaded `bg.cardHeader` row you built (label left, control right):\n  `surface=\"row\"`, so the row itself is the track and the lens is flush with it.\n\n## Do / don't\n\n- Do keep it to a handful of short options; segments are equal columns.\n- Do pass `clearable` whenever `null` is a valid answer, or the user can never\n  get back to it.\n- Don't pass `onChange={() => {}}` to show a value; omit `onChange` for read-only.",
       "examples": [
         {
           "file": "src/control/segmented-control/examples/01-basic.tsx",
@@ -3897,6 +4088,14 @@
           "code": "import { Card, Stack, Text } from '@korzun/design/component';\nimport { SegmentedControl } from '@korzun/design/control';\nimport { useState } from 'react';\n\nconst VIEWS = [\n  { value: 'grid', label: 'Grid' },\n  { value: 'list', label: 'List' },\n] as const;\n\ntype View = (typeof VIEWS)[number]['value'];\n\nexport default function Surfaces() {\n  const [body, setBody] = useState<View>('grid');\n  const [header, setHeader] = useState<View>('list');\n  return (\n    <Stack>\n      <Card title=\"surface card, in the body\">\n        <SegmentedControl label=\"Body view\" options={VIEWS} value={body} onChange={setBody} />\n      </Card>\n      <Card\n        title=\"surface row, in the header\"\n        headerAction={\n          <SegmentedControl\n            label=\"Header view\"\n            options={VIEWS}\n            value={header}\n            onChange={setHeader}\n            surface=\"row\"\n          />\n        }\n      >\n        <Text>Showing {header}.</Text>\n      </Card>\n    </Stack>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/control/segmented-control/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { SegmentedControl } from '@korzun/design/control';\nimport { useState } from 'react';\n\nconst SORTS = [\n  { value: 'title', label: 'Title' },\n  { value: 'author', label: 'Author' },\n  { value: 'added', label: 'Added' },\n] as const;\n\nexport default function Preview() {\n  const [sort, setSort] = useState<(typeof SORTS)[number]['value']>('title');\n  return <SegmentedControl label=\"Sort by\" options={SORTS} value={sort} onChange={setSort} />;\n}\n"
+      },
       "tables": [
         {
           "name": "SegmentedControlProps",
@@ -4049,10 +4248,22 @@
           "dark": "500"
         },
         {
+          "path": "radius.lg",
+          "kind": "value",
+          "light": "16px",
+          "dark": "16px"
+        },
+        {
           "path": "radius.md",
           "kind": "value",
           "light": "8px",
           "dark": "8px"
+        },
+        {
+          "path": "radius.sm",
+          "kind": "value",
+          "light": "4px",
+          "dark": "4px"
         },
         {
           "path": "recipe.focusRing",
@@ -4097,7 +4308,23 @@
           "dark": "0.35s cubic-bezier(0.4, 0, 0.2, 1)"
         }
       ],
-      "changelog": []
+      "changelog": [
+        {
+          "version": "0.6.0",
+          "date": "2026-11-26",
+          "tags": [
+            "TextInput",
+            "TextArea",
+            "NumberInput",
+            "DateTimeInput",
+            "ChipsInput",
+            "SegmentedControl",
+            "Tag",
+            "Switch"
+          ],
+          "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.5.2 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px."
+        }
+      ]
     },
     {
       "id": "control/switch",
@@ -4115,7 +4342,7 @@
         "SwitchRadiusValue"
       ],
       "importLine": "import { Switch, type SwitchProps, type SwitchRadiusValue } from '@korzun/design/control'",
-      "body": "An on/off toggle (`role=\"switch\"`) with an optional label and description, a\nfull-row `horizontal` layout for forms, and a `loading` state for saves in\nflight. Controlled: you own `checked`.\n\nUse something else for: one of several options (`SegmentedControl`, `Select`),\nan action that happens on click (`Button`).\n\n## Usage\n\n### Behaviour\n\nNo `className`. Keyboard: Enter and Space toggle. Clicks and those keys stop\npropagation, so a switch inside a clickable card row won't trigger the row.\n\n### Choosing a radius\n\nSee [corners](../corners.md).\n\n- In a shaded row (`layout=\"horizontal\"`, or inside any field row): omit it\n  (`inset`, a 4px track concentric with the row's 8px corner).\n- In a `Card` header (`headerAction`), or anywhere with no nearby corner to\n  echo: `radius=\"pill\"`.\n\n## Do / don't\n\n- Do pass `loading` while the save runs instead of `disabled`; `disabled` means\n  \"you may not change this\".\n- Do give a label-less switch an `ariaLabel`; `name` is a machine key.\n- Don't expect a switch to submit with a `<form>`; send `checked` from state.\n- Don't put an interactive element in `description` of a `horizontal` switch:\n  clicking it toggles the switch.",
+      "body": "An on/off toggle (`role=\"switch\"`) with an optional label and description, a\nfull-row `horizontal` layout for forms, and a `loading` state for saves in\nflight. Controlled: you own `checked`.\n\nUse something else for: one of several options (`SegmentedControl`, `Select`),\nan action that happens on click (`Button`).\n\n## Usage\n\n### Behaviour\n\nNo `className`. Keyboard: Enter and Space toggle. Clicks and those keys stop\npropagation, so a switch inside a clickable card row won't trigger the row.\n\n### Choosing a radius\n\nSee [corners](../corners.md).\n\n- In a shaded row (`layout=\"horizontal\"`, or inside any field row): omit it\n  (`inset`, a track one radius step squarer than the row: 4px in a Card's 8px\n  row, 8px in a Page's 16px row).\n- In a `Card` header (`headerAction`), or anywhere with no nearby corner to\n  echo: `radius=\"pill\"`.\n\n## Do / don't\n\n- Do pass `loading` while the save runs instead of `disabled`; `disabled` means\n  \"you may not change this\".\n- Do give a label-less switch an `ariaLabel`; `name` is a machine key.\n- Don't expect a switch to submit with a `<form>`; send `checked` from state.\n- Don't put an interactive element in `description` of a `horizontal` switch:\n  clicking it toggles the switch.",
       "examples": [
         {
           "file": "src/control/switch/examples/01-basic.tsx",
@@ -4158,6 +4385,14 @@
           "code": "import { Inline, Stack, Text } from '@korzun/design/component';\nimport { Button, Switch } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function LoadingAndDisabled() {\n  const [subscribed, setSubscribed] = useState(false);\n  const [email, setEmail] = useState(false);\n  const [saving, setSaving] = useState(true);\n  const [changes, setChanges] = useState(0);\n  return (\n    <Stack>\n      <Switch\n        name=\"push-device\"\n        label=\"This device\"\n        checked={subscribed}\n        loading={saving}\n        onChange={(next) => {\n          setSubscribed(next);\n          setChanges((n) => n + 1);\n        }}\n      />\n      <Inline>\n        <Button onClick={() => setSaving((s) => !s)}>\n          {saving ? 'Finish save' : 'Start save'}\n        </Button>\n        <Text tone=\"muted\">Changes made: {changes}</Text>\n      </Inline>\n      <Switch\n        name=\"push-email\"\n        label=\"Email (not available)\"\n        disabled\n        checked={email}\n        onChange={setEmail}\n      />\n    </Stack>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/control/switch/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { Stack } from '@korzun/design/component';\nimport { Switch } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Preview() {\n  const [notifications, setNotifications] = useState(true);\n  const [autoSync, setAutoSync] = useState(false);\n  return (\n    <Stack align=\"start\">\n      <Switch\n        name=\"notifications\"\n        label=\"Notifications\"\n        checked={notifications}\n        onChange={setNotifications}\n      />\n      <Switch name=\"autoSync\" label=\"Auto sync\" checked={autoSync} onChange={setAutoSync} />\n    </Stack>\n  );\n}\n"
+      },
       "tables": [
         {
           "name": "SwitchProps",
@@ -4198,7 +4433,7 @@
               "name": "layout",
               "type": "'default' | 'horizontal'",
               "required": false,
-              "description": "`'default'`: track then label, inline. `'horizontal'`: a full-width shaded row (`bg.cardHeader`, `radius.md`) with label and description on the left and the track on the right; the whole row toggles, description included.",
+              "description": "`'default'`: track then label, inline. `'horizontal'`: a full-width shaded row (`bg.cardHeader`, corners by surface depth) with label and description on the left and the track on the right; the whole row toggles, description included.",
               "default": "'default'"
             },
             {
@@ -4287,6 +4522,18 @@
           "dark": "50%"
         },
         {
+          "path": "radius.lg",
+          "kind": "value",
+          "light": "16px",
+          "dark": "16px"
+        },
+        {
+          "path": "radius.md",
+          "kind": "value",
+          "light": "8px",
+          "dark": "8px"
+        },
+        {
           "path": "radius.pill",
           "kind": "value",
           "light": "999px",
@@ -4336,6 +4583,21 @@
         }
       ],
       "changelog": [
+        {
+          "version": "0.6.0",
+          "date": "2026-11-26",
+          "tags": [
+            "TextInput",
+            "TextArea",
+            "NumberInput",
+            "DateTimeInput",
+            "ChipsInput",
+            "SegmentedControl",
+            "Tag",
+            "Switch"
+          ],
+          "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.5.2 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px."
+        },
         {
           "version": "0.0.6",
           "date": "2026-11-21",
@@ -4430,6 +4692,14 @@
           "code": "import { Stack, Text } from '@korzun/design/component';\nimport { TextArea } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function WithoutLabel() {\n  const [notes, setNotes] = useState<string | undefined>(undefined);\n  return (\n    <Stack>\n      <TextArea\n        name=\"notes\"\n        layout=\"inline\"\n        ariaLabel=\"Reading notes\"\n        placeholder=\"Reading notes\"\n        value={notes}\n        onChange={setNotes}\n      />\n      <Text tone=\"muted\">Characters: {notes?.length ?? 0}</Text>\n    </Stack>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/control/text-area/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { TextArea } from '@korzun/design/control';\nimport { createUseStyles } from '@korzun/design/theme';\nimport { useState } from 'react';\n\nconst useStyle = createUseStyles({ box: { width: 320 } });\n\nexport default function Preview() {\n  const styles = useStyle();\n  const [note, setNote] = useState<string | undefined>('Remember to return the book.');\n  return (\n    <div className={styles.box}>\n      <TextArea name=\"note\" layout=\"vertical\" label=\"Note\" value={note} onChange={setNote} />\n    </div>\n  );\n}\n"
+      },
       "tables": [
         {
           "name": "TextAreaProps",
@@ -4458,7 +4728,7 @@
               "name": "layout",
               "type": "'horizontal' | 'vertical' | 'inline'",
               "required": false,
-              "description": "`horizontal` and `vertical` paint a shaded card-header row with `md` corners; `inline` paints nothing.",
+              "description": "`horizontal` and `vertical` paint a shaded card-header row with corners that follow surface depth ([corners](../corners.md)); `inline` paints nothing.",
               "default": "'horizontal'"
             },
             {
@@ -4511,7 +4781,7 @@
               "name": "variant",
               "type": "'outlined' | 'borderless'",
               "required": false,
-              "description": "`'outlined'` has a border and the input background; `'borderless'` drops both and keeps its `md` corners, so the browser's default textarea background shows (check it in dark mode).",
+              "description": "`'outlined'` has a border and the input background; `'borderless'` drops both and keeps its depth corners, so the browser's default textarea background shows (check it in dark mode).",
               "default": "'outlined'"
             }
           ]
@@ -4561,10 +4831,22 @@
           "dark": "1"
         },
         {
+          "path": "radius.lg",
+          "kind": "value",
+          "light": "16px",
+          "dark": "16px"
+        },
+        {
           "path": "radius.md",
           "kind": "value",
           "light": "8px",
           "dark": "8px"
+        },
+        {
+          "path": "radius.sm",
+          "kind": "value",
+          "light": "4px",
+          "dark": "4px"
         },
         {
           "path": "recipe.input",
@@ -4604,6 +4886,21 @@
         }
       ],
       "changelog": [
+        {
+          "version": "0.6.0",
+          "date": "2026-11-26",
+          "tags": [
+            "TextInput",
+            "TextArea",
+            "NumberInput",
+            "DateTimeInput",
+            "ChipsInput",
+            "SegmentedControl",
+            "Tag",
+            "Switch"
+          ],
+          "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.5.2 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px."
+        },
         {
           "version": "0.5.2",
           "date": "2026-11-26",
@@ -4707,6 +5004,14 @@
           "code": "import { Inline, Text } from '@korzun/design/component';\nimport { TextInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function WithoutLabel() {\n  const [filter, setFilter] = useState<string | undefined>(undefined);\n  return (\n    <Inline>\n      <TextInput\n        name=\"filter\"\n        layout=\"inline\"\n        ariaLabel=\"Filter books\"\n        placeholder=\"Filter books\"\n        value={filter}\n        onChange={setFilter}\n      />\n      <Text tone=\"muted\">Filter: {filter === undefined ? 'none' : `“${filter}”`}</Text>\n    </Inline>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/control/text-input/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { TextInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Preview() {\n  const [name, setName] = useState<string | undefined>('Ada');\n  return <TextInput name=\"name\" label=\"Name\" value={name} onChange={setName} />;\n}\n"
+      },
       "tables": [
         {
           "name": "TextInputProps",
@@ -4746,7 +5051,7 @@
               "name": "layout",
               "type": "'horizontal' | 'vertical' | 'inline'",
               "required": false,
-              "description": "`horizontal` and `vertical` paint a shaded card-header row with `md` corners; `inline` paints nothing.",
+              "description": "`horizontal` and `vertical` paint a shaded card-header row with corners that follow surface depth ([corners](../corners.md)); `inline` paints nothing.",
               "default": "'horizontal'"
             },
             {
@@ -4880,10 +5185,22 @@
           "dark": "1"
         },
         {
+          "path": "radius.lg",
+          "kind": "value",
+          "light": "16px",
+          "dark": "16px"
+        },
+        {
           "path": "radius.md",
           "kind": "value",
           "light": "8px",
           "dark": "8px"
+        },
+        {
+          "path": "radius.sm",
+          "kind": "value",
+          "light": "4px",
+          "dark": "4px"
         },
         {
           "path": "recipe.input",
@@ -4929,6 +5246,21 @@
         }
       ],
       "changelog": [
+        {
+          "version": "0.6.0",
+          "date": "2026-11-26",
+          "tags": [
+            "TextInput",
+            "TextArea",
+            "NumberInput",
+            "DateTimeInput",
+            "ChipsInput",
+            "SegmentedControl",
+            "Tag",
+            "Switch"
+          ],
+          "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.5.2 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px."
+        },
         {
           "version": "0.5.2",
           "date": "2026-11-26",
@@ -4989,6 +5321,14 @@
           "code": "import { Inline, Surface, Text } from '@korzun/design/component';\nimport { Button, Select, useModalDialog } from '@korzun/design/control';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\nimport { useState } from 'react';\n\nconst SHELVES = ['Reading', 'To read', 'Finished', 'Abandoned'];\n\nconst useStyles = createUseStyles((theme: Theme) => ({\n  dialog: { ...theme.recipe.modal.dialog, backgroundColor: theme.color.bg.card },\n  header: { ...theme.recipe.modal.header },\n  body: {\n    padding: `0 ${theme.space.xxl} ${theme.space.xxl}`,\n  },\n  footer: { ...theme.recipe.modal.footer },\n}));\n\nexport default function SelectInside() {\n  const styles = useStyles();\n  const [isOpen, setIsOpen] = useState(false);\n  const [shelf, setShelf] = useState<string | undefined>('Reading');\n  const close = () => setIsOpen(false);\n  const ref = useModalDialog(isOpen, close);\n  return (\n    <Inline>\n      <Button onClick={() => setIsOpen(true)}>Move book</Button>\n      <Text tone=\"muted\">Shelf: {shelf ?? 'none'}</Text>\n      <dialog ref={ref} className={styles.dialog}>\n        <Surface>\n          <div className={styles.header}>Move book</div>\n          <div className={styles.body}>\n            <Select\n              name=\"shelf\"\n              label=\"Shelf\"\n              layout=\"vertical\"\n              options={SHELVES}\n              value={shelf}\n              onChange={setShelf}\n            />\n          </div>\n          <div className={styles.footer}>\n            <Button type=\"primary\" onClick={close}>\n              Done\n            </Button>\n          </div>\n        </Surface>\n      </dialog>\n    </Inline>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/control/use-modal-dialog/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { Surface } from '@korzun/design/component';\nimport { Button, useModalDialog } from '@korzun/design/control';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\n\nconst useStyles = createUseStyles((theme: Theme) => ({\n  dialog: { ...theme.recipe.modal.dialog, backgroundColor: theme.color.bg.card },\n  header: { ...theme.recipe.modal.header },\n  body: {\n    padding: `0 ${theme.space.xxl} ${theme.space.xxl}`,\n    color: theme.color.text.secondary,\n  },\n  footer: { ...theme.recipe.modal.footer },\n}));\n\nexport default function Preview() {\n  const styles = useStyles();\n  const ref = useModalDialog(true, () => {});\n  return (\n    <dialog ref={ref} className={styles.dialog}>\n      <Surface>\n        <div className={styles.header}>Edit progress</div>\n        <div className={styles.body}>You are on page 42 of 310.</div>\n        <div className={styles.footer}>\n          <Button type=\"text\" onClick={() => {}}>\n            Cancel\n          </Button>\n          <Button type=\"primary\" onClick={() => {}}>\n            Save\n          </Button>\n        </div>\n      </Surface>\n    </dialog>\n  );\n}\n"
+      },
       "tables": [],
       "tokens": [],
       "changelog": [
@@ -5084,6 +5424,14 @@
           "code": "import { Alert, Card, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function WithAction() {\n  const [overdue, setOverdue] = useState(true);\n  return (\n    <Card title=\"Kitchen frame\">\n      {overdue ? (\n        <Alert\n          tone=\"warning\"\n          title=\"Frame is overdue\"\n          action={<Button onClick={() => setOverdue(false)}>Retry</Button>}\n        >\n          No check-in for 2h 14m.\n        </Alert>\n      ) : (\n        <Text tone=\"muted\">Checked in just now.</Text>\n      )}\n    </Card>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/component/alert/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { Alert } from '@korzun/design/component';\n\nexport default function Preview() {\n  return (\n    <Alert tone=\"warning\" title=\"Frame is overdue\">\n      No check-in for 2h 14m.\n    </Alert>\n  );\n}\n"
+      },
       "tables": [
         {
           "name": "AlertProps",
@@ -5360,6 +5708,14 @@
           "code": "import { Card, Stack, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Nested() {\n  const [pressed, setPressed] = useState<string | undefined>();\n  return (\n    <Card\n      title=\"Library (16px)\"\n      footer={<Button onClick={() => setPressed('Sync library')}>Sync library</Button>}\n    >\n      <Stack>\n        <Text>The feature sits on the page.</Text>\n        <Card\n          title=\"Devices (8px)\"\n          footer={<Button onClick={() => setPressed('Pair device')}>Pair device</Button>}\n        >\n          <Stack>\n            <Text>A group inside the feature, one level in.</Text>\n            <Card title=\"Kitchen frame (4px)\">\n              <Text>Deeper Cards stay at the smallest step.</Text>\n            </Card>\n          </Stack>\n        </Card>\n        <Text tone=\"muted\">Pressed: {pressed ?? 'nothing yet'}</Text>\n      </Stack>\n    </Card>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/component/card/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { Card, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\n\nexport default function Preview() {\n  return (\n    <Card\n      title=\"Device name\"\n      subTitle=\"Shown on the frame\"\n      footer={<Button type=\"primary\">Save</Button>}\n    >\n      <Text>Kitchen frame</Text>\n    </Card>\n  );\n}\n"
+      },
       "tables": [
         {
           "name": "CardProps",
@@ -5624,6 +5980,14 @@
           "code": "import { Card, CardDivider, Stack, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Actions() {\n  const [pending, setPending] = useState(['Middlemarch', 'Persuasion']);\n  const [last, setLast] = useState('nothing yet');\n  return (\n    <Card title=\"Requests\">\n      <Stack>\n        <CardDivider\n          actions={\n            <Button type=\"link\" onClick={() => setPending([])}>\n              Clear all\n            </Button>\n          }\n        >\n          Pending (actions right)\n        </CardDivider>\n        <Text>{pending.length > 0 ? pending.join(', ') : 'Nothing pending'}</Text>\n        <CardDivider\n          align=\"center\"\n          actionsAlign=\"left\"\n          actions={\n            <Button type=\"link\" onClick={() => setLast('Archive')}>\n              Archive\n            </Button>\n          }\n        >\n          Label center, actions left\n        </CardDivider>\n        <CardDivider\n          actionsAlign=\"center\"\n          actions={\n            <Button type=\"link\" onClick={() => setLast('Export')}>\n              Export\n            </Button>\n          }\n        >\n          Label left, actions center\n        </CardDivider>\n        <CardDivider\n          align=\"right\"\n          actionsAlign=\"right\"\n          actions={\n            <Button type=\"link\" onClick={() => setLast('Share')}>\n              Share\n            </Button>\n          }\n        >\n          Same side, label first\n        </CardDivider>\n        <Text tone=\"muted\">Last action: {last}</Text>\n      </Stack>\n    </Card>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/component/card-divider/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { Card, CardDivider, Stack, Text } from '@korzun/design/component';\n\nexport default function Preview() {\n  return (\n    <Card title=\"Notifications\">\n      <Stack>\n        <Text>Email me when a book is ready.</Text>\n        <CardDivider />\n        <Text>Keep notifications for 30 days.</Text>\n      </Stack>\n    </Card>\n  );\n}\n"
+      },
       "tables": [
         {
           "name": "CardDividerProps",
@@ -5739,6 +6103,14 @@
           "code": "import { Card, CardRow, Stack, Text } from '@korzun/design/component';\n\nexport default function Depth() {\n  return (\n    <Stack>\n      <CardRow>\n        <Text>On the page (16px)</Text>\n      </CardRow>\n      <Card title=\"Card\">\n        <CardRow>\n          <Text>In a Card (8px)</Text>\n        </CardRow>\n      </Card>\n    </Stack>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/component/card-row/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { CardRow, Stack, Text } from '@korzun/design/component';\n\nconst uploads = ['middlemarch.epub', 'persuasion.epub', 'villette.epub'];\n\nexport default function Preview() {\n  return (\n    <div style={{ width: 240 }}>\n      <Stack>\n        {uploads.map((fileName) => (\n          <CardRow key={fileName}>\n            <Text>{fileName}</Text>\n          </CardRow>\n        ))}\n      </Stack>\n    </div>\n  );\n}\n"
+      },
       "tables": [
         {
           "name": "CardRowProps",
@@ -5871,6 +6243,14 @@
           "code": "import { CollapsibleSection, Stack, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Actions() {\n  const [open, setOpen] = useState(true);\n  const [count, setCount] = useState(2);\n  return (\n    <CollapsibleSection\n      title=\"Reading list\"\n      subTitle={`${count} books`}\n      open={open}\n      onOpenToggle={() => setOpen((o) => !o)}\n      actions={[\n        <Button key=\"add\" type=\"text\" onClick={() => setCount((n) => n + 1)}>\n          Add\n        </Button>,\n      ]}\n    >\n      <Stack gap=\"xs\">\n        {Array.from({ length: count }, (_, i) => (\n          <Text key={i}>Book {i + 1}</Text>\n        ))}\n      </Stack>\n    </CollapsibleSection>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/component/collapsible-section/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { CollapsibleSection, Stack, Text } from '@korzun/design/component';\n\nexport default function Preview() {\n  return (\n    <CollapsibleSection title=\"Archived\" subTitle=\"3 items\" open>\n      <Stack gap=\"xs\">\n        <Text>Middlemarch</Text>\n        <Text>Bleak House</Text>\n        <Text>Persuasion</Text>\n      </Stack>\n    </CollapsibleSection>\n  );\n}\n"
+      },
       "tables": [
         {
           "name": "CollapsibleSectionProps",
@@ -6028,6 +6408,14 @@
           "code": "import { Card, EmptyState, Inline, Stack, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { useState } from 'react';\n\ntype State = 'loading' | 'error' | 'empty' | 'loaded';\n\nconst states: State[] = ['loading', 'error', 'empty', 'loaded'];\n\nexport default function ListStates() {\n  const [state, setState] = useState<State>('empty');\n\n  let list;\n  if (state === 'loading') {\n    list = <EmptyState title=\"Loading…\" />;\n  } else if (state === 'error') {\n    list = <EmptyState title=\"Error loading requests\" danger />;\n  } else if (state === 'empty') {\n    list = (\n      <EmptyState title=\"No requests yet\">Fill in the form above to ask for a book.</EmptyState>\n    );\n  } else {\n    list = (\n      <Card>\n        <Text>Middlemarch by George Eliot</Text>\n      </Card>\n    );\n  }\n\n  return (\n    <Stack>\n      <Inline wrap>\n        {states.map((s) => (\n          <Button key={s} type={s === state ? 'primary' : 'default'} onClick={() => setState(s)}>\n            {s}\n          </Button>\n        ))}\n      </Inline>\n      <Card title=\"New request\">\n        <Text tone=\"muted\">Title and author go here.</Text>\n      </Card>\n      {list}\n    </Stack>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/component/empty-state/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { EmptyState } from '@korzun/design/component';\n\nexport default function Preview() {\n  return <EmptyState title=\"No requests yet\">Fill in the form to ask for a book.</EmptyState>;\n}\n"
+      },
       "tables": [
         {
           "name": "EmptyStateProps",
@@ -6157,6 +6545,14 @@
           "code": "import { ErrorMessage, Inline, Stack, Text } from '@korzun/design/component';\n\nexport default function EmptyChildren() {\n  return (\n    <Stack gap=\"sm\">\n      <Inline>\n        <Text tone=\"muted\" size=\"sm\">\n          undefined:\n        </Text>\n        <ErrorMessage>{undefined}</ErrorMessage>\n      </Inline>\n      <Inline>\n        <Text tone=\"muted\" size=\"sm\">\n          null:\n        </Text>\n        <ErrorMessage>{null}</ErrorMessage>\n      </Inline>\n      <Inline>\n        <Text tone=\"muted\" size=\"sm\">\n          false:\n        </Text>\n        <ErrorMessage>{false}</ErrorMessage>\n      </Inline>\n      <Inline>\n        <Text tone=\"muted\" size=\"sm\">\n          empty string:\n        </Text>\n        <ErrorMessage>{''}</ErrorMessage>\n      </Inline>\n      <Inline>\n        <Text tone=\"muted\" size=\"sm\">\n          0:\n        </Text>\n        <ErrorMessage>{0}</ErrorMessage>\n      </Inline>\n    </Stack>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/component/error-message/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { ErrorMessage } from '@korzun/design/component';\n\nexport default function Preview() {\n  return <ErrorMessage>Could not save the book.</ErrorMessage>;\n}\n"
+      },
       "tables": [
         {
           "name": "ErrorMessageProps",
@@ -6292,6 +6688,14 @@
           "code": "import { Heading, Inline, Stack, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { useState } from 'react';\n\nconst title =\n  'Middlemarch: A Study of Provincial Life, in Eight Books, with a Prelude and a Finale, Followed by an Extended Note on the Text, a Chronology, a Map of the Midlands, and a Glossary of Provincial Terms';\n\nexport default function Truncate() {\n  const [opened, setOpened] = useState(0);\n  return (\n    <Stack gap=\"xl\">\n      <Stack gap=\"xs\">\n        <Text size=\"sm\" tone=\"muted\">\n          Without truncate\n        </Text>\n        <Heading level={3}>{title}</Heading>\n      </Stack>\n      <Stack gap=\"xs\">\n        <Text size=\"sm\" tone=\"muted\">\n          With truncate, beside an action\n        </Text>\n        <Inline justify=\"between\">\n          <Heading level={3} truncate>\n            {title}\n          </Heading>\n          <Button type=\"primary\" onClick={() => setOpened((n) => n + 1)}>\n            Open\n          </Button>\n        </Inline>\n        <Text size=\"sm\" tone=\"muted\">\n          Opened: {opened}\n        </Text>\n      </Stack>\n    </Stack>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/component/heading/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { Heading, Stack } from '@korzun/design/component';\n\nexport default function Preview() {\n  return (\n    <Stack gap=\"sm\">\n      <Heading level={1}>Library</Heading>\n      <Heading level={2}>Middlemarch</Heading>\n      <Heading level={3}>Chapter one</Heading>\n    </Stack>\n  );\n}\n"
+      },
       "tables": [
         {
           "name": "HeadingProps",
@@ -6578,6 +6982,14 @@
           "code": "import { Inline, Stack, Text } from '@korzun/design/component';\n\nexport default function Elements() {\n  return (\n    <Stack gap=\"lg\">\n      <Stack gap=\"xs\">\n        <Text size=\"sm\" tone=\"muted\">\n          as=\"nav\"\n        </Text>\n        <Inline as=\"nav\" gap=\"xl\">\n          <a href=\"/books\">Books</a>\n          <a href=\"/authors\">Authors</a>\n        </Inline>\n      </Stack>\n      <Stack gap=\"xs\">\n        <Text size=\"sm\" tone=\"muted\">\n          as=\"ul\"\n        </Text>\n        <Inline as=\"ul\" gap=\"xl\">\n          <li>\n            <Text>Middlemarch</Text>\n          </li>\n          <li>\n            <Text>Bleak House</Text>\n          </li>\n          <li>\n            <Text>Persuasion</Text>\n          </li>\n        </Inline>\n      </Stack>\n    </Stack>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/component/inline/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { Inline } from '@korzun/design/component';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\n\nconst useStyle = createUseStyles((theme: Theme) => ({\n  block: {\n    width: 64,\n    height: 48,\n    backgroundColor: theme.color.brand.light,\n    border: `1px solid ${theme.color.brand.outline}`,\n    borderRadius: theme.radius.md,\n  },\n}));\n\nexport default function Preview() {\n  const styles = useStyle();\n  return (\n    <Inline>\n      <div className={styles.block} />\n      <div className={styles.block} />\n      <div className={styles.block} />\n    </Inline>\n  );\n}\n"
+      },
       "tables": [
         {
           "name": "InlineProps",
@@ -6785,6 +7197,14 @@
           "code": "import { MetaLine, Tag, Text } from '@korzun/design/component';\n\nexport default function ElementItems() {\n  return (\n    <Text as=\"div\" size=\"sm\" tone=\"faint\">\n      <MetaLine\n        items={[\n          <time key=\"added\" dateTime=\"2026-03-12\">\n            12 March 2026\n          </time>,\n          'Kindle Scribe',\n          <Tag key=\"sync\" size=\"sm\" tone=\"success\">\n            Synced\n          </Tag>,\n        ]}\n      />\n    </Text>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/component/meta-line/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { MetaLine, Text } from '@korzun/design/component';\n\nexport default function Preview() {\n  return (\n    <Text as=\"div\" tone=\"faint\">\n      <MetaLine items={['Frank Herbert', 'Dune #3', '42%']} />\n    </Text>\n  );\n}\n"
+      },
       "tables": [
         {
           "name": "MetaLineProps",
@@ -6858,6 +7278,14 @@
           "code": "import { Inline, MetadataList, Stack } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function OptionalEntries() {\n  const [lastSync, setLastSync] = useState<string | undefined>(undefined);\n  return (\n    <Stack gap=\"md\">\n      <Inline>\n        <Button onClick={() => setLastSync(lastSync ? undefined : '12 March 2026')}>\n          {lastSync ? 'Forget sync' : 'Sync now'}\n        </Button>\n      </Inline>\n      <MetadataList\n        metadata={[\n          { title: 'Slug', value: 'my-kindle' },\n          ...(lastSync ? [{ title: 'Last sync', value: lastSync }] : []),\n        ]}\n      />\n    </Stack>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/component/metadata-list/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { MetadataList, Tag } from '@korzun/design/component';\n\nexport default function Preview() {\n  return (\n    <MetadataList\n      metadata={[\n        { title: 'Slug', value: 'my-kindle' },\n        { title: 'Cover size', value: '1860×2480' },\n        {\n          title: 'Status',\n          value: (\n            <Tag size=\"sm\" tone=\"success\">\n              Active\n            </Tag>\n          ),\n        },\n      ]}\n    />\n  );\n}\n"
+      },
       "tables": [
         {
           "name": "MetadataListProps",
@@ -6972,6 +7400,15 @@
           "code": "import { Inline, NavDesktop, Stack, type NavItem } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { BookIcon, SettingsIcon, UploadIcon } from '@korzun/design/icon';\nimport { useState } from 'react';\n\nexport default function Badges() {\n  const [pending, setPending] = useState(3);\n  const items: NavItem[] = [\n    { to: '/library', label: 'Library', Icon: BookIcon, active: true },\n    { to: '/upload', label: 'Upload', Icon: UploadIcon, active: false, badge: pending },\n    { to: '/settings', label: 'Settings', Icon: SettingsIcon, active: false, badge: 'dot' },\n  ];\n  return (\n    <Stack>\n      <NavDesktop items={items} />\n      <Inline>\n        <Button onClick={() => setPending((n) => n + 1)}>Add a fix</Button>\n        <Button onClick={() => setPending(0)}>Clear fixes</Button>\n      </Inline>\n    </Stack>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/component/nav-desktop/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { NavDesktop, type NavItem } from '@korzun/design/component';\nimport { BookIcon, SettingsIcon, UploadIcon } from '@korzun/design/icon';\n\nconst items: NavItem[] = [\n  { to: '/library', label: 'Library', Icon: BookIcon, active: true },\n  { to: '/upload', label: 'Upload', Icon: UploadIcon, active: false },\n  { to: '/settings', label: 'Settings', Icon: SettingsIcon, active: false },\n];\n\nexport default function Preview() {\n  return <NavDesktop items={items} />;\n}\n",
+        "viewport": "desktop"
+      },
       "tables": [
         {
           "name": "NavDesktopProps",
@@ -7133,6 +7570,15 @@
           "viewport": "mobile"
         }
       ],
+      "preview": {
+        "file": "src/component/nav-mobile/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { NavMobile, type NavItem } from '@korzun/design/component';\nimport { BookIcon, HomeIcon, ListCheckIcon, SettingsIcon, UploadIcon } from '@korzun/design/icon';\n\nconst items: NavItem[] = [\n  { to: '/library', label: 'Library', Icon: BookIcon, active: true },\n  { to: '/upload', label: 'Upload', Icon: UploadIcon, active: false },\n  { to: '/request', label: 'Request', Icon: ListCheckIcon, active: false },\n];\nconst home: NavItem = { to: '/library', label: 'Back to library', Icon: HomeIcon, active: false };\nconst settings: NavItem = { to: '/settings', label: 'Settings', Icon: SettingsIcon, active: false };\n\nexport default function Preview() {\n  return (\n    <NavMobile\n      main={{ items, collapsed: home }}\n      settings={{ items: [], collapsed: settings }}\n      expanded=\"main\"\n    />\n  );\n}\n",
+        "viewport": "mobile"
+      },
       "tables": [
         {
           "name": "NavMobileProps",
@@ -7369,6 +7815,14 @@
           "code": "import { Card, Page, Stack, Text } from '@korzun/design/component';\nimport { TextInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function DocumentTitle() {\n  const [title, setTitle] = useState<string | undefined>('Library');\n  return (\n    <Page documentTitle={title}>\n      <Card title=\"Tab title\">\n        <Stack>\n          <TextInput name=\"title\" label=\"Title\" value={title} onChange={setTitle} />\n          <Text tone=\"muted\">Tab title: {title}</Text>\n        </Stack>\n      </Card>\n    </Page>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/component/page/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { Card, Page, Text } from '@korzun/design/component';\n\nexport default function Preview() {\n  return (\n    <Page>\n      <Card title=\"Device password\" />\n      <Card title=\"Change password\">\n        <Text>Choose a new password.</Text>\n      </Card>\n    </Page>\n  );\n}\n"
+      },
       "tables": [
         {
           "name": "PageProps",
@@ -7601,6 +8055,14 @@
           "code": "import { Card, Inline, ProgressIndicator, Stack, Text } from '@korzun/design/component';\n\nexport default function InARow() {\n  return (\n    <Card title=\"Reading\">\n      <Stack gap=\"sm\">\n        <Inline justify=\"between\">\n          <Text weight=\"semibold\">Middlemarch</Text>\n          <ProgressIndicator value={0.42} ariaLabel=\"Reading progress for Middlemarch\" size={14} />\n        </Inline>\n        <Inline justify=\"between\">\n          <Text weight=\"semibold\">Persuasion</Text>\n          <ProgressIndicator value={1} ariaLabel=\"Reading progress for Persuasion\" size={14} />\n        </Inline>\n      </Stack>\n    </Card>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/component/progress-indicator/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { Inline, ProgressIndicator } from '@korzun/design/component';\n\nexport default function Preview() {\n  return (\n    <Inline gap=\"lg\">\n      <ProgressIndicator value={0.25} size={40} ariaLabel=\"Reading progress for Persuasion\" />\n      <ProgressIndicator value={0.6} size={40} ariaLabel=\"Reading progress for Middlemarch\" />\n      <ProgressIndicator value={0.9} size={40} ariaLabel=\"Reading progress for Villette\" />\n    </Inline>\n  );\n}\n"
+      },
       "tables": [
         {
           "name": "ProgressIndicatorProps",
@@ -7723,6 +8185,14 @@
           "code": "import { Spinner } from '@korzun/design/component';\n\nexport default function Standalone() {\n  return <Spinner size=\"xl\" label=\"Loading books\" />;\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/component/spinner/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { Spinner } from '@korzun/design/component';\n\n// Unsized, the spinner takes the surrounding font size: large here so it reads as a thumbnail.\nexport default function Preview() {\n  return (\n    <div style={{ fontSize: 48, display: 'flex' }}>\n      <Spinner label=\"Loading\" />\n    </div>\n  );\n}\n"
+      },
       "tables": [
         {
           "name": "SpinnerProps",
@@ -7876,6 +8346,14 @@
           "code": "import { Heading, Inline, Stack, Tag, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function NestedWithInline() {\n  const [all, setAll] = useState(false);\n  return (\n    <Stack gap=\"xxl\">\n      <Stack as=\"section\" gap=\"sm\">\n        <Inline justify=\"between\">\n          <Heading level={3}>Currently reading</Heading>\n          <Button type=\"link\" onClick={() => setAll((value) => !value)}>\n            {all ? 'Show less' : 'See all'}\n          </Button>\n        </Inline>\n        <Inline wrap>\n          <Tag>Fiction</Tag>\n          <Tag tone=\"author\">George Eliot</Tag>\n          {all && <Tag>Classic</Tag>}\n          {all && <Tag>1871</Tag>}\n        </Inline>\n      </Stack>\n      <Stack as=\"section\" gap=\"sm\">\n        <Heading level={3}>Up next</Heading>\n        <Text tone=\"muted\">Nothing queued yet.</Text>\n      </Stack>\n    </Stack>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/component/stack/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { Stack } from '@korzun/design/component';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\n\nconst useStyle = createUseStyles((theme: Theme) => ({\n  block: {\n    width: 200,\n    height: 28,\n    backgroundColor: theme.color.brand.light,\n    border: `1px solid ${theme.color.brand.outline}`,\n    borderRadius: theme.radius.md,\n  },\n}));\n\nexport default function Preview() {\n  const styles = useStyle();\n  return (\n    <Stack>\n      <div className={styles.block} />\n      <div className={styles.block} />\n      <div className={styles.block} />\n    </Stack>\n  );\n}\n"
+      },
       "tables": [
         {
           "name": "StackProps",
@@ -8054,6 +8532,14 @@
           "code": "import { Card, Inline, Stack, Surface, Text, useSurfaceRadius } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\nimport { useState, type ReactNode } from 'react';\n\nconst useStyle = createUseStyles((theme: Theme) => ({\n  box: {\n    border: `1px solid ${theme.color.border.default}`,\n    padding: theme.space.lg,\n  },\n}));\n\nconst LevelBox = ({ name, children }: { name: string; children?: ReactNode }) => {\n  const styles = useStyle();\n  const borderRadius = useSurfaceRadius();\n  const [taps, setTaps] = useState(0);\n  return (\n    <div className={styles.box} style={{ borderRadius }}>\n      <Surface>\n        <Stack gap=\"sm\">\n          <Inline>\n            <Button onClick={() => setTaps((n) => n + 1)}>{name}</Button>\n            <Text tone=\"muted\">\n              Radius {borderRadius}, taps: {taps}\n            </Text>\n          </Inline>\n          {children}\n        </Stack>\n      </Surface>\n    </div>\n  );\n};\n\nexport default function Nesting() {\n  return (\n    <Card title=\"Card\">\n      <LevelBox name=\"Box\">\n        <LevelBox name=\"Box in box\">\n          <LevelBox name=\"Box in box in box\" />\n        </LevelBox>\n      </LevelBox>\n    </Card>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/component/surface/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { Card, Surface, useSurfaceRadius } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\n\nconst useStyle = createUseStyles((theme: Theme) => ({\n  box: {\n    border: `1px solid ${theme.color.border.default}`,\n    padding: theme.space.lg,\n  },\n}));\n\nconst InsetBox = () => {\n  const styles = useStyle();\n  const borderRadius = useSurfaceRadius();\n  return (\n    <div className={styles.box} style={{ borderRadius }}>\n      <Surface>\n        <Button>Save</Button>\n      </Surface>\n    </div>\n  );\n};\n\nexport default function Preview() {\n  return (\n    <Card title=\"Settings\">\n      <InsetBox />\n    </Card>\n  );\n}\n"
+      },
       "tables": [
         {
           "name": "SurfaceProps",
@@ -8133,7 +8619,7 @@
         "TagTone"
       ],
       "importLine": "import { Tag, type TagProps, type TagTone } from '@korzun/design/component'",
-      "body": "A small coloured chip (an inline `<span>`) for a category, status, or value:\nan author, a subject, \"Read only\". Optionally clickable, in which case it\nbecomes `role=\"button\"` with `tabIndex=0` and Enter/Space.\n\nUse something else for: an editable list of chips (`ChipsInput` in\n`@korzun/design/control`), an action (`Button`), a count on a nav tab\n(`NavItem.badge`).\n\n## Usage\n\n### Choosing a tone\n\n`TagTone` is `keyof Theme['color']['chip']`. There are two groups: label tones\nare **domain names** (what kind of thing the tag names) and status tones are\n**meanings** (what state it reports). Neither group is a set of colour names:\nnever pick a tone for its colour. Pick by what the tag *is*:\n\nStatus tones report a state:\n\n| Tone | Use for |\n|---|---|\n| `success` | Something went well (Published, Paid). |\n| `warning` | Needs attention soon (Overdue, Expiring). |\n| `danger` | Something failed or is blocked (Failed, Rejected). |\n| `info` | Neutral news (Scheduled, New). |\n| `neutral` | A state with no category (\"no change\"): quiet grey. |\n\nLabel tones name a kind of thing:\n\n| Tone | Use for |\n|---|---|\n| `status` | Legacy; kept for Bookplate's existing chips. Don't pick it for new state tags. |\n| `author` | A person who wrote something. |\n| `series` | A series name. |\n| `subject` | A subject / genre / keyword. The default. |\n| `book` | A book or title. |\n| `entryType` | The kind of an entry or record. |\n| `user` | An app user / account. |\n| `rating` | A rating value. |\n\nNote the name clash: `status` is a legacy label tone despite its name; for a state use `success`/`warning`/`danger`/`info`, or `neutral` when it carries no meaning.\n\nEach tone has its own `text`, `bg`, and `border` in both light and dark themes.\nA consumer's theme can't add tones; the list is fixed by the `Theme` type.\n\n### Styling\n\nNo `className`, no `ariaLabel`.\n\n### Corners\n\n`radius.md` at both sizes, which is right inside a Card or modal; see\n[corners](../corners.md).\n\n## Do / don't\n\n- Do choose `tone` by meaning, so the same kind of thing is the same colour\n  everywhere.\n- Do use `tone=\"warning\"` for \"Overdue\".\n- Do use `size=\"sm\"` inside text rows and lists.\n- Don't use `neutral` just to make a tag grey when it has a category.\n- Don't use `subject` or `author` to mean warning or success.\n- Don't use `info` to look like a link (it shares a hue with links; use\n  `Button type=\"link\"` for actions).\n- Don't use `status` for a new state tag; it is a legacy label tone.\n- Don't nest a clickable Tag inside another clickable element (Button, a\n  clickable Card); both would fire.",
+      "body": "A small coloured chip (an inline `<span>`) for a category, status, or value:\nan author, a subject, \"Read only\". Optionally clickable, in which case it\nbecomes `role=\"button\"` with `tabIndex=0` and Enter/Space.\n\nUse something else for: an editable list of chips (`ChipsInput` in\n`@korzun/design/control`), an action (`Button`), a count on a nav tab\n(`NavItem.badge`).\n\n## Usage\n\n### Choosing a tone\n\n`TagTone` is `keyof Theme['color']['chip']`. There are two groups: label tones\nare **domain names** (what kind of thing the tag names) and status tones are\n**meanings** (what state it reports). Neither group is a set of colour names:\nnever pick a tone for its colour. Pick by what the tag *is*:\n\nStatus tones report a state:\n\n| Tone | Use for |\n|---|---|\n| `success` | Something went well (Published, Paid). |\n| `warning` | Needs attention soon (Overdue, Expiring). |\n| `danger` | Something failed or is blocked (Failed, Rejected). |\n| `info` | Neutral news (Scheduled, New). |\n| `neutral` | A state with no category (\"no change\"): quiet grey. |\n\nLabel tones name a kind of thing:\n\n| Tone | Use for |\n|---|---|\n| `status` | Legacy; kept for Bookplate's existing chips. Don't pick it for new state tags. |\n| `author` | A person who wrote something. |\n| `series` | A series name. |\n| `subject` | A subject / genre / keyword. The default. |\n| `book` | A book or title. |\n| `entryType` | The kind of an entry or record. |\n| `user` | An app user / account. |\n| `rating` | A rating value. |\n\nNote the name clash: `status` is a legacy label tone despite its name; for a state use `success`/`warning`/`danger`/`info`, or `neutral` when it carries no meaning.\n\nEach tone has its own `text`, `bg`, and `border` in both light and dark themes.\nA consumer's theme can't add tones; the list is fixed by the `Theme` type.\n\n### Styling\n\nNo `className`, no `ariaLabel`.\n\n### Corners\n\nAt both sizes the corners follow surface depth: `md` in a Card or modal, `lg`\ndirectly on a `Page`, `sm` one more level in (a `CardRow` in a Card, a Popover);\nsee [corners](../corners.md).\n\n## Do / don't\n\n- Do choose `tone` by meaning, so the same kind of thing is the same colour\n  everywhere.\n- Do use `tone=\"warning\"` for \"Overdue\".\n- Do use `size=\"sm\"` inside text rows and lists.\n- Don't use `neutral` just to make a tag grey when it has a category.\n- Don't use `subject` or `author` to mean warning or success.\n- Don't use `info` to look like a link (it shares a hue with links; use\n  `Button type=\"link\"` for actions).\n- Don't use `status` for a new state tag; it is a legacy label tone.\n- Don't nest a clickable Tag inside another clickable element (Button, a\n  clickable Card); both would fire.",
       "examples": [
         {
           "file": "src/component/tag/examples/01-basic.tsx",
@@ -8184,6 +8670,14 @@
           "code": "import { Card, Inline, Stack, Tag, Text } from '@korzun/design/component';\n\nexport default function InCard() {\n  return (\n    <Card title=\"Metadata fixes\">\n      <Stack gap=\"sm\">\n        <Inline wrap gap=\"xs\">\n          <Text>Middlemarch</Text>\n          <Tag size=\"sm\" tone=\"author\">\n            George Eliot\n          </Tag>\n          <Tag size=\"sm\">Fiction</Tag>\n          <Tag size=\"sm\">Classic</Tag>\n        </Inline>\n        <Inline gap=\"xs\">\n          <Text>Access</Text>\n          <Tag size=\"sm\" tone=\"neutral\">\n            Read only\n          </Tag>\n        </Inline>\n      </Stack>\n    </Card>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/component/tag/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { Inline, Tag } from '@korzun/design/component';\n\nexport default function Preview() {\n  return (\n    <Inline>\n      <Tag tone=\"success\">Published</Tag>\n      <Tag tone=\"author\">George Eliot</Tag>\n      <Tag tone=\"subject\">Fiction</Tag>\n    </Inline>\n  );\n}\n"
+      },
       "tables": [
         {
           "name": "TagProps",
@@ -8484,10 +8978,22 @@
           "dark": "1"
         },
         {
+          "path": "radius.lg",
+          "kind": "value",
+          "light": "16px",
+          "dark": "16px"
+        },
+        {
           "path": "radius.md",
           "kind": "value",
           "light": "8px",
           "dark": "8px"
+        },
+        {
+          "path": "radius.sm",
+          "kind": "value",
+          "light": "4px",
+          "dark": "4px"
         },
         {
           "path": "space.md",
@@ -8515,6 +9021,21 @@
         }
       ],
       "changelog": [
+        {
+          "version": "0.6.0",
+          "date": "2026-11-26",
+          "tags": [
+            "TextInput",
+            "TextArea",
+            "NumberInput",
+            "DateTimeInput",
+            "ChipsInput",
+            "SegmentedControl",
+            "Tag",
+            "Switch"
+          ],
+          "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.5.2 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px."
+        },
         {
           "version": "0.1.0",
           "date": "2026-11-21",
@@ -8635,6 +9156,14 @@
           "code": "import { Inline, Stack, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { useState } from 'react';\n\nconst title =\n  'Middlemarch: A Study of Provincial Life, in Eight Books, with a Prelude and a Finale, Followed by an Extended Note on the Text, a Chronology, a Map of the Midlands, and a Glossary of Provincial Terms';\n\nexport default function Truncate() {\n  const [opened, setOpened] = useState(0);\n  return (\n    <Stack gap=\"xl\">\n      <Inline justify=\"between\">\n        <Text truncate weight=\"semibold\">\n          {title}\n        </Text>\n        <Button type=\"primary\" onClick={() => setOpened((n) => n + 1)}>\n          Open\n        </Button>\n      </Inline>\n      <Inline justify=\"between\">\n        <Stack gap=\"none\">\n          <Text truncate weight=\"semibold\">\n            {title}\n          </Text>\n          <Text size=\"sm\" tone=\"muted\">\n            George Eliot. Opened: {opened}\n          </Text>\n        </Stack>\n        <Button type=\"primary\" onClick={() => setOpened((n) => n + 1)}>\n          Open\n        </Button>\n      </Inline>\n    </Stack>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/component/text/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { Stack, Text } from '@korzun/design/component';\n\nexport default function Preview() {\n  return (\n    <Stack gap=\"sm\">\n      <Text as=\"p\">Welcome back.</Text>\n      <Text as=\"p\" size=\"sm\" tone=\"muted\">\n        3 books, updated yesterday\n      </Text>\n      <Text as=\"p\" size=\"xs\" tone=\"faint\">\n        Cover art by the publisher\n      </Text>\n    </Stack>\n  );\n}\n"
+      },
       "tables": [
         {
           "name": "TextProps",
@@ -8881,6 +9410,14 @@
           "code": "import { Card, Page, Text, ThemeSetting } from '@korzun/design/component';\nimport { useTheme, useThemeSetting } from '@korzun/design/theme';\n\nexport default function Basic() {\n  const [setting] = useThemeSetting();\n  const { colorScheme } = useTheme();\n  return (\n    <Page>\n      <ThemeSetting />\n      <Card title=\"Preview\">\n        <Text>\n          Choice: {setting}. Mode in use: {colorScheme}.\n        </Text>\n      </Card>\n    </Page>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/component/theme-setting/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { ThemeSetting } from '@korzun/design/component';\n\nexport default function Preview() {\n  return <ThemeSetting />;\n}\n"
+      },
       "tables": [
         {
           "name": "ThemeSettingProps",
@@ -8920,6 +9457,15 @@
           "viewport": "mobile"
         }
       ],
+      "preview": {
+        "file": "src/component/top-fade/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { Stack, Text, TopFade } from '@korzun/design/component';\n\n// Page content scrolled up under the band at the top edge.\nexport default function Preview() {\n  return (\n    <>\n      <TopFade />\n      <div style={{ position: 'fixed', top: -6, left: 16, right: 16 }}>\n        <Stack gap=\"xs\">\n          <Text>Middlemarch</Text>\n          <Text>Persuasion</Text>\n          <Text>Villette</Text>\n        </Stack>\n      </div>\n    </>\n  );\n}\n",
+        "viewport": "mobile"
+      },
       "tables": [
         {
           "name": "TopFadeProps",
@@ -8989,7 +9535,7 @@
         "ThemeSetting"
       ],
       "importLine": "import { GlobalStyles, ThemeProvider, createUseStyles, darkTheme, lightTheme, useTheme, useThemeGlobalStyles, useThemeSetting, type SpaceValue, type Theme, type ThemeMode, type ThemeProviderProps, type ThemeSetting } from '@korzun/design/theme'",
-      "body": "Every visual value comes from the theme. App styles use `createUseStyles` (the\nsame function react-jss exports, re-exported here) with a typed `theme`\nargument. Don't add another CSS-in-JS library, and don't write literal colours,\nspacing, font sizes, or radii.\n\nUse something else for: a ready-made light/dark/auto picker (`ThemeSetting`),\nthe full list of token keys ([tokens](tokens.md)).\n\n## Usage\n\n### Setup\n\n```tsx\n<ThemeProvider identity={userId /* or null when signed out */}>\n  <ToastProvider>{app}</ToastProvider>\n</ThemeProvider>\n```\n\n- `ThemeProvider` renders `GlobalStyles`: the page background, the body font,\n  a 16px input floor on iOS, scroll lock while a `<dialog>` is open, and the\n  `theme-rotation` and `theme-slide-*` keyframes. Don't render\n  `GlobalStyles` yourself, or `useThemeGlobalStyles()`, the hook it calls.\n- `lightTheme` / `darkTheme` are the two concrete themes (for tests).\n\n### `useThemeSetting()`\n\n```ts\nuseThemeSetting(): [ThemeSetting, (setting: ThemeSetting) => void]\n```\n\nReturns `[setting, setSetting]`, where `ThemeSetting` is `'light' | 'dark' |\n'auto'`. `'auto'` follows the OS `prefers-color-scheme` live. The\n`ThemeSetting` component is a ready-made picker for it. Without a\n`ThemeProvider` above it, the setter does nothing.\n\n### `useTheme()`\n\n```ts\nuseTheme(): Theme\n```\n\nReturns the current `Theme` object, for values needed outside a stylesheet.\n`theme.colorScheme` is the mode it resolved to, `'light'` or `'dark'`.\n\n### Writing styles\n\n```ts\n// style.ts, next to the component\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\nimport { applyTransparency } from '@korzun/design';\n\nexport const useStyle = createUseStyles((theme: Theme) => ({\n  root: {\n    padding: theme.space.md,\n    backgroundColor: theme.color.bg.card,\n  },\n  highlight: { backgroundColor: applyTransparency(theme.color.brand.default, 0.12) },\n  [theme.breakpoint.mobile]: { root: { padding: theme.space.sm } },\n}));\n```\n\n- Style files are for padding, borders, backgrounds, and one-offs (borders come from the border tokens). Lay out with\n  `Stack`/`Inline` and set text with `Text`/`Heading`.\n- `applyTransparency(color, alpha)` turns a hex or rgb token into an `rgba()`\n  string. Use it for tints instead of writing an rgba literal.\n- Media queries: use the `theme.breakpoint.mobile` / `.normal` strings as keys.\n\n### Tokens\n\nThe token groups (`color`, `space`, `radius`, `fontSize`, `shadow`, `zIndex`,\n`breakpoint` and the rest) are listed key by key in [tokens](tokens.md). Use the\nsemantic tokens, never the primitive `gray`, `blue` and `red` scales. Radii are\nchosen by nesting depth; see [corners](corners.md).\n\n| Group | Keys | Notes |\n|---|---|---|\n| `color.text` | `primary`, `secondary`, `muted`, `faint`, `description`, `onPrimary`, `onDanger` | `muted` for labels and meta, `faint` for placeholders |\n| `color.bg` | `page`, `card`, `cardHeader`, `track`, `input`, `footer`, `glass`, `glassFallback`, `glassActive`, `selected`, `hover`, `success`, `placeholder` | `cardHeader` is also the shaded-row and inset-box fill; `hover` is a translucent scrim |\n| `color.border` | `default`, `strong`, `light`, `focus`, `hover`, `danger`, `glass`, `glassActive`, `faint`, `loading`, `success`, `section` | Cards and dividers use `strong`; inputs use `default` |\n| `color.brand` | `default`, `hover`, `active`, `light`, `outline`, `loading*`, `linkHover` | The primary action colour |\n| `color.danger` | `default`, `hover`, `active`, `light`, `outline`, `loading*` | Destructive actions and errors |\n| `color.success` | (a string) | Solid green |\n| `color.warning` | (a string) | Solid amber |\n| `color.info` | (a string) | Solid blue, the mode's `brand.default` |\n| `color.chip.<tone>` | `{ text, bg, border }` for 13 tones. Status tones: `success`, `warning`, `danger`, `info`, `neutral`. Label tones: `status`, `author`, `series`, `subject`, `book`, `entryType`, `user`, `rating` | Used by `Tag` |\n| `color.overlay` | `backdrop` | Modal backdrop |\n| `color.gray` / `blue` / `red` | primitive scales | Don't use these in app code; use the semantic tokens above |\n| `space` | `xxxs` 0.1rem, `xxs` 0.125, `xs` 0.25, `sm` 0.375, `md` 0.5, `lg` 0.625, `xl` 0.75, `xxl` 1, `xxxl` 1.25, `xxxxl` 1.5, `xxxxxl` 2rem | `md` is the default gap between stacked fields |\n| `radius` | `sm` 4px, `md` 8px, `lg` 16px, `circle`, `pill` | Chosen by nesting depth; see [corners](corners.md) |\n| `fontSize` | `xxs` 0.6rem, `xs` 0.7, `sm` 0.75, `md` 0.875, `lg` 1, `xl` 1.25, `xxl` 1.75rem | Control text is `'0.80rem'`, the one sanctioned literal (already applied by `recipe.input` and Button) |\n| `fontWeight` | `regular` 400, `medium` 500, `semibold` 600, `bold` 700, `extrabold` 800 | |\n| `lineHeight` | `tight` 1, `body` 1.3 | |\n| `fontFamily` | `body`, `mono` | |\n| `shadow` | `card`, `cardStack`, `hoverLift`, `dangerStack`, `brandStack`, `glass`, `glassActive` | Floating layers use `hoverLift` |\n| `transition` | `fast`, `medium`, `slide`, `slow`, `spring` | Values like `'0.2s ease-in'` |\n| `zIndex` | `behind`, `base`, `stack.{lo,md,hi}`, `header`, `sticky`, `toast` | |\n| `breakpoint` | `mobile` (≤640px), `normal` | Media query strings |\n| `layout` | `navHeightMobile`, `modalWidth`, `controlHeight`, `floatingControlTopBase` | Measured chrome sizes to lay out around |\n| `size` | `metadataValue` | |\n\n### Recipes\n\nRecipes are style fragments that you spread into a rule: `{ ...theme.recipe.input }`.\n\n| Recipe | Gives you |\n|---|---|\n| `recipe.input` | Text-input chrome: font, `md` radius, border, hover and focus colours, iOS 16px floor; `&$danger` turns the border red if your sheet declares a `danger: {}` class |\n| `recipe.label` | Field label: semibold, `md`, muted; `&$danger` |\n| `recipe.focusRing` | Transparent 2px outline; set `outlineColor: theme.color.brand.outline` on `'&:focus'` |\n| `recipe.spinner` | 1em rotating box. `Spinner` is the normal way to show a spinner; use the recipe only for a custom rotating element |\n| `recipe.glass` / `glassHighlight` | Frosted translucent surface (floating chrome) and its active state |\n| `recipe.row` | The shaded field row a control sits in inside a card: `bg.cardHeader`, `md` corners, padding `md lg md sm`. Use it for custom rows next to form fields |\n| `recipe.card.shell` / `header` / `footer` | The Card surface (`lg`), its header bar, and its footer bar |\n| `recipe.modal.dialog` / `header` / `footer` | A `<dialog>` surface (`lg`, shared width, backdrop), its title, and its button bar |\n\nRecipes that use `$name` references need an empty class with that name in the\nsame sheet (`danger: {}`).\n\n## Do / don't\n\n- Do style with `theme.*` tokens and `createUseStyles`.\n- Do use `applyTransparency` for a tint instead of an rgba literal.\n- Don't render `GlobalStyles` yourself; `ThemeProvider` does.\n- Don't use the primitive `gray`, `blue` and `red` scales in app code.",
+      "body": "Every visual value comes from the theme. App styles use `createUseStyles` (the\nsame function react-jss exports, re-exported here) with a typed `theme`\nargument. Don't add another CSS-in-JS library, and don't write literal colours,\nspacing, font sizes, or radii.\n\nUse something else for: a ready-made light/dark/auto picker (`ThemeSetting`),\nthe full list of token keys ([tokens](tokens.md)).\n\n## Usage\n\n### Setup\n\n```tsx\n<ThemeProvider identity={userId /* or null when signed out */}>\n  <ToastProvider>{app}</ToastProvider>\n</ThemeProvider>\n```\n\n- `ThemeProvider` renders `GlobalStyles`: a reset (every element\n  `box-sizing: border-box` with no default margin or padding; components are\n  sized against it), the page background, the body font,\n  a 16px input floor on iOS, scroll lock while a `<dialog>` is open, and the\n  `theme-rotation` and `theme-slide-*` keyframes. Don't render\n  `GlobalStyles` yourself, or `useThemeGlobalStyles()`, the hook it calls.\n- `lightTheme` / `darkTheme` are the two concrete themes (for tests).\n\n### `useThemeSetting()`\n\n```ts\nuseThemeSetting(): [ThemeSetting, (setting: ThemeSetting) => void]\n```\n\nReturns `[setting, setSetting]`, where `ThemeSetting` is `'light' | 'dark' |\n'auto'`. `'auto'` follows the OS `prefers-color-scheme` live. The\n`ThemeSetting` component is a ready-made picker for it. Without a\n`ThemeProvider` above it, the setter does nothing.\n\n### `useTheme()`\n\n```ts\nuseTheme(): Theme\n```\n\nReturns the current `Theme` object, for values needed outside a stylesheet.\n`theme.colorScheme` is the mode it resolved to, `'light'` or `'dark'`.\n\n### Writing styles\n\n```ts\n// style.ts, next to the component\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\nimport { applyTransparency } from '@korzun/design';\n\nexport const useStyle = createUseStyles((theme: Theme) => ({\n  root: {\n    padding: theme.space.md,\n    backgroundColor: theme.color.bg.card,\n  },\n  highlight: { backgroundColor: applyTransparency(theme.color.brand.default, 0.12) },\n  [theme.breakpoint.mobile]: { root: { padding: theme.space.sm } },\n}));\n```\n\n- Style files are for padding, borders, backgrounds, and one-offs (borders come from the border tokens). Lay out with\n  `Stack`/`Inline` and set text with `Text`/`Heading`.\n- `applyTransparency(color, alpha)` turns a hex or rgb token into an `rgba()`\n  string. Use it for tints instead of writing an rgba literal.\n- Media queries: use the `theme.breakpoint.mobile` / `.normal` strings as keys.\n\n### Tokens\n\nThe token groups (`color`, `space`, `radius`, `fontSize`, `shadow`, `zIndex`,\n`breakpoint` and the rest) are listed key by key in [tokens](tokens.md). Use the\nsemantic tokens, never the primitive `gray`, `blue` and `red` scales. Radii are\nchosen by nesting depth; see [corners](corners.md).\n\n| Group | Keys | Notes |\n|---|---|---|\n| `color.text` | `primary`, `secondary`, `muted`, `faint`, `description`, `onPrimary`, `onDanger` | `muted` for labels and meta, `faint` for placeholders |\n| `color.bg` | `page`, `card`, `cardHeader`, `track`, `input`, `footer`, `glass`, `glassFallback`, `glassActive`, `selected`, `hover`, `success`, `placeholder` | `cardHeader` is also the shaded-row and inset-box fill; `hover` is a translucent scrim |\n| `color.border` | `default`, `strong`, `light`, `focus`, `hover`, `danger`, `glass`, `glassActive`, `faint`, `loading`, `success`, `section` | Cards and dividers use `strong`; inputs use `default` |\n| `color.brand` | `default`, `hover`, `active`, `light`, `outline`, `loading*`, `linkHover` | The primary action colour |\n| `color.danger` | `default`, `hover`, `active`, `light`, `outline`, `loading*` | Destructive actions and errors |\n| `color.success` | (a string) | Solid green |\n| `color.warning` | (a string) | Solid amber |\n| `color.info` | (a string) | Solid blue, the mode's `brand.default` |\n| `color.chip.<tone>` | `{ text, bg, border }` for 13 tones. Status tones: `success`, `warning`, `danger`, `info`, `neutral`. Label tones: `status`, `author`, `series`, `subject`, `book`, `entryType`, `user`, `rating` | Used by `Tag` |\n| `color.overlay` | `backdrop` | Modal backdrop |\n| `color.gray` / `blue` / `red` | primitive scales | Don't use these in app code; use the semantic tokens above |\n| `space` | `xxxs` 0.1rem, `xxs` 0.125, `xs` 0.25, `sm` 0.375, `md` 0.5, `lg` 0.625, `xl` 0.75, `xxl` 1, `xxxl` 1.25, `xxxxl` 1.5, `xxxxxl` 2rem | `md` is the default gap between stacked fields |\n| `radius` | `sm` 4px, `md` 8px, `lg` 16px, `circle`, `pill` | Chosen by nesting depth; see [corners](corners.md) |\n| `fontSize` | `xxs` 0.6rem, `xs` 0.7, `sm` 0.75, `md` 0.875, `lg` 1, `xl` 1.25, `xxl` 1.75rem | Control text is `'0.80rem'`, the one sanctioned literal (already applied by `recipe.input` and Button) |\n| `fontWeight` | `regular` 400, `medium` 500, `semibold` 600, `bold` 700, `extrabold` 800 | |\n| `lineHeight` | `tight` 1, `body` 1.3 | |\n| `fontFamily` | `body`, `mono` | |\n| `shadow` | `card`, `cardStack`, `hoverLift`, `dangerStack`, `brandStack`, `glass`, `glassActive` | Floating layers use `hoverLift` |\n| `transition` | `fast`, `medium`, `slide`, `slow`, `spring` | Values like `'0.2s ease-in'` |\n| `zIndex` | `behind`, `base`, `stack.{lo,md,hi}`, `header`, `sticky`, `toast` | |\n| `breakpoint` | `mobile` (≤640px), `normal` | Media query strings |\n| `layout` | `navHeightMobile`, `modalWidth`, `controlHeight`, `floatingControlTopBase` | Measured chrome sizes to lay out around |\n| `size` | `metadataValue` | |\n\n### Recipes\n\nRecipes are style fragments that you spread into a rule: `{ ...theme.recipe.input }`.\n\n| Recipe | Gives you |\n|---|---|\n| `recipe.input` | Text-input chrome: font, `md` radius, border, hover and focus colours, iOS 16px floor; `&$danger` turns the border red if your sheet declares a `danger: {}` class |\n| `recipe.label` | Field label: semibold, `md`, muted; `&$danger` |\n| `recipe.focusRing` | Transparent 2px outline; set `outlineColor: theme.color.brand.outline` on `'&:focus'` |\n| `recipe.spinner` | 1em rotating box. `Spinner` is the normal way to show a spinner; use the recipe only for a custom rotating element |\n| `recipe.glass` / `glassHighlight` | Frosted translucent surface (floating chrome) and its active state |\n| `recipe.row` | The shaded field row a control sits in inside a card: `bg.cardHeader`, `md` corners, padding `md lg md sm`. Use it for custom rows next to form fields |\n| `recipe.card.shell` / `header` / `footer` | The Card surface (`lg`), its header bar, and its footer bar |\n| `recipe.modal.dialog` / `header` / `footer` | A `<dialog>` surface (`lg`, shared width, backdrop), its title, and its button bar |\n\nRecipes that use `$name` references need an empty class with that name in the\nsame sheet (`danger: {}`).\n\n## Do / don't\n\n- Do style with `theme.*` tokens and `createUseStyles`.\n- Do use `applyTransparency` for a tint instead of an rgba literal.\n- Don't render `GlobalStyles` yourself; `ThemeProvider` does.\n- Don't use the primitive `gray`, `blue` and `red` scales in app code.",
       "examples": [
         {
           "file": "src/theme/examples/01-styles.tsx",
@@ -9016,6 +9562,14 @@
           "code": "import { Inline, Stack, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { darkTheme, lightTheme, useTheme } from '@korzun/design/theme';\nimport { useState } from 'react';\n\nexport default function Values() {\n  const current = useTheme();\n  const [mode, setMode] = useState<'light' | 'dark'>('light');\n  const picked = mode === 'light' ? lightTheme : darkTheme;\n  return (\n    <Stack gap=\"md\" align=\"start\">\n      <Text>Page background here: {current.color.bg.page}</Text>\n      <Inline>\n        <Button type={mode === 'light' ? 'primary' : 'default'} onClick={() => setMode('light')}>\n          lightTheme\n        </Button>\n        <Button type={mode === 'dark' ? 'primary' : 'default'} onClick={() => setMode('dark')}>\n          darkTheme\n        </Button>\n      </Inline>\n      <Text tone=\"muted\">\n        {picked.colorScheme}: page {picked.color.bg.page}, text {picked.color.text.primary}\n      </Text>\n    </Stack>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/theme/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { Inline } from '@korzun/design/component';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\n\nconst useStyle = createUseStyles((theme: Theme) => ({\n  swatch: {\n    width: 40,\n    height: 40,\n    borderRadius: theme.radius.md,\n    border: `1px solid ${theme.color.border.default}`,\n  },\n  brand: { backgroundColor: theme.color.brand.default },\n  success: { backgroundColor: theme.color.success },\n  warning: { backgroundColor: theme.color.warning },\n  danger: { backgroundColor: theme.color.danger.default },\n  text: { backgroundColor: theme.color.text.primary },\n  card: { backgroundColor: theme.color.bg.card },\n}));\n\nconst tokens = ['brand', 'success', 'warning', 'danger', 'text', 'card'] as const;\n\nexport default function Preview() {\n  const styles = useStyle();\n  return (\n    <Inline gap=\"sm\">\n      {tokens.map((token) => (\n        <div key={token} className={`${styles.swatch} ${styles[token]}`} />\n      ))}\n    </Inline>\n  );\n}\n"
+      },
       "tables": [
         {
           "name": "ThemeProviderProps",
@@ -9157,6 +9711,15 @@
       "tokens": [],
       "changelog": [
         {
+          "version": "0.6.0",
+          "date": "2026-11-26",
+          "tags": [
+            "ThemeProvider",
+            "GlobalStyles"
+          ],
+          "text": "`GlobalStyles` (rendered by `ThemeProvider`) ships the reset the components are drawn against: every element is `box-sizing: border-box` with no default margin or padding, as in Bookplate's and Scribe's `index.html`. Without it a text field was 51px tall instead of `layout.controlHeight` (33px). An app that already carries this reset sees no change; one that relied on browser default margins (`p`, `h1`, `ul`) loses them."
+        },
+        {
           "version": "0.2.0",
           "date": "2026-11-21",
           "tags": [
@@ -9250,6 +9813,14 @@
           "code": "import { Inline, Stack, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { ToastProvider, useToast } from '@korzun/design/toast';\nimport { useState } from 'react';\n\nconst Sender = () => {\n  const showToast = useToast();\n  const [sent, setSent] = useState(0);\n  return (\n    <Stack gap=\"md\">\n      <Inline>\n        <Button\n          onClick={() => {\n            showToast(`Message ${sent + 1} sent`, 'success');\n            setSent(sent + 1);\n          }}\n        >\n          Send message\n        </Button>\n      </Inline>\n      <Text tone=\"muted\">Sent: {sent}</Text>\n    </Stack>\n  );\n};\n\nexport default function MaxToasts() {\n  return (\n    <ToastProvider maxToasts={2}>\n      <Sender />\n    </ToastProvider>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/toast/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { ToastProvider, useToast } from '@korzun/design/toast';\nimport { useEffect } from 'react';\n\n// A toast leaves after a few seconds, so a fresh one replaces it just before it would go.\nconst Show = () => {\n  const showToast = useToast();\n  useEffect(() => {\n    showToast('Password changed', 'success');\n    const timer = setInterval(() => showToast('Password changed', 'success'), 3500);\n    return () => clearInterval(timer);\n  }, [showToast]);\n  return null;\n};\n\nexport default function Preview() {\n  return (\n    <ToastProvider maxToasts={1}>\n      <Show />\n    </ToastProvider>\n  );\n}\n"
+      },
       "tables": [
         {
           "name": "ToastProviderProps",
@@ -9480,6 +10051,14 @@
           "code": "import { Inline, Stack, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { ChevronIcon, SearchIcon } from '@korzun/design/icon';\nimport { useState } from 'react';\n\nexport default function InComponents() {\n  const [searches, setSearches] = useState(0);\n  const [pages, setPages] = useState(1);\n  return (\n    <Stack gap=\"md\" align=\"start\">\n      <Inline>\n        <Button prefix={SearchIcon} onClick={() => setSearches((n) => n + 1)}>\n          Search\n        </Button>\n        <Button suffix={ChevronIcon} onClick={() => setPages((n) => n + 1)}>\n          Next page\n        </Button>\n      </Inline>\n      <Text tone=\"muted\">\n        Searches: {searches}, page {pages}\n      </Text>\n    </Stack>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/icon/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { Inline } from '@korzun/design/component';\nimport {\n  BookIcon,\n  CheckIcon,\n  HomeIcon,\n  SearchIcon,\n  SettingsIcon,\n  UploadIcon,\n  UserIcon,\n} from '@korzun/design/icon';\n\nconst icons = [HomeIcon, BookIcon, SearchIcon, UploadIcon, UserIcon, CheckIcon, SettingsIcon];\n\nexport default function Preview() {\n  return (\n    <Inline gap=\"lg\">\n      {icons.map((Icon, index) => (\n        <Icon key={index} width={28} height={28} aria-hidden />\n      ))}\n    </Inline>\n  );\n}\n"
+      },
       "tables": [
         {
           "name": "IconProps",
@@ -9558,7 +10137,7 @@
       "docPath": "docs/corners.md",
       "title": "Corners",
       "description": "Corner radius by nesting depth, one radius step per level.",
-      "body": "Corner radius tracks **depth**, not size. Surfaces on the page background have\nthe roundest corners. Each surface nested inside another gets a squarer,\nconcentric corner, so the inner curve follows the outer one.\n\n## Tokens\n\n| Token | Value | Use |\n|---|---|---|\n| `theme.radius.lg` | 16px | Surfaces on the page background |\n| `theme.radius.md` | 8px | One level in: inside a card or modal; also floating layers |\n| `theme.radius.sm` | 4px | Two levels in: inside an input, inset box, row, or menu |\n| `theme.radius.pill` | 999px | Capsules: nav bar, a Switch with no nearby corner |\n| `theme.radius.circle` | 50% | Round glass buttons |\n\n## The rule\n\nFind where the element sits, then read its radius from this table:\n\n| Where the element sits | Radius | Examples |\n|---|---|---|\n| On the page background | `lg` | `Card`, modal dialog (`recipe.modal.dialog`), `Button`, `Select` and `CardRow` directly on a `Page` (automatic) |\n| Inside a card or modal | `md` | inputs (`recipe.input`), Buttons and Selects in a Card or Dialog (automatic), `Tag`, shaded rows (`recipe.row`), inset boxes |\n| Inside one of those | `sm` | a chip inside an input, Buttons and Selects in a nested Card, inset box (`Surface`) or Popover (automatic), a menu item, a Switch track in a shaded row |\n| Flush with its parent (zero inset, edges touch) | the parent's radius | an unlabelled Select's trigger, an input filling its row |\n| Inset 4px or less from its parent | `calc(parent − inset)` | a Switch thumb 2px inside a 4px track is 2px |\n| A small control with no nearby corner | `pill` / `circle` | a Switch in a full-width card header |\n| A floating layer (popover, menu, dropdown, toast) | `md`, plus `shadow.hoverLift` or `recipe.glass` | its items are `sm` |\n\n**Step down one token per level** (`lg` → `md` → `sm`). Do not subtract the\npadding: a Card has 13px of inset, but the inputs inside it are `md` (8px), not\n16 − 13 = 3px. Exact subtraction applies only to tight insets of 4px or less.\n\n## It's automatic\n\nComponents read their corners from the **surface depth** they sit at, so you\npass no radius prop:\n\n| Depth | Radius | Where |\n|---|---|---|\n| 0 | `lg` (16px) | On the page background, inside a `Page` |\n| 1 | `md` (8px) | Inside a `Card`, `CardRow`, `Alert` or `Dialog` on the page |\n| 2+ | `sm` (4px) | One more level in; deeper levels stay `sm` |\n| none | each component's old default | No `Page`, `Dialog`, `Card`, `CardRow`, `Alert` or `Surface` above it (tests, a component rendered on its own) |\n\nWho provides depth:\n\n- `Page` provides 0, to its header, content and footer actions.\n- `Dialog` provides 1 to its header, body and footer.\n- `Card`, `CardRow` and `Alert` each provide one level deeper than where\n  they sit, so a Card in a Card steps down.\n- `Popover` (and so `Menu` and the `Select` list) provides a fixed 2: a\n  floating layer is `md` and its items `sm`, whatever opened it.\n\nWhat follows depth with no prop: `Button`, `Select`, `Card`, `CardRow`,\n`Alert`. For a hand-made box that holds Buttons or Selects, wrap its contents\nin `<Surface>` and read its own radius with `useSurfaceRadius()`; see\n[surface](component/surface.md).\n\nHand-drawn boxes (your own `recipe.card.shell` or `recipe.row` styles, a `useModalDialog` modal) are invisible to depth: wrap their contents in `Surface`.\n\nAn explicit prop (`Button radius`, `Select surface`) is an **override** and\nalways wins over depth. It pins that radius even where depth would step down,\nwhich breaks concentricity, so set it only when the surface really is different\n(`radius=\"background\"` on a Button that must stay round inside a Card).\n\n`Switch` still takes `radius` (`inset` or `pill`) by hand, and `type=\"link\"`\nbuttons have no padding or background, so radius doesn't apply.\n\n## In your own styles\n\n```ts\nconst useStyles = createUseStyles((theme: Theme) => ({\n  panel: { ...theme.recipe.card.shell },  // already lg\n  inset: {\n    backgroundColor: theme.color.bg.cardHeader,\n    borderRadius: theme.radius.md,        // one level in\n    padding: theme.space.md,\n  },\n  chip: { borderRadius: theme.radius.sm }, // two levels in\n  knob: { borderRadius: `calc(${theme.radius.sm} - 2px)` }, // 2px inset\n}));\n```\n\n- Never write a literal `borderRadius` (`'12px'`, `'50%'`). The only\n  non-token form allowed is `calc(theme.radius.X ± Npx)` for tight insets.\n- A 1px inset works the other way too: `Card size=\"small\"` is\n  `calc(radius.md + 1px)` so its flush `md` children stay concentric."
+      "body": "Corner radius tracks **depth**, not size. Surfaces on the page background have\nthe roundest corners. Each surface nested inside another gets a squarer,\nconcentric corner, so the inner curve follows the outer one.\n\n## Tokens\n\n| Token | Value | Use |\n|---|---|---|\n| `theme.radius.lg` | 16px | Surfaces on the page background |\n| `theme.radius.md` | 8px | One level in: inside a card or modal; also floating layers |\n| `theme.radius.sm` | 4px | Two levels in: inside an input, inset box, row, or menu |\n| `theme.radius.pill` | 999px | Capsules: nav bar, a Switch with no nearby corner |\n| `theme.radius.circle` | 50% | Round glass buttons |\n\n## The rule\n\nFind where the element sits, then read its radius from this table:\n\n| Where the element sits | Radius | Examples |\n|---|---|---|\n| On the page background | `lg` | `Card`, modal dialog (`recipe.modal.dialog`), and any control directly on a `Page`: `Button`, `Select`, `CardRow`, text fields, `Tag` (automatic) |\n| Inside a card or modal | `md` | inputs and their shaded rows, Buttons, Selects, Tags and SegmentedControls in a Card or Dialog (automatic), shaded rows (`recipe.row`), inset boxes |\n| Inside one of those | `sm` | a chip inside an input, controls in a nested Card, CardRow, inset box (`Surface`) or Popover (automatic), a menu item, a Switch track in a shaded row |\n| Flush with its parent (zero inset, edges touch) | the parent's radius | an unlabelled Select's trigger, an input filling its row |\n| Inset 4px or less from its parent | `calc(parent − inset)` | a Switch thumb 2px inside a 4px track is 2px |\n| A small control with no nearby corner | `pill` / `circle` | a Switch in a full-width card header |\n| A floating layer (popover, menu, dropdown, toast) | `md`, plus `shadow.hoverLift` or `recipe.glass` | its items are `sm` |\n\n**Step down one token per level** (`lg` → `md` → `sm`). Do not subtract the\npadding: a Card has 13px of inset, but the inputs inside it are `md` (8px), not\n16 − 13 = 3px. Exact subtraction applies only to tight insets of 4px or less.\n\n## It's automatic\n\nComponents read their corners from the **surface depth** they sit at, so you\npass no radius prop:\n\n| Depth | Radius | Where |\n|---|---|---|\n| 0 | `lg` (16px) | On the page background, inside a `Page` |\n| 1 | `md` (8px) | Inside a `Card`, `CardRow`, `Alert` or `Dialog` on the page |\n| 2+ | `sm` (4px) | One more level in; deeper levels stay `sm` |\n| none | each component's old default | No `Page`, `Dialog`, `Card`, `CardRow`, `Alert` or `Surface` above it (tests, a component rendered on its own) |\n\nWho provides depth:\n\n- `Page` provides 0, to its header, content and footer actions.\n- `Dialog` provides 1 to its header, body and footer.\n- `Card`, `CardRow` and `Alert` each provide one level deeper than where\n  they sit, so a Card in a Card steps down.\n- `Popover` (and so `Menu` and the `Select` list) provides a fixed 2: a\n  floating layer is `md` and its items `sm`, whatever opened it.\n\nWhat follows depth with no prop: `Button`, `Select`, `Card`, `CardRow`,\n`Alert`, `TextInput`, `TextArea`, `NumberInput`, `DateTimeInput`,\n`ChipsInput` (its chips a step further in), `SegmentedControl`, `Tag`, and a\n`Switch` row (`layout=\"horizontal\"`, its `inset` track a step further in). A\nfield's shaded row and the field in it are flush, so both take the depth\nradius. For a hand-made box that holds Buttons or Selects, wrap its contents\nin `<Surface>` and read its own radius with `useSurfaceRadius()`; see\n[surface](component/surface.md).\n\nHand-drawn boxes (your own `recipe.card.shell` or `recipe.row` styles, a `useModalDialog` modal) are invisible to depth: wrap their contents in `Surface`.\n\nAn explicit prop (`Button radius`, `Select surface`) is an **override** and\nalways wins over depth. It pins that radius even where depth would step down,\nwhich breaks concentricity, so set it only when the surface really is different\n(`radius=\"background\"` on a Button that must stay round inside a Card).\n\n`Switch` still takes `radius` (`inset` or `pill`) by hand for its track;\n`inset` follows the row as above, `pill` stays a capsule. `type=\"link\"`\nbuttons have no padding or background, so radius doesn't apply. Floating\nlayers (`Toast`, a `Popover` surface, the `ChipsInput` suggestion list) stay\n`md` wherever they open.\n\n## In your own styles\n\n```ts\nconst useStyles = createUseStyles((theme: Theme) => ({\n  panel: { ...theme.recipe.card.shell },  // already lg\n  inset: {\n    backgroundColor: theme.color.bg.cardHeader,\n    borderRadius: theme.radius.md,        // one level in\n    padding: theme.space.md,\n  },\n  chip: { borderRadius: theme.radius.sm }, // two levels in\n  knob: { borderRadius: `calc(${theme.radius.sm} - 2px)` }, // 2px inset\n}));\n```\n\n- Never write a literal `borderRadius` (`'12px'`, `'50%'`). The only\n  non-token form allowed is `calc(theme.radius.X ± Npx)` for tight insets.\n- A 1px inset works the other way too: `Card size=\"small\"` is\n  `calc(radius.md + 1px)` so its flush `md` children stay concentric."
     },
     {
       "slug": "hooks",
@@ -9590,6 +10169,44 @@
     }
   ],
   "changelog": [
+    {
+      "version": "0.6.0",
+      "date": "2026-11-26",
+      "entries": [
+        {
+          "version": "0.6.0",
+          "date": "2026-11-26",
+          "tags": [
+            "ThemeProvider",
+            "GlobalStyles"
+          ],
+          "text": "`GlobalStyles` (rendered by `ThemeProvider`) ships the reset the components are drawn against: every element is `box-sizing: border-box` with no default margin or padding, as in Bookplate's and Scribe's `index.html`. Without it a text field was 51px tall instead of `layout.controlHeight` (33px). An app that already carries this reset sees no change; one that relied on browser default margins (`p`, `h1`, `ul`) loses them."
+        },
+        {
+          "version": "0.6.0",
+          "date": "2026-11-26",
+          "tags": [
+            "TextInput",
+            "TextArea",
+            "NumberInput",
+            "DateTimeInput",
+            "ChipsInput",
+            "SegmentedControl",
+            "Tag",
+            "Switch"
+          ],
+          "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.5.2 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px."
+        },
+        {
+          "version": "0.6.0",
+          "date": "2026-11-26",
+          "tags": [
+            "General"
+          ],
+          "text": "Docs site: each module has an `examples/preview.tsx` that shows the component alone; the overview thumbnails render it instead of the first example, and it never appears on the component page or in the doc. `npm run docs:check` fails for a module without one."
+        }
+      ]
+    },
     {
       "version": "0.5.2",
       "date": "2026-11-26",

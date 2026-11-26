@@ -47,4 +47,9 @@ export const useStyle = createUseStyles((theme: Theme) => ({
   horizontal: {},
   vertical: {},
   inline: {},
+  // Corners follow surface depth: the shaded row and the field inside it are
+  // flush, so both take the depth radius (md, the default, is depth 1).
+  depth0: { '&, & $input': { borderRadius: theme.radius.lg } },
+  depth1: {},
+  depth2: { '&, & $input': { borderRadius: theme.radius.sm } },
 }));

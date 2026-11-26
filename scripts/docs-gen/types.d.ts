@@ -41,8 +41,8 @@ export type ExampleInfo = {
   title: string;
   description: string;
   code: string;
-  /** `mobile`: the demo and its overview thumbnail render at phone width (`@viewport mobile`). */
-  viewport?: 'mobile';
+  /** `mobile`: the demo and its overview thumbnail render at phone width (`@viewport mobile`). `desktop`: the overview thumbnail lays out at a desktop width and is scaled to fit, for a module hidden on phones. */
+  viewport?: 'mobile' | 'desktop';
 };
 
 export type ModuleInfo = {
@@ -58,6 +58,8 @@ export type ModuleInfo = {
   importLine: string;
   body: string;
   examples: ExampleInfo[];
+  /** `examples/preview.tsx`: the component alone, for the overview thumbnail; never on the component page or in the doc. */
+  preview?: ExampleInfo;
   tables: TypeTable[];
   tokens: TokenRow[];
   changelog: ChangelogEntry[];

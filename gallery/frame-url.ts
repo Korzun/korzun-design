@@ -6,6 +6,9 @@ import type { ThemeValue } from './messages.js';
 /** Width in px of a `@viewport mobile` example's frame: a common phone's CSS width. */
 export const MOBILE_WIDTH = 390;
 
+/** Width in px a `@viewport desktop` thumbnail lays out at: past the 640px mobile breakpoint. */
+export const DESKTOP_WIDTH = 680;
+
 /**
  * The URL of one example frame. `fit: 'center'` centres a small example in the
  * viewport; overview thumbnails ask for it, docs demos keep the normal flow.

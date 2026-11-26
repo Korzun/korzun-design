@@ -30,7 +30,8 @@ propagation, so a switch inside a clickable card row won't trigger the row.
 See [corners](../corners.md).
 
 - In a shaded row (`layout="horizontal"`, or inside any field row): omit it
-  (`inset`, a 4px track concentric with the row's 8px corner).
+  (`inset`, a track one radius step squarer than the row: 4px in a Card's 8px
+  row, 8px in a Page's 16px row).
 - In a `Card` header (`headerAction`), or anywhere with no nearby corner to
   echo: `radius="pill"`.
 
@@ -242,7 +243,7 @@ export default function LoadingAndDisabled() {
 | `description` | `ReactNode` |  | Helper text under the label, linked by `aria-describedby`. |
 | `disabled` | `boolean` | `false` | Fades the switch to 40% and removes it from the tab order. |
 | `label` | `string` |  | Visible label and accessible name (`ariaLabel` wins over it). |
-| `layout` | `'default' \| 'horizontal'` | `'default'` | `'default'`: track then label, inline. `'horizontal'`: a full-width shaded row (`bg.cardHeader`, `radius.md`) with label and description on the left and the track on the right; the whole row toggles, description included. |
+| `layout` | `'default' \| 'horizontal'` | `'default'` | `'default'`: track then label, inline. `'horizontal'`: a full-width shaded row (`bg.cardHeader`, corners by surface depth) with label and description on the left and the track on the right; the whole row toggles, description included. |
 | `loading` | `boolean` | `false` | A save driven by this switch is in flight. Clicks are ignored at once and `aria-busy` is set; the thumb becomes a spinner only after 150ms, so fast saves do not flash. The switch keeps its colour and shows the position it is saving. |
 | `name` (required) | `string` |  | Not a form field (no hidden input); only the last-resort accessible name. |
 | `onChange` (required) | `(checked: boolean) => void` |  | Receives the new value, not an event. Not called while `disabled` or `loading`. |
@@ -271,6 +272,8 @@ type SwitchRadiusValue = 'inset' | 'pill';
 | `theme.color.text.muted` | `#6E6E6E` | `#9CA1AB` |
 | `theme.fontSize.sm` | `0.75rem` | `0.75rem` |
 | `theme.radius.circle` | `50%` | `50%` |
+| `theme.radius.lg` | `16px` | `16px` |
+| `theme.radius.md` | `8px` | `8px` |
 | `theme.radius.pill` | `999px` | `999px` |
 | `theme.radius.sm` | `4px` | `4px` |
 | `theme.recipe.focusRing` | [recipe](../tokens.md#recipe) | [recipe](../tokens.md#recipe) |
@@ -286,6 +289,7 @@ type SwitchRadiusValue = 'inset' | 'pill';
 
 ## Changelog
 
+- **0.6.0** (2026-11-26): Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.5.2 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px.
 - **0.0.6** (2026-11-21): New `theme.recipe.row`: the shaded field row (`bg.cardHeader`, `radius.md`, padding `md lg md sm`), for custom rows beside form fields. `Switch`'s horizontal layout now uses it and looks the same.
 
 <!-- /generated:changelog -->

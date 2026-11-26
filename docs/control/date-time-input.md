@@ -206,7 +206,7 @@ export default function InACard() {
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `label` | `string` |  | Linked to the date input; the time input is labelled `${label} time` (or `Time`). |
-| `layout` | `'horizontal' \| 'vertical' \| 'inline'` | `'horizontal'` | `'horizontal'` and `'vertical'` paint a shaded row (`bg.cardHeader`, `radius.md`); `'inline'` paints none. |
+| `layout` | `'horizontal' \| 'vertical' \| 'inline'` | `'horizontal'` | `'horizontal'` and `'vertical'` paint a shaded row (`bg.cardHeader`) with corners that follow surface depth ([corners](../corners.md)); `'inline'` paints none. |
 | `name` (required) | `string` |  | The date input's `name`; the time input is `${name}Time`. Form data holds two fields, not the composed value. |
 | `onChange` | `(newValue: string \| undefined) => void` | `() => {}` | Receives the recomposed ISO string (time in UTC), or `undefined` when the date is cleared; not an event. |
 | `value` (required) | `string \| undefined` |  | An ISO 8601 date string as the server stores it: a bare date, a timestamp, or a lower-precision year / year-month. `undefined` and `''` both mean "no date". The inputs re-sync when this changes. |
@@ -223,7 +223,9 @@ export default function InACard() {
 | `theme.color.text.faint` | `#9ca3af` | `#6E7480` |
 | `theme.color.text.primary` | `#111` | `#F5F5F7` |
 | `theme.layout.controlHeight` | `2.0625rem` | `2.0625rem` |
+| `theme.radius.lg` | `16px` | `16px` |
 | `theme.radius.md` | `8px` | `8px` |
+| `theme.radius.sm` | `4px` | `4px` |
 | `theme.recipe.input` | [recipe](../tokens.md#recipe) | [recipe](../tokens.md#recipe) |
 | `theme.recipe.label` | [recipe](../tokens.md#recipe) | [recipe](../tokens.md#recipe) |
 | `theme.space.md` | `0.5rem` | `0.5rem` |
@@ -237,6 +239,6 @@ export default function InACard() {
 
 ## Changelog
 
-No changes yet.
+- **0.6.0** (2026-11-26): Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.5.2 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px.
 
 <!-- /generated:changelog -->

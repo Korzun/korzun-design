@@ -1,4 +1,4 @@
-import { Heading, Inline, Stack } from '@korzun/design/component';
+import { Heading, Inline, Stack, Surface } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import cx from 'classnames';
@@ -111,23 +111,28 @@ export const ExampleBlock = ({ mod, example, headingId }: ExampleBlockProps) => 
           }}
         />
       </div>
-      <Stack gap="sm" className={styles.meta}>
-        <Heading level={3} size="md" id={titleId}>
-          {example.title}
-        </Heading>
-        {example.description && <Markdown source={example.description} from={mod.docPath} inline />}
-        <Inline gap="md" wrap>
-          <Button
-            type="link"
-            ariaExpanded={showCode}
-            ariaControls={codeId}
-            onClick={() => setShowCode((s) => !s)}
-          >
-            {showCode ? 'Hide code' : 'Show code'}
-          </Button>
-          <CopyButton text={example.code} label={`Copy ${example.title} code`} />
-        </Inline>
-      </Stack>
+      {/* The block is a hand-drawn card on the page: its buttons sit one level in. */}
+      <Surface>
+        <Stack gap="sm" className={styles.meta}>
+          <Heading level={3} size="md" id={titleId}>
+            {example.title}
+          </Heading>
+          {example.description && (
+            <Markdown source={example.description} from={mod.docPath} inline />
+          )}
+          <Inline gap="md" wrap>
+            <Button
+              type="link"
+              ariaExpanded={showCode}
+              ariaControls={codeId}
+              onClick={() => setShowCode((s) => !s)}
+            >
+              {showCode ? 'Hide code' : 'Show code'}
+            </Button>
+            <CopyButton text={example.code} label={`Copy ${example.title} code`} />
+          </Inline>
+        </Stack>
+      </Surface>
       {showCode && (
         <pre className={cx(styles.code, tokens.tokens)} id={codeId}>
           {/* highlight.js escapes the source; the spans are its own. */}

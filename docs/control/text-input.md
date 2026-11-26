@@ -356,7 +356,7 @@ export default function WithoutLabel() {
 | `autoCapitalize` | `'none' \| 'sentences' \| 'words' \| 'characters'` |  | Passed through to the input. |
 | `autoComplete` | `HTMLInputAutoCompleteAttribute \| undefined` |  | Passed through to the input. |
 | `label` | `string` |  | Visible label, linked to the input so it names it. |
-| `layout` | `'horizontal' \| 'vertical' \| 'inline'` | `'horizontal'` | `horizontal` and `vertical` paint a shaded card-header row with `md` corners; `inline` paints nothing. |
+| `layout` | `'horizontal' \| 'vertical' \| 'inline'` | `'horizontal'` | `horizontal` and `vertical` paint a shaded card-header row with corners that follow surface depth ([corners](../corners.md)); `inline` paints nothing. |
 | `maxLength` | `number` |  | Native limit, plus an `n/max` counter once within `max(10% of max, 10)` characters; the counter turns red at the limit. |
 | `name` (required) | `string` |  | The input's `name` (form data) and the key passed to `onValidChange`. |
 | `onChange` | `(newValue: string \| undefined) => void` | `() => {}` | Receives the string, or `undefined` when emptied; not an event. Not called while `validate` fails. |
@@ -392,7 +392,9 @@ Trailing icon button of a `TextInput`.
 | `theme.fontSize.xxs` | `0.6rem` | `0.6rem` |
 | `theme.layout.controlHeight` | `2.0625rem` | `2.0625rem` |
 | `theme.lineHeight.tight` | `1` | `1` |
+| `theme.radius.lg` | `16px` | `16px` |
 | `theme.radius.md` | `8px` | `8px` |
+| `theme.radius.sm` | `4px` | `4px` |
 | `theme.recipe.input` | [recipe](../tokens.md#recipe) | [recipe](../tokens.md#recipe) |
 | `theme.recipe.label` | [recipe](../tokens.md#recipe) | [recipe](../tokens.md#recipe) |
 | `theme.space.md` | `0.5rem` | `0.5rem` |
@@ -407,6 +409,7 @@ Trailing icon button of a `TextInput`.
 
 ## Changelog
 
+- **0.6.0** (2026-11-26): Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.5.2 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px.
 - **0.5.2** (2026-11-26): The visible `label` is linked to its field (`htmlFor` and a generated `id`), so it names the field and clicking it focuses the field. A new `ariaLabel` prop names a field that has no visible `label`; with a `label` it is ignored.
 - **0.5.2** (2026-11-26): `action` works: clicking its icon button calls `action.action`. `TextInputAction` gains an optional `ariaLabel` naming that button.
 

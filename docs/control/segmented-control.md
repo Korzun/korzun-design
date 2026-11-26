@@ -40,8 +40,9 @@ Delete clear when `clearable`. Modified keys (Ctrl/Cmd/Alt) are left alone.
 
 ### Choosing a surface
 
-The track and lens are always `radius.md` (see [corners](../corners.md)), so the
-control belongs inside a card or modal.
+The track and lens take the radius of the surface depth they sit at (see
+[corners](../corners.md)): `md` in a card or modal, `lg` directly on a `Page`,
+`sm` two or more levels in.
 
 - Directly in a `Card` body: omit `surface` (`'card'`).
 - Inside a shaded `bg.cardHeader` row you built (label left, control right):
@@ -282,7 +283,9 @@ One segment of a `SegmentedControl`.
 | `theme.fontSize.md` | `0.875rem` | `0.875rem` |
 | `theme.fontSize.xs` | `0.7rem` | `0.7rem` |
 | `theme.fontWeight.medium` | `500` | `500` |
+| `theme.radius.lg` | `16px` | `16px` |
 | `theme.radius.md` | `8px` | `8px` |
+| `theme.radius.sm` | `4px` | `4px` |
 | `theme.recipe.focusRing` | [recipe](../tokens.md#recipe) | [recipe](../tokens.md#recipe) |
 | `theme.shadow.cardStack` | `0px 2px 0px rgba(217, 217, 217, 0.2)` | `0px 2px 0px rgba(0, 0, 0, 0.4)` |
 | `theme.space.sm` | `0.375rem` | `0.375rem` |
@@ -297,6 +300,6 @@ One segment of a `SegmentedControl`.
 
 ## Changelog
 
-No changes yet.
+- **0.6.0** (2026-11-26): Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.5.2 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px.
 
 <!-- /generated:changelog -->

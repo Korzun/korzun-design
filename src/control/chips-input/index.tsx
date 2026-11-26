@@ -1,6 +1,7 @@
 import cx from 'classnames';
 import { useId, useRef, useState } from 'react';
 
+import { useDepthClassKey } from '../../component/surface/index.js';
 import { XIcon } from '../../icon/index.js';
 import type { Theme } from '../../theme/index.js';
 import { Popover } from '../popover/index.js';
@@ -24,7 +25,7 @@ export type ChipsInputProps = {
   disabled?: boolean;
   /** Field label. Ignored in the `block` layout; set `layout` to show it. */
   label?: string;
-  /** `'block'` is the bare box, with no label. `'horizontal'` and `'vertical'` add a label on a `bg.cardHeader` row (`radius.md`), like the other fields. */
+  /** `'block'` is the bare box, with no label. `'horizontal'` and `'vertical'` add a label on a `bg.cardHeader` row, like the other fields. Corners follow surface depth ([corners](../corners.md)); chips are a step squarer than the box. */
   layout?: 'horizontal' | 'vertical' | 'block';
   /** Set on the text input only: form data gets the half-typed text, not the chips. */
   name?: string;
@@ -52,6 +53,7 @@ export const ChipsInput = ({
   dense = false,
 }: ChipsInputProps) => {
   const style = useStyle({ chipColor, dense });
+  const depthKey = useDepthClassKey();
   // A per-instance DOM id keeps label/input association unique even when two
   // forms with the same `name` mount at once (e.g. the create form plus a row
   // being edited on the device list). `name` stays form-data only.
@@ -109,7 +111,7 @@ export const ChipsInput = ({
   }
 
   const control = (
-    <div className={style.controlRoot}>
+    <div className={cx(style.controlRoot, depthKey && style[depthKey])}>
       <div
         ref={chipsContainerRef}
         className={cx(style.chipsContainer, { [style.disabled]: disabled })}
@@ -171,7 +173,7 @@ export const ChipsInput = ({
   }
 
   return (
-    <div className={cx(style.root, style[layout])}>
+    <div className={cx(style.root, style[layout], depthKey && style[depthKey])}>
       <label className={style.label} htmlFor={inputId}>
         {label}
       </label>

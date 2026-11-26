@@ -5,7 +5,7 @@ import { MemoryRouter, Route, Routes, useLocation } from 'react-router';
 
 import { CATEGORIES } from '../../scripts/docs-gen/categories.mjs';
 import { siteData } from '../data.js';
-import { MOBILE_WIDTH } from '../frame-url.js';
+import { DESKTOP_WIDTH, MOBILE_WIDTH } from '../frame-url.js';
 import { Thumbnail } from '../part/thumbnail.js';
 import { OverviewPage } from './overview.js';
 
@@ -32,7 +32,7 @@ describe('OverviewPage', () => {
     expect(headings.length).toBeGreaterThan(1);
   });
 
-  it('gives each card a lazy, inert thumbnail of the first example', () => {
+  it('gives each card a lazy, inert thumbnail of its preview', () => {
     mount();
     const link = screen.getByRole('link', { name: /^Button\b/ });
     const frame = link.querySelector('iframe')!;
@@ -40,15 +40,27 @@ describe('OverviewPage', () => {
     expect(frame).toHaveAttribute('aria-hidden', 'true');
     expect(frame).toHaveAttribute('tabindex', '-1');
     expect(frame.getAttribute('src')).toMatch(
-      /^\/#\/frame\/button\/basic\?theme=(light|dark|auto)&fit=center$/
+      /^\/#\/frame\/button\/preview\?theme=(light|dark|auto)&fit=center$/
     );
   });
 
-  it('lays a @viewport mobile first example out at phone width in its thumbnail', () => {
+  it('falls back to the first example for a module with no preview', () => {
     const button = siteData.modules.find((m) => m.slug === 'button')!;
     const { container } = render(
       <ThemeProvider identity="test">
-        <Thumbnail mod={{ ...button, examples: [{ ...button.examples[0], viewport: 'mobile' }] }} />
+        <Thumbnail mod={{ ...button, preview: undefined }} />
+      </ThemeProvider>
+    );
+    expect(container.querySelector('iframe')!.getAttribute('src')).toMatch(
+      /\/frame\/button\/basic\?/
+    );
+  });
+
+  it('lays a @viewport mobile preview out at phone width in its thumbnail', () => {
+    const button = siteData.modules.find((m) => m.slug === 'button')!;
+    const { container } = render(
+      <ThemeProvider identity="test">
+        <Thumbnail mod={{ ...button, preview: { ...button.preview!, viewport: 'mobile' } }} />
         <Thumbnail mod={button} />
       </ThemeProvider>
     );
@@ -56,6 +68,20 @@ describe('OverviewPage', () => {
     expect(phone).toHaveAttribute('data-viewport', 'mobile');
     expect(getComputedStyle(phone).width).toBe(`${MOBILE_WIDTH}px`);
     expect(wide).not.toHaveAttribute('data-viewport');
+  });
+
+  it('lays a @viewport desktop preview out past the mobile breakpoint, scaled to fit', () => {
+    const bar = siteData.modules.find((m) => m.slug === 'page-actions-bar')!;
+    expect(bar.preview?.viewport).toBe('desktop');
+    const { container } = render(
+      <ThemeProvider identity="test">
+        <Thumbnail mod={bar} />
+      </ThemeProvider>
+    );
+    const frame = container.querySelector('iframe')!;
+    expect(frame).toHaveAttribute('data-viewport', 'desktop');
+    expect(getComputedStyle(frame).width).toBe(`${DESKTOP_WIDTH}px`);
+    expect(frame.style.transform).toMatch(/^scale\(/);
   });
 
   it('filters by the search box and says when nothing matches', async () => {

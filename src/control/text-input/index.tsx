@@ -1,6 +1,7 @@
 import cx from 'classnames';
 import { useCallback, useId, useState } from 'react';
 
+import { useDepthClassKey } from '../../component/surface/index.js';
 import { IconProps } from '../../icon/index.js';
 import { Button } from '../button/index.js';
 import { useStyle } from './style.js';
@@ -30,7 +31,7 @@ export type TextInputProps = {
   autoComplete?: React.HTMLInputAutoCompleteAttribute | undefined;
   /** Visible label, linked to the input so it names it. */
   label?: string;
-  /** `horizontal` and `vertical` paint a shaded card-header row with `md` corners; `inline` paints nothing. */
+  /** `horizontal` and `vertical` paint a shaded card-header row with corners that follow surface depth ([corners](../corners.md)); `inline` paints nothing. */
   layout?: 'horizontal' | 'vertical' | 'inline';
   /** Native limit, plus an `n/max` counter once within `max(10% of max, 10)` characters; the counter turns red at the limit. */
   maxLength?: number;
@@ -74,6 +75,7 @@ export const TextInput = ({
   value = '',
 }: TextInputProps) => {
   const style = useStyle();
+  const depthKey = useDepthClassKey();
   const id = useId();
 
   const [isValid, setIsValid] = useState<boolean>(true);
@@ -114,7 +116,7 @@ export const TextInput = ({
     remaining !== undefined && remaining <= Math.max(Math.floor((maxLength ?? 0) * 0.1), 10);
 
   return (
-    <div className={cx(style.root, style[layout])}>
+    <div className={cx(style.root, style[layout], depthKey && style[depthKey])}>
       {label && (
         <label htmlFor={id} className={cx(style.label, { [style.danger]: !isValid })}>
           {label}

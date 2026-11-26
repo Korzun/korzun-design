@@ -1,6 +1,7 @@
 import cx from 'classnames';
 import { useCallback, useId, useState } from 'react';
 
+import { useDepthClassKey } from '../../component/surface/index.js';
 import { isNumeric } from '../../utils.js';
 import { useStyle } from './style.js';
 
@@ -9,7 +10,7 @@ export type NumberInputProps = {
   ariaLabel?: string;
   /** Required key: pass `label={undefined}` for none. Linked to the input so it names it. */
   label: string | undefined;
-  /** `horizontal` and `vertical` paint a shaded card-header row with `md` corners; `inline` paints nothing. */
+  /** `horizontal` and `vertical` paint a shaded card-header row with corners that follow surface depth ([corners](../corners.md)); `inline` paints nothing. */
   layout?: 'horizontal' | 'vertical' | 'inline';
   /** The input's `name` and the key passed to `onValidChange`. */
   name: string;
@@ -44,6 +45,7 @@ export const NumberInput = ({
   value,
 }: NumberInputProps) => {
   const style = useStyle();
+  const depthKey = useDepthClassKey();
   const id = useId();
 
   const [isValid, setIsValid] = useState<boolean>(true);
@@ -78,7 +80,7 @@ export const NumberInput = ({
   }
 
   return (
-    <div className={cx(style.root, style[layout])}>
+    <div className={cx(style.root, style[layout], depthKey && style[depthKey])}>
       {label && (
         <label htmlFor={id} className={cx(style.label, { [`${style.danger}`]: !isValid })}>
           {label}

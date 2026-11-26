@@ -22,8 +22,21 @@ describe('examples', () => {
   }
 
   it('lists every example file in the generated site data', () => {
-    const listed = new Set(siteData.modules.flatMap((m) => m.examples.map((e) => e.file)));
+    const listed = new Set(
+      siteData.modules.flatMap((m) =>
+        [...m.examples, ...(m.preview ? [m.preview] : [])].map((e) => e.file)
+      )
+    );
     expect(Object.keys(exampleComponents).filter((file) => !listed.has(file))).toEqual([]);
+  });
+});
+
+describe('previews', () => {
+  it('every module has one, kept off its examples', () => {
+    for (const mod of siteData.modules) {
+      expect(mod.preview?.file, mod.slug).toMatch(/\/examples\/preview\.tsx$/);
+      expect(mod.examples.map((e) => e.slug)).not.toContain('preview');
+    }
   });
 });
 

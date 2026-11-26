@@ -1,7 +1,10 @@
 import { createUseStyles, type Theme } from '../../theme/index.js';
 
 export const useStyle = createUseStyles((theme: Theme) => {
-  const radius = theme.radius.md;
+  // One radius for the track, lens, segments and the reveal's clip, read from
+  // a custom property so surface depth can set it once on the root (md, the
+  // default, is depth 1).
+  const radius = 'var(--seg-radius)';
   // Shared by the real segments and the reveal's copies (see `reveal`), so
   // the two rows lay out identically and the brand copy covers the muted
   // glyph under it exactly.
@@ -37,6 +40,7 @@ export const useStyle = createUseStyles((theme: Theme) => {
     // channel-step from `bg.page` in dark mode.
     root: {
       ...grid,
+      '--seg-radius': theme.radius.md,
       position: 'relative',
       borderRadius: radius,
       '&$card': { backgroundColor: theme.color.bg.track },
@@ -146,5 +150,8 @@ export const useStyle = createUseStyles((theme: Theme) => {
     active: {},
     readOnly: {},
     iconic: {},
+    depth0: { '--seg-radius': theme.radius.lg },
+    depth1: {},
+    depth2: { '--seg-radius': theme.radius.sm },
   };
 });

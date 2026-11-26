@@ -1,7 +1,10 @@
 /** @typedef {import('./types.js').ExampleInfo} ExampleInfo */
 
 /** `@viewport` values an example may ask for. */
-const VIEWPORTS = ['mobile'];
+const VIEWPORTS = ['mobile', 'desktop'];
+
+/** The file name of a module's overview preview: its examples folder, no NN- prefix. */
+export const PREVIEW_FILE = 'preview.tsx';
 
 /**
  * The first comment line is the title, the rest the description. A
@@ -13,7 +16,8 @@ const VIEWPORTS = ['mobile'];
  */
 export function readExample(file, source) {
   const name = file.split('/').pop();
-  const m = /^(\d+)-([a-z0-9-]+)\.tsx$/.exec(name);
+  // `preview.tsx` is the overview thumbnail: the component alone, kept off the doc.
+  const m = name === PREVIEW_FILE ? [name, '0', 'preview'] : /^(\d+)-([a-z0-9-]+)\.tsx$/.exec(name);
   if (!m) throw new Error(`Example ${file}: name must be NN-slug.tsx`);
   const c = /^\s*\/\*\*([\s\S]*?)\*\/[ \t]*\r?\n(?:[ \t]*\r?\n)?/.exec(source);
   const lines = c
@@ -30,7 +34,7 @@ export function readExample(file, source) {
     const tag = /^\s*@viewport\s+(\S*)\s*$/.exec(line);
     if (!tag) return true;
     if (!VIEWPORTS.includes(tag[1])) {
-      throw new Error(`Example ${file}: @viewport must be "mobile", not "${tag[1]}"`);
+      throw new Error(`Example ${file}: @viewport must be "mobile" or "desktop", not "${tag[1]}"`);
     }
     viewport = tag[1];
     return false;

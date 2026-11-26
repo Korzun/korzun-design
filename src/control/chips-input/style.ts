@@ -155,4 +155,14 @@ export const useStyle = createUseStyles((theme: Theme) => ({
   disabled: {},
   horizontal: {},
   vertical: {},
+  // Corners follow surface depth (md, the default, is depth 1). The class sits
+  // on the field box's wrapper and, with a label, on the shaded row too: the
+  // row and the box are flush, so both take the depth radius, and the chips
+  // inside the box take one step down.
+  depth0: {
+    '&$root, & $chipsContainer': { borderRadius: theme.radius.lg },
+    '& $chip': { borderRadius: theme.radius.md },
+  },
+  depth1: {},
+  depth2: { '&$root, & $chipsContainer': { borderRadius: theme.radius.sm } },
 }));

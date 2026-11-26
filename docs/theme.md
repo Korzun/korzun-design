@@ -45,7 +45,9 @@ the full list of token keys ([tokens](tokens.md)).
 </ThemeProvider>
 ```
 
-- `ThemeProvider` renders `GlobalStyles`: the page background, the body font,
+- `ThemeProvider` renders `GlobalStyles`: a reset (every element
+  `box-sizing: border-box` with no default margin or padding; components are
+  sized against it), the page background, the body font,
   a 16px input floor on iOS, scroll lock while a `<dialog>` is open, and the
   `theme-rotation` and `theme-slide-*` keyframes. Don't render
   `GlobalStyles` yourself, or `useThemeGlobalStyles()`, the hook it calls.
@@ -341,6 +343,7 @@ This module has no styles of its own.
 
 ## Changelog
 
+- **0.6.0** (2026-11-26): `GlobalStyles` (rendered by `ThemeProvider`) ships the reset the components are drawn against: every element is `box-sizing: border-box` with no default margin or padding, as in Bookplate's and Scribe's `index.html`. Without it a text field was 51px tall instead of `layout.controlHeight` (33px). An app that already carries this reset sees no change; one that relied on browser default margins (`p`, `h1`, `ul`) loses them.
 - **0.2.0** (2026-11-21): New `fontWeight.regular` (400) token.
 - **0.1.0** (2026-11-21): `Tag` status tones: `success`, `warning` (yellow, stronger fill), `danger`, `info` (brand blue). New `color.warning` and `color.info` solid colours. Status tones report state; label tones name things. No visual change to existing tags.
 - **0.0.6** (2026-11-21): New `theme.recipe.row`: the shaded field row (`bg.cardHeader`, `radius.md`, padding `md lg md sm`), for custom rows beside form fields. `Switch`'s horizontal layout now uses it and looks the same.

@@ -1,13 +1,14 @@
 import cx from 'classnames';
 import { useCallback, useId, useState } from 'react';
 
+import { useDepthClassKey } from '../../component/surface/index.js';
 import { composeIsoDate, splitIsoDate } from './iso-date.js';
 import { useStyle } from './style.js';
 
 export type DateTimeInputProps = {
   /** Linked to the date input; the time input is labelled `${label} time` (or `Time`). */
   label?: string;
-  /** `'horizontal'` and `'vertical'` paint a shaded row (`bg.cardHeader`, `radius.md`); `'inline'` paints none. */
+  /** `'horizontal'` and `'vertical'` paint a shaded row (`bg.cardHeader`) with corners that follow surface depth ([corners](../corners.md)); `'inline'` paints none. */
   layout?: 'horizontal' | 'vertical' | 'inline';
   /** The date input's `name`; the time input is `${name}Time`. Form data holds two fields, not the composed value. */
   name: string;
@@ -36,6 +37,7 @@ export const DateTimeInput = ({
   value,
 }: DateTimeInputProps) => {
   const style = useStyle();
+  const depthKey = useDepthClassKey();
   const dateId = useId();
 
   const [parts, setParts] = useState(() => splitIsoDate(value));
@@ -69,7 +71,7 @@ export const DateTimeInput = ({
   );
 
   return (
-    <div className={cx(style.root, style[layout])}>
+    <div className={cx(style.root, style[layout], depthKey && style[depthKey])}>
       {label && (
         <label className={style.label} htmlFor={dateId}>
           {label}

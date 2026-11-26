@@ -119,7 +119,8 @@ no old doc:
   "takes `className`", "Space toggles", "submits as `<name>`" are Usage
   sentences under `### Styling`, `### Keyboard`, `### Forms`.
 - Its §4: `examples/01-basic.tsx` first, then one per value and state, each
-  wired to state.
+  wired to state, plus `examples/preview.tsx` (the overview thumbnail: the
+  component alone; see "The preview" there).
 
 ## 3. AGENTS.md
 

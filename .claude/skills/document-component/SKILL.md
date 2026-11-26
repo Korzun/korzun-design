@@ -157,21 +157,45 @@ A module that only shows on phones (its `style.ts` hides it with `[theme.breakpo
  */
 ```
 
-The component page then renders that demo in a 390px-wide frame (its media queries see a phone), and an `01` with the tag gives a phone-width overview thumbnail. The tag line is left out of the description. `mobile` is the only value. Use it only where the module is hidden or laid out differently at desktop width, never to make a wide example fit. Check `style.ts` before tagging: a module with no breakpoint rule (PageFooterActions) shows at every width and gets no tag, and one hidden on phones (`[theme.breakpoint.mobile]`: PageActionsBar, NavDesktop) never does.
+The component page then renders that demo in a 390px-wide frame (its media queries see a phone), and an `01` with the tag gives a phone-width overview thumbnail. The tag line is left out of the description. The other value, `desktop`, is for a preview only (see "The preview"). Use `mobile` only where the module is hidden or laid out differently at desktop width, never to make a wide example fit. Check `style.ts` before tagging: a module with no breakpoint rule (PageFooterActions) shows at every width and gets no tag, and one hidden on phones (`[theme.breakpoint.mobile]`: PageActionsBar, NavDesktop) never does.
 A phone-width frame is still a browser tab: `env(safe-area-inset-*)` is 0 there, so chrome sized by the installed app's insets (TopFade's band, NavMobile's home-indicator padding) shows at its browser-tab size. That is expected; do not add props or descriptions to fake the inset. Check the page at phone width too: `shoot-page.mjs … --width 390`.
 
 - Imports: entry points only (`@korzun/design/<entry>`), all `@korzun/design/*` first then `react`, one block.
 - Default export, no props. Layout with `Stack`/`Inline`, text with `Text`/`Heading`, no inline styles or literals.
 - Text is typed Unicode (`Loading…`, `2–5`), never HTML entities and never ASCII stand-ins; strings match the component's own (`Loading…`, not `Loading...`).
-- Every interactive control is wired to state, so using it visibly changes the demo, including a `Button` that is only there to show layout (Stack 03 counts its "Add a book" clicks): a controlled value with its setter, plus a `Text` readout where the control does not display its own value ("Chosen: Edit"). No handler that does nothing (`() => {}`, `() => undefined`, `() => null`, `noop`, a function with an empty body). Quick check, which must print nothing: `grep -rnE '\(\) => (\{\s*\}|undefined|null)|noop' src/<area>/<module>/examples/`; it does not catch every do-nothing handler, so also read each handler. One exception: a callback the type requires but the component never calls (a `PageFooterActions` `FooterAction` with `submit: true` takes `onClick` and submits the form instead) gets `() => {}`, and that one grep hit is expected; say so in your report. Do not invent wiring for it (a ref that calls `requestSubmit()`). A shared `items` constant becomes a function of the setter, or moves inside the component.
+- Every interactive control is wired to state, so using it visibly changes the demo, including a `Button` that is only there to show layout (Stack 03 counts its "Add a book" clicks): a controlled value with its setter, plus a `Text` readout where the control does not display its own value ("Chosen: Edit"). No handler that does nothing (`() => {}`, `() => undefined`, `() => null`, `noop`, a function with an empty body). Quick check, which must print nothing: `grep -rnE '\(\) => (\{\s*\}|undefined|null)|noop' --exclude=preview.tsx src/<area>/<module>/examples/`; it does not catch every do-nothing handler, so also read each handler. One exception: a callback the type requires but the component never calls (a `PageFooterActions` `FooterAction` with `submit: true` takes `onClick` and submits the form instead) gets `() => {}`, and that one grep hit is expected; say so in your report. Do not invent wiring for it (a ref that calls `requestSubmit()`). A shared `items` constant becomes a function of the setter, or moves inside the component.
 - Titles and descriptions name no defaults: no "(the default)", no "`solid` by default".
 - Each description sentence is shown by the demo. "Set `ariaLabel` when the trigger is an icon" means the demo's trigger is an icon `Button` with `ariaLabel`.
 - Examples follow the Usage and Do / don't of this doc and of every component they use (read `docs/component/surface.md` before using `Surface`). An example never demonstrates a use those docs advise against (a `Surface` with no drawn box around it).
-- `01` is the canonical compact usage: it is the overview thumbnail.
+- `01` is the canonical compact usage, the first demo on the component page. The overview thumbnail is the preview below, not `01`.
 - A lone trigger (a `Button` that opens a `Dialog`, a fragment root `<>`) goes in an `Inline`: at the root of the frame it stretches to the full width.
 - An example with an overlay places its trigger so the overlay opens on the side the example is about (a `side="top"` trigger sits below other content). The frame adds room above for a `side="top"` overlay, and room below for a list that flipped upward for lack of room, so it opens downward as it would on a page.
 - A description talks about the component, never the demo frame (no "to stay inside the demo"). No prop (`side`, a large `gap`) is set only to fit the frame. When the frame clips an overlay and the example is as it should be, report a gallery defect.
 - Link items and `to` props stay real links. Clicking one in a demo shows the frame's "The example navigated to…" page; that is expected.
+
+### The preview
+
+Every module also has `examples/preview.tsx`, its overview thumbnail. It is rendered alone in a small, centred, non-interactive frame (about 430×240px, scaled to 0.6) and never shown on the component page or in the doc; `docs:check` fails without one.
+
+```tsx
+/** Preview */
+import { Inline } from '@korzun/design/component';
+import { Button } from '@korzun/design/control';
+
+export default function Preview() {
+  return (
+    <Inline>
+      <Button type="primary">Save</Button>
+      <Button>Cancel</Button>
+    </Inline>
+  );
+}
+```
+
+- Show the component and nothing else, like an Ant Design overview card: one instance or a tight row of variants. No `Text` readouts or explanations, no wrapper `Card` unless the module only exists inside one (CardDivider), no buttons that drive a demo.
+- An overlay (Dialog, Menu, Popover) is shown open. A phone-only module takes `@viewport mobile` as in its `01`. The thumbnail frame is about 430px wide, under the 640px mobile breakpoint, so a module hidden on phones (PageActionsBar, NavDesktop) takes `@viewport desktop`: the thumbnail lays it out at 680px and scales it to fit. Never override a module's own breakpoint styles to show it.
+- It is not interactive, so the wiring rule above does not apply: a required handler may be `() => {}` (the grep check excludes `preview.tsx`).
+- Check it: `http://localhost:<port>/#/frame/<slug>/preview?fit=center&theme=light` at a 430×240 viewport, in both themes.
 
 Coverage checklist (REQUIRED; fill in every row, it goes in your report). Each row names its example file:
 

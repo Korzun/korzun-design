@@ -87,6 +87,11 @@ function fixture({ doc = DOC } = {}) {
     'src/control/widget/examples/01-basic.tsx',
     '/**\n * Basic\n *\n * Plain use.\n */\nexport default () => null;\n'
   );
+  put(
+    root,
+    'src/control/widget/examples/preview.tsx',
+    '/** Preview */\nexport default () => null;\n'
+  );
   put(root, 'dist/control/widget/index.d.ts', DTS);
   put(
     root,
@@ -457,6 +462,23 @@ test('non-strict skips docs without front matter, strict throws', () => {
   );
 });
 
+test('the preview is site data only, never a doc example; strict requires one', () => {
+  const root = fixture();
+  const files = generate(root);
+  const [mod] = JSON.parse(files.get('gallery/generated/site-data.json')).modules;
+  assert.equal(mod.preview.file, 'src/control/widget/examples/preview.tsx');
+  assert.deepEqual(
+    mod.examples.map((e) => e.slug),
+    ['basic']
+  );
+  assert.doesNotMatch(files.get('docs/control/widget.md'), /Preview/);
+  rmSync(join(root, 'src/control/widget/examples/preview.tsx'));
+  assert.throws(
+    () => generate(root, { strict: true }),
+    /docs\/control\/widget\.md: no preview \(examples\/preview\.tsx\)/
+  );
+});
+
 test('missing dist throws', () => {
   const root = fixture();
   rmSync(join(root, 'dist'), { recursive: true });
@@ -504,6 +526,7 @@ test('--check exits 0 when current, 1 after a JSDoc edit', () => {
       `src/${area}/examples/01-basic.tsx`,
       '/**\n * Basic\n *\n * Plain use.\n */\nexport default () => null;\n'
     );
+    put(root, `src/${area}/examples/preview.tsx`, '/** Preview */\nexport default () => null;\n');
     put(root, `dist/${area}/index.d.ts`, 'export {};\n');
   }
   symlinkNodeModules(root);

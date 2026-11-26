@@ -26,7 +26,8 @@ const useStyle = createUseStyles((theme: Theme) => ({
   swatch: { display: 'flex', flexDirection: 'column', gap: theme.space.xs },
   chip: {
     height: 44,
-    borderRadius: theme.radius.md,
+    // Swatches and shadow boxes are tiles on the page background.
+    borderRadius: theme.radius.lg,
     border: `1px solid ${theme.color.border.default}`,
   },
   path: { fontSize: theme.fontSize.xs, color: theme.color.text.muted, wordBreak: 'break-all' },
@@ -36,7 +37,7 @@ const useStyle = createUseStyles((theme: Theme) => ({
   bar: { height: 12, backgroundColor: theme.color.brand.default },
   box: {
     height: 64,
-    borderRadius: theme.radius.md,
+    borderRadius: theme.radius.lg,
     backgroundColor: theme.color.bg.card,
   },
   boxes: {

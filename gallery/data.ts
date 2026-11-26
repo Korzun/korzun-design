@@ -19,7 +19,7 @@ export const exampleFor = (
   mod: ModuleInfo,
   slug: string
 ): { info: ExampleInfo; Component: ComponentType } | undefined => {
-  const info = mod.examples.find((e) => e.slug === slug);
+  const info = slug === mod.preview?.slug ? mod.preview : mod.examples.find((e) => e.slug === slug);
   const Component = info && exampleComponents[info.file];
   return info && Component ? { info, Component } : undefined;
 };

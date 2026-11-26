@@ -1,7 +1,7 @@
 import { Card, Heading, Page, Stack, Text } from '@korzun/design/component';
 import { TextInput } from '@korzun/design/control';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router';
 
 import { CATEGORIES } from '../../scripts/docs-gen/categories.mjs';
@@ -62,17 +62,13 @@ const ModuleCard = ({ mod }: { mod: ModuleInfo }) => {
   );
 };
 
-// TextInput has no aria-label prop; name its input once it is in the DOM.
 const SearchBox = ({ value, onChange }: { value: string; onChange: (v: string) => void }) => {
   const styles = useStyle();
-  const ref = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    ref.current?.querySelector('input')?.setAttribute('aria-label', 'Search components');
-  }, []);
   return (
-    <div ref={ref} className={styles.search}>
+    <div className={styles.search}>
       <TextInput
         name="search"
+        ariaLabel="Search components"
         layout="inline"
         placeholder="Search by name, description or prop"
         autoComplete="off"

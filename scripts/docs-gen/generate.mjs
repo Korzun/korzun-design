@@ -7,7 +7,7 @@ import { CATEGORIES } from './categories.mjs';
 import { parseChangelog, validateTags } from './changelog.mjs';
 import { readDefaults } from './defaults.mjs';
 import { docFiles } from './doc-files.mjs';
-import { readExample } from './examples.mjs';
+import { PREVIEW_FILE, readExample } from './examples.mjs';
 import { parseFrontMatter } from './front-matter.mjs';
 import { listModules } from './inventory.mjs';
 import { parseOrThrow } from './parse.mjs';
@@ -162,9 +162,16 @@ function readExamples(repo, mod) {
   const dir = join(repo, mod.srcDir, 'examples');
   if (!existsSync(dir)) return [];
   return readdirSync(dir)
-    .filter((f) => f.endsWith('.tsx'))
+    .filter((f) => f.endsWith('.tsx') && f !== PREVIEW_FILE)
     .map((f) => readExample(`${mod.srcDir}/examples/${f}`, readFileSync(join(dir, f), 'utf8')))
     .sort((a, b) => a.order - b.order);
+}
+
+/** The module's `examples/preview.tsx`, shown only as its overview thumbnail. */
+function readPreview(repo, mod) {
+  const rel = `${mod.srcDir}/examples/${PREVIEW_FILE}`;
+  const source = readIf(join(repo, rel));
+  return source === null ? undefined : readExample(rel, source);
 }
 
 /**
@@ -241,6 +248,10 @@ export function generate(repo, { strict = false, warn = console.warn } = {}) {
 
     const examples = readExamples(repo, skel);
     if (strict && examples.length === 0) throw new Error(`${skel.docPath}: no examples`);
+    const preview = readPreview(repo, skel);
+    if (strict && !preview) {
+      throw new Error(`${skel.docPath}: no preview (examples/${PREVIEW_FILE})`);
+    }
 
     // A component whose props type is not exported would get no table and a
     // "takes no props" line; that is a missing export, so stop.
@@ -284,6 +295,7 @@ export function generate(repo, { strict = false, warn = console.warn } = {}) {
       importLine: '',
       body: '',
       examples,
+      ...(preview ? { preview } : {}),
       tables: orderTables(tables, skel.values),
       tokens,
       changelog: entries,
