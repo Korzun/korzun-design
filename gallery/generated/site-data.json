@@ -1178,7 +1178,8 @@
               "type": "(newValue: string) => boolean",
               "required": false,
               "description": "Receives the raw text. Replacing it drops the built-in check, so include one.",
-              "default": "accepts empty or numeric text"
+              "default": "accepts empty or numeric text",
+              "defaultProse": true
             },
             {
               "name": "value",
@@ -2010,7 +2011,7 @@
           "rows": [
             {
               "name": "action",
-              "type": "Action",
+              "type": "TextInputAction",
               "required": false,
               "description": "Broken, do not use: the icon button is drawn but its `action` callback is never wired up."
             },

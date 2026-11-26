@@ -295,7 +295,7 @@ export default function FormInCard() {
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `action` | `Action` |  | Broken, do not use: the icon button is drawn but its `action` callback is never wired up. |
+| `action` | [TextInputAction](#textinputaction) |  | Broken, do not use: the icon button is drawn but its `action` callback is never wired up. |
 | `autoCapitalize` | `'none' \| 'sentences' \| 'words' \| 'characters'` |  | Passed through to the input. |
 | `autoComplete` | `React.HTMLInputAutoCompleteAttribute \| undefined` |  | Passed through to the input. |
 | `label` | `string` |  | Visible label. Not linked to the input (no `htmlFor`). |

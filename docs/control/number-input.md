@@ -239,7 +239,7 @@ export default function WithoutLabel() {
 | `onChange` | `(newValue: number \| undefined) => void` | `() => {}` | Receives `parseFloat(text)`, or `undefined` when emptied; not called while `validate` fails. |
 | `onValidChange` | `(fieldName: string, newValid: boolean) => void` | `() => {}` | Called with `name` and the new validity; fires only when validity flips. |
 | `placeholder` | `string` |  | Placeholder text for the input. |
-| `validate` | `(newValue: string) => boolean` | `accepts empty or numeric text` | Receives the raw text. Replacing it drops the built-in check, so include one. |
+| `validate` | `(newValue: string) => boolean` | accepts empty or numeric text | Receives the raw text. Replacing it drops the built-in check, so include one. |
 | `value` (required) | `number \| undefined` |  | Current number. Re-syncs into the field only when the prop changes. |
 
 <!-- /generated:props -->
