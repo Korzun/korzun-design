@@ -99,17 +99,28 @@ export default function Basic() {
 row action, and `dashed` an "add a row" affordance.
 
 ```tsx
-import { Inline } from '@korzun/design/component';
+import { Inline, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
+import { useState } from 'react';
 
 export default function Variants() {
+  const [pressed, setPressed] = useState('nothing yet');
   return (
     <Inline wrap>
-      <Button type="primary">Primary</Button>
-      <Button>Default</Button>
-      <Button type="text">Text</Button>
-      <Button type="link">Link</Button>
-      <Button type="dashed">Dashed</Button>
+      <Button type="primary" onClick={() => setPressed('Primary')}>
+        Primary
+      </Button>
+      <Button onClick={() => setPressed('Default')}>Default</Button>
+      <Button type="text" onClick={() => setPressed('Text')}>
+        Text
+      </Button>
+      <Button type="link" onClick={() => setPressed('Link')}>
+        Link
+      </Button>
+      <Button type="dashed" onClick={() => setPressed('Dashed')}>
+        Dashed
+      </Button>
+      <Text tone="muted">Pressed: {pressed}</Text>
     </Inline>
   );
 }
@@ -122,19 +133,24 @@ deletion, on `default` otherwise. `success` is the green treatment. The two
 cannot both be set; TypeScript rejects it.
 
 ```tsx
-import { Inline } from '@korzun/design/component';
+import { Inline, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
+import { useState } from 'react';
 
 export default function DangerAndSuccess() {
+  const [pressed, setPressed] = useState('nothing yet');
   return (
     <Inline wrap>
-      <Button danger>Log out</Button>
-      <Button type="primary" danger>
+      <Button danger onClick={() => setPressed('Log out')}>
+        Log out
+      </Button>
+      <Button type="primary" danger onClick={() => setPressed('Delete book')}>
         Delete book
       </Button>
-      <Button type="primary" success>
+      <Button type="primary" success onClick={() => setPressed('Mark as read')}>
         Mark as read
       </Button>
+      <Text tone="muted">Pressed: {pressed}</Text>
     </Inline>
   );
 }
@@ -146,18 +162,23 @@ export default function DangerAndSuccess() {
 element. An icon-only button needs an `ariaLabel` so it has an accessible name.
 
 ```tsx
-import { Inline } from '@korzun/design/component';
+import { Inline, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { ChevronIcon, SearchIcon, SettingsIcon } from '@korzun/design/icon';
+import { useState } from 'react';
 
 export default function Icons() {
+  const [pressed, setPressed] = useState('nothing yet');
   return (
     <Inline wrap>
-      <Button prefix={SearchIcon}>Search</Button>
-      <Button type="primary" suffix={ChevronIcon}>
+      <Button prefix={SearchIcon} onClick={() => setPressed('Search')}>
+        Search
+      </Button>
+      <Button type="primary" suffix={ChevronIcon} onClick={() => setPressed('Next')}>
         Next
       </Button>
-      <Button prefix={SettingsIcon} ariaLabel="Settings" />
+      <Button prefix={SettingsIcon} ariaLabel="Settings" onClick={() => setPressed('Settings')} />
+      <Text tone="muted">Pressed: {pressed}</Text>
     </Inline>
   );
 }
@@ -189,7 +210,9 @@ export default function LoadingAndDisabled() {
       <Button type="text" disabled={!uploading} onClick={() => setUploading(false)}>
         Cancel upload
       </Button>
-      <Button disabled>Disabled</Button>
+      <Button disabled onClick={() => setUploading(true)}>
+        Disabled
+      </Button>
     </Inline>
   );
 }

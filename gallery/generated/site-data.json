@@ -112,7 +112,7 @@
           "order": 2,
           "title": "Variants",
           "description": "`type` picks the look, not the HTML attribute. `primary` is the one main action,\n`default` a secondary one, `text` a Cancel in a modal footer, `link` an inline\nrow action, and `dashed` an \"add a row\" affordance.",
-          "code": "import { Inline } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\n\nexport default function Variants() {\n  return (\n    <Inline wrap>\n      <Button type=\"primary\">Primary</Button>\n      <Button>Default</Button>\n      <Button type=\"text\">Text</Button>\n      <Button type=\"link\">Link</Button>\n      <Button type=\"dashed\">Dashed</Button>\n    </Inline>\n  );\n}\n"
+          "code": "import { Inline, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Variants() {\n  const [pressed, setPressed] = useState('nothing yet');\n  return (\n    <Inline wrap>\n      <Button type=\"primary\" onClick={() => setPressed('Primary')}>\n        Primary\n      </Button>\n      <Button onClick={() => setPressed('Default')}>Default</Button>\n      <Button type=\"text\" onClick={() => setPressed('Text')}>\n        Text\n      </Button>\n      <Button type=\"link\" onClick={() => setPressed('Link')}>\n        Link\n      </Button>\n      <Button type=\"dashed\" onClick={() => setPressed('Dashed')}>\n        Dashed\n      </Button>\n      <Text tone=\"muted\">Pressed: {pressed}</Text>\n    </Inline>\n  );\n}\n"
         },
         {
           "file": "src/control/button/examples/03-danger-and-success.tsx",
@@ -120,7 +120,7 @@
           "order": 3,
           "title": "Danger and success",
           "description": "Add `danger` to a destructive action: on `primary` when it confirms the\ndeletion, on `default` otherwise. `success` is the green treatment. The two\ncannot both be set; TypeScript rejects it.",
-          "code": "import { Inline } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\n\nexport default function DangerAndSuccess() {\n  return (\n    <Inline wrap>\n      <Button danger>Log out</Button>\n      <Button type=\"primary\" danger>\n        Delete book\n      </Button>\n      <Button type=\"primary\" success>\n        Mark as read\n      </Button>\n    </Inline>\n  );\n}\n"
+          "code": "import { Inline, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function DangerAndSuccess() {\n  const [pressed, setPressed] = useState('nothing yet');\n  return (\n    <Inline wrap>\n      <Button danger onClick={() => setPressed('Log out')}>\n        Log out\n      </Button>\n      <Button type=\"primary\" danger onClick={() => setPressed('Delete book')}>\n        Delete book\n      </Button>\n      <Button type=\"primary\" success onClick={() => setPressed('Mark as read')}>\n        Mark as read\n      </Button>\n      <Text tone=\"muted\">Pressed: {pressed}</Text>\n    </Inline>\n  );\n}\n"
         },
         {
           "file": "src/control/button/examples/04-icons.tsx",
@@ -128,7 +128,7 @@
           "order": 4,
           "title": "Icons",
           "description": "`prefix` and `suffix` take an icon component (`prefix={SearchIcon}`), not an\nelement. An icon-only button needs an `ariaLabel` so it has an accessible name.",
-          "code": "import { Inline } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { ChevronIcon, SearchIcon, SettingsIcon } from '@korzun/design/icon';\n\nexport default function Icons() {\n  return (\n    <Inline wrap>\n      <Button prefix={SearchIcon}>Search</Button>\n      <Button type=\"primary\" suffix={ChevronIcon}>\n        Next\n      </Button>\n      <Button prefix={SettingsIcon} ariaLabel=\"Settings\" />\n    </Inline>\n  );\n}\n"
+          "code": "import { Inline, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { ChevronIcon, SearchIcon, SettingsIcon } from '@korzun/design/icon';\nimport { useState } from 'react';\n\nexport default function Icons() {\n  const [pressed, setPressed] = useState('nothing yet');\n  return (\n    <Inline wrap>\n      <Button prefix={SearchIcon} onClick={() => setPressed('Search')}>\n        Search\n      </Button>\n      <Button type=\"primary\" suffix={ChevronIcon} onClick={() => setPressed('Next')}>\n        Next\n      </Button>\n      <Button prefix={SettingsIcon} ariaLabel=\"Settings\" onClick={() => setPressed('Settings')} />\n      <Text tone=\"muted\">Pressed: {pressed}</Text>\n    </Inline>\n  );\n}\n"
         },
         {
           "file": "src/control/button/examples/05-loading-and-disabled.tsx",
@@ -136,7 +136,7 @@
           "order": 5,
           "title": "Loading and disabled",
           "description": "`loading` swaps the icons for a spinner and blocks clicks; `disabled` greys the\nbutton out. Both take the button out of the tab order.",
-          "code": "import { Inline } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { UploadIcon } from '@korzun/design/icon';\nimport { useState } from 'react';\n\nexport default function LoadingAndDisabled() {\n  const [uploading, setUploading] = useState(false);\n  return (\n    <Inline wrap>\n      <Button\n        type=\"primary\"\n        prefix={UploadIcon}\n        loading={uploading}\n        onClick={() => setUploading(true)}\n      >\n        {uploading ? 'Uploading' : 'Upload'}\n      </Button>\n      <Button type=\"text\" disabled={!uploading} onClick={() => setUploading(false)}>\n        Cancel upload\n      </Button>\n      <Button disabled>Disabled</Button>\n    </Inline>\n  );\n}\n"
+          "code": "import { Inline } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { UploadIcon } from '@korzun/design/icon';\nimport { useState } from 'react';\n\nexport default function LoadingAndDisabled() {\n  const [uploading, setUploading] = useState(false);\n  return (\n    <Inline wrap>\n      <Button\n        type=\"primary\"\n        prefix={UploadIcon}\n        loading={uploading}\n        onClick={() => setUploading(true)}\n      >\n        {uploading ? 'Uploading' : 'Upload'}\n      </Button>\n      <Button type=\"text\" disabled={!uploading} onClick={() => setUploading(false)}>\n        Cancel upload\n      </Button>\n      <Button disabled onClick={() => setUploading(true)}>\n        Disabled\n      </Button>\n    </Inline>\n  );\n}\n"
         },
         {
           "file": "src/control/button/examples/06-submit-in-card.tsx",

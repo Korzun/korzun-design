@@ -22,7 +22,9 @@ export default function LoadingAndDisabled() {
       <Button type="text" disabled={!uploading} onClick={() => setUploading(false)}>
         Cancel upload
       </Button>
-      <Button disabled>Disabled</Button>
+      <Button disabled onClick={() => setUploading(true)}>
+        Disabled
+      </Button>
     </Inline>
   );
 }

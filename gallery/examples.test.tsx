@@ -45,6 +45,14 @@ describe('pilot examples wire every button', () => {
     clickChangesDemo('src/component/stack/examples/03-align.tsx', /Add a book/);
   });
 
+  it.each([
+    ['02-variants', /^(Primary|Default|Text|Link|Dashed)$/],
+    ['03-danger-and-success', /^(Log out|Delete book|Mark as read)$/],
+    ['04-icons', /^(Search|Next|Settings)$/],
+  ])('Button %s: each button shows what was pressed', (file, name) => {
+    clickChangesDemo(`src/control/button/examples/${file}.tsx`, name);
+  });
+
   it('Stack 05: "See all" shows more tags', () => {
     clickChangesDemo('src/component/stack/examples/05-nested-with-inline.tsx', /See all/);
   });
