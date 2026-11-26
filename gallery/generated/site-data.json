@@ -8798,6 +8798,586 @@
         }
       ],
       "changelog": []
+    },
+    {
+      "id": "theme",
+      "slug": "theme",
+      "entry": "@korzun/design/theme",
+      "docPath": "docs/theme.md",
+      "title": "Theme",
+      "description": "ThemeProvider, the light and dark themes, and createUseStyles for writing token-based styles.",
+      "category": "Theme",
+      "values": [
+        "GlobalStyles",
+        "ThemeProvider",
+        "createUseStyles",
+        "darkTheme",
+        "lightTheme",
+        "useTheme",
+        "useThemeGlobalStyles",
+        "useThemeSetting"
+      ],
+      "types": [
+        "SpaceValue",
+        "Theme",
+        "ThemeMode",
+        "ThemeProviderProps",
+        "ThemeSetting"
+      ],
+      "importLine": "import { GlobalStyles, ThemeProvider, createUseStyles, darkTheme, lightTheme, useTheme, useThemeGlobalStyles, useThemeSetting, type SpaceValue, type Theme, type ThemeMode, type ThemeProviderProps, type ThemeSetting } from '@korzun/design/theme'",
+      "body": "Every visual value comes from the theme. App styles use `createUseStyles` (the\nsame function react-jss exports, re-exported here) with a typed `theme`\nargument. Don't add another CSS-in-JS library, and don't write literal colours,\nspacing, font sizes, or radii.\n\nUse something else for: a ready-made light/dark/auto picker (`ThemeSetting`),\nthe full list of token keys ([tokens](tokens.md)).\n\n## Usage\n\n### Setup\n\n```tsx\n<ThemeProvider identity={userId /* or null when signed out */}>\n  <ToastProvider>{app}</ToastProvider>\n</ThemeProvider>\n```\n\n- `ThemeProvider` renders `GlobalStyles`: the page background, the body font,\n  a 16px input floor on iOS, scroll lock while a `<dialog>` is open, and the\n  `theme-rotation` and `theme-slide-*` keyframes. Don't render\n  `GlobalStyles` yourself, or `useThemeGlobalStyles()`, the hook it calls.\n- `lightTheme` / `darkTheme` are the two concrete themes (for tests).\n\n### `useThemeSetting()`\n\n```ts\nuseThemeSetting(): [ThemeSetting, (setting: ThemeSetting) => void]\n```\n\nReturns `[setting, setSetting]`, where `ThemeSetting` is `'light' | 'dark' |\n'auto'`. `'auto'` follows the OS `prefers-color-scheme` live. The\n`ThemeSetting` component is a ready-made picker for it. Without a\n`ThemeProvider` above it, the setter does nothing.\n\n### `useTheme()`\n\n```ts\nuseTheme(): Theme\n```\n\nReturns the current `Theme` object, for values needed outside a stylesheet.\n`theme.colorScheme` is the mode it resolved to, `'light'` or `'dark'`.\n\n### Writing styles\n\n```ts\n// style.ts, next to the component\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\nimport { applyTransparency } from '@korzun/design';\n\nexport const useStyle = createUseStyles((theme: Theme) => ({\n  root: {\n    padding: theme.space.md,\n    backgroundColor: theme.color.bg.card,\n  },\n  highlight: { backgroundColor: applyTransparency(theme.color.brand.default, 0.12) },\n  [theme.breakpoint.mobile]: { root: { padding: theme.space.sm } },\n}));\n```\n\n- Style files are for padding, borders, backgrounds, and one-offs (borders come from the border tokens). Lay out with\n  `Stack`/`Inline` and set text with `Text`/`Heading`.\n- `applyTransparency(color, alpha)` turns a hex or rgb token into an `rgba()`\n  string. Use it for tints instead of writing an rgba literal.\n- Media queries: use the `theme.breakpoint.mobile` / `.normal` strings as keys.\n\n### Tokens\n\nThe token groups (`color`, `space`, `radius`, `fontSize`, `shadow`, `zIndex`,\n`breakpoint` and the rest) are listed key by key in [tokens](tokens.md). Use the\nsemantic tokens, never the primitive `gray`, `blue` and `red` scales. Radii are\nchosen by nesting depth; see [corners](corners.md).\n\n| Group | Keys | Notes |\n|---|---|---|\n| `color.text` | `primary`, `secondary`, `muted`, `faint`, `description`, `onPrimary`, `onDanger` | `muted` for labels and meta, `faint` for placeholders |\n| `color.bg` | `page`, `card`, `cardHeader`, `track`, `input`, `footer`, `glass`, `glassFallback`, `glassActive`, `selected`, `hover`, `success`, `placeholder` | `cardHeader` is also the shaded-row and inset-box fill; `hover` is a translucent scrim |\n| `color.border` | `default`, `strong`, `light`, `focus`, `hover`, `danger`, `glass`, `glassActive`, `faint`, `loading`, `success`, `section` | Cards and dividers use `strong`; inputs use `default` |\n| `color.brand` | `default`, `hover`, `active`, `light`, `outline`, `loading*`, `linkHover` | The primary action colour |\n| `color.danger` | `default`, `hover`, `active`, `light`, `outline`, `loading*` | Destructive actions and errors |\n| `color.success` | (a string) | Solid green |\n| `color.warning` | (a string) | Solid amber |\n| `color.info` | (a string) | Solid blue, the mode's `brand.default` |\n| `color.chip.<tone>` | `{ text, bg, border }` for 13 tones. Status tones: `success`, `warning`, `danger`, `info`, `neutral`. Label tones: `status`, `author`, `series`, `subject`, `book`, `entryType`, `user`, `rating` | Used by `Tag` |\n| `color.overlay` | `backdrop` | Modal backdrop |\n| `color.gray` / `blue` / `red` | primitive scales | Don't use these in app code; use the semantic tokens above |\n| `space` | `xxxs` 0.1rem, `xxs` 0.125, `xs` 0.25, `sm` 0.375, `md` 0.5, `lg` 0.625, `xl` 0.75, `xxl` 1, `xxxl` 1.25, `xxxxl` 1.5, `xxxxxl` 2rem | `md` is the default gap between stacked fields |\n| `radius` | `sm` 4px, `md` 8px, `lg` 16px, `circle`, `pill` | Chosen by nesting depth; see [corners](corners.md) |\n| `fontSize` | `xxs` 0.6rem, `xs` 0.7, `sm` 0.75, `md` 0.875, `lg` 1, `xl` 1.25, `xxl` 1.75rem | Control text is `'0.80rem'`, the one sanctioned literal (already applied by `recipe.input` and Button) |\n| `fontWeight` | `regular` 400, `medium` 500, `semibold` 600, `bold` 700, `extrabold` 800 | |\n| `lineHeight` | `tight` 1, `body` 1.3 | |\n| `fontFamily` | `body`, `mono` | |\n| `shadow` | `card`, `cardStack`, `hoverLift`, `dangerStack`, `brandStack`, `glass`, `glassActive` | Floating layers use `hoverLift` |\n| `transition` | `fast`, `medium`, `slide`, `slow`, `spring` | Values like `'0.2s ease-in'` |\n| `zIndex` | `behind`, `base`, `stack.{lo,md,hi}`, `header`, `sticky`, `toast` | |\n| `breakpoint` | `mobile` (≤640px), `normal` | Media query strings |\n| `layout` | `navHeightMobile`, `modalWidth`, `controlHeight`, `floatingControlTopBase` | Measured chrome sizes to lay out around |\n| `size` | `metadataValue` | |\n\n### Recipes\n\nRecipes are style fragments that you spread into a rule: `{ ...theme.recipe.input }`.\n\n| Recipe | Gives you |\n|---|---|\n| `recipe.input` | Text-input chrome: font, `md` radius, border, hover and focus colours, iOS 16px floor; `&$danger` turns the border red if your sheet declares a `danger: {}` class |\n| `recipe.label` | Field label: semibold, `md`, muted; `&$danger` |\n| `recipe.focusRing` | Transparent 2px outline; set `outlineColor: theme.color.brand.outline` on `'&:focus'` |\n| `recipe.spinner` | 1em rotating box. `Spinner` is the normal way to show a spinner; use the recipe only for a custom rotating element |\n| `recipe.glass` / `glassHighlight` | Frosted translucent surface (floating chrome) and its active state |\n| `recipe.row` | The shaded field row a control sits in inside a card: `bg.cardHeader`, `md` corners, padding `md lg md sm`. Use it for custom rows next to form fields |\n| `recipe.card.shell` / `header` / `footer` | The Card surface (`lg`), its header bar, and its footer bar |\n| `recipe.modal.dialog` / `header` / `footer` | A `<dialog>` surface (`lg`, shared width, backdrop), its title, and its button bar |\n\nRecipes that use `$name` references need an empty class with that name in the\nsame sheet (`danger: {}`).\n\n## Do / don't\n\n- Do style with `theme.*` tokens and `createUseStyles`.\n- Do use `applyTransparency` for a tint instead of an rgba literal.\n- Don't render `GlobalStyles` yourself; `ThemeProvider` does.\n- Don't use the primitive `gray`, `blue` and `red` scales in app code.",
+      "examples": [
+        {
+          "file": "src/theme/examples/01-styles.tsx",
+          "slug": "styles",
+          "order": 1,
+          "title": "Writing styles",
+          "description": "`createUseStyles` takes a function of the typed `theme`, so spacing, colours and corners all come from tokens. `applyTransparency` tints a token, and the `theme.breakpoint.mobile` string keys a media query. The Button counts the picks the tinted row shows.",
+          "code": "import { applyTransparency } from '@korzun/design';\nimport { Stack, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\nimport { useState } from 'react';\n\nconst useStyle = createUseStyles((theme: Theme) => ({\n  panel: {\n    padding: theme.space.xxl,\n    backgroundColor: theme.color.bg.card,\n    border: `1px solid ${theme.color.border.strong}`,\n    borderRadius: theme.radius.lg,\n  },\n  highlight: {\n    padding: theme.space.md,\n    backgroundColor: applyTransparency(theme.color.brand.default, 0.12),\n    borderRadius: theme.radius.md,\n  },\n  [theme.breakpoint.mobile]: { panel: { padding: theme.space.md } },\n}));\n\nexport default function Styles() {\n  const styles = useStyle();\n  const [picks, setPicks] = useState(0);\n  return (\n    <div className={styles.panel}>\n      <Stack gap=\"md\" align=\"start\">\n        <div className={styles.highlight}>\n          <Text>Picked {picks} times</Text>\n        </div>\n        <Button onClick={() => setPicks((n) => n + 1)}>Pick</Button>\n      </Stack>\n    </div>\n  );\n}\n"
+        },
+        {
+          "file": "src/theme/examples/02-setting.tsx",
+          "slug": "setting",
+          "order": 2,
+          "title": "Light, dark or auto",
+          "description": "`useThemeSetting` returns the choice and its setter; `useTheme().colorScheme` is the mode it resolved to. Pass the app's root `ThemeProvider` an `identity` and the choice is saved for that user and restored when they return; with `null` nothing is saved. Switch the identity below and the choice follows it.",
+          "code": "import { Inline, Stack, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { ThemeProvider, useTheme, useThemeSetting, type ThemeSetting } from '@korzun/design/theme';\nimport { useState } from 'react';\n\nconst settings: ThemeSetting[] = ['light', 'dark', 'auto'];\n\nconst Picker = ({ identity }: { identity: string | null }) => {\n  const [setting, setSetting] = useThemeSetting();\n  const theme = useTheme();\n  return (\n    <Stack gap=\"md\" align=\"start\">\n      <Text tone=\"muted\">\n        {identity === null ? 'Signed out' : `Signed in as ${identity}`}: setting {setting}, mode{' '}\n        {theme.colorScheme}\n      </Text>\n      <Inline>\n        {settings.map((next) => (\n          <Button\n            key={next}\n            type={setting === next ? 'primary' : 'default'}\n            onClick={() => setSetting(next)}\n          >\n            {next}\n          </Button>\n        ))}\n      </Inline>\n    </Stack>\n  );\n};\n\nexport default function Setting() {\n  const [identity, setIdentity] = useState<string | null>('ada');\n  return (\n    <ThemeProvider identity={identity}>\n      <Stack gap=\"lg\" align=\"start\">\n        <Picker identity={identity} />\n        <Inline>\n          <Button onClick={() => setIdentity(identity === null ? 'ada' : null)}>\n            {identity === null ? 'Sign in' : 'Sign out'}\n          </Button>\n        </Inline>\n      </Stack>\n    </ThemeProvider>\n  );\n}\n"
+        },
+        {
+          "file": "src/theme/examples/03-values.tsx",
+          "slug": "values",
+          "order": 3,
+          "title": "Values outside a stylesheet",
+          "description": "`useTheme` returns the current `Theme` for a value a stylesheet cannot take, such as a label or a chart option. `lightTheme` and `darkTheme` are the two concrete themes, handy in tests. Pick one to read the same tokens from it.",
+          "code": "import { Inline, Stack, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { darkTheme, lightTheme, useTheme } from '@korzun/design/theme';\nimport { useState } from 'react';\n\nexport default function Values() {\n  const current = useTheme();\n  const [mode, setMode] = useState<'light' | 'dark'>('light');\n  const picked = mode === 'light' ? lightTheme : darkTheme;\n  return (\n    <Stack gap=\"md\" align=\"start\">\n      <Text>Page background here: {current.color.bg.page}</Text>\n      <Inline>\n        <Button type={mode === 'light' ? 'primary' : 'default'} onClick={() => setMode('light')}>\n          lightTheme\n        </Button>\n        <Button type={mode === 'dark' ? 'primary' : 'default'} onClick={() => setMode('dark')}>\n          darkTheme\n        </Button>\n      </Inline>\n      <Text tone=\"muted\">\n        {picked.colorScheme}: page {picked.color.bg.page}, text {picked.color.text.primary}\n      </Text>\n    </Stack>\n  );\n}\n"
+        }
+      ],
+      "tables": [
+        {
+          "name": "ThemeProviderProps",
+          "kind": "props",
+          "rows": [
+            {
+              "name": "children",
+              "type": "ReactNode",
+              "required": true,
+              "description": "The app."
+            },
+            {
+              "name": "identity",
+              "type": "string | null",
+              "required": false,
+              "description": "Whose light, dark or auto choice this is, for example the signed-in user's id. The choice is saved per identity in `localStorage` under `theme-setting:<identity>` and restored when it comes back; with `null`, nothing is saved and the mode is `'auto'`.",
+              "default": "null"
+            }
+          ]
+        },
+        {
+          "name": "Theme",
+          "kind": "object",
+          "rows": [
+            {
+              "name": "breakpoint",
+              "type": "{ mobile: string; normal: string; }",
+              "required": true,
+              "description": ""
+            },
+            {
+              "name": "color",
+              "type": "{ gray: typeof gray; blue: typeof blue; red: typeof red; text: { primary: string; secondary: string; muted: string; faint: string; onPrimary: string; onDanger: string; description: string; }; bg: { page: string; card: string; cardHeader: string; /** * The rail behind a segmented control's sliding lens. Its own token, not * `cardHeader`, because it must read against BOTH `page` and `card` — and * in dark mode those sit on either side of `cardHeader`, which left the * rail invisible on the page. */ track: string; input: string; footer: string; glass: string; glassFallback: string; glassActive: string; selected: string; hover: string; success: string; placeholder: string; }; border: { default: string; strong: string; light: string; focus: string; hover: string; danger: string; glass: string; glassActive: string; faint: string; loading: string; success: string; section: string; }; success: string; /** Solid warning colour for icons and accents. */ warning: string; /** Solid info colour for icons and accents. */ info: string; brand: { default: string; hover: string; active: string; light: string; outline: string; loading: string; loadingHover: string; loadingActive: string; linkHover: string; }; danger: { default: string; hover: string; active: string; light: string; outline: string; loading: string; loadingHover: string; loadingActive: string; }; overlay: { backdrop: string; }; chip: { status: { text: string; bg: string; border: string; }; author: { text: string; bg: string; border: string; }; series: { text: string; bg: string; border: string; }; subject: { text: string; bg: string; border: string; }; book: { text: string; bg: string; border: string; }; entryType: { text: string; bg: string; border: string; }; user: { text: string; bg: string; border: string; }; rating: { text: string; bg: string; border: string; }; neutral: { text: string; bg: string; border: string; }; success: { text: string; bg: string; border: string; }; warning: { text: string; bg: string; border: string; }; danger: { text: string; bg: string; border: string; }; info: { text: string; bg: string; border: string; }; }; }",
+              "required": true,
+              "description": ""
+            },
+            {
+              "name": "colorScheme",
+              "type": "'light' | 'dark'",
+              "required": true,
+              "description": ""
+            },
+            {
+              "name": "fontFamily",
+              "type": "{ body: string; mono: string; }",
+              "required": true,
+              "description": ""
+            },
+            {
+              "name": "fontSize",
+              "type": "{ xxs: string; xs: string; sm: string; md: string; lg: string; xl: string; xxl: string; }",
+              "required": true,
+              "description": ""
+            },
+            {
+              "name": "fontWeight",
+              "type": "{ regular: number; medium: number; semibold: number; bold: number; extrabold: number; }",
+              "required": true,
+              "description": ""
+            },
+            {
+              "name": "layout",
+              "type": "{ navHeightMobile: string; modalWidth: string; controlHeight: string; floatingControlTopBase: string; }",
+              "required": true,
+              "description": ""
+            },
+            {
+              "name": "lineHeight",
+              "type": "{ tight: number; body: number; }",
+              "required": true,
+              "description": ""
+            },
+            {
+              "name": "radius",
+              "type": "{ sm: string; md: string; lg: string; circle: string; pill: string; }",
+              "required": true,
+              "description": ""
+            },
+            {
+              "name": "recipe",
+              "type": "{ input: Recipe; focusRing: Recipe; label: Recipe; spinner: Recipe; glass: Recipe; glassHighlight: Recipe; /** The shaded field row (`bg.cardHeader`, `md` corners) a control sits in inside a card. */ row: Recipe; modal: { dialog: Recipe; header: Recipe; footer: Recipe; }; card: { shell: Recipe; header: Recipe; footer: Recipe; }; }",
+              "required": true,
+              "description": ""
+            },
+            {
+              "name": "shadow",
+              "type": "{ card: string; cardStack: string; hoverLift: string; dangerStack: string; brandStack: string; glass: string; glassActive: string; }",
+              "required": true,
+              "description": ""
+            },
+            {
+              "name": "size",
+              "type": "{ metadataValue: string; }",
+              "required": true,
+              "description": ""
+            },
+            {
+              "name": "space",
+              "type": "{ xxxs: SpaceValue; xxs: SpaceValue; xs: SpaceValue; sm: SpaceValue; md: SpaceValue; lg: SpaceValue; xl: SpaceValue; xxl: SpaceValue; xxxl: SpaceValue; xxxxl: SpaceValue; xxxxxl: SpaceValue; }",
+              "required": true,
+              "description": ""
+            },
+            {
+              "name": "transition",
+              "type": "{ fast: string; medium: string; slide: string; slow: string; spring: string; }",
+              "required": true,
+              "description": ""
+            },
+            {
+              "name": "zIndex",
+              "type": "{ behind: number; base: number; stack: { lo: number; md: number; hi: number; }; header: number; sticky: number; toast: number; }",
+              "required": true,
+              "description": ""
+            }
+          ],
+          "description": "The token object that `useTheme` returns and `createUseStyles` passes to a style function. Every key is described in [tokens](tokens.md)."
+        },
+        {
+          "name": "SpaceValue",
+          "kind": "alias",
+          "rows": [],
+          "text": "`${number}rem`",
+          "description": "A rem length, so a space value can feed props that only accept rem (Popover `gap`)."
+        },
+        {
+          "name": "ThemeMode",
+          "kind": "alias",
+          "rows": [],
+          "text": "'light' | 'dark'"
+        },
+        {
+          "name": "ThemeSetting",
+          "kind": "alias",
+          "rows": [],
+          "text": "'light' | 'dark' | 'auto'",
+          "description": "The user's appearance choice; `'auto'` follows the operating system."
+        }
+      ],
+      "tokens": [],
+      "changelog": [
+        {
+          "version": "0.2.0",
+          "date": "2026-11-21",
+          "tags": [
+            "lightTheme",
+            "darkTheme"
+          ],
+          "text": "New `fontWeight.regular` (400) token."
+        },
+        {
+          "version": "0.1.0",
+          "date": "2026-11-21",
+          "tags": [
+            "Tag",
+            "lightTheme",
+            "darkTheme"
+          ],
+          "text": "`Tag` status tones: `success`, `warning` (yellow, stronger fill), `danger`, `info` (brand blue). New `color.warning` and `color.info` solid colours. Status tones report state; label tones name things. No visual change to existing tags."
+        },
+        {
+          "version": "0.0.6",
+          "date": "2026-11-21",
+          "tags": [
+            "Switch",
+            "lightTheme",
+            "darkTheme"
+          ],
+          "text": "New `theme.recipe.row`: the shaded field row (`bg.cardHeader`, `radius.md`, padding `md lg md sm`), for custom rows beside form fields. `Switch`'s horizontal layout now uses it and looks the same."
+        },
+        {
+          "version": "0.0.3",
+          "date": "2026-11-21",
+          "tags": [
+            "Tag",
+            "lightTheme",
+            "darkTheme"
+          ],
+          "text": "New `color.chip.neutral` token: a quiet grey built from each mode's muted text colour (light 0.08 / 0.22 alphas, dark 0.16 / 0.30, matching the other chips in each mode)."
+        },
+        {
+          "version": "0.0.1",
+          "date": "2026-11-15",
+          "tags": [
+            "ThemeProvider",
+            "lightTheme",
+            "darkTheme"
+          ],
+          "text": "Theme tokens and light/dark themes; `ThemeProvider` takes an `identity` prop (replaces Bookplate's token coupling)."
+        }
+      ]
+    },
+    {
+      "id": "toast",
+      "slug": "toast",
+      "entry": "@korzun/design/toast",
+      "docPath": "docs/toast.md",
+      "title": "Toast",
+      "description": "Short, transient confirmations and errors that slide in from a corner and leave on their own.",
+      "category": "Feedback",
+      "values": [
+        "ToastProvider",
+        "useToast"
+      ],
+      "types": [
+        "ToastProviderProps"
+      ],
+      "importLine": "import { ToastProvider, useToast, type ToastProviderProps } from '@korzun/design/toast'",
+      "body": "Short, transient confirmations and errors (\"Password changed\", \"Failed to reset\npassword\") that appear in a corner, stay four seconds, and slide away. Mount\n`ToastProvider` once; call the function `useToast()` returns from anywhere\nbelow it.\n\nUse something else for: an error that must stay until the user acts (inline\ntext near the field, or `EmptyState danger` for a failed load), a question\nneeding an answer (`ConfirmModal`).\n\n## Usage\n\n### `ToastProvider`\n\nPlacement:\n\n- **Inside `ThemeProvider`** (toasts are styled from the theme) and above every\n  component that calls `useToast`. Bookplate nests it innermost among its app\n  providers, around the router.\n- It renders its container itself; you don't place anything in the layout.\n  Desktop: bottom-right, `space.xxxxl` from the edges. Mobile: full width just\n  above the floating `NavMobile` (and below it in z-order, so toasts slide up\n  from behind the bar).\n- The container is a `popover=\"manual\"` element shown while any toast is up,\n  so toasts appear **above an open modal `<dialog>`** too.\n\n```tsx\n<ThemeProvider identity={username}>\n  <ToastProvider>\n    <AppRouter />\n  </ToastProvider>\n</ThemeProvider>\n```\n\n### `useToast()`\n\n```ts\nuseToast(): (message: string, type: 'success' | 'error' | 'info') => void\n```\n\nReturns the **function itself** (not an object): `const showToast = useToast()`.\n\n| Argument | Notes |\n|---|---|\n| `message` | Plain string. No elements, no actions, no links. |\n| `type` | `'success'`: green check. `'error'`: red X, announced `aria-live=\"assertive\"`. `'info'`: brand-blue info icon. Success and info are `polite`. Required; there is no default. |\n\n### Behaviour to know\n\n- **Without a `ToastProvider` above it, `showToast` silently does nothing**\n  (the default context is a no-op). No error is thrown.\n- Duration is fixed at 4000ms; there is no per-toast duration, no close\n  button, and no tap-to-dismiss.\n- Toasts have `radius.md` (a floating layer) per [corners](corners.md).\n\n### Styling\n\nNo `className`. Position, colours and corners come from theme tokens.\n\n## Do / don't\n\n- Do mount exactly one `ToastProvider`, inside `ThemeProvider`.\n- Do keep messages to one short sentence; nothing truncates a long one.\n- Don't destructure: `const { showToast } = useToast()` is wrong.\n- Don't use a toast for the only copy of an error the user must fix.",
+      "examples": [
+        {
+          "file": "src/toast/examples/01-basic.tsx",
+          "slug": "basic",
+          "order": 1,
+          "title": "Basic",
+          "description": "`useToast` returns a function that takes a one-line message and a `type`. `success` shows a green check, `error` a red X and is announced assertively, and `info` a blue info icon.",
+          "code": "import { Inline } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { useToast } from '@korzun/design/toast';\n\nexport default function Basic() {\n  const showToast = useToast();\n  return (\n    <Inline>\n      <Button onClick={() => showToast('Password changed', 'success')}>Success</Button>\n      <Button onClick={() => showToast('Failed to reset password', 'error')}>Error</Button>\n      <Button onClick={() => showToast('Reading progress syncs when online', 'info')}>Info</Button>\n    </Inline>\n  );\n}\n"
+        },
+        {
+          "file": "src/toast/examples/02-form-outcome.tsx",
+          "slug": "form-outcome",
+          "order": 2,
+          "title": "Reporting an outcome",
+          "description": "A form submitted from the Card footer reports its result with the function `useToast` returns. A failed save also puts the message in an `ErrorMessage` beside the field, so the toast is never the only copy of an error the user must fix.",
+          "code": "import { Card, ErrorMessage, Stack } from '@korzun/design/component';\nimport { Button, TextInput } from '@korzun/design/control';\nimport { useToast } from '@korzun/design/toast';\nimport { useState } from 'react';\n\nexport default function FormOutcome() {\n  const showToast = useToast();\n  const [password, setPassword] = useState('');\n  const [valid, setValid] = useState(true);\n  const [error, setError] = useState<string | undefined>(undefined);\n  const save = () => {\n    if (!valid || password.length < 8) {\n      const message = 'Password must be at least 8 characters';\n      setError(message);\n      showToast(message, 'error');\n      return;\n    }\n    setError(undefined);\n    showToast('Password changed', 'success');\n    setPassword('');\n  };\n  return (\n    <Card\n      title=\"Change password\"\n      footer={\n        <Button type=\"primary\" submit form=\"change-password\">\n          Save\n        </Button>\n      }\n    >\n      <form\n        id=\"change-password\"\n        onSubmit={(event) => {\n          event.preventDefault();\n          save();\n        }}\n      >\n        <Stack gap=\"md\">\n          <TextInput\n            name=\"password\"\n            label=\"New password\"\n            password\n            value={password}\n            onChange={(next) => setPassword(next ?? '')}\n            onValidChange={(_name, ok) => setValid(ok)}\n            validate={(next) => next.length >= 8}\n          />\n          <ErrorMessage>{error}</ErrorMessage>\n        </Stack>\n      </form>\n    </Card>\n  );\n}\n"
+        },
+        {
+          "file": "src/toast/examples/03-max-toasts.tsx",
+          "slug": "max-toasts",
+          "order": 3,
+          "title": "Limiting the stack",
+          "description": "`maxToasts` caps how many toasts show at once: when a new one would exceed it, the oldest starts to leave. It goes on the app's one root `ToastProvider`; here the cap is two, so the third click pushes the first toast out.",
+          "code": "import { Inline, Stack, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { ToastProvider, useToast } from '@korzun/design/toast';\nimport { useState } from 'react';\n\nconst Sender = () => {\n  const showToast = useToast();\n  const [sent, setSent] = useState(0);\n  return (\n    <Stack gap=\"md\">\n      <Inline>\n        <Button\n          onClick={() => {\n            showToast(`Message ${sent + 1} sent`, 'success');\n            setSent(sent + 1);\n          }}\n        >\n          Send message\n        </Button>\n      </Inline>\n      <Text tone=\"muted\">Sent: {sent}</Text>\n    </Stack>\n  );\n};\n\nexport default function MaxToasts() {\n  return (\n    <ToastProvider maxToasts={2}>\n      <Sender />\n    </ToastProvider>\n  );\n}\n"
+        }
+      ],
+      "tables": [
+        {
+          "name": "ToastProviderProps",
+          "kind": "props",
+          "rows": [
+            {
+              "name": "children",
+              "type": "ReactNode",
+              "required": true,
+              "description": "The app."
+            },
+            {
+              "name": "maxToasts",
+              "type": "number",
+              "required": false,
+              "description": "How many toasts show at once. When a new toast would exceed it, the oldest starts its exit animation.",
+              "default": "3"
+            }
+          ]
+        }
+      ],
+      "tokens": [
+        {
+          "path": "breakpoint.mobile",
+          "kind": "value",
+          "light": "@media (max-width: 640px)",
+          "dark": "@media (max-width: 640px)"
+        },
+        {
+          "path": "color.bg.card",
+          "kind": "color",
+          "light": "#FCFCFC",
+          "dark": "#1A1B1E"
+        },
+        {
+          "path": "color.brand.default",
+          "kind": "color",
+          "light": "#1777FF",
+          "dark": "#3696fe"
+        },
+        {
+          "path": "color.danger.default",
+          "kind": "color",
+          "light": "#FF4D4F",
+          "dark": "#FF4D4F"
+        },
+        {
+          "path": "color.success",
+          "kind": "color",
+          "light": "#16a34a",
+          "dark": "#22C55E"
+        },
+        {
+          "path": "color.text.primary",
+          "kind": "color",
+          "light": "#111",
+          "dark": "#F5F5F7"
+        },
+        {
+          "path": "fontSize.md",
+          "kind": "value",
+          "light": "0.875rem",
+          "dark": "0.875rem"
+        },
+        {
+          "path": "fontWeight.medium",
+          "kind": "value",
+          "light": "500",
+          "dark": "500"
+        },
+        {
+          "path": "layout.navHeightMobile",
+          "kind": "value",
+          "light": "96px",
+          "dark": "96px"
+        },
+        {
+          "path": "radius.md",
+          "kind": "value",
+          "light": "8px",
+          "dark": "8px"
+        },
+        {
+          "path": "shadow.hoverLift",
+          "kind": "value",
+          "light": "0 2px 8px rgba(0,0,0,0.15)",
+          "dark": "0 2px 8px rgba(0,0,0,0.6)"
+        },
+        {
+          "path": "space.lg",
+          "kind": "value",
+          "light": "0.625rem",
+          "dark": "0.625rem"
+        },
+        {
+          "path": "space.md",
+          "kind": "value",
+          "light": "0.5rem",
+          "dark": "0.5rem"
+        },
+        {
+          "path": "space.xxl",
+          "kind": "value",
+          "light": "1rem",
+          "dark": "1rem"
+        },
+        {
+          "path": "space.xxxxl",
+          "kind": "value",
+          "light": "1.5rem",
+          "dark": "1.5rem"
+        },
+        {
+          "path": "transition.slide",
+          "kind": "value",
+          "light": "0.2s ease-out",
+          "dark": "0.2s ease-out"
+        },
+        {
+          "path": "zIndex.sticky",
+          "kind": "value",
+          "light": "1000",
+          "dark": "1000"
+        },
+        {
+          "path": "zIndex.toast",
+          "kind": "value",
+          "light": "9999",
+          "dark": "9999"
+        }
+      ],
+      "changelog": [
+        {
+          "version": "0.0.1",
+          "date": "2026-11-15",
+          "tags": [
+            "ToastProvider",
+            "useToast"
+          ],
+          "text": "Toast: `ToastProvider`, `useToast`."
+        }
+      ]
+    },
+    {
+      "id": "icon",
+      "slug": "icon",
+      "entry": "@korzun/design/icon",
+      "docPath": "docs/icon.md",
+      "title": "Icons",
+      "description": "Inline SVG icon components that take the surrounding text colour, with the shared IconProps.",
+      "category": "Data display",
+      "values": [
+        "AdjustmentsHorizontalIcon",
+        "AlertOctagonIcon",
+        "BookIcon",
+        "BooksIcon",
+        "CheckIcon",
+        "ChevronCircleIcon",
+        "ChevronIcon",
+        "CircleXIcon",
+        "ClockIcon",
+        "DeviceIcon",
+        "HandLoveYouIcon",
+        "HandOkIcon",
+        "HandPeaceIcon",
+        "HandsClapIcon",
+        "HomeIcon",
+        "InfoCircleIcon",
+        "KeyIcon",
+        "ListCheckIcon",
+        "MoreIcon",
+        "RowRemoveIcon",
+        "SearchIcon",
+        "SettingsIcon",
+        "SpinnerIcon",
+        "ThumbDownIcon",
+        "UploadIcon",
+        "UserIcon",
+        "UsersIcon",
+        "XIcon",
+        "defaultFilledIconProps",
+        "defaultStrokeIconProps"
+      ],
+      "types": [
+        "IconProps"
+      ],
+      "importLine": "import { AdjustmentsHorizontalIcon, AlertOctagonIcon, BookIcon, BooksIcon, CheckIcon, ChevronCircleIcon, ChevronIcon, CircleXIcon, ClockIcon, DeviceIcon, HandLoveYouIcon, HandOkIcon, HandPeaceIcon, HandsClapIcon, HomeIcon, InfoCircleIcon, KeyIcon, ListCheckIcon, MoreIcon, RowRemoveIcon, SearchIcon, SettingsIcon, SpinnerIcon, ThumbDownIcon, UploadIcon, UserIcon, UsersIcon, XIcon, defaultFilledIconProps, defaultStrokeIconProps, type IconProps } from '@korzun/design/icon'",
+      "body": "Inline SVG icon components, mostly from [Tabler](https://tabler.io/icons) on a\n24×24 view box. Each one paints in `currentColor`, so it takes the text colour\nof wherever it sits, in both themes, including hover and selected states.\n\nUse something else for: a determinate progress mark (`ProgressIndicator`), a\nloading state on a button (`Button`'s `loading`, which draws the spinner for\nyou).\n\n## Usage\n\n### Props\n\nEvery icon takes the same `IconProps`, listed below. `defaultStrokeIconProps`\nand `defaultFilledIconProps` are exported for building your own icon with the\nsame defaults.\n\n### Sizing and colour\n\n- Size with `width`/`height` props (`<HomeIcon width={14} height={14} />`), or\n  with `height: '1em', width: '1em'` in a class so it scales with the text (this\n  is what `Button` does for `prefix`/`suffix`).\n- Colour by setting `color` on the icon or any ancestor. Don't pass `stroke` or\n  `fill` colours; they bypass the theme.\n\n### Passing icons to other components\n\nComponents take the icon **component**, never an element:\n\n```tsx\n<Button prefix={SearchIcon}>Search</Button>                 // ComponentType<IconProps>\n<ConfirmModal icon={AlertOctagonIcon} danger … />\nconst item: NavItem = { to: '/', label: 'Home', Icon: HomeIcon, active };\noptions={[{ value: 'grid', label: 'Grid', Icon: BooksIcon }]} // SegmentedControl\n```\n\n### Kinds of icon\n\nEvery icon is listed in the table below, and the docs site also shows them as a grid. Each is one of three kinds.\n\n- **Stroke** icons draw outlines and take `stroke` and `strokeWidth`.\n- **Filled** icons (`AlertOctagonIcon`, `CheckIcon`, `CircleXIcon`,\n  `InfoCircleIcon`) ignore `stroke` and `strokeWidth`.\n- **Emoji** icons (`HandLoveYouIcon`, `HandOkIcon`, `HandPeaceIcon`,\n  `HandsClapIcon`, `ThumbDownIcon`) draw the platform's colour-emoji glyph as an\n  alpha mask over `currentColor`, so they recolour like the others but their\n  exact shape depends on the OS emoji font. They ignore `fill`, `stroke` and\n  `strokeWidth`.\n\nTwo to know: `ChevronIcon` points right, so rotate it via `className` for other\ndirections. `SpinnerIcon` is a quarter arc that **does not spin by itself**; use\n`Spinner` (component) for a ready-made loader, not a hand-built `SpinnerIcon`:\n\n```tsx\n<Spinner label=\"Loading books\" />\n```\n\n### Every icon\n\n| Export | Kind | Depicts |\n|---|---|---|\n| `AdjustmentsHorizontalIcon` | stroke | Three horizontal sliders (general settings, filters). |\n| `AlertOctagonIcon` | filled | Octagon with `!` (danger/warning; confirm modals). |\n| `BookIcon` | stroke | A single book (Tabler `book-2`). |\n| `BooksIcon` | stroke | Books standing on a shelf. |\n| `CheckIcon` | filled | A check mark (success). |\n| `ChevronCircleIcon` | stroke | Right chevron in a circle (Card's collapse toggle). |\n| `ChevronIcon` | stroke | Right-pointing chevron; rotate it via `className` for other directions. |\n| `CircleXIcon` | filled | X in a filled circle (clear, error). |\n| `ClockIcon` | stroke | Clock face (time, pending). |\n| `DeviceIcon` | stroke | A tablet / e-reader (Tabler `device-tablet`). |\n| `HandLoveYouIcon` | emoji | 🤟 silhouette (rating 5, \"Love\"). |\n| `HandOkIcon` | emoji | 👌 silhouette (rating 2, \"Okay\"). |\n| `HandPeaceIcon` | emoji | ✌️ silhouette (rating 3, \"Nice\"). |\n| `HandsClapIcon` | emoji | 👏 silhouette (rating 4, \"Great\"). |\n| `HomeIcon` | stroke | A house. |\n| `InfoCircleIcon` | filled | `i` in a filled circle (info). |\n| `KeyIcon` | stroke | A key (passwords, credentials). |\n| `ListCheckIcon` | stroke | Checklist (requests, tasks). |\n| `MoreIcon` | stroke | Three horizontal dots (overflow menu). |\n| `RowRemoveIcon` | stroke | A table row with an X under it (remove row). |\n| `SearchIcon` | stroke | Magnifying glass. |\n| `SettingsIcon` | stroke | Gear. |\n| `SpinnerIcon` | stroke | A quarter arc. **Does not spin by itself**; use `Spinner` (component) for a ready-made loader. |\n| `ThumbDownIcon` | emoji | 👎 silhouette (rating 1, \"Bad\"). |\n| `UploadIcon` | stroke | Arrow up out of a tray. |\n| `UserIcon` | stroke | One person. |\n| `UsersIcon` | stroke | Two people. |\n| `XIcon` | stroke | An X (close, dismiss, error toast). |\n\n## Do / don't\n\n- Do pass `aria-hidden` when the icon sits next to a text label.\n- Do give a standalone meaningful icon `role` and `aria-label`.\n- Don't pass `<Icon />` elements where a component is expected.\n- Don't import from icon file paths; only `@korzun/design/icon` is exported.",
+      "examples": [
+        {
+          "file": "src/icon/examples/01-basic.tsx",
+          "slug": "basic",
+          "order": 1,
+          "title": "Basic",
+          "description": "An icon next to a text label is decorative, so it takes `aria-hidden`. A standalone icon that carries meaning takes `role=\"img\"` and an `aria-label`. The button flips the state, and both icons follow it.",
+          "code": "import { Inline, Stack, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { AlertOctagonIcon, CheckIcon } from '@korzun/design/icon';\nimport { useState } from 'react';\n\nexport default function Basic() {\n  const [valid, setValid] = useState(true);\n  const Icon = valid ? CheckIcon : AlertOctagonIcon;\n  return (\n    <Stack gap=\"md\" align=\"start\">\n      <Text size=\"sm\" tone=\"muted\">\n        Decorative, beside a label\n      </Text>\n      <Inline gap=\"xs\">\n        <Icon width={15} height={15} aria-hidden />\n        <Text>{valid ? 'Book is valid' : 'Book has problems'}</Text>\n      </Inline>\n      <Text size=\"sm\" tone=\"muted\">\n        Standalone, named for screen readers\n      </Text>\n      <Icon width={24} height={24} role=\"img\" aria-label={valid ? 'Valid' : 'Has problems'} />\n      <Inline>\n        <Button onClick={() => setValid(!valid)}>\n          {valid ? 'Mark as broken' : 'Mark as valid'}\n        </Button>\n      </Inline>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/icon/examples/02-size-and-colour.tsx",
+          "slug": "size-and-colour",
+          "order": 2,
+          "title": "Size and colour",
+          "description": "Size an icon with `width` and `height`, or give it `1em` in a class so it scales with the text around it. Colour comes from `color` on the icon or any ancestor; pass no `stroke` or `fill` colour.",
+          "code": "import { Inline, Stack, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { HomeIcon, SearchIcon, SettingsIcon } from '@korzun/design/icon';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\nimport { useState } from 'react';\n\nconst useStyle = createUseStyles((theme: Theme) => ({\n  scaled: { height: '1em', width: '1em' },\n  brand: { color: theme.color.brand.default },\n  danger: { color: theme.color.danger.default },\n}));\n\nconst sizes = [16, 24, 32] as const;\n\nexport default function SizeAndColour() {\n  const styles = useStyle();\n  const [danger, setDanger] = useState(false);\n  return (\n    <Stack gap=\"lg\" align=\"start\">\n      <Inline gap=\"lg\">\n        {sizes.map((size) => (\n          <Stack key={size} gap=\"xs\" align=\"center\">\n            <HomeIcon width={size} height={size} aria-hidden />\n            <Text size=\"sm\" tone=\"muted\">\n              {size}px\n            </Text>\n          </Stack>\n        ))}\n      </Inline>\n      <Inline gap=\"xs\">\n        <SearchIcon className={styles.scaled} aria-hidden />\n        <Text size=\"lg\">Scales with this text</Text>\n      </Inline>\n      <Inline gap=\"xs\" className={danger ? styles.danger : styles.brand}>\n        <SettingsIcon aria-hidden />\n        <Text>{danger ? 'Colour set to danger' : 'Colour set to brand'}</Text>\n      </Inline>\n      <Inline>\n        <Button onClick={() => setDanger(!danger)}>Switch colour</Button>\n      </Inline>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/icon/examples/03-stroke.tsx",
+          "slug": "stroke",
+          "order": 3,
+          "title": "Stroke width and icon kinds",
+          "description": "`strokeWidth` thickens a stroke icon. Filled icons such as `CheckIcon` and the emoji icons such as `HandOkIcon` ignore it. The button steps the width.",
+          "code": "import { Inline, Stack, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { CheckIcon, HandOkIcon, SearchIcon } from '@korzun/design/icon';\nimport { useState } from 'react';\n\nconst widths = [1, 2, 3] as const;\n\nexport default function Stroke() {\n  const [strokeWidth, setStrokeWidth] = useState<number>(2);\n  return (\n    <Stack gap=\"lg\" align=\"start\">\n      <Inline gap=\"xl\">\n        <Stack gap=\"xs\" align=\"center\">\n          <SearchIcon width={32} height={32} strokeWidth={strokeWidth} aria-hidden />\n          <Text size=\"sm\" tone=\"muted\">\n            Stroke\n          </Text>\n        </Stack>\n        <Stack gap=\"xs\" align=\"center\">\n          <CheckIcon width={32} height={32} strokeWidth={strokeWidth} aria-hidden />\n          <Text size=\"sm\" tone=\"muted\">\n            Filled\n          </Text>\n        </Stack>\n        <Stack gap=\"xs\" align=\"center\">\n          <HandOkIcon width={32} height={32} strokeWidth={strokeWidth} aria-hidden />\n          <Text size=\"sm\" tone=\"muted\">\n            Emoji\n          </Text>\n        </Stack>\n      </Inline>\n      <Inline>\n        {widths.map((width) => (\n          <Button\n            key={width}\n            type={strokeWidth === width ? 'primary' : 'default'}\n            onClick={() => setStrokeWidth(width)}\n          >\n            {`strokeWidth ${width}`}\n          </Button>\n        ))}\n      </Inline>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/icon/examples/04-in-components.tsx",
+          "slug": "in-components",
+          "order": 4,
+          "title": "Passing icons to components",
+          "description": "Components take the icon component, never an element: `prefix={SearchIcon}`, not `prefix={<SearchIcon />}`. A Button sizes the icon to its text itself.",
+          "code": "import { Inline, Stack, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { ChevronIcon, SearchIcon } from '@korzun/design/icon';\nimport { useState } from 'react';\n\nexport default function InComponents() {\n  const [searches, setSearches] = useState(0);\n  const [pages, setPages] = useState(1);\n  return (\n    <Stack gap=\"md\" align=\"start\">\n      <Inline>\n        <Button prefix={SearchIcon} onClick={() => setSearches((n) => n + 1)}>\n          Search\n        </Button>\n        <Button suffix={ChevronIcon} onClick={() => setPages((n) => n + 1)}>\n          Next page\n        </Button>\n      </Inline>\n      <Text tone=\"muted\">\n        Searches: {searches}, page {pages}\n      </Text>\n    </Stack>\n  );\n}\n"
+        }
+      ],
+      "tables": [
+        {
+          "name": "IconProps",
+          "kind": "props",
+          "rows": [
+            {
+              "name": "aria-hidden",
+              "type": "boolean | 'true' | 'false'",
+              "required": false,
+              "description": "Pass it for a decorative icon next to a text label. It is not set unless you pass it."
+            },
+            {
+              "name": "aria-label",
+              "type": "string",
+              "required": false,
+              "description": "Accessible name for a meaningful standalone icon; pair it with `role=\"img\"`."
+            },
+            {
+              "name": "className",
+              "type": "string",
+              "required": false,
+              "description": "Class on the `<svg>`, for size, colour (`color: …`) or animation.",
+              "default": "''"
+            },
+            {
+              "name": "fill",
+              "type": "string",
+              "required": false,
+              "description": "Unset, it follows the icon: unfilled for a stroke icon, the text colour for a filled one. Ignored by `SpinnerIcon` and the emoji icons. A colour passed here bypasses the theme."
+            },
+            {
+              "name": "height",
+              "type": "number",
+              "required": false,
+              "description": "Height in pixels. Set it together with `width`. A `className` with CSS `width` and `height` overrides both.",
+              "default": "24"
+            },
+            {
+              "name": "role",
+              "type": "string",
+              "required": false,
+              "description": "`'img'` for a meaningful standalone icon, `'status'` for a loading spinner."
+            },
+            {
+              "name": "stroke",
+              "type": "string",
+              "required": false,
+              "description": "Stroke colour, for stroke icons only. A colour passed here bypasses the theme.",
+              "default": "'currentColor'"
+            },
+            {
+              "name": "strokeWidth",
+              "type": "number",
+              "required": false,
+              "description": "Stroke width, for stroke icons only; filled and emoji icons ignore it.",
+              "default": "2"
+            },
+            {
+              "name": "width",
+              "type": "number",
+              "required": false,
+              "description": "Width in pixels. Set it together with `height`. A `className` with CSS `width` and `height` overrides both.",
+              "default": "24"
+            }
+          ],
+          "description": "Props shared by every icon component."
+        }
+      ],
+      "tokens": [],
+      "changelog": []
     }
   ],
   "guides": [
