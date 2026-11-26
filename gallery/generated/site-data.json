@@ -2604,6 +2604,198 @@
       "changelog": []
     },
     {
+      "id": "control/page-actions-menu",
+      "slug": "page-actions-menu",
+      "entry": "@korzun/design/control",
+      "docPath": "docs/control/page-actions-menu.md",
+      "title": "PageActionsMenu",
+      "description": "The mobile page-actions control: a round glass button that opens a menu of every page action.",
+      "category": "Actions",
+      "values": [
+        "PageActionsMenu"
+      ],
+      "types": [
+        "PageActionIntentProps",
+        "PageActionItem",
+        "PageActionsMenuProps"
+      ],
+      "importLine": "import { PageActionsMenu, type PageActionIntentProps, type PageActionItem, type PageActionsMenuProps } from '@korzun/design/control'",
+      "body": "The mobile page-actions control: a round glass \"More actions\" button (⋯)\nthat opens a glass menu listing every action. It is hidden at 641px and up,\nwhere [`PageActionsBar`](page-actions-bar.md) takes over with the same items.\nUsually you don't render it yourself: pass `headerActions` to `Page`, which\nrenders both.\n\nUse something else for: desktop header actions\n([`PageActionsBar`](page-actions-bar.md)), bottom-of-page form actions\n(`PageFooterActions`), a single inline action ([`Button`](button.md)). For any\nother actions-behind-a-button, use [`Menu`](menu.md).\n\n## Usage\n\n### The trigger\n\nThe trigger is always the round \"More actions\" button: there is no label prop\nand no `className`.\n\n### Items\n\n`PageActionItem` is shared with `PageActionsBar`, so one array drives both. It is\n[`Menu`](menu.md)'s action item (`MenuActionItem`) plus `primary` and `align`,\nwhich only `PageActionsBar` uses; this menu ignores them. `to` is not allowed:\npage actions are actions, not links. The tables under Props list each field.\n\n### Behaviour to know\n\n- It is a `Menu` (`surface=\"glass\" align=\"end\"`), so it has Menu's keyboard\n  behaviour. Opening focuses the first enabled item. Up and Down move through\n  enabled items and wrap; Home and End jump to the ends; Enter and Space\n  activate.\n- Selecting an item closes the menu, returns focus to the trigger, then calls\n  `onClick`. Escape closes and returns focus to the trigger. Tab closes and\n  moves on from the trigger. A mousedown outside closes without moving focus.\n- Escape and outside presses go to the innermost open layer first: a Select\n  opened over the menu closes before the menu does.\n- The menu is a floating layer (`radius.md`, glass, items `radius.sm`) in a\n  [`Popover`](popover.md) portalled to the body, `space.sm` under the trigger,\n  right-aligned to it; it flips above when there is no room below.\n- It doesn't place itself: `Page` puts it in the sticky controls row\n  (`margin-left: auto` keeps it at the trailing end, with or without a\n  `BackButton`).\n\n## Do / don't\n\n- Do pass the same `items` you give `PageActionsBar` (or just use `Page`).\n- Do put destructive items last with `separatorBefore`.\n- Don't render it on its own and expect it on desktop; it is hidden there.\n- Don't give two items the same `label`; they collide as React keys.",
+      "examples": [
+        {
+          "file": "src/control/page-actions-menu/examples/01-basic.tsx",
+          "slug": "basic",
+          "order": 1,
+          "title": "Basic",
+          "description": "A round \"More actions\" button that opens a glass menu of every item, right-aligned\nto the button. Choosing an item closes the menu and calls its `onClick`, which\ntakes no arguments.",
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { PageActionsMenu } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Basic() {\n  const [chosen, setChosen] = useState('nothing yet');\n  return (\n    <Stack>\n      <PageActionsMenu\n        items={[\n          { label: 'Edit', onClick: () => setChosen('Edit') },\n          { label: 'Download', onClick: () => setChosen('Download') },\n          { label: 'Share', onClick: () => setChosen('Share') },\n        ]}\n      />\n      <Text tone=\"muted\">Chosen: {chosen}</Text>\n    </Stack>\n  );\n}\n",
+          "viewport": "mobile"
+        },
+        {
+          "file": "src/control/page-actions-menu/examples/02-item-options.tsx",
+          "slug": "item-options",
+          "order": 2,
+          "title": "Item options",
+          "description": "The same `items` array drives `PageActionsBar`, so items carry `primary` and\n`align`; this menu lists every item in order and ignores both. Edit and Read\nare marked `primary` and still appear. `Icon` takes an icon component,\n`intentProps` runs when the pointer, focus or a touch reaches Download,\nArchive is `disabled`, and Delete is `danger` with a `separatorBefore`.",
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { PageActionsMenu } from '@korzun/design/control';\nimport { UploadIcon } from '@korzun/design/icon';\nimport { useState } from 'react';\n\nexport default function ItemOptions() {\n  const [chosen, setChosen] = useState('nothing yet');\n  const [prefetched, setPrefetched] = useState('nothing yet');\n  const prefetch = () => setPrefetched('Download');\n  return (\n    <Stack>\n      <PageActionsMenu\n        items={[\n          { label: 'Edit', onClick: () => setChosen('Edit'), primary: true },\n          { label: 'Read', onClick: () => setChosen('Read'), primary: true, align: 'leading' },\n          {\n            label: 'Download',\n            onClick: () => setChosen('Download'),\n            Icon: UploadIcon,\n            intentProps: { onMouseEnter: prefetch, onFocus: prefetch, onTouchStart: prefetch },\n          },\n          { label: 'Archive', onClick: () => setChosen('Archive'), disabled: true },\n          {\n            label: 'Delete',\n            onClick: () => setChosen('Delete'),\n            danger: true,\n            separatorBefore: true,\n          },\n        ]}\n      />\n      <Text tone=\"muted\">Chosen: {chosen}</Text>\n      <Text tone=\"muted\">Prefetched: {prefetched}</Text>\n    </Stack>\n  );\n}\n",
+          "viewport": "mobile"
+        },
+        {
+          "file": "src/control/page-actions-menu/examples/03-in-page.tsx",
+          "slug": "in-page",
+          "order": 3,
+          "title": "In a Page",
+          "description": "The usual way to get it: pass `headerActions` to `Page`, which renders this\nmenu at phone width and `PageActionsBar` on desktop from the same array.",
+          "code": "import { Card, Page, Text } from '@korzun/design/component';\nimport { useState } from 'react';\n\nexport default function InPage() {\n  const [message, setMessage] = useState('Nothing chosen yet.');\n  return (\n    <Page\n      headerActions={[\n        { label: 'Edit', onClick: () => setMessage('Edit chosen'), primary: true },\n        { label: 'Download', onClick: () => setMessage('Download chosen') },\n        {\n          label: 'Delete',\n          onClick: () => setMessage('Delete chosen'),\n          danger: true,\n          separatorBefore: true,\n        },\n      ]}\n    >\n      <Card title=\"Dune\">\n        <Text>{message}</Text>\n      </Card>\n    </Page>\n  );\n}\n",
+          "viewport": "mobile"
+        }
+      ],
+      "tables": [
+        {
+          "name": "PageActionsMenuProps",
+          "kind": "props",
+          "rows": [
+            {
+              "name": "items",
+              "type": "PageActionItem[]",
+              "required": true,
+              "description": "All items appear in the menu, in order; `primary` and `align` are ignored here. Labels must be unique: they are the React keys."
+            }
+          ]
+        },
+        {
+          "name": "PageActionIntentProps",
+          "kind": "props",
+          "rows": [
+            {
+              "name": "onFocus",
+              "type": "() => void",
+              "required": true,
+              "description": "The item took focus (arrow keys or opening the menu)."
+            },
+            {
+              "name": "onMouseEnter",
+              "type": "() => void",
+              "required": true,
+              "description": "Pointer entered the item."
+            },
+            {
+              "name": "onTouchStart",
+              "type": "() => void",
+              "required": true,
+              "description": "A touch started on the item."
+            }
+          ],
+          "description": "Hover, focus and touch handlers spread onto a menu item; see `MenuIntentProps`. Not applied to `PageActionsBar`'s primary items: its `Button`s take no pointer handlers."
+        },
+        {
+          "name": "PageActionItem",
+          "kind": "object",
+          "rows": [
+            {
+              "name": "align",
+              "type": "'leading' | 'trailing'",
+              "required": false,
+              "description": "`PageActionsBar` primary items only: side of the bar; anything but `'leading'` is trailing. `PageActionsMenu` ignores it."
+            },
+            {
+              "name": "danger",
+              "type": "boolean",
+              "required": false,
+              "description": "Red text. Styling only; it does not add a separator."
+            },
+            {
+              "name": "disabled",
+              "type": "boolean",
+              "required": false,
+              "description": "Greyed out, cannot be activated, skipped by arrow keys. A disabled link renders without `href`, so middle-click cannot open it either."
+            },
+            {
+              "name": "Icon",
+              "type": "ComponentType<IconProps>",
+              "required": false,
+              "description": "Leading icon component (`HomeIcon`), not an element. Drawn at the text size, hidden from assistive tech."
+            },
+            {
+              "name": "intentProps",
+              "type": "MenuIntentProps",
+              "required": false,
+              "description": "Handlers spread onto the item element, e.g. to prefetch."
+            },
+            {
+              "name": "label",
+              "type": "string",
+              "required": true,
+              "description": "Visible text. Must be unique within the menu: it is the React key."
+            },
+            {
+              "name": "onClick",
+              "type": "() => void",
+              "required": true,
+              "description": "Receives no event. The menu closes first, then this is called."
+            },
+            {
+              "name": "primary",
+              "type": "boolean",
+              "required": false,
+              "description": "`PageActionsBar` only: render as an inline Button instead of in the overflow menu; `PageActionsMenu` ignores it. The Button ignores `Icon` and `intentProps`."
+            },
+            {
+              "name": "separatorBefore",
+              "type": "boolean",
+              "required": false,
+              "description": "Divider above this item. Ignored on the first item."
+            },
+            {
+              "name": "to",
+              "type": "never",
+              "required": false,
+              "description": "Not allowed on an action item: an item is an action or a link, never both."
+            }
+          ],
+          "description": "One page action, shared by `PageActionsBar` and `PageActionsMenu`."
+        }
+      ],
+      "tokens": [
+        {
+          "path": "breakpoint.normal",
+          "kind": "value",
+          "light": "@media (min-width: 641px)",
+          "dark": "@media (min-width: 641px)"
+        },
+        {
+          "path": "color.text.primary",
+          "kind": "color",
+          "light": "#111",
+          "dark": "#F5F5F7"
+        },
+        {
+          "path": "radius.circle",
+          "kind": "value",
+          "light": "50%",
+          "dark": "50%"
+        },
+        {
+          "path": "recipe.glass",
+          "kind": "recipe",
+          "light": null,
+          "dark": null
+        }
+      ],
+      "changelog": [
+        {
+          "version": "0.4.0",
+          "date": "2026-11-23",
+          "tags": [
+            "PageActionsMenu",
+            "PageActionsBar",
+            "Menu"
+          ],
+          "text": "`PageActionsMenu` and `PageActionsBar` are rebuilt on `Menu`: arrow keys, Home and End move between actions, and Escape returns focus to the trigger. `PageActionItem` is now `MenuActionItem & { primary?, align? }`: it gains an optional `Icon` (shown in the menus, ignored by the bar's primary Buttons), and `to` is not allowed."
+        }
+      ]
+    },
+    {
       "id": "control/popover",
       "slug": "popover",
       "entry": "@korzun/design/control",
