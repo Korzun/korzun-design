@@ -5,10 +5,10 @@ import { MemoryRouter, Route, Routes } from 'react-router';
 import { siteData } from '../data.js';
 import { GuidePage } from './guide.js';
 
-const mount = (slug: string) =>
+const mount = (slug: string, hash = '') =>
   render(
     <ThemeProvider identity="test">
-      <MemoryRouter initialEntries={[`/guides/${slug}`]}>
+      <MemoryRouter initialEntries={[`/guides/${slug}${hash}`]}>
         <Routes>
           <Route path="/guides/:slug" element={<GuidePage />} />
         </Routes>
@@ -41,6 +41,19 @@ describe('GuidePage', () => {
       true
     );
     expect(hrefs.some((h) => h?.endsWith('.md'))).toBe(false);
+  });
+
+  it('lands on the section a link names: headings carry slug ids', () => {
+    const scrollIntoView = vi.fn();
+    Element.prototype.scrollIntoView = scrollIntoView;
+    try {
+      mount('tokens', '#recipe');
+      const recipe = document.getElementById('recipe');
+      expect(recipe).toHaveTextContent('recipe');
+      expect(scrollIntoView.mock.contexts).toContain(recipe);
+    } finally {
+      Reflect.deleteProperty(Element.prototype, 'scrollIntoView');
+    }
   });
 
   it('renders not-found for an unknown guide', () => {

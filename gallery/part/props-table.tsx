@@ -3,11 +3,12 @@ import { createUseStyles, type Theme } from '@korzun/design/theme';
 import type { MouseEvent, ReactNode } from 'react';
 import { useLocation } from 'react-router';
 
+import { anchor } from '../../scripts/docs-gen/slug.mjs';
 import type { TypeTable } from '../../scripts/docs-gen/types.js';
 import { Markdown } from './markdown.js';
 
-/** The anchor id of a type's table on its component page. */
-export const tableId = (name: string): string => name.toLowerCase();
+/** The anchor id of a type's table on its component page: the generator's, so doc links land on it. */
+export const tableId = (name: string): string => anchor(name);
 
 export const useTableStyle = createUseStyles((theme: Theme) => ({
   // A wide table scrolls inside its own box instead of widening the page.
@@ -133,7 +134,7 @@ export type PropsTableProps = {
 
 const NO_PAGES: ReadonlyMap<string, string> = new Map();
 
-/** One generated type table, anchored by `id={name.toLowerCase()}`. */
+/** One generated type table, anchored by `id={tableId(name)}`. */
 export const PropsTable = ({ table, tables, typePages = NO_PAGES, from }: PropsTableProps) => {
   const styles = useTableStyle();
   const linkable = new Set(tables.filter((t) => t.name !== table.name).map((t) => t.name));

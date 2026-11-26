@@ -1,16 +1,17 @@
 import { Heading, Inline, Page, Stack, Text } from '@korzun/design/component';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
-import { useEffect, type ReactNode } from 'react';
-import { useLocation, useParams } from 'react-router';
+import type { ReactNode } from 'react';
+import { useParams } from 'react-router';
 
 import type { ChangelogEntry, ModuleInfo } from '../../scripts/docs-gen/types.js';
 import { moduleBySlug, typePages } from '../data.js';
 import { siteColumn } from '../layout/column.js';
+import { useScrollToHash } from '../layout/scroll.js';
 import { NotFound } from '../not-found.js';
 import { CopyButton } from '../part/copy-button.js';
 import { ExampleBlock } from '../part/example-block.js';
 import { IconGrid } from '../part/icon-grid.js';
-import { Markdown } from '../part/markdown.js';
+import { createSlugger, headingTexts, Markdown } from '../part/markdown.js';
 import { PropsTable } from '../part/props-table.js';
 import { TokensTable } from '../part/tokens-table.js';
 
@@ -66,9 +67,9 @@ const byVersion = (entries: ChangelogEntry[]) => {
   return groups;
 };
 
-const Section = ({ title, children }: { title: string; children: ReactNode }) => (
+const Section = ({ title, id, children }: { title: string; id: string; children: ReactNode }) => (
   <Stack as="section" gap="xl" aria-label={title}>
-    <Heading level={2} id={title.toLowerCase().replaceAll(' ', '-')}>
+    <Heading level={2} id={id}>
       {title}
     </Heading>
     {children}
@@ -79,15 +80,24 @@ const Section = ({ title, children }: { title: string; children: ReactNode }) =>
 export const ComponentPage = () => {
   const styles = useStyle();
   const mod = moduleBySlug(useParams().slug ?? '');
-  const { hash } = useLocation();
-
-  // A link to a supporting type (`#/components/button#buttontypevalue`) lands on its table.
-  useEffect(() => {
-    if (hash) document.getElementById(hash.slice(1))?.scrollIntoView();
-  }, [hash]);
+  // A link to a supporting type (`#/components/button#buttontypevalue`) or a
+  // Usage section (`#/components/popover#layers`) lands on it.
+  useScrollToHash();
 
   if (!mod) return <NotFound />;
   const usage = usageBody(mod);
+  // Heading ids in the doc's order, numbered on a repeat as GitHub does: a
+  // Usage `### Actions` keeps `actions`, the example after it gets `actions-1`.
+  const slug = createSlugger();
+  for (const text of headingTexts(usage)) slug(text);
+  const ids = {
+    examples: slug('Examples'),
+    example: new Map(mod.examples.map((e) => [e.slug, slug(e.title)])),
+    icons: slug('All icons'),
+    props: slug('Props'),
+    tokens: slug('Tokens'),
+    changelog: slug('Changelog'),
+  };
   const llmDoc = `${import.meta.env.BASE_URL}${mod.docPath}`;
 
   return (
@@ -117,23 +127,28 @@ export const ComponentPage = () => {
           {usage && <Markdown source={usage} from={mod.docPath} />}
 
           {mod.examples.length > 0 && (
-            <Section title="Examples">
+            <Section title="Examples" id={ids.examples}>
               <div className={styles.examples}>
                 {mod.examples.map((example) => (
-                  <ExampleBlock key={example.slug} mod={mod} example={example} />
+                  <ExampleBlock
+                    key={example.slug}
+                    mod={mod}
+                    example={example}
+                    headingId={ids.example.get(example.slug)}
+                  />
                 ))}
               </div>
             </Section>
           )}
 
           {mod.id === 'icon' && (
-            <Section title="All icons">
+            <Section title="All icons" id={ids.icons}>
               <IconGrid />
             </Section>
           )}
 
           {mod.tables.length > 0 && (
-            <Section title="Props">
+            <Section title="Props" id={ids.props}>
               <Stack gap="xxxl">
                 {mod.tables.map((table) => (
                   <PropsTable
@@ -149,13 +164,13 @@ export const ComponentPage = () => {
           )}
 
           {mod.tokens.length > 0 && (
-            <Section title="Tokens">
+            <Section title="Tokens" id={ids.tokens}>
               <TokensTable tokens={mod.tokens} />
             </Section>
           )}
 
           {mod.changelog.length > 0 && (
-            <Section title="Changelog">
+            <Section title="Changelog" id={ids.changelog}>
               <Stack gap="xxl">
                 {byVersion(mod.changelog).map((group) => (
                   <Stack gap="md" key={group.version}>

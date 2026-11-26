@@ -4,6 +4,7 @@ import { useParams } from 'react-router';
 
 import { siteData } from '../data.js';
 import { siteColumn } from '../layout/column.js';
+import { useScrollToHash } from '../layout/scroll.js';
 import { NotFound } from '../not-found.js';
 import { Markdown } from '../part/markdown.js';
 
@@ -19,6 +20,8 @@ const useStyle = createUseStyles((theme: Theme) => ({
 export const GuidePage = () => {
   const styles = useStyle();
   const { slug } = useParams();
+  // A section link (`#/guides/tokens#recipe`) lands on its heading.
+  useScrollToHash();
   const guide = siteData.guides.find((g) => g.slug === slug);
   if (!guide) return <NotFound />;
   return (

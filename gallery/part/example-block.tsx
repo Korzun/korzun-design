@@ -4,6 +4,7 @@ import { createUseStyles, type Theme } from '@korzun/design/theme';
 import cx from 'classnames';
 import { useEffect, useId, useRef, useState } from 'react';
 
+import { anchor } from '../../scripts/docs-gen/slug.mjs';
 import type { ExampleInfo, ModuleInfo } from '../../scripts/docs-gen/types.js';
 import { frameSrc, MOBILE_WIDTH, useFrameTheme } from '../frame-url.js';
 import { isHeightMessage } from '../messages.js';
@@ -52,17 +53,20 @@ export type ExampleBlockProps = {
   mod: ModuleInfo;
   /** The example to show. */
   example: ExampleInfo;
+  /** Id of the title heading. Default: the slug of the title, as the doc's `### <title>` has. */
+  headingId?: string;
 };
 
 /** One example: its live demo in a frame sized to fit, title, description and copyable code. */
-export const ExampleBlock = ({ mod, example }: ExampleBlockProps) => {
+export const ExampleBlock = ({ mod, example, headingId }: ExampleBlockProps) => {
   const styles = useStyle();
   const [theme, onLoad] = useFrameTheme();
   const [height, setHeight] = useState<number | null>(null);
   const [loaded, setLoaded] = useState(false);
   const [showCode, setShowCode] = useState(false);
   const frameRef = useRef<HTMLIFrameElement>(null);
-  const titleId = useId();
+  // The id the doc's `### <title>` heading has, so `#expanded-side` links land here too.
+  const titleId = headingId ?? anchor(example.title);
   const codeId = useId();
 
   // The frame posts its content height; only this block's frame sizes it.
@@ -91,7 +95,8 @@ export const ExampleBlock = ({ mod, example }: ExampleBlockProps) => {
           className={cx(
             styles.frame,
             example.viewport === 'mobile' && styles.mobile,
-            !loaded && styles.pending
+            // Shown once it has painted: on load, or on its first height message if that comes first.
+            !loaded && height === null && styles.pending
           )}
           data-viewport={example.viewport}
           src={frameSrc(mod.slug, example.slug, theme)}

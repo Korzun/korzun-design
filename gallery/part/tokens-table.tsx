@@ -69,7 +69,7 @@ const Recipe = ({ path }: { path: string }) => {
   const keys = recipeKeys(path);
   return (
     <Text size="sm">
-      <a href="#/guides/tokens" className={styles.link}>
+      <a href="#/guides/tokens#recipe" className={styles.link}>
         recipe
       </a>
       {keys.length > 0 && ' setting '}

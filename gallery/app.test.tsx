@@ -85,4 +85,28 @@ describe('gallery routes', () => {
     await userEvent.click(screen.getByRole('link', { name: 'Back to the example' }));
     expect(screen.getByRole('button', { name: 'Save' })).toBeInTheDocument();
   });
+  it('scrolls to the top on a page change, unless the link names a section', async () => {
+    const scrollTo = vi.spyOn(window, 'scrollTo').mockImplementation(() => {});
+    const scrollIntoView = vi.fn();
+    Element.prototype.scrollIntoView = scrollIntoView;
+    try {
+      render(
+        <MemoryRouter initialEntries={['/changelog']}>
+          <Link to="/components/button">to button</Link>
+          <Link to="/components/menu#menuitem">to menu item</Link>
+          <GalleryRoutes />
+        </MemoryRouter>
+      );
+      scrollTo.mockClear();
+      await userEvent.click(screen.getByRole('link', { name: 'to button' }));
+      expect(scrollTo).toHaveBeenCalledWith(0, 0);
+      scrollTo.mockClear();
+      await userEvent.click(screen.getByRole('link', { name: 'to menu item' }));
+      expect(scrollTo).not.toHaveBeenCalled();
+      expect(scrollIntoView.mock.contexts.at(-1)).toBe(document.getElementById('menuitem'));
+    } finally {
+      scrollTo.mockRestore();
+      Reflect.deleteProperty(Element.prototype, 'scrollIntoView');
+    }
+  });
 });

@@ -23,7 +23,7 @@ describe('TokensTable', () => {
     expect(within(row).queryByText('–')).toBeNull();
     expect(within(row).getByRole('link', { name: 'recipe' })).toHaveAttribute(
       'href',
-      '#/guides/tokens'
+      '#/guides/tokens#recipe'
     );
     for (const key of Object.keys(lightTheme.recipe.glass)) {
       expect(row).toHaveTextContent(key);

@@ -38,6 +38,30 @@ describe('ExampleBlock', () => {
     expect(iframe).toHaveAttribute('height', '120');
   });
 
+  it('reveals the frame on its first height message, even before load fires', () => {
+    const { container } = render(
+      <ThemeProvider identity="test">
+        <ToastProvider>
+          <MemoryRouter>
+            <ExampleBlock mod={button} example={button.examples[0]} />
+          </MemoryRouter>
+        </ToastProvider>
+      </ThemeProvider>
+    );
+    const iframe = container.querySelector('iframe')!;
+    expect(getComputedStyle(iframe).visibility).toBe('hidden');
+    act(() => {
+      window.dispatchEvent(
+        new MessageEvent('message', {
+          origin: window.location.origin,
+          source: iframe.contentWindow,
+          data: { type: 'gallery:height', height: 80 },
+        })
+      );
+    });
+    expect(getComputedStyle(iframe).visibility).not.toBe('hidden');
+  });
+
   it('renders a @viewport mobile example in a phone-width frame', () => {
     const mobile = { ...button.examples[0], viewport: 'mobile' as const };
     const { container } = render(

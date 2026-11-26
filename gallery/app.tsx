@@ -5,6 +5,7 @@ import { HashRouter, Outlet, Route, Routes, useLocation } from 'react-router';
 
 import { Frame, FrameNavigatedAway } from './frame.js';
 import { Header } from './layout/header.js';
+import { useScrollToTopOnPageChange } from './layout/scroll.js';
 import { NotFound } from './not-found.js';
 import { ChangelogPage } from './page/changelog.js';
 import { ComponentPage } from './page/component.js';
@@ -25,6 +26,7 @@ const useStyle = createUseStyles((theme: Theme) => ({
 
 const ShellBody = (): ReactElement => {
   const styles = useStyle();
+  useScrollToTopOnPageChange();
   return (
     <div className={styles.root}>
       <Header />
