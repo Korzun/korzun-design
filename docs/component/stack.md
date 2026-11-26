@@ -113,10 +113,12 @@ child full width; use `start` so buttons and tags keep their own width.
 ```tsx
 import { Stack, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
+import { useState } from 'react';
 
 const aligns = ['stretch', 'start', 'center', 'end'] as const;
 
 export default function Align() {
+  const [added, setAdded] = useState(0);
   return (
     <Stack gap="lg">
       {aligns.map((align) => (
@@ -124,9 +126,10 @@ export default function Align() {
           <Text size="sm" tone="muted">
             {`align="${align}"`}
           </Text>
-          <Button>Add a book</Button>
+          <Button onClick={() => setAdded((n) => n + 1)}>Add a book</Button>
         </Stack>
       ))}
+      <Text tone="muted">Books added: {added}</Text>
     </Stack>
   );
 }
@@ -171,18 +174,24 @@ with its content.
 ```tsx
 import { Heading, Inline, Stack, Tag, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
+import { useState } from 'react';
 
 export default function NestedWithInline() {
+  const [all, setAll] = useState(false);
   return (
     <Stack gap="xxl">
       <Stack as="section" gap="sm">
         <Inline justify="between">
           <Heading level={3}>Currently reading</Heading>
-          <Button type="link">See all</Button>
+          <Button type="link" onClick={() => setAll((value) => !value)}>
+            {all ? 'Show less' : 'See all'}
+          </Button>
         </Inline>
         <Inline wrap>
           <Tag>Fiction</Tag>
           <Tag tone="author">George Eliot</Tag>
+          {all && <Tag>Classic</Tag>}
+          {all && <Tag>1871</Tag>}
         </Inline>
       </Stack>
       <Stack as="section" gap="sm">

@@ -4,10 +4,12 @@
  */
 import { Stack, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
+import { useState } from 'react';
 
 const aligns = ['stretch', 'start', 'center', 'end'] as const;
 
 export default function Align() {
+  const [added, setAdded] = useState(0);
   return (
     <Stack gap="lg">
       {aligns.map((align) => (
@@ -15,9 +17,10 @@ export default function Align() {
           <Text size="sm" tone="muted">
             {`align="${align}"`}
           </Text>
-          <Button>Add a book</Button>
+          <Button onClick={() => setAdded((n) => n + 1)}>Add a book</Button>
         </Stack>
       ))}
+      <Text tone="muted">Books added: {added}</Text>
     </Stack>
   );
 }
