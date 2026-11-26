@@ -69,7 +69,13 @@ export const ExampleBlock = ({ mod, example }: ExampleBlockProps) => {
   }, []);
 
   return (
-    <section className={styles.root} aria-labelledby={titleId} id={`example-${example.slug}`}>
+    <section
+      className={styles.root}
+      aria-labelledby={titleId}
+      id={`example-${example.slug}`}
+      // For screenshot scripts: the demo has loaded and sized itself.
+      data-ready={loaded && height !== null ? '' : undefined}
+    >
       <div className={styles.demo}>
         <iframe
           ref={frameRef}

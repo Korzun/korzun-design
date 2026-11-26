@@ -175,17 +175,15 @@ CLAUDE.md).
    ```
    S=<scratch>; PORT=$(cat $S/gallery.port); for i in $(seq 1 60); do curl -s -o /dev/null http://localhost:$PORT/ && break; sleep 1; done; echo "gallery on $PORT"
    ```
-   Shoot the whole page in both schemes:
+   Shoot the whole page, light and dark; it waits until every demo frame has loaded and sized itself:
    ```
-   S=<scratch>; PORT=$(cat $S/gallery.port)
-   playwright screenshot --full-page --viewport-size 1280,2400 --wait-for-timeout 15000 "http://localhost:$PORT/#/components/<slug>" $S/<slug>-light.png
-   playwright screenshot --full-page --color-scheme dark --viewport-size 1280,2400 --wait-for-timeout 15000 "http://localhost:$PORT/#/components/<slug>" $S/<slug>-dark.png
+   S=<scratch>; PORT=$(cat $S/gallery.port); node .claude/skills/document-component/shoot-page.mjs http://localhost:$PORT <slug> $S/<slug>.png
    ```
-   For each example whose demo opens an overlay (menu, popover, select list, dialog) from a button, open it inside its demo frame:
+   For each example whose demo opens an overlay, open it inside its demo frame, light and dark, with one step per action a reader takes:
    ```
-   S=<scratch>; PORT=$(cat $S/gallery.port); node .claude/skills/document-component/open-overlay.mjs http://localhost:$PORT <slug> <example-slug> "<trigger button name>" $S/<slug>-<example-slug>-open.png
+   S=<scratch>; PORT=$(cat $S/gallery.port); node .claude/skills/document-component/open-overlay.mjs http://localhost:$PORT <slug> <example-slug> $S/<slug>-<example-slug>-open.png --click "<trigger name>"
    ```
-   `<example-slug>` is the example file name without `NN-` and `.tsx`. An overlay opened by typing or focus rather than a button click gets a sentence in your report saying how it opens and what you checked, in place of an overlay shot.
+   `<example-slug>` is the example file name without `NN-` and `.tsx`. Steps: `--click "role:name"` (role defaults to `button`; `--click "Open dialog" --click "Actions"` opens a menu inside a dialog), `--type "combobox:Fan"` types into the first element with that role, `--press Escape`.
    View every PNG. Each example renders, is not empty, is legible in dark, and each opened overlay is fully visible in its open-overlay shot. An example that renders wrong because of its own content (a `side="top"` trigger with no room above, so it flips) is fixed in the example; anything else is reported with its screenshot path.
    Stop the server by its process group: `S=<scratch>; kill -- -$(cat $S/gallery.pid)`.
 
