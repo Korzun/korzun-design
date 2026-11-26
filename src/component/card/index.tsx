@@ -1,32 +1,34 @@
 import cx from 'classnames';
-import { PropsWithChildren, ReactNode, ReactElement, useCallback, useState } from 'react';
+import { ReactNode, ReactElement, useCallback, useState } from 'react';
 
 import { ChevronCircleIcon } from '../../icon/index.js';
 import { depthClass, SurfaceDepthProvider, useSurfaceDepth } from '../surface/index.js';
 import { useStyle } from './style.js';
 
-export type CardProps = PropsWithChildren<{
+export type CardProps = {
+  /** Body. A collapsible card unmounts it while collapsed, so child state resets on reopen. */
+  children?: ReactNode;
   /** On the outer element. Override with `'&&'` specificity, never `!important`. */
   className?: string;
-  /** Starts a collapsible card collapsed. Defaults to **true**: pass `false` to start open. Uncontrolled. */
+  /** Starts a collapsible card collapsed; pass `false` to start it open. Uncontrolled: there is no `open` prop. */
   defaultCollapsed?: boolean;
-  /** Grey footer bar, right-aligned. Clicks don't bubble to `onClick`. Hidden while collapsed. */
+  /** Grey footer bar, children right-aligned. Clicks don't bubble to `onClick`. Hidden while a collapsible card is collapsed. */
   footer?: ReactNode;
   /** Right side of the header. Clicks and keys here don't bubble to `onClick` or the collapse toggle. */
   headerAction?: ReactNode | ReactElement[];
-  /** Header becomes a `role="button"` toggle (Enter/Space) with a chevron. Collapsed content unmounts. */
+  /** Header becomes a `role="button"` toggle (Enter/Space) with a rotating chevron before the title. A header click still bubbles to `onClick`, so both fire. */
   isCollapsible?: boolean;
-  /** Whole-card click. The card is not focusable; Enter/Space bubbling from any focused child fires it. */
+  /** Whole-card click; adds a pointer cursor. The card is not focusable: Enter/Space bubbling from any focused child fires it, so keep form fields out of a clickable card. */
   onClick?: () => void;
   /** Header click. Ignored when `isCollapsible` (the header toggles instead); its presence renders a header. */
   onClickHeader?: () => void;
-  /** `'large'` (default): `space.xl` body padding. `'small'`: 1px body padding, for list rows. */
+  /** `'large'`: `space.xl` body padding. `'small'`: 1px body padding and a corner 1px over the next step down, for list rows; see [Corners](#corners). */
   size?: 'small' | 'large';
   /** Small faint text after the title. */
   subTitle?: string;
   /** Header title. */
   title?: string | ReactNode;
-}>;
+};
 
 /** The bordered surface each feature on a screen lives in: optional header, padded body, optional footer. */
 export const Card = ({

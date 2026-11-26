@@ -21,7 +21,7 @@ export const radiusForDepth = (radius: Theme['radius'], depth: number): string =
 export const depthClass = (depth: number): 0 | 1 | 2 => Math.min(depth, 2) as 0 | 1 | 2;
 
 export interface SurfaceProps {
-  /** The hand-made box's contents; Buttons and Selects inside follow the deeper level. */
+  /** The hand-made box's contents, not the box itself. They sit one level deeper than the surface around it, so a Button or Select inside takes the next corner radius down. */
   children?: ReactNode;
 }
 

@@ -1,41 +1,36 @@
 import { createUseStyles, ThemeProvider, type Theme } from '@korzun/design/theme';
 import { ToastProvider } from '@korzun/design/toast';
 import { useState, type ReactElement } from 'react';
-import { HashRouter, Navigate, Outlet, Route, Routes, useLocation } from 'react-router';
+import { HashRouter, Outlet, Route, Routes, useLocation } from 'react-router';
 
-import { AllStories } from './all.js';
-import { StoryNotFound } from './not-found.js';
+import { Frame, FrameNavigatedAway } from './frame.js';
+import { Header } from './layout/header.js';
+import { useScrollToTopOnPageChange } from './layout/scroll.js';
+import { NotFound } from './not-found.js';
+import { ChangelogPage } from './page/changelog.js';
+import { ComponentPage } from './page/component.js';
+import { GuidePage } from './page/guide.js';
+import { OverviewPage } from './page/overview.js';
 import { TokensPage } from './page/tokens.js';
-import { Preview, PreviewNavigatedAway } from './preview.js';
-import { Sidebar } from './shell/sidebar.js';
-import { StoryView } from './shell/story-view.js';
-import { stories } from './stories.js';
 
 const useStyle = createUseStyles((theme: Theme) => ({
+  // Apps reset the body margin in their own CSS; the site has none.
+  '@global': { body: { margin: 0 } },
   root: {
-    display: 'flex',
-    height: '100vh',
+    minHeight: '100vh',
     fontFamily: theme.fontFamily.body,
     color: theme.color.text.primary,
     backgroundColor: theme.color.bg.page,
-  },
-  content: {
-    flex: 1,
-    minWidth: 0,
-    overflowY: 'auto',
-    padding: theme.space.xxxxl,
-    boxSizing: 'border-box',
   },
 }));
 
 const ShellBody = (): ReactElement => {
   const styles = useStyle();
+  useScrollToTopOnPageChange();
   return (
     <div className={styles.root}>
-      <Sidebar />
-      <main className={styles.content}>
-        <Outlet />
-      </main>
+      <Header />
+      <Outlet />
     </div>
   );
 };
@@ -48,30 +43,29 @@ const Shell = (): ReactElement => (
   </ThemeProvider>
 );
 
-const ShellNotFound = (): ReactElement => <StoryNotFound id={useLocation().pathname} />;
-
 export const GalleryRoutes = (): ReactElement => {
   const { pathname } = useLocation();
-  // A window opened on a preview (the canvas iframe, a screenshot link) stays
-  // a preview: links inside a story must not load the shell into the frame.
-  const [previewHome] = useState(() => (pathname.startsWith('/preview/') ? pathname : null));
+  // A window opened on an example frame (a thumbnail, a demo, a screenshot
+  // link) stays a frame: links inside must not load the site into it.
+  const [frameHome] = useState(() => (pathname.startsWith('/frame/') ? pathname : null));
 
-  if (previewHome)
+  if (frameHome)
     return (
       <Routes>
-        <Route path="/preview/*" element={<Preview />} />
-        <Route path="*" element={<PreviewNavigatedAway home={previewHome} />} />
+        <Route path="/frame/:module/:example" element={<Frame />} />
+        <Route path="*" element={<FrameNavigatedAway home={frameHome} />} />
       </Routes>
     );
   return (
     <Routes>
-      <Route path="/" element={<Navigate to={`/story/${stories[0].id}`} replace />} />
-      <Route path="/preview/*" element={<Preview />} />
+      <Route path="/frame/:module/:example" element={<Frame />} />
       <Route element={<Shell />}>
-        <Route path="/story/*" element={<StoryView />} />
-        <Route path="/all" element={<AllStories />} />
+        <Route index element={<OverviewPage />} />
+        <Route path="/components/:slug" element={<ComponentPage />} />
+        <Route path="/guides/:slug" element={<GuidePage />} />
         <Route path="/tokens" element={<TokensPage />} />
-        <Route path="*" element={<ShellNotFound />} />
+        <Route path="/changelog" element={<ChangelogPage />} />
+        <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>
   );

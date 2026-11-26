@@ -14,50 +14,34 @@ type InternalOption = { label: string; value: string; description?: string; _isC
 export type SelectProps = {
   /** With a search query that matches no label exactly, offers an "Add: *query*" option. */
   allowCreate?: boolean;
-  /** Show the inline "clear" (✕) control when a value is selected (default true). */
+  /** Shows a ✕ when a value is set. Pass `false` for required fields. */
   clearable?: boolean;
-  /** Faded; can't open; no clear button. */
+  /** Faded to 50%; can't open; no clear button. */
   disabled?: boolean;
-  /** Visible label; it targets the search box, not the closed trigger. */
+  /** Visible label. It targets the search box, so it is not the closed trigger's accessible name; see [Forms](#forms). */
   label?: string;
-  /** Default `'horizontal'`; `horizontal`/`vertical` paint a card-header row. */
+  /** `'horizontal'` and `'vertical'` paint a `bg.cardHeader` row; `'inline'` does not. */
   layout?: 'horizontal' | 'vertical' | 'inline';
   /** Shows a spinner and "Loading…"; can't open. */
   loading?: boolean;
-  /** Only lands on the search box while open: form data never carries the selection. */
+  /** Only lands on the search box while it is open: form data never carries the selection. See [Forms](#forms). */
   name: string;
-  /** Receives the option's `value`, `undefined` from clear, or the trimmed typed text from "Add:"; not an event. */
+  /** Receives the option's `value`, `undefined` from the clear button, or the trimmed typed text from "Add:". Not an event. */
   onChange?: (value: string | undefined) => void;
   /** Strings or `{ label, value, description? }` objects, mixed freely. */
   options: SelectOption[];
-  /** Shown when nothing is selected. Default `'Select…'`. */
+  /** Shown when nothing is selected. */
   placeholder?: string;
   /**
-   * Which surface this select sits on, which decides its corner radius AND its
-   * elevation together — they are one decision, not two.
-   *
-   * Unset, it follows where the select sits: `'page'` directly on a `Page`,
-   * `'card'` in a card or dialog (and outside any surface), `'inset'` two or
-   * more surfaces deep.
-   *
-   * `'card'` is the control as it has always looked: `radius.md`, no shadow,
-   * because the card around it already provides both.
-   *
-   * `'page'` matches `theme.recipe.card.shell` — `radius.lg` plus
-   * `shadow.cardStack` — so a select sitting directly on the page reads as its
-   * own raised surface alongside the cards it shares that page with, instead of
-   * a flat control missing the elevation everything around it has.
-   *
-   * `'inset'` takes `radius.sm` with no shadow, for a select nested inside an
-   * inset box.
-   *
-   * Named for the surface rather than for `radius` (as `Button`'s own prop is),
-   * because here the radius is a consequence, not the choice.
+   * Unset, it follows the surface depth: `'page'` directly on a `Page`,
+   * `'card'` in a card, a dialog or outside any surface, `'inset'` two or more
+   * surfaces deep. Set, it overrides that and sets the corner radius and the
+   * elevation together; see [Choosing a surface](#choosing-a-surface).
    */
   surface?: 'card' | 'page' | 'inset';
-  /** Opening swaps the trigger for a search box (default `true`); `false` is a plain list, arrow keys only. */
+  /** Opening swaps the trigger for a search box. `false` gives a plain list, arrow keys only. */
   searchable?: boolean;
-  /** Controlled selection; a value not in `options` displays as the raw string. */
+  /** Controlled selection. A value not in `options` displays as the raw string. */
   value: string | undefined;
 };
 

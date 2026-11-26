@@ -5,7 +5,7 @@ import { useStyle } from './style.js';
 export interface FooterAction {
   /** Button text; may change between renders (`Save` → `Saving…`) without remounting. */
   label: string;
-  /** Required even for a `submit` item, and ignored there (pass `() => {}`). Receives no event. */
+  /** Required even for a `submit` item, where it is never called (the form submits); pass `() => {}`. Receives no event. Not called while `disabled` or `loading`. */
   onClick: () => void;
   /** Greys the button out and blocks clicks. */
   disabled?: boolean;
@@ -15,16 +15,19 @@ export interface FooterAction {
   danger?: boolean;
   /** Renders `type="primary"`; otherwise `type="default"`. */
   emphasis?: boolean;
-  /** Side of the row; default `'trailing'`. */
+  /**
+   * Which side of the row the button sits on: leading is left, trailing is right.
+   * @default 'trailing'
+   */
   align?: 'leading' | 'trailing';
-  /** Render a native submit button (`onClick` is then ignored). */
+  /** Renders a native submit button; `onClick` is then ignored. Pair it with `form` when the row sits outside the `<form>`. */
   submit?: boolean;
   /** Id of the `<form>` to submit; needed because the row sits outside the form. */
   form?: string;
 }
 
 export interface PageFooterActionsProps {
-  /** Rendered in order within each side (leading, then trailing). */
+  /** Items in order within each side: leading items first, then trailing ones. */
   items: FooterAction[];
 }
 

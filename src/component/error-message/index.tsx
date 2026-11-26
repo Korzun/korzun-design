@@ -5,7 +5,7 @@ import { createElement } from 'react';
 import { useStyle } from './style.js';
 
 export interface ErrorMessageProps extends Omit<HTMLAttributes<HTMLElement>, 'style' | 'children'> {
-  /** The element to render. Default `'p'`. */
+  /** The element to render. */
   as?: 'p' | 'div' | 'span';
   /** The error text. `null`, `undefined`, `false` and `''` render nothing; `0` renders. */
   children?: ReactNode;

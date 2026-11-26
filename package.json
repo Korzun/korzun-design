@@ -1,6 +1,6 @@
 {
   "name": "@korzun/design",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "type": "module",
   "license": "SEE LICENSE IN LICENSE",
   "repository": {
@@ -18,7 +18,7 @@
     "dist",
     "src",
     "!src/**/*.test.*",
-    "!src/**/*.stories.*",
+    "!src/**/examples/**",
     "!src/test-utils.tsx",
     "!src/setup.ts"
   ],
@@ -64,8 +64,10 @@
     "gallery:build": "vite build --config gallery/vite.config.ts",
     "gallery:build:pages": "vite build --config gallery/vite.config.ts --mode pages",
     "smoke": "npm run build && bash scripts/smoke-exports.sh",
+    "docs:gen": "npm run build && node scripts/docs-gen/cli.mjs",
+    "docs:check": "node scripts/docs-gen/cli.mjs --check",
     "build": "rm -rf dist && tsc -p tsconfig.build.json",
-    "test": "vitest run && npm run test:scripts",
+    "test": "npm run build && vitest run && npm run test:scripts && npm run docs:check",
     "test:scripts": "node --test \"scripts/**/*.test.mjs\"",
     "test:watch": "vitest",
     "lint": "oxlint src gallery scripts && oxfmt --check \"src/**/*.{ts,tsx}\" \"gallery/**/*.{ts,tsx}\" && tsc --noEmit",
@@ -88,6 +90,8 @@
     "@vitejs/plugin-react": "^6.0.3",
     "classnames": "^2.5.1",
     "jsdom": "^29.1.1",
+    "marked": "^18.3.0",
+    "oxc-parser": "^0.160.0",
     "oxfmt": "^0.74.0",
     "oxlint": "^1.74.0",
     "react": "^19.2.8",

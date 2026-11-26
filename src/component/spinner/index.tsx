@@ -5,13 +5,13 @@ import type { TextSize } from '../text/style.js';
 import { useStyle } from './style.js';
 
 export interface SpinnerProps {
-  /** Size, from the theme's `fontSize` tokens; the spinner is `1em` square. Unset inherits the surrounding font size. */
+  /** Sets the font size from the theme's `fontSize` tokens, so the spinner is that many `em` square. Unset, it takes the surrounding font size. */
   size?: TextSize;
-  /** Accessible name announced for the loading state. Default `'Loading'`. Ignored when `decorative`. */
+  /** Accessible name of the status, announced as the loading state. Ignored when `decorative`. */
   label?: string;
-  /** Hide the spinner from assistive tech, for use beside text that already names the load. Default `false`. */
+  /** Hides it from assistive tech (no role, `aria-hidden`), for use beside text that already names the load. */
   decorative?: boolean;
-  /** Extra class on the root. Override with `'&&'` specificity, never `!important`. */
+  /** Added last on the root. Override with `'&&'` specificity, never `!important`. */
   className?: string;
 }
 

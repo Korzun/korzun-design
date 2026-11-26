@@ -4,9 +4,9 @@ import type { ReactNode } from 'react';
 import { useStyle } from './style.js';
 
 export type MetaLineProps = {
-  /** The data to show, in order. `null`, `undefined` and `false` are skipped; `''` and `0` are kept. */
+  /** The data, in order. `null`, `undefined` and `false` are skipped, and nothing renders when every item is. `''` and `0` are kept and draw a separator, so filter them yourself. */
   items: ReactNode[];
-  /** Applied to the outer element; the font size and colour set here reach every item. */
+  /** On the outer element. The font size and colour set here reach every item, and the separators scale with it. Override with `'&&'` specificity, never `!important`. */
   className?: string;
 };
 

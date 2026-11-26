@@ -1,0 +1,300 @@
+import { contentHeight, nextHeadroom, overlayTop } from './frame-height.js';
+
+const rect = (top: number, height: number) =>
+  ({ top, bottom: top + height, height, left: 0, right: 0, width: 0, x: 0, y: top }) as DOMRect;
+
+const place = <T extends Element>(el: T, top: number, height: number): T => {
+  el.getBoundingClientRect = () => rect(top, height);
+  return el;
+};
+
+describe('contentHeight', () => {
+  let wrapper: HTMLDivElement;
+  beforeEach(() => {
+    document.body.innerHTML = '<div id="root"><div id="flow"></div></div>';
+    wrapper = place(document.getElementById('flow') as HTMLDivElement, 0, 100);
+    wrapper.style.paddingBottom = '16px';
+  });
+
+  it('is the wrapper height when nothing is open', () => {
+    expect(contentHeight(wrapper)).toBe(100);
+  });
+
+  it('reaches the bottom of a popover portalled to the body, plus the padding', () => {
+    const popover = place(document.createElement('div'), 80, 200);
+    document.body.append(popover);
+    expect(contentHeight(wrapper)).toBe(80 + 200 + 16);
+  });
+
+  it('fits an open dialog with the padding above and below; a closed one is ignored', () => {
+    const dialog = place(document.createElement('dialog'), 0, 300);
+    wrapper.append(dialog);
+    expect(contentHeight(wrapper)).toBe(100);
+    dialog.setAttribute('open', '');
+    expect(contentHeight(wrapper)).toBe(300 + 2 * 16);
+  });
+
+  it('leaves out a top-side popover (placed by CSS bottom): it ends at its trigger', () => {
+    const popover = place(document.createElement('div'), 300, 200);
+    popover.style.bottom = '52px';
+    document.body.append(popover);
+    expect(contentHeight(wrapper)).toBe(100);
+    popover.style.bottom = '';
+    popover.style.top = '300px';
+    expect(contentHeight(wrapper)).toBe(300 + 200 + 16);
+  });
+
+  it('reaches a fixed popover inside an open dialog', () => {
+    const dialog = place(document.createElement('dialog'), 0, 50);
+    dialog.setAttribute('open', '');
+    const popover = place(document.createElement('div'), 200, 100);
+    popover.style.position = 'fixed';
+    dialog.append(popover);
+    wrapper.append(dialog);
+    expect(contentHeight(wrapper)).toBe(200 + 100 + 16);
+  });
+
+  it('adds the scroll offset, so a scrolled frame measures the same', () => {
+    const popover = place(document.createElement('div'), 80, 200);
+    document.body.append(popover);
+    Object.defineProperty(window, 'scrollY', { value: 20, configurable: true });
+    expect(contentHeight(wrapper)).toBe(20 + 80 + 200 + 16);
+    Object.defineProperty(window, 'scrollY', { value: 0, configurable: true });
+  });
+});
+
+describe('contentHeight with a clamped modal dialog', () => {
+  it('counts the content height, not the clamped box, plus the UA viewport gap', () => {
+    document.body.innerHTML = '<div id="flow"></div>';
+    const wrapper = document.getElementById('flow') as HTMLDivElement;
+    wrapper.getBoundingClientRect = () => ({ height: 40, bottom: 40 }) as DOMRect;
+    wrapper.style.paddingBottom = '16px';
+    const dialog = document.createElement('dialog');
+    dialog.setAttribute('open', '');
+    // Clamped to a short viewport: the box is 42px, its content 162px.
+    dialog.getBoundingClientRect = () => ({ top: 0, height: 42, bottom: 42 }) as DOMRect;
+    Object.defineProperty(dialog, 'scrollHeight', { value: 162 });
+    dialog.style.maxHeight = 'calc(100% - 38px)';
+    wrapper.append(dialog);
+    expect(contentHeight(wrapper)).toBe(162 + 38);
+  });
+});
+
+describe('contentHeight with a top-anchored modal dialog', () => {
+  it('reaches from the dialog top through its full height and bottom margin', () => {
+    document.body.innerHTML = '<div id="flow"></div>';
+    const wrapper = document.getElementById('flow') as HTMLDivElement;
+    wrapper.getBoundingClientRect = () => ({ height: 40, bottom: 40 }) as DOMRect;
+    wrapper.style.paddingBottom = '16px';
+    const dialog = document.createElement('dialog');
+    dialog.setAttribute('open', '');
+    // The modal recipe: marginTop 100px, marginBottom 50px; clamped to 60px here.
+    dialog.getBoundingClientRect = () => ({ top: 100, height: 60, bottom: 160 }) as DOMRect;
+    Object.defineProperty(dialog, 'scrollHeight', { value: 162 });
+    dialog.style.marginBottom = '50px';
+    wrapper.append(dialog);
+    expect(contentHeight(wrapper)).toBe(100 + 162 + 50);
+  });
+});
+
+describe('overlayTop', () => {
+  let wrapper: HTMLDivElement;
+  beforeEach(() => {
+    document.body.innerHTML = '<div id="root"><div id="flow"></div></div>';
+    wrapper = place(document.getElementById('flow') as HTMLDivElement, 0, 100);
+  });
+
+  it('is null when nothing is open', () => {
+    expect(overlayTop(wrapper)).toBeNull();
+  });
+
+  it('ignores body elements that render nothing (the dev module script, a hidden node)', () => {
+    const script = place(document.createElement('script'), 0, 0);
+    script.type = 'module';
+    document.body.append(script);
+    const hidden = place(document.createElement('div'), 0, 0);
+    hidden.style.display = 'none';
+    document.body.append(hidden);
+    expect(overlayTop(wrapper)).toBeNull();
+    expect(contentHeight(wrapper)).toBe(100);
+    const popover = place(document.createElement('div'), -40, 100);
+    document.body.append(popover);
+    expect(overlayTop(wrapper)).toBe(-40);
+    popover.remove();
+    expect(overlayTop(wrapper)).toBeNull();
+  });
+
+  it('is the highest top of the overlays, above the wrapper too', () => {
+    document.body.append(place(document.createElement('div'), 40, 100));
+    document.body.append(place(document.createElement('div'), -60, 100));
+    expect(overlayTop(wrapper)).toBe(-60);
+  });
+
+  it('counts a fixed popover inside an open dialog, not the dialog itself', () => {
+    const dialog = place(document.createElement('dialog'), 0, 50);
+    dialog.setAttribute('open', '');
+    const popover = place(document.createElement('div'), -30, 100);
+    popover.style.position = 'fixed';
+    dialog.append(popover);
+    wrapper.append(dialog);
+    expect(overlayTop(wrapper)).toBe(-30);
+  });
+});
+
+describe('nextHeadroom', () => {
+  const none = { value: 0, staleTop: null };
+
+  it('is zero while nothing is open, whatever it was', () => {
+    expect(nextHeadroom(none, null, 24)).toEqual(none);
+    expect(nextHeadroom({ value: 90, staleTop: null }, null, 24)).toEqual(none);
+  });
+
+  it('stays zero for an overlay that starts below the top padding', () => {
+    expect(nextHeadroom(none, 24, 24)).toEqual(none);
+    expect(nextHeadroom(none, 300, 24)).toEqual(none);
+  });
+
+  it('grows by what the overlay sticks out above the padding', () => {
+    expect(nextHeadroom(none, -60, 24)).toEqual({ value: 84, staleTop: -60 });
+  });
+
+  it('waits while the overlay has not moved since the last growth', () => {
+    const grown = { value: 84, staleTop: -60 };
+    expect(nextHeadroom(grown, -60, 24)).toBe(grown);
+  });
+
+  it('keeps its value once the overlay has moved into the room', () => {
+    expect(nextHeadroom({ value: 84, staleTop: -60 }, 24, 24)).toEqual({
+      value: 84,
+      staleTop: null,
+    });
+  });
+
+  it('grows again for an overlay that moved only part of the way (a centred dialog)', () => {
+    expect(nextHeadroom({ value: 84, staleTop: -60 }, -18, 24)).toEqual({
+      value: 126,
+      staleTop: -18,
+    });
+  });
+});
+
+// A list that wanted the bottom side and flipped above its trigger for lack of room.
+const flipped = (top: number, height: number) => {
+  const el = place(document.createElement('div'), top, height);
+  el.dataset.side = 'top';
+  el.dataset.preferredSide = 'bottom';
+  el.style.bottom = '300px';
+  return el;
+};
+
+describe('room below a flipped overlay', () => {
+  let wrapper: HTMLDivElement;
+  beforeEach(() => {
+    document.body.innerHTML = '<div id="root"><div id="flow"></div></div>';
+    wrapper = place(document.getElementById('flow') as HTMLDivElement, 0, 100);
+    wrapper.style.paddingBottom = '16px';
+  });
+
+  it('grows the frame by the list height below the flow, so it can flip back down', () => {
+    document.body.append(flipped(-150, 200));
+    expect(contentHeight(wrapper)).toBe(100 + 200 + 16);
+  });
+
+  it('grows it below the open dialog that holds the list', () => {
+    const dialog = place(document.createElement('dialog'), 20, 130);
+    dialog.setAttribute('open', '');
+    const list = flipped(-50, 120);
+    list.style.position = 'fixed';
+    dialog.append(list);
+    wrapper.append(dialog);
+    expect(contentHeight(wrapper)).toBe(150 + 120 + 16);
+  });
+
+  it('grows it below the popover that holds the trigger of a nested list', () => {
+    // The outer popover hangs below the flow (60–180); the inner list flipped
+    // above its trigger, which sits in the outer popover just under 150.
+    document.body.append(place(document.createElement('div'), 60, 120));
+    document.body.append(flipped(50, 100));
+    expect(contentHeight(wrapper)).toBe(180 + 100 + 16);
+  });
+
+  it("ignores an overlay that does not hold the flipped list's trigger", () => {
+    document.body.append(place(document.createElement('div'), 400, 50));
+    document.body.append(flipped(-150, 200));
+    expect(contentHeight(wrapper)).toBe(450 + 16);
+  });
+
+  it('gets no headroom: room below makes it flip back instead', () => {
+    document.body.append(flipped(-150, 200));
+    expect(overlayTop(wrapper)).toBeNull();
+  });
+
+  it('leaves a list that chose the top side to the headroom', () => {
+    const chosen = flipped(-150, 200);
+    chosen.dataset.preferredSide = 'top';
+    document.body.append(chosen);
+    expect(overlayTop(wrapper)).toBe(-150);
+    expect(contentHeight(wrapper)).toBe(100);
+  });
+});
+
+describe('a toast stack fixed to the viewport bottom', () => {
+  let wrapper: HTMLDivElement;
+  // A toast container: fixed by its class, `bottom` set, `top` auto (src/toast/style.ts).
+  const stack = (top: number, height: number) => {
+    const el = place(document.createElement('div'), top, height);
+    el.className = 'toasts';
+    return el;
+  };
+  beforeEach(() => {
+    document.head.innerHTML =
+      '<style>.toasts { position: fixed; bottom: 24px; right: 24px; }</style>';
+    document.body.innerHTML = '<div id="root"><div id="flow"></div></div>';
+    wrapper = place(document.getElementById('flow') as HTMLDivElement, 0, 100);
+    wrapper.style.paddingBottom = '16px';
+  });
+  afterEach(() => {
+    document.head.innerHTML = '';
+  });
+
+  it('grows the frame to the whole stack plus its bottom offset and the padding', () => {
+    // Three toasts, 180px tall, in a 100px frame: the top 104px is cut off.
+    document.getElementById('root')!.append(stack(-104, 180));
+    expect(contentHeight(wrapper)).toBe(180 + 24 + 16);
+  });
+
+  it('counts a stack rendered inside the example too', () => {
+    wrapper.append(stack(-104, 180));
+    expect(contentHeight(wrapper)).toBe(180 + 24 + 16);
+  });
+
+  it('gets no headroom: it sits at the bottom, so a taller frame shows it', () => {
+    document.body.append(stack(-104, 180));
+    expect(overlayTop(wrapper)).toBeNull();
+    expect(contentHeight(wrapper)).toBe(180 + 24 + 16);
+  });
+
+  it('reads top and bottom as declared: a browser resolves a fixed element’s auto top to px', () => {
+    const real = window.getComputedStyle.bind(window);
+    const spy = vi.spyOn(window, 'getComputedStyle').mockImplementation((el, pseudo) => {
+      const style = real(el, pseudo);
+      if (!(el as Element).classList?.contains('toasts')) return style;
+      return new Proxy(style, {
+        get: (target, key) =>
+          key === 'top' ? '-104px' : Reflect.get(target, key as string, target),
+      });
+    });
+    try {
+      document.getElementById('root')!.append(stack(-104, 180));
+      expect(contentHeight(wrapper)).toBe(180 + 24 + 16);
+    } finally {
+      spy.mockRestore();
+    }
+  });
+
+  it('keeps the flow height when the stack already fits', () => {
+    wrapper = place(wrapper, 0, 400);
+    document.body.append(stack(300, 60));
+    expect(contentHeight(wrapper)).toBe(400);
+  });
+});

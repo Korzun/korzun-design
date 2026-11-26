@@ -66,11 +66,13 @@ The package ships `AGENTS.md` and per-module docs in `docs/`, written for LLM co
 @node_modules/@korzun/design/AGENTS.md
 ```
 
-## Gallery
+## Docs site
 
-`npm run gallery` starts the story explorer on the LAN; `npm run gallery:build` writes a static copy to `gallery-dist/`. Every push to `main` deploys it to https://korzun.github.io/korzun-design/. It is for development only and is not published to npm.
+https://korzun.github.io/korzun-design/ is the documentation site: an overview of every module, and one page per control, component and entry point with its import line, live examples (each with its source), props tables, theme tokens and changelog. It also serves `llms.txt` (an index for LLM agents) and `llms-full.txt` (every doc in one file). Every push to `main` deploys it; it is not published to npm.
 
-Each control and component has a `*.stories.tsx` beside it: a default export with a `title`, default `args`, and `argTypes` (`boolean`, `text`, `number`, `select`, `action`), and one named export per story. Stories import their own module relatively and may import helpers from `@gallery/*`.
+- `npm run gallery` serves the site locally (on the LAN) from the source tree; `npm run gallery:build` writes a static copy to `gallery-dist/`.
+- `npm run docs:gen` builds the package and regenerates the generated sections of every `docs/**/*.md` (import, examples, props, tokens, changelog), the `AGENTS.md` docs index and the site data, from the JSDoc, each module's `examples/NN-slug.tsx`, the theme tokens and `CHANGELOG.md`. Run it after any API change; `npm run docs:check` (part of `npm test`) fails when anything is stale.
+- Two Claude Code skills in `.claude/skills/` do the work: `new-component` adds a control, component or hook end to end (code, test, examples, doc, export, CHANGELOG), and `document-component` writes or refreshes a module's doc, JSDoc and examples.
 
 ## Development
 

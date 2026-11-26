@@ -8,19 +8,16 @@ import type { NavItem } from '../nav-types.js';
 import { useStyle } from './style.js';
 
 /**
- * One side of the bar, in both of the shapes it can take.
- *
- * Both shapes are always rendered, which is what makes the swap a MORPH rather
- * than a cross-fade: the pill around them is a single element whose width
- * animates between the two, so the capsule is seen to shrink into the circle
- * instead of one bar fading out while a different one fades in.
+ * One side of the bar. Both its shapes, the capsule of `items` and the circle for `collapsed`,
+ * are always rendered, so the pill morphs between them instead of cross-fading.
  */
 export interface NavPill {
-  /** Destinations shown while this side is expanded. `[]` makes the side permanently a circle. */
+  /** Destinations shown while this side is expanded. `[]` makes the side a circle for good. */
   items: NavItem[];
   /**
-   * The single destination it collapses to. Its `label` is the circle's `aria-label`; its
-   * `badge` shows only while collapsed; its `active` lights the circle.
+   * The single destination the side collapses to. Its `label` is the circle's `aria-label` and
+   * its `Icon` is drawn at 18px; its `badge` shows only while collapsed and its `active` lights
+   * the circle.
    */
   collapsed: NavItem;
 }
@@ -28,9 +25,9 @@ export interface NavPill {
 export interface NavMobileProps {
   /** The left-hand side: the app's main destinations. */
   main: NavPill;
-  /** The right-hand side: settings. */
+  /** The right-hand side: settings, or an account or admin group. */
   settings: NavPill;
-  /** Which side is expanded; the other is a circle. Derive it from the route. */
+  /** Which side is the capsule; the other is a circle. Derive it from the route. */
   expanded: 'main' | 'settings';
 }
 

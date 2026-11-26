@@ -4,13 +4,13 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useStyle } from './style.js';
 
 export type TextAreaProps = {
-  /** Grows to fit content (min height 7rem, else 10rem; set inline, so a class can't lower it). */
+  /** Grows to fit content, so it never scrolls. The minimum height is 7rem with it and 10rem without, set inline so a class can't lower it. */
   autoResize?: boolean;
   /** Visible label. Not linked to the textarea (no `htmlFor`). */
   label?: string;
-  /** Default `'horizontal'`; `horizontal`/`vertical` paint a card-header row. */
+  /** `horizontal` and `vertical` paint a shaded card-header row with `md` corners; `inline` paints nothing. */
   layout?: 'horizontal' | 'vertical' | 'inline';
-  /** Native limit, plus an `n/max` counter once within `max(10% of max, 50)` characters. */
+  /** Native limit, plus an `n/max` counter once within `max(10% of max, 50)` characters; the counter turns red at the limit. */
   maxLength?: number;
   /** The textarea's `name` and the key passed to `onValidChange`. */
   name: string;
@@ -20,11 +20,11 @@ export type TextAreaProps = {
   onValidChange?: (fieldName: string, newValid: boolean) => void;
   /** Placeholder text for the textarea. */
   placeholder?: string;
-  /** Receives the raw text on each keystroke; `false` turns the label red. Default accepts all. */
+  /** Receives the raw text on each keystroke; `false` turns the label red. */
   validate?: (newValue: string) => boolean;
   /** Typed as required (pass `undefined` for empty). Re-syncs into the field only when the prop changes. */
   value: string | undefined;
-  /** `'outlined'` (default) has border and input background; `'borderless'` drops both (check dark mode). */
+  /** `'outlined'` has a border and the input background; `'borderless'` drops both and keeps its `md` corners, so the browser's default textarea background shows (check it in dark mode). */
   variant?: 'outlined' | 'borderless';
 };
 

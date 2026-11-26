@@ -18,7 +18,7 @@ export interface AlertProps {
   Icon?: ComponentType<IconProps>;
   /** Content on the right, usually a Button; wraps under the text when narrow. */
   action?: ReactNode;
-  /** Extra class on the root. Override with `'&&'` specificity, never `!important`. */
+  /** Extra class, added last on the root. Override with `'&&'` specificity, never `!important`. */
   className?: string;
 }
 

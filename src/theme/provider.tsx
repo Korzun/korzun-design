@@ -22,7 +22,14 @@ const readSetting = (identity: string | null): ThemeSetting => {
   return stored === 'light' || stored === 'dark' || stored === 'auto' ? stored : 'auto';
 };
 
-export type ThemeProviderProps = { children: ReactNode; identity?: string | null };
+export type ThemeProviderProps = {
+  /** The app. */
+  children: ReactNode;
+  /**
+   * Whose light, dark or auto choice this is, for example the signed-in user's id. The choice is saved per identity in `localStorage` under `theme-setting:<identity>` and restored when it comes back; with `null`, nothing is saved and the mode is `'auto'`.
+   */
+  identity?: string | null;
+};
 export const ThemeProvider = ({ children, identity = null }: ThemeProviderProps) => {
   const [scope, setScope] = useState(identity);
   const [setting, setSettingState] = useState<ThemeSetting>(() => readSetting(identity));

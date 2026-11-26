@@ -1,3 +1,8 @@
+---
+title: Hooks
+description: Mobile-chrome hooks: standalone detection, minimize on scroll, pull to refresh.
+category: Guide
+---
 # Hooks
 
 `import { isStandalone, useMinimizeOnScroll, usePullToRefresh } from '@korzun/design/hooks'`

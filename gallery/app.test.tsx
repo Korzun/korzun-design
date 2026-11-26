@@ -1,10 +1,8 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Link, MemoryRouter } from 'react-router';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { GalleryRoutes } from './app.js';
-import { stories } from './stories.js';
 
 const mount = (path: string) =>
   render(
@@ -14,70 +12,101 @@ const mount = (path: string) =>
   );
 
 describe('gallery routes', () => {
-  beforeEach(() => {
-    // jsdom lacks the dialog API that modal stories call.
-    HTMLDialogElement.prototype.showModal = vi.fn();
-    HTMLDialogElement.prototype.close = vi.fn();
-  });
+  beforeEach(() => localStorage.clear());
 
-  it('redirects / to the first story', () => {
+  it('renders the overview at / with the header', () => {
     mount('/');
-    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(stories[0].title);
+    expect(screen.getByRole('textbox', { name: 'Search components' })).toBeInTheDocument();
+    // Scoped to the nav: role queries over the whole overview are slow in jsdom.
+    const links = within(screen.getByRole('navigation', { name: 'Site' }))
+      .getAllByRole('link')
+      .map((l) => [l.textContent, l.getAttribute('href')]);
+    expect(links).toEqual([
+      ['Components', '/'],
+      ['Icons', '/components/icon'],
+      ['Tokens', '/tokens'],
+      ['Changelog', '/changelog'],
+    ]);
+    expect(screen.getByRole('radiogroup', { name: 'Theme' })).toBeInTheDocument();
   });
 
-  it('renders the tokens page inside the shell', () => {
-    mount('/tokens');
-    expect(screen.getByRole('heading', { level: 1, name: 'Tokens' })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'All' })).toBeInTheDocument();
+  it.each([
+    ['/components/button', 'Button'],
+    ['/tokens', 'Tokens'],
+    ['/changelog', 'Changelog'],
+  ])('renders %s with its page heading', (path, heading) => {
+    // querySelector, not getByRole: the tokens page is too big for role queries in jsdom.
+    const { container } = mount(path);
+    expect(container.querySelector('h1')).toHaveTextContent(heading);
   });
 
-  it('renders the contact sheet with sheet:false stories as links', () => {
-    const error = vi.spyOn(console, 'error').mockImplementation(() => {});
-    mount('/all');
-    expect(screen.getByRole('heading', { level: 1, name: 'All stories' })).toBeInTheDocument();
-    const links = screen.getAllByRole('link', { name: /^Open / });
-    expect(links.length).toBe(stories.filter((s) => !s.sheet).length);
-    for (const l of links) {
-      expect(l).toHaveAttribute(
-        'href',
-        expect.stringMatching(/^\/story\/component\/(page|nav-mobile|nav-desktop|top-fade)\//)
-      );
+  it('renders not-found for an unknown route, component or guide', () => {
+    for (const path of ['/nope', '/components/nope', '/guides/nope']) {
+      const { unmount } = mount(path);
+      expect(screen.getByRole('heading', { level: 1, name: 'Not found' })).toBeInTheDocument();
+      expect(screen.getByText(path)).toBeInTheDocument();
+      unmount();
     }
-    expect(screen.getAllByTestId('sheet-story').length).toBe(stories.length);
-    expect(error).not.toHaveBeenCalled();
-    error.mockRestore();
   });
 
-  it('renders the preview route without the sidebar', () => {
-    mount('/preview/control/button/default');
-    expect(screen.queryByRole('link', { name: 'All' })).toBeNull();
+  it('renders a frame without the header', () => {
+    mount('/frame/button/basic');
     expect(screen.getByRole('button', { name: 'Save' })).toBeInTheDocument();
-  });
-  it('shows not-found inside the shell for an unknown path', () => {
-    mount('/nope');
-    expect(screen.getByText(/Story not found/)).toHaveTextContent('/nope');
-    expect(screen.getByRole('link', { name: 'All' })).toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: 'Components' })).toBeNull();
   });
 
-  it('keeps a preview window a preview when a story links outside it', async () => {
+  it('posts the chosen theme to every loaded frame without reloading it', async () => {
+    mount('/');
+    const frames = Array.from(document.querySelectorAll('iframe'));
+    expect(frames.length).toBeGreaterThan(0);
+    // A loaded frame keeps its URL; the theme reaches it as a message.
+    for (const f of frames) fireEvent.load(f);
+    const srcs = frames.map((f) => f.getAttribute('src'));
+    const spies = frames.map((f) => vi.spyOn(f.contentWindow!, 'postMessage'));
+    await userEvent.click(screen.getByRole('radio', { name: 'Dark' }));
+    for (const spy of spies)
+      expect(spy).toHaveBeenCalledWith(
+        { type: 'gallery:theme', theme: 'dark' },
+        window.location.origin
+      );
+    expect(frames.map((f) => f.getAttribute('src'))).toEqual(srcs);
+  });
+
+  it('keeps a frame window a frame when an example links outside it', async () => {
     render(
-      <MemoryRouter initialEntries={['/preview/control/button/default']}>
+      <MemoryRouter initialEntries={['/frame/button/basic']}>
         <Link to="/">to root</Link>
-        <Link to="/books">to books</Link>
         <GalleryRoutes />
       </MemoryRouter>
     );
     await userEvent.click(screen.getByRole('link', { name: 'to root' }));
-    expect(screen.queryByRole('link', { name: 'All' })).toBeNull();
-    expect(screen.queryByRole('heading', { level: 1 })).toBeNull();
-    expect(screen.getByText(/The story navigated to/)).toHaveTextContent('/');
-    await userEvent.click(screen.getByRole('link', { name: 'to books' }));
-    expect(screen.getByText(/The story navigated to/)).toHaveTextContent('/books');
-    expect(screen.getByRole('link', { name: 'Back to the story' })).toHaveAttribute(
-      'href',
-      '/preview/control/button/default'
-    );
-    await userEvent.click(screen.getByRole('link', { name: 'Back to the story' }));
+    expect(screen.queryByRole('textbox', { name: 'Search components' })).toBeNull();
+    expect(screen.getByText(/The example navigated to/)).toHaveTextContent('/');
+    await userEvent.click(screen.getByRole('link', { name: 'Back to the example' }));
     expect(screen.getByRole('button', { name: 'Save' })).toBeInTheDocument();
+  });
+  it('scrolls to the top on a page change, unless the link names a section', async () => {
+    const scrollTo = vi.spyOn(window, 'scrollTo').mockImplementation(() => {});
+    const scrollIntoView = vi.fn();
+    Element.prototype.scrollIntoView = scrollIntoView;
+    try {
+      render(
+        <MemoryRouter initialEntries={['/changelog']}>
+          <Link to="/components/button">to button</Link>
+          <Link to="/components/menu#menuitem">to menu item</Link>
+          <GalleryRoutes />
+        </MemoryRouter>
+      );
+      scrollTo.mockClear();
+      await userEvent.click(screen.getByRole('link', { name: 'to button' }));
+      expect(scrollTo).toHaveBeenCalledWith(0, 0);
+      scrollTo.mockClear();
+      await userEvent.click(screen.getByRole('link', { name: 'to menu item' }));
+      expect(scrollTo).not.toHaveBeenCalled();
+      expect(scrollIntoView.mock.contexts.at(-1)).toBe(document.getElementById('menuitem'));
+    } finally {
+      scrollTo.mockRestore();
+      Reflect.deleteProperty(Element.prototype, 'scrollIntoView');
+    }
   });
 });

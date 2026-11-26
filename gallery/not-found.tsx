@@ -1,12 +1,23 @@
-import { Link } from 'react-router';
+import { Heading, Page, Text } from '@korzun/design/component';
+import { createUseStyles, type Theme } from '@korzun/design/theme';
+import { Link, useLocation } from 'react-router';
 
-import { stories } from './stories.js';
+const useStyle = createUseStyles((theme: Theme) => ({
+  link: { color: theme.color.brand.default },
+}));
 
-export const StoryNotFound = ({ id }: { id: string }) => (
-  <div>
-    <p>
-      Story not found: <code>{id}</code>
-    </p>
-    <Link to={`/story/${stories[0].id}`}>Open the first story</Link>
-  </div>
-);
+/** Shown for any route, component or guide the site does not have. */
+export const NotFound = () => {
+  const styles = useStyle();
+  return (
+    <Page>
+      <Heading level={1}>Not found</Heading>
+      <Text as="p">
+        Nothing lives at <code>{useLocation().pathname}</code>.
+      </Text>
+      <Link to="/" className={styles.link}>
+        Back to the components
+      </Link>
+    </Page>
+  );
+};

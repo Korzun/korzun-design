@@ -5,6 +5,9 @@ other libraries such as MUI, Chakra, or shadcn. Before using a module, read its
 doc in `docs/`. The doc paths below are relative to this file, so in a
 consuming app they are under `node_modules/@korzun/design/`.
 
+The same docs are on the docs site, https://korzun.github.io/korzun-design/,
+with an index for agents at https://korzun.github.io/korzun-design/llms.txt.
+
 To load this guide in a consuming app, add this line to its `CLAUDE.md` or
 `AGENTS.md`:
 
@@ -90,6 +93,6 @@ Every component exports its props type as `<Name>Props` (`ButtonProps`,
 
 ## Docs index
 
-[docs]|theme.md: provider, createUseStyles, token summary, recipes|corners.md: radius by nesting depth|patterns.md: screens, forms in cards, modals, overrides|tokens.md: every token key in detail|philosophy.md: design rules and why|icon.md|toast.md|hooks.md
+[docs]|theme.md: ThemeProvider, the light and dark themes, and createUseStyles for writing token-based styles.|corners.md: Corner radius by nesting depth, one radius step per level.|patterns.md: How screens are built: forms in cards, confirmations, menus, modals, toasts and style overrides.|tokens.md: Every theme token key in detail, group by group.|philosophy.md: The design rules the code enforces, and why.|icon.md: Inline SVG icon components that take the surrounding text colour, with the shared IconProps.|toast.md: Short, transient confirmations and errors that slide in from a corner and leave on their own.|hooks.md: Mobile-chrome hooks: standalone detection, minimize on scroll, pull to refresh.
 [docs/control]|{back-button,button,chips-input,confirm-modal,date-time-input,dialog,field-list,menu,number-input,page-actions-bar,page-actions-menu,page-footer-actions,popover,segmented-control,select,switch,text-area,text-input,use-modal-dialog}.md
 [docs/component]|{alert,card,card-divider,card-row,collapsible-section,empty-state,error-message,heading,inline,meta-line,metadata-list,nav-desktop,nav-mobile,page,progress-indicator,spinner,stack,surface,tag,text,theme-setting,top-fade}.md

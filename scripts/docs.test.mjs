@@ -4,13 +4,17 @@ import { dirname, join, relative } from 'node:path';
 import { test } from 'node:test';
 import { fileURLToPath } from 'node:url';
 
+import { parseFrontMatter } from './docs-gen/front-matter.mjs';
+
 const repo = join(dirname(fileURLToPath(import.meta.url)), '..');
 const internal = ['control/layer-stack', 'component/metadata'];
 
 const moduleDirs = (area) =>
   readdirSync(join(repo, 'src', area), { withFileTypes: true })
     .filter((d) => d.isDirectory())
-    .filter((d) => ['index.ts', 'index.tsx'].some((f) => existsSync(join(repo, 'src', area, d.name, f))))
+    .filter((d) =>
+      ['index.ts', 'index.tsx'].some((f) => existsSync(join(repo, 'src', area, d.name, f)))
+    )
     .map((d) => `${area}/${d.name}`);
 
 // docs/superpowers holds internal plans and specs; it is not shipped or indexed.
@@ -36,7 +40,9 @@ export const parseIndex = (text) =>
       return items.flatMap((item) => {
         const name = item.split(':')[0].trim();
         const group = name.match(/^\{(.+)\}\.md$/);
-        return (group ? group[1].split(',').map((n) => `${n}.md`) : [name]).map((n) => `${dir}/${n}`);
+        return (group ? group[1].split(',').map((n) => `${n}.md`) : [name]).map(
+          (n) => `${dir}/${n}`
+        );
       });
     });
 
@@ -73,7 +79,20 @@ test('relative links in AGENTS.md and docs resolve', () => {
   for (const f of [join(repo, 'AGENTS.md'), ...docFiles()]) {
     for (const [, target] of readFileSync(f, 'utf8').matchAll(/\]\(([^)#\s]+)(?:#[^)]*)?\)/g)) {
       if (/^[a-z]+:/.test(target)) continue;
-      assert.ok(existsSync(join(dirname(f), target)), `${relative(repo, f)} links to missing ${target}`);
+      assert.ok(
+        existsSync(join(dirname(f), target)),
+        `${relative(repo, f)} links to missing ${target}`
+      );
+    }
+  }
+});
+
+test('every doc with front matter has title, description, category', () => {
+  for (const f of docFiles()) {
+    const { data } = parseFrontMatter(readFileSync(f, 'utf8'));
+    if (Object.keys(data).length === 0) continue;
+    for (const key of ['title', 'description', 'category']) {
+      assert.ok(data[key], `${relative(repo, f)} front matter is missing ${key}`);
     }
   }
 });

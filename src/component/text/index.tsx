@@ -7,15 +7,15 @@ import { useStyle, useTypography, type TextSize, type TextTone, type TextWeight 
 const INLINE_TAGS = ['span', 'strong', 'em', 'label'];
 
 export interface TextProps extends Omit<HTMLAttributes<HTMLElement>, 'style'> {
-  /** The element to render. Default `'span'`. */
+  /** The element to render. `p` has its margin reset to 0; space paragraphs with `Stack` `gap`. */
   as?: 'span' | 'p' | 'div' | 'label' | 'strong' | 'em';
-  /** Font size, from the theme's `fontSize` tokens. Unset inherits. */
+  /** Font size, from the theme's `fontSize` tokens. Unset, it inherits from the parent. */
   size?: TextSize;
-  /** Text colour: `primary`, `secondary`, `muted`, `faint`, `description`, or `danger`/`success` for inline error and confirmation text. Unset inherits. */
+  /** Text colour. `primary` to `description` use the theme's `color.text` tokens; `danger` and `success` use the chip text colours, for inline error and confirmation text. Unset, it inherits from the parent. */
   tone?: TextTone;
-  /** Font weight, from the theme's `fontWeight` tokens. Unset inherits. */
+  /** Font weight, from the theme's `fontWeight` tokens. Unset, it inherits from the parent. */
   weight?: TextWeight;
-  /** Clip to one line with an ellipsis. Inline elements become `inline-block` so the clip applies. Default `false`. */
+  /** Clips to one line with an ellipsis. Also sets `min-width: 0` and `max-width: 100%`, so it clips inside an `Inline` or `Stack` with any `align`. On `span`, `strong`, `em` and `label` it also makes the element `inline-block`, because inline elements ignore overflow. */
   truncate?: boolean;
   /** The id of the control this label describes. Only for `as="label"`. */
   htmlFor?: string;

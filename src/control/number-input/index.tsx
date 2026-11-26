@@ -7,7 +7,7 @@ import { useStyle } from './style.js';
 export type NumberInputProps = {
   /** Required key: pass `label={undefined}` for none. Not linked to the input (no `htmlFor`). */
   label: string | undefined;
-  /** Default `'horizontal'`; `horizontal`/`vertical` paint a card-header row. */
+  /** `horizontal` and `vertical` paint a shaded card-header row with `md` corners; `inline` paints nothing. */
   layout?: 'horizontal' | 'vertical' | 'inline';
   /** The input's `name` and the key passed to `onValidChange`. */
   name: string;
@@ -17,7 +17,10 @@ export type NumberInputProps = {
   onValidChange?: (fieldName: string, newValid: boolean) => void;
   /** Placeholder text for the input. */
   placeholder?: string;
-  /** Receives the raw text. Replacing it drops the default empty-or-numeric check, so include one. */
+  /**
+   * Receives the raw text. Replacing it drops the built-in check, so include one.
+   * @default accepts empty or numeric text
+   */
   validate?: (newValue: string) => boolean;
   /** Current number. Re-syncs into the field only when the prop changes. */
   value: number | undefined;

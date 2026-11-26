@@ -1,4 +1,4 @@
-import { act, fireEvent, screen } from '@testing-library/react';
+import { act, cleanup, fireEvent, screen } from '@testing-library/react';
 import { useEffect, useRef, type ReactNode } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -113,6 +113,14 @@ describe('Popover', () => {
       expect(el.style.bottom).toBe('404px');
       expect(el.style.top).toBe('');
       expect(el).toHaveAttribute('data-side', 'top');
+    });
+
+    it('names the side it was asked for in data-preferred-side, flipped or not', () => {
+      renderWithProviders(<Harness />);
+      expect(wrapper()).toHaveAttribute('data-preferred-side', 'bottom');
+      cleanup();
+      renderWithProviders(<Harness side="top" />);
+      expect(wrapper()).toHaveAttribute('data-preferred-side', 'top');
     });
 
     it('aligns end with matchWidth={false}', () => {

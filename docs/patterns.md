@@ -1,3 +1,8 @@
+---
+title: Patterns
+description: How screens are built: forms in cards, confirmations, menus, modals, toasts and style overrides.
+category: Guide
+---
 # Patterns
 
 How screens are put together from the library, as Bookplate does it.

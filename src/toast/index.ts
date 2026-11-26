@@ -1,2 +1,2 @@
-export { ToastProvider } from './provider.js';
+export { ToastProvider, type ToastProviderProps } from './provider.js';
 export { useToast } from './hook/index.js';

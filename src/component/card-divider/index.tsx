@@ -7,19 +7,13 @@ import { useStyle } from './style.js';
 export type CardDividerAlign = 'left' | 'center' | 'right';
 
 export type CardDividerProps = {
-  /** Optional label. Without it (and without actions) the divider is a plain full-width line. */
+  /** Optional label, one word or two: it does not wrap. Without a label and without actions the divider is a plain full-width line. `null`, `undefined` and `false` count as absent. */
   children?: ReactNode;
-  /**
-   * Where the label sits (default `'left'`). Left/right hug that edge with a short stub of line
-   * poking past; center leaves equal line on both sides.
-   */
+  /** Where the label sits. `'left'` and `'right'` hug that edge with a short stub of line poking past; `'center'` leaves equal line on both sides. */
   align?: CardDividerAlign;
-  /** Optional actions rendered on the divider line (e.g. a bulk-action button). */
+  /** Optional controls rendered on the line (e.g. a bulk-action button); keep them one text line tall. `null`, `undefined` and `false` count as absent. */
   actions?: ReactNode;
-  /**
-   * Where the actions sit (default `'right'`). When actions share a position with the label they
-   * stack in the same group — label first, then actions.
-   */
+  /** Where the actions sit. When it equals `align`, label and actions share one group, label first. */
   actionsAlign?: CardDividerAlign;
 };
 

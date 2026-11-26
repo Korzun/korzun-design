@@ -1,0 +1,717 @@
+import { readFileSync } from 'node:fs';
+import { dirname, resolve } from 'node:path';
+
+import { parseSync } from 'oxc-parser';
+
+import { parseOrThrow } from './parse.mjs';
+
+/** @typedef {import('./types.js').PropRow} PropRow */
+/** @typedef {import('./types.js').TypeTable} TypeTable */
+
+const defaultRead = (p) => readFileSync(p, 'utf8');
+
+/** Parse a .d.ts once per path and index its declarations, imports and re-exports. */
+function createLoader(readFile) {
+  const cache = new Map();
+
+  function load(path) {
+    if (cache.has(path)) return cache.get(path);
+    const src = readFile(path);
+    const { program, comments } = parseOrThrow(path, src, 'dts');
+    const file = {
+      path,
+      src,
+      // JSDoc blocks only (`/** … */`): not `//` lines or plain `/* … */` blocks.
+      comments: comments.filter((c) => c.type === 'Block' && c.value.startsWith('*')),
+      decls: new Map(),
+      // Runtime values (`declare const X`, `declare function X`), kept apart from types.
+      values: new Map(),
+      imports: new Map(),
+      reexports: new Map(),
+      // `export type { Action as TextInputAction }`: exported name -> local name.
+      localExports: new Map(),
+      exportAll: [],
+    };
+    for (const stmt of program.body) {
+      if (stmt.type === 'ImportDeclaration') {
+        const from = String(stmt.source.value);
+        for (const s of stmt.specifiers) {
+          if (s.type === 'ImportSpecifier') {
+            file.imports.set(s.local.name, { from, name: s.imported.name ?? s.imported.value });
+          }
+        }
+        continue;
+      }
+      if (stmt.type === 'ExportAllDeclaration' && !stmt.exported) {
+        file.exportAll.push(String(stmt.source.value));
+        continue;
+      }
+      const decl = stmt.type === 'ExportNamedDeclaration' ? stmt.declaration : stmt;
+      if (decl?.type === 'TSTypeAliasDeclaration' || decl?.type === 'TSInterfaceDeclaration') {
+        file.decls.set(decl.id.name, decl);
+      }
+      if (decl?.type === 'TSDeclareFunction' && decl.id) file.values.set(decl.id.name, decl);
+      if (decl?.type === 'VariableDeclaration') {
+        for (const d of decl.declarations)
+          if (d.id.type === 'Identifier') file.values.set(d.id.name, d);
+      }
+      if (stmt.type === 'ExportNamedDeclaration' && !stmt.source) {
+        for (const s of stmt.specifiers ?? []) {
+          const exported = s.exported.name ?? s.exported.value;
+          const local = s.local.name ?? s.local.value;
+          if (exported !== local) file.localExports.set(exported, local);
+        }
+      }
+      if (stmt.type === 'ExportNamedDeclaration' && stmt.source) {
+        const from = String(stmt.source.value);
+        for (const s of stmt.specifiers) {
+          file.reexports.set(s.exported.name ?? s.exported.value, {
+            from,
+            name: s.local.name ?? s.local.value,
+          });
+        }
+      }
+    }
+    cache.set(path, file);
+    return file;
+  }
+
+  /** Map a relative specifier to a .d.ts path, or null for packages (react, ...). */
+  function locate(fromFile, spec) {
+    if (!spec.startsWith('.')) return null;
+    const base = resolve(dirname(fromFile.path), spec);
+    const candidates = spec.endsWith('.js')
+      ? [base.replace(/\.js$/, '.d.ts')]
+      : [`${base}.d.ts`, resolve(base, 'index.d.ts')];
+    for (const candidate of candidates) {
+      try {
+        load(candidate);
+        return candidate;
+      } catch {
+        // try the next candidate
+      }
+    }
+    return null;
+  }
+
+  /** Find the declaration of `name` visible from `file`: local, imported, or re-exported. */
+  function resolveName(file, name, seen = new Set(), space = 'decls') {
+    const key = `${file.path}#${name}`;
+    if (seen.has(key)) return null;
+    seen.add(key);
+    const local = file[space].get(name);
+    if (local) return { file, decl: local };
+    const renamed = file.localExports.get(name);
+    if (renamed) return resolveName(file, renamed, seen, space);
+    const link = file.imports.get(name) ?? file.reexports.get(name);
+    if (link) {
+      const target = locate(file, link.from);
+      return target ? resolveName(load(target), link.name, seen, space) : null;
+    }
+    for (const from of file.exportAll) {
+      const target = locate(file, from);
+      const hit = target && resolveName(load(target), name, seen, space);
+      if (hit) return hit;
+    }
+    return null;
+  }
+
+  return { load, resolveName };
+}
+
+/**
+ * Text of the JSDoc block directly above `node`, split into description and
+ * tags. With `keywords`, `export`/`declare` may sit between the two (a type
+ * declaration's own comment precedes its `export`). `@member <name> <note>`
+ * (on a type) collects a note for one of its members' rows.
+ */
+function readDoc(file, node, keywords = false) {
+  const between = keywords ? /^\s*(?:(?:export|declare)\s+)*$/ : /^\s*$/;
+  const comment = file.comments.find(
+    (c) => c.end <= node.start && between.test(file.src.slice(c.end, node.start))
+  );
+  const out = { description: '', default: undefined, deprecated: false, members: [] };
+  if (!comment) return out;
+  const lines = comment.value
+    .replace(/^\*/, '')
+    .split('\n')
+    .map((l) => l.replace(/^\s*\* ?/, '').trim());
+  const desc = [];
+  let tag = null;
+  for (const line of lines) {
+    const m = /^@(\w+)\s*(.*)$/.exec(line);
+    if (m) {
+      tag = m[1];
+      if (tag === 'default') out.default = m[2];
+      else if (tag === 'deprecated') out.deprecated = true;
+      else if (tag === 'member') {
+        const [, name = '', text = ''] = /^(\S*)\s*(.*)$/.exec(m[2]);
+        out.members.push({ name, text });
+      }
+    } else if (tag === null) {
+      if (line) desc.push(line);
+    } else if (tag === 'default' && line) {
+      out.default = `${out.default} ${line}`.trim();
+    } else if (tag === 'member' && line) {
+      const note = out.members.at(-1);
+      note.text = `${note.text} ${line}`.trim();
+    }
+  }
+  out.description = desc.join(' ');
+  if (out.default !== undefined && !isExpression(out.default)) out.defaultProse = true;
+  return out;
+}
+
+/** Whether `text` reads as one TypeScript expression (`'md'`, `() => true`), not prose. */
+function isExpression(text) {
+  if (!text.trim()) return false;
+  const { program, errors } = parseSync('default.ts', `(${text});`, { lang: 'ts' });
+  return errors.length === 0 && program.body.length === 1;
+}
+
+const squash = (s) => s.replace(/\s+/g, ' ').trim();
+
+/** Type text without the `/** … *\/` and `//` comments a .d.ts keeps inside a type. */
+const stripComments = (s) => s.replace(/\/\*[\s\S]*?\*\//g, ' ').replace(/(^|\s)\/\/[^\n]*/g, '$1');
+
+// Type text without the `React.` namespace (`React.ComponentType` reads
+// `ComponentType`), so a type prints the same however its source spelled it.
+const unReact = (s) => s.replace(/(?<![\w$.])React\./g, '');
+
+// Most keys a `keyof` type may have and still print as its literal union.
+const MAX_KEYS = 20;
+
+/** Every node nested in `node` (itself included) that satisfies `test`. */
+function findNodes(node, test, out = []) {
+  if (!node || typeof node !== 'object') return out;
+  if (Array.isArray(node)) {
+    for (const n of node) findNodes(n, test, out);
+    return out;
+  }
+  if (typeof node.type === 'string' && test(node)) out.push(node);
+  for (const [k, v] of Object.entries(node)) {
+    if (k !== 'type' && v && typeof v === 'object') findNodes(v, test, out);
+  }
+  return out;
+}
+
+/**
+ * Type members of a flattened type: name -> row. Returns null when it cannot be flattened.
+ * `exported` maps a declaration requested under another name (`type Action`
+ * exported as `TextInputAction`) to that name, so type text prints the name a
+ * reader can import.
+ */
+function createFlattener(loader, exported = new Map()) {
+  // Source text of `node`, with references to renamed exports printed by their
+  // exported name; whitespace squashed unless `layout` keeps it (an alias block).
+  function renamedText(node, file, layout = false) {
+    const refs = findNodes(
+      node,
+      (n) => n.type === 'TSTypeReference' && n.typeName?.type === 'Identifier'
+    );
+    let text = '';
+    let cursor = node.start;
+    for (const ref of refs.sort((a, b) => a.start - b.start)) {
+      const tn = ref.typeName;
+      if (tn.start < cursor) continue;
+      const decl = loader.resolveName(file, tn.name)?.decl;
+      const name = decl && exported.get(decl);
+      if (!name || name === tn.name) continue;
+      text += file.src.slice(cursor, tn.start) + name;
+      cursor = tn.end;
+    }
+    const out = text + file.src.slice(cursor, node.end);
+    return unReact(layout ? out : squash(stripComments(out)));
+  }
+
+  // Longest object literal a type cell prints in full; longer ones print their keys.
+  const MAX_LITERAL = 120;
+
+  /**
+   * A row's object-literal type, short: a nested literal prints as `{ … }`
+   * (`stack: { … }`), and one still over MAX_LITERAL characters prints its
+   * keys only (`{ xs, sm, md }`). A flat, short literal prints as written.
+   * Null when the literal has members other than plain properties.
+   */
+  function literalSummary(node, file) {
+    const props = node.members;
+    if (!props.every((m) => m.type === 'TSPropertySignature' && !m.computed)) return null;
+    const plain = renamedText(node, file);
+    const nested = props.some((m) => m.typeAnnotation?.typeAnnotation?.type === 'TSTypeLiteral');
+    if (!nested && plain.length <= MAX_LITERAL) return plain;
+    const key = (m) => (m.key.type === 'Identifier' ? m.key.name : String(m.key.value));
+    const members = props.map((m) => {
+      const ann = m.typeAnnotation?.typeAnnotation;
+      const type = !ann ? 'any' : ann.type === 'TSTypeLiteral' ? '{ … }' : inlineType(ann, file, 1);
+      return `${key(m)}${m.optional ? '?' : ''}: ${type};`;
+    });
+    const short = `{ ${members.join(' ')} }`;
+    return short.length <= MAX_LITERAL ? short : `{ ${props.map(key).join(', ')} }`;
+  }
+
+  // The members of an object-shaped type node, with the file they are written in, or null.
+  function membersOf(node, file, depth) {
+    if (!node || depth > 20) return null;
+    if (node.type === 'TSParenthesizedType') return membersOf(node.typeAnnotation, file, depth + 1);
+    if (node.type === 'TSTypeLiteral') return { members: node.members, file };
+    if (node.type === 'TSTypeReference' && node.typeName.type === 'Identifier') {
+      if (node.typeArguments) return null;
+      const found = loader.resolveName(file, node.typeName.name);
+      const decl = found?.decl;
+      if (decl?.type === 'TSInterfaceDeclaration') {
+        return decl.extends?.length ? null : { members: decl.body.body, file: found.file };
+      }
+      if (decl?.type === 'TSTypeAliasDeclaration' && !decl.typeParameters?.params?.length) {
+        return membersOf(decl.typeAnnotation, found.file, depth + 1);
+      }
+      return null;
+    }
+    if (node.type === 'TSIndexedAccessType') {
+      const idx = node.indexType;
+      if (idx.type !== 'TSLiteralType' || typeof idx.literal.value !== 'string') return null;
+      const outer = membersOf(node.objectType, file, depth + 1);
+      const member = outer?.members.find(
+        (m) => m.type === 'TSPropertySignature' && !m.computed && memberKey(m) === idx.literal.value
+      );
+      const ann = member?.typeAnnotation?.typeAnnotation;
+      return ann ? membersOf(ann, outer.file, depth + 1) : null;
+    }
+    return null;
+  }
+
+  const memberKey = (m) => (m.key.type === 'Identifier' ? m.key.name : String(m.key.value));
+
+  // `keyof Theme['color']['chip']` as the literal union of its keys, when they are known and few.
+  function keyofText(node, file) {
+    if (node.type !== 'TSTypeOperator' || node.operator !== 'keyof') return null;
+    const found = membersOf(node.typeAnnotation, file, 0);
+    if (!found) return null;
+    const props = found.members.filter((m) => m.type === 'TSPropertySignature' && !m.computed);
+    if (props.length === 0 || props.length !== found.members.length) return null;
+    if (props.length > MAX_KEYS) return null;
+    return props
+      .map((m) =>
+        m.key.type === 'Identifier' || typeof m.key.value === 'string'
+          ? `'${memberKey(m)}'`
+          : String(m.key.value)
+      )
+      .join(' | ');
+  }
+
+  function flattenNode(node, file, depth) {
+    if (depth > 20) return null;
+    switch (node.type) {
+      case 'TSParenthesizedType':
+        return flattenNode(node.typeAnnotation, file, depth + 1);
+      case 'TSTypeLiteral':
+        return literalRows(node, file);
+      case 'TSIntersectionType': {
+        const rows = new Map();
+        const failed = [];
+        for (const part of node.types) {
+          const sub = flattenNode(part, file, depth + 1);
+          if (!sub) failed.push(part);
+          else for (const [k, v] of sub) rows.set(k, v);
+        }
+        if (failed.length === node.types.length) return null;
+        for (const part of failed) skip(skipName(part, file));
+        return rows;
+      }
+      case 'TSUnionType':
+        return unionRows(node, file, depth);
+      case 'TSTypeReference':
+        return referenceRows(node, file, depth);
+      default:
+        return null;
+    }
+  }
+
+  const isObjectShaped = (n) =>
+    n.type === 'TSTypeLiteral' ||
+    n.type === 'TSIntersectionType' ||
+    (n.type === 'TSParenthesizedType' && isObjectShaped(n.typeAnnotation));
+
+  // Source text of a type, with the package's own non-generic, non-object aliases
+  // substituted by their text. React/DOM, generic and object-shaped types stay by name.
+  function inlineType(node, file, depth) {
+    const plain = () => renamedText(node, file);
+    if (depth > 20) return plain();
+    const keys = keyofText(node, file);
+    if (keys) return keys;
+    if (node.type === 'TSUnionType') {
+      const parts = [];
+      for (const t of node.types) {
+        for (const piece of inlineType(t, file, depth + 1).split(' | ')) {
+          if (!parts.includes(piece)) parts.push(piece);
+        }
+      }
+      return parts.join(' | ');
+    }
+    if (
+      node.type === 'TSTypeReference' &&
+      node.typeName.type === 'Identifier' &&
+      !node.typeArguments
+    ) {
+      const found = loader.resolveName(file, node.typeName.name);
+      const decl = found?.decl;
+      if (
+        decl?.type === 'TSTypeAliasDeclaration' &&
+        !decl.typeParameters?.params?.length &&
+        !isObjectShaped(decl.typeAnnotation)
+      ) {
+        return inlineType(decl.typeAnnotation, found.file, depth + 1);
+      }
+    }
+    return plain();
+  }
+
+  function literalRows(node, file) {
+    const rows = new Map();
+    for (const m of node.members ?? node.body) {
+      if (m.type !== 'TSPropertySignature' || m.computed) continue;
+      const name = m.key.name ?? String(m.key.value);
+      const doc = readDoc(file, m);
+      const ann = m.typeAnnotation?.typeAnnotation;
+      const row = {
+        name,
+        type: !ann
+          ? 'any'
+          : ((ann.type === 'TSTypeLiteral' ? literalSummary(ann, file) : null) ??
+            inlineType(ann, file, 0)),
+        required: !m.optional,
+        description: doc.description,
+      };
+      if (doc.default !== undefined) row.default = doc.default;
+      if (doc.defaultProse) row.defaultProse = true;
+      if (doc.deprecated) row.deprecated = true;
+      rows.set(name, row);
+    }
+    return rows;
+  }
+
+  // Top-level members of a union type text: `(a: X | Y) => void | Z` is two.
+  const splitTop = (text) => {
+    const parts = [];
+    let depth = 0;
+    let start = 0;
+    for (let i = 0; i < text.length; i++) {
+      const c = text[i];
+      if ('([{<'.includes(c)) depth++;
+      else if (')]}'.includes(c) || (c === '>' && text[i - 1] !== '=')) depth--;
+      else if (c === '|' && depth === 0) {
+        parts.push(text.slice(start, i).trim());
+        start = i + 1;
+      }
+    }
+    parts.push(text.slice(start).trim());
+    return parts.filter(Boolean);
+  };
+  const FORBIDS = new Set(['never', 'undefined']);
+  const joinTypes = (parts) => {
+    const set = new Set(parts);
+    const bool = set.has('boolean') || (set.has('true') && set.has('false'));
+    const named = parts.map((t) => (bool && (t === 'true' || t === 'false') ? 'boolean' : t));
+    const unique = [...new Set(named)];
+    // A function type joined with others needs parentheses to read as one member.
+    return unique.length > 1
+      ? unique.map((t) => (t.includes('=>') && !/^\(.*\)$/.test(t) ? `(${t})` : t)).join(' | ')
+      : unique[0];
+  };
+  // Each prop listed once. A branch typing the prop only `never`/`undefined`
+  // forbids it and does not define it. The row's type joins the defining
+  // branches' types without `never`/`undefined`, reading `true`/`false` as
+  // `boolean` when it has both or `boolean` already (so a `false` discriminant
+  // or a `false | undefined` mutual exclusion reads `boolean`). Its description
+  // joins the defining branches' distinct texts, and it is required only when
+  // every branch defines it as required.
+  function unionRows(node, file, depth) {
+    const branches = [];
+    for (const part of node.types) {
+      const sub = flattenNode(part, file, depth + 1);
+      if (!sub) return null;
+      branches.push(sub);
+    }
+    const names = [...new Set(branches.flatMap((b) => [...b.keys()]))];
+    const rows = new Map();
+    for (const name of names) {
+      const present = branches.map((b) => b.get(name)).filter(Boolean);
+      const defining = present.filter((row) => !splitTop(row.type).every((t) => FORBIDS.has(t)));
+      const types = defining.flatMap((r) => splitTop(r.type)).filter((t) => !FORBIDS.has(t));
+      const texts = [...new Set(defining.map((r) => r.description).filter(Boolean))];
+      const merged = {
+        ...(defining.find((r) => r.description) ?? defining[0] ?? present[0]),
+        type: types.length ? joinTypes(types) : present[0].type,
+        description: texts.join(' '),
+        required: defining.length === branches.length && defining.every((r) => r.required),
+      };
+      // A `@default` written on any one defining branch's member is the prop's default.
+      const withDefault = defining.find((r) => r.default !== undefined);
+      if (withDefault) {
+        merged.default = withDefault.default;
+        if (withDefault.defaultProse) merged.defaultProse = true;
+        else delete merged.defaultProse;
+      }
+      rows.set(name, merged);
+    }
+    return rows;
+  }
+
+  // Name of an external type that was left out of a table, looking through Omit/Pick-style wrappers.
+  function skipName(node, file) {
+    if (node.type === 'TSParenthesizedType') return skipName(node.typeAnnotation, file);
+    if (node.type === 'TSTypeReference') {
+      const args = node.typeArguments?.params ?? [];
+      const tn = node.typeName;
+      const wrapper =
+        tn.type === 'Identifier' && ['Omit', 'Pick', 'Partial', 'Required'].includes(tn.name);
+      if (wrapper && args.length) return skipName(args[0], file);
+      // A Record says nothing without its key and value types.
+      if (tn.type === 'Identifier' && tn.name === 'Record') return renamedText(node, file);
+      return unReact(squash(file.src.slice(tn.start, tn.end)));
+    }
+    return unReact(squash(file.src.slice(node.start, node.end)));
+  }
+
+  let skipped = [];
+  const skip = (name) => {
+    if (!skipped.includes(name)) skipped.push(name);
+  };
+
+  function literalKeys(node) {
+    if (node.type === 'TSLiteralType' && typeof node.literal.value === 'string') {
+      return [node.literal.value];
+    }
+    if (node.type === 'TSUnionType') {
+      const keys = node.types.map(literalKeys);
+      return keys.every(Boolean) ? keys.flat() : null;
+    }
+    return null;
+  }
+
+  function referenceRows(node, file, depth) {
+    const tn = node.typeName;
+    const name = tn.type === 'TSQualifiedName' ? tn.right.name : tn.name;
+    const args = node.typeArguments?.params ?? [];
+    if (name === 'PropsWithChildren' && args.length === 1) {
+      const inner = flattenNode(args[0], file, depth + 1);
+      if (!inner) return null;
+      const rows = new Map([
+        ['children', { name: 'children', type: 'ReactNode', required: false, description: '' }],
+      ]);
+      for (const [k, v] of inner) rows.set(k, v);
+      return rows;
+    }
+    if ((name === 'Omit' || name === 'Pick') && args.length === 2) {
+      const keys = literalKeys(args[1]);
+      const inner = flattenNode(args[0], file, depth + 1);
+      if (!keys || !inner) return null;
+      return new Map([...inner].filter(([k]) => (name === 'Omit') !== keys.includes(k)));
+    }
+    // A generic of this package (`BaseProps<V>`) flattens with its type
+    // parameters left by name; library generics do not resolve and stay out.
+    if (tn.type !== 'Identifier') return null;
+    const found = loader.resolveName(file, tn.name);
+    return found ? flattenDecl(found.decl, found.file, depth + 1) : null;
+  }
+
+  function flattenDecl(decl, file, depth) {
+    if (decl.type === 'TSTypeAliasDeclaration') {
+      return flattenNode(decl.typeAnnotation, file, depth);
+    }
+    const rows = new Map();
+    for (const ext of decl.extends ?? []) {
+      const ref = {
+        type: 'TSTypeReference',
+        typeName: ext.expression,
+        typeArguments: ext.typeArguments,
+        start: ext.start,
+        end: ext.end,
+      };
+      const sub = flattenNode(ref, file, depth + 1);
+      if (!sub) {
+        skip(skipName(ref, file));
+        continue;
+      }
+      for (const [k, v] of sub) rows.set(k, v);
+    }
+    for (const [k, v] of literalRows(decl.body, file)) rows.set(k, v);
+    return rows;
+  }
+
+  const flatten = (decl, file) => {
+    skipped = [];
+    const rows = flattenDecl(decl, file, 0);
+    return { rows, skipped: rows ? skipped : [] };
+  };
+  // An alias's declared text; one with a resolvable `keyof` part prints it as the key union.
+  const aliasText = (node, file) => {
+    const parts = node.type === 'TSUnionType' ? node.types : [node];
+    const resolves = parts.some((t) => keyofText(t, file));
+    return resolves ? inlineType(node, file, 0) : renamedText(node, file, true);
+  };
+  return { flatten, aliasText };
+}
+
+const cmp = (x, y) => (x < y ? -1 : x > y ? 1 : 0);
+
+/** `children` first, then case-insensitive alphabetical (ties by exact name). */
+const byName = (a, b) => {
+  if (a.name === 'children') return -1;
+  if (b.name === 'children') return 1;
+  return cmp(a.name.toLowerCase(), b.name.toLowerCase()) || cmp(a.name, b.name);
+};
+
+/**
+ * Build one table per requested exported type name, following relative imports
+ * between .d.ts files. Types that cannot be flattened fall back to their declared text.
+ * @param {string} dtsPath
+ * @param {string[]} names
+ * @param {(p: string) => string} [readFile]
+ * @returns {TypeTable[]}
+ */
+export function extractTypeTables(dtsPath, names, readFile = defaultRead) {
+  const loader = createLoader(readFile);
+  const entry = loader.load(resolve(dtsPath));
+  const resolved = names.map((name) => {
+    const found = loader.resolveName(entry, name);
+    if (!found) throw new Error(`type ${name} not found from ${dtsPath}`);
+    return { name, ...found };
+  });
+  const exported = new Map(resolved.map(({ name, decl }) => [decl, name]));
+  // `type PageActionIntentProps = MenuIntentProps` requested here: references
+  // to MenuIntentProps print the name this module documents.
+  for (const { name, decl, file } of resolved) {
+    const ann = decl.type === 'TSTypeAliasDeclaration' ? decl.typeAnnotation : null;
+    if (ann?.type !== 'TSTypeReference' || ann.typeName.type !== 'Identifier') continue;
+    if (ann.typeArguments || decl.typeParameters?.params?.length) continue;
+    const target = loader.resolveName(file, ann.typeName.name)?.decl;
+    if (target && !exported.has(target)) exported.set(target, name);
+  }
+  const { flatten, aliasText } = createFlattener(loader, exported);
+  return resolved.map(({ name, decl, file }) => {
+    const { rows, skipped } = flatten(decl, file);
+    const { description, members } = readDoc(file, decl, true);
+    for (const note of members) {
+      const target = rows?.get(note.name);
+      if (!target) throw new Error(`${name}: @member ${note.name}: no such member`);
+      const text = [target.description, note.text].filter(Boolean).join(' ');
+      rows.set(note.name, { ...target, description: text });
+    }
+    let out;
+    if (!rows) {
+      const body = decl.type === 'TSTypeAliasDeclaration' ? decl.typeAnnotation : decl;
+      out = { name, kind: 'alias', rows: [], text: aliasText(body, file) };
+    } else {
+      out = {
+        name,
+        kind: name.endsWith('Props') ? 'props' : 'object',
+        rows: [...rows.values()].sort(byName),
+      };
+      if (skipped.length) out.extends = skipped;
+    }
+    if (description) out.description = description;
+    return out;
+  });
+}
+
+/**
+ * The .d.ts file that declares each requested exported type, following
+ * re-exports, so a type several modules export has one defining module.
+ * @param {string} dtsPath
+ * @param {string[]} names
+ * @param {(p: string) => string} [readFile]
+ * @returns {Map<string, string>} type name -> absolute path of its declaring file
+ */
+export function declarationFiles(dtsPath, names, readFile = defaultRead) {
+  const loader = createLoader(readFile);
+  const entry = loader.load(resolve(dtsPath));
+  const out = new Map();
+  for (const name of names) {
+    const found = loader.resolveName(entry, name);
+    if (found) out.set(name, found.file.path);
+  }
+  return out;
+}
+
+// The last name of a type reference or import type: `FC`, `React.FC` and
+// `import("react").FC` are all `FC`; null for any other node.
+function refName(node) {
+  if (node?.type === 'TSTypeReference') {
+    const tn = node.typeName;
+    return tn.type === 'Identifier'
+      ? tn.name
+      : tn.type === 'TSQualifiedName'
+        ? tn.right.name
+        : null;
+  }
+  if (node?.type === 'TSImportType') {
+    const q = node.qualifier;
+    return q?.type === 'Identifier' ? q.name : q?.type === 'TSQualifiedName' ? q.right.name : null;
+  }
+  return null;
+}
+
+// React's component types: a value typed as one of these takes the props in its first type argument.
+const COMPONENT_TYPES = new Set([
+  'FC',
+  'FunctionComponent',
+  'ExoticComponent',
+  'NamedExoticComponent',
+  'MemoExoticComponent',
+  'ForwardRefExoticComponent',
+]);
+// Wrappers around a props type that name no props of their own.
+const PROPS_WRAPPERS = new Set(['Readonly', 'PropsWithChildren']);
+
+// The type name a props parameter or wrapper argument refers to: `P` in
+// `(props: P)`, `Readonly<P>`, `PropsWithChildren<P>`, `P & RefAttributes<…>`;
+// null for an inline type. A function type (`memo`'s argument) gives its first
+// parameter's.
+function propsTypeName(node) {
+  if (!node) return null;
+  if (node.type === 'TSIntersectionType') {
+    for (const part of node.types) {
+      const name = propsTypeName(part);
+      if (name && name !== 'RefAttributes') return name;
+    }
+    return null;
+  }
+  if (node.type === 'TSFunctionType') return paramTypeName(node);
+  const name = refName(node);
+  if (!name) return null;
+  if (PROPS_WRAPPERS.has(name)) return propsTypeName(node.typeArguments?.params?.[0]);
+  return node.type === 'TSTypeReference' && node.typeName.type === 'Identifier' ? name : null;
+}
+
+const paramTypeName = (fn) => propsTypeName(fn.params[0]?.typeAnnotation?.typeAnnotation);
+
+/**
+ * The props type each exported component takes, by name: the type of a
+ * function's first parameter, or the first type argument of a React component
+ * type (`FC`, `MemoExoticComponent`, `ForwardRefExoticComponent`, …),
+ * through `Readonly` and `PropsWithChildren`. A component with no parameter,
+ * one typed inline, a value of any other type (`Context<Theme>`) and a name
+ * that is not a declared value are absent.
+ * @param {string} dtsPath
+ * @param {string[]} names
+ * @param {(p: string) => string} [readFile]
+ * @returns {Map<string, string>} component name -> props type name
+ */
+export function componentPropsTypes(dtsPath, names, readFile = defaultRead) {
+  const loader = createLoader(readFile);
+  const entry = loader.load(resolve(dtsPath));
+  const out = new Map();
+  for (const name of names) {
+    const decl = loader.resolveName(entry, name, new Set(), 'values')?.decl;
+    if (!decl) continue;
+    const fn = decl.type === 'TSDeclareFunction' ? decl : decl.id?.typeAnnotation?.typeAnnotation;
+    let type = null;
+    if (fn?.type === 'TSDeclareFunction' || fn?.type === 'TSFunctionType') {
+      type = paramTypeName(fn);
+    } else if (COMPONENT_TYPES.has(refName(fn))) {
+      type = propsTypeName(fn.typeArguments?.params?.[0]);
+    }
+    if (type) out.set(name, type);
+  }
+  return out;
+}
