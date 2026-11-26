@@ -1,3 +1,8 @@
+---
+title: Corners
+description: Corner radius by nesting depth, one radius step per level.
+category: Guide
+---
 # Corners
 
 Corner radius tracks **depth**, not size. Surfaces on the page background have

@@ -9,6 +9,7 @@ import { siteColumn } from '../layout/column.js';
 import { NotFound } from '../not-found.js';
 import { CopyButton } from '../part/copy-button.js';
 import { ExampleBlock } from '../part/example-block.js';
+import { IconGrid } from '../part/icon-grid.js';
 import { Markdown } from '../part/markdown.js';
 import { PropsTable } from '../part/props-table.js';
 import { TokensTable } from '../part/tokens-table.js';
@@ -67,7 +68,7 @@ const byVersion = (entries: ChangelogEntry[]) => {
 
 const Section = ({ title, children }: { title: string; children: ReactNode }) => (
   <Stack as="section" gap="xl" aria-label={title}>
-    <Heading level={2} id={title.toLowerCase()}>
+    <Heading level={2} id={title.toLowerCase().replaceAll(' ', '-')}>
       {title}
     </Heading>
     {children}
@@ -122,6 +123,12 @@ export const ComponentPage = () => {
                   <ExampleBlock key={example.slug} mod={mod} example={example} />
                 ))}
               </div>
+            </Section>
+          )}
+
+          {mod.id === 'icon' && (
+            <Section title="All icons">
+              <IconGrid />
             </Section>
           )}
 

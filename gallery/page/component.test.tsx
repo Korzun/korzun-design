@@ -4,7 +4,8 @@ import { act, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes } from 'react-router';
 
-import { moduleBySlug } from '../data.js';
+import type { ModuleInfo } from '../../scripts/docs-gen/types.js';
+import { moduleBySlug, siteData } from '../data.js';
 import { ComponentPage } from './component.js';
 
 const mount = (slug: string) =>
@@ -123,5 +124,42 @@ describe('ComponentPage', () => {
   it('renders not-found for an unknown slug', () => {
     mount('nope');
     expect(screen.getByRole('heading', { level: 1, name: 'Not found' })).toBeInTheDocument();
+  });
+});
+
+describe('ComponentPage for the icon module', () => {
+  // The real icon page arrives with its doc's front matter; a synthetic module
+  // stands in so the grid wiring is covered now.
+  const icon: ModuleInfo = {
+    ...button,
+    id: 'icon',
+    slug: 'icon',
+    entry: '@korzun/design/icon',
+    docPath: 'docs/icon.md',
+    title: 'Icons',
+    category: 'Data display',
+    values: ['CheckIcon'],
+    types: ['IconProps'],
+    importLine: "import { CheckIcon } from '@korzun/design/icon'",
+    body: '',
+    examples: [],
+    tables: [],
+    tokens: [],
+    changelog: [],
+  };
+  beforeAll(() => siteData.modules.push(icon));
+  afterAll(() => {
+    siteData.modules.splice(siteData.modules.indexOf(icon), 1);
+  });
+
+  it('renders the icon grid', () => {
+    mount('icon');
+    const grid = screen.getByRole('list', { name: 'Icons' });
+    expect(within(grid).getByText('CheckIcon')).toBeInTheDocument();
+  });
+
+  it('renders no icon grid on other pages', () => {
+    mount('button');
+    expect(screen.queryByRole('list', { name: 'Icons' })).toBeNull();
   });
 });

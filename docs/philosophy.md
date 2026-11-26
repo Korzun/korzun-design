@@ -1,3 +1,8 @@
+---
+title: Design philosophy
+description: The design rules the code enforces, and why.
+category: Guide
+---
 # Design philosophy
 
 These are the rules the code already enforces, extracted from the source comments at extraction time. Nothing here is aspirational: each rule names the file whose comment states it and the code that carries it out.

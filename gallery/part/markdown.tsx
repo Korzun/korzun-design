@@ -58,6 +58,22 @@ const useStyle = createUseStyles((theme: Theme) => ({
       backgroundColor: theme.color.bg.cardHeader,
     },
     '& pre code': { padding: 0, backgroundColor: 'transparent' },
+    // Guides lean on tables (corners, tokens): ruled rows, left-aligned heads.
+    '& table': {
+      display: 'block',
+      maxWidth: '100%',
+      overflowX: 'auto',
+      margin: `0 0 ${theme.space.lg}`,
+      borderCollapse: 'collapse',
+      fontSize: theme.fontSize.md,
+    },
+    '& th, & td': {
+      padding: `${theme.space.sm} ${theme.space.lg} ${theme.space.sm} 0`,
+      borderBottom: `1px solid ${theme.color.border.default}`,
+      textAlign: 'left',
+      verticalAlign: 'top',
+    },
+    '& th': { fontWeight: theme.fontWeight.semibold, color: theme.color.text.secondary },
   },
   // Inline runs (a prop or example description) share the code and link look.
   text: {

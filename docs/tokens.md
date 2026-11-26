@@ -1,3 +1,8 @@
+---
+title: Tokens
+description: Every theme token key in detail, group by group.
+category: Guide
+---
 # Tokens
 
 Every token lives in `src/theme/theme.ts`. The `Theme` interface declares the groups; `lightTheme` and `darkTheme` are both built by `buildTheme(mode)` and share every key, differing only in values. Consumers read tokens with `useTheme()` or inside `createUseStyles((theme: Theme) => ...)`. The groups below follow the order of the `Theme` type; the key lists are taken from it.

@@ -6,6 +6,7 @@ import { barrelStatements, knownNames } from './barrels.mjs';
 import { CATEGORIES } from './categories.mjs';
 import { parseChangelog, validateTags } from './changelog.mjs';
 import { readDefaults } from './defaults.mjs';
+import { docFiles } from './doc-files.mjs';
 import { readExample } from './examples.mjs';
 import { parseFrontMatter } from './front-matter.mjs';
 import { listModules } from './inventory.mjs';
@@ -102,20 +103,6 @@ function readExamples(repo, mod) {
     .filter((f) => f.endsWith('.tsx'))
     .map((f) => readExample(`${mod.srcDir}/examples/${f}`, readFileSync(join(dir, f), 'utf8')))
     .sort((a, b) => a.order - b.order);
-}
-
-function docFiles(repo) {
-  const out = [];
-  const walk = (rel) => {
-    for (const d of readdirSync(join(repo, rel), { withFileTypes: true })) {
-      if (d.isDirectory()) {
-        if (rel === 'docs' && d.name === 'superpowers') continue;
-        walk(`${rel}/${d.name}`);
-      } else if (d.name.endsWith('.md')) out.push(`${rel}/${d.name}`);
-    }
-  };
-  if (existsSync(join(repo, 'docs'))) walk('docs');
-  return out.sort();
 }
 
 /**

@@ -1,4 +1,3 @@
-import { Page } from '@korzun/design/component';
 import { createUseStyles, ThemeProvider, type Theme } from '@korzun/design/theme';
 import { ToastProvider } from '@korzun/design/toast';
 import { useState, type ReactElement } from 'react';
@@ -7,9 +6,10 @@ import { HashRouter, Outlet, Route, Routes, useLocation } from 'react-router';
 import { Frame, FrameNavigatedAway } from './frame.js';
 import { Header } from './layout/header.js';
 import { NotFound } from './not-found.js';
+import { ChangelogPage } from './page/changelog.js';
 import { ComponentPage } from './page/component.js';
+import { GuidePage } from './page/guide.js';
 import { OverviewPage } from './page/overview.js';
-import { ChangelogPage, GuidePage } from './page/pending.js';
 import { TokensPage } from './page/tokens.js';
 
 const useStyle = createUseStyles((theme: Theme) => ({
@@ -41,13 +41,6 @@ const Shell = (): ReactElement => (
   </ThemeProvider>
 );
 
-// The tokens page predates the site and has no Page of its own.
-const Tokens = (): ReactElement => (
-  <Page documentTitle="Tokens · @korzun/design">
-    <TokensPage />
-  </Page>
-);
-
 export const GalleryRoutes = (): ReactElement => {
   const { pathname } = useLocation();
   // A window opened on an example frame (a thumbnail, a demo, a screenshot
@@ -68,7 +61,7 @@ export const GalleryRoutes = (): ReactElement => {
         <Route index element={<OverviewPage />} />
         <Route path="/components/:slug" element={<ComponentPage />} />
         <Route path="/guides/:slug" element={<GuidePage />} />
-        <Route path="/tokens" element={<Tokens />} />
+        <Route path="/tokens" element={<TokensPage />} />
         <Route path="/changelog" element={<ChangelogPage />} />
         <Route path="*" element={<NotFound />} />
       </Route>
