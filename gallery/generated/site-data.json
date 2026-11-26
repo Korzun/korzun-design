@@ -2767,7 +2767,7 @@
           "rows": [
             {
               "name": "Icon",
-              "type": "(props: IconProps) => React.JSX.Element",
+              "type": "(props: IconProps) => JSX.Element",
               "required": false,
               "description": "Icon component (`Icon: SearchIcon`), not an element. Drawn above the label, which then becomes a small caption under it."
             },
@@ -3497,7 +3497,7 @@
             },
             {
               "name": "autoComplete",
-              "type": "React.HTMLInputAutoCompleteAttribute | undefined",
+              "type": "HTMLInputAutoCompleteAttribute | undefined",
               "required": false,
               "description": "Passed through to the input."
             },
@@ -3535,7 +3535,7 @@
             },
             {
               "name": "onKeyDown",
-              "type": "(event: React.KeyboardEvent<HTMLInputElement>) => void",
+              "type": "(event: KeyboardEvent<HTMLInputElement>) => void",
               "required": false,
               "description": "Passed through; unlike `onChange`, this one receives the event."
             },
@@ -3593,7 +3593,7 @@
             },
             {
               "name": "icon",
-              "type": "React.ComponentType<IconProps>",
+              "type": "ComponentType<IconProps>",
               "required": true,
               "description": "Icon component, not an element."
             }

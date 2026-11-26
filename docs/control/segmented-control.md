@@ -258,7 +258,7 @@ One segment of a `SegmentedControl`.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `Icon` | `(props: IconProps) => React.JSX.Element` |  | Icon component (`Icon: SearchIcon`), not an element. Drawn above the label, which then becomes a small caption under it. |
+| `Icon` | `(props: IconProps) => JSX.Element` |  | Icon component (`Icon: SearchIcon`), not an element. Drawn above the label, which then becomes a small caption under it. |
 | `label` (required) | `string` |  | The segment's accessible name, and its visible text unless `showLabels` is off. |
 | `value` (required) | `V` |  | The value passed to `onChange` when this segment is picked. |
 

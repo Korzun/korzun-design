@@ -226,7 +226,7 @@ test('external intersection part is skipped, own rows kept', () => {
     t.rows.map((r) => r.name),
     ['a']
   );
-  assert.deepEqual(t.extends, ['React.HTMLAttributes']);
+  assert.deepEqual(t.extends, ['HTMLAttributes']);
 });
 
 test('export * barrels are searched when resolving a name', () => {
@@ -565,4 +565,32 @@ test('a @default that is not an expression is marked as prose', () => {
   assert.equal(row(t, 'validate').defaultProse, true);
   assert.equal(row(t, 'size').defaultProse, undefined);
   assert.equal(row(t, 'check').defaultProse, undefined);
+});
+
+test('type text drops a leading React. namespace', () => {
+  const t = table(
+    `export type XProps = {
+  icon: React.ComponentType<IconProps>;
+  Icon?: (props: IconProps) => React.JSX.Element;
+  onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
+  ReactThing?: MyReact.Node;
+};
+export type Shape = React.ReactNode | string;`,
+    'XProps'
+  );
+  assert.equal(row(t, 'icon').type, 'ComponentType<IconProps>');
+  assert.equal(row(t, 'Icon').type, '(props: IconProps) => JSX.Element');
+  assert.equal(row(t, 'onKeyDown').type, '(event: KeyboardEvent<HTMLInputElement>) => void');
+  assert.equal(row(t, 'ReactThing').type, 'MyReact.Node');
+  const shape = extractTypeTables(
+    '/x/a.d.ts',
+    ['Shape'],
+    files({ '/x/a.d.ts': `export type Shape = React.ReactNode | Array<string>;` })
+  )[0];
+  assert.equal(shape.text, 'ReactNode | Array<string>');
+  const ext = table(
+    `export interface XProps extends React.HTMLAttributes<HTMLDivElement> { a?: string }`,
+    'XProps'
+  );
+  assert.deepEqual(ext.extends, ['HTMLAttributes']);
 });

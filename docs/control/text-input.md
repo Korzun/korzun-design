@@ -297,13 +297,13 @@ export default function FormInCard() {
 | --- | --- | --- | --- |
 | `action` | [TextInputAction](#textinputaction) |  | Broken, do not use: the icon button is drawn but its `action` callback is never wired up. |
 | `autoCapitalize` | `'none' \| 'sentences' \| 'words' \| 'characters'` |  | Passed through to the input. |
-| `autoComplete` | `React.HTMLInputAutoCompleteAttribute \| undefined` |  | Passed through to the input. |
+| `autoComplete` | `HTMLInputAutoCompleteAttribute \| undefined` |  | Passed through to the input. |
 | `label` | `string` |  | Visible label. Not linked to the input (no `htmlFor`). |
 | `layout` | `'horizontal' \| 'vertical' \| 'inline'` | `'horizontal'` | `horizontal` and `vertical` paint a shaded card-header row with `md` corners; `inline` paints nothing. |
 | `maxLength` | `number` |  | Native limit, plus an `n/max` counter once within `max(10% of max, 10)` characters; the counter turns red at the limit. |
 | `name` (required) | `string` |  | The input's `name` (form data) and the key passed to `onValidChange`. |
 | `onChange` | `(newValue: string \| undefined) => void` | `() => {}` | Receives the string, or `undefined` when emptied; not an event. Not called while `validate` fails. |
-| `onKeyDown` | `(event: React.KeyboardEvent<HTMLInputElement>) => void` |  | Passed through; unlike `onChange`, this one receives the event. |
+| `onKeyDown` | `(event: KeyboardEvent<HTMLInputElement>) => void` |  | Passed through; unlike `onChange`, this one receives the event. |
 | `onValidChange` | `(fieldName: string, newValid: boolean) => void` | `() => {}` | Called with `name` and the new validity; fires only when validity flips. |
 | `password` | `boolean` | `false` | Renders `type="password"`. |
 | `placeholder` | `string` |  | Placeholder text for the input. |
@@ -318,7 +318,7 @@ Trailing icon button of a `TextInput`. Broken: `action` is never called.
 | --- | --- | --- | --- |
 | `action` (required) | `() => void` |  | Never wired up: clicking the icon does nothing. |
 | `danger` | `boolean` |  | Red icon. |
-| `icon` (required) | `React.ComponentType<IconProps>` |  | Icon component, not an element. |
+| `icon` (required) | `ComponentType<IconProps>` |  | Icon component, not an element. |
 
 <!-- /generated:props -->
 

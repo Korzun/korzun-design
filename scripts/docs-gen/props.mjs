@@ -154,6 +154,10 @@ function isExpression(text) {
 
 const squash = (s) => s.replace(/\s+/g, ' ').trim();
 
+// Type text without the `React.` namespace (`React.ComponentType` reads
+// `ComponentType`), so a type prints the same however its source spelled it.
+const unReact = (s) => s.replace(/(?<![\w$.])React\./g, '');
+
 // Most keys a `keyof` type may have and still print as its literal union.
 const MAX_KEYS = 20;
 
@@ -195,7 +199,7 @@ function createFlattener(loader, exported = new Map()) {
       text += file.src.slice(cursor, tn.start) + name;
       cursor = tn.end;
     }
-    return squash(text + file.src.slice(cursor, node.end));
+    return unReact(squash(text + file.src.slice(cursor, node.end)));
   }
 
   // The members of an object-shaped type node, with the file they are written in, or null.
@@ -413,9 +417,9 @@ function createFlattener(loader, exported = new Map()) {
       if (wrapper && args.length) return skipName(args[0], file);
       // A Record says nothing without its key and value types.
       if (tn.type === 'Identifier' && tn.name === 'Record') return renamedText(node, file);
-      return squash(file.src.slice(tn.start, tn.end));
+      return unReact(squash(file.src.slice(tn.start, tn.end)));
     }
-    return squash(file.src.slice(node.start, node.end));
+    return unReact(squash(file.src.slice(node.start, node.end)));
   }
 
   let skipped = [];
@@ -493,7 +497,7 @@ function createFlattener(loader, exported = new Map()) {
   const aliasText = (node, file) => {
     const parts = node.type === 'TSUnionType' ? node.types : [node];
     const resolves = parts.some((t) => keyofText(t, file));
-    return resolves ? inlineType(node, file, 0) : file.src.slice(node.start, node.end);
+    return resolves ? inlineType(node, file, 0) : unReact(file.src.slice(node.start, node.end));
   };
   return { flatten, aliasText };
 }
