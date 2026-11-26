@@ -217,8 +217,11 @@ CLAUDE.md's stories rule is obsolete.
    `<example-slug>` is the example file name without `NN-` and `.tsx`. Steps run in order, one per reader action:
    - `--click "<role>:<name>"`: the element with that ARIA role and exact accessible name; a bare name means role `button`. A Select's trigger is `button:<its shown value or placeholder>`.
    - `--click "Open dialog" --click "Actions"`: a menu inside a dialog.
-   - `--type "<role>:<text>"`: types into the first element with that role (`--type "textbox:Fi"` after opening a searchable Select; `--type "combobox:Fan"`).
-   - `--press <key>`: `ArrowDown`, `Enter`, `Escape`.
+   - `--click "<role>:<name>#2"`: the second element with that role and name (1-based), when several share one.
+   - `--type "<role>:<text>"`: types into the first element with that role; it needs no accessible name (`--type "textbox:Fi"` after opening a searchable Select; `--type "combobox:Fan"`). `--type "textbox#2:…"` types into the second textbox. For a newline (a TextArea), pass the text with zsh/bash ANSI quoting: `--type $'textbox:One\nTwo'`.
+   - `--press <key>`: `ArrowDown`, `Enter`, `Escape`, `Backspace`. It presses on whatever has focus, so a key after `--type` lands in that field.
+   - A validity state that only typing reaches (invalid, too long) gets its own shot: the steps that reach it (`--type "textbox:abc"`, then `--press Backspace` if needed) are the held view.
+   - `--width <px>` (both scripts) sets the browser width: `--width 390` to see the page as a phone does.
    An example with several overlays gets one shot per overlay.
 
    Fill in this table; it goes in your report:

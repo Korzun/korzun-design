@@ -21,3 +21,5 @@ and do what the right column says.
 | "(the default) helps the reader." | The Default column says it; prose repeats drift. | Leave defaults out of JSDoc, titles and descriptions. |
 | "This JSDoc explains why the prop is named so." | Rationale and history are not behaviour. | Behaviour only, three sentences at most; link to a Usage section for more. |
 | "The example shows the prop; the doc's advice is about real apps." | Readers copy examples. | Never demonstrate a use the docs advise against. |
+| "The textbox has no name, so I can't shoot the invalid state." | `--type "textbox:…"` needs no name; it types into the first textbox (`textbox#2:…` for the second). | Type the invalid value and shoot it; `--press` keys land in the focused field. |
+| "The component is hidden at desktop width, so its frame is empty; that's the gallery." | `@viewport mobile` renders the example at phone width. | Add the tag to the example's doc comment and reshoot. |
