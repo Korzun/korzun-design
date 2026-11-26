@@ -24,6 +24,8 @@ while IFS= read -r doc; do
 done < <(find docs -name '*.md' -not -path 'docs/superpowers/*' | sort)
 if grep -q '^package/docs/superpowers/' <<<"$listing"; then echo "smoke: tarball contains docs/superpowers"; exit 1; fi
 if grep '/examples/' <<<"$listing"; then echo "smoke: tarball contains examples"; exit 1; fi
+if grep -q '^package/recipes/' <<<"$listing"; then echo "smoke: tarball contains recipes"; exit 1; fi
+grep -q '^package/docs/recipes/' <<<"$listing" || { echo "smoke: tarball is missing docs/recipes"; exit 1; }
 mkdir "$tmp/pkg"
 tar -xzf "${tarballs[0]}" -C "$tmp/pkg"
 node -e '

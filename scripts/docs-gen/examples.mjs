@@ -1,7 +1,7 @@
 /** @typedef {import('./types.js').ExampleInfo} ExampleInfo */
 
 /** `@viewport` values an example may ask for. */
-const VIEWPORTS = ['mobile', 'desktop'];
+const VIEWPORTS = ['mobile', 'screen', 'desktop'];
 
 /** The file name of a module's overview preview: its examples folder, no NN- prefix. */
 export const PREVIEW_FILE = 'preview.tsx';
@@ -9,7 +9,8 @@ export const PREVIEW_FILE = 'preview.tsx';
 /**
  * The first comment line is the title, the rest the description. A
  * `@viewport mobile` line renders the demo (and the overview thumbnail) at
- * phone width; it is left out of the description.
+ * phone width; `@viewport screen` marks a full-height screen (a recipe) whose
+ * demo frame has a fixed height. Either line is left out of the description.
  * @param {string} file
  * @param {string} source
  * @returns {ExampleInfo}
@@ -34,7 +35,7 @@ export function readExample(file, source) {
     const tag = /^\s*@viewport\s+(\S*)\s*$/.exec(line);
     if (!tag) return true;
     if (!VIEWPORTS.includes(tag[1])) {
-      throw new Error(`Example ${file}: @viewport must be "mobile" or "desktop", not "${tag[1]}"`);
+      throw new Error(`Example ${file}: @viewport must be "mobile", "screen" or "desktop", not "${tag[1]}"`);
     }
     viewport = tag[1];
     return false;

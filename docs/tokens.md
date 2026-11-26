@@ -39,7 +39,7 @@ Fixed component sizes that are not part of the spacing scale. One key: `metadata
 
 ## layout
 
-Intrinsic sizes of chrome that other elements must lay out around. They are measured, not derived, so they are tuned on a device and kept in one place. Keys: `navHeightMobile` (the floating mobile nav, `96px`), `modalWidth` (the one width for every dialog, `500px`), `controlHeight` (the shared single-line control height, `2.0625rem`), and `floatingControlTopBase`, a position rather than a size: the `top` at which the mobile back button and actions menu pin, `max(space.xxxl, env(safe-area-inset-top) + space.xxxxl)`.
+Intrinsic sizes of chrome that other elements must lay out around. They are measured, not derived, so they are tuned on a device and kept in one place. Keys: `navHeightMobile` (the floating mobile nav, `96px`), `modalWidth` (the one width for every dialog, `500px`), `formWidth` (a standalone form column such as sign-in, `400px`), `controlHeight` (the shared single-line control height, `2.0625rem`), and `floatingControlTopBase`, a position rather than a size: the `top` at which the mobile back button and actions menu pin, `max(space.xxxl, env(safe-area-inset-top) + space.xxxxl)`.
 
 ## fontSize
 

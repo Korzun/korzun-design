@@ -11,6 +11,7 @@ import { ChangelogPage } from './page/changelog.js';
 import { ComponentPage } from './page/component.js';
 import { GuidePage } from './page/guide.js';
 import { OverviewPage } from './page/overview.js';
+import { RecipePage, RecipesPage } from './page/recipes.js';
 import { TokensPage } from './page/tokens.js';
 
 const useStyle = createUseStyles((theme: Theme) => ({
@@ -53,16 +54,20 @@ export const GalleryRoutes = (): ReactElement => {
     return (
       <Routes>
         <Route path="/frame/:module/:example" element={<Frame />} />
+        <Route path="/frame/recipe/:recipe/:example" element={<Frame />} />
         <Route path="*" element={<FrameNavigatedAway home={frameHome} />} />
       </Routes>
     );
   return (
     <Routes>
       <Route path="/frame/:module/:example" element={<Frame />} />
+      <Route path="/frame/recipe/:recipe/:example" element={<Frame />} />
       <Route element={<Shell />}>
         <Route index element={<OverviewPage />} />
         <Route path="/components/:slug" element={<ComponentPage />} />
         <Route path="/guides/:slug" element={<GuidePage />} />
+        <Route path="/recipes" element={<RecipesPage />} />
+        <Route path="/recipes/:slug" element={<RecipePage />} />
         <Route path="/tokens" element={<TokensPage />} />
         <Route path="/changelog" element={<ChangelogPage />} />
         <Route path="*" element={<NotFound />} />

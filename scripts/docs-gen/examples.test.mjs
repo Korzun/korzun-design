@@ -48,8 +48,14 @@ const a = 1;
 
 test('an unknown @viewport value throws', () => {
   assert.throws(() => readExample('01-a.tsx', `/** T\n * @viewport tablet\n */\nx`), {
-    message: 'Example 01-a.tsx: @viewport must be "mobile" or "desktop", not "tablet"',
+    message: 'Example 01-a.tsx: @viewport must be "mobile", "screen" or "desktop", not "tablet"',
   });
+});
+
+test('@viewport screen marks a full-height screen example', () => {
+  const ex = readExample('recipes/login/01-sign-in.tsx', `/** Sign in\n * @viewport screen\n */\nx`);
+  assert.equal(ex.viewport, 'screen');
+  assert.equal(ex.description, '');
 });
 
 test('preview.tsx reads as the module preview: slug "preview", order 0', () => {

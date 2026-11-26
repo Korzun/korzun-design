@@ -41,8 +41,12 @@ export type ExampleInfo = {
   title: string;
   description: string;
   code: string;
-  /** `mobile`: the demo and its overview thumbnail render at phone width (`@viewport mobile`). `desktop`: the overview thumbnail lays out at a desktop width and is scaled to fit, for a module hidden on phones. */
-  viewport?: 'mobile' | 'desktop';
+  /**
+   * `mobile`: the demo and its overview thumbnail render at phone width (`@viewport mobile`).
+   * `screen`: a full-height screen; the demo frame has a fixed height instead of sizing to fit (`@viewport screen`).
+   * `desktop`: the overview thumbnail lays out at a desktop width and is scaled to fit, for a module hidden on phones (`@viewport desktop`).
+   */
+  viewport?: 'mobile' | 'screen' | 'desktop';
 };
 
 export type ModuleInfo = {
@@ -73,10 +77,22 @@ export type Guide = {
   body: string;
 };
 
+export type Recipe = {
+  /** Basename of `docs/recipes/<slug>.md`, and of its examples folder `recipes/<slug>/`. */
+  slug: string;
+  docPath: string;
+  title: string;
+  description: string;
+  /** The doc's prose, with the H1 and the generated examples region stripped. */
+  body: string;
+  examples: ExampleInfo[];
+};
+
 export type SiteData = {
   version: string;
   modules: ModuleInfo[];
   guides: Guide[];
+  recipes: Recipe[];
   changelog: { version: string; date: string; entries: ChangelogEntry[] }[];
   /** Type name -> slug of the module page that owns its table (the declaring module when several document it). */
   typePages: Record<string, string>;

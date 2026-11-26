@@ -173,6 +173,9 @@ export interface Theme {
   layout: {
     navHeightMobile: string;
     modalWidth: string;
+    // The width of a standalone form column (sign-in, password reset) on the
+    // page background; narrower than a dialog.
+    formWidth: string;
     controlHeight: string;
     floatingControlTopBase: string;
   };
@@ -512,6 +515,7 @@ function buildTheme(mode: ThemeMode): Theme {
   const layout: Theme['layout'] = {
     navHeightMobile: '96px',
     modalWidth: '500px',
+    formWidth: '400px',
     controlHeight: '2.0625rem',
     floatingControlTopBase,
   };
