@@ -110,8 +110,8 @@ export default function Layouts() {
 ### Radius
 
 `inset` is the track corner for a switch in a shaded row: concentric with the
-row's own corner. `pill` is the capsule for a switch on an unshaded surface,
-with no nearby corner to echo.
+row's own corner. `pill` is the capsule for a switch with no nearby corner to
+echo.
 
 ```tsx
 import { Stack, Text } from '@korzun/design/component';
@@ -132,7 +132,7 @@ export default function Radius() {
         checked={inset}
         onChange={setInset}
       />
-      <Text tone="muted">radius pill, on an unshaded surface</Text>
+      <Text tone="muted">radius pill, no corner nearby</Text>
       <Switch name="pill" label="Pill track" radius="pill" checked={pill} onChange={setPill} />
     </Stack>
   );
@@ -242,7 +242,7 @@ export default function LoadingAndDisabled() {
 | `description` | `ReactNode` |  | Helper text under the label, linked by `aria-describedby`. |
 | `disabled` | `boolean` | `false` | Fades the switch to 40% and removes it from the tab order. |
 | `label` | `string` |  | Visible label and accessible name (`ariaLabel` wins over it). |
-| `layout` | `'default' \| 'horizontal'` | `'default'` | `'default'`: track then label, inline. `'horizontal'`: a full-width shaded row with label and description on the left and the track on the right; the whole row toggles, description included. |
+| `layout` | `'default' \| 'horizontal'` | `'default'` | `'default'`: track then label, inline. `'horizontal'`: a full-width shaded row (`bg.cardHeader`, `radius.md`) with label and description on the left and the track on the right; the whole row toggles, description included. |
 | `loading` | `boolean` | `false` | A save driven by this switch is in flight. Clicks are ignored at once and `aria-busy` is set; the thumb becomes a spinner only after 150ms, so fast saves do not flash. The switch keeps its colour and shows the position it is saving. |
 | `name` (required) | `string` |  | Not a form field (no hidden input); only the last-resort accessible name. |
 | `onChange` (required) | `(checked: boolean) => void` |  | Receives the new value, not an event. Not called while `disabled` or `loading`. |

@@ -1,7 +1,7 @@
 /** Radius
  * `inset` is the track corner for a switch in a shaded row: concentric with the
- * row's own corner. `pill` is the capsule for a switch on an unshaded surface,
- * with no nearby corner to echo.
+ * row's own corner. `pill` is the capsule for a switch with no nearby corner to
+ * echo.
  */
 import { Stack, Text } from '@korzun/design/component';
 import { Switch } from '@korzun/design/control';
@@ -21,7 +21,7 @@ export default function Radius() {
         checked={inset}
         onChange={setInset}
       />
-      <Text tone="muted">radius pill, on an unshaded surface</Text>
+      <Text tone="muted">radius pill, no corner nearby</Text>
       <Switch name="pill" label="Pill track" radius="pill" checked={pill} onChange={setPill} />
     </Stack>
   );

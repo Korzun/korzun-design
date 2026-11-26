@@ -58,8 +58,8 @@ export type SwitchProps = {
   label?: string;
   /**
    * `'default'`: track then label, inline. `'horizontal'`: a full-width shaded
-   * row with label and description on the left and the track on the right; the
-   * whole row toggles, description included.
+   * row (`bg.cardHeader`, `radius.md`) with label and description on the left and
+   * the track on the right; the whole row toggles, description included.
    */
   layout?: 'default' | 'horizontal';
   /**
