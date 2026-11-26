@@ -11,6 +11,20 @@ const viewportGap = (dialog: HTMLElement, view: Window) => {
   return m ? Number(m[1]) : 0;
 };
 
+// Overlays outside the flow: body children that do not hold the wrapper (a
+// portalled popover), and fixed children of an open dialog (a popover in it).
+const overlays = (wrapper: HTMLElement): Element[] => {
+  const doc = wrapper.ownerDocument;
+  const view = doc.defaultView ?? window;
+  const found = [...doc.body.children].filter((child) => !child.contains(wrapper));
+  for (const dialog of doc.querySelectorAll<HTMLElement>('dialog[open]')) {
+    for (const child of dialog.children) {
+      if (view.getComputedStyle(child).position === 'fixed') found.push(child);
+    }
+  }
+  return found;
+};
+
 /**
  * The height an example frame needs so nothing it shows is clipped: its flow
  * wrapper, plus whatever is open outside the flow. A popover portalled to the
@@ -28,20 +42,47 @@ export const contentHeight = (wrapper: HTMLElement): number => {
   const pad = parseFloat(view.getComputedStyle(wrapper).paddingBottom) || 0;
   const bottom = (el: Element) => el.getBoundingClientRect().bottom + view.scrollY + pad;
   let height = wrapper.getBoundingClientRect().height;
-  for (const child of doc.body.children) {
-    if (!child.contains(wrapper)) height = Math.max(height, bottom(child));
-  }
+  for (const el of overlays(wrapper)) height = Math.max(height, bottom(el));
   for (const dialog of doc.querySelectorAll<HTMLElement>('dialog[open]')) {
     const full = dialogHeight(dialog);
     const top = dialog.getBoundingClientRect().top + view.scrollY;
     const below = Math.max(pad, parseFloat(view.getComputedStyle(dialog).marginBottom) || 0);
     const gap = Math.max(2 * pad, viewportGap(dialog, view));
     height = Math.max(height, top + full + below, full + gap);
-    for (const child of dialog.children) {
-      if (view.getComputedStyle(child).position === 'fixed') {
-        height = Math.max(height, bottom(child));
-      }
-    }
   }
   return Math.ceil(height);
+};
+
+/**
+ * The highest top edge (document coordinates) of any overlay open outside the
+ * flow, or null when none is. Negative when an overlay sticks out above the
+ * frame: a list that flipped upward, or a `side="top"` menu near the top.
+ */
+export const overlayTop = (wrapper: HTMLElement): number | null => {
+  const view = wrapper.ownerDocument.defaultView ?? window;
+  const tops = overlays(wrapper).map((el) => el.getBoundingClientRect().top + view.scrollY);
+  return tops.length ? Math.min(...tops) : null;
+};
+
+/**
+ * Extra top padding the flow wrapper gets while an overlay is open, so one
+ * that opens above its trigger fits in the frame. `staleTop` is the overlay
+ * top measured when the room last grew: the popover re-measures only after
+ * the frame moves its anchor, so until its top changes the room stays as is.
+ */
+export type Headroom = { value: number; staleTop: number | null };
+
+/**
+ * The next headroom for an overlay top (from `overlayTop`) and the wrapper's
+ * padding `pad`. Zero with nothing open, so a closed frame keeps its height.
+ * While open it only grows, by what the overlay still sticks out above `pad`,
+ * which converges whether the overlay moves with its anchor (a popover) or by
+ * half as much (one in a centred dialog), and never oscillates.
+ */
+export const nextHeadroom = (prev: Headroom, top: number | null, pad: number): Headroom => {
+  if (top === null) return { value: 0, staleTop: null };
+  if (top === prev.staleTop) return prev;
+  if (top >= pad - 0.5)
+    return prev.staleTop === null ? prev : { value: prev.value, staleTop: null };
+  return { value: Math.ceil(prev.value + pad - top), staleTop: top };
 };

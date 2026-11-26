@@ -1,4 +1,4 @@
-import { contentHeight } from './frame-height.js';
+import { contentHeight, nextHeadroom, overlayTop } from './frame-height.js';
 
 const rect = (top: number, height: number) =>
   ({ top, bottom: top + height, height, left: 0, right: 0, width: 0, x: 0, y: top }) as DOMRect;
@@ -84,5 +84,70 @@ describe('contentHeight with a top-anchored modal dialog', () => {
     dialog.style.marginBottom = '50px';
     wrapper.append(dialog);
     expect(contentHeight(wrapper)).toBe(100 + 162 + 50);
+  });
+});
+
+describe('overlayTop', () => {
+  let wrapper: HTMLDivElement;
+  beforeEach(() => {
+    document.body.innerHTML = '<div id="root"><div id="flow"></div></div>';
+    wrapper = place(document.getElementById('flow') as HTMLDivElement, 0, 100);
+  });
+
+  it('is null when nothing is open', () => {
+    expect(overlayTop(wrapper)).toBeNull();
+  });
+
+  it('is the highest top of the overlays, above the wrapper too', () => {
+    document.body.append(place(document.createElement('div'), 40, 100));
+    document.body.append(place(document.createElement('div'), -60, 100));
+    expect(overlayTop(wrapper)).toBe(-60);
+  });
+
+  it('counts a fixed popover inside an open dialog, not the dialog itself', () => {
+    const dialog = place(document.createElement('dialog'), 0, 50);
+    dialog.setAttribute('open', '');
+    const popover = place(document.createElement('div'), -30, 100);
+    popover.style.position = 'fixed';
+    dialog.append(popover);
+    wrapper.append(dialog);
+    expect(overlayTop(wrapper)).toBe(-30);
+  });
+});
+
+describe('nextHeadroom', () => {
+  const none = { value: 0, staleTop: null };
+
+  it('is zero while nothing is open, whatever it was', () => {
+    expect(nextHeadroom(none, null, 24)).toEqual(none);
+    expect(nextHeadroom({ value: 90, staleTop: null }, null, 24)).toEqual(none);
+  });
+
+  it('stays zero for an overlay that starts below the top padding', () => {
+    expect(nextHeadroom(none, 24, 24)).toEqual(none);
+    expect(nextHeadroom(none, 300, 24)).toEqual(none);
+  });
+
+  it('grows by what the overlay sticks out above the padding', () => {
+    expect(nextHeadroom(none, -60, 24)).toEqual({ value: 84, staleTop: -60 });
+  });
+
+  it('waits while the overlay has not moved since the last growth', () => {
+    const grown = { value: 84, staleTop: -60 };
+    expect(nextHeadroom(grown, -60, 24)).toBe(grown);
+  });
+
+  it('keeps its value once the overlay has moved into the room', () => {
+    expect(nextHeadroom({ value: 84, staleTop: -60 }, 24, 24)).toEqual({
+      value: 84,
+      staleTop: null,
+    });
+  });
+
+  it('grows again for an overlay that moved only part of the way (a centred dialog)', () => {
+    expect(nextHeadroom({ value: 84, staleTop: -60 }, -18, 24)).toEqual({
+      value: 126,
+      staleTop: -18,
+    });
   });
 });

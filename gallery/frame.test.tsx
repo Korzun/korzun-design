@@ -78,6 +78,36 @@ describe('Frame', () => {
     post.mockRestore();
   });
 
+  it('adds top room while an overlay sticks out above the frame, and removes it on close', async () => {
+    const post = vi.spyOn(window, 'postMessage');
+    const heights = () =>
+      post.mock.calls
+        .map((call) => call[0] as { type?: string; height?: number })
+        .filter((m) => m.type === 'gallery:height')
+        .map((m) => m.height);
+    mount('/frame/button/basic');
+    const [base] = heights();
+    const padded = () =>
+      [...document.body.querySelectorAll<HTMLElement>('div')].filter((el) => el.style.paddingTop);
+    expect(padded()).toEqual([]);
+    const resized = vi.fn();
+    window.addEventListener('resize', resized);
+    // A list flipped upward, 60px above the frame's top edge.
+    const portal = document.createElement('div');
+    portal.getBoundingClientRect = () => ({ top: -60, bottom: 40 }) as DOMRect;
+    await act(async () => document.body.append(portal));
+    const [flow] = padded();
+    expect(flow).toContainElement(screen.getByRole('button', { name: 'Save' }));
+    expect(parseFloat(flow.style.paddingTop)).toBeGreaterThanOrEqual(60);
+    // The popover re-measures against the moved anchor.
+    expect(resized).toHaveBeenCalled();
+    await act(async () => portal.remove());
+    expect(padded()).toEqual([]);
+    expect(heights().at(-1)).toBe(base);
+    window.removeEventListener('resize', resized);
+    post.mockRestore();
+  });
+
   it('centres the example only when the URL asks for fit=center', () => {
     const { unmount } = mount('/frame/button/basic?fit=center');
     expect(

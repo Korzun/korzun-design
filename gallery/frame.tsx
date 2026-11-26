@@ -5,7 +5,7 @@ import { Link, useLocation, useParams, useSearchParams } from 'react-router';
 
 import { useThemeSetting } from '../src/theme/use-theme-setting.js';
 import { exampleFor, moduleBySlug } from './data.js';
-import { contentHeight } from './frame-height.js';
+import { contentHeight, nextHeadroom, overlayTop, type Headroom } from './frame-height.js';
 import { isThemeMessage, isThemeValue, postToWindow, type ThemeValue } from './messages.js';
 
 const ThemeSync = ({ theme }: { theme: ThemeValue }) => {
@@ -44,14 +44,25 @@ const Centered = ({ children }: { children: ReactNode }) => (
 // changes, so the page sizes the iframe to fit with no inner scrollbar. The
 // body is at least the viewport tall, so the wrapper is what gets measured,
 // plus any open menu, popover or dialog (see contentHeight), which would
-// otherwise be clipped at the frame's edge.
+// otherwise be clipped at the frame's edge. An overlay that opens above its
+// trigger (a list flipped upward, a `side="top"` menu) gets top padding while
+// it is open (see nextHeadroom), and the popover is told to re-measure.
 const Flow = ({ children }: { children: ReactNode }) => {
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
     let last = -1;
+    let headroom: Headroom = { value: 0, staleTop: null };
     const post = () => {
+      const pad = parseFloat(getComputedStyle(el).paddingBottom) || 0;
+      headroom = nextHeadroom(headroom, overlayTop(el), pad);
+      const paddingTop = headroom.value ? `${pad + headroom.value}px` : '';
+      if (el.style.paddingTop !== paddingTop) {
+        el.style.paddingTop = paddingTop;
+        // Popovers re-measure on resize; this one moved its anchor.
+        window.dispatchEvent(new Event('resize'));
+      }
       const height = contentHeight(el);
       if (height === last) return;
       last = height;
