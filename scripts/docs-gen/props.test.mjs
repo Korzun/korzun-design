@@ -554,6 +554,46 @@ export type ActionOrName = Action | string;`;
   assert.equal(alias.text, 'TextInputAction | string');
 });
 
+test('type cells drop comments written inside the type', () => {
+  const t = table(
+    `export interface XProps {
+  /** Fragments. */
+  recipe: {
+    input: string;
+    /** The shaded row. */
+    row: string;
+    // a line note
+    glass: string;
+  };
+}`,
+    'XProps'
+  );
+  assert.equal(row(t, 'recipe').type, '{ input: string; row: string; glass: string; }');
+});
+
+test('a member typed as a nested object literal prints nested literals as { … }', () => {
+  const t = table(
+    `export interface Theme {
+  zIndex: { base: number; stack: { lo: number; hi: number }; toast: number };
+}`,
+    'Theme'
+  );
+  assert.equal(row(t, 'zIndex').type, '{ base: number; stack: { … }; toast: number; }');
+});
+
+test('a long object literal member prints its keys only', () => {
+  const keys = Array.from({ length: 12 }, (_, i) => `key${i}`);
+  const t = table(
+    `export interface Theme {
+  space: { ${keys.map((k) => `${k}: SpaceValue;`).join(' ')} };
+  radius: { sm: string; md: string };
+}`,
+    'Theme'
+  );
+  assert.equal(row(t, 'space').type, `{ ${keys.join(', ')} }`);
+  assert.equal(row(t, 'radius').type, '{ sm: string; md: string }');
+});
+
 test('Record keeps its type arguments in Also accepts', () => {
   const t = table(
     `export type FieldRow = { _key: string } & Record<string, string | number | undefined>;`,

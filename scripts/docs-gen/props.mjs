@@ -162,6 +162,9 @@ function isExpression(text) {
 
 const squash = (s) => s.replace(/\s+/g, ' ').trim();
 
+/** Type text without the `/** … *\/` and `//` comments a .d.ts keeps inside a type. */
+const stripComments = (s) => s.replace(/\/\*[\s\S]*?\*\//g, ' ').replace(/(^|\s)\/\/[^\n]*/g, '$1');
+
 // Type text without the `React.` namespace (`React.ComponentType` reads
 // `ComponentType`), so a type prints the same however its source spelled it.
 const unReact = (s) => s.replace(/(?<![\w$.])React\./g, '');
@@ -209,7 +212,32 @@ function createFlattener(loader, exported = new Map()) {
       cursor = tn.end;
     }
     const out = text + file.src.slice(cursor, node.end);
-    return unReact(layout ? out : squash(out));
+    return unReact(layout ? out : squash(stripComments(out)));
+  }
+
+  // Longest object literal a type cell prints in full; longer ones print their keys.
+  const MAX_LITERAL = 120;
+
+  /**
+   * A row's object-literal type, short: a nested literal prints as `{ … }`
+   * (`stack: { … }`), and one still over MAX_LITERAL characters prints its
+   * keys only (`{ xs, sm, md }`). A flat, short literal prints as written.
+   * Null when the literal has members other than plain properties.
+   */
+  function literalSummary(node, file) {
+    const props = node.members;
+    if (!props.every((m) => m.type === 'TSPropertySignature' && !m.computed)) return null;
+    const plain = renamedText(node, file);
+    const nested = props.some((m) => m.typeAnnotation?.typeAnnotation?.type === 'TSTypeLiteral');
+    if (!nested && plain.length <= MAX_LITERAL) return plain;
+    const key = (m) => (m.key.type === 'Identifier' ? m.key.name : String(m.key.value));
+    const members = props.map((m) => {
+      const ann = m.typeAnnotation?.typeAnnotation;
+      const type = !ann ? 'any' : ann.type === 'TSTypeLiteral' ? '{ … }' : inlineType(ann, file, 1);
+      return `${key(m)}${m.optional ? '?' : ''}: ${type};`;
+    });
+    const short = `{ ${members.join(' ')} }`;
+    return short.length <= MAX_LITERAL ? short : `{ ${props.map(key).join(', ')} }`;
   }
 
   // The members of an object-shaped type node, with the file they are written in, or null.
@@ -337,7 +365,10 @@ function createFlattener(loader, exported = new Map()) {
       const ann = m.typeAnnotation?.typeAnnotation;
       const row = {
         name,
-        type: ann ? inlineType(ann, file, 0) : 'any',
+        type: !ann
+          ? 'any'
+          : ((ann.type === 'TSTypeLiteral' ? literalSummary(ann, file) : null) ??
+            inlineType(ann, file, 0)),
         required: !m.optional,
         description: doc.description,
       };
