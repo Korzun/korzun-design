@@ -6802,6 +6802,353 @@
       "changelog": []
     },
     {
+      "id": "component/nav-desktop",
+      "slug": "nav-desktop",
+      "entry": "@korzun/design/component",
+      "docPath": "docs/component/nav-desktop.md",
+      "title": "NavDesktop",
+      "description": "The app's top navigation on wide screens: a centred row of icon and label links with the active one underlined.",
+      "category": "Navigation",
+      "values": [
+        "NavDesktop"
+      ],
+      "types": [
+        "NavDesktopProps",
+        "NavItem"
+      ],
+      "importLine": "import { NavDesktop, type NavDesktopProps, type NavItem } from '@korzun/design/component'",
+      "body": "The app's top navigation on wide screens: a centred row of icon + label links\non the page background, the active one underlined. Hidden below the mobile\nbreakpoint (`max-width: 640px`), so render it alongside `NavMobile` and let CSS\npick. Each item is a react-router `<Link>`, so it **must render inside a\nrouter**.\n\nUse something else for: mobile navigation (`NavMobile`), in-page tabs or a\nmode switch (`SegmentedControl`), page-level actions (`Page` `headerActions`).\n\n## Usage\n\n### Items\n\nEach item is a `NavItem`, shared with `NavMobile`; its fields are in the\ngenerated tables below. `active` is yours to compute from the route, in one\nplace, and both navs take the same items:\n\n```tsx\nconst { pathname } = useLocation();\nconst items: NavItem[] = [\n  { to: '/library', label: 'Library', Icon: BookIcon, active: pathname.startsWith('/library') },\n  { to: '/upload', label: 'Upload', Icon: UploadIcon, active: pathname === '/upload', badge: pendingFixes },\n];\n\n// In the layout route, above <Outlet />.\n<NavDesktop items={items} />\n<NavMobile main={{ items, collapsed: items[0] }} settings={…} expanded=\"main\" />\n<Outlet />\n```\n\n### Styling\n\nNo `className`.\n\n### Behaviour to know\n\n- It is **not** fixed or sticky; it is a normal `<header>` in flow at the top\n  of the document, so render it before your routes' content.\n- Badges are visual only: the count has no accessible label, and a dot has no\n  text at all. Put the meaning in `label` if it matters to screen readers.\n\n## Do / don't\n\n- Do render both `NavDesktop` and `NavMobile`; each hides itself at the other's\n  breakpoint.\n- Do derive `active` from the current route in one place and share the items.\n- Don't pass an element as `Icon` (`Icon: <HomeIcon />`); pass the component.\n- Don't render it outside a react-router `Router`.",
+      "examples": [
+        {
+          "file": "src/component/nav-desktop/examples/01-basic.tsx",
+          "slug": "basic",
+          "order": 1,
+          "title": "Basic",
+          "description": "Icon and label links in a centred row, the active one underlined. `active` is\nyours to compute from the route; here Library is the current page.",
+          "code": "import { NavDesktop, type NavItem } from '@korzun/design/component';\nimport { BookIcon, SettingsIcon, UploadIcon } from '@korzun/design/icon';\n\nconst items: NavItem[] = [\n  { to: '/library', label: 'Library', Icon: BookIcon, active: true },\n  { to: '/upload', label: 'Upload', Icon: UploadIcon, active: false },\n  { to: '/settings', label: 'Settings', Icon: SettingsIcon, active: false },\n];\n\nexport default function Basic() {\n  return <NavDesktop items={items} />;\n}\n"
+        },
+        {
+          "file": "src/component/nav-desktop/examples/02-badges.tsx",
+          "slug": "badges",
+          "order": 2,
+          "title": "Badges",
+          "description": "A positive `badge` number draws a red count on the icon's corner and `0` draws\nnothing, so a count can be passed as it is. `'dot'` draws a red dot.",
+          "code": "import { Inline, NavDesktop, Stack, type NavItem } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { BookIcon, SettingsIcon, UploadIcon } from '@korzun/design/icon';\nimport { useState } from 'react';\n\nexport default function Badges() {\n  const [pending, setPending] = useState(3);\n  const items: NavItem[] = [\n    { to: '/library', label: 'Library', Icon: BookIcon, active: true },\n    { to: '/upload', label: 'Upload', Icon: UploadIcon, active: false, badge: pending },\n    { to: '/settings', label: 'Settings', Icon: SettingsIcon, active: false, badge: 'dot' },\n  ];\n  return (\n    <Stack>\n      <NavDesktop items={items} />\n      <Inline>\n        <Button onClick={() => setPending((n) => n + 1)}>Add a fix</Button>\n        <Button onClick={() => setPending(0)}>Clear fixes</Button>\n      </Inline>\n    </Stack>\n  );\n}\n"
+        }
+      ],
+      "tables": [
+        {
+          "name": "NavDesktopProps",
+          "kind": "props",
+          "rows": [
+            {
+              "name": "items",
+              "type": "NavItem[]",
+              "required": true,
+              "description": "Destinations, rendered in order and keyed by `to`, so each `to` must be unique."
+            }
+          ]
+        },
+        {
+          "name": "NavItem",
+          "kind": "object",
+          "rows": [
+            {
+              "name": "active",
+              "type": "boolean",
+              "required": true,
+              "description": "You compute this, for example from `useLocation().pathname`: the nav does not match routes. Sets `aria-current=\"page\"` and marks the item as current."
+            },
+            {
+              "name": "badge",
+              "type": "number | 'dot'",
+              "required": false,
+              "description": "A positive number draws a red count on the icon's corner and `0` draws nothing. `'dot'` draws a red dot for \"active, nothing to decide yet\"."
+            },
+            {
+              "name": "Icon",
+              "type": "(props: IconProps) => ReactElement",
+              "required": true,
+              "description": "An icon component (`HomeIcon`), not an element. Drawn at 14×14 in a tab and 18×18 in a `NavMobile` circle."
+            },
+            {
+              "name": "label",
+              "type": "string",
+              "required": true,
+              "description": "Visible text."
+            },
+            {
+              "name": "to",
+              "type": "string",
+              "required": true,
+              "description": "Route path passed to react-router `<Link to>`. Must be unique within a list, as it is the key."
+            }
+          ],
+          "description": "A single navigation destination, shared by the desktop and mobile layouts."
+        }
+      ],
+      "tokens": [
+        {
+          "path": "breakpoint.mobile",
+          "kind": "value",
+          "light": "@media (max-width: 640px)",
+          "dark": "@media (max-width: 640px)"
+        },
+        {
+          "path": "color.bg.page",
+          "kind": "color",
+          "light": "#F6F6F9",
+          "dark": "#242527"
+        },
+        {
+          "path": "color.danger.default",
+          "kind": "color",
+          "light": "#FF4D4F",
+          "dark": "#FF4D4F"
+        },
+        {
+          "path": "color.text.primary",
+          "kind": "color",
+          "light": "#111",
+          "dark": "#F5F5F7"
+        },
+        {
+          "path": "radius.pill",
+          "kind": "value",
+          "light": "999px",
+          "dark": "999px"
+        },
+        {
+          "path": "space.md",
+          "kind": "value",
+          "light": "0.5rem",
+          "dark": "0.5rem"
+        },
+        {
+          "path": "space.xs",
+          "kind": "value",
+          "light": "0.25rem",
+          "dark": "0.25rem"
+        },
+        {
+          "path": "space.xxl",
+          "kind": "value",
+          "light": "1rem",
+          "dark": "1rem"
+        },
+        {
+          "path": "space.xxxxl",
+          "kind": "value",
+          "light": "1.5rem",
+          "dark": "1.5rem"
+        },
+        {
+          "path": "zIndex.header",
+          "kind": "value",
+          "light": "10",
+          "dark": "10"
+        }
+      ],
+      "changelog": []
+    },
+    {
+      "id": "component/nav-mobile",
+      "slug": "nav-mobile",
+      "entry": "@korzun/design/component",
+      "docPath": "docs/component/nav-mobile.md",
+      "title": "NavMobile",
+      "description": "The app's bottom navigation on phones: two frosted pills, one expanded into tabs and one a circle.",
+      "category": "Navigation",
+      "values": [
+        "NavMobile"
+      ],
+      "types": [
+        "NavMobileProps",
+        "NavPill"
+      ],
+      "importLine": "import { NavMobile, type NavMobileProps, type NavPill } from '@korzun/design/component'",
+      "body": "The app's bottom navigation on phones: a `position: fixed` bar floating above\nthe bottom edge, holding two frosted-glass pills. The **expanded** side is a\ncapsule of tabs with a glass lens sliding to the active one; the other side is\na circle that links to a single destination. Scrolling down fast minimizes the\nexpanded side to a circle too (iOS-tab-bar style); scrolling up, reaching the\ntop, tapping the circle, or a route change brings it back. Hidden at\n`min-width: 641px`, so render it alongside `NavDesktop`. Uses react-router\n`Link` and `useLocation`, so it **must render inside a router**.\n\nUse something else for: desktop navigation (`NavDesktop`), page actions\n(`Page` `headerActions` / `footerActions`).\n\n## Usage\n\n### Sides and items\n\nEach side is a `NavPill`: `items` are its tabs while it is the `expanded` side,\nand `collapsed` is the one destination its circle links to. A tab is a\n`NavItem`, documented with [NavDesktop](nav-desktop.md#navitem); tab icons are\ndrawn at 14px. Derive `expanded` and every `active` from the route in one place (`main` and `settingsItems` are `NavItem[]` lists as in [Expanded side](#expanded-side)):\n\n```tsx\nconst { pathname } = useLocation();\nconst inSettings = pathname === '/settings' || pathname === '/users';\n\n<NavMobile\n  main={{ items: main, collapsed: { to: '/library', label: 'Back to library', Icon: HomeIcon, active: false } }}\n  settings={{ items: settingsItems, collapsed: { to: '/settings', label: 'Settings', Icon: SettingsIcon, active: pathname === '/settings' } }}\n  expanded={inSettings ? 'settings' : 'main'}\n/>\n```\n\n### Styling\n\nNo `className`.\n\n### Behaviour to know\n\n- **The page must make room for it:** pass `bottomNav` to every `<Page>` that\n  shows this bar, or the last rows sit under it. Toasts already clear it on\n  mobile.\n- Tabs are equal-width columns sized to the widest label. Five short labels fit\n  at 320px; six do not (Bookplate measured \"Library\"/\"Settings\" clipping), so\n  move extra destinations into the other side.\n- The minimized circle is a `<button aria-label=\"Show navigation\">`, not a\n  link: tapping it only re-expands the bar. It shows the active tab's icon (or\n  `collapsed.Icon` when no tab is active) and the active tab's badge, else a\n  dot if any hidden sibling has a badge.\n- Minimizing only reacts to user-driven scroll (after a touch or wheel on this\n  route), so scroll restoration on navigation never minimizes it. Tuning\n  constants live in [hooks](../hooks.md) (`MINIMIZE_SPEED`, `EXPAND_AFTER`).\n- Hidden shapes are `inert` and `aria-hidden`; only what is on screen is in\n  the tab order.\n- A side with `items: []` is a circle for good (Bookplate does this for a\n  non-admin's settings side).\n\n## Do / don't\n\n- Do render it once, in the layout route, next to `NavDesktop`.\n- Do set `bottomNav` on each `Page` under that layout.\n- Do drive `expanded` from the URL so Back behaves.\n- Don't keep more than about five tabs on one side.\n- Don't also call `useMinimizeOnScroll` for the same bar; NavMobile owns it.",
+      "examples": [
+        {
+          "file": "src/component/nav-mobile/examples/01-basic.tsx",
+          "slug": "basic",
+          "order": 1,
+          "title": "Basic",
+          "description": "The bar floats above the bottom edge: the `main` side is a capsule of tabs with\na lens on the active one, and `settings` is a circle linking to its `collapsed`\ndestination.",
+          "code": "import { Card, NavMobile, Page, Text, type NavItem } from '@korzun/design/component';\nimport { BookIcon, HomeIcon, ListCheckIcon, SettingsIcon, UploadIcon } from '@korzun/design/icon';\n\nconst items: NavItem[] = [\n  { to: '/library', label: 'Library', Icon: BookIcon, active: true },\n  { to: '/upload', label: 'Upload', Icon: UploadIcon, active: false },\n  { to: '/request', label: 'Request', Icon: ListCheckIcon, active: false },\n];\nconst home: NavItem = { to: '/library', label: 'Back to library', Icon: HomeIcon, active: false };\nconst settings: NavItem = { to: '/settings', label: 'Settings', Icon: SettingsIcon, active: false };\n\nexport default function Basic() {\n  return (\n    <>\n      <Page bottomNav>\n        <Card title=\"Library\">\n          <Text>Your books are listed here.</Text>\n        </Card>\n      </Page>\n      <NavMobile\n        main={{ items, collapsed: home }}\n        settings={{ items: [], collapsed: settings }}\n        expanded=\"main\"\n      />\n    </>\n  );\n}\n",
+          "viewport": "mobile"
+        },
+        {
+          "file": "src/component/nav-mobile/examples/02-expanded-side.tsx",
+          "slug": "expanded-side",
+          "order": 2,
+          "title": "Expanded side",
+          "description": "`expanded` picks the side that is a capsule; the other side becomes a circle\nlinking to its `collapsed` destination. In an app you derive it from the route,\nhere the buttons stand in for it.",
+          "code": "import { Card, Inline, NavMobile, Page, Stack, Text, type NavItem } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport {\n  AdjustmentsHorizontalIcon,\n  BookIcon,\n  HomeIcon,\n  ListCheckIcon,\n  SettingsIcon,\n  UploadIcon,\n  UsersIcon,\n} from '@korzun/design/icon';\nimport { useState } from 'react';\n\nconst main: NavItem[] = [\n  { to: '/library', label: 'Library', Icon: BookIcon, active: true },\n  { to: '/upload', label: 'Upload', Icon: UploadIcon, active: false },\n  { to: '/request', label: 'Request', Icon: ListCheckIcon, active: false },\n];\nconst admin: NavItem[] = [\n  { to: '/general', label: 'General', Icon: AdjustmentsHorizontalIcon, active: true },\n  { to: '/users', label: 'Users', Icon: UsersIcon, active: false },\n];\n\nexport default function ExpandedSide() {\n  const [expanded, setExpanded] = useState<'main' | 'settings'>('main');\n  return (\n    <>\n      <Page bottomNav>\n        <Card title=\"Navigation\">\n          <Stack>\n            <Inline>\n              <Button onClick={() => setExpanded('main')}>Main</Button>\n              <Button onClick={() => setExpanded('settings')}>Settings</Button>\n            </Inline>\n            <Text tone=\"muted\">Expanded: {expanded}</Text>\n          </Stack>\n        </Card>\n      </Page>\n      <NavMobile\n        main={{\n          items: main,\n          collapsed: { to: '/library', label: 'Back to library', Icon: HomeIcon, active: false },\n        }}\n        settings={{\n          items: admin,\n          collapsed: { to: '/general', label: 'Settings', Icon: SettingsIcon, active: false },\n        }}\n        expanded={expanded}\n      />\n    </>\n  );\n}\n",
+          "viewport": "mobile"
+        },
+        {
+          "file": "src/component/nav-mobile/examples/03-badges.tsx",
+          "slug": "badges",
+          "order": 3,
+          "title": "Badges",
+          "description": "A tab's `badge` shows on its icon, and the `collapsed` item's `badge` shows\nonly while its side is a circle. An empty `items` makes a side a circle for\ngood.",
+          "code": "import { Card, Inline, NavMobile, Page, Stack, Text, type NavItem } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { BookIcon, HomeIcon, ListCheckIcon, SettingsIcon, UploadIcon } from '@korzun/design/icon';\nimport { useState } from 'react';\n\nexport default function Badges() {\n  const [pending, setPending] = useState(3);\n  const items: NavItem[] = [\n    { to: '/library', label: 'Library', Icon: BookIcon, active: true },\n    { to: '/upload', label: 'Upload', Icon: UploadIcon, active: false, badge: pending },\n    { to: '/request', label: 'Request', Icon: ListCheckIcon, active: false, badge: 'dot' },\n  ];\n  return (\n    <>\n      <Page bottomNav>\n        <Card title=\"Navigation\">\n          <Stack>\n            <Inline>\n              <Button onClick={() => setPending((n) => n + 1)}>Add a fix</Button>\n              <Button onClick={() => setPending(0)}>Clear fixes</Button>\n            </Inline>\n            <Text tone=\"muted\">Pending fixes: {pending}</Text>\n          </Stack>\n        </Card>\n      </Page>\n      <NavMobile\n        main={{\n          items,\n          collapsed: { to: '/library', label: 'Back to library', Icon: HomeIcon, active: false },\n        }}\n        settings={{\n          items: [],\n          collapsed: {\n            to: '/settings',\n            label: 'Settings',\n            Icon: SettingsIcon,\n            active: false,\n            badge: 'dot',\n          },\n        }}\n        expanded=\"main\"\n      />\n    </>\n  );\n}\n",
+          "viewport": "mobile"
+        }
+      ],
+      "tables": [
+        {
+          "name": "NavMobileProps",
+          "kind": "props",
+          "rows": [
+            {
+              "name": "expanded",
+              "type": "'main' | 'settings'",
+              "required": true,
+              "description": "Which side is the capsule; the other is a circle. Derive it from the route."
+            },
+            {
+              "name": "main",
+              "type": "NavPill",
+              "required": true,
+              "description": "The left-hand side: the app's main destinations."
+            },
+            {
+              "name": "settings",
+              "type": "NavPill",
+              "required": true,
+              "description": "The right-hand side: settings, or an account or admin group."
+            }
+          ]
+        },
+        {
+          "name": "NavPill",
+          "kind": "object",
+          "rows": [
+            {
+              "name": "collapsed",
+              "type": "NavItem",
+              "required": true,
+              "description": "The single destination the side collapses to. Its `label` is the circle's `aria-label` and its `Icon` is drawn at 18px; its `badge` shows only while collapsed and its `active` lights the circle."
+            },
+            {
+              "name": "items",
+              "type": "NavItem[]",
+              "required": true,
+              "description": "Destinations shown while this side is expanded. `[]` makes the side a circle for good."
+            }
+          ],
+          "description": "One side of the bar. Both its shapes, the capsule of `items` and the circle for `collapsed`, are always rendered, so the pill morphs between them instead of cross-fading."
+        }
+      ],
+      "tokens": [
+        {
+          "path": "breakpoint.normal",
+          "kind": "value",
+          "light": "@media (min-width: 641px)",
+          "dark": "@media (min-width: 641px)"
+        },
+        {
+          "path": "color.bg.page",
+          "kind": "color",
+          "light": "#F6F6F9",
+          "dark": "#242527"
+        },
+        {
+          "path": "color.brand.default",
+          "kind": "color",
+          "light": "#1777FF",
+          "dark": "#3696fe"
+        },
+        {
+          "path": "color.danger.default",
+          "kind": "color",
+          "light": "#FF4D4F",
+          "dark": "#FF4D4F"
+        },
+        {
+          "path": "color.text.primary",
+          "kind": "color",
+          "light": "#111",
+          "dark": "#F5F5F7"
+        },
+        {
+          "path": "radius.pill",
+          "kind": "value",
+          "light": "999px",
+          "dark": "999px"
+        },
+        {
+          "path": "recipe.glass",
+          "kind": "recipe",
+          "light": null,
+          "dark": null
+        },
+        {
+          "path": "recipe.glassHighlight",
+          "kind": "recipe",
+          "light": null,
+          "dark": null
+        },
+        {
+          "path": "space.lg",
+          "kind": "value",
+          "light": "0.625rem",
+          "dark": "0.625rem"
+        },
+        {
+          "path": "space.sm",
+          "kind": "value",
+          "light": "0.375rem",
+          "dark": "0.375rem"
+        },
+        {
+          "path": "space.xl",
+          "kind": "value",
+          "light": "0.75rem",
+          "dark": "0.75rem"
+        },
+        {
+          "path": "space.xs",
+          "kind": "value",
+          "light": "0.25rem",
+          "dark": "0.25rem"
+        },
+        {
+          "path": "space.xxs",
+          "kind": "value",
+          "light": "0.125rem",
+          "dark": "0.125rem"
+        },
+        {
+          "path": "space.xxxl",
+          "kind": "value",
+          "light": "1.25rem",
+          "dark": "1.25rem"
+        },
+        {
+          "path": "transition.fast",
+          "kind": "value",
+          "light": "0.1s ease-in",
+          "dark": "0.1s ease-in"
+        },
+        {
+          "path": "transition.spring",
+          "kind": "value",
+          "light": "0.35s cubic-bezier(0.4, 0, 0.2, 1)",
+          "dark": "0.35s cubic-bezier(0.4, 0, 0.2, 1)"
+        },
+        {
+          "path": "zIndex.sticky",
+          "kind": "value",
+          "light": "1000",
+          "dark": "1000"
+        }
+      ],
+      "changelog": []
+    },
+    {
       "id": "component/page",
       "slug": "page",
       "entry": "@korzun/design/component",
@@ -8343,6 +8690,44 @@
           "text": "`truncate` on `Text` and `Heading` clips inside `Stack` (any `align`), `Inline`, and a `Stack` nested in an `Inline`; `Stack` and `Inline` roots have `min-width: 0`."
         }
       ]
+    },
+    {
+      "id": "component/theme-setting",
+      "slug": "theme-setting",
+      "entry": "@korzun/design/component",
+      "docPath": "docs/component/theme-setting.md",
+      "title": "ThemeSetting",
+      "description": "A ready-made \"Appearance\" card with a Light, Dark and Auto switch bound to the theme.",
+      "category": "Theme",
+      "values": [
+        "ThemeSetting"
+      ],
+      "types": [
+        "ThemeSettingProps"
+      ],
+      "importLine": "import { ThemeSetting, type ThemeSettingProps } from '@korzun/design/component'",
+      "body": "A ready-made settings feature: a `Card` titled \"Appearance\" holding a\nthree-option `SegmentedControl` (Light / Dark / Auto) bound to the theme. A\nchoice applies immediately and is persisted by `ThemeProvider`.\n\nUse something else for: reading the current choice or the resolved mode in\nyour own code (`useThemeSetting` from `@korzun/design/theme`), a custom\nappearance UI (build it on `useThemeSetting`).\n\n## Usage\n\n### Props and styling\n\nIt takes no props: no `className`, no title override.\n\n### How it works\n\n- Reads and writes through `useThemeSetting()`, i.e. the context provided by\n  `ThemeProvider` from `@korzun/design/theme`.\n- `ThemeProvider` stores the choice in `localStorage` under\n  `theme-setting:<identity>`, where `identity` is the provider's prop (for\n  example the signed-in username). Switching identity restores that user's\n  choice; without an `identity` (or with `identity={null}`) it **stores\n  nothing** and the setting resets to `'auto'` on reload.\n- `'auto'` follows the OS `prefers-color-scheme` live.\n\n### Behaviour to know\n\n- **Without a `ThemeProvider` above it, it renders but does nothing**: the\n  default context's setter is a no-op.\n- **Name clash at the package root:** `@korzun/design` (root entry) exports\n  this component as `ThemeSetting` and the `'light' | 'dark' | 'auto'` type as\n  `ThemeSettingValue`. From `@korzun/design/theme` the type is named\n  `ThemeSetting`. Import the component from `/component` to avoid confusion.\n\n### In an app\n\nGive the provider an identity so the choice persists per user, and place the\nsetting in a `Page` like any other Card:\n\n```tsx\n<ThemeProvider identity={viewer?.username ?? null}>\n  <ToastProvider>\n    <AppRouter />\n  </ToastProvider>\n</ThemeProvider>\n\n<Page bottomNav>\n  <ThemeSetting />\n  <Card title=\"Change password\">…</Card>\n</Page>\n```\n\n## Do / don't\n\n- Do place it directly in a `Page`, like any other Card.\n- Do pass `identity` to `ThemeProvider` if the choice should survive a reload.\n- Don't wrap it in another `Card`; it already is one.",
+      "examples": [
+        {
+          "file": "src/component/theme-setting/examples/01-basic.tsx",
+          "slug": "basic",
+          "order": 1,
+          "title": "Basic",
+          "description": "The \"Appearance\" card applies a choice at once, so the app's colours change with\nit. It sits in a `Page` like any other Card. `Auto` follows the system setting, and the readout shows the mode in use.",
+          "code": "import { Card, Page, Text, ThemeSetting } from '@korzun/design/component';\nimport { useTheme, useThemeSetting } from '@korzun/design/theme';\n\nexport default function Basic() {\n  const [setting] = useThemeSetting();\n  const { colorScheme } = useTheme();\n  return (\n    <Page>\n      <ThemeSetting />\n      <Card title=\"Preview\">\n        <Text>\n          Choice: {setting}. Mode in use: {colorScheme}.\n        </Text>\n      </Card>\n    </Page>\n  );\n}\n"
+        }
+      ],
+      "tables": [
+        {
+          "name": "ThemeSettingProps",
+          "kind": "alias",
+          "rows": [],
+          "text": "Record<string, never>",
+          "description": "ThemeSetting takes no props."
+        }
+      ],
+      "tokens": [],
+      "changelog": []
     },
     {
       "id": "component/top-fade",
