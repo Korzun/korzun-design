@@ -8,12 +8,17 @@ export type { PageActionIntentProps, PageActionItem };
 export interface PageActionsBarProps {
   /**
    * `primary` items render as inline Buttons (`align: 'leading'` on the left),
-   * the rest in the overflow menu. Labels must be unique.
+   * the rest in the overflow menu; with no overflow items there is no trigger.
+   * Labels must be unique: they are the React keys.
    */
   items: PageActionItem[];
-  /** Visible label (and accessible name) for the overflow trigger. Defaults to
-   * "More…" — pass e.g. "Actions" on a page whose whole action set lives in the
-   * menu rather than spilling over from inline buttons. */
+  /**
+   * Visible label of the overflow trigger, and its accessible name; unset, the
+   * accessible name is "More actions". Pass `'Actions'` when every item is in
+   * the menu.
+   *
+   * @default 'More…'
+   */
   actionsLabel?: string;
 }
 

@@ -2604,6 +2604,170 @@
       "changelog": []
     },
     {
+      "id": "control/page-actions-bar",
+      "slug": "page-actions-bar",
+      "entry": "@korzun/design/control",
+      "docPath": "docs/control/page-actions-bar.md",
+      "title": "PageActionsBar",
+      "description": "The desktop page-actions row: primary actions as inline buttons and the rest in an overflow menu.",
+      "category": "Actions",
+      "values": [
+        "PageActionsBar"
+      ],
+      "types": [
+        "PageActionsBarProps"
+      ],
+      "importLine": "import { PageActionsBar, type PageActionsBarProps } from '@korzun/design/control'",
+      "body": "The desktop page-actions row: `primary` items render as inline Buttons and\nthe rest collapse into a \"More…\" overflow menu. It is hidden at 640px and\nbelow, where [`PageActionsMenu`](page-actions-menu.md) shows the same items.\nUsually you don't render it yourself: pass `headerActions` (and `actionsLabel`)\nto `Page`, which puts it in the header row.\n\nUse something else for: mobile ([`PageActionsMenu`](page-actions-menu.md)),\nbottom-of-page form actions (`PageFooterActions`), a one-off button inside a\ncard ([`Button`](button.md)). For any other actions-behind-a-button, use\n[`Menu`](menu.md).\n\n## Usage\n\n### How items are placed\n\n`PageActionItem` is the shape [`PageActionsMenu`](page-actions-menu.md) shares:\nsee its [item table](page-actions-menu.md#pageactionitem).\n\n- `primary: true` → an inline [`Button`](button.md) (`type=\"default\"`, its\n  radius following the surface depth, so `radius.lg` on the page background).\n  `align: 'leading'` puts it at the left; anything else is trailing, at the\n  right. `danger` and `disabled` apply.\n- Not primary → the overflow menu (solid card surface, `radius.md`, items\n  `radius.sm`), opened by the trigger at the far right. `separatorBefore`\n  draws a divider there.\n- No overflow items → no trigger.\n- **`Icon` and `intentProps` only work on overflow items**; primary Buttons drop\n  them.\n- Items are keyed by `label`, so labels must be unique.\n\n### Behaviour to know\n\n- The overflow is a `Menu` (`surface=\"solid\" align=\"end\"`), so it has Menu's\n  keyboard behaviour. Opening focuses the first enabled item. Up and Down move\n  through enabled items and wrap; Home and End jump to the ends; Enter and\n  Space activate.\n- Selecting an item closes the menu, returns focus to the trigger, then calls\n  `onClick`. Escape closes and returns focus to the trigger. Tab closes and\n  moves on from the trigger. A mousedown outside closes without moving focus.\n- Escape and outside presses go to the innermost open layer first: a Select\n  opened over the menu closes before the menu does.\n- The trigger is a native `<button>` with `aria-haspopup=\"menu\"`,\n  `aria-expanded` and `aria-controls`. The menu renders in a\n  [`Popover`](popover.md), `space.sm` under the trigger, right-aligned to it.\n- The bar has no `className`.\n\n## Do / don't\n\n- Do mark at most two or three items `primary`; the rest belong in the menu.\n- Do use `Page headerActions` so the mobile menu gets the same items.\n- Don't rely on `intentProps` for a primary item.",
+      "examples": [
+        {
+          "file": "src/control/page-actions-bar/examples/01-basic.tsx",
+          "slug": "basic",
+          "order": 1,
+          "title": "Basic",
+          "description": "`primary` items are inline Buttons: `align: 'leading'` puts Read at the left\nand the rest sit at the right. Everything else collapses into the overflow\nmenu, where `danger` turns Delete red and `separatorBefore` sets it apart.",
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { PageActionsBar } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Basic() {\n  const [chosen, setChosen] = useState('nothing yet');\n  return (\n    <Stack>\n      <PageActionsBar\n        items={[\n          { label: 'Read', onClick: () => setChosen('Read'), primary: true, align: 'leading' },\n          { label: 'Edit', onClick: () => setChosen('Edit'), primary: true },\n          { label: 'Download', onClick: () => setChosen('Download') },\n          {\n            label: 'Delete',\n            onClick: () => setChosen('Delete'),\n            danger: true,\n            separatorBefore: true,\n          },\n        ]}\n      />\n      <Text tone=\"muted\">Chosen: {chosen}</Text>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/page-actions-bar/examples/02-actions-label.tsx",
+          "slug": "actions-label",
+          "order": 2,
+          "title": "Actions label",
+          "description": "`actionsLabel` sets the overflow trigger's visible text and accessible name.\nPass \"Actions\" when every item is in the menu, as here, because \"More…\"\nwould promise inline actions that are not there.",
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { PageActionsBar } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function ActionsLabel() {\n  const [chosen, setChosen] = useState('nothing yet');\n  return (\n    <Stack>\n      <PageActionsBar\n        actionsLabel=\"Actions\"\n        items={[\n          { label: 'Upload file', onClick: () => setChosen('Upload file') },\n          { label: 'Upload folder', onClick: () => setChosen('Upload folder') },\n        ]}\n      />\n      <Text tone=\"muted\">Chosen: {chosen}</Text>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/page-actions-bar/examples/03-item-options.tsx",
+          "slug": "item-options",
+          "order": 3,
+          "title": "Item options",
+          "description": "A primary Button takes `danger` and `disabled`: Remove is red and Publish is\ngreyed out. It ignores `Icon` and `intentProps`, so Edit shows no icon. In the\noverflow menu Download shows its `Icon` and runs `intentProps` when the\npointer, focus or a touch reaches it, and Archive is `disabled`.",
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { PageActionsBar } from '@korzun/design/control';\nimport { UploadIcon } from '@korzun/design/icon';\nimport { useState } from 'react';\n\nexport default function ItemOptions() {\n  const [chosen, setChosen] = useState('nothing yet');\n  const [prefetched, setPrefetched] = useState('nothing yet');\n  const prefetch = (label: string) => () => setPrefetched(label);\n  const intent = (label: string) => ({\n    onMouseEnter: prefetch(label),\n    onFocus: prefetch(label),\n    onTouchStart: prefetch(label),\n  });\n  return (\n    <Stack>\n      <PageActionsBar\n        items={[\n          {\n            label: 'Edit',\n            onClick: () => setChosen('Edit'),\n            primary: true,\n            Icon: UploadIcon,\n            intentProps: intent('Edit'),\n          },\n          { label: 'Publish', onClick: () => setChosen('Publish'), primary: true, disabled: true },\n          { label: 'Remove', onClick: () => setChosen('Remove'), primary: true, danger: true },\n          {\n            label: 'Download',\n            onClick: () => setChosen('Download'),\n            Icon: UploadIcon,\n            intentProps: intent('Download'),\n          },\n          { label: 'Archive', onClick: () => setChosen('Archive'), disabled: true },\n        ]}\n      />\n      <Text tone=\"muted\">Chosen: {chosen}</Text>\n      <Text tone=\"muted\">Prefetched: {prefetched}</Text>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/page-actions-bar/examples/04-in-page.tsx",
+          "slug": "in-page",
+          "order": 4,
+          "title": "In a Page",
+          "description": "The usual way to get it: pass `headerActions` and `actionsLabel` to `Page`,\nwhich puts the bar in the header row on desktop and `PageActionsMenu` at\nphone width from the same array.",
+          "code": "import { Card, Page, Text } from '@korzun/design/component';\nimport { useState } from 'react';\n\nexport default function InPage() {\n  const [message, setMessage] = useState('Nothing chosen yet.');\n  return (\n    <Page\n      actionsLabel=\"Actions\"\n      headerActions={[\n        { label: 'Edit', onClick: () => setMessage('Edit chosen'), primary: true },\n        { label: 'Download', onClick: () => setMessage('Download chosen') },\n        {\n          label: 'Delete',\n          onClick: () => setMessage('Delete chosen'),\n          danger: true,\n          separatorBefore: true,\n        },\n      ]}\n    >\n      <Card title=\"Dune\">\n        <Text>{message}</Text>\n      </Card>\n    </Page>\n  );\n}\n"
+        }
+      ],
+      "tables": [
+        {
+          "name": "PageActionsBarProps",
+          "kind": "props",
+          "rows": [
+            {
+              "name": "actionsLabel",
+              "type": "string",
+              "required": false,
+              "description": "Visible label of the overflow trigger, and its accessible name; unset, the accessible name is \"More actions\". Pass `'Actions'` when every item is in the menu.",
+              "default": "'More…'"
+            },
+            {
+              "name": "items",
+              "type": "PageActionItem[]",
+              "required": true,
+              "description": "`primary` items render as inline Buttons (`align: 'leading'` on the left), the rest in the overflow menu; with no overflow items there is no trigger. Labels must be unique: they are the React keys."
+            }
+          ]
+        }
+      ],
+      "tokens": [
+        {
+          "path": "breakpoint.mobile",
+          "kind": "value",
+          "light": "@media (max-width: 640px)",
+          "dark": "@media (max-width: 640px)"
+        },
+        {
+          "path": "color.bg.input",
+          "kind": "color",
+          "light": "#FFFFFF",
+          "dark": "#1A1B1E"
+        },
+        {
+          "path": "color.border.default",
+          "kind": "color",
+          "light": "#D9D9D9",
+          "dark": "#3A3B40"
+        },
+        {
+          "path": "color.brand.active",
+          "kind": "color",
+          "light": "#0758d9",
+          "dark": "#91CAFF"
+        },
+        {
+          "path": "color.brand.hover",
+          "kind": "color",
+          "light": "#3696fe",
+          "dark": "#87BAFF"
+        },
+        {
+          "path": "color.brand.outline",
+          "kind": "color",
+          "light": "#91CAFF",
+          "dark": "rgba(54, 150, 254, 0.45)"
+        },
+        {
+          "path": "color.text.primary",
+          "kind": "color",
+          "light": "#111",
+          "dark": "#F5F5F7"
+        },
+        {
+          "path": "fontFamily.body",
+          "kind": "value",
+          "light": "system-ui, sans-serif",
+          "dark": "system-ui, sans-serif"
+        },
+        {
+          "path": "radius.lg",
+          "kind": "value",
+          "light": "16px",
+          "dark": "16px"
+        },
+        {
+          "path": "recipe.focusRing",
+          "kind": "recipe",
+          "light": null,
+          "dark": null
+        },
+        {
+          "path": "shadow.cardStack",
+          "kind": "value",
+          "light": "0px 2px 0px rgba(217, 217, 217, 0.2)",
+          "dark": "0px 2px 0px rgba(0, 0, 0, 0.4)"
+        },
+        {
+          "path": "space.md",
+          "kind": "value",
+          "light": "0.5rem",
+          "dark": "0.5rem"
+        },
+        {
+          "path": "space.xxl",
+          "kind": "value",
+          "light": "1rem",
+          "dark": "1rem"
+        }
+      ],
+      "changelog": [
+        {
+          "version": "0.4.0",
+          "date": "2026-11-23",
+          "tags": [
+            "PageActionsMenu",
+            "PageActionsBar",
+            "Menu"
+          ],
+          "text": "`PageActionsMenu` and `PageActionsBar` are rebuilt on `Menu`: arrow keys, Home and End move between actions, and Escape returns focus to the trigger. `PageActionItem` is now `MenuActionItem & { primary?, align? }`: it gains an optional `Icon` (shown in the menus, ignored by the bar's primary Buttons), and `to` is not allowed."
+        }
+      ]
+    },
+    {
       "id": "control/page-actions-menu",
       "slug": "page-actions-menu",
       "entry": "@korzun/design/control",
