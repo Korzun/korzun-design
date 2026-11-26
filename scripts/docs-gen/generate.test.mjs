@@ -423,7 +423,7 @@ test(
   () => {
     const root = mkdtempSync(join(tmpdir(), 'docs-gen-real-'));
     roots.push(root);
-    for (const p of ['package.json', 'src', 'dist', 'docs', 'AGENTS.md', 'CHANGELOG.md']) {
+    for (const p of ['package.json', 'src', 'dist', 'docs', 'recipes', 'AGENTS.md', 'CHANGELOG.md']) {
       cpSync(join(realRepo, p), join(root, p), { recursive: true });
     }
     const site = JSON.parse(generate(root).get('gallery/generated/site-data.json'));
