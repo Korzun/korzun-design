@@ -1072,6 +1072,176 @@
       ]
     },
     {
+      "id": "control/number-input",
+      "slug": "number-input",
+      "entry": "@korzun/design/control",
+      "docPath": "docs/control/number-input.md",
+      "title": "NumberInput",
+      "description": "A single-line field that reports a number, with a label and validation.",
+      "category": "Inputs",
+      "values": [
+        "NumberInput"
+      ],
+      "types": [
+        "NumberInputProps"
+      ],
+      "importLine": "import { NumberInput, type NumberInputProps } from '@korzun/design/control'",
+      "body": "A single-line field for a number, with an optional label and validation. It\nparses with `parseFloat` and reports `number | undefined`. Same label/layout\nsystem as `TextInput`.\n\nUse something else for: one of a few fixed numbers (`SegmentedControl` or\n`Select`), free text (`TextInput`).\n\n## Usage\n\n### Behaviour to know\n\n- It is a plain `<input>` (no `type=\"number\"`, no `inputMode`), so phones show\n  the full text keyboard and there are no spinner arrows.\n- The default check accepts anything JavaScript reads as a number: `1.5`, `-3`,\n  `1e3` (reported as `1000`).\n- Invalid text stays visible with a red label and border; your state keeps the\n  last valid number.\n\n### What it has no prop for\n\nNo `className`, no `disabled`, no `min` / `max` / `step`.\n\n## Do / don't\n\n- Do pass `label={undefined}` explicitly when there is no visible label.\n- Do report `onValidChange` into the form and disable submit while any field is invalid.\n- Don't expect integer-only input unless your `validate` enforces it.",
+      "examples": [
+        {
+          "file": "src/control/number-input/examples/01-basic.tsx",
+          "slug": "basic",
+          "order": 1,
+          "title": "Basic",
+          "description": "A controlled number field. `onChange` receives a number, not an event or the\ntext, and `undefined` once the field is emptied.",
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { NumberInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Basic() {\n  const [pages, setPages] = useState<number | undefined>(42);\n  return (\n    <Stack>\n      <NumberInput name=\"pages\" label=\"Pages\" value={pages} onChange={setPages} />\n      <Text tone=\"muted\">Value: {pages === undefined ? 'undefined' : pages}</Text>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/number-input/examples/02-layouts.tsx",
+          "slug": "layouts",
+          "order": 2,
+          "title": "Layouts",
+          "description": "`horizontal` puts the label and field on one shaded row, `vertical` stacks\nthe label above the field on that row, and `inline` paints nothing around the\npair.",
+          "code": "import { Stack } from '@korzun/design/component';\nimport { NumberInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Layouts() {\n  const [horizontal, setHorizontal] = useState<number | undefined>(1);\n  const [vertical, setVertical] = useState<number | undefined>(2);\n  const [inline, setInline] = useState<number | undefined>(3);\n  return (\n    <Stack>\n      <NumberInput\n        name=\"horizontal\"\n        layout=\"horizontal\"\n        label=\"Horizontal\"\n        value={horizontal}\n        onChange={setHorizontal}\n      />\n      <NumberInput\n        name=\"vertical\"\n        layout=\"vertical\"\n        label=\"Vertical\"\n        value={vertical}\n        onChange={setVertical}\n      />\n      <NumberInput\n        name=\"inline\"\n        layout=\"inline\"\n        label=\"Inline\"\n        value={inline}\n        onChange={setInline}\n      />\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/number-input/examples/03-default-check.tsx",
+          "slug": "default-check",
+          "order": 3,
+          "title": "Default check",
+          "description": "Without `validate` the field accepts empty text or anything JavaScript reads\nas a number: try `1.5`, `-3` or `1e3` (reported as 1000). Other text turns the\nlabel and border red, `onValidChange` fires once, and `onChange` is not called,\nso the saved number stays at the last valid one. Type `abc` to see it.",
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { NumberInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function DefaultCheck() {\n  const [rating, setRating] = useState<number | undefined>(4.5);\n  const [valid, setValid] = useState(true);\n  return (\n    <Stack>\n      <NumberInput\n        name=\"rating\"\n        layout=\"vertical\"\n        label=\"Rating\"\n        value={rating}\n        onChange={setRating}\n        onValidChange={(_name, ok) => setValid(ok)}\n      />\n      <Text tone={valid ? 'success' : 'danger'}>{valid ? 'Valid' : 'Invalid'}</Text>\n      <Text tone=\"muted\">Saved number: {rating === undefined ? 'undefined' : rating}</Text>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/number-input/examples/04-form-in-card.tsx",
+          "slug": "form-in-card",
+          "order": 4,
+          "title": "Form in a card",
+          "description": "The `horizontal` layout is made for a `Card` body. Index uses the built-in check.\nWidth replaces it with a rule that still checks the text is numeric, and both\nfields report validity through `onValidChange`, so Save stays disabled while\neither is invalid.",
+          "code": "import { Card, Stack, Text } from '@korzun/design/component';\nimport { Button, NumberInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function FormInCard() {\n  const [seriesIndex, setSeriesIndex] = useState<number | undefined>(2);\n  const [coverWidth, setCoverWidth] = useState<number | undefined>(600);\n  const [valid, setValid] = useState<Record<string, boolean>>({});\n  const [saved, setSaved] = useState<string | null>(null);\n  const invalid = Object.values(valid).some((ok) => !ok);\n  const onValidChange = (field: string, ok: boolean) => setValid((s) => ({ ...s, [field]: ok }));\n  return (\n    <Card\n      title=\"Series\"\n      footer={\n        <Button\n          type=\"primary\"\n          disabled={invalid}\n          onClick={() => setSaved(`Index ${seriesIndex ?? '–'}, width ${coverWidth ?? '–'}`)}\n        >\n          Save\n        </Button>\n      }\n    >\n      <Stack>\n        <NumberInput\n          name=\"seriesIndex\"\n          label=\"Index\"\n          value={seriesIndex}\n          onChange={setSeriesIndex}\n          onValidChange={onValidChange}\n        />\n        <NumberInput\n          name=\"coverWidth\"\n          label=\"Width (up to 4096)\"\n          value={coverWidth}\n          onChange={setCoverWidth}\n          validate={(t) => t === '' || (/^\\d+$/.test(t) && Number(t) <= 4096)}\n          onValidChange={onValidChange}\n        />\n        {saved !== null && <Text tone=\"success\">Saved: {saved}</Text>}\n      </Stack>\n    </Card>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/number-input/examples/05-without-label.tsx",
+          "slug": "without-label",
+          "order": 5,
+          "title": "Without a label",
+          "description": "`label` is a required key: pass `label={undefined}` when there is no visible\nlabel, and describe the field with a `placeholder`.",
+          "code": "import { Inline, Text } from '@korzun/design/component';\nimport { NumberInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function WithoutLabel() {\n  const [quantity, setQuantity] = useState<number | undefined>(undefined);\n  return (\n    <Inline>\n      <NumberInput\n        name=\"quantity\"\n        layout=\"inline\"\n        label={undefined}\n        placeholder=\"Quantity\"\n        value={quantity}\n        onChange={setQuantity}\n      />\n      <Text tone=\"muted\">Quantity: {quantity === undefined ? 'none' : quantity}</Text>\n    </Inline>\n  );\n}\n"
+        }
+      ],
+      "tables": [
+        {
+          "name": "NumberInputProps",
+          "kind": "props",
+          "rows": [
+            {
+              "name": "label",
+              "type": "string | undefined",
+              "required": true,
+              "description": "Required key: pass `label={undefined}` for none. Not linked to the input (no `htmlFor`)."
+            },
+            {
+              "name": "layout",
+              "type": "'horizontal' | 'vertical' | 'inline'",
+              "required": false,
+              "description": "`horizontal` and `vertical` paint a shaded card-header row with `md` corners; `inline` paints nothing.",
+              "default": "'horizontal'"
+            },
+            {
+              "name": "name",
+              "type": "string",
+              "required": true,
+              "description": "The input's `name` and the key passed to `onValidChange`."
+            },
+            {
+              "name": "onChange",
+              "type": "(newValue: number | undefined) => void",
+              "required": false,
+              "description": "Receives `parseFloat(text)`, or `undefined` when emptied; not called while `validate` fails.",
+              "default": "() => {}"
+            },
+            {
+              "name": "onValidChange",
+              "type": "(fieldName: string, newValid: boolean) => void",
+              "required": false,
+              "description": "Called with `name` and the new validity; fires only when validity flips.",
+              "default": "() => {}"
+            },
+            {
+              "name": "placeholder",
+              "type": "string",
+              "required": false,
+              "description": "Placeholder text for the input."
+            },
+            {
+              "name": "validate",
+              "type": "(newValue: string) => boolean",
+              "required": false,
+              "description": "Receives the raw text. Replacing it drops the built-in check, so include one.",
+              "default": "accepts empty or numeric text"
+            },
+            {
+              "name": "value",
+              "type": "number | undefined",
+              "required": true,
+              "description": "Current number. Re-syncs into the field only when the prop changes."
+            }
+          ]
+        }
+      ],
+      "tokens": [
+        {
+          "path": "color.bg.cardHeader",
+          "kind": "color",
+          "light": "#EEEEEE",
+          "dark": "#232427"
+        },
+        {
+          "path": "layout.controlHeight",
+          "kind": "value",
+          "light": "2.0625rem",
+          "dark": "2.0625rem"
+        },
+        {
+          "path": "radius.md",
+          "kind": "value",
+          "light": "8px",
+          "dark": "8px"
+        },
+        {
+          "path": "recipe.input",
+          "kind": "recipe",
+          "light": null,
+          "dark": null
+        },
+        {
+          "path": "recipe.label",
+          "kind": "recipe",
+          "light": null,
+          "dark": null
+        },
+        {
+          "path": "space.md",
+          "kind": "value",
+          "light": "0.5rem",
+          "dark": "0.5rem"
+        },
+        {
+          "path": "space.sm",
+          "kind": "value",
+          "light": "0.375rem",
+          "dark": "0.375rem"
+        },
+        {
+          "path": "space.xs",
+          "kind": "value",
+          "light": "0.25rem",
+          "dark": "0.25rem"
+        }
+      ],
+      "changelog": []
+    },
+    {
       "id": "control/select",
       "slug": "select",
       "entry": "@korzun/design/control",
