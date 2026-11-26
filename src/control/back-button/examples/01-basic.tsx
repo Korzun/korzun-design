@@ -4,15 +4,15 @@
  * so pass the logical parent route. Mobile only: it is hidden at 641px and up,
  * where the desktop navigation takes over. It does not position itself, so you
  * place it in your own row.
+ * @viewport mobile
  */
-import { Inline, Text } from '@korzun/design/component';
+import { Inline } from '@korzun/design/component';
 import { BackButton } from '@korzun/design/control';
 
 export default function Basic() {
   return (
     <Inline>
       <BackButton to="/library" />
-      <Text tone="muted">The button shows below 641px wide.</Text>
     </Inline>
   );
 }

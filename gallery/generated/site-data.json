@@ -24,7 +24,8 @@
           "order": 1,
           "title": "Basic",
           "description": "A round glass button that pushes `to` as a new history entry, asking the\ndestination to restore its scroll position. It does not go back in history,\nso pass the logical parent route. Mobile only: it is hidden at 641px and up,\nwhere the desktop navigation takes over. It does not position itself, so you\nplace it in your own row.",
-          "code": "import { Inline, Text } from '@korzun/design/component';\nimport { BackButton } from '@korzun/design/control';\n\nexport default function Basic() {\n  return (\n    <Inline>\n      <BackButton to=\"/library\" />\n      <Text tone=\"muted\">The button shows below 641px wide.</Text>\n    </Inline>\n  );\n}\n"
+          "code": "import { Inline } from '@korzun/design/component';\nimport { BackButton } from '@korzun/design/control';\n\nexport default function Basic() {\n  return (\n    <Inline>\n      <BackButton to=\"/library\" />\n    </Inline>\n  );\n}\n",
+          "viewport": "mobile"
         },
         {
           "file": "src/control/back-button/examples/02-in-page.tsx",
@@ -32,7 +33,8 @@
           "order": 2,
           "title": "In a page",
           "description": "Usually you do not render it yourself: pass `back` to `Page`, which puts the\nbutton in its sticky controls row on mobile, beside the page's actions menu\n(`headerActions`).",
-          "code": "import { Card, Page, Stack, Text } from '@korzun/design/component';\nimport { useState } from 'react';\n\nexport default function InPage() {\n  const [status, setStatus] = useState('Unread');\n  return (\n    <Page\n      back=\"/library\"\n      headerActions={[\n        { label: 'Mark as read', onClick: () => setStatus('Read'), primary: true },\n        { label: 'Mark as unread', onClick: () => setStatus('Unread') },\n      ]}\n    >\n      <Card title=\"Dune\">\n        <Stack>\n          <Text>Frank Herbert, 1965.</Text>\n          <Text tone=\"muted\">Status: {status}</Text>\n        </Stack>\n      </Card>\n    </Page>\n  );\n}\n"
+          "code": "import { Card, Page, Stack, Text } from '@korzun/design/component';\nimport { useState } from 'react';\n\nexport default function InPage() {\n  const [status, setStatus] = useState('Unread');\n  return (\n    <Page\n      back=\"/library\"\n      headerActions={[\n        { label: 'Mark as read', onClick: () => setStatus('Read'), primary: true },\n        { label: 'Mark as unread', onClick: () => setStatus('Unread') },\n      ]}\n    >\n      <Card title=\"Dune\">\n        <Stack>\n          <Text>Frank Herbert, 1965.</Text>\n          <Text tone=\"muted\">Status: {status}</Text>\n        </Stack>\n      </Card>\n    </Page>\n  );\n}\n",
+          "viewport": "mobile"
         }
       ],
       "tables": [
@@ -677,7 +679,7 @@
               "name": "chipColor",
               "type": "'status' | 'author' | 'series' | 'subject' | 'book' | 'entryType' | 'user' | 'rating' | 'neutral' | 'success' | 'warning' | 'danger' | 'info'",
               "required": false,
-              "description": "Chip colour family: `status`, `author`, `series`, `subject`, `book`, `entryType`, `user`, `rating`, `neutral`, `success`, `warning`, `danger` or `info`. Pick the one that tags the same values elsewhere.",
+              "description": "Chip colour family from `theme.color.chip`. Pick the one that tags the same values elsewhere.",
               "default": "'subject'"
             },
             {

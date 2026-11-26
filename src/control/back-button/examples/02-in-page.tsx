@@ -2,6 +2,7 @@
  * Usually you do not render it yourself: pass `back` to `Page`, which puts the
  * button in its sticky controls row on mobile, beside the page's actions menu
  * (`headerActions`).
+ * @viewport mobile
  */
 import { Card, Page, Stack, Text } from '@korzun/design/component';
 import { useState } from 'react';
