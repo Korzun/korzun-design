@@ -43,6 +43,7 @@ Use something else for: a modal (`Dialog`), page action menus
   content stays `gap` pixels inside the viewport's left and right edges;
   content wider than the viewport pins to `gap`. With `matchWidth` it lines up
   with the anchor exactly, edge margin or not. There is no vertical clamp.
+- **Align.** `align` sets the edge it lines up with: `start`, `center` or `end`. Use `end` for an anchor at the right edge of the screen, so the content grows leftwards.
 - **Top side is anchored by its bottom edge** (CSS `bottom`), so a popover
   above its anchor stays attached when its content grows or shrinks.
 - **`data-side`.** The wrapper carries `data-side="bottom"` or `"top"`: the side
@@ -242,8 +243,7 @@ export default function Side() {
 ### Align
 
 `align` lines the popover up with the anchor's start edge, centre or end
-edge. The anchors are wider than the popover so each edge shows. Use `end`
-for an anchor at the right edge of the screen.
+edge. The anchors are wider than the popover so each edge shows.
 
 ```tsx
 import { Stack, Text } from '@korzun/design/component';
@@ -417,7 +417,7 @@ export default function Gap() {
           {'gap="2rem"'}
         </Button>
         <Button ref={themeAnchor} onClick={() => toggle('theme')}>
-          theme.space.xl
+          {'gap={theme.space.xl}'}
         </Button>
       </Inline>
       <Popover

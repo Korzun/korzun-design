@@ -6,7 +6,7 @@ import { useStyle } from './style.js';
 export type { PageActionIntentProps, PageActionItem };
 
 export interface PageActionsMenuProps {
-  /** All items appear in the menu, in order; `primary` and `align` are ignored here. Labels must be unique: they are the React keys. */
+  /** All items appear in the menu, in order; `primary` and `align` are ignored here. Labels must be unique. */
   items: PageActionItem[];
 }
 

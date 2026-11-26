@@ -1,7 +1,6 @@
 /** Align
  * `align` lines the popover up with the anchor's start edge, centre or end
- * edge. The anchors are wider than the popover so each edge shows. Use `end`
- * for an anchor at the right edge of the screen.
+ * edge. The anchors are wider than the popover so each edge shows.
  */
 import { Stack, Text } from '@korzun/design/component';
 import { Button, Popover } from '@korzun/design/control';

@@ -49,7 +49,7 @@ export default function Gap() {
           {'gap="2rem"'}
         </Button>
         <Button ref={themeAnchor} onClick={() => toggle('theme')}>
-          theme.space.xl
+          {'gap={theme.space.xl}'}
         </Button>
       </Inline>
       <Popover
