@@ -45,7 +45,6 @@ export type ButtonProps = React.PropsWithChildren<
     /**
      * Click and Enter/Space handler. **Ignored when `submit` is set**; the form
      * submits instead. Receives no event. Not called while `disabled` or `loading`.
-     * @default () => {}
      */
     onClick?: () => void;
     /** Icon component shown before the label (`prefix={SearchIcon}`), not an element. */

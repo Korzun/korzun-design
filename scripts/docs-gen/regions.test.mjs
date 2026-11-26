@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
-import { REGIONS, renderRegion, replaceRegions, stripRegions } from './regions.mjs';
+import { orderTables, REGIONS, renderRegion, replaceRegions, stripRegions } from './regions.mjs';
 
 const mod = (over = {}) => ({
   id: 'control/button',
@@ -284,4 +284,34 @@ test('props: main <Name>Props first, then other props tables, then objects, then
     'MenuItem',
     'Types',
   ]);
+});
+
+test('props: a type description renders under its heading, or above a lone table', () => {
+  const tables = [
+    { name: 'MenuProps', kind: 'props', rows: [row()], description: 'The menu.' },
+    { name: 'MenuItem', kind: 'object', rows: [row()], description: 'One entry.' },
+    { name: 'Side', kind: 'alias', rows: [], text: "'top' | 'bottom'", description: 'Where.' },
+  ];
+  const out = renderRegion('props', mod({ values: ['Menu'], tables }));
+  assert.ok(out.startsWith('## Props\n\nThe menu.\n\n| Prop |'));
+  assert.ok(out.includes('### MenuItem\n\nOne entry.\n\n| Prop |'));
+  assert.ok(out.includes("```ts\n/** Where. */\ntype Side = 'top' | 'bottom';\n```"));
+  const headed = renderRegion(
+    'props',
+    mod({ values: ['Menu'], tables: [tables[0], { ...tables[0], name: 'MenuTriggerProps' }] })
+  );
+  assert.ok(headed.includes('### MenuProps\n\nThe menu.\n\n| Prop |'));
+});
+
+test('orderTables: the order the props region renders, for the site too', () => {
+  const tables = [
+    { name: 'Align', kind: 'alias', rows: [] },
+    { name: 'MenuIntentProps', kind: 'props', rows: [] },
+    { name: 'MenuItem', kind: 'object', rows: [] },
+    { name: 'MenuProps', kind: 'props', rows: [] },
+  ];
+  assert.deepEqual(
+    orderTables(tables, ['Menu']).map((t) => t.name),
+    ['MenuProps', 'MenuIntentProps', 'MenuItem', 'Align']
+  );
 });

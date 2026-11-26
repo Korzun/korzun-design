@@ -24,23 +24,17 @@ function findComponent(program, name) {
   return null;
 }
 
-function isLiteral(node) {
-  switch (node.type) {
-    case 'Literal':
-      return true;
-    case 'UnaryExpression':
-      return (node.operator === '-' || node.operator === '+') && node.argument.type === 'Literal';
-    case 'ArrayExpression':
-      return node.elements.length === 0;
-    case 'ObjectExpression':
-      return node.properties.length === 0;
-    default:
-      return false;
-  }
+// `Type.Default as TypeValue` reads as `Type.Default`: the assertion is for TypeScript.
+function unwrapAssertion(node) {
+  let n = node;
+  while (n.type === 'TSAsExpression' || n.type === 'TSSatisfiesExpression') n = n.expression;
+  return n;
 }
 
 /**
- * Literal defaults from the first parameter's object pattern, as written in source.
+ * Defaults from the first parameter's object pattern, as written in source:
+ * literals, functions (`() => {}`) and any other expression, with type
+ * assertions dropped and whitespace collapsed to single spaces.
  * @param {string} tsxSource
  * @param {string} componentName
  * @returns {Record<string, string>}
@@ -55,8 +49,9 @@ export function readDefaults(tsxSource, componentName) {
   for (const prop of target.properties) {
     if (prop.type !== 'Property' || prop.value.type !== 'AssignmentPattern') continue;
     const key = prop.key.type === 'Identifier' ? prop.key.name : String(prop.key.value);
-    const right = prop.value.right;
-    if (isLiteral(right)) result[key] = tsxSource.slice(right.start, right.end);
+    const right = unwrapAssertion(prop.value.right);
+    const text = tsxSource.slice(right.start, right.end);
+    result[key] = right.type === 'Literal' ? text : text.replace(/\s+/g, ' ');
   }
   return result;
 }

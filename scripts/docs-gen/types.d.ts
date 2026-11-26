@@ -12,6 +12,8 @@ export type TypeTable = {
   kind: 'props' | 'object' | 'alias';
   rows: PropRow[];
   text?: string;
+  /** The type's own JSDoc (on the interface or alias, not a prop), shown under its heading. */
+  description?: string;
   /** External types left out of `rows` (React/DOM props the type also accepts). */
   extends?: string[];
 };

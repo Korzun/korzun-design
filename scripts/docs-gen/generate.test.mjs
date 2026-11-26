@@ -143,6 +143,31 @@ test('generates regions, index and site data', () => {
   assert.ok(files.get('gallery/generated/site-data.json').endsWith('}\n'));
 });
 
+test('site data lists tables in the doc order: the main <Name>Props first', () => {
+  const root = fixture();
+  put(
+    root,
+    'src/control/index.ts',
+    "export { Widget, type WidgetExtraProps, type WidgetProps } from './widget/index.js';\n"
+  );
+  put(
+    root,
+    'dist/control/widget/index.d.ts',
+    `${DTS}/** Extra fields. */\nexport interface WidgetExtraProps { /** More. */ more?: string }\n`
+  );
+  const files = generate(root);
+  const doc = files.get('docs/control/widget.md');
+  const headings = [...doc.matchAll(/^### (\w+Props)$/gm)].map((m) => m[1]);
+  assert.deepEqual(headings, ['WidgetProps', 'WidgetExtraProps']);
+  assert.ok(doc.includes('### WidgetExtraProps\n\nExtra fields.\n'));
+  const site = JSON.parse(files.get('gallery/generated/site-data.json'));
+  assert.deepEqual(
+    site.modules[0].tables.map((t) => t.name),
+    headings
+  );
+  assert.equal(site.modules[0].tables[1].description, 'Extra fields.');
+});
+
 test('tokens follow style.ts imports transitively, cycle-safe', () => {
   const root = fixture();
   put(

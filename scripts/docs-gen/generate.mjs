@@ -11,7 +11,7 @@ import { readExample } from './examples.mjs';
 import { parseFrontMatter } from './front-matter.mjs';
 import { listModules } from './inventory.mjs';
 import { extractTypeTables } from './props.mjs';
-import { importNames, replaceRegions, stripRegions } from './regions.mjs';
+import { importNames, orderTables, replaceRegions, stripRegions } from './regions.mjs';
 import { collectTokenPaths, resolveTokens } from './tokens.mjs';
 
 /** @typedef {import('./types.js').ModuleInfo} ModuleInfo */
@@ -206,7 +206,7 @@ export function generate(repo, { strict = false } = {}) {
       importLine: '',
       body: '',
       examples,
-      tables,
+      tables: orderTables(tables, skel.values),
       tokens,
       changelog: entries,
     };

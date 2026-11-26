@@ -117,9 +117,13 @@ export const PropsTable = ({ table, tables, from }: PropsTableProps) => {
   const styles = useTableStyle();
   const linkable = new Set(tables.filter((t) => t.name !== table.name).map((t) => t.name));
   const caption = (
-    <Heading level={3} size="md" id={tableId(table.name)}>
-      <code className={styles.code}>{table.name}</code>
-    </Heading>
+    <>
+      <Heading level={3} size="md" id={tableId(table.name)}>
+        <code className={styles.code}>{table.name}</code>
+      </Heading>
+      {/* The type's own JSDoc, so a note written on the interface is not lost. */}
+      {table.description && <Markdown source={table.description} from={from} />}
+    </>
   );
 
   if (table.kind === 'alias')

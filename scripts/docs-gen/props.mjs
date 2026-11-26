@@ -98,10 +98,15 @@ function createLoader(readFile) {
   return { load, resolveName };
 }
 
-/** Text of the JSDoc block directly above `node`, split into description and tags. */
-function readDoc(file, node) {
+/**
+ * Text of the JSDoc block directly above `node`, split into description and
+ * tags. With `keywords`, `export`/`declare` may sit between the two (a type
+ * declaration's own comment precedes its `export`).
+ */
+function readDoc(file, node, keywords = false) {
+  const between = keywords ? /^\s*(?:(?:export|declare)\s+)*$/ : /^\s*$/;
   const comment = file.comments.find(
-    (c) => c.end <= node.start && /^\s*$/.test(file.src.slice(c.end, node.start))
+    (c) => c.end <= node.start && between.test(file.src.slice(c.end, node.start))
   );
   const out = { description: '', default: undefined, deprecated: false };
   if (!comment) return out;
@@ -389,16 +394,20 @@ export function extractTypeTables(dtsPath, names, readFile = defaultRead) {
     if (!found) throw new Error(`type ${name} not found from ${dtsPath}`);
     const { decl, file } = found;
     const { rows, skipped } = flatten(decl, file);
+    const { description } = readDoc(file, decl, true);
+    let out;
     if (!rows) {
       const body = decl.type === 'TSTypeAliasDeclaration' ? decl.typeAnnotation : decl;
-      return { name, kind: 'alias', rows: [], text: file.src.slice(body.start, body.end) };
+      out = { name, kind: 'alias', rows: [], text: file.src.slice(body.start, body.end) };
+    } else {
+      out = {
+        name,
+        kind: name.endsWith('Props') ? 'props' : 'object',
+        rows: [...rows.values()].sort(byName),
+      };
+      if (skipped.length) out.extends = skipped;
     }
-    const out = {
-      name,
-      kind: name.endsWith('Props') ? 'props' : 'object',
-      rows: [...rows.values()].sort(byName),
-    };
-    if (skipped.length) out.extends = skipped;
+    if (description) out.description = description;
     return out;
   });
 }

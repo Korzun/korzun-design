@@ -383,3 +383,38 @@ test('union: function types from different branches stay whole and parenthesised
   );
   assert.equal(row(t, 'f').type, '((v: string | null) => void) | ((v: string) => void)');
 });
+
+test('a type-level JSDoc becomes the table description', () => {
+  const src = `/** An item that navigates. Needs a router. */
+export interface LinkItem {
+  /** Path. */
+  to: string;
+}
+/**
+ * Where it opens.
+ * @see Popover
+ */
+export type Side = 'top' | 'bottom';
+export interface Bare { a?: string }`;
+  const tables = extractTypeTables(
+    '/x/a.d.ts',
+    ['LinkItem', 'Side', 'Bare'],
+    files({ '/x/a.d.ts': src })
+  );
+  assert.equal(tables[0].description, 'An item that navigates. Needs a router.');
+  assert.equal(tables[1].description, 'Where it opens.');
+  assert.equal('description' in tables[2], false);
+  assert.equal(row(tables[0], 'to').description, 'Path.');
+});
+
+test('a type comment is read at the declaration, through a re-export', () => {
+  const t = extractTypeTables(
+    '/x/a.d.ts',
+    ['Item'],
+    files({
+      '/x/a.d.ts': `/** Not this one. */\nexport type { Item } from './types.js';`,
+      '/x/types.d.ts': `/** One entry. */\nexport declare interface Item { a?: string }`,
+    })
+  )[0];
+  assert.equal(t.description, 'One entry.');
+});

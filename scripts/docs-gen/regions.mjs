@@ -93,6 +93,7 @@ function alsoAccepts(table) {
 function tableBlock(table, linkable, heading) {
   const parts = [];
   if (heading) parts.push(`### ${table.name}`);
+  if (table.description) parts.push(table.description);
   if (table.rows.length > 0) parts.push(rowsTable(table.rows, linkable));
   const extra = alsoAccepts(table);
   if (extra) parts.push(extra);
@@ -101,16 +102,35 @@ function tableBlock(table, linkable, heading) {
 
 /**
  * Props tables first, the module's own `<Value>Props` leading, then object
- * tables, then the alias block. Every table with a `###` heading is a link
- * target for the other tables' type cells.
+ * tables, then aliases, each group in its given order. The props region
+ * renders in this order and the site data stores it, so both read the same.
+ * @param {TypeTable[]} tables
+ * @param {string[]} values
+ * @returns {TypeTable[]}
  */
-function renderProps(mod) {
-  const mains = new Set(mod.values.map((v) => `${v}Props`));
-  const propsTables = mod.tables
+export function orderTables(tables, values) {
+  const mains = new Set(values.map((v) => `${v}Props`));
+  const propsTables = tables
     .filter((t) => t.kind === 'props')
     .sort((a, b) => Number(mains.has(b.name)) - Number(mains.has(a.name)));
-  const objects = mod.tables.filter((t) => t.kind === 'object');
-  const aliases = mod.tables.filter((t) => t.kind === 'alias');
+  return [
+    ...propsTables,
+    ...tables.filter((t) => t.kind === 'object'),
+    ...tables.filter((t) => t.kind === 'alias'),
+  ];
+}
+
+/**
+ * The tables in `orderTables` order: props, objects, then one alias block,
+ * each with its type description under the heading (an alias's as a doc
+ * comment in the block). Every table with a `###` heading is a link target
+ * for the other tables' type cells.
+ */
+function renderProps(mod) {
+  const ordered = orderTables(mod.tables, mod.values);
+  const propsTables = ordered.filter((t) => t.kind === 'props');
+  const objects = ordered.filter((t) => t.kind === 'object');
+  const aliases = ordered.filter((t) => t.kind === 'alias');
   const headed = propsTables.length > 1;
   const targets = [...(headed ? propsTables : []), ...objects, ...aliases].map((t) => t.name);
   const linkable = (self) => new Set(targets.filter((n) => n !== self.name));
@@ -118,7 +138,12 @@ function renderProps(mod) {
   for (const t of propsTables) parts.push(...tableBlock(t, linkable(t), headed));
   for (const t of objects) parts.push(...tableBlock(t, linkable(t), true));
   if (aliases.length > 0) {
-    const text = aliases.map((t) => `type ${t.name} = ${(t.text ?? '').trim()};`).join('\n');
+    const text = aliases
+      .map((t) => {
+        const decl = `type ${t.name} = ${(t.text ?? '').trim()};`;
+        return t.description ? `/** ${t.description} */\n${decl}` : decl;
+      })
+      .join('\n');
     parts.push('### Types', `\`\`\`ts\n${text}\n\`\`\``);
   }
   if (parts.every((p) => /^#+ [^\n]*$/.test(p))) {
