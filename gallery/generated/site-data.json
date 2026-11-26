@@ -1687,6 +1687,255 @@
       ]
     },
     {
+      "id": "control/switch",
+      "slug": "switch",
+      "entry": "@korzun/design/control",
+      "docPath": "docs/control/switch.md",
+      "title": "Switch",
+      "description": "An on/off toggle with an optional label and description, a full-row layout for forms, and a loading state for saves in flight.",
+      "category": "Inputs",
+      "values": [
+        "Switch"
+      ],
+      "types": [
+        "SwitchProps",
+        "SwitchRadiusValue"
+      ],
+      "importLine": "import { Switch, type SwitchProps, type SwitchRadiusValue } from '@korzun/design/control'",
+      "body": "An on/off toggle (`role=\"switch\"`) with an optional label and description, a\nfull-row `horizontal` layout for forms, and a `loading` state for saves in\nflight. Controlled: you own `checked`.\n\nUse something else for: one of several options (`SegmentedControl`, `Select`),\nan action that happens on click (`Button`).\n\n## Usage\n\n### Behaviour\n\nNo `className`. Keyboard: Enter and Space toggle. Clicks and those keys stop\npropagation, so a switch inside a clickable card row won't trigger the row.\n\n### Choosing a radius\n\nSee [corners](../corners.md).\n\n- In a shaded row (`layout=\"horizontal\"`, or inside any field row): omit it\n  (`inset`, a 4px track concentric with the row's 8px corner).\n- In a `Card` header (`headerAction`), or anywhere with no nearby corner to\n  echo: `radius=\"pill\"`.\n\n## Do / don't\n\n- Do pass `loading` while the save runs instead of `disabled`; `disabled` means\n  \"you may not change this\".\n- Do give a label-less switch an `ariaLabel`; `name` is a machine key.\n- Don't expect a switch to submit with a `<form>`; send `checked` from state.\n- Don't put an interactive element in `description` of a `horizontal` switch:\n  clicking it toggles the switch.",
+      "examples": [
+        {
+          "file": "src/control/switch/examples/01-basic.tsx",
+          "slug": "basic",
+          "order": 1,
+          "title": "Basic",
+          "description": "A controlled switch with a visible `label`. `onChange` receives the new\nvalue, not an event; Enter and Space toggle it from the keyboard.",
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Switch } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Basic() {\n  const [checked, setChecked] = useState(true);\n  return (\n    <Stack>\n      <Switch name=\"notifications\" label=\"Notifications\" checked={checked} onChange={setChecked} />\n      <Text tone=\"muted\">Notifications: {checked ? 'on' : 'off'}</Text>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/switch/examples/02-layouts.tsx",
+          "slug": "layouts",
+          "order": 2,
+          "title": "Layouts",
+          "description": "`default` puts the track and the label inline. `horizontal` is a full-width\nshaded row with the label and `description` on the left and the track on the\nright, and the whole row toggles. In both, the `description` is helper text\nlinked by `aria-describedby`.",
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Switch } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Layouts() {\n  const [inline, setInline] = useState(true);\n  const [row, setRow] = useState(false);\n  return (\n    <Stack>\n      <Text tone=\"muted\">layout default</Text>\n      <Switch\n        name=\"sync\"\n        label=\"Sync over Wi-Fi only\"\n        description=\"Large downloads wait for a Wi-Fi connection.\"\n        checked={inline}\n        onChange={setInline}\n      />\n      <Text tone=\"muted\">layout horizontal</Text>\n      <Switch\n        name=\"grayscale\"\n        label=\"Grayscale\"\n        layout=\"horizontal\"\n        description=\"Convert covers to grayscale for monochrome screens.\"\n        checked={row}\n        onChange={setRow}\n      />\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/switch/examples/03-radius.tsx",
+          "slug": "radius",
+          "order": 3,
+          "title": "Radius",
+          "description": "`inset` is the track corner for a switch in a shaded row: concentric with the\nrow's own corner. `pill` is the capsule for a switch on an unshaded surface,\nwith no nearby corner to echo.",
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Switch } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Radius() {\n  const [inset, setInset] = useState(true);\n  const [pill, setPill] = useState(true);\n  return (\n    <Stack>\n      <Text tone=\"muted\">radius inset, in a shaded row</Text>\n      <Switch\n        name=\"inset\"\n        label=\"Inset track\"\n        layout=\"horizontal\"\n        radius=\"inset\"\n        checked={inset}\n        onChange={setInset}\n      />\n      <Text tone=\"muted\">radius pill, on an unshaded surface</Text>\n      <Switch name=\"pill\" label=\"Pill track\" radius=\"pill\" checked={pill} onChange={setPill} />\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/switch/examples/04-in-a-card.tsx",
+          "slug": "in-a-card",
+          "order": 4,
+          "title": "In a Card",
+          "description": "A setting row in the body takes the default `inset` track. A switch in the\nheader, with no nearby corner, takes `radius=\"pill\"`; with no visible label it\nneeds an `ariaLabel`.",
+          "code": "import { Card, Stack, Text } from '@korzun/design/component';\nimport { Switch } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function InACard() {\n  const [isSeries, setIsSeries] = useState(false);\n  const [bwCover, setBwCover] = useState(true);\n  return (\n    <Card\n      title=\"Series\"\n      headerAction={\n        <Switch\n          name=\"isSeries\"\n          ariaLabel=\"Part of a series\"\n          radius=\"pill\"\n          checked={isSeries}\n          onChange={setIsSeries}\n        />\n      }\n    >\n      <Stack>\n        <Switch\n          name=\"bwCover\"\n          label=\"Grayscale\"\n          layout=\"horizontal\"\n          description=\"Convert the cover to grayscale for monochrome screens.\"\n          checked={bwCover}\n          onChange={setBwCover}\n        />\n        <Text tone=\"muted\">Part of a series: {isSeries ? 'yes' : 'no'}</Text>\n      </Stack>\n    </Card>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/switch/examples/05-loading-and-disabled.tsx",
+          "slug": "loading-and-disabled",
+          "order": 5,
+          "title": "Loading and disabled",
+          "description": "`loading` marks a save in flight: clicks are ignored and the thumb turns into\na spinner after a short delay, while the switch keeps its colour. `disabled`\nfades the whole control and means \"you may not change this\". The button holds\nthe save open; the count shows that clicks during it do nothing.",
+          "code": "import { Inline, Stack, Text } from '@korzun/design/component';\nimport { Button, Switch } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function LoadingAndDisabled() {\n  const [subscribed, setSubscribed] = useState(false);\n  const [email, setEmail] = useState(false);\n  const [saving, setSaving] = useState(true);\n  const [changes, setChanges] = useState(0);\n  return (\n    <Stack>\n      <Switch\n        name=\"push-device\"\n        label=\"This device\"\n        checked={subscribed}\n        loading={saving}\n        onChange={(next) => {\n          setSubscribed(next);\n          setChanges((n) => n + 1);\n        }}\n      />\n      <Inline>\n        <Button onClick={() => setSaving((s) => !s)}>\n          {saving ? 'Finish save' : 'Start save'}\n        </Button>\n        <Text tone=\"muted\">Changes made: {changes}</Text>\n      </Inline>\n      <Switch\n        name=\"push-email\"\n        label=\"Email (not available)\"\n        disabled\n        checked={email}\n        onChange={setEmail}\n      />\n    </Stack>\n  );\n}\n"
+        }
+      ],
+      "tables": [
+        {
+          "name": "SwitchProps",
+          "kind": "props",
+          "rows": [
+            {
+              "name": "ariaLabel",
+              "type": "string",
+              "required": false,
+              "description": "Accessible name for a switch with no visible `label`, because something outside it already carries the name (a grid's row and column headers). It wins over `label`. Without either, `name` is announced."
+            },
+            {
+              "name": "checked",
+              "type": "boolean",
+              "required": true,
+              "description": "Controlled on/off state."
+            },
+            {
+              "name": "description",
+              "type": "ReactNode",
+              "required": false,
+              "description": "Helper text under the label, linked by `aria-describedby`."
+            },
+            {
+              "name": "disabled",
+              "type": "boolean",
+              "required": false,
+              "description": "Fades the switch to 40% and removes it from the tab order.",
+              "default": "false"
+            },
+            {
+              "name": "label",
+              "type": "string",
+              "required": false,
+              "description": "Visible label and accessible name (`ariaLabel` wins over it)."
+            },
+            {
+              "name": "layout",
+              "type": "'default' | 'horizontal'",
+              "required": false,
+              "description": "`'default'`: track then label, inline. `'horizontal'`: a full-width shaded row with label and description on the left and the track on the right; the whole row toggles, description included.",
+              "default": "'default'"
+            },
+            {
+              "name": "loading",
+              "type": "boolean",
+              "required": false,
+              "description": "A save driven by this switch is in flight. Clicks are ignored at once and `aria-busy` is set; the thumb becomes a spinner only after 150ms, so fast saves do not flash. The switch keeps its colour and shows the position it is saving.",
+              "default": "false"
+            },
+            {
+              "name": "name",
+              "type": "string",
+              "required": true,
+              "description": "Not a form field (no hidden input); only the last-resort accessible name."
+            },
+            {
+              "name": "onChange",
+              "type": "(checked: boolean) => void",
+              "required": true,
+              "description": "Receives the new value, not an event. Not called while `disabled` or `loading`."
+            },
+            {
+              "name": "radius",
+              "type": "'inset' | 'pill'",
+              "required": false,
+              "description": "The corner shape of the track. Leave it for a switch in a shaded row (`layout=\"horizontal\"` or a field row), where the track is concentric with the row; `'pill'` suits a Card header or any spot with no nearby corner. See [Choosing a radius](#choosing-a-radius).",
+              "default": "'inset'"
+            }
+          ]
+        },
+        {
+          "name": "SwitchRadiusValue",
+          "kind": "alias",
+          "rows": [],
+          "text": "'inset' | 'pill'",
+          "description": "Corner shape of a Switch track."
+        }
+      ],
+      "tokens": [
+        {
+          "path": "color.bg.input",
+          "kind": "color",
+          "light": "#FFFFFF",
+          "dark": "#1A1B1E"
+        },
+        {
+          "path": "color.border.default",
+          "kind": "color",
+          "light": "#D9D9D9",
+          "dark": "#3A3B40"
+        },
+        {
+          "path": "color.brand.default",
+          "kind": "color",
+          "light": "#1777FF",
+          "dark": "#3696fe"
+        },
+        {
+          "path": "color.brand.outline",
+          "kind": "color",
+          "light": "#91CAFF",
+          "dark": "rgba(54, 150, 254, 0.45)"
+        },
+        {
+          "path": "color.text.description",
+          "kind": "color",
+          "light": "#585863",
+          "dark": "#A8ADB6"
+        },
+        {
+          "path": "color.text.muted",
+          "kind": "color",
+          "light": "#6E6E6E",
+          "dark": "#9CA1AB"
+        },
+        {
+          "path": "fontSize.sm",
+          "kind": "value",
+          "light": "0.75rem",
+          "dark": "0.75rem"
+        },
+        {
+          "path": "radius.circle",
+          "kind": "value",
+          "light": "50%",
+          "dark": "50%"
+        },
+        {
+          "path": "radius.pill",
+          "kind": "value",
+          "light": "999px",
+          "dark": "999px"
+        },
+        {
+          "path": "radius.sm",
+          "kind": "value",
+          "light": "4px",
+          "dark": "4px"
+        },
+        {
+          "path": "recipe.focusRing",
+          "kind": "recipe",
+          "light": null,
+          "dark": null
+        },
+        {
+          "path": "recipe.label",
+          "kind": "recipe",
+          "light": null,
+          "dark": null
+        },
+        {
+          "path": "recipe.row",
+          "kind": "recipe",
+          "light": null,
+          "dark": null
+        },
+        {
+          "path": "recipe.spinner",
+          "kind": "recipe",
+          "light": null,
+          "dark": null
+        },
+        {
+          "path": "space.md",
+          "kind": "value",
+          "light": "0.5rem",
+          "dark": "0.5rem"
+        },
+        {
+          "path": "space.xs",
+          "kind": "value",
+          "light": "0.25rem",
+          "dark": "0.25rem"
+        }
+      ],
+      "changelog": [
+        {
+          "version": "0.0.6",
+          "date": "2026-11-21",
+          "tags": [
+            "Switch",
+            "lightTheme",
+            "darkTheme"
+          ],
+          "text": "New `theme.recipe.row`: the shaded field row (`bg.cardHeader`, `radius.md`, padding `md lg md sm`), for custom rows beside form fields. `Switch`'s horizontal layout now uses it and looks the same."
+        }
+      ]
+    },
+    {
       "id": "control/text-area",
       "slug": "text-area",
       "entry": "@korzun/design/control",

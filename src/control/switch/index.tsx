@@ -43,34 +43,30 @@ export type { SwitchRadiusValue };
 
 export type SwitchProps = {
   /**
-   * Accessible name when the visible `label` is absent because something
-   * OUTSIDE the switch already carries it — a grid's row and column headers,
-   * say. Without it such a switch falls back to announcing `name`, which is a
-   * machine key (`BOOK_REQUEST_FULFILLED:EMAIL`), not a name.
+   * Accessible name for a switch with no visible `label`, because something
+   * outside it already carries the name (a grid's row and column headers). It
+   * wins over `label`. Without either, `name` is announced.
    */
   ariaLabel?: string;
   /** Controlled on/off state. */
   checked: boolean;
   /** Helper text under the label, linked by `aria-describedby`. */
   description?: ReactNode;
-  /** Fades the switch and removes it from the tab order. */
+  /** Fades the switch to 40% and removes it from the tab order. */
   disabled?: boolean;
   /** Visible label and accessible name (`ariaLabel` wins over it). */
   label?: string;
   /**
-   * `'default'`: track then label, inline. `'horizontal'`: full-width shaded
-   * row, track on the right; the whole row toggles, description included.
+   * `'default'`: track then label, inline. `'horizontal'`: a full-width shaded
+   * row with label and description on the left and the track on the right; the
+   * whole row toggles, description included.
    */
   layout?: 'default' | 'horizontal';
   /**
-   * A save driven by this switch is in flight. The thumb becomes a spinner
-   * (after a short delay — see `SPINNER_DELAY_MS`) and further clicks are
-   * ignored until it clears.
-   *
-   * Distinct from `disabled`, which means "you may not change this" and fades
-   * the whole control. A loading switch keeps its colour and shows the
-   * position it is SAVING, not the one it came from, so the reader can see
-   * where the click is taking it.
+   * A save driven by this switch is in flight. Clicks are ignored at once and
+   * `aria-busy` is set; the thumb becomes a spinner only after 150ms, so fast
+   * saves do not flash. The switch keeps its colour and shows the position it
+   * is saving.
    */
   loading?: boolean;
   /** Not a form field (no hidden input); only the last-resort accessible name. */
@@ -78,10 +74,12 @@ export type SwitchProps = {
   /** Receives the new value, not an event. Not called while `disabled` or `loading`. */
   onChange: (checked: boolean) => void;
   /**
-   * The corner shape of the track, named for what the switch sits in. Defaults
-   * to `inset` — concentric with the shaded input row every switch in this app
-   * currently sits in. Pass `pill` for the classic capsule on an unshaded
-   * surface.
+   * The corner shape of the track. Leave it for a switch in a shaded row
+   * (`layout="horizontal"` or a field row), where the track is concentric with
+   * the row; `'pill'` suits a Card header or any spot with no nearby corner.
+   * See [Choosing a radius](#choosing-a-radius).
+   *
+   * @default 'inset'
    */
   radius?: SwitchRadiusValue;
 };
