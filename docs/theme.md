@@ -307,7 +307,7 @@ The token object that `useTheme` returns and `createUseStyles` passes to a style
 | `fontFamily` (required) | `{ body: string; mono: string; }` |  |  |
 | `fontSize` (required) | `{ xxs: string; xs: string; sm: string; md: string; lg: string; xl: string; xxl: string; }` |  |  |
 | `fontWeight` (required) | `{ regular: number; medium: number; semibold: number; bold: number; extrabold: number; }` |  |  |
-| `layout` (required) | `{ navHeightMobile: string; modalWidth: string; controlHeight: string; floatingControlTopBase: string; }` |  |  |
+| `layout` (required) | `{ navHeightMobile, modalWidth, formWidth, controlHeight, floatingControlTopBase }` |  |  |
 | `lineHeight` (required) | `{ tight: number; body: number; }` |  |  |
 | `radius` (required) | `{ sm: string; md: string; lg: string; circle: string; pill: string; }` |  |  |
 | `recipe` (required) | `{ input, focusRing, label, spinner, glass, glassHighlight, row, modal, card }` |  |  |
