@@ -237,3 +237,46 @@ describe('room below a flipped overlay', () => {
     expect(contentHeight(wrapper)).toBe(100);
   });
 });
+
+describe('a toast stack fixed to the viewport bottom', () => {
+  let wrapper: HTMLDivElement;
+  // A toast container: fixed by its class, `bottom` set, `top` auto (src/toast/style.ts).
+  const stack = (top: number, height: number) => {
+    const el = place(document.createElement('div'), top, height);
+    el.className = 'toasts';
+    return el;
+  };
+  beforeEach(() => {
+    document.head.innerHTML =
+      '<style>.toasts { position: fixed; bottom: 24px; right: 24px; }</style>';
+    document.body.innerHTML = '<div id="root"><div id="flow"></div></div>';
+    wrapper = place(document.getElementById('flow') as HTMLDivElement, 0, 100);
+    wrapper.style.paddingBottom = '16px';
+  });
+  afterEach(() => {
+    document.head.innerHTML = '';
+  });
+
+  it('grows the frame to the whole stack plus its bottom offset and the padding', () => {
+    // Three toasts, 180px tall, in a 100px frame: the top 104px is cut off.
+    document.getElementById('root')!.append(stack(-104, 180));
+    expect(contentHeight(wrapper)).toBe(180 + 24 + 16);
+  });
+
+  it('counts a stack rendered inside the example too', () => {
+    wrapper.append(stack(-104, 180));
+    expect(contentHeight(wrapper)).toBe(180 + 24 + 16);
+  });
+
+  it('gets no headroom: it sits at the bottom, so a taller frame shows it', () => {
+    document.body.append(stack(-104, 180));
+    expect(overlayTop(wrapper)).toBeNull();
+    expect(contentHeight(wrapper)).toBe(180 + 24 + 16);
+  });
+
+  it('keeps the flow height when the stack already fits', () => {
+    wrapper = place(wrapper, 0, 400);
+    document.body.append(stack(300, 60));
+    expect(contentHeight(wrapper)).toBe(400);
+  });
+});

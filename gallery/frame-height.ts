@@ -15,9 +15,31 @@ const viewportGap = (dialog: HTMLElement, view: Window) => {
 // in the body, and a zero rect at the top would read as an overlay at 0.
 const NON_RENDERING = new Set(['SCRIPT', 'STYLE', 'LINK', 'TEMPLATE', 'NOSCRIPT', 'META']);
 
+/**
+ * A stack its stylesheet fixes to the viewport's bottom edge (the toast
+ * container: `position: fixed`, `bottom` set, `top` auto). A popover placed
+ * by an inline `bottom` is not one: it ends at its trigger.
+ */
+const isBottomStack = (el: Element, view: Window): el is HTMLElement => {
+  if (!(el instanceof HTMLElement) || el.style.bottom !== '') return false;
+  const style = view.getComputedStyle(el);
+  return (
+    style.position === 'fixed' &&
+    style.display !== 'none' &&
+    !['', 'auto'].includes(style.bottom) &&
+    ['', 'auto'].includes(style.top)
+  );
+};
+
+// Every bottom stack in the document, in the example or beside it, that shows something.
+const bottomStacks = (doc: Document, view: Window): HTMLElement[] =>
+  [...doc.body.querySelectorAll('*')].filter(
+    (el): el is HTMLElement => isBottomStack(el, view) && el.getBoundingClientRect().height > 0
+  );
+
 // Overlays outside the flow: body children that do not hold the wrapper (a
 // portalled popover) and render a box, and fixed children of an open dialog
-// (a popover in it).
+// (a popover in it). A bottom stack is measured on its own (see contentHeight).
 const overlays = (wrapper: HTMLElement): Element[] => {
   const doc = wrapper.ownerDocument;
   const view = doc.defaultView ?? window;
@@ -25,7 +47,8 @@ const overlays = (wrapper: HTMLElement): Element[] => {
     (child) =>
       !child.contains(wrapper) &&
       !NON_RENDERING.has(child.tagName) &&
-      view.getComputedStyle(child).display !== 'none'
+      view.getComputedStyle(child).display !== 'none' &&
+      !isBottomStack(child, view)
   );
   for (const dialog of doc.querySelectorAll<HTMLElement>('dialog[open]')) {
     for (const child of dialog.children) {
@@ -87,6 +110,12 @@ export const contentHeight = (wrapper: HTMLElement): number => {
     const below = Math.max(pad, parseFloat(view.getComputedStyle(dialog).marginBottom) || 0);
     const gap = Math.max(2 * pad, viewportGap(dialog, view));
     height = Math.max(height, top + full + below, full + gap);
+  }
+  // A toast stack hangs from the viewport's bottom edge and does not move as
+  // the frame grows, so the frame needs its height, its offset and the padding.
+  for (const stack of bottomStacks(doc, view)) {
+    const offset = parseFloat(view.getComputedStyle(stack).bottom) || 0;
+    height = Math.max(height, stack.getBoundingClientRect().height + offset + pad);
   }
   return Math.ceil(height);
 };
