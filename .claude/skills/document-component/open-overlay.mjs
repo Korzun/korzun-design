@@ -2,18 +2,18 @@
 // demo frame, so an opened menu, popover, select or dialog is seen as a reader
 // sees it (clipped by the frame or not).
 //
-// node .claude/skills/document-component/open-overlay.mjs <slug> <example-slug> "<button name>" <out.png> [light|dark]
+// node .claude/skills/document-component/open-overlay.mjs <base-url> <slug> <example-slug> "<button name>" <out.png> [light|dark]
 //
-// Needs `npm run gallery` listening on http://localhost:5173. Uses the global
+// <base-url> is the running gallery, e.g. http://localhost:5191. Uses the global
 // mise playwright (`mise where npm:playwright`).
 import { execFileSync } from 'node:child_process';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
-const [slug, example, name, out, scheme = 'light'] = process.argv.slice(2);
-if (!slug || !example || !name || !out) {
+const [base, slug, example, name, out, scheme = 'light'] = process.argv.slice(2);
+if (!base || !slug || !example || !name || !out) {
   console.error(
-    'usage: open-overlay.mjs <slug> <example-slug> "<button name>" <out.png> [light|dark]'
+    'usage: open-overlay.mjs <base-url> <slug> <example-slug> "<button name>" <out.png> [light|dark]'
   );
   process.exit(2);
 }
@@ -29,7 +29,7 @@ try {
     viewport: { width: 1280, height: 2400 },
     colorScheme: scheme === 'dark' ? 'dark' : 'light',
   });
-  await page.goto(`http://localhost:5173/#/components/${slug}`);
+  await page.goto(`${base.replace(/\/$/, '')}/#/components/${slug}`);
   const section = page.locator(`#example-${example}`);
   await section.waitFor({ timeout: 30000 });
   const frame = section.frameLocator('iframe');

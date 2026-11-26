@@ -1,6 +1,6 @@
 ---
 name: document-component
-description: Use when documenting or migrating a korzun-design module's doc (docs/control, docs/component, theme, toast, icon) for the docs site, adding or fixing a module's examples/, or after changing a component's props or JSDoc so its generated doc, tables and examples are out of date.
+description: Use when documenting or migrating a korzun-design module's doc (docs/control, docs/component, theme, toast, icon) for the docs site, adding or fixing a module's examples/, or refreshing a module's doc, JSDoc and examples after its API was changed elsewhere.
 ---
 
 # Document a component
@@ -9,8 +9,14 @@ The output is a module doc shaped like the pilots (`docs/control/button.md`,
 `docs/component/alert.md`, `docs/component/stack.md`): hand-written guidance,
 JSDoc that carries every note the old tables had, runnable examples that cover
 every variant and state, and generated regions filled by `npm run docs:gen`.
+It documents the module's current API: component types and runtime code stay
+as they are (step 7 says what to do when they would need to change).
+
 Below, `<area>/<module>` is the module folder (`control/menu`), `<slug>` the
-folder name (`menu`), `<Name>` the main exported value (`Menu`).
+folder name (`menu`), `<Name>` the main exported value (`Menu`). For an
+entry-point module (`theme`, `toast`, `icon`) the doc is `docs/<area>.md`, the
+source `src/<area>/`, the slug `<area>`, and stories are
+`src/<area>/*.stories.tsx` (e.g. `src/toast/toast.stories.tsx`).
 
 ## 0. Branch check
 
@@ -130,6 +136,7 @@ The first comment line is the title; the rest is the description shown above the
 - A handler shows its effect (a `Text` readout via `useState`, a toast) wherever that takes a line or two.
 - Examples follow the doc's own advice (if Usage says "separator before danger items", every danger item has one).
 - `01` is the canonical compact usage: it is the overview thumbnail.
+- Link items and `to` props stay real links. Clicking one in a demo shows the frame's "The example navigated to…" page; that is expected.
 
 Coverage checklist (REQUIRED; fill it in, it goes in your report). List every row
 below for this module, and give each an example file:
@@ -140,10 +147,17 @@ below for this module, and give each an example file:
 | each state the module has (`disabled`, `loading`, error, empty, read-only) | each | |
 | the old doc's main `## Example` composition | reproduced | |
 | the common composition with its usual neighbours (in a `Card`, `Dialog`, form, row) | one | |
+| examples follow the doc's own advice (Usage and Do / don't) | checked in every example | all |
+| handlers show a visible effect where it takes a line or two | checked in every example | all |
+
+A union with many values (a `gap` scale, every `tone`) can be one example
+showing all values side by side, each labelled with its value.
 
 ## 5. Delete stories
 
-`git rm src/<area>/<module>/*.stories.tsx`. Examples replace stories.
+`git rm src/<area>/<module>/*.stories.tsx`. Examples replace stories. On this
+branch this supersedes CLAUDE.md's per-control stories rule (Task 15 updates
+CLAUDE.md).
 
 ## 6. Verify (REQUIRED, in order)
 
@@ -151,22 +165,29 @@ below for this module, and give each an example file:
 2. Read every generated table in the doc against the old doc, row by row: each old note is present; types and descriptions are right for each row. A wrong row (a merged union with the wrong type or description, an unlinked supporting type, a missing default) is a generator problem: write it in your report with the file and line. Fix JSDoc when the JSDoc is wrong; the generated text is regenerated, never edited.
 3. `npm run lint`.
 4. `npm test` once (build, vitest, script tests, docs:check). Fix and rerun until green.
-5. Screenshots. Start `npm run gallery` in the background, wait for `http://localhost:5173`, then:
+5. Screenshots. Pick a free port and start the gallery in its own process group, recording its id (`<scratch>` is your scratch directory):
    ```
-   playwright screenshot --viewport-size 1280,2400 --wait-for-timeout 15000 "http://localhost:5173/#/components/<slug>" <scratch>/<slug>-light.png
-   playwright screenshot --color-scheme dark --viewport-size 1280,2400 --wait-for-timeout 15000 "http://localhost:5173/#/components/<slug>" <scratch>/<slug>-dark.png
+   PORT=$(node -e "const s=require('net').createServer().listen(0,()=>{console.log(s.address().port);s.close()})")
+   setsid npm run gallery -- --port $PORT --strictPort > <scratch>/gallery.log 2>&1 & echo $! > <scratch>/gallery.pid
    ```
-   For each example whose demo opens an overlay (menu, popover, select list, dialog), open it inside its demo frame:
+   Wait until `curl -s -o /dev/null http://localhost:$PORT/` succeeds, then shoot the whole page in both schemes:
    ```
-   node .claude/skills/document-component/open-overlay.mjs <slug> <example-slug> "<trigger button name>" <scratch>/<slug>-<example-slug>-open.png
+   playwright screenshot --full-page --viewport-size 1280,2400 --wait-for-timeout 15000 "http://localhost:$PORT/#/components/<slug>" <scratch>/<slug>-light.png
+   playwright screenshot --full-page --color-scheme dark --viewport-size 1280,2400 --wait-for-timeout 15000 "http://localhost:$PORT/#/components/<slug>" <scratch>/<slug>-dark.png
    ```
-   `<example-slug>` is the example file name without `NN-` and `.tsx`. View every PNG. Each example renders, is not empty, is legible in dark. An example that renders wrong because of its own content (a `side="top"` trigger with no room above, so it flips) is fixed in the example. An overlay cut off at the frame edge is reported with its screenshot path. Stop the server (`pkill -f "vite --config gallery"`).
+   For each example whose demo opens an overlay (menu, popover, select list, dialog) from a button, open it inside its demo frame:
+   ```
+   node .claude/skills/document-component/open-overlay.mjs http://localhost:$PORT <slug> <example-slug> "<trigger button name>" <scratch>/<slug>-<example-slug>-open.png
+   ```
+   `<example-slug>` is the example file name without `NN-` and `.tsx`. An overlay opened by typing or focus rather than a button click gets a sentence in your report saying how it opens and what you checked, in place of an overlay shot.
+   View every PNG. Each example renders, is not empty, is legible in dark, and each opened overlay is fully visible in its open-overlay shot. An example that renders wrong because of its own content (a `side="top"` trigger with no room above, so it flips) is fixed in the example; anything else is reported with its screenshot path.
+   Stop the server by its process group: `kill -- -$(cat <scratch>/gallery.pid)`.
 
 ## 7. Commit
 
 - Doc, JSDoc, examples and the stories deletion: one commit, `docs(<slug>): generated docs and examples`.
 - An unrelated fix you needed (a brittle test, a typo elsewhere): its own commit, before it.
-- CHANGELOG: if the diff in `src/` changes only comments, `examples/` and `*.stories.tsx`, no CHANGELOG line (the 0.5.1 `[General]` line covers the migration). If documenting it needs a change to runtime code or a type, stop and report it: behaviour changes are out of scope here.
+- CHANGELOG: if the diff in `src/` changes only comments, `examples/` and `*.stories.tsx`, no CHANGELOG line (the 0.5.1 `[General]` line covers the migration). If documenting it would need a change to runtime code or a type (a bug, a missing prop), stop and report it: that change is made elsewhere, with its own CHANGELOG line, and this skill then refreshes the doc.
 
 ## 8. Report
 
