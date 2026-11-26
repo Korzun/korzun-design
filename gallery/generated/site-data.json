@@ -1914,7 +1914,8 @@
               "name": "clearable",
               "type": "boolean",
               "required": false,
-              "description": "Clicking (or Space/Enter on) the checked segment, Backspace and Delete clear the value. Without it, clicking the checked segment does nothing and there is no way to clear."
+              "description": "Clicking (or Space/Enter on) the checked segment, Backspace and Delete clear the value. Without it, clicking the checked segment does nothing and there is no way to clear.",
+              "default": "false"
             },
             {
               "name": "label",

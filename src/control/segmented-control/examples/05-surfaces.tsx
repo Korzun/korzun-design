@@ -4,7 +4,7 @@
  * shows. The corner is the same in both: the control belongs inside a card or
  * modal.
  */
-import { Card, Stack } from '@korzun/design/component';
+import { Card, Stack, Text } from '@korzun/design/component';
 import { SegmentedControl } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -35,7 +35,7 @@ export default function Surfaces() {
           />
         }
       >
-        Showing {header}.
+        <Text>Showing {header}.</Text>
       </Card>
     </Stack>
   );

@@ -165,8 +165,8 @@ export default function Clearable() {
 ### Read-only
 
 Omit `onChange` to show a value without letting it change: the segments are
-marked `aria-disabled` and ignore clicks and keys. A `value` no option has
-checks nothing.
+marked `aria-disabled` and ignore clicks and keys. A `null` value checks
+nothing and draws no lens.
 
 ```tsx
 import { Stack, Text } from '@korzun/design/component';
@@ -198,7 +198,7 @@ shows. The corner is the same in both: the control belongs inside a card or
 modal.
 
 ```tsx
-import { Card, Stack } from '@korzun/design/component';
+import { Card, Stack, Text } from '@korzun/design/component';
 import { SegmentedControl } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -229,7 +229,7 @@ export default function Surfaces() {
           />
         }
       >
-        Showing {header}.
+        <Text>Showing {header}.</Text>
       </Card>
     </Stack>
   );
@@ -244,10 +244,10 @@ export default function Surfaces() {
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `clearable` | `boolean` |  | Clicking (or Space/Enter on) the checked segment, Backspace and Delete clear the value. Without it, clicking the checked segment does nothing and there is no way to clear. |
+| `clearable` | `boolean` | `false` | Clicking (or Space/Enter on) the checked segment, Backspace and Delete clear the value. Without it, clicking the checked segment does nothing and there is no way to clear. |
 | `label` (required) | `string` |  | The group's accessible name (`aria-label`), e.g. the setting it edits. Not rendered visibly: put a visible label beside it yourself. |
-| `onChange` | `((value: V \| null) => void) \| ((value: V) => void)` |  | Absent means read-only: the control shows the value, and segments get `aria-disabled` and ignore clicks and keys. |
-| `options` (required) | `ReadonlyArray<` [SegmentedOption](#segmentedoption) `<V>>` |  | The segments, in order. Declare them `as const` or type them as `SegmentedOption<V>`. |
+| `onChange` | `((value: V \| null) => void) \| ((value: V) => void)` |  | Receives `null` (a clear) only when `clearable` is set. Absent means read-only: the control shows the value, and segments get `aria-disabled` and ignore clicks and keys. |
+| `options` (required) | `ReadonlyArray<`[SegmentedOption](#segmentedoption)`<V>>` |  | The segments, in order. Declare them `as const` or type them as `SegmentedOption<V>`. |
 | `showLabels` | `boolean` | `true` | Render each option's label. Only an option with an `Icon` can go without one; a text-only option always shows its label. |
 | `surface` | `'card' \| 'row'` | `'card'` | What the control sits on. `card` paints its own `bg.track` rail. `row` paints nothing: the shaded input row it sits in is the track and only the lens shows, the way the white field shows in a `TextInput` row. |
 | `value` (required) | `V \| null` |  | The checked option; `null` (or a value no option has) checks nothing and draws no lens. |

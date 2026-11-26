@@ -1,7 +1,7 @@
 /** Read-only
  * Omit `onChange` to show a value without letting it change: the segments are
- * marked `aria-disabled` and ignore clicks and keys. A `value` no option has
- * checks nothing.
+ * marked `aria-disabled` and ignore clicks and keys. A `null` value checks
+ * nothing and draws no lens.
  */
 import { Stack, Text } from '@korzun/design/component';
 import { SegmentedControl } from '@korzun/design/control';

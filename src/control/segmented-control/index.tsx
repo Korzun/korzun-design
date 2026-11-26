@@ -27,8 +27,6 @@ type BaseProps<V extends string> = {
   /**
    * Render each option's label. Only an option with an `Icon` can go without
    * one; a text-only option always shows its label.
-   *
-   * @default true
    */
   showLabels?: boolean;
   /**
@@ -36,8 +34,6 @@ type BaseProps<V extends string> = {
    * rail. `row` paints nothing: the shaded input row it sits in is the track
    * and only the lens shows, the way the white field shows in a `TextInput`
    * row.
-   *
-   * @default 'card'
    */
   surface?: 'card' | 'row';
 };
@@ -47,7 +43,10 @@ export type SegmentedControlProps<V extends string> = BaseProps<V> &
     | {
         /** Clicking (or Space/Enter on) the checked segment, Backspace and Delete clear the value. */
         clearable: true;
-        /** Absent means read-only: the control shows the value, and segments get `aria-disabled` and ignore clicks and keys. */
+        /**
+         * Receives `null` (a clear) only when `clearable` is set. Absent means read-only: the
+         * control shows the value, and segments get `aria-disabled` and ignore clicks and keys.
+         */
         onChange?: (value: V | null) => void;
       }
     | {
@@ -57,7 +56,10 @@ export type SegmentedControlProps<V extends string> = BaseProps<V> &
          * @default false
          */
         clearable?: false;
-        /** Absent means read-only: the control shows the value, and segments get `aria-disabled` and ignore clicks and keys. */
+        /**
+         * Receives `null` (a clear) only when `clearable` is set. Absent means read-only: the
+         * control shows the value, and segments get `aria-disabled` and ignore clicks and keys.
+         */
         onChange?: (value: V) => void;
       }
   );
