@@ -14,9 +14,18 @@ function cell(text) {
   return String(text).replace(/\r?\n/g, ' ').replace(/\|/g, '\\|').trim();
 }
 
-/** A value in backticks inside a table cell; empty stays empty. */
+/**
+ * A value as a code span inside a table cell; empty stays empty. The fence is
+ * one backtick longer than the longest run inside (a template literal type),
+ * with a space inside each end when the text starts or ends with a backtick.
+ */
 function code(text) {
-  return text ? `\`${cell(text)}\`` : '';
+  if (!text) return '';
+  const body = cell(text);
+  const longest = Math.max(0, ...(body.match(/`+/g) ?? []).map((run) => run.length));
+  const fence = '`'.repeat(longest + 1);
+  const pad = /^`|`$/.test(body) ? ' ' : '';
+  return `${fence}${pad}${body}${pad}${fence}`;
 }
 
 function anchor(name) {

@@ -353,3 +353,22 @@ test('props: a prose default renders as plain text, a value default as code', ()
   assert.ok(out.includes('| `() => boolean` | accepts numeric text |'), out);
   assert.ok(out.includes("| `'m'` |"), out);
 });
+
+test('props: a type with backticks is fenced by a longer run, padded when it starts or ends with one', () => {
+  const tables = [
+    {
+      name: 'PopoverProps',
+      kind: 'props',
+      rows: [
+        row({ name: 'gap', type: 'number | `${number}px` | `${number}rem`', default: '4' }),
+        row({ name: 'unit', type: '`${number}px`', default: '`1px`' }),
+      ],
+    },
+  ];
+  const out = renderRegion('props', mod({ values: ['Popover'], tables }));
+  assert.ok(
+    out.includes('| `gap` | `` number \\| `${number}px` \\| `${number}rem` `` | `4` |'),
+    out
+  );
+  assert.ok(out.includes('| `unit` | `` `${number}px` `` | `` `1px` `` |'), out);
+});
