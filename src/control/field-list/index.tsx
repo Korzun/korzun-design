@@ -8,18 +8,41 @@ import { useStyle } from './style.js';
 /**
  * One column of a `FieldList`: a `TextInput` (`'text'`) or `NumberInput`
  * (`'number'`) per row, keyed by `key`. `validate` receives the raw text.
+ * A number column shows a row value only if it is a `number`: a numeric string
+ * shows as empty.
  */
 export type ColumnDescriptor =
-  | { type: 'text'; key: string; placeholder?: string; validate?: (v: string) => boolean }
-  | { type: 'number'; key: string; placeholder?: string; validate?: (v: string) => boolean };
+  | {
+      /** `'text'` renders a `TextInput`, `'number'` a `NumberInput`. */
+      type: 'text';
+      /** The row field this column reads and writes, and the end of each input's `name`. */
+      key: string;
+      /** Says what the column is, since inputs have no labels. */
+      placeholder?: string;
+      /** Receives the raw text on each keystroke; while it returns `false`, `onChange` is not called. */
+      validate?: (v: string) => boolean;
+    }
+  | {
+      /** `'text'` renders a `TextInput`, `'number'` a `NumberInput`. */
+      type: 'number';
+      /** The row field this column reads and writes, and the end of each input's `name`. */
+      key: string;
+      /** Says what the column is, since inputs have no labels. */
+      placeholder?: string;
+      /** Receives the raw text on each keystroke; while it returns `false`, `onChange` is not called. */
+      validate?: (v: string) => boolean;
+    };
 
 /** A `FieldList` row: a stable unique `_key` plus one value per column key. */
-export type FieldRow = { _key: string } & Record<string, string | number | undefined>;
+export type FieldRow = {
+  /** Stable and unique: it is the React key and part of each input's `name`. */
+  _key: string;
+} & Record<string, string | number | undefined>;
 
 export type FieldListProps = {
   /** Text of the dashed add button ("Add identifier"). */
   addLabel: string;
-  /** One input per column per row; inputs have no labels, so use `placeholder`. */
+  /** One input per column per row; inputs have no labels, so use `placeholder`. A number column shows a row value only if it is a `number`: a numeric string shows as empty. */
   columns: ColumnDescriptor[];
   /** Append a row with a fresh `_key`. Receives no event. */
   onAdd: () => void;

@@ -1236,6 +1236,167 @@
       "changelog": []
     },
     {
+      "id": "control/field-list",
+      "slug": "field-list",
+      "entry": "@korzun/design/control",
+      "docPath": "docs/control/field-list.md",
+      "title": "FieldList",
+      "description": "An editable list of rows of text and number inputs, each with a remove button, plus an add button.",
+      "category": "Inputs",
+      "values": [
+        "FieldList"
+      ],
+      "types": [
+        "ColumnDescriptor",
+        "FieldListProps",
+        "FieldRow"
+      ],
+      "importLine": "import { FieldList, type ColumnDescriptor, type FieldListProps, type FieldRow } from '@korzun/design/control'",
+      "body": "An editable list of rows, each with one or more text/number inputs and a\nremove button, plus a dashed \"add\" button underneath. Fully controlled: you own\nthe rows and apply every change. On phones a row's columns stack.\n\nUse something else for: a list of single words or tags (`ChipsInput`), a fixed\nset of fields (`TextInput` / `NumberInput` directly).\n\n## Usage\n\n### Columns\n\n`ColumnDescriptor` is\n`{ type: 'text' | 'number'; key: string; placeholder?: string; validate?: (text: string) => boolean }`.\nA text column renders a `TextInput`, a number column a `NumberInput` (see\nthose docs for the controlled-ish behaviour). A number column shows a row value\nonly if it is a `number`; a numeric string displays as empty.\n\n### Corners\n\nThe add button follows surface depth: 16px directly on a Page, 8px in a Card\nor Dialog, 4px deeper (8px with no Page, Dialog, Card, CardRow, Alert or Surface above it).\n\n### Behaviour to know\n\n- The add button is 8px outside any surface and follows surface depth inside\n  one (a Card body, a Dialog, a Popover).\n- Inputs have no labels; use `placeholder` to say what each column is.\n- Every remove button is titled \"Remove row\" (its accessible name); they are not\n  distinguished per row.\n- No `className`.\n\n## Do / don't\n\n- Do generate `_key` once per row (`crypto.randomUUID()`), never from the index.\n- Do strip `_key` before sending rows to the server.\n- Don't store numeric columns as strings; they won't display.",
+      "examples": [
+        {
+          "file": "src/control/field-list/examples/01-basic.tsx",
+          "slug": "basic",
+          "order": 1,
+          "title": "Basic",
+          "description": "Rows of inputs with a remove button each and a dashed add button below. You\nown the rows: every `onAdd`, `onRemove` and `onChange` is yours to apply, and\neach row needs a stable `_key` made once (`crypto.randomUUID()`), never from\nthe index. Inputs have no labels, so `placeholder` says what each column is.",
+          "code": "import { Card } from '@korzun/design/component';\nimport { FieldList, type FieldRow } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Basic() {\n  const [identifiers, setIdentifiers] = useState<FieldRow[]>([\n    { _key: crypto.randomUUID(), scheme: 'isbn', value: '9780441172719' },\n  ]);\n  return (\n    <Card title=\"Identifiers\">\n      <FieldList\n        addLabel=\"Add identifier\"\n        columns={[\n          { type: 'text', key: 'scheme', placeholder: 'Scheme (e.g. isbn)' },\n          { type: 'text', key: 'value', placeholder: 'Value' },\n        ]}\n        rows={identifiers}\n        onAdd={() => setIdentifiers((r) => [...r, { _key: crypto.randomUUID() }])}\n        onRemove={(key) => setIdentifiers((r) => r.filter((row) => row._key !== key))}\n        onChange={(key, field, value) =>\n          setIdentifiers((r) =>\n            r.map((row) => (row._key === key ? { ...row, [field]: value } : row))\n          )\n        }\n      />\n    </Card>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/field-list/examples/02-number-and-validation.tsx",
+          "slug": "number-and-validation",
+          "order": 2,
+          "title": "Number column and validation",
+          "description": "A `number` column renders a `NumberInput` and reports a `number`, or\n`undefined` when the field is emptied; a `text` column reports a string.\n`validate` receives the raw text: while it fails, `onChange` is not called\nand `onValidChange` reports `${rowKey}.${columnKey}` once, when validity\nflips.",
+          "code": "import { Card, Stack, Text } from '@korzun/design/component';\nimport { FieldList, type FieldRow } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function NumberAndValidation() {\n  const [rows, setRows] = useState<FieldRow[]>([\n    { _key: crypto.randomUUID(), name: 'Dune', qty: 2 },\n  ]);\n  const [invalid, setInvalid] = useState<string[]>([]);\n  return (\n    <Card title=\"Order\">\n      <Stack>\n        <FieldList\n          addLabel=\"Add item\"\n          columns={[\n            {\n              type: 'text',\n              key: 'name',\n              placeholder: 'Title (letters only)',\n              validate: (text) => /^[A-Za-z ]*$/.test(text),\n            },\n            { type: 'number', key: 'qty', placeholder: 'Quantity' },\n          ]}\n          rows={rows}\n          onAdd={() => setRows((r) => [...r, { _key: crypto.randomUUID() }])}\n          onRemove={(key) => setRows((r) => r.filter((row) => row._key !== key))}\n          onChange={(key, field, value) =>\n            setRows((r) => r.map((row) => (row._key === key ? { ...row, [field]: value } : row)))\n          }\n          onValidChange={(field, valid) =>\n            setInvalid((names) => (valid ? names.filter((n) => n !== field) : [...names, field]))\n          }\n        />\n        <Text tone=\"muted\">\n          Stored: {rows.map((row) => `${row.name ?? '–'} × ${row.qty ?? '–'}`).join(', ') || 'none'}\n        </Text>\n        <Text tone={invalid.length > 0 ? 'danger' : 'muted'}>\n          {invalid.length > 0 ? `Invalid: ${invalid.length} field` : 'All fields valid'}\n        </Text>\n      </Stack>\n    </Card>\n  );\n}\n"
+        }
+      ],
+      "tables": [
+        {
+          "name": "FieldListProps",
+          "kind": "props",
+          "rows": [
+            {
+              "name": "addLabel",
+              "type": "string",
+              "required": true,
+              "description": "Text of the dashed add button (\"Add identifier\")."
+            },
+            {
+              "name": "columns",
+              "type": "ColumnDescriptor[]",
+              "required": true,
+              "description": "One input per column per row; inputs have no labels, so use `placeholder`. A number column shows a row value only if it is a `number`: a numeric string shows as empty."
+            },
+            {
+              "name": "onAdd",
+              "type": "() => void",
+              "required": true,
+              "description": "Append a row with a fresh `_key`. Receives no event."
+            },
+            {
+              "name": "onChange",
+              "type": "(rowKey: string, fieldKey: string, newValue: string | number | undefined) => void",
+              "required": true,
+              "description": "`string` from a text column, `number` from a number column, `undefined` when emptied. Not called while that field's `validate` fails."
+            },
+            {
+              "name": "onRemove",
+              "type": "(rowKey: string) => void",
+              "required": true,
+              "description": "Remove the row with this `_key`."
+            },
+            {
+              "name": "onValidChange",
+              "type": "(fieldName: string, isValid: boolean) => void",
+              "required": false,
+              "description": "`fieldName` is `${rowKey}.${columnKey}`. Fires only when validity flips."
+            },
+            {
+              "name": "rows",
+              "type": "FieldRow[]",
+              "required": true,
+              "description": "`_key` must be stable and unique: it is the React key and part of each input's `name`."
+            }
+          ]
+        },
+        {
+          "name": "ColumnDescriptor",
+          "kind": "object",
+          "rows": [
+            {
+              "name": "key",
+              "type": "string",
+              "required": true,
+              "description": "The row field this column reads and writes, and the end of each input's `name`."
+            },
+            {
+              "name": "placeholder",
+              "type": "string",
+              "required": false,
+              "description": "Says what the column is, since inputs have no labels."
+            },
+            {
+              "name": "type",
+              "type": "'text' | 'number'",
+              "required": true,
+              "description": "`'text'` renders a `TextInput`, `'number'` a `NumberInput`."
+            },
+            {
+              "name": "validate",
+              "type": "(v: string) => boolean",
+              "required": false,
+              "description": "Receives the raw text on each keystroke; while it returns `false`, `onChange` is not called."
+            }
+          ],
+          "description": "One column of a `FieldList`: a `TextInput` (`'text'`) or `NumberInput` (`'number'`) per row, keyed by `key`. `validate` receives the raw text. A number column shows a row value only if it is a `number`: a numeric string shows as empty."
+        },
+        {
+          "name": "FieldRow",
+          "kind": "object",
+          "rows": [
+            {
+              "name": "_key",
+              "type": "string",
+              "required": true,
+              "description": "Stable and unique: it is the React key and part of each input's `name`."
+            }
+          ],
+          "extends": [
+            "Record<string, string | number | undefined>"
+          ],
+          "description": "A `FieldList` row: a stable unique `_key` plus one value per column key."
+        }
+      ],
+      "tokens": [
+        {
+          "path": "breakpoint.mobile",
+          "kind": "value",
+          "light": "@media (max-width: 640px)",
+          "dark": "@media (max-width: 640px)"
+        },
+        {
+          "path": "space.lg",
+          "kind": "value",
+          "light": "0.625rem",
+          "dark": "0.625rem"
+        },
+        {
+          "path": "space.xl",
+          "kind": "value",
+          "light": "0.75rem",
+          "dark": "0.75rem"
+        },
+        {
+          "path": "space.xs",
+          "kind": "value",
+          "light": "0.25rem",
+          "dark": "0.25rem"
+        }
+      ],
+      "changelog": []
+    },
+    {
       "id": "control/menu",
       "slug": "menu",
       "entry": "@korzun/design/control",
