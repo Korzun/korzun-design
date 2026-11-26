@@ -356,7 +356,7 @@ test(
     assert.equal(segmented.kind, 'props');
     assert.equal(row(segmented, 'clearable').type, 'boolean');
     assert.equal(row(segmented, 'clearable').required, false);
-    assert.match(row(segmented, 'clearable').description, /clear the value\. Off by default/);
+    assert.match(row(segmented, 'clearable').description, /clear the value\. Without it/);
     assert.equal(row(segmented, 'value').type, 'V | null');
     assert.equal(row(segmented, 'label').required, true);
   }

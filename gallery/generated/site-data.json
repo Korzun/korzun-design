@@ -1687,6 +1687,266 @@
       ]
     },
     {
+      "id": "control/segmented-control",
+      "slug": "segmented-control",
+      "entry": "@korzun/design/control",
+      "docPath": "docs/control/segmented-control.md",
+      "title": "SegmentedControl",
+      "description": "A row of equal-width radio segments in a track, with a lens that slides to the checked one.",
+      "category": "Inputs",
+      "values": [
+        "SegmentedControl"
+      ],
+      "types": [
+        "SegmentedControlProps",
+        "SegmentedOption"
+      ],
+      "importLine": "import { SegmentedControl, type SegmentedControlProps, type SegmentedOption } from '@korzun/design/control'",
+      "body": "A row of equal-width radio segments in a track, with a lens that slides to the\nchecked one. Options can be text, or an icon over a small caption. Optionally\nclearable, and read-only when `onChange` is omitted. Generic over the value\ntype: `V extends string`.\n\nUse something else for: many options or long labels (`Select`), on/off\n(`Switch`), actions (`Button`).\n\n## Usage\n\n### Behaviour\n\nNo `className`, no `name` (not a form field). Type options with the exported\n`SegmentedOption<V>` (and props with `SegmentedControlProps<V>`).\n\n### Keyboard\n\nOn the group: ArrowRight/ArrowUp and ArrowLeft/ArrowDown step one option and do\nnot wrap; Home/End jump to the ends; digits 1–9 pick that option; Backspace and\nDelete clear when `clearable`. Modified keys (Ctrl/Cmd/Alt) are left alone.\n\n### Choosing a surface\n\nThe track and lens are always `radius.md` (see [corners](../corners.md)), so the\ncontrol belongs inside a card or modal.\n\n- Directly in a `Card` body: omit `surface` (`'card'`).\n- Inside a shaded `bg.cardHeader` row you built (label left, control right):\n  `surface=\"row\"`, so the row itself is the track and the lens is flush with it.\n\n## Do / don't\n\n- Do keep it to a handful of short options; segments are equal columns.\n- Do pass `clearable` whenever `null` is a valid answer, or the user can never\n  get back to it.\n- Don't pass `onChange={() => {}}` to show a value; omit `onChange` for read-only.",
+      "examples": [
+        {
+          "file": "src/control/segmented-control/examples/01-basic.tsx",
+          "slug": "basic",
+          "order": 1,
+          "title": "Basic",
+          "description": "A few short text options. Declare them `as const` so `value` and `onChange`\nare typed to the option values. The `label` names the group for assistive tech\nand is not drawn, so put a visible label beside the control yourself.",
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { SegmentedControl } from '@korzun/design/control';\nimport { useState } from 'react';\n\nconst SORTS = [\n  { value: 'title', label: 'Title' },\n  { value: 'author', label: 'Author' },\n  { value: 'added', label: 'Added' },\n] as const;\n\nexport default function Basic() {\n  const [sort, setSort] = useState<(typeof SORTS)[number]['value']>('title');\n  return (\n    <Stack>\n      <Text tone=\"muted\">Sort by</Text>\n      <SegmentedControl label=\"Sort by\" options={SORTS} value={sort} onChange={setSort} />\n      <Text tone=\"muted\">Sorted by: {sort}</Text>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/segmented-control/examples/02-icons.tsx",
+          "slug": "icons",
+          "order": 2,
+          "title": "Icons",
+          "description": "An option with an `Icon` draws it above its label, which becomes a small\ncaption. `showLabels={false}` drops the captions and leaves icons only; the\n`label` stays each segment's accessible name. `Icon` takes a component\n(`ThumbDownIcon`), not an element.",
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { SegmentedControl } from '@korzun/design/control';\nimport { HandLoveYouIcon, HandOkIcon, ThumbDownIcon } from '@korzun/design/icon';\nimport { useState } from 'react';\n\nconst RATINGS = [\n  { value: 'bad', label: 'Bad', Icon: ThumbDownIcon },\n  { value: 'ok', label: 'Okay', Icon: HandOkIcon },\n  { value: 'great', label: 'Great', Icon: HandLoveYouIcon },\n] as const;\n\nexport default function Icons() {\n  const [rating, setRating] = useState<(typeof RATINGS)[number]['value']>('ok');\n  return (\n    <Stack>\n      <Text tone=\"muted\">With captions</Text>\n      <SegmentedControl label=\"Rating\" options={RATINGS} value={rating} onChange={setRating} />\n      <Text tone=\"muted\">showLabels off</Text>\n      <SegmentedControl\n        label=\"Rating\"\n        options={RATINGS}\n        value={rating}\n        onChange={setRating}\n        showLabels={false}\n      />\n      <Text tone=\"muted\">Rating: {rating}</Text>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/segmented-control/examples/03-clearable.tsx",
+          "slug": "clearable",
+          "order": 3,
+          "title": "Clearable",
+          "description": "With `clearable`, clicking the checked segment, Backspace or Delete calls\n`onChange(null)`. Once the value is `null` nothing is checked and no lens is\ndrawn. Without `clearable`, `onChange` never receives `null`.",
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { SegmentedControl } from '@korzun/design/control';\nimport { HandLoveYouIcon, HandOkIcon, ThumbDownIcon } from '@korzun/design/icon';\nimport { useState } from 'react';\n\nconst RATINGS = [\n  { value: 'bad', label: 'Bad', Icon: ThumbDownIcon },\n  { value: 'ok', label: 'Okay', Icon: HandOkIcon },\n  { value: 'great', label: 'Great', Icon: HandLoveYouIcon },\n] as const;\n\nexport default function Clearable() {\n  const [rating, setRating] = useState<(typeof RATINGS)[number]['value'] | null>('great');\n  return (\n    <Stack>\n      <SegmentedControl\n        label=\"Rating\"\n        options={RATINGS}\n        value={rating}\n        onChange={setRating}\n        clearable\n        showLabels={false}\n      />\n      <Text tone=\"muted\">Rating: {rating ?? 'none'}</Text>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/segmented-control/examples/04-read-only.tsx",
+          "slug": "read-only",
+          "order": 4,
+          "title": "Read-only",
+          "description": "Omit `onChange` to show a value without letting it change: the segments are\nmarked `aria-disabled` and ignore clicks and keys. A `value` no option has\nchecks nothing.",
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { SegmentedControl } from '@korzun/design/control';\n\nconst OPTIONS = [\n  { value: 'draft', label: 'Draft' },\n  { value: 'review', label: 'Review' },\n  { value: 'published', label: 'Published' },\n] as const;\n\nexport default function ReadOnly() {\n  return (\n    <Stack>\n      <Text tone=\"muted\">Value review</Text>\n      <SegmentedControl label=\"Status\" options={OPTIONS} value=\"review\" />\n      <Text tone=\"muted\">Value null</Text>\n      <SegmentedControl label=\"Status\" options={OPTIONS} value={null} />\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/segmented-control/examples/05-surfaces.tsx",
+          "slug": "surfaces",
+          "order": 5,
+          "title": "Surfaces",
+          "description": "In a Card body the control paints its own track. In the shaded Card header the\nheader is the track, so `surface=\"row\"` paints nothing and only the lens\nshows. The corner is the same in both: the control belongs inside a card or\nmodal.",
+          "code": "import { Card, Stack } from '@korzun/design/component';\nimport { SegmentedControl } from '@korzun/design/control';\nimport { useState } from 'react';\n\nconst VIEWS = [\n  { value: 'grid', label: 'Grid' },\n  { value: 'list', label: 'List' },\n] as const;\n\ntype View = (typeof VIEWS)[number]['value'];\n\nexport default function Surfaces() {\n  const [body, setBody] = useState<View>('grid');\n  const [header, setHeader] = useState<View>('list');\n  return (\n    <Stack>\n      <Card title=\"surface card, in the body\">\n        <SegmentedControl label=\"Body view\" options={VIEWS} value={body} onChange={setBody} />\n      </Card>\n      <Card\n        title=\"surface row, in the header\"\n        headerAction={\n          <SegmentedControl\n            label=\"Header view\"\n            options={VIEWS}\n            value={header}\n            onChange={setHeader}\n            surface=\"row\"\n          />\n        }\n      >\n        Showing {header}.\n      </Card>\n    </Stack>\n  );\n}\n"
+        }
+      ],
+      "tables": [
+        {
+          "name": "SegmentedControlProps",
+          "kind": "props",
+          "rows": [
+            {
+              "name": "clearable",
+              "type": "boolean",
+              "required": false,
+              "description": "Clicking (or Space/Enter on) the checked segment, Backspace and Delete clear the value. Without it, clicking the checked segment does nothing and there is no way to clear."
+            },
+            {
+              "name": "label",
+              "type": "string",
+              "required": true,
+              "description": "The group's accessible name (`aria-label`), e.g. the setting it edits. Not rendered visibly: put a visible label beside it yourself."
+            },
+            {
+              "name": "onChange",
+              "type": "((value: V | null) => void) | ((value: V) => void)",
+              "required": false,
+              "description": "Absent means read-only: the control shows the value, and segments get `aria-disabled` and ignore clicks and keys."
+            },
+            {
+              "name": "options",
+              "type": "ReadonlyArray<SegmentedOption<V>>",
+              "required": true,
+              "description": "The segments, in order. Declare them `as const` or type them as `SegmentedOption<V>`."
+            },
+            {
+              "name": "showLabels",
+              "type": "boolean",
+              "required": false,
+              "description": "Render each option's label. Only an option with an `Icon` can go without one; a text-only option always shows its label.",
+              "default": "true"
+            },
+            {
+              "name": "surface",
+              "type": "'card' | 'row'",
+              "required": false,
+              "description": "What the control sits on. `card` paints its own `bg.track` rail. `row` paints nothing: the shaded input row it sits in is the track and only the lens shows, the way the white field shows in a `TextInput` row.",
+              "default": "'card'"
+            },
+            {
+              "name": "value",
+              "type": "V | null",
+              "required": true,
+              "description": "The checked option; `null` (or a value no option has) checks nothing and draws no lens."
+            }
+          ]
+        },
+        {
+          "name": "SegmentedOption",
+          "kind": "object",
+          "rows": [
+            {
+              "name": "Icon",
+              "type": "(props: IconProps) => React.JSX.Element",
+              "required": false,
+              "description": "Icon component (`Icon: SearchIcon`), not an element. Drawn above the label, which then becomes a small caption under it."
+            },
+            {
+              "name": "label",
+              "type": "string",
+              "required": true,
+              "description": "The segment's accessible name, and its visible text unless `showLabels` is off."
+            },
+            {
+              "name": "value",
+              "type": "V",
+              "required": true,
+              "description": "The value passed to `onChange` when this segment is picked."
+            }
+          ],
+          "description": "One segment of a `SegmentedControl`."
+        }
+      ],
+      "tokens": [
+        {
+          "path": "color.bg.input",
+          "kind": "color",
+          "light": "#FFFFFF",
+          "dark": "#1A1B1E"
+        },
+        {
+          "path": "color.bg.track",
+          "kind": "color",
+          "light": "#EEEEEE",
+          "dark": "#2C2D31"
+        },
+        {
+          "path": "color.border.default",
+          "kind": "color",
+          "light": "#D9D9D9",
+          "dark": "#3A3B40"
+        },
+        {
+          "path": "color.brand.default",
+          "kind": "color",
+          "light": "#1777FF",
+          "dark": "#3696fe"
+        },
+        {
+          "path": "color.brand.hover",
+          "kind": "color",
+          "light": "#3696fe",
+          "dark": "#87BAFF"
+        },
+        {
+          "path": "color.brand.outline",
+          "kind": "color",
+          "light": "#91CAFF",
+          "dark": "rgba(54, 150, 254, 0.45)"
+        },
+        {
+          "path": "color.text.muted",
+          "kind": "color",
+          "light": "#6E6E6E",
+          "dark": "#9CA1AB"
+        },
+        {
+          "path": "color.text.secondary",
+          "kind": "color",
+          "light": "#5A6375",
+          "dark": "#C8CBD2"
+        },
+        {
+          "path": "fontFamily.body",
+          "kind": "value",
+          "light": "system-ui, sans-serif",
+          "dark": "system-ui, sans-serif"
+        },
+        {
+          "path": "fontSize.md",
+          "kind": "value",
+          "light": "0.875rem",
+          "dark": "0.875rem"
+        },
+        {
+          "path": "fontSize.xs",
+          "kind": "value",
+          "light": "0.7rem",
+          "dark": "0.7rem"
+        },
+        {
+          "path": "fontWeight.medium",
+          "kind": "value",
+          "light": "500",
+          "dark": "500"
+        },
+        {
+          "path": "radius.md",
+          "kind": "value",
+          "light": "8px",
+          "dark": "8px"
+        },
+        {
+          "path": "recipe.focusRing",
+          "kind": "recipe",
+          "light": null,
+          "dark": null
+        },
+        {
+          "path": "shadow.cardStack",
+          "kind": "value",
+          "light": "0px 2px 0px rgba(217, 217, 217, 0.2)",
+          "dark": "0px 2px 0px rgba(0, 0, 0, 0.4)"
+        },
+        {
+          "path": "space.sm",
+          "kind": "value",
+          "light": "0.375rem",
+          "dark": "0.375rem"
+        },
+        {
+          "path": "space.xl",
+          "kind": "value",
+          "light": "0.75rem",
+          "dark": "0.75rem"
+        },
+        {
+          "path": "space.xs",
+          "kind": "value",
+          "light": "0.25rem",
+          "dark": "0.25rem"
+        },
+        {
+          "path": "space.xxs",
+          "kind": "value",
+          "light": "0.125rem",
+          "dark": "0.125rem"
+        },
+        {
+          "path": "transition.spring",
+          "kind": "value",
+          "light": "0.35s cubic-bezier(0.4, 0, 0.2, 1)",
+          "dark": "0.35s cubic-bezier(0.4, 0, 0.2, 1)"
+        }
+      ],
+      "changelog": []
+    },
+    {
       "id": "control/switch",
       "slug": "switch",
       "entry": "@korzun/design/control",

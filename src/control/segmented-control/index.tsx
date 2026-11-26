@@ -18,7 +18,7 @@ export type SegmentedOption<V extends string> = {
 };
 
 type BaseProps<V extends string> = {
-  /** The group's accessible name, e.g. the setting or field it edits. Not rendered visibly. */
+  /** The group's accessible name (`aria-label`), e.g. the setting it edits. Not rendered visibly: put a visible label beside it yourself. */
   label: string;
   /** The segments, in order. Declare them `as const` or type them as `SegmentedOption<V>`. */
   options: ReadonlyArray<SegmentedOption<V>>;
@@ -27,13 +27,17 @@ type BaseProps<V extends string> = {
   /**
    * Render each option's label. Only an option with an `Icon` can go without
    * one; a text-only option always shows its label.
+   *
+   * @default true
    */
   showLabels?: boolean;
   /**
-   * What the control sits on. `card` (default) paints its own `bg.track`
+   * What the control sits on. `card` paints its own `bg.track`
    * rail. `row` paints nothing: the shaded input row it sits in is the track
    * and only the lens shows, the way the white field shows in a `TextInput`
    * row.
+   *
+   * @default 'card'
    */
   surface?: 'card' | 'row';
 };
@@ -43,13 +47,17 @@ export type SegmentedControlProps<V extends string> = BaseProps<V> &
     | {
         /** Clicking (or Space/Enter on) the checked segment, Backspace and Delete clear the value. */
         clearable: true;
-        /** Absent means read-only: the control shows the value and ignores input. */
+        /** Absent means read-only: the control shows the value, and segments get `aria-disabled` and ignore clicks and keys. */
         onChange?: (value: V | null) => void;
       }
     | {
-        /** Off by default: clicking the checked segment does nothing and there is no way to clear. */
+        /**
+         * Without it, clicking the checked segment does nothing and there is no way to clear.
+         *
+         * @default false
+         */
         clearable?: false;
-        /** Absent means read-only: the control shows the value and ignores input. */
+        /** Absent means read-only: the control shows the value, and segments get `aria-disabled` and ignore clicks and keys. */
         onChange?: (value: V) => void;
       }
   );
