@@ -103,10 +103,10 @@ export default function Basic() {
 
 ### Reporting an outcome
 
-A component reports the result of a mutation with the function `useToast` returns. The field also turns red while the password is too short, so the toast is never the only copy of an error the user must fix.
+A form submitted from the Card footer reports its result with the function `useToast` returns. A failed save also puts the message in an `ErrorMessage` beside the field, so the toast is never the only copy of an error the user must fix.
 
 ```tsx
-import { Card, Inline, Stack } from '@korzun/design/component';
+import { Card, ErrorMessage, Stack } from '@korzun/design/component';
 import { Button, TextInput } from '@korzun/design/control';
 import { useToast } from '@korzun/design/toast';
 import { useState } from 'react';
@@ -114,31 +114,48 @@ import { useState } from 'react';
 export default function FormOutcome() {
   const showToast = useToast();
   const [password, setPassword] = useState('');
+  const [valid, setValid] = useState(true);
+  const [error, setError] = useState<string | undefined>(undefined);
   const save = () => {
-    if (password.length < 8) {
-      showToast('Password must be at least 8 characters', 'error');
+    if (!valid || password.length < 8) {
+      const message = 'Password must be at least 8 characters';
+      setError(message);
+      showToast(message, 'error');
       return;
     }
+    setError(undefined);
     showToast('Password changed', 'success');
     setPassword('');
   };
   return (
-    <Card title="Change password">
-      <Stack gap="md">
-        <TextInput
-          name="password"
-          label="New password"
-          password
-          value={password}
-          onChange={(next) => setPassword(next ?? '')}
-          validate={(next) => next.length === 0 || next.length >= 8}
-        />
-        <Inline>
-          <Button type="primary" onClick={save}>
-            Save
-          </Button>
-        </Inline>
-      </Stack>
+    <Card
+      title="Change password"
+      footer={
+        <Button type="primary" submit form="change-password">
+          Save
+        </Button>
+      }
+    >
+      <form
+        id="change-password"
+        onSubmit={(event) => {
+          event.preventDefault();
+          save();
+        }}
+      >
+        <Stack gap="md">
+          <TextInput
+            name="password"
+            label="New password"
+            password
+            value={password}
+            onChange={(next) => setPassword(next ?? '')}
+            onValidChange={(_name, ok) => setValid(ok)}
+            validate={(next) => next.length >= 8}
+          />
+          <ErrorMessage>{error}</ErrorMessage>
+        </Stack>
+      </form>
     </Card>
   );
 }
@@ -146,7 +163,7 @@ export default function FormOutcome() {
 
 ### Limiting the stack
 
-`maxToasts` caps how many toasts show at once: when a new one would exceed it, the oldest starts to leave. Here the cap is two, so the third click pushes the first toast out.
+`maxToasts` caps how many toasts show at once: when a new one would exceed it, the oldest starts to leave. It goes on the app's one root `ToastProvider`; here the cap is two, so the third click pushes the first toast out.
 
 ```tsx
 import { Inline, Stack, Text } from '@korzun/design/component';
