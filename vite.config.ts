@@ -10,6 +10,18 @@ export default defineConfig({
     environment: 'jsdom',
     globals: true,
     setupFiles: ['./src/setup.ts'],
-    include: ['src/**/*.test.{ts,tsx}', 'gallery/**/*.test.{ts,tsx}'],
+    projects: [
+      { extends: true, test: { name: 'src', include: ['src/**/*.test.{ts,tsx}'] } },
+      {
+        extends: true,
+        test: {
+          name: 'gallery',
+          include: ['gallery/**/*.test.{ts,tsx}'],
+          // A gallery test renders whole pages from the full site data; its first
+          // render in a file can take over 5 s on a loaded machine.
+          testTimeout: 30_000,
+        },
+      },
+    ],
   },
 });
