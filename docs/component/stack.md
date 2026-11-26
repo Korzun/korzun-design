@@ -24,14 +24,13 @@ Use something else for: a horizontal row (`Inline`), a bordered surface
 ### Choosing a gap
 
 Pick `gap` from the theme's `space` scale so spacing is the same everywhere:
-`xs` for tight groups, `md` (the default) for most content, `xxl` between
-sections. `gap="none"` emits `gap: 0`, for children that supply their own
-spacing.
+`xs` for tight groups, `md` for most content, `xxl` between sections.
+`gap="none"` emits `gap: 0`, for children that supply their own spacing.
 
 ### Behaviour
 
-- `align` is the horizontal (cross-axis) alignment. The default `stretch` makes
-  children full width; `start` keeps buttons and tags at their own width.
+- `align` is the horizontal (cross-axis) alignment. `stretch` makes children
+  full width; `start` keeps buttons and tags at their own width.
 - `as="ul"` and `as="ol"` also reset the list's margin, padding and bullets.
   Children should be `li` (`<Stack as="li">` works).
 - Every other HTML attribute (`id`, `aria-*`, `data-*`, event handlers) passes

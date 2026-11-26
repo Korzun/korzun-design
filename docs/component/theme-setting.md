@@ -21,8 +21,8 @@ None. No `className`, no title override.
 - `ThemeProvider` stores the choice in `localStorage` under
   `theme-setting:<identity>`, where `identity` is the provider's prop (for
   example the signed-in username). Switching identity restores that user's
-  choice; `identity={null}` (the default) **stores nothing** and the
-  setting resets to `'auto'` on reload.
+  choice; without an `identity` (or with `identity={null}`) it **stores
+  nothing** and the setting resets to `'auto'` on reload.
 - `'auto'` follows the OS `prefers-color-scheme` live.
 
 ## Surprising behaviour
