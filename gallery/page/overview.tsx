@@ -4,28 +4,29 @@ import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router';
 
+import { CATEGORIES } from '../../scripts/docs-gen/categories.mjs';
 import type { ModuleInfo } from '../../scripts/docs-gen/types.js';
 import { siteData } from '../data.js';
+import { siteColumn } from '../layout/column.js';
 import { Thumbnail } from '../part/thumbnail.js';
 import { filterModules } from '../search.js';
 
-/** The closed category list, in display order. */
-export const CATEGORIES = [
-  'Layout',
-  'Typography',
-  'Actions',
-  'Inputs',
-  'Overlays',
-  'Feedback',
-  'Data display',
-  'Navigation',
-  'Theme',
-];
-
 const useStyle = createUseStyles((theme: Theme) => ({
+  // Page's own column is 800px; the overview uses the wider site column so
+  // its edges line up with the header and four cards fit per row.
+  column: {
+    ...siteColumn(theme),
+    paddingTop: theme.space.xxxxxl,
+    paddingBottom: theme.space.xxxxxl,
+  },
+  // TextInput's inline layout sizes to its placeholder; stretch it across the column.
+  search: {
+    '&& > div': { display: 'flex', width: '100%' },
+    '&& input': { width: '100%' },
+  },
   grid: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(14rem, 1fr))',
+    gridTemplateColumns: 'repeat(auto-fill, minmax(16rem, 1fr))',
     gap: theme.space.xl,
   },
   card: {
@@ -63,12 +64,13 @@ const ModuleCard = ({ mod }: { mod: ModuleInfo }) => {
 
 // TextInput has no aria-label prop; name its input once it is in the DOM.
 const SearchBox = ({ value, onChange }: { value: string; onChange: (v: string) => void }) => {
+  const styles = useStyle();
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
     ref.current?.querySelector('input')?.setAttribute('aria-label', 'Search components');
   }, []);
   return (
-    <div ref={ref}>
+    <div ref={ref} className={styles.search}>
       <TextInput
         name="search"
         layout="inline"
@@ -92,18 +94,25 @@ export const OverviewPage = () => {
   })).filter((g) => g.modules.length > 0);
 
   return (
-    <Page documentTitle="@korzun/design" header={<SearchBox value={query} onChange={setQuery} />}>
-      {groups.length === 0 && <Text tone="muted">{`No components match “${query.trim()}”.`}</Text>}
-      {groups.map(({ category, modules }) => (
-        <Stack as="section" gap="lg" key={category}>
-          <Heading level={2}>{category}</Heading>
-          <div className={styles.grid}>
-            {modules.map((mod) => (
-              <ModuleCard key={mod.slug} mod={mod} />
-            ))}
-          </div>
+    <div className={styles.column}>
+      <Page type="minimal" documentTitle="@korzun/design">
+        <Stack gap="xxxxl">
+          <SearchBox value={query} onChange={setQuery} />
+          {groups.length === 0 && (
+            <Text tone="muted">{`No components match “${query.trim()}”.`}</Text>
+          )}
+          {groups.map(({ category, modules }) => (
+            <Stack as="section" gap="lg" key={category}>
+              <Heading level={2}>{category}</Heading>
+              <div className={styles.grid}>
+                {modules.map((mod) => (
+                  <ModuleCard key={mod.slug} mod={mod} />
+                ))}
+              </div>
+            </Stack>
+          ))}
         </Stack>
-      ))}
-    </Page>
+      </Page>
+    </div>
   );
 };

@@ -51,7 +51,7 @@ export const Thumbnail = ({ mod }: ThumbnailProps) => {
     <div className={styles.box}>
       <iframe
         className={styles.frame}
-        src={`${import.meta.env.BASE_URL}#/frame/${mod.slug}/${first.slug}?theme=${theme}`}
+        src={`${import.meta.env.BASE_URL}#/frame/${mod.slug}/${first.slug}?theme=${theme}&fit=center`}
         title={`${mod.title}: ${first.title}`}
         loading="lazy"
         tabIndex={-1}

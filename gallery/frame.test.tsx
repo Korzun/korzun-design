@@ -47,6 +47,15 @@ describe('Frame', () => {
     send(window.location.origin);
     expect(localStorage.getItem('theme-setting:gallery-frame')).toBe('light');
   });
+  it('centres the example only when the URL asks for fit=center', () => {
+    const { unmount } = mount('/frame/button/basic?fit=center');
+    expect(
+      screen.getByRole('button', { name: 'Save' }).closest('[data-fit="center"]')
+    ).not.toBeNull();
+    unmount();
+    mount('/frame/button/basic');
+    expect(screen.getByRole('button', { name: 'Save' }).closest('[data-fit]')).toBeNull();
+  });
 });
 
 describe('FrameNavigatedAway', () => {

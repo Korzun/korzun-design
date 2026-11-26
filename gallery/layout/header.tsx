@@ -6,13 +6,15 @@ import { Link, NavLink } from 'react-router';
 
 import { siteData } from '../data.js';
 import { postToWindow } from '../messages.js';
+import { siteColumn } from './column.js';
 
 const useStyle = createUseStyles((theme: Theme) => ({
   root: {
-    padding: `${theme.space.lg} ${theme.space.xxl}`,
+    padding: `${theme.space.lg} 0`,
     borderBottom: `1px solid ${theme.color.border.default}`,
     backgroundColor: theme.color.bg.card,
   },
+  inner: siteColumn(theme),
   link: {
     color: theme.color.text.secondary,
     textDecoration: 'none',
@@ -49,7 +51,7 @@ export const Header = () => {
 
   return (
     <header className={styles.root}>
-      <Inline justify="between" gap="xl" wrap>
+      <Inline justify="between" gap="xl" wrap className={styles.inner}>
         <Inline gap="xl" wrap>
           <Link to="/" className={styles.brand}>
             <Inline gap="sm" align="baseline">

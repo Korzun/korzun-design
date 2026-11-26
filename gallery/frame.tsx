@@ -1,6 +1,6 @@
-import { ThemeProvider } from '@korzun/design/theme';
+import { createUseStyles, ThemeProvider, type Theme } from '@korzun/design/theme';
 import { ToastProvider } from '@korzun/design/toast';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { Link, useLocation, useParams, useSearchParams } from 'react-router';
 
 import { useThemeSetting } from '../src/theme/use-theme-setting.js';
@@ -15,12 +15,35 @@ const ThemeSync = ({ theme }: { theme: ThemeValue }) => {
   return null;
 };
 
+const useStyle = createUseStyles((theme: Theme) => ({
+  '@global': { body: { margin: 0 } },
+  centered: {
+    display: 'grid',
+    placeItems: 'center',
+    // A wide example (a form) shrinks to the frame instead of overflowing it.
+    gridTemplateColumns: 'minmax(0, 1fr)',
+    '& > *': { maxWidth: '100%' },
+    minHeight: '100vh',
+    padding: theme.space.xxxxl,
+    boxSizing: 'border-box',
+  },
+}));
+
+// Thumbnails ask for `fit=center`: a small example sits in the middle of the
+// viewport instead of its top-left corner. Docs demos keep the normal flow.
+const Centered = ({ children }: { children: ReactNode }) => (
+  <div className={useStyle().centered} data-fit="center">
+    {children}
+  </div>
+);
+
 // Renders one docs example on its own: the site embeds it in an iframe so the
 // example gets its own theme provider and cannot leak styles into the page.
 export const Frame = () => {
   const { module: moduleSlug = '', example: exampleSlug = '' } = useParams();
   const [params] = useSearchParams();
   const rawTheme = params.get('theme');
+  const centered = params.get('fit') === 'center';
   const [theme, setTheme] = useState<ThemeValue | null>(isThemeValue(rawTheme) ? rawTheme : null);
 
   useEffect(() => {
@@ -42,7 +65,13 @@ export const Frame = () => {
     <ThemeProvider identity="gallery-frame">
       <ToastProvider>
         {theme && <ThemeSync theme={theme} />}
-        <Component />
+        {centered ? (
+          <Centered>
+            <Component />
+          </Centered>
+        ) : (
+          <Component />
+        )}
       </ToastProvider>
     </ThemeProvider>
   );

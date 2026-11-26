@@ -3,6 +3,7 @@ import { createRequire } from 'node:module';
 import { join, posix } from 'node:path';
 
 import { barrelStatements, knownNames } from './barrels.mjs';
+import { CATEGORIES } from './categories.mjs';
 import { parseChangelog, validateTags } from './changelog.mjs';
 import { readDefaults } from './defaults.mjs';
 import { readExample } from './examples.mjs';
@@ -14,18 +15,6 @@ import { collectTokenPaths, resolveTokens } from './tokens.mjs';
 
 /** @typedef {import('./types.js').ModuleInfo} ModuleInfo */
 /** @typedef {import('./types.js').SiteData} SiteData */
-
-export const CATEGORIES = [
-  'Layout',
-  'Typography',
-  'Actions',
-  'Inputs',
-  'Overlays',
-  'Feedback',
-  'Data display',
-  'Navigation',
-  'Theme',
-];
 
 const byName = (a, b) => (a < b ? -1 : a > b ? 1 : 0);
 

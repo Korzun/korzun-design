@@ -34,7 +34,7 @@ describe('OverviewPage', () => {
     expect(frame).toHaveAttribute('aria-hidden', 'true');
     expect(frame).toHaveAttribute('tabindex', '-1');
     expect(frame.getAttribute('src')).toMatch(
-      /^\/#\/frame\/button\/basic\?theme=(light|dark|auto)$/
+      /^\/#\/frame\/button\/basic\?theme=(light|dark|auto)&fit=center$/
     );
   });
 
