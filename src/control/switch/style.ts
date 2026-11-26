@@ -1,5 +1,13 @@
 import { createUseStyles, type Theme } from '../../theme/index.js';
 
+// Named for what the switch SITS IN rather than for a size, matching
+// `ButtonRadius`: a caller knows its own surroundings, not which step of the
+// radius scale suits a 16px-tall track.
+//
+// Deliberately two values, where `ButtonRadius` has four. A switch's track is
+// 16px tall, so any radius of 8px or more clamps to a full pill — `card`
+// (`radius.md`) and `pill` would be the same shape, named twice, and could
+// never diverge while the track keeps that height.
 /** Corner shape of a Switch track. */
 export type SwitchRadiusValue = 'inset' | 'pill';
 export enum SwitchRadius {
