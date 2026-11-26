@@ -1,16 +1,18 @@
-import { PropsWithChildren, useCallback } from 'react';
+import { type ReactNode, useCallback } from 'react';
 
 import { IconProps } from '../../icon/index.js';
 import { Button } from '../button/index.js';
 import { Dialog } from '../dialog/index.js';
 import { useStyle } from './style.js';
 
-export type ConfirmModalProps = PropsWithChildren<{
-  /** Cancel button label. Default `'Cancel'`. */
+export type ConfirmModalProps = {
+  /** Cancel button label. */
   cancelText?: string;
+  /** Body content, in secondary text colour. */
+  children?: ReactNode;
   /** Disables only the Confirm button (e.g. until a checkbox is ticked). */
   confirmDisabled?: boolean;
-  /** Confirm button label. Default `'Confirm'`. */
+  /** Confirm button label. */
   confirmText?: string;
   /** Red Confirm button; also tints `icon` red. */
   danger?: boolean;
@@ -24,9 +26,9 @@ export type ConfirmModalProps = PropsWithChildren<{
   onCancel?: () => void;
   /** Receives no event and does not close the modal: set `isOpen` to `false` yourself. */
   onConfirm?: () => void;
-  /** Header text. Default `'Confirm action'`. */
+  /** Header text. */
   title?: string;
-}>;
+};
 
 /**
  * Ready-made yes/no modal on a native `<dialog>`: title, body (`children`),
