@@ -1,19 +1,11 @@
 import { useStyle } from './style.js';
 
 export type ProgressIndicatorProps = {
-  /** A **fraction from 0 to 1**, not a percentage (`0.42` shows "42%"). Clamped to 0–1. */
+  /** A **fraction from 0 to 1**, not a percentage (`0.42` shows "42%"). Clamped to 0–1, so `42` shows "Completed". */
   value: number;
-  /**
-   * Required, not defaulted (2026-08-13 final review, M-1): `role=
-   * "progressbar"` below has no accessible name of its own — a bare number
-   * ("N%") means nothing out of context to a screen-reader user, and this
-   * component has four semantic call sites (book, series, my-progress-row,
-   * user-progress-row) that each mean something different. Every caller
-   * must say what progress this actually is, e.g. `Reading progress for
-   * ${title}`.
-   */
+  /** Accessible name of the progressbar: say what progress it is (`Reading progress for ${title}`), because a bare "42%" means nothing out of context. Not used at exactly 0 or 1, where no progressbar renders. */
   ariaLabel: string;
-  /** Width and height of the SVG in px (default 40). The label's font size does not scale. */
+  /** Width and height of the SVG in px. The label's font size is fixed (`fontSize.sm`) and does not scale. */
   size?: number;
 };
 
