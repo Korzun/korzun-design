@@ -5,6 +5,8 @@ import { MemoryRouter, Route, Routes, useLocation } from 'react-router';
 
 import { CATEGORIES } from '../../scripts/docs-gen/categories.mjs';
 import { siteData } from '../data.js';
+import { MOBILE_WIDTH } from '../frame-url.js';
+import { Thumbnail } from '../part/thumbnail.js';
 import { OverviewPage } from './overview.js';
 
 const Location = () => <p data-testid="location">{useLocation().pathname}</p>;
@@ -40,6 +42,20 @@ describe('OverviewPage', () => {
     expect(frame.getAttribute('src')).toMatch(
       /^\/#\/frame\/button\/basic\?theme=(light|dark|auto)&fit=center$/
     );
+  });
+
+  it('lays a @viewport mobile first example out at phone width in its thumbnail', () => {
+    const button = siteData.modules.find((m) => m.slug === 'button')!;
+    const { container } = render(
+      <ThemeProvider identity="test">
+        <Thumbnail mod={{ ...button, examples: [{ ...button.examples[0], viewport: 'mobile' }] }} />
+        <Thumbnail mod={button} />
+      </ThemeProvider>
+    );
+    const [phone, wide] = container.querySelectorAll('iframe');
+    expect(phone).toHaveAttribute('data-viewport', 'mobile');
+    expect(getComputedStyle(phone).width).toBe(`${MOBILE_WIDTH}px`);
+    expect(wide).not.toHaveAttribute('data-viewport');
   });
 
   it('filters by the search box and says when nothing matches', async () => {

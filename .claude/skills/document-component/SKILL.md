@@ -145,6 +145,17 @@ export default function Basic() {
 
 The first comment line is the title; the rest is the description shown above the demo.
 
+A module that only shows on phones (hidden at desktop widths by a media query: BackButton, NavMobile, PageFooterActions) gets `@viewport mobile` on its own line in each such example's doc comment, after the description:
+
+```tsx
+/** Basic
+ * A round back button that returns to the given route.
+ * @viewport mobile
+ */
+```
+
+The component page then renders that demo in a 390px-wide frame (its media queries see a phone), and an `01` with the tag gives a phone-width overview thumbnail. The tag line is left out of the description. `mobile` is the only value. Use it only where the module is hidden or laid out differently at desktop width, never to make a wide example fit. Check the page at phone width too: `shoot-page.mjs … --width 390`.
+
 - Imports: entry points only (`@korzun/design/<entry>`), all `@korzun/design/*` first then `react`, one block.
 - Default export, no props. Layout with `Stack`/`Inline`, text with `Text`/`Heading`, no inline styles or literals.
 - Text is typed Unicode (`Loading…`, `2–5`), never HTML entities and never ASCII stand-ins; strings match the component's own (`Loading…`, not `Loading...`).

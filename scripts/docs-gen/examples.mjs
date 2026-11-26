@@ -1,6 +1,12 @@
 /** @typedef {import('./types.js').ExampleInfo} ExampleInfo */
 
+/** `@viewport` values an example may ask for. */
+const VIEWPORTS = ['mobile'];
+
 /**
+ * The first comment line is the title, the rest the description. A
+ * `@viewport mobile` line renders the demo (and the overview thumbnail) at
+ * phone width; it is left out of the description.
  * @param {string} file
  * @param {string} source
  * @returns {ExampleInfo}
@@ -19,12 +25,23 @@ export function readExample(file, source) {
   if (!c || !lines[0]?.trim()) {
     throw new Error(`Example ${file}: needs a leading doc comment with a title`);
   }
+  let viewport;
+  const body = lines.slice(1).filter((line) => {
+    const tag = /^\s*@viewport\s+(\S*)\s*$/.exec(line);
+    if (!tag) return true;
+    if (!VIEWPORTS.includes(tag[1])) {
+      throw new Error(`Example ${file}: @viewport must be "mobile", not "${tag[1]}"`);
+    }
+    viewport = tag[1];
+    return false;
+  });
   return {
     file,
     slug: m[2],
     order: Number(m[1]),
     title: lines[0].trim(),
-    description: lines.slice(1).join('\n').trim(),
+    description: body.join('\n').trim(),
     code: source.slice(c[0].length),
+    ...(viewport ? { viewport } : {}),
   };
 }

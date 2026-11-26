@@ -3,6 +3,9 @@ import { useState } from 'react';
 
 import type { ThemeValue } from './messages.js';
 
+/** Width in px of a `@viewport mobile` example's frame: a common phone's CSS width. */
+export const MOBILE_WIDTH = 390;
+
 /**
  * The URL of one example frame. `fit: 'center'` centres a small example in the
  * viewport; overview thumbnails ask for it, docs demos keep the normal flow.

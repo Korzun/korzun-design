@@ -2,19 +2,30 @@
 // frame has loaded and sized itself (the gallery sets `data-ready` on each
 // example section), so no frame is blank or half-height in the shot.
 //
-// node .claude/skills/document-component/shoot-page.mjs <base-url> <slug> <out.png> [--theme light|dark|both]
+// node .claude/skills/document-component/shoot-page.mjs <base-url> <slug> <out.png> [--theme light|dark|both] [--width <px>]
 //
 // `--theme both` (the default) writes <out>-light.png and <out>-dark.png;
-// light or dark writes <out>.png. <base-url> is the running gallery, e.g.
+// light or dark writes <out>.png. `--width` sets the viewport width (default
+// 1280), to see the page as a phone does (`--width 390`). <base-url> is the running gallery, e.g.
 // http://localhost:5191. Uses the global mise playwright (`mise where npm:playwright`).
 import { execFileSync } from 'node:child_process';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
-const usage = 'usage: shoot-page.mjs <base-url> <slug> <out.png> [--theme light|dark|both]';
-const [base, slug, out, flag, value] = process.argv.slice(2);
-const theme = flag === '--theme' ? value : 'both';
-if (!base || !slug || !out?.endsWith('.png') || (flag && flag !== '--theme')) {
+const usage =
+  'usage: shoot-page.mjs <base-url> <slug> <out.png> [--theme light|dark|both] [--width px]';
+const [base, slug, out, ...rest] = process.argv.slice(2);
+const options = { '--theme': 'both', '--width': '1280' };
+for (let i = 0; i < rest.length; i += 2) {
+  if (!(rest[i] in options) || rest[i + 1] === undefined) {
+    console.error(usage);
+    process.exit(2);
+  }
+  options[rest[i]] = rest[i + 1];
+}
+const theme = options['--theme'];
+const width = Number(options['--width']);
+if (!base || !slug || !out?.endsWith('.png') || !Number.isInteger(width) || width < 200) {
   console.error(usage);
   process.exit(2);
 }
@@ -30,7 +41,7 @@ const { chromium } = await import(
 
 const shoot = async (browser, scheme, path) => {
   const page = await browser.newPage({
-    viewport: { width: 1280, height: 2400 },
+    viewport: { width, height: 2400 },
     colorScheme: scheme,
   });
   await page.goto(`${base.replace(/\/$/, '')}/#/components/${slug}`);

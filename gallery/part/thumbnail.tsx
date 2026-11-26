@@ -1,7 +1,8 @@
 import { createUseStyles, type Theme } from '@korzun/design/theme';
+import cx from 'classnames';
 
 import type { ModuleInfo } from '../../scripts/docs-gen/types.js';
-import { frameSrc, useFrameTheme } from '../frame-url.js';
+import { frameSrc, MOBILE_WIDTH, useFrameTheme } from '../frame-url.js';
 
 // The frame lays out larger than the box and is scaled down to fit, so the
 // example renders at a realistic width and reads as a miniature.
@@ -27,6 +28,13 @@ const useStyle = createUseStyles((theme: Theme) => ({
     transformOrigin: 'top left',
     pointerEvents: 'none',
   },
+  // A `@viewport mobile` example lays out at phone width, centred in the box.
+  mobile: {
+    width: `${MOBILE_WIDTH}px`,
+    left: '50%',
+    transform: `translateX(-50%) scale(${SCALE})`,
+    transformOrigin: 'top center',
+  },
 }));
 
 export type ThumbnailProps = {
@@ -44,7 +52,8 @@ export const Thumbnail = ({ mod }: ThumbnailProps) => {
   return (
     <div className={styles.box}>
       <iframe
-        className={styles.frame}
+        className={cx(styles.frame, first.viewport === 'mobile' && styles.mobile)}
+        data-viewport={first.viewport}
         src={frameSrc(mod.slug, first.slug, theme, 'center')}
         title={`${mod.title}: ${first.title}`}
         loading="lazy"

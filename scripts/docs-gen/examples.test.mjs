@@ -31,3 +31,23 @@ test('throws on a bad file name', () => {
     message: 'Example basic.tsx: name must be NN-slug.tsx',
   });
 });
+
+test('@viewport mobile in the doc comment marks a phone-width example, off the description', () => {
+  const src = `/** Back
+ * Shown on phones only.
+ * @viewport mobile
+ */
+const a = 1;
+`;
+  const ex = readExample('src/component/back-button/examples/01-back.tsx', src);
+  assert.equal(ex.viewport, 'mobile');
+  assert.equal(ex.description, 'Shown on phones only.');
+  assert.equal(ex.code, 'const a = 1;\n');
+  assert.equal(readExample('01-a.tsx', `/** T */\nx`).viewport, undefined);
+});
+
+test('an unknown @viewport value throws', () => {
+  assert.throws(() => readExample('01-a.tsx', `/** T\n * @viewport tablet\n */\nx`), {
+    message: 'Example 01-a.tsx: @viewport must be "mobile", not "tablet"',
+  });
+});

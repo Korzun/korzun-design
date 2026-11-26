@@ -4,6 +4,7 @@ import { act, fireEvent, render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 
 import { moduleBySlug } from '../data.js';
+import { MOBILE_WIDTH } from '../frame-url.js';
 import { ExampleBlock } from './example-block.js';
 
 const button = moduleBySlug('button')!;
@@ -35,5 +36,24 @@ describe('ExampleBlock', () => {
     });
     expect(section).toHaveAttribute('data-ready');
     expect(iframe).toHaveAttribute('height', '120');
+  });
+
+  it('renders a @viewport mobile example in a phone-width frame', () => {
+    const mobile = { ...button.examples[0], viewport: 'mobile' as const };
+    const { container } = render(
+      <ThemeProvider identity="test">
+        <ToastProvider>
+          <MemoryRouter>
+            <ExampleBlock mod={button} example={mobile} />
+            <ExampleBlock mod={button} example={button.examples[1]} />
+          </MemoryRouter>
+        </ToastProvider>
+      </ThemeProvider>
+    );
+    const [phone, wide] = container.querySelectorAll('iframe');
+    expect(phone).toHaveAttribute('data-viewport', 'mobile');
+    expect(getComputedStyle(phone).width).toBe(`${MOBILE_WIDTH}px`);
+    expect(wide).not.toHaveAttribute('data-viewport');
+    expect(getComputedStyle(wide).width).toBe('100%');
   });
 });

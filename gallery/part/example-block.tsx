@@ -5,7 +5,7 @@ import cx from 'classnames';
 import { useEffect, useId, useRef, useState } from 'react';
 
 import type { ExampleInfo, ModuleInfo } from '../../scripts/docs-gen/types.js';
-import { frameSrc, useFrameTheme } from '../frame-url.js';
+import { frameSrc, MOBILE_WIDTH, useFrameTheme } from '../frame-url.js';
 import { isHeightMessage } from '../messages.js';
 import { CopyButton } from './copy-button.js';
 import { Markdown } from './markdown.js';
@@ -23,6 +23,15 @@ const useStyle = createUseStyles((theme: Theme) => ({
   },
   // Until the frame reports its height, reserve room for a row of controls.
   frame: { display: 'block', width: '100%', border: 0, minHeight: theme.layout.controlHeight },
+  // A `@viewport mobile` example lays out at phone width, centred, with its edges drawn.
+  mobile: {
+    width: `${MOBILE_WIDTH}px`,
+    maxWidth: '100%',
+    margin: '0 auto',
+    borderLeft: `1px solid ${theme.color.border.light}`,
+    borderRight: `1px solid ${theme.color.border.light}`,
+    boxSizing: 'border-box',
+  },
   // A frame's blank document paints white before the example loads; hide it till then.
   pending: { visibility: 'hidden' },
   meta: { padding: `${theme.space.xl} ${theme.space.xxl}` },
@@ -79,7 +88,12 @@ export const ExampleBlock = ({ mod, example }: ExampleBlockProps) => {
       <div className={styles.demo}>
         <iframe
           ref={frameRef}
-          className={cx(styles.frame, !loaded && styles.pending)}
+          className={cx(
+            styles.frame,
+            example.viewport === 'mobile' && styles.mobile,
+            !loaded && styles.pending
+          )}
+          data-viewport={example.viewport}
           src={frameSrc(mod.slug, example.slug, theme)}
           title={`${mod.title}: ${example.title}`}
           // Eager: a demo sizing itself on scroll would shift the page under the reader.

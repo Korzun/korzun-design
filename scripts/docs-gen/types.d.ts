@@ -41,6 +41,8 @@ export type ExampleInfo = {
   title: string;
   description: string;
   code: string;
+  /** `mobile`: the demo and its overview thumbnail render at phone width (`@viewport mobile`). */
+  viewport?: 'mobile';
 };
 
 export type ModuleInfo = {
