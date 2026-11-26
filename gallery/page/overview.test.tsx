@@ -34,7 +34,7 @@ describe('OverviewPage', () => {
 
   it('gives each card a lazy, inert thumbnail of the first example', () => {
     mount();
-    const link = screen.getByRole('link', { name: /Button/ });
+    const link = screen.getByRole('link', { name: /^Button\b/ });
     const frame = link.querySelector('iframe')!;
     expect(frame).toHaveAttribute('loading', 'lazy');
     expect(frame).toHaveAttribute('aria-hidden', 'true');
@@ -73,7 +73,7 @@ describe('OverviewPage', () => {
 
   it('navigates to the component page when a card is clicked', async () => {
     mount();
-    await userEvent.click(screen.getByRole('link', { name: /Button/ }));
+    await userEvent.click(screen.getByRole('link', { name: /^Button\b/ }));
     expect(screen.getByTestId('location')).toHaveTextContent('/components/button');
   });
 });
