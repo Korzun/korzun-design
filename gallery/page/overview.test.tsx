@@ -3,6 +3,8 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router';
 
+import { CATEGORIES } from '../../scripts/docs-gen/categories.mjs';
+import { siteData } from '../data.js';
 import { OverviewPage } from './overview.js';
 
 const Location = () => <p data-testid="location">{useLocation().pathname}</p>;
@@ -23,7 +25,9 @@ describe('OverviewPage', () => {
   it('renders the categories in the closed-list order, empty ones hidden', () => {
     mount();
     const headings = screen.getAllByRole('heading', { level: 2 }).map((h) => h.textContent);
-    expect(headings).toEqual(['Layout', 'Actions', 'Feedback']);
+    const used = new Set(siteData.modules.map((m) => m.category));
+    expect(headings).toEqual(CATEGORIES.filter((c) => used.has(c)));
+    expect(headings.length).toBeGreaterThan(1);
   });
 
   it('gives each card a lazy, inert thumbnail of the first example', () => {
