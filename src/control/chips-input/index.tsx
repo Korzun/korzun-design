@@ -28,7 +28,7 @@ export type ChipsInputProps = {
   layout?: 'horizontal' | 'vertical' | 'block';
   /** Set on the text input only: form data gets the half-typed text, not the chips. */
   name?: string;
-  /** Chip colour family: `status`, `author`, `series`, `subject`, `book`, `entryType`, `user`, `rating`, `neutral`, `success`, `warning`, `danger` or `info`. Pick the one that tags the same values elsewhere. */
+  /** Chip colour family from `theme.color.chip`. Pick the one that tags the same values elsewhere. */
   chipColor?: ChipColor;
   /** Matches a standard input's height, so the field lines up with `TextInput` and `Select` rows. Leave it off for a roomy standalone tag box. */
   dense?: boolean;

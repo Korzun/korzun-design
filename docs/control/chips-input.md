@@ -342,7 +342,7 @@ export default function InDialog() {
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `allowCustom` | `boolean` | `true` | Enter or Tab adds the typed text as a chip. `false`: only suggestions can be added. |
-| `chipColor` | `'status' \| 'author' \| 'series' \| 'subject' \| 'book' \| 'entryType' \| 'user' \| 'rating' \| 'neutral' \| 'success' \| 'warning' \| 'danger' \| 'info'` | `'subject'` | Chip colour family: `status`, `author`, `series`, `subject`, `book`, `entryType`, `user`, `rating`, `neutral`, `success`, `warning`, `danger` or `info`. Pick the one that tags the same values elsewhere. |
+| `chipColor` | `'status' \| 'author' \| 'series' \| 'subject' \| 'book' \| 'entryType' \| 'user' \| 'rating' \| 'neutral' \| 'success' \| 'warning' \| 'danger' \| 'info'` | `'subject'` | Chip colour family from `theme.color.chip`. Pick the one that tags the same values elsewhere. |
 | `dense` | `boolean` | `false` | Matches a standard input's height, so the field lines up with `TextInput` and `Select` rows. Leave it off for a roomy standalone tag box. |
 | `disabled` | `boolean` | `false` | Disables typing and the chip remove buttons. |
 | `label` | `string` |  | Field label. Ignored in the `block` layout; set `layout` to show it. |
