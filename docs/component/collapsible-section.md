@@ -33,13 +33,13 @@ state.
 
 ### Actions
 
-- Actions toggle the section. They are rendered inside the header button with
-  no `stopPropagation`, so clicking an action also opens or closes the
-  section. Stop propagation in your action's handler if that is unwanted.
-- Pressing Enter or Space on a focused action reaches the header's key handler,
-  which toggles the section and stops the action's own `onClick` from firing.
-  Stop `keydown` propagation as well to keep the action working from the
-  keyboard.
+- Actions are rendered inside the header button. An action that does not stop
+  propagation (a native `<button>`, a link, a `Tag` with `onClick`) toggles the
+  section on click, and Enter or Space on it reaches the header's key handler,
+  which toggles the section and cancels the action's own activation. Stop
+  `click` and `keydown` propagation in such an action.
+- A library `Button` already stops both, so it neither toggles the section nor
+  loses its key press.
 - Actions in the array need their own `key`s (they are rendered as a bare
   array).
 
@@ -54,7 +54,7 @@ No `className`.
 ## Do / don't
 
 - Do pass `actions` as an array of keyed elements.
-- Do stop click and keydown propagation inside actions that must not toggle the section.
+- Do stop click and keydown propagation inside actions that are not a `Button` and must not toggle the section.
 - Don't use it as a screen's top-level feature container; that is `Card`.
 
 <!-- generated:examples -->
@@ -113,24 +113,14 @@ export default function Controlled() {
 
 ### Actions
 
-`actions` is an array of keyed elements shown at the header's right end.
-They sit inside the header, so a click or key press on one also toggles the
-section: wrap an action that must not toggle in an element that stops
-`click` and `keydown`.
+`actions` is an array of keyed elements shown at the header's right end. A
+`Button` stops its click and key press from reaching the header, so Add does
+not toggle the section.
 
 ```tsx
 import { CollapsibleSection, Stack, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { useState } from 'react';
-import type { ReactNode } from 'react';
-
-function KeepOpen({ children }: { children: ReactNode }) {
-  return (
-    <span onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()}>
-      {children}
-    </span>
-  );
-}
 
 export default function Actions() {
   const [open, setOpen] = useState(true);
@@ -142,11 +132,9 @@ export default function Actions() {
       open={open}
       onOpenToggle={() => setOpen((o) => !o)}
       actions={[
-        <KeepOpen key="add">
-          <Button type="text" onClick={() => setCount((n) => n + 1)}>
-            Add
-          </Button>
-        </KeepOpen>,
+        <Button key="add" type="text" onClick={() => setCount((n) => n + 1)}>
+          Add
+        </Button>,
       ]}
     >
       <Stack gap="xs">
@@ -168,7 +156,7 @@ export default function Actions() {
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `children` | `ReactNode` |  | Shown only while open; unmounted when closed. |
-| `actions` | `ReactNode[]` | `[]` | Rendered at the header's right end. An array of keyed elements; clicking one also toggles the section. |
+| `actions` | `ReactNode[]` | `[]` | Rendered at the header's right end. An array of keyed elements; one that does not stop click propagation (anything but a library `Button`) also toggles the section. |
 | `onOpenToggle` | `() => void` | `() => {}` | Called on every header click/Enter/Space. Receives no value: flip your own state. |
 | `open` | `boolean` |  | Controlled open state. Omit for uncontrolled, which starts closed (there is no `defaultOpen`). |
 | `subTitle` | `string` |  | Faint text after the title, e.g. a count ("3 items"). |

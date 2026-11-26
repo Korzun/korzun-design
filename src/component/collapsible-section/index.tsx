@@ -3,7 +3,7 @@ import { ReactNode, useCallback, useState } from 'react';
 import { useStyle } from './style.js';
 
 export type CollapsibleSectionProps = {
-  /** Rendered at the header's right end. An array of keyed elements; clicking one also toggles the section. */
+  /** Rendered at the header's right end. An array of keyed elements; one that does not stop click propagation (anything but a library `Button`) also toggles the section. */
   actions?: ReactNode[];
   /** Shown only while open; unmounted when closed. */
   children?: ReactNode;
