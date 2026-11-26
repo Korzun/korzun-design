@@ -210,6 +210,20 @@ describe('room below a flipped overlay', () => {
     expect(contentHeight(wrapper)).toBe(150 + 120 + 16);
   });
 
+  it('grows it below the popover that holds the trigger of a nested list', () => {
+    // The outer popover hangs below the flow (60–180); the inner list flipped
+    // above its trigger, which sits in the outer popover just under 150.
+    document.body.append(place(document.createElement('div'), 60, 120));
+    document.body.append(flipped(50, 100));
+    expect(contentHeight(wrapper)).toBe(180 + 100 + 16);
+  });
+
+  it("ignores an overlay that does not hold the flipped list's trigger", () => {
+    document.body.append(place(document.createElement('div'), 400, 50));
+    document.body.append(flipped(-150, 200));
+    expect(contentHeight(wrapper)).toBe(450 + 16);
+  });
+
   it('gets no headroom: room below makes it flip back instead', () => {
     document.body.append(flipped(-150, 200));
     expect(overlayTop(wrapper)).toBeNull();

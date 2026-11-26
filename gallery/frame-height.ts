@@ -54,7 +54,8 @@ const flippedUp = (el: Element) =>
  * does not move as the frame grows, and a centred one moves half as far.
  * A list that flipped above its trigger for lack of room gets room below
  * instead: the frame grows by the list's height under the flow (or under the
- * open dialog holding it), and the list flips back down when it re-measures.
+ * open dialog holding it, or under the overlay its trigger sits in: a popover
+ * nested in a popover), and the list flips back down when it re-measures.
  */
 export const contentHeight = (wrapper: HTMLElement): number => {
   const doc = wrapper.ownerDocument;
@@ -62,11 +63,22 @@ export const contentHeight = (wrapper: HTMLElement): number => {
   const pad = parseFloat(view.getComputedStyle(wrapper).paddingBottom) || 0;
   const bottom = (el: Element) => el.getBoundingClientRect().bottom + view.scrollY + pad;
   let height = wrapper.getBoundingClientRect().height;
-  for (const el of overlays(wrapper)) {
+  const open = overlays(wrapper);
+  for (const el of open) {
     if (flippedUp(el)) {
+      const list = el.getBoundingClientRect();
       const host = el.closest('dialog[open]') ?? wrapper;
-      const room = host.getBoundingClientRect().bottom + el.getBoundingClientRect().height;
-      height = Math.max(height, room + view.scrollY + pad);
+      // The trigger sits just under the list's bottom edge; an overlay
+      // spanning that edge holds it, so the list needs room below that one.
+      const holders = open.filter((other) => {
+        const r = other.getBoundingClientRect();
+        return other !== el && r.top <= list.bottom && r.bottom >= list.bottom;
+      });
+      const floor = Math.max(
+        host.getBoundingClientRect().bottom,
+        ...holders.map((other) => other.getBoundingClientRect().bottom)
+      );
+      height = Math.max(height, floor + list.height + view.scrollY + pad);
     } else if (!bottomAnchored(el)) height = Math.max(height, bottom(el));
   }
   for (const dialog of doc.querySelectorAll<HTMLElement>('dialog[open]')) {
