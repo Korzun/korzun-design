@@ -100,6 +100,28 @@ describe('PropsTable links to types documented on other pages', () => {
     expect(link.closest('code')).toHaveTextContent(/^PageActionItem\[\]$/);
   });
 
+  it('does not link a recursive type to its own table, as the .md does not', () => {
+    const item: TypeTable = {
+      name: 'MenuItem',
+      kind: 'object',
+      rows: [{ name: 'children', type: 'MenuItem[]', required: false, description: '' }],
+    };
+    render(
+      <ThemeProvider identity="test">
+        <MemoryRouter initialEntries={['/components/menu']}>
+          <PropsTable
+            table={item}
+            tables={[item]}
+            typePages={new Map([['MenuItem', 'menu']])}
+            from="docs/control/menu.md"
+          />
+        </MemoryRouter>
+      </ThemeProvider>
+    );
+    expect(screen.queryByRole('link', { name: 'MenuItem' })).toBeNull();
+    expect(screen.getByText('MenuItem[]').tagName).toBe('CODE');
+  });
+
   it('prefers a table on this page over one elsewhere', () => {
     const item: TypeTable = { name: 'PageActionItem', kind: 'object', rows: [] };
     render(

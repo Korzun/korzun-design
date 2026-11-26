@@ -75,11 +75,14 @@ const TypeText = ({
   text,
   linkable,
   typePages,
+  self,
   bare = false,
 }: {
   text: string;
   linkable: Set<string>;
   typePages: ReadonlyMap<string, string>;
+  /** The table this text sits in: a recursive type does not link to itself. */
+  self: string;
   /** Inside a `<code>` already: render the parts without a wrapper. */
   bare?: boolean;
 }) => {
@@ -91,7 +94,7 @@ const TypeText = ({
   for (const match of text.matchAll(/[A-Za-z_$][\w$]*/g)) {
     const here = linkable.has(match[0]);
     const page = typePages.get(match[0]);
-    if (!here && !page) continue;
+    if (match[0] === self || (!here && !page)) continue;
     parts.push(text.slice(last, match.index));
     const id = tableId(match[0]);
     parts.push(
@@ -128,9 +131,9 @@ export type PropsTableProps = {
   from: string;
 };
 
-/** One generated type table, anchored by `id={name.toLowerCase()}`. */
 const NO_PAGES: ReadonlyMap<string, string> = new Map();
 
+/** One generated type table, anchored by `id={name.toLowerCase()}`. */
 export const PropsTable = ({ table, tables, typePages = NO_PAGES, from }: PropsTableProps) => {
   const styles = useTableStyle();
   const linkable = new Set(tables.filter((t) => t.name !== table.name).map((t) => t.name));
@@ -151,7 +154,13 @@ export const PropsTable = ({ table, tables, typePages = NO_PAGES, from }: PropsT
         <pre className={styles.alias}>
           <code>
             {`type ${table.name} = `}
-            <TypeText text={table.text ?? ''} linkable={linkable} typePages={typePages} bare />
+            <TypeText
+              text={table.text ?? ''}
+              linkable={linkable}
+              typePages={typePages}
+              self={table.name}
+              bare
+            />
           </code>
         </pre>
       </Stack>
@@ -191,7 +200,12 @@ export const PropsTable = ({ table, tables, typePages = NO_PAGES, from }: PropsT
                   </Stack>
                 </td>
                 <td>
-                  <TypeText text={row.type} linkable={linkable} typePages={typePages} />
+                  <TypeText
+                    text={row.type}
+                    linkable={linkable}
+                    typePages={typePages}
+                    self={table.name}
+                  />
                 </td>
                 <td>
                   {row.default && row.defaultProse ? (
