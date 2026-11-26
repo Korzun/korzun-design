@@ -12,7 +12,7 @@ import { docFiles } from './doc-files.mjs';
 import { readExample } from './examples.mjs';
 import { parseFrontMatter } from './front-matter.mjs';
 import { listModules } from './inventory.mjs';
-import { declarationFiles, extractTypeTables } from './props.mjs';
+import { componentPropsTypes, declarationFiles, extractTypeTables } from './props.mjs';
 import {
   importNames,
   orderTables,
@@ -242,6 +242,18 @@ export function generate(repo, { strict = false, warn = console.warn } = {}) {
 
     const examples = readExamples(repo, skel);
     if (strict && examples.length === 0) throw new Error(`${skel.docPath}: no examples`);
+
+    // A component whose props type is not exported would get no table and a
+    // "takes no props" line; that is a missing export, so stop.
+    const dts = join(repo, skel.dtsDir, 'index.d.ts');
+    const components = skel.values.filter((v) => /^[A-Z]/.test(v));
+    for (const [value, type] of componentPropsTypes(dts, components)) {
+      if (!skel.types.includes(type)) {
+        throw new Error(
+          `${skel.docPath}: ${value} takes ${type}, which ${skel.entry} does not export`
+        );
+      }
+    }
 
     const tables = withDefaults(
       repo,

@@ -22,6 +22,8 @@ function createLoader(readFile) {
       // JSDoc blocks only (`/** … */`): not `//` lines or plain `/* … */` blocks.
       comments: comments.filter((c) => c.type === 'Block' && c.value.startsWith('*')),
       decls: new Map(),
+      // Runtime values (`declare const X`, `declare function X`), kept apart from types.
+      values: new Map(),
       imports: new Map(),
       reexports: new Map(),
       // `export type { Action as TextInputAction }`: exported name -> local name.
@@ -45,6 +47,11 @@ function createLoader(readFile) {
       const decl = stmt.type === 'ExportNamedDeclaration' ? stmt.declaration : stmt;
       if (decl?.type === 'TSTypeAliasDeclaration' || decl?.type === 'TSInterfaceDeclaration') {
         file.decls.set(decl.id.name, decl);
+      }
+      if (decl?.type === 'TSDeclareFunction' && decl.id) file.values.set(decl.id.name, decl);
+      if (decl?.type === 'VariableDeclaration') {
+        for (const d of decl.declarations)
+          if (d.id.type === 'Identifier') file.values.set(d.id.name, d);
       }
       if (stmt.type === 'ExportNamedDeclaration' && !stmt.source) {
         for (const s of stmt.specifiers ?? []) {
@@ -86,22 +93,22 @@ function createLoader(readFile) {
   }
 
   /** Find the declaration of `name` visible from `file`: local, imported, or re-exported. */
-  function resolveName(file, name, seen = new Set()) {
+  function resolveName(file, name, seen = new Set(), space = 'decls') {
     const key = `${file.path}#${name}`;
     if (seen.has(key)) return null;
     seen.add(key);
-    const local = file.decls.get(name);
+    const local = file[space].get(name);
     if (local) return { file, decl: local };
     const renamed = file.localExports.get(name);
-    if (renamed) return resolveName(file, renamed, seen);
+    if (renamed) return resolveName(file, renamed, seen, space);
     const link = file.imports.get(name) ?? file.reexports.get(name);
     if (link) {
       const target = locate(file, link.from);
-      return target ? resolveName(load(target), link.name, seen) : null;
+      return target ? resolveName(load(target), link.name, seen, space) : null;
     }
     for (const from of file.exportAll) {
       const target = locate(file, from);
-      const hit = target && resolveName(load(target), name, seen);
+      const hit = target && resolveName(load(target), name, seen, space);
       if (hit) return hit;
     }
     return null;
@@ -620,6 +627,53 @@ export function declarationFiles(dtsPath, names, readFile = defaultRead) {
   for (const name of names) {
     const found = loader.resolveName(entry, name);
     if (found) out.set(name, found.file.path);
+  }
+  return out;
+}
+
+// The type name a props parameter or wrapper argument refers to: `P` in
+// `(props: P)`, `ForwardRefExoticComponent<P & RefAttributes<…>>`, or null for
+// an inline type.
+function propsTypeName(node) {
+  if (!node) return null;
+  if (node.type === 'TSIntersectionType') {
+    for (const part of node.types) {
+      const name = propsTypeName(part);
+      if (name && name !== 'RefAttributes') return name;
+    }
+    return null;
+  }
+  if (node.type === 'TSTypeReference' && node.typeName.type === 'Identifier') {
+    return node.typeName.name;
+  }
+  return null;
+}
+
+/**
+ * The props type each exported component takes, by name: the type of a
+ * function's first parameter, or the first type argument of a wrapper
+ * (`memo`, `forwardRef`). A component with no parameter, or one typed inline,
+ * is absent; so is a name that is not a declared value.
+ * @param {string} dtsPath
+ * @param {string[]} names
+ * @param {(p: string) => string} [readFile]
+ * @returns {Map<string, string>} component name -> props type name
+ */
+export function componentPropsTypes(dtsPath, names, readFile = defaultRead) {
+  const loader = createLoader(readFile);
+  const entry = loader.load(resolve(dtsPath));
+  const out = new Map();
+  for (const name of names) {
+    const decl = loader.resolveName(entry, name, new Set(), 'values')?.decl;
+    if (!decl) continue;
+    const fn = decl.type === 'TSDeclareFunction' ? decl : decl.id?.typeAnnotation?.typeAnnotation;
+    let type = null;
+    if (fn?.type === 'TSDeclareFunction' || fn?.type === 'TSFunctionType') {
+      type = propsTypeName(fn.params[0]?.typeAnnotation?.typeAnnotation);
+    } else if (fn?.type === 'TSTypeReference' || fn?.type === 'TSImportType') {
+      type = propsTypeName(fn.typeArguments?.params?.[0]);
+    }
+    if (type) out.set(name, type);
   }
   return out;
 }

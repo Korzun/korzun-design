@@ -244,6 +244,15 @@ test('a type two modules document links to the module that declares it, with a w
   assert.match(warnings[0], /Shared.*gadget\.md.*widget\.md/);
 });
 
+test('a component whose props type the module does not export fails, not "takes no props"', () => {
+  const root = fixture();
+  put(root, 'src/control/index.ts', "export { Widget } from './widget/index.js';\n");
+  assert.throws(
+    () => generate(root),
+    /docs\/control\/widget\.md: Widget takes WidgetProps, which @korzun\/design\/control does not export/
+  );
+});
+
 test('tokens follow style.ts imports transitively, cycle-safe', () => {
   const root = fixture();
   put(
