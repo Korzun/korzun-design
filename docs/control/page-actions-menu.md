@@ -234,11 +234,11 @@ One page action, shared by `PageActionsBar` and `PageActionsMenu`.
 | `align` | `'leading' \| 'trailing'` |  | `PageActionsBar` primary items only: side of the bar; anything but `'leading'` is trailing. `PageActionsMenu` ignores it. |
 | `danger` | `boolean` |  | Red text. Styling only; it does not add a separator. |
 | `disabled` | `boolean` |  | Greyed out, cannot be activated, skipped by arrow keys. A disabled link renders without `href`, so middle-click cannot open it either. |
-| `Icon` | `ComponentType<IconProps>` |  | Leading icon component (`HomeIcon`), not an element. Drawn at the text size, hidden from assistive tech. |
-| `intentProps` | `MenuIntentProps` |  | Handlers spread onto the item element, e.g. to prefetch. |
+| `Icon` | `ComponentType<IconProps>` |  | Leading icon component (`HomeIcon`), not an element. Drawn at the text size, hidden from assistive tech. Shown in the menus; `PageActionsBar`'s primary Buttons ignore it. |
+| `intentProps` | [PageActionIntentProps](#pageactionintentprops) |  | Handlers spread onto the item element, e.g. to prefetch. Applied to menu items; `PageActionsBar`'s primary Buttons ignore it. |
 | `label` (required) | `string` |  | Visible text. Must be unique within the menu: it is the React key. |
 | `onClick` (required) | `() => void` |  | Receives no event. The menu closes first, then this is called. |
-| `primary` | `boolean` |  | `PageActionsBar` only: render as an inline Button instead of in the overflow menu; `PageActionsMenu` ignores it. The Button ignores `Icon` and `intentProps`. |
+| `primary` | `boolean` |  | `PageActionsBar` only: render as an inline Button instead of in the overflow menu; `PageActionsMenu` ignores it. |
 | `separatorBefore` | `boolean` |  | Divider above this item. Ignored on the first item. |
 | `to` | `never` |  | Not allowed on an action item: an item is an action or a link, never both. |
 
