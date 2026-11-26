@@ -1516,6 +1516,249 @@
       ]
     },
     {
+      "id": "control/text-area",
+      "slug": "text-area",
+      "entry": "@korzun/design/control",
+      "docPath": "docs/control/text-area.md",
+      "title": "TextArea",
+      "description": "A multi-line text field with a label, validation, optional auto-grow, and a character counter near `maxLength`.",
+      "category": "Inputs",
+      "values": [
+        "TextArea"
+      ],
+      "types": [
+        "TextAreaProps"
+      ],
+      "importLine": "import { TextArea, type TextAreaProps } from '@korzun/design/control'",
+      "body": "A multi-line text field with an optional label, validation, an optional\nauto-grow mode, and a character counter near `maxLength`. Same label/layout\nsystem as `TextInput`.\n\nUse something else for: single-line text (`TextInput`), tags (`ChipsInput`).\n\n## Usage\n\n### Styling\n\nNo `className`, no `disabled`, no `rows`, never resizable by the user\n(`resize: none`).\n\n## Do / don't\n\n- Do use `autoResize` for long free text so the card doesn't scroll inside itself.\n- Do set `maxLength` when the server has a limit; the counter only appears near it.\n- Don't expect `onChange('')`; an empty field reports `undefined`.\n- Don't try to shrink it below 7rem / 10rem with CSS; the min height is inline.",
+      "examples": [
+        {
+          "file": "src/control/text-area/examples/01-basic.tsx",
+          "slug": "basic",
+          "order": 1,
+          "title": "Basic",
+          "description": "A controlled multi-line field. `onChange` receives the string, not an event,\nand `undefined` once the field is emptied.",
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { TextArea } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Basic() {\n  const [note, setNote] = useState<string | undefined>('Remember to return the book.');\n  return (\n    <Stack>\n      <TextArea name=\"note\" layout=\"vertical\" label=\"Note\" value={note} onChange={setNote} />\n      <Text tone=\"muted\">Length: {note === undefined ? 'undefined' : note.length}</Text>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/text-area/examples/02-layouts.tsx",
+          "slug": "layouts",
+          "order": 2,
+          "title": "Layouts",
+          "description": "`horizontal` puts the label and field on one shaded row, `vertical` stacks\nthe label above the field on that row, and `inline` paints nothing around the\npair.",
+          "code": "import { Stack } from '@korzun/design/component';\nimport { TextArea } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Layouts() {\n  const [horizontal, setHorizontal] = useState<string | undefined>('Horizontal');\n  const [vertical, setVertical] = useState<string | undefined>('Vertical');\n  const [inline, setInline] = useState<string | undefined>('Inline');\n  return (\n    <Stack>\n      <TextArea\n        name=\"horizontal\"\n        layout=\"horizontal\"\n        label=\"Horizontal\"\n        value={horizontal}\n        onChange={setHorizontal}\n      />\n      <TextArea\n        name=\"vertical\"\n        layout=\"vertical\"\n        label=\"Vertical\"\n        value={vertical}\n        onChange={setVertical}\n      />\n      <TextArea name=\"inline\" layout=\"inline\" label=\"Inline\" value={inline} onChange={setInline} />\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/text-area/examples/03-variants.tsx",
+          "slug": "variants",
+          "order": 3,
+          "title": "Variants",
+          "description": "`outlined` has a border and the input background; `borderless` drops both, so\nthe browser's own textarea background shows. Check it in dark mode.",
+          "code": "import { Stack } from '@korzun/design/component';\nimport { TextArea } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Variants() {\n  const [outlined, setOutlined] = useState<string | undefined>('Outlined');\n  const [borderless, setBorderless] = useState<string | undefined>('Borderless');\n  return (\n    <Stack>\n      <TextArea\n        name=\"outlined\"\n        layout=\"vertical\"\n        variant=\"outlined\"\n        label=\"Outlined\"\n        value={outlined}\n        onChange={setOutlined}\n      />\n      <TextArea\n        name=\"borderless\"\n        layout=\"vertical\"\n        variant=\"borderless\"\n        label=\"Borderless\"\n        value={borderless}\n        onChange={setBorderless}\n      />\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/text-area/examples/04-auto-resize.tsx",
+          "slug": "auto-resize",
+          "order": 4,
+          "title": "Auto-resize",
+          "description": "With `autoResize` the field grows to fit what is typed, so it never scrolls;\nits minimum height is 7rem. Without it the height stays at 10rem and long text\nscrolls. Both start with the same text: add lines to each.",
+          "code": "import { Stack } from '@korzun/design/component';\nimport { TextArea } from '@korzun/design/control';\nimport { useState } from 'react';\n\nconst SAMPLE = 'One\\nTwo\\nThree\\nFour\\nFive\\nSix\\nSeven\\nEight\\nNine\\nTen';\n\nexport default function AutoResize() {\n  const [grows, setGrows] = useState<string | undefined>(SAMPLE);\n  const [fixed, setFixed] = useState<string | undefined>(SAMPLE);\n  return (\n    <Stack>\n      <TextArea\n        name=\"grows\"\n        layout=\"vertical\"\n        label=\"Auto-resize\"\n        autoResize\n        value={grows}\n        onChange={setGrows}\n      />\n      <TextArea\n        name=\"fixed\"\n        layout=\"vertical\"\n        label=\"Fixed height\"\n        value={fixed}\n        onChange={setFixed}\n      />\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/text-area/examples/05-character-counter.tsx",
+          "slug": "character-counter",
+          "order": 5,
+          "title": "Character counter",
+          "description": "`maxLength` limits the text natively. The `n/max` counter appears once the field is\nwithin the last 10% of the limit (at least 50 characters) and turns red at the limit.\nThe first field is inside that window, the second is at the limit.",
+          "code": "import { Stack } from '@korzun/design/component';\nimport { TextArea } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function CharacterCounter() {\n  const [near, setNear] = useState<string | undefined>(\n    'A short summary of the book that is already past halfway.'\n  );\n  const [full, setFull] = useState<string | undefined>(\n    'A short summary of the book that fills every one of the characters allowed.'\n  );\n  return (\n    <Stack>\n      <TextArea\n        name=\"near\"\n        layout=\"vertical\"\n        label=\"Near the limit\"\n        maxLength={100}\n        value={near}\n        onChange={setNear}\n      />\n      <TextArea\n        name=\"full\"\n        layout=\"vertical\"\n        label=\"At the limit\"\n        maxLength={75}\n        value={full}\n        onChange={setFull}\n      />\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/text-area/examples/06-validation.tsx",
+          "slug": "validation",
+          "order": 6,
+          "title": "Validation and placeholder",
+          "description": "`placeholder` shows while the field is empty. `validate` receives the raw text\non each keystroke; while it returns `false` the label turns red, `onChange` is\nnot called (the saved text stays at the last valid one) and `onValidChange`\nfires once when validity flips. Add a second line to see it.",
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { TextArea } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Validation() {\n  const [text, setText] = useState<string | undefined>(undefined);\n  const [valid, setValid] = useState(true);\n  return (\n    <Stack>\n      <TextArea\n        name=\"one-line\"\n        layout=\"vertical\"\n        label=\"One line only\"\n        placeholder=\"No line breaks allowed\"\n        value={text}\n        onChange={setText}\n        validate={(v) => !v.includes('\\n')}\n        onValidChange={(_name, ok) => setValid(ok)}\n      />\n      <Text tone={valid ? 'success' : 'danger'}>{valid ? 'Valid' : 'Invalid'}</Text>\n      <Text tone=\"muted\">Saved text: {text === undefined ? 'nothing' : `“${text}”`}</Text>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/text-area/examples/07-form-in-card.tsx",
+          "slug": "form-in-card",
+          "order": 7,
+          "title": "Form in a card",
+          "description": "A short note in the `horizontal` layout, and a long description that\ngrows as the user types, with its label above and a `maxLength` the server\nenforces.",
+          "code": "import { Card, Stack, Text } from '@korzun/design/component';\nimport { Button, TextArea } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function FormInCard() {\n  const [note, setNote] = useState<string | undefined>('Signed copy.');\n  const [description, setDescription] = useState<string | undefined>(\n    'A retired lighthouse keeper starts receiving letters from the sea.'\n  );\n  const [saved, setSaved] = useState(0);\n  return (\n    <Card\n      title=\"Book details\"\n      footer={\n        <Button type=\"primary\" onClick={() => setSaved((n) => n + 1)}>\n          Save\n        </Button>\n      }\n    >\n      <Stack>\n        <TextArea name=\"note\" label=\"Note\" value={note} onChange={setNote} />\n        <TextArea\n          name=\"description\"\n          layout=\"vertical\"\n          label=\"Description\"\n          autoResize\n          maxLength={3000}\n          value={description}\n          onChange={setDescription}\n        />\n        <Text tone=\"muted\">Saved {saved} times</Text>\n      </Stack>\n    </Card>\n  );\n}\n"
+        }
+      ],
+      "tables": [
+        {
+          "name": "TextAreaProps",
+          "kind": "props",
+          "rows": [
+            {
+              "name": "autoResize",
+              "type": "boolean",
+              "required": false,
+              "description": "Grows to fit content, so it never scrolls. The minimum height is 7rem with it and 10rem without, set inline so a class can't lower it.",
+              "default": "false"
+            },
+            {
+              "name": "label",
+              "type": "string",
+              "required": false,
+              "description": "Visible label. Not linked to the textarea (no `htmlFor`)."
+            },
+            {
+              "name": "layout",
+              "type": "'horizontal' | 'vertical' | 'inline'",
+              "required": false,
+              "description": "`horizontal` and `vertical` paint a shaded card-header row with `md` corners; `inline` paints nothing.",
+              "default": "'horizontal'"
+            },
+            {
+              "name": "maxLength",
+              "type": "number",
+              "required": false,
+              "description": "Native limit, plus an `n/max` counter once within `max(10% of max, 50)` characters; the counter turns red at the limit."
+            },
+            {
+              "name": "name",
+              "type": "string",
+              "required": true,
+              "description": "The textarea's `name` and the key passed to `onValidChange`."
+            },
+            {
+              "name": "onChange",
+              "type": "(newValue: string | undefined) => void",
+              "required": false,
+              "description": "Receives the string, or `undefined` when emptied; not an event. Not called while `validate` fails.",
+              "default": "() => {}"
+            },
+            {
+              "name": "onValidChange",
+              "type": "(fieldName: string, newValid: boolean) => void",
+              "required": false,
+              "description": "Called with `name` and the new validity; fires only when validity flips.",
+              "default": "() => {}"
+            },
+            {
+              "name": "placeholder",
+              "type": "string",
+              "required": false,
+              "description": "Placeholder text for the textarea."
+            },
+            {
+              "name": "validate",
+              "type": "(newValue: string) => boolean",
+              "required": false,
+              "description": "Receives the raw text on each keystroke; `false` turns the label red.",
+              "default": "() => true"
+            },
+            {
+              "name": "value",
+              "type": "string | undefined",
+              "required": true,
+              "description": "Typed as required (pass `undefined` for empty). Re-syncs into the field only when the prop changes.",
+              "default": "''"
+            },
+            {
+              "name": "variant",
+              "type": "'outlined' | 'borderless'",
+              "required": false,
+              "description": "`'outlined'` has a border and the input background; `'borderless'` drops both and keeps its `md` corners, so the browser's default textarea background shows (check it in dark mode).",
+              "default": "'outlined'"
+            }
+          ]
+        }
+      ],
+      "tokens": [
+        {
+          "path": "color.bg.cardHeader",
+          "kind": "color",
+          "light": "#EEEEEE",
+          "dark": "#232427"
+        },
+        {
+          "path": "color.danger.default",
+          "kind": "color",
+          "light": "#FF4D4F",
+          "dark": "#FF4D4F"
+        },
+        {
+          "path": "color.text.faint",
+          "kind": "color",
+          "light": "#9ca3af",
+          "dark": "#6E7480"
+        },
+        {
+          "path": "fontFamily.body",
+          "kind": "value",
+          "light": "system-ui, sans-serif",
+          "dark": "system-ui, sans-serif"
+        },
+        {
+          "path": "fontSize.lg",
+          "kind": "value",
+          "light": "1rem",
+          "dark": "1rem"
+        },
+        {
+          "path": "fontSize.xxs",
+          "kind": "value",
+          "light": "0.6rem",
+          "dark": "0.6rem"
+        },
+        {
+          "path": "lineHeight.tight",
+          "kind": "value",
+          "light": "1",
+          "dark": "1"
+        },
+        {
+          "path": "radius.md",
+          "kind": "value",
+          "light": "8px",
+          "dark": "8px"
+        },
+        {
+          "path": "recipe.input",
+          "kind": "recipe",
+          "light": null,
+          "dark": null
+        },
+        {
+          "path": "recipe.label",
+          "kind": "recipe",
+          "light": null,
+          "dark": null
+        },
+        {
+          "path": "space.md",
+          "kind": "value",
+          "light": "0.5rem",
+          "dark": "0.5rem"
+        },
+        {
+          "path": "space.sm",
+          "kind": "value",
+          "light": "0.375rem",
+          "dark": "0.375rem"
+        },
+        {
+          "path": "space.xs",
+          "kind": "value",
+          "light": "0.25rem",
+          "dark": "0.25rem"
+        },
+        {
+          "path": "space.xxs",
+          "kind": "value",
+          "light": "0.125rem",
+          "dark": "0.125rem"
+        }
+      ],
+      "changelog": []
+    },
+    {
       "id": "control/text-input",
       "slug": "text-input",
       "entry": "@korzun/design/control",
