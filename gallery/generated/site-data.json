@@ -2604,6 +2604,276 @@
       "changelog": []
     },
     {
+      "id": "control/popover",
+      "slug": "popover",
+      "entry": "@korzun/design/control",
+      "docPath": "docs/control/popover.md",
+      "title": "Popover",
+      "description": "A positioning primitive that shows content in a portal below or above an anchor element, and paints nothing itself.",
+      "category": "Overlays",
+      "values": [
+        "Popover"
+      ],
+      "types": [
+        "PopoverAlign",
+        "PopoverGap",
+        "PopoverProps",
+        "PopoverSide"
+      ],
+      "importLine": "import { Popover, type PopoverAlign, type PopoverGap, type PopoverProps, type PopoverSide } from '@korzun/design/control'",
+      "body": "A positioning primitive: renders `children` in a portal on `document.body`,\n`position: fixed` below or above an anchor element, so a dropdown can escape\nancestors that clip overflow (rounded cards). It paints **nothing** itself: no\nbackground, border, shadow, or radius. `Menu`, `Select` and `ChipsInput` build\ntheir dropdowns on it.\n\nUse something else for: a modal (`Dialog`), page action menus\n(`PageActionsMenu`, `PageActionsBar`), choosing from a list (`Select`).\n\n## Usage\n\n### Behaviour to know\n\n- **Content mounts one commit after `open` flips.** An effect keyed on `open`\n  that reaches into the content must wait for it: use a ref callback or\n  `autoFocus` instead.\n- **Flip.** It opens on `side`. If the content does not fit on that side and\n  the other side has more room, it opens on the other side. When neither side\n  fits it keeps whichever has more room.\n- **Clamp.** Only when `matchWidth` is false: `left` is clamped so the\n  content stays `gap` pixels inside the viewport's left and right edges;\n  content wider than the viewport pins to `gap`. With `matchWidth` it lines up\n  with the anchor exactly, edge margin or not. There is no vertical clamp.\n- **Top side is anchored by its bottom edge** (CSS `bottom`), so a popover\n  above its anchor stays attached when its content grows or shrinks.\n- **`data-side`.** The wrapper carries `data-side=\"bottom\"` or `\"top\"`: the side\n  actually used after flipping. It also carries `data-preferred-side`, the\n  `side` prop, so a flip can be told from a choice. Style against these (an\n  arrow, an animation origin) rather than against the `side` prop.\n- It re-measures, flip decision included, on window resize, on any scroll\n  (capture phase), and when its content resizes (`ResizeObserver`, where the\n  browser has it), so it stays attached to a scrolled anchor and to content\n  that changes size.\n- Its first render is transparent (`opacity: 0`) and is measured in a layout\n  effect before paint, so it never flashes at 0,0 or on the wrong side. It is\n  not `visibility: hidden`, so an `autoFocus` child takes focus on mount.\n- **No focus management.** Focus stays where it was; return it yourself if\n  closing should move it.\n- z-index is `theme.zIndex.sticky` (1000). Inside an open `<dialog>` it portals\n  into that dialog, so it shows in the top layer; this also matches a non-modal\n  `show()` dialog. The target is resolved each time the popover opens, so it\n  also works when it mounts already open.\n- Clicking the anchor does not count as \"outside\", so a toggle button on the\n  anchor works without racing `onClose`.\n\n### Layers\n\nEscape and outside pointer-down close the innermost open layer first. With\n`onClose`, an open popover joins a layer stack shared with other popovers and\nopen `Dialog`s, in the order they opened. A popover registers once its portal\ntarget resolves, one commit after each opening, so a `Dialog` that mounts\nalready open together with an already-open popover inside it still sits below\nthat popover.\n\n- An Escape keydown anywhere in the document goes to the top layer only,\n  unless the event is already `defaultPrevented` (a control such as\n  `Select` handled it first). A popover on top calls `onClose` and\n  `preventDefault()`s the key, so an enclosing native `<dialog>` does not\n  also fire `cancel` and close. A `Dialog` on top keeps the key: its own\n  `cancel` closes it, and the popover beneath stays open.\n- A mousedown closes every layer above the one it lands in (every layer,\n  when it lands outside them all), top first. A press in a nested popover\n  closes neither it nor its parent; a press inside a `Dialog` opened over a\n  popover does not close that popover.\n\n### Styling the surface\n\nContent is two surface levels in: Buttons and Selects inside a popover are 4px,\nwherever the anchor sits.\n\nA popover is a floating layer: corners `radius.md` with `shadow.hoverLift` (or\n`recipe.glass`), and the items inside it `radius.sm`. See\n[corners](../corners.md). The \"Basic\" example draws such a surface.\n\n```ts\nmenu: {\n  backgroundColor: theme.color.bg.card,\n  border: `1px solid ${theme.color.border.strong}`,\n  borderRadius: theme.radius.md,\n  boxShadow: theme.shadow.hoverLift,\n  padding: theme.space.xs,\n},\nitem: { borderRadius: theme.radius.sm, padding: theme.space.md },\n```\n\n## Do / don't\n\n- Do anchor to a `Button` through its `ref`, or wrap any element in a `<div ref>`.\n- Do give the content its own surface and radius; the wrapper is transparent.\n- Do call `preventDefault()` in your own Escape handler if you close the\n  popover yourself, so `onClose` is not called a second time.\n- Don't expect it to close on selection; that is your code.",
+      "examples": [
+        {
+          "file": "src/control/popover/examples/01-basic.tsx",
+          "slug": "basic",
+          "order": 1,
+          "title": "Basic",
+          "description": "A Filters button opens a popover under it. The popover paints nothing, so the\ncontent brings its own background, border and radius. It does not close on\nselection: choosing an option calls `setOpen(false)` itself.",
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button, Popover } from '@korzun/design/control';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\nimport { useRef, useState } from 'react';\n\nconst useStyle = createUseStyles((theme: Theme) => ({\n  panel: {\n    backgroundColor: theme.color.bg.card,\n    border: `1px solid ${theme.color.border.strong}`,\n    borderRadius: theme.radius.md,\n    boxShadow: theme.shadow.hoverLift,\n    padding: theme.space.xs,\n  },\n}));\n\nexport default function Basic() {\n  const styles = useStyle();\n  const anchor = useRef<HTMLElement>(null);\n  const [open, setOpen] = useState(false);\n  const [chosen, setChosen] = useState('nothing yet');\n  const choose = (label: string) => {\n    setChosen(label);\n    setOpen(false);\n  };\n  return (\n    <Stack align=\"start\">\n      <Button ref={anchor} onClick={() => setOpen((value) => !value)}>\n        Filters\n      </Button>\n      <Popover anchorRef={anchor} open={open} matchWidth={false} onClose={() => setOpen(false)}>\n        <div className={styles.panel}>\n          <Stack gap=\"xxs\">\n            <Button type=\"text\" onClick={() => choose('Unread')}>\n              Unread\n            </Button>\n            <Button type=\"text\" onClick={() => choose('Finished')}>\n              Finished\n            </Button>\n            <Button type=\"text\" onClick={() => choose('Favourites')}>\n              Favourites\n            </Button>\n          </Stack>\n        </div>\n      </Popover>\n      <Text tone=\"muted\">Chosen: {chosen}</Text>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/popover/examples/02-side.tsx",
+          "slug": "side",
+          "order": 2,
+          "title": "Side",
+          "description": "`side=\"bottom\"` opens the popover below its anchor and `side=\"top\"` above it.\nEach anchor is labelled with the side it asks for.",
+          "code": "import { Inline, Stack, Text } from '@korzun/design/component';\nimport { Button, Popover } from '@korzun/design/control';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\nimport { useRef, useState } from 'react';\n\nconst useStyle = createUseStyles((theme: Theme) => ({\n  panel: {\n    backgroundColor: theme.color.bg.card,\n    border: `1px solid ${theme.color.border.strong}`,\n    borderRadius: theme.radius.md,\n    boxShadow: theme.shadow.hoverLift,\n    padding: theme.space.md,\n  },\n}));\n\nexport default function Side() {\n  const styles = useStyle();\n  const belowAnchor = useRef<HTMLElement>(null);\n  const aboveAnchor = useRef<HTMLElement>(null);\n  const [open, setOpen] = useState<'bottom' | 'top' | null>(null);\n  const toggle = (side: 'bottom' | 'top') => setOpen((current) => (current === side ? null : side));\n  return (\n    <Stack>\n      <Text tone=\"muted\">Open: {open ?? 'none'}</Text>\n      <Inline>\n        <Button ref={belowAnchor} onClick={() => toggle('bottom')}>\n          Opens below\n        </Button>\n        <Button ref={aboveAnchor} onClick={() => toggle('top')}>\n          Opens above\n        </Button>\n      </Inline>\n      <Popover\n        anchorRef={belowAnchor}\n        open={open === 'bottom'}\n        side=\"bottom\"\n        matchWidth={false}\n        onClose={() => setOpen(null)}\n      >\n        <div className={styles.panel}>\n          <Text>Below the anchor</Text>\n        </div>\n      </Popover>\n      <Popover\n        anchorRef={aboveAnchor}\n        open={open === 'top'}\n        side=\"top\"\n        matchWidth={false}\n        onClose={() => setOpen(null)}\n      >\n        <div className={styles.panel}>\n          <Text>Above the anchor</Text>\n        </div>\n      </Popover>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/popover/examples/03-align.tsx",
+          "slug": "align",
+          "order": 3,
+          "title": "Align",
+          "description": "`align` lines the popover up with the anchor's start edge, centre or end\nedge. The anchors are wider than the popover so each edge shows. Use `end`\nfor an anchor at the right edge of the screen.",
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button, Popover } from '@korzun/design/control';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\nimport { useRef, useState } from 'react';\n\nconst useStyle = createUseStyles((theme: Theme) => ({\n  panel: {\n    backgroundColor: theme.color.bg.card,\n    border: `1px solid ${theme.color.border.strong}`,\n    borderRadius: theme.radius.md,\n    boxShadow: theme.shadow.hoverLift,\n    padding: theme.space.md,\n  },\n}));\n\ntype Align = 'start' | 'center' | 'end';\n\nexport default function Align() {\n  const styles = useStyle();\n  const startAnchor = useRef<HTMLElement>(null);\n  const centerAnchor = useRef<HTMLElement>(null);\n  const endAnchor = useRef<HTMLElement>(null);\n  const [open, setOpen] = useState<Align | null>(null);\n  const toggle = (align: Align) => setOpen((current) => (current === align ? null : align));\n  const anchors = { start: startAnchor, center: centerAnchor, end: endAnchor };\n  return (\n    <Stack>\n      <Text tone=\"muted\">Open: {open ?? 'none'}</Text>\n      <Button ref={startAnchor} onClick={() => toggle('start')}>\n        align start: popover at the left edge\n      </Button>\n      <Button ref={centerAnchor} onClick={() => toggle('center')}>\n        align center: popover at the middle\n      </Button>\n      <Button ref={endAnchor} onClick={() => toggle('end')}>\n        align end: popover at the right edge\n      </Button>\n      {(['start', 'center', 'end'] as const).map((align) => (\n        <Popover\n          key={align}\n          anchorRef={anchors[align]}\n          open={open === align}\n          align={align}\n          matchWidth={false}\n          onClose={() => setOpen(null)}\n        >\n          <div className={styles.panel}>\n            <Text>align {align}</Text>\n          </div>\n        </Popover>\n      ))}\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/popover/examples/04-width.tsx",
+          "slug": "width",
+          "order": 4,
+          "title": "Width",
+          "description": "`matchWidth` makes the popover exactly as wide as its anchor, as a Select's\nlist is. `matchWidth={false}` lets the content size itself.",
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button, Popover } from '@korzun/design/control';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\nimport { useRef, useState } from 'react';\n\nconst useStyle = createUseStyles((theme: Theme) => ({\n  panel: {\n    backgroundColor: theme.color.bg.card,\n    border: `1px solid ${theme.color.border.strong}`,\n    borderRadius: theme.radius.md,\n    boxShadow: theme.shadow.hoverLift,\n    padding: theme.space.md,\n  },\n}));\n\nexport default function Width() {\n  const styles = useStyle();\n  const matchedAnchor = useRef<HTMLElement>(null);\n  const contentAnchor = useRef<HTMLElement>(null);\n  const [open, setOpen] = useState<'matched' | 'content' | null>(null);\n  const toggle = (name: 'matched' | 'content') =>\n    setOpen((current) => (current === name ? null : name));\n  return (\n    <Stack>\n      <Text tone=\"muted\">Open: {open ?? 'none'}</Text>\n      <Button ref={matchedAnchor} onClick={() => toggle('matched')}>\n        matchWidth: as wide as this button\n      </Button>\n      <Button ref={contentAnchor} onClick={() => toggle('content')}>\n        matchWidth false: as wide as its content\n      </Button>\n      <Popover\n        anchorRef={matchedAnchor}\n        open={open === 'matched'}\n        matchWidth\n        onClose={() => setOpen(null)}\n      >\n        <div className={styles.panel}>\n          <Text>Same width as the anchor</Text>\n        </div>\n      </Popover>\n      <Popover\n        anchorRef={contentAnchor}\n        open={open === 'content'}\n        matchWidth={false}\n        onClose={() => setOpen(null)}\n      >\n        <div className={styles.panel}>\n          <Text>Short</Text>\n        </div>\n      </Popover>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/popover/examples/05-gap.tsx",
+          "slug": "gap",
+          "order": 5,
+          "title": "Gap",
+          "description": "`gap` is the space between the anchor and the popover. It takes a number of\npixels, a `px` or `rem` string, or a theme space value (`theme.space.xl`).\nEach button is labelled with the value it passes.",
+          "code": "import { Inline, Stack, Text } from '@korzun/design/component';\nimport { Button, Popover } from '@korzun/design/control';\nimport { createUseStyles, useTheme, type Theme } from '@korzun/design/theme';\nimport { useRef, useState } from 'react';\n\nconst useStyle = createUseStyles((theme: Theme) => ({\n  panel: {\n    backgroundColor: theme.color.bg.card,\n    border: `1px solid ${theme.color.border.strong}`,\n    borderRadius: theme.radius.md,\n    boxShadow: theme.shadow.hoverLift,\n    padding: theme.space.md,\n  },\n}));\n\ntype Name = 'pixels' | 'px' | 'rem' | 'theme';\n\nexport default function Gap() {\n  const styles = useStyle();\n  const theme = useTheme();\n  const pixelsAnchor = useRef<HTMLElement>(null);\n  const pxAnchor = useRef<HTMLElement>(null);\n  const remAnchor = useRef<HTMLElement>(null);\n  const themeAnchor = useRef<HTMLElement>(null);\n  const [open, setOpen] = useState<Name | null>(null);\n  const toggle = (name: Name) => setOpen((current) => (current === name ? null : name));\n  const close = () => setOpen(null);\n  const panel = (text: string) => (\n    <div className={styles.panel}>\n      <Text>{text}</Text>\n    </div>\n  );\n  return (\n    <Stack>\n      <Text tone=\"muted\">Open: {open ?? 'none'}</Text>\n      <Inline>\n        <Button ref={pixelsAnchor} onClick={() => toggle('pixels')}>\n          {'gap={24}'}\n        </Button>\n        <Button ref={pxAnchor} onClick={() => toggle('px')}>\n          {'gap=\"12px\"'}\n        </Button>\n        <Button ref={remAnchor} onClick={() => toggle('rem')}>\n          {'gap=\"2rem\"'}\n        </Button>\n        <Button ref={themeAnchor} onClick={() => toggle('theme')}>\n          theme.space.xl\n        </Button>\n      </Inline>\n      <Popover\n        anchorRef={pixelsAnchor}\n        open={open === 'pixels'}\n        gap={24}\n        matchWidth={false}\n        onClose={close}\n      >\n        {panel('24 pixels')}\n      </Popover>\n      <Popover\n        anchorRef={pxAnchor}\n        open={open === 'px'}\n        gap=\"12px\"\n        matchWidth={false}\n        onClose={close}\n      >\n        {panel('12px')}\n      </Popover>\n      <Popover\n        anchorRef={remAnchor}\n        open={open === 'rem'}\n        gap=\"2rem\"\n        matchWidth={false}\n        onClose={close}\n      >\n        {panel('2rem')}\n      </Popover>\n      <Popover\n        anchorRef={themeAnchor}\n        open={open === 'theme'}\n        gap={theme.space.xl}\n        matchWidth={false}\n        onClose={close}\n      >\n        {panel('theme.space.xl')}\n      </Popover>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/popover/examples/06-nested.tsx",
+          "slug": "nested",
+          "order": 6,
+          "title": "Nested popovers",
+          "description": "A popover inside a popover is one layer deeper. Escape and a press outside\nclose the innermost open layer first: Escape closes \"More\" before \"Filters\",\nand a press inside \"More\" closes neither.",
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button, Popover } from '@korzun/design/control';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\nimport { useRef, useState } from 'react';\n\nconst useStyle = createUseStyles((theme: Theme) => ({\n  panel: {\n    backgroundColor: theme.color.bg.card,\n    border: `1px solid ${theme.color.border.strong}`,\n    borderRadius: theme.radius.md,\n    boxShadow: theme.shadow.hoverLift,\n    padding: theme.space.xs,\n  },\n}));\n\nexport default function Nested() {\n  const styles = useStyle();\n  const outerAnchor = useRef<HTMLElement>(null);\n  const innerAnchor = useRef<HTMLElement>(null);\n  const [outerOpen, setOuterOpen] = useState(false);\n  const [innerOpen, setInnerOpen] = useState(false);\n  const [chosen, setChosen] = useState('nothing yet');\n  return (\n    <Stack align=\"start\">\n      <Button ref={outerAnchor} onClick={() => setOuterOpen((value) => !value)}>\n        Filters\n      </Button>\n      <Popover\n        anchorRef={outerAnchor}\n        open={outerOpen}\n        matchWidth={false}\n        onClose={() => setOuterOpen(false)}\n      >\n        <div className={styles.panel}>\n          <Stack gap=\"xxs\">\n            <Button type=\"text\" onClick={() => setChosen('Unread')}>\n              Unread\n            </Button>\n            <Button ref={innerAnchor} type=\"text\" onClick={() => setInnerOpen((value) => !value)}>\n              More\n            </Button>\n          </Stack>\n          <Popover\n            anchorRef={innerAnchor}\n            open={innerOpen}\n            matchWidth={false}\n            onClose={() => setInnerOpen(false)}\n          >\n            <div className={styles.panel}>\n              <Stack gap=\"xxs\">\n                <Button type=\"text\" onClick={() => setChosen('Finished')}>\n                  Finished\n                </Button>\n                <Button type=\"text\" onClick={() => setChosen('Favourites')}>\n                  Favourites\n                </Button>\n              </Stack>\n            </div>\n          </Popover>\n        </div>\n      </Popover>\n      <Text tone=\"muted\">Chosen: {chosen}</Text>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/popover/examples/07-in-dialog.tsx",
+          "slug": "in-dialog",
+          "order": 7,
+          "title": "In a Dialog",
+          "description": "A popover whose anchor is inside an open Dialog renders into that dialog, so\nit shows above the backdrop. Escape closes the popover first and the Dialog\non the next press.",
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button, Dialog, Popover } from '@korzun/design/control';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\nimport { useRef, useState } from 'react';\n\nconst useStyle = createUseStyles((theme: Theme) => ({\n  panel: {\n    backgroundColor: theme.color.bg.card,\n    border: `1px solid ${theme.color.border.strong}`,\n    borderRadius: theme.radius.md,\n    boxShadow: theme.shadow.hoverLift,\n    padding: theme.space.xs,\n  },\n}));\n\nexport default function InDialog() {\n  const styles = useStyle();\n  const anchor = useRef<HTMLElement>(null);\n  const [dialogOpen, setDialogOpen] = useState(false);\n  const [open, setOpen] = useState(false);\n  const [chosen, setChosen] = useState('nothing yet');\n  const choose = (label: string) => {\n    setChosen(label);\n    setOpen(false);\n  };\n  return (\n    <>\n      <Button onClick={() => setDialogOpen(true)}>Open dialog</Button>\n      <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} title=\"Edit book\">\n        <Stack align=\"start\">\n          <Button ref={anchor} onClick={() => setOpen((value) => !value)}>\n            Status\n          </Button>\n          <Popover anchorRef={anchor} open={open} matchWidth={false} onClose={() => setOpen(false)}>\n            <div className={styles.panel}>\n              <Stack gap=\"xxs\">\n                <Button type=\"text\" onClick={() => choose('Reading')}>\n                  Reading\n                </Button>\n                <Button type=\"text\" onClick={() => choose('Finished')}>\n                  Finished\n                </Button>\n              </Stack>\n            </div>\n          </Popover>\n          <Text tone=\"muted\">Chosen: {chosen}</Text>\n        </Stack>\n      </Dialog>\n    </>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/popover/examples/08-without-onclose.tsx",
+          "slug": "without-onclose",
+          "order": 8,
+          "title": "Without onClose",
+          "description": "With no `onClose`, Escape and a press outside do nothing: the popover stays\nopen until your code sets `open` to `false`, here the Show and Hide button.",
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button, Popover } from '@korzun/design/control';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\nimport { useRef, useState } from 'react';\n\nconst useStyle = createUseStyles((theme: Theme) => ({\n  panel: {\n    backgroundColor: theme.color.bg.card,\n    border: `1px solid ${theme.color.border.strong}`,\n    borderRadius: theme.radius.md,\n    boxShadow: theme.shadow.hoverLift,\n    padding: theme.space.md,\n  },\n}));\n\nexport default function WithoutOnClose() {\n  const styles = useStyle();\n  const anchor = useRef<HTMLElement>(null);\n  const [open, setOpen] = useState(true);\n  return (\n    <Stack align=\"start\">\n      <Button ref={anchor} onClick={() => setOpen((value) => !value)}>\n        {open ? 'Hide' : 'Show'}\n      </Button>\n      <Popover anchorRef={anchor} open={open} matchWidth={false}>\n        <div className={styles.panel}>\n          <Text>Press Escape or click outside: it stays</Text>\n        </div>\n      </Popover>\n      <Text tone=\"muted\">Open: {open ? 'yes' : 'no'}</Text>\n    </Stack>\n  );\n}\n"
+        }
+      ],
+      "tables": [
+        {
+          "name": "PopoverProps",
+          "kind": "props",
+          "rows": [
+            {
+              "name": "children",
+              "type": "ReactNode",
+              "required": true,
+              "description": "Your surface: give it its own background, border, and radius."
+            },
+            {
+              "name": "align",
+              "type": "'start' | 'center' | 'end'",
+              "required": false,
+              "description": "Horizontal alignment to the anchor's left edge, centre, or right edge.",
+              "default": "'start'"
+            },
+            {
+              "name": "anchorRef",
+              "type": "RefObject<HTMLElement | null>",
+              "required": true,
+              "description": "Element the popover aligns to (placed below or above it, per `side`)."
+            },
+            {
+              "name": "className",
+              "type": "string",
+              "required": false,
+              "description": "Applied to the fixed wrapper; win specificity with `'&&'`, never `!important`."
+            },
+            {
+              "name": "gap",
+              "type": "number | `${number}px` | `${number}rem`",
+              "required": false,
+              "description": "Space between the anchor and the popover: a number of pixels, or a CSS length string in `px` or `rem` (`'6px'`, `'0.375rem'`), resolved at each measurement. Also the margin kept from the viewport's left and right edges when `matchWidth` is false. Theme space values (`theme.space.sm`) are assignable as they are.",
+              "default": "4"
+            },
+            {
+              "name": "matchWidth",
+              "type": "boolean",
+              "required": false,
+              "description": "Sets the popover's width to the anchor's width. `false` lets the content size itself and keeps it inside the viewport's left and right edges.",
+              "default": "true"
+            },
+            {
+              "name": "onClose",
+              "type": "() => void",
+              "required": false,
+              "description": "Called on a pointer-down outside both the anchor and the popover content, and on an Escape keydown no control has already handled; it receives no event. Escape and outside pointer-down close the innermost open layer first (see [Layers](#layers)). Omit to opt out of both."
+            },
+            {
+              "name": "open",
+              "type": "boolean",
+              "required": true,
+              "description": "Whether the popover is rendered; when `false` it renders nothing. Fully controlled: it never closes itself."
+            },
+            {
+              "name": "side",
+              "type": "'bottom' | 'top'",
+              "required": false,
+              "description": "Preferred side; flips to the other side when this one has no room.",
+              "default": "'bottom'"
+            }
+          ]
+        },
+        {
+          "name": "PopoverAlign",
+          "kind": "alias",
+          "rows": [],
+          "text": "'start' | 'center' | 'end'",
+          "description": "Horizontal alignment of the popover against the anchor."
+        },
+        {
+          "name": "PopoverGap",
+          "kind": "alias",
+          "rows": [],
+          "text": "number | `${number}px` | `${number}rem`",
+          "description": "A popover gap: pixels, or a CSS length in `px` or `rem`. TypeScript rejects other units."
+        },
+        {
+          "name": "PopoverSide",
+          "kind": "alias",
+          "rows": [],
+          "text": "'bottom' | 'top'",
+          "description": "Which side of the anchor the popover prefers."
+        }
+      ],
+      "tokens": [
+        {
+          "path": "zIndex.sticky",
+          "kind": "value",
+          "light": "1000",
+          "dark": "1000"
+        }
+      ],
+      "changelog": [
+        {
+          "version": "0.5.0",
+          "date": "2026-11-24",
+          "tags": [
+            "Page",
+            "Dialog",
+            "Card",
+            "CardRow",
+            "Alert",
+            "Surface",
+            "Popover",
+            "Menu",
+            "Select",
+            "Button"
+          ],
+          "text": "Surface depth: corners are concentric site-wide with no radius props. `Page` provides depth 0, `Dialog` 1, and `Card`, `CardRow` and `Alert` each provide one level deeper than where they sit; `Popover` (so `Menu` and the `Select` list) provides a fixed 2. Depth 0 is `radius.lg`, 1 is `md`, 2 and deeper is `sm`. `Button`, `Select`, `Card`, `CardRow` and `Alert` follow it; an explicit `Button radius` or `Select surface` still wins. With no `Page`, `Dialog`, `Card`, `CardRow`, `Alert` or `Surface` above it, a component keeps its 0.4.0 look; a bare `Card` (no `Page`) still counts as depth 0 and gives its contents depth 1, so its Buttons and nested Cards change as below."
+        },
+        {
+          "version": "0.5.0",
+          "date": "2026-11-24",
+          "tags": [
+            "Button",
+            "Select",
+            "Card",
+            "CardRow",
+            "Popover",
+            "Menu",
+            "Dialog",
+            "Page"
+          ],
+          "text": "**Visible changes:**\n  - Buttons in a Card default to 8px (they were 16px unless `radius=\"card\"` was set), and Buttons in a Dialog body are 8px.\n  - Selects directly on a Page get the page look (16px and the card shadow); in a Card or Dialog they stay 8px. This includes Selects in your own boxes on a Page (a `useModalDialog` modal, a `recipe.card.shell` or `recipe.row` box), because depth cannot see hand-drawn boxes: wrap their contents in `Surface`, or pass `surface=\"card\"`.\n  - Without a Page, a bare `Card` counts as depth 0: its Buttons go from 16px to 8px, a Card nested in it steps down, and a `CardRow` in it is 8px.\n  - A Card nested in a Card or Dialog steps down (8px, then 4px), and so do its Buttons and Selects; `size=\"small\"` keeps its extra 1px.\n  - `CardRow` is 16px on a Page and 8px inside a Card (it was always 16px).\n  - Buttons and Selects inside a Popover or Menu are 4px."
+        },
+        {
+          "version": "0.5.0",
+          "date": "2026-11-24",
+          "tags": [
+            "Popover",
+            "Menu"
+          ],
+          "text": "`theme.space` values are typed as `SpaceValue` (`${number}rem`), so `gap={theme.space.sm}` on `Popover` and `Menu` needs no `as PopoverGap` cast. `Theme['space']` is now typed `${number}rem`, so hand-built Theme objects or mocks with `px` values stop type-checking."
+        },
+        {
+          "version": "0.4.0",
+          "date": "2026-11-23",
+          "tags": [
+            "Popover",
+            "Dialog"
+          ],
+          "text": "Layer stack: popovers and dialogs now close innermost-first. Escape and an outside press only affect the topmost layer, so a popover inside a popover closes one level at a time. **Behaviour change:** a popover beneath an open dialog no longer takes its Escape or closes on a press inside the dialog."
+        },
+        {
+          "version": "0.4.0",
+          "date": "2026-11-23",
+          "tags": [
+            "Popover"
+          ],
+          "text": "`Popover` `gap` also accepts a `px` or `rem` string (type `PopoverGap`: `` number | `${number}px` | `${number}rem` ``), not only a number of pixels."
+        },
+        {
+          "version": "0.3.0",
+          "date": "2026-11-22",
+          "tags": [
+            "Popover",
+            "Select",
+            "ChipsInput",
+            "Dialog"
+          ],
+          "text": "`Popover` renders inside an open `<dialog>` that contains its anchor, so `Select` and `ChipsInput` work in modals."
+        },
+        {
+          "version": "0.1.0",
+          "date": "2026-11-21",
+          "tags": [
+            "Popover",
+            "Select",
+            "ChipsInput"
+          ],
+          "text": "`Popover`:\n  - `side` (`bottom`/`top`) and `align` (`start`/`center`/`end`).\n  - Flips when the preferred side has no room.\n  - Stays inside the viewport horizontally, unless `matchWidth` (then it lines up with the anchor exactly).\n  - On the top side it is anchored by its bottom edge, and it re-measures when its content resizes (`ResizeObserver`), so it stays attached as content grows or shrinks.\n  - The provisional first render is transparent rather than hidden, so an `autoFocus` child takes focus.\n  - Exposes `data-side`.\n  - Escape calls `onClose` unless already handled, without closing a surrounding dialog.\n  - Defaults keep the same position when there is room below; `Select` and `ChipsInput` now open upward near the bottom of the viewport."
+        },
+        {
+          "version": "0.1.0",
+          "date": "2026-11-21",
+          "tags": [
+            "Popover"
+          ],
+          "text": "New types: `PopoverSide`, `PopoverAlign`."
+        }
+      ]
+    },
+    {
       "id": "control/select",
       "slug": "select",
       "entry": "@korzun/design/control",

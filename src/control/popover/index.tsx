@@ -14,25 +14,27 @@ import { useStyle } from './style.js';
 
 export type { PopoverAlign, PopoverSide } from './position.js';
 
-/** A popover gap: pixels, or a CSS length in `px` or `rem`. */
+/** A popover gap: pixels, or a CSS length in `px` or `rem`. TypeScript rejects other units. */
 export type PopoverGap = number | `${number}px` | `${number}rem`;
 
 export type PopoverProps = {
   /** Element the popover aligns to (placed below or above it, per `side`). */
   anchorRef: RefObject<HTMLElement | null>;
-  /** Whether the popover is rendered. */
+  /** Whether the popover is rendered; when `false` it renders nothing. Fully controlled: it never closes itself. */
   open: boolean;
   /** Your surface: give it its own background, border, and radius. */
   children: ReactNode;
   /** Applied to the fixed wrapper; win specificity with `'&&'`, never `!important`. */
   className?: string;
   /**
-   * Vertical gap between the anchor and the popover: a number of pixels, or a
-   * CSS length string in `px` or `rem` (`'6px'`, `'0.375rem'`), resolved at
-   * each measurement. Also the viewport edge margin when `matchWidth` is false.
+   * Space between the anchor and the popover: a number of pixels, or a CSS
+   * length string in `px` or `rem` (`'6px'`, `'0.375rem'`), resolved at each
+   * measurement. Also the margin kept from the viewport's left and right edges
+   * when `matchWidth` is false. Theme space values (`theme.space.sm`) are
+   * assignable as they are.
    */
   gap?: PopoverGap;
-  /** Match the popover width to the anchor width (default true). */
+  /** Sets the popover's width to the anchor's width. `false` lets the content size itself and keeps it inside the viewport's left and right edges. */
   matchWidth?: boolean;
   /** Preferred side; flips to the other side when this one has no room. */
   side?: PopoverSide;
@@ -40,9 +42,9 @@ export type PopoverProps = {
   align?: PopoverAlign;
   /**
    * Called on a pointer-down outside both the anchor and the popover content,
-   * and on an Escape keydown no control has already handled. Escape and
-   * outside pointer-down close the innermost open layer first (a nested
-   * popover before its parent, a Dialog opened over it before it). Omit to opt out.
+   * and on an Escape keydown no control has already handled; it receives no
+   * event. Escape and outside pointer-down close the innermost open layer
+   * first (see [Layers](#layers)). Omit to opt out of both.
    */
   onClose?: () => void;
 };
