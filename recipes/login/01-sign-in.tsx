@@ -55,6 +55,7 @@ export default function SignIn() {
                     name="username"
                     placeholder="Username or email"
                     autoCapitalize="none"
+                    autoComplete="username"
                     value={username}
                     onChange={setUsername}
                   />
@@ -62,6 +63,7 @@ export default function SignIn() {
                     name="password"
                     placeholder="Password"
                     password
+                    autoComplete="current-password"
                     value={password}
                     onChange={setPassword}
                   />

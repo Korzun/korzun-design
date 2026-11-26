@@ -70,6 +70,7 @@ export default function SignIn() {
                     name="username"
                     placeholder="Username or email"
                     autoCapitalize="none"
+                    autoComplete="username"
                     value={username}
                     onChange={setUsername}
                   />
@@ -77,6 +78,7 @@ export default function SignIn() {
                     name="password"
                     placeholder="Password"
                     password
+                    autoComplete="current-password"
                     value={password}
                     onChange={setPassword}
                   />
@@ -116,6 +118,8 @@ export default function SignIn() {
 - **No radius props.** The card is on the page, so it takes the page radius;
   Sign In is one level in, so it is a step squarer; Forgot password? is on the
   page again and matches the card. See [corners](../corners.md).
+- **`autoComplete` on both fields.** `username` and `current-password` let
+  password managers fill the form; keep them when you adapt it.
 - **No label, placeholder only.** On a screen that does one thing the
   placeholders are enough, as in Bookplate.
 

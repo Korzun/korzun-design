@@ -33,6 +33,18 @@ describe('Sign in recipe', () => {
     await waitFor(() => expect(screen.getByRole('button', { name: 'Sign In' })).toBeEnabled());
   });
 
+  it('marks the fields for password managers', () => {
+    mount();
+    expect(screen.getByPlaceholderText('Username or email')).toHaveAttribute(
+      'autocomplete',
+      'username'
+    );
+    expect(screen.getByPlaceholderText('Password')).toHaveAttribute(
+      'autocomplete',
+      'current-password'
+    );
+  });
+
   it('is listed as a recipe with a screen-viewport example', () => {
     const recipe = recipeBySlug('login');
     expect(recipe?.title).toBe('Sign in');
