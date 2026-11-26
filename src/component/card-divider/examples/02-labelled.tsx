@@ -9,12 +9,12 @@ export default function Labelled() {
     <Card title="Notifications">
       <Stack>
         <Text>Email me when a book is ready.</Text>
-        <CardDivider>align left</CardDivider>
-        <Text>Devices</Text>
-        <CardDivider align="center">align center</CardDivider>
-        <Text>Validation</Text>
-        <CardDivider align="right">align right</CardDivider>
-        <Text>History</Text>
+        <CardDivider>Devices (left)</CardDivider>
+        <Text>Kitchen frame, Hallway frame</Text>
+        <CardDivider align="center">Validation (center)</CardDivider>
+        <Text>Check files for errors on upload.</Text>
+        <CardDivider align="right">History (right)</CardDivider>
+        <Text>Keep notifications for 30 days.</Text>
       </Stack>
     </Card>
   );

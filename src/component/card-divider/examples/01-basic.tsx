@@ -2,7 +2,7 @@
  * A plain rule between a form's fields and its submit button. It is full-bleed: it cancels the
  * Card body's padding, so the line meets the Card's borders.
  */
-import { Card, CardDivider, Stack, Text } from '@korzun/design/component';
+import { Card, CardDivider, Inline, Stack, Text } from '@korzun/design/component';
 import { Button, TextInput } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -21,9 +21,11 @@ export default function Basic() {
         <Stack>
           <TextInput name="title" label="Title" value={title} onChange={setTitle} />
           <CardDivider />
-          <Button type="primary" submit>
-            Request
-          </Button>
+          <Inline>
+            <Button type="primary" submit>
+              Request
+            </Button>
+          </Inline>
           <Text tone="muted">Requested: {requested ?? 'nothing yet'}</Text>
         </Stack>
       </form>

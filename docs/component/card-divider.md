@@ -21,6 +21,8 @@ separating menu items (`PageActionItem.separatorBefore`).
 
 ## Usage
 
+### Styling
+
 No `className`.
 
 ### Surprising behaviour
@@ -30,6 +32,7 @@ No `className`.
   `Card size="small"` (1px padding) or any other container it overhangs.
 - It always reserves one label line of height, labelled or not, so swapping a
   plain divider for a labelled one does not shift the layout.
+- The label does not wrap (`white-space: nowrap`); keep it to a word or two.
 
 ## Do / don't
 
@@ -49,7 +52,7 @@ A plain rule between a form's fields and its submit button. It is full-bleed: it
 Card body's padding, so the line meets the Card's borders.
 
 ```tsx
-import { Card, CardDivider, Stack, Text } from '@korzun/design/component';
+import { Card, CardDivider, Inline, Stack, Text } from '@korzun/design/component';
 import { Button, TextInput } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -68,9 +71,11 @@ export default function Basic() {
         <Stack>
           <TextInput name="title" label="Title" value={title} onChange={setTitle} />
           <CardDivider />
-          <Button type="primary" submit>
-            Request
-          </Button>
+          <Inline>
+            <Button type="primary" submit>
+              Request
+            </Button>
+          </Inline>
           <Text tone="muted">Requested: {requested ?? 'nothing yet'}</Text>
         </Stack>
       </form>
@@ -92,12 +97,12 @@ export default function Labelled() {
     <Card title="Notifications">
       <Stack>
         <Text>Email me when a book is ready.</Text>
-        <CardDivider>align left</CardDivider>
-        <Text>Devices</Text>
-        <CardDivider align="center">align center</CardDivider>
-        <Text>Validation</Text>
-        <CardDivider align="right">align right</CardDivider>
-        <Text>History</Text>
+        <CardDivider>Devices (left)</CardDivider>
+        <Text>Kitchen frame, Hallway frame</Text>
+        <CardDivider align="center">Validation (center)</CardDivider>
+        <Text>Check files for errors on upload.</Text>
+        <CardDivider align="right">History (right)</CardDivider>
+        <Text>Keep notifications for 30 days.</Text>
       </Stack>
     </Card>
   );
@@ -106,9 +111,9 @@ export default function Labelled() {
 
 ### Actions
 
-`actions` puts controls on the line, on the right by default: use link Buttons, the line is one
-text line tall. `actionsAlign` moves them; when it equals `align` the label and the actions
-share one group, label first.
+`actions` puts controls on the line: use link Buttons, the line is one text line tall.
+`actionsAlign` places them on the `left`, `center` or `right`. When it equals `align` the label
+and the actions share one group, label first.
 
 ```tsx
 import { Card, CardDivider, Stack, Text } from '@korzun/design/component';
@@ -117,7 +122,7 @@ import { useState } from 'react';
 
 export default function Actions() {
   const [pending, setPending] = useState(['Middlemarch', 'Persuasion']);
-  const [archived, setArchived] = useState(0);
+  const [last, setLast] = useState('nothing yet');
   return (
     <Card title="Requests">
       <Stack>
@@ -128,21 +133,42 @@ export default function Actions() {
             </Button>
           }
         >
-          Pending
+          Pending (actions right)
         </CardDivider>
         <Text>{pending.length > 0 ? pending.join(', ') : 'Nothing pending'}</Text>
+        <CardDivider
+          align="center"
+          actionsAlign="left"
+          actions={
+            <Button type="link" onClick={() => setLast('Archive')}>
+              Archive
+            </Button>
+          }
+        >
+          Label center, actions left
+        </CardDivider>
+        <CardDivider
+          actionsAlign="center"
+          actions={
+            <Button type="link" onClick={() => setLast('Export')}>
+              Export
+            </Button>
+          }
+        >
+          Label left, actions center
+        </CardDivider>
         <CardDivider
           align="right"
           actionsAlign="right"
           actions={
-            <Button type="link" onClick={() => setArchived((n) => n + 1)}>
-              Archive
+            <Button type="link" onClick={() => setLast('Share')}>
+              Share
             </Button>
           }
         >
           Same side, label first
         </CardDivider>
-        <Text tone="muted">Archived: {archived}</Text>
+        <Text tone="muted">Last action: {last}</Text>
       </Stack>
     </Card>
   );
