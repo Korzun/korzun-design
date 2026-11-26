@@ -61,6 +61,7 @@ Every rule below applies to type-level comments too. A finished JSDoc line is:
 - **Default-free prose.** The Default column carries defaults: no "(default)", "(the default)", "`'solid'` (default)" or "defaults to". The generator fills the column from the component's destructuring as written: literals (`side = 'bottom'`), functions (`onChange = () => {}` shows `() => {}`) and other expressions. Two cases need you:
   - The column shows a name a reader cannot use (an enum constant: `ButtonType.Default`) or is empty for a prop that has a default (a `??` fallback, a value set by a child component): add `@default <value>` (`@default 'default'`).
   - The prop's unset value is computed from where the component sits (it follows surface depth): no `@default`, and the description starts "Unset, it follows …" (Button `radius`).
+  - A `@default` that is not a value is prose (`@default accepts numeric text`) and shows as plain text. The generator tells them apart by parsing: a single word (`@default none`) parses as a name and renders as code. Write a prose default as two words or more (`@default no limit`), or as a value (`@default undefined`).
 - **Links as markdown, never a bare "see X".** Another doc: `[corners](../corners.md)`, `[Popover](../control/popover.md)`. A section of this doc: `[Forms](#forms)`.
 - **Characters as written.** Typed Unicode stays (… – “ ” ✕); never replace it with ASCII (`...`, `-`, `"`).
 
@@ -115,6 +116,7 @@ Use something else for: <job> (`OtherComponent`), <job> (`Other`).
 - Usage and Do / don't: check every sentence against the code, the changelog lines and the docs of the modules it builds on (step 1). Rewrite each sentence that is now false; keep every other sentence word for word, characters included. List each rewritten sentence, old and new, in your report.
 - Short facts from the old Props section ("No `className`.", "Pass `value` and `onChange` together.") go in Usage, as a sentence in the `###` subsection whose subject they share, or a new subsection named for it (`### Styling`). A fact the generated import region already states ("props type exported as `MenuProps`") is dropped.
 - The old hand-written `## Props`, `## Items` and type tables, and the old `## Example` code block, are removed once step 2 has moved their notes into JSDoc and step 4 has turned the example into `examples/`. Short code fragments in Usage and "don't" snippets stay. A Usage code block that a runnable example now repeats line for line becomes one sentence naming that example.
+- An old `## Example` that cannot run in a frame (a router layout with `useLocation` and `<Outlet/>`, an app-root `ThemeProvider`, a native `<input>` wired by ARIA to a control the library lacks): keep the old block verbatim as a Usage code fragment, under a sentence saying why it is not a demo ("It needs the app's router, so it is shown as code."). Keep every name it defines (its `main`, `settingsItems` arrays); never trim it so it uses a variable it no longer defines. Then put every part that can run (the props, item kinds and neighbours it uses) into one example. List the fragment in your report.
 - Generated regions are written by `docs:gen` only; you leave the markers empty.
 
 ## 4. Examples
@@ -196,7 +198,7 @@ CLAUDE.md's stories rule is obsolete.
 1. `npx oxfmt src/<area>/<module>` then `npm run docs:gen`.
 2. Notes check, row by row. For each row of your audit table, find every clause of its Old note column in **that prop's own row** of the generated table. Only a clause no single prop owns may live in its type's description paragraph instead. A clause found only in an example, in Usage, or in another prop's row is lost: put it on the prop's JSDoc and regenerate. Then read every generated row: type, default and description right. A wrong row that right JSDoc cannot fix (a merged union with the wrong type, an unlinked supporting type) is a generator problem: write it in your report with the file and line. A type cell links a type whose table is in another migrated doc by itself (`PageActionItem` in `page-actions-bar.md` links to `../control/page-actions-menu.md#pageactionitem`); a type from a doc not migrated yet stays plain code until that doc is, which is not a defect. Do not hand-write that link into the JSDoc. The generated text is regenerated, never edited.
 3. `npm run lint`.
-4. `npm test` once (build, vitest, script tests, docs:check). Fix and rerun until green.
+4. `npm test` once (build, vitest, script tests, docs:check), with the full log kept: `S=<scratch>; npm test > $S/<slug>/test.log 2>&1; echo "exit $?"; tail -5 $S/<slug>/test.log`. Fix and rerun until green; the last run's log stays at that path. Run it after your last edit to `src/` or `docs/`, so the log is newer than every file you commit.
 5. Screenshots: the last step before the commit. Any edit after a screenshot (an example, its description, JSDoc, the doc) means you redo 6.1 to 6.5 and reshoot that example's shots and the full page.
 
    Each block below is one Bash call; shell variables do not survive between calls, so the port and process id live in files and every call starts by setting `S` to your scratch directory (the same absolute path each time).
@@ -252,6 +254,6 @@ Your report contains, in order:
 1. The JSDoc audit table from step 2 (every old note and where it lives now).
 2. The coverage checklist from step 4.
 3. Every Usage and Do / don't sentence you rewrote (old, new, why), and any you doubt but kept.
-4. Each check from step 6 with its result (`docs:check: ok`, test counts, lint clean).
+4. Each check from step 6 with its result (`docs:check: ok`, test counts, lint clean). For `npm test`, give the path of `$S/<slug>/test.log` and quote its last lines (the vitest `Tests` count, the script `pass`/`fail` counts and `docs:check: ok`).
 5. The full-page shot paths and the overlay table from step 6.5, with what you fixed or found in them.
 6. Generator and gallery problems (file, line, shot path), and anything left undone.
