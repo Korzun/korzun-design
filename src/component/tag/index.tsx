@@ -7,11 +7,11 @@ export type { TagTone };
 export interface TagProps {
   /** The label. */
   children: React.ReactNode;
-  /** Makes it a button (focusable, Enter/Space, pointer cursor). Receives no event. */
+  /** Makes it a button: `role="button"`, focusable, pointer cursor, Enter/Space activate it, and hover deepens the tone. Receives no event. */
   onClick?: () => void;
-  /** `sm` renders a compact chip that fits within a normal text line height. Default `'md'`. */
+  /** `sm` is compact (tight line height) and fits inside a normal text line, so rows keep the same height with or without chips. */
   size?: 'sm' | 'md';
-  /** Colour, from the theme's `color.chip` tokens. Status tones (`success`, `warning`, `danger`, `info`, `neutral`) report state; label tones (the rest) name a kind of thing. `status` is a legacy label tone despite its name; for a state use `success`/`warning`/`danger`/`info`, or `neutral` when it carries no meaning. Default `subject`. */
+  /** Colour, from the theme's `color.chip` tokens. Status tones report a state; label tones name a kind of thing, and `status` is a legacy label tone despite its name. See [Choosing a tone](#choosing-a-tone). */
   tone?: TagTone;
 }
 
