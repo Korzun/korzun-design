@@ -15,6 +15,24 @@ const mount = (table: TypeTable) =>
   );
 
 describe('PropsTable', () => {
+  it('labels the type and default cells and marks the description wide, for the stacked phone layout', () => {
+    const { container } = mount({
+      name: 'ButtonProps',
+      kind: 'props',
+      rows: [
+        { name: 'size', type: 'string', required: false, default: "'m'", description: 'Size.' },
+      ],
+    });
+    const cells = Array.from(container.querySelectorAll('tbody td'));
+    expect(cells.map((td) => td.getAttribute('data-label'))).toEqual([
+      null,
+      'Type',
+      'Default',
+      null,
+    ]);
+    expect(cells[3]!.className).toMatch(/wide/);
+  });
+
   it('shows the type description under the heading, with markdown', () => {
     mount({
       name: 'MenuLinkItem',

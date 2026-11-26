@@ -8,6 +8,7 @@ import { CATEGORIES } from '../../scripts/docs-gen/categories.mjs';
 import type { ModuleInfo } from '../../scripts/docs-gen/types.js';
 import { siteData } from '../data.js';
 import { siteColumn } from '../layout/column.js';
+import { Markdown } from '../part/markdown.js';
 import { Thumbnail } from '../part/thumbnail.js';
 import { filterModules } from '../search.js';
 
@@ -52,8 +53,9 @@ const ModuleCard = ({ mod }: { mod: ModuleInfo }) => {
             <Heading level={3} size="md">
               {mod.title}
             </Heading>
+            {/* Inline markdown (code spans), with links as text: the card is a link already. */}
             <Text size="sm" tone="description">
-              {mod.description}
+              <Markdown source={mod.description} from={mod.docPath} inline links={false} />
             </Text>
           </Stack>
         </Stack>

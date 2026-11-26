@@ -11,7 +11,7 @@ export default function IntentProps() {
   const [prefetches, setPrefetches] = useState(0);
   const count = () => setPrefetches((n) => n + 1);
   return (
-    <Stack>
+    <Stack align="start">
       <Menu
         trigger={(p) => <Button {...p}>Book</Button>}
         items={[

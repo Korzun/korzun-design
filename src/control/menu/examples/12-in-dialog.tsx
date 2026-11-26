@@ -10,10 +10,10 @@ export default function InDialog() {
   const [open, setOpen] = useState(false);
   const [chosen, setChosen] = useState('nothing yet');
   return (
-    <>
+    <Stack align="start">
       <Button onClick={() => setOpen(true)}>Open dialog</Button>
       <Dialog open={open} onClose={() => setOpen(false)} title="Edit book">
-        <Stack>
+        <Stack align="start">
           <Menu
             trigger={(p) => <Button {...p}>Actions</Button>}
             items={[
@@ -25,6 +25,6 @@ export default function InDialog() {
           <Text tone="muted">Chosen: {chosen}</Text>
         </Stack>
       </Dialog>
-    </>
+    </Stack>
   );
 }

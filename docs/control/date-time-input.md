@@ -125,7 +125,7 @@ changes. A year or year-month shows as the 1st of the period, a timestamp shows 
 Pick a sample, then edit the date to see what `onChange` sends back.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Inline, Stack, Text } from '@korzun/design/component';
 import { DateTimeInput, SegmentedControl } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -142,12 +142,14 @@ export default function StoredValues() {
   const [value, setValue] = useState<string | undefined>('2023-06');
   return (
     <Stack>
-      <SegmentedControl
-        label="Stored value"
-        options={SAMPLES}
-        value={value ?? null}
-        onChange={setValue}
-      />
+      <Inline>
+        <SegmentedControl
+          label="Stored value"
+          options={SAMPLES}
+          value={value ?? null}
+          onChange={setValue}
+        />
+      </Inline>
       <DateTimeInput name="stored" label="Publish date" value={value} onChange={setValue} />
       <Text tone="muted">Value: {value === undefined ? 'undefined' : `'${value}'`}</Text>
     </Stack>
@@ -231,6 +233,7 @@ export default function InACard() {
 | `theme.space.md` | `0.5rem` | `0.5rem` |
 | `theme.space.sm` | `0.375rem` | `0.375rem` |
 | `theme.space.xs` | `0.25rem` | `0.25rem` |
+| `theme.space.xxl` | `1rem` | `1rem` |
 | `theme.zIndex.base` | `1` | `1` |
 
 <!-- /generated:tokens -->
@@ -239,6 +242,6 @@ export default function InACard() {
 
 ## Changelog
 
-- **0.6.0** (2026-11-26): Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.5.2 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px.
+- **0.6.0** (2026-11-26): Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.5.2 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px. A text field, `ChipsInput` box or field label directly on a Page also moves its text 16px in from the edge (8px elsewhere), the inset `Button` keeps, so it clears the deeper corner.
 
 <!-- /generated:changelog -->

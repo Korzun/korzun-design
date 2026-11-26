@@ -161,7 +161,7 @@
           "order": 7,
           "title": "Confirm dialog footer",
           "description": "A `text` Cancel beside a `primary danger` action. `loading` shows the spinner\nand blocks a second click while the deletion runs; `canDismiss={!deleting}`\nkeeps the dialog open until it finishes. Inside a Dialog the corners step down\nby themselves: no `radius` prop.",
-          "code": "import { Button, Dialog } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function DialogFooter() {\n  const [open, setOpen] = useState(false);\n  const [deleting, setDeleting] = useState(false);\n  const close = () => {\n    setDeleting(false);\n    setOpen(false);\n  };\n  const confirm = () => {\n    setDeleting(true);\n    setTimeout(close, 1000);\n  };\n  return (\n    <>\n      <Button danger onClick={() => setOpen(true)}>\n        Delete book\n      </Button>\n      <Dialog\n        open={open}\n        onClose={close}\n        canDismiss={!deleting}\n        title=\"Delete this book?\"\n        footer={\n          <>\n            <Button type=\"text\" disabled={deleting} onClick={close}>\n              Cancel\n            </Button>\n            <Button type=\"primary\" danger loading={deleting} onClick={confirm}>\n              Delete\n            </Button>\n          </>\n        }\n      >\n        It is removed from every device. This cannot be undone.\n      </Dialog>\n    </>\n  );\n}\n"
+          "code": "import { Stack } from '@korzun/design/component';\nimport { Button, Dialog } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function DialogFooter() {\n  const [open, setOpen] = useState(false);\n  const [deleting, setDeleting] = useState(false);\n  const close = () => {\n    setDeleting(false);\n    setOpen(false);\n  };\n  const confirm = () => {\n    setDeleting(true);\n    setTimeout(close, 1000);\n  };\n  return (\n    <Stack align=\"start\">\n      <Button danger onClick={() => setOpen(true)}>\n        Delete book\n      </Button>\n      <Dialog\n        open={open}\n        onClose={close}\n        canDismiss={!deleting}\n        title=\"Delete this book?\"\n        footer={\n          <>\n            <Button type=\"text\" disabled={deleting} onClick={close}>\n              Cancel\n            </Button>\n            <Button type=\"primary\" danger loading={deleting} onClick={confirm}>\n              Delete\n            </Button>\n          </>\n        }\n      >\n        It is removed from every device. This cannot be undone.\n      </Dialog>\n    </Stack>\n  );\n}\n"
         }
       ],
       "preview": {
@@ -677,7 +677,7 @@
           "order": 7,
           "title": "In a dialog",
           "description": "The suggestion list opens inside an open `Dialog` that contains the field,\nso it works in a modal.",
-          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button, ChipsInput, Dialog } from '@korzun/design/control';\nimport { useState } from 'react';\n\nconst SUBJECTS = ['Astronomy', 'Biology', 'Cooking', 'History', 'Poetry', 'Travel'];\n\nexport default function InDialog() {\n  const [open, setOpen] = useState(false);\n  const [subjects, setSubjects] = useState<string[]>([]);\n  return (\n    <Stack>\n      <Button onClick={() => setOpen(true)}>Edit subjects</Button>\n      <Text tone=\"muted\">Subjects: {subjects.join(', ') || 'none'}</Text>\n      <Dialog\n        open={open}\n        onClose={() => setOpen(false)}\n        title=\"Edit subjects\"\n        footer={\n          <Button type=\"primary\" onClick={() => setOpen(false)}>\n            Done\n          </Button>\n        }\n      >\n        <ChipsInput\n          value={subjects}\n          suggestions={SUBJECTS}\n          onChange={setSubjects}\n          placeholder=\"Add subject…\"\n        />\n      </Dialog>\n    </Stack>\n  );\n}\n"
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button, ChipsInput, Dialog } from '@korzun/design/control';\nimport { useState } from 'react';\n\nconst SUBJECTS = ['Astronomy', 'Biology', 'Cooking', 'History', 'Poetry', 'Travel'];\n\nexport default function InDialog() {\n  const [open, setOpen] = useState(false);\n  const [subjects, setSubjects] = useState<string[]>([]);\n  return (\n    <Stack align=\"start\">\n      <Button onClick={() => setOpen(true)}>Edit subjects</Button>\n      <Text tone=\"muted\">Subjects: {subjects.join(', ') || 'none'}</Text>\n      <Dialog\n        open={open}\n        onClose={() => setOpen(false)}\n        title=\"Edit subjects\"\n        footer={\n          <Button type=\"primary\" onClick={() => setOpen(false)}>\n            Done\n          </Button>\n        }\n      >\n        <ChipsInput\n          value={subjects}\n          suggestions={SUBJECTS}\n          onChange={setSubjects}\n          placeholder=\"Add subject…\"\n        />\n      </Dialog>\n    </Stack>\n  );\n}\n"
         }
       ],
       "preview": {
@@ -1154,6 +1154,12 @@
           "dark": "0.25rem"
         },
         {
+          "path": "space.xxl",
+          "kind": "value",
+          "light": "1rem",
+          "dark": "1rem"
+        },
+        {
           "path": "space.xxs",
           "kind": "value",
           "light": "0.125rem",
@@ -1174,7 +1180,7 @@
             "Tag",
             "Switch"
           ],
-          "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.5.2 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px."
+          "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.5.2 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px. A text field, `ChipsInput` box or field label directly on a Page also moves its text 16px in from the edge (8px elsewhere), the inset `Button` keeps, so it clears the deeper corner."
         },
         {
           "version": "0.3.0",
@@ -1406,7 +1412,7 @@
           "order": 3,
           "title": "Stored values",
           "description": "`value` is an ISO 8601 string as a server stores it, and the inputs re-sync when it\nchanges. A year or year-month shows as the 1st of the period, a timestamp shows in UTC\n(22:30 at -05:00 is 03:30 the next day), and an unreadable string or `''` shows as empty.\nPick a sample, then edit the date to see what `onChange` sends back.",
-          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { DateTimeInput, SegmentedControl } from '@korzun/design/control';\nimport { useState } from 'react';\n\nconst SAMPLES = [\n  { value: '2023', label: 'Year' },\n  { value: '2023-06', label: 'Month' },\n  { value: '2023-06-06', label: 'Day' },\n  { value: '2015-08-04T22:30:00-05:00', label: 'Timestamp' },\n  { value: 'June 2023', label: 'Unreadable' },\n  { value: '', label: 'None' },\n] as const;\n\nexport default function StoredValues() {\n  const [value, setValue] = useState<string | undefined>('2023-06');\n  return (\n    <Stack>\n      <SegmentedControl\n        label=\"Stored value\"\n        options={SAMPLES}\n        value={value ?? null}\n        onChange={setValue}\n      />\n      <DateTimeInput name=\"stored\" label=\"Publish date\" value={value} onChange={setValue} />\n      <Text tone=\"muted\">Value: {value === undefined ? 'undefined' : `'${value}'`}</Text>\n    </Stack>\n  );\n}\n"
+          "code": "import { Inline, Stack, Text } from '@korzun/design/component';\nimport { DateTimeInput, SegmentedControl } from '@korzun/design/control';\nimport { useState } from 'react';\n\nconst SAMPLES = [\n  { value: '2023', label: 'Year' },\n  { value: '2023-06', label: 'Month' },\n  { value: '2023-06-06', label: 'Day' },\n  { value: '2015-08-04T22:30:00-05:00', label: 'Timestamp' },\n  { value: 'June 2023', label: 'Unreadable' },\n  { value: '', label: 'None' },\n] as const;\n\nexport default function StoredValues() {\n  const [value, setValue] = useState<string | undefined>('2023-06');\n  return (\n    <Stack>\n      <Inline>\n        <SegmentedControl\n          label=\"Stored value\"\n          options={SAMPLES}\n          value={value ?? null}\n          onChange={setValue}\n        />\n      </Inline>\n      <DateTimeInput name=\"stored\" label=\"Publish date\" value={value} onChange={setValue} />\n      <Text tone=\"muted\">Value: {value === undefined ? 'undefined' : `'${value}'`}</Text>\n    </Stack>\n  );\n}\n"
         },
         {
           "file": "src/control/date-time-input/examples/04-in-a-card.tsx",
@@ -1539,6 +1545,12 @@
           "dark": "0.25rem"
         },
         {
+          "path": "space.xxl",
+          "kind": "value",
+          "light": "1rem",
+          "dark": "1rem"
+        },
+        {
           "path": "zIndex.base",
           "kind": "value",
           "light": "1",
@@ -1559,7 +1571,7 @@
             "Tag",
             "Switch"
           ],
-          "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.5.2 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px."
+          "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.5.2 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px. A text field, `ChipsInput` box or field label directly on a Page also moves its text 16px in from the edge (8px elsewhere), the inset `Button` keeps, so it clears the deeper corner."
         }
       ]
     },
@@ -1602,7 +1614,7 @@
           "order": 3,
           "title": "Not dismissable while busy",
           "description": "`canDismiss={!saving}` makes Escape and backdrop clicks do nothing while a request\nruns. The switch holds the busy state on so you can try both; the footer buttons\nare disabled or loading to match, so every way out is gated the same.",
-          "code": "import { Stack } from '@korzun/design/component';\nimport { Button, Dialog, Switch } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function NotDismissable() {\n  const [open, setOpen] = useState(false);\n  const [saving, setSaving] = useState(true);\n  return (\n    <>\n      <Button onClick={() => setOpen(true)}>Open busy dialog</Button>\n      <Dialog\n        open={open}\n        onClose={() => setOpen(false)}\n        canDismiss={!saving}\n        title=\"Saving changes\"\n        footer={\n          <>\n            <Button type=\"text\" disabled={saving} onClick={() => setOpen(false)}>\n              Cancel\n            </Button>\n            <Button type=\"primary\" loading={saving} onClick={() => setOpen(false)}>\n              Save\n            </Button>\n          </>\n        }\n      >\n        <Stack>\n          Escape and the backdrop are ignored while the request is in flight.\n          <Switch name=\"saving\" label=\"Request in flight\" checked={saving} onChange={setSaving} />\n        </Stack>\n      </Dialog>\n    </>\n  );\n}\n"
+          "code": "import { Stack } from '@korzun/design/component';\nimport { Button, Dialog, Switch } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function NotDismissable() {\n  const [open, setOpen] = useState(false);\n  const [saving, setSaving] = useState(true);\n  return (\n    <Stack align=\"start\">\n      <Button onClick={() => setOpen(true)}>Open busy dialog</Button>\n      <Dialog\n        open={open}\n        onClose={() => setOpen(false)}\n        canDismiss={!saving}\n        title=\"Saving changes\"\n        footer={\n          <>\n            <Button type=\"text\" disabled={saving} onClick={() => setOpen(false)}>\n              Cancel\n            </Button>\n            <Button type=\"primary\" loading={saving} onClick={() => setOpen(false)}>\n              Save\n            </Button>\n          </>\n        }\n      >\n        <Stack>\n          Escape and the backdrop are ignored while the request is in flight.\n          <Switch name=\"saving\" label=\"Request in flight\" checked={saving} onChange={setSaving} />\n        </Stack>\n      </Dialog>\n    </Stack>\n  );\n}\n"
         },
         {
           "file": "src/control/dialog/examples/04-form.tsx",
@@ -2005,7 +2017,7 @@
           "order": 1,
           "title": "Basic",
           "description": "A trigger button and a list of actions. Spread the `trigger` props onto the\nbutton; choosing an item closes the menu and calls its `onClick`, which takes\nno arguments.",
-          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button, Menu } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Basic() {\n  const [chosen, setChosen] = useState('nothing yet');\n  return (\n    <Stack>\n      <Menu\n        trigger={(p) => <Button {...p}>Sort by</Button>}\n        items={[\n          { label: 'Title', onClick: () => setChosen('Title') },\n          { label: 'Author', onClick: () => setChosen('Author') },\n          { label: 'Date added', onClick: () => setChosen('Date added') },\n        ]}\n      />\n      <Text tone=\"muted\">Chosen: {chosen}</Text>\n    </Stack>\n  );\n}\n"
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button, Menu } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Basic() {\n  const [chosen, setChosen] = useState('nothing yet');\n  return (\n    <Stack align=\"start\">\n      <Menu\n        trigger={(p) => <Button {...p}>Sort by</Button>}\n        items={[\n          { label: 'Title', onClick: () => setChosen('Title') },\n          { label: 'Author', onClick: () => setChosen('Author') },\n          { label: 'Date added', onClick: () => setChosen('Date added') },\n        ]}\n      />\n      <Text tone=\"muted\">Chosen: {chosen}</Text>\n    </Stack>\n  );\n}\n"
         },
         {
           "file": "src/control/menu/examples/02-links-and-icons.tsx",
@@ -2013,7 +2025,7 @@
           "order": 2,
           "title": "Links and icons",
           "description": "An item with `to` is a link and one with `onClick` is an action; one item is\nnever both. `Icon` takes an icon component (`HomeIcon`), not an element. A link\nitem needs a router above the Menu, and middle-click opens it in a new tab.",
-          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button, Menu } from '@korzun/design/control';\nimport { BooksIcon, HomeIcon, SettingsIcon } from '@korzun/design/icon';\nimport { useState } from 'react';\n\nexport default function LinksAndIcons() {\n  const [chosen, setChosen] = useState('nothing yet');\n  return (\n    <Stack>\n      <Menu\n        trigger={(p) => <Button {...p}>Go to</Button>}\n        items={[\n          { label: 'Home', to: '/', Icon: HomeIcon },\n          { label: 'Library', to: '/library', Icon: BooksIcon },\n          { label: 'Settings', onClick: () => setChosen('Settings'), Icon: SettingsIcon },\n        ]}\n      />\n      <Text tone=\"muted\">Chosen: {chosen}</Text>\n    </Stack>\n  );\n}\n"
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button, Menu } from '@korzun/design/control';\nimport { BooksIcon, HomeIcon, SettingsIcon } from '@korzun/design/icon';\nimport { useState } from 'react';\n\nexport default function LinksAndIcons() {\n  const [chosen, setChosen] = useState('nothing yet');\n  return (\n    <Stack align=\"start\">\n      <Menu\n        trigger={(p) => <Button {...p}>Go to</Button>}\n        items={[\n          { label: 'Home', to: '/', Icon: HomeIcon },\n          { label: 'Library', to: '/library', Icon: BooksIcon },\n          { label: 'Settings', onClick: () => setChosen('Settings'), Icon: SettingsIcon },\n        ]}\n      />\n      <Text tone=\"muted\">Chosen: {chosen}</Text>\n    </Stack>\n  );\n}\n"
         },
         {
           "file": "src/control/menu/examples/03-danger-and-separator.tsx",
@@ -2021,7 +2033,7 @@
           "order": 3,
           "title": "Danger and separator",
           "description": "`danger` turns an item's text red and does nothing else: Archive is red\nwith no divider. `separatorBefore` draws the divider above an item, so the\ndestructive item sits apart from the rest.",
-          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button, Menu } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function DangerAndSeparator() {\n  const [chosen, setChosen] = useState('nothing yet');\n  return (\n    <Stack>\n      <Menu\n        trigger={(p) => <Button {...p}>Book</Button>}\n        items={[\n          { label: 'Edit metadata', onClick: () => setChosen('Edit metadata') },\n          { label: 'Archive', danger: true, onClick: () => setChosen('Archive') },\n          {\n            label: 'Delete book',\n            danger: true,\n            separatorBefore: true,\n            onClick: () => setChosen('Delete book'),\n          },\n        ]}\n      />\n      <Text tone=\"muted\">Chosen: {chosen}</Text>\n    </Stack>\n  );\n}\n"
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button, Menu } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function DangerAndSeparator() {\n  const [chosen, setChosen] = useState('nothing yet');\n  return (\n    <Stack align=\"start\">\n      <Menu\n        trigger={(p) => <Button {...p}>Book</Button>}\n        items={[\n          { label: 'Edit metadata', onClick: () => setChosen('Edit metadata') },\n          { label: 'Archive', danger: true, onClick: () => setChosen('Archive') },\n          {\n            label: 'Delete book',\n            danger: true,\n            separatorBefore: true,\n            onClick: () => setChosen('Delete book'),\n          },\n        ]}\n      />\n      <Text tone=\"muted\">Chosen: {chosen}</Text>\n    </Stack>\n  );\n}\n"
         },
         {
           "file": "src/control/menu/examples/04-disabled-and-conditional.tsx",
@@ -2045,7 +2057,7 @@
           "order": 6,
           "title": "Align",
           "description": "`align` lines the menu up with the trigger's start edge, centre or end edge.\nThe wide triggers show it: each menu is narrower than its trigger. Use `end` for\na trigger at the right edge of the screen.",
-          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button, Menu } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Align() {\n  const [chosen, setChosen] = useState('nothing yet');\n  const items = (align: string) => [\n    { label: 'Open', onClick: () => setChosen(`Open (${align})`) },\n    { label: 'Close', onClick: () => setChosen(`Close (${align})`) },\n  ];\n  return (\n    <Stack>\n      <Text tone=\"muted\">Chosen: {chosen}</Text>\n      <Menu\n        align=\"start\"\n        trigger={(p) => <Button {...p}>align start: menu at the left edge</Button>}\n        items={items('start')}\n      />\n      <Menu\n        align=\"center\"\n        trigger={(p) => <Button {...p}>align center: menu at the middle</Button>}\n        items={items('center')}\n      />\n      <Menu\n        align=\"end\"\n        trigger={(p) => <Button {...p}>align end: menu at the right edge</Button>}\n        items={items('end')}\n      />\n    </Stack>\n  );\n}\n"
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button, Menu } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Align() {\n  const [chosen, setChosen] = useState('nothing yet');\n  const items = (align: string) => [\n    { label: 'Open', onClick: () => setChosen(`Open (${align})`) },\n    { label: 'Close', onClick: () => setChosen(`Close (${align})`) },\n  ];\n  return (\n    <Stack align=\"start\">\n      <Text tone=\"muted\">Chosen: {chosen}</Text>\n      <Menu\n        align=\"start\"\n        trigger={(p) => <Button {...p}>align start: menu at the left edge</Button>}\n        items={items('start')}\n      />\n      <Menu\n        align=\"center\"\n        trigger={(p) => <Button {...p}>align center: menu at the middle</Button>}\n        items={items('center')}\n      />\n      <Menu\n        align=\"end\"\n        trigger={(p) => <Button {...p}>align end: menu at the right edge</Button>}\n        items={items('end')}\n      />\n    </Stack>\n  );\n}\n"
         },
         {
           "file": "src/control/menu/examples/07-side.tsx",
@@ -2053,7 +2065,7 @@
           "order": 7,
           "title": "Side",
           "description": "`side=\"top\"` opens the menu above the trigger. It flips to the other side when\nthere is no room, so the trigger sits below other content here.",
-          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button, Menu } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Side() {\n  const [chosen, setChosen] = useState('nothing yet');\n  return (\n    <Stack>\n      <Text tone=\"muted\">Chosen: {chosen}</Text>\n      <Menu\n        side=\"top\"\n        trigger={(p) => <Button {...p}>Opens above</Button>}\n        items={[\n          { label: 'Reply', onClick: () => setChosen('Reply') },\n          { label: 'Forward', onClick: () => setChosen('Forward') },\n          { label: 'Mark unread', onClick: () => setChosen('Mark unread') },\n        ]}\n      />\n    </Stack>\n  );\n}\n"
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button, Menu } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Side() {\n  const [chosen, setChosen] = useState('nothing yet');\n  return (\n    <Stack align=\"start\">\n      <Text tone=\"muted\">Chosen: {chosen}</Text>\n      <Menu\n        side=\"top\"\n        trigger={(p) => <Button {...p}>Opens above</Button>}\n        items={[\n          { label: 'Reply', onClick: () => setChosen('Reply') },\n          { label: 'Forward', onClick: () => setChosen('Forward') },\n          { label: 'Mark unread', onClick: () => setChosen('Mark unread') },\n        ]}\n      />\n    </Stack>\n  );\n}\n"
         },
         {
           "file": "src/control/menu/examples/08-book-actions.tsx",
@@ -2077,7 +2089,7 @@
           "order": 10,
           "title": "Intent props",
           "description": "`intentProps` are spread onto the item element: here hovering, focusing or\ntouching “Open reader” counts a prefetch, which is what a router's prefetch\nhook would do.",
-          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button, Menu } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function IntentProps() {\n  const [prefetches, setPrefetches] = useState(0);\n  const count = () => setPrefetches((n) => n + 1);\n  return (\n    <Stack>\n      <Menu\n        trigger={(p) => <Button {...p}>Book</Button>}\n        items={[\n          {\n            label: 'Open reader',\n            to: '/books/1/read',\n            intentProps: { onMouseEnter: count, onFocus: count, onTouchStart: count },\n          },\n          { label: 'Reset count', onClick: () => setPrefetches(0) },\n        ]}\n      />\n      <Text tone=\"muted\">Prefetches: {prefetches}</Text>\n    </Stack>\n  );\n}\n"
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button, Menu } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function IntentProps() {\n  const [prefetches, setPrefetches] = useState(0);\n  const count = () => setPrefetches((n) => n + 1);\n  return (\n    <Stack align=\"start\">\n      <Menu\n        trigger={(p) => <Button {...p}>Book</Button>}\n        items={[\n          {\n            label: 'Open reader',\n            to: '/books/1/read',\n            intentProps: { onMouseEnter: count, onFocus: count, onTouchStart: count },\n          },\n          { label: 'Reset count', onClick: () => setPrefetches(0) },\n        ]}\n      />\n      <Text tone=\"muted\">Prefetches: {prefetches}</Text>\n    </Stack>\n  );\n}\n"
         },
         {
           "file": "src/control/menu/examples/11-in-card.tsx",
@@ -2093,7 +2105,7 @@
           "order": 12,
           "title": "In a Dialog",
           "description": "A Menu inside a Dialog opens into the dialog, so it shows above the dialog's\nbackdrop. Escape closes the menu first and the Dialog on the next press.",
-          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button, Dialog, Menu } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function InDialog() {\n  const [open, setOpen] = useState(false);\n  const [chosen, setChosen] = useState('nothing yet');\n  return (\n    <>\n      <Button onClick={() => setOpen(true)}>Open dialog</Button>\n      <Dialog open={open} onClose={() => setOpen(false)} title=\"Edit book\">\n        <Stack>\n          <Menu\n            trigger={(p) => <Button {...p}>Actions</Button>}\n            items={[\n              { label: 'Rename', onClick: () => setChosen('Rename') },\n              { label: 'Duplicate', onClick: () => setChosen('Duplicate') },\n              { label: 'Delete', danger: true, onClick: () => setChosen('Delete') },\n            ]}\n          />\n          <Text tone=\"muted\">Chosen: {chosen}</Text>\n        </Stack>\n      </Dialog>\n    </>\n  );\n}\n"
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button, Dialog, Menu } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function InDialog() {\n  const [open, setOpen] = useState(false);\n  const [chosen, setChosen] = useState('nothing yet');\n  return (\n    <Stack align=\"start\">\n      <Button onClick={() => setOpen(true)}>Open dialog</Button>\n      <Dialog open={open} onClose={() => setOpen(false)} title=\"Edit book\">\n        <Stack align=\"start\">\n          <Menu\n            trigger={(p) => <Button {...p}>Actions</Button>}\n            items={[\n              { label: 'Rename', onClick: () => setChosen('Rename') },\n              { label: 'Duplicate', onClick: () => setChosen('Duplicate') },\n              { label: 'Delete', danger: true, onClick: () => setChosen('Delete') },\n            ]}\n          />\n          <Text tone=\"muted\">Chosen: {chosen}</Text>\n        </Stack>\n      </Dialog>\n    </Stack>\n  );\n}\n"
         }
       ],
       "preview": {
@@ -2739,6 +2751,12 @@
           "kind": "value",
           "light": "0.25rem",
           "dark": "0.25rem"
+        },
+        {
+          "path": "space.xxl",
+          "kind": "value",
+          "light": "1rem",
+          "dark": "1rem"
         }
       ],
       "changelog": [
@@ -2755,7 +2773,7 @@
             "Tag",
             "Switch"
           ],
-          "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.5.2 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px."
+          "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.5.2 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px. A text field, `ChipsInput` box or field label directly on a Page also moves its text 16px in from the edge (8px elsewhere), the inset `Button` keeps, so it clears the deeper corner."
         },
         {
           "version": "0.5.2",
@@ -3330,7 +3348,7 @@
           "order": 3,
           "title": "Align",
           "description": "`align` lines the popover up with the anchor's start edge, centre or end\nedge. The anchors are wider than the popover so each edge shows.",
-          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button, Popover } from '@korzun/design/control';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\nimport { useRef, useState } from 'react';\n\nconst useStyle = createUseStyles((theme: Theme) => ({\n  panel: {\n    backgroundColor: theme.color.bg.card,\n    border: `1px solid ${theme.color.border.strong}`,\n    borderRadius: theme.radius.md,\n    boxShadow: theme.shadow.hoverLift,\n    padding: theme.space.md,\n  },\n}));\n\ntype Align = 'start' | 'center' | 'end';\n\nexport default function Align() {\n  const styles = useStyle();\n  const startAnchor = useRef<HTMLElement>(null);\n  const centerAnchor = useRef<HTMLElement>(null);\n  const endAnchor = useRef<HTMLElement>(null);\n  const [open, setOpen] = useState<Align | null>(null);\n  const toggle = (align: Align) => setOpen((current) => (current === align ? null : align));\n  const anchors = { start: startAnchor, center: centerAnchor, end: endAnchor };\n  return (\n    <Stack>\n      <Text tone=\"muted\">Open: {open ?? 'none'}</Text>\n      <Button ref={startAnchor} onClick={() => toggle('start')}>\n        align start: popover at the left edge\n      </Button>\n      <Button ref={centerAnchor} onClick={() => toggle('center')}>\n        align center: popover at the middle\n      </Button>\n      <Button ref={endAnchor} onClick={() => toggle('end')}>\n        align end: popover at the right edge\n      </Button>\n      {(['start', 'center', 'end'] as const).map((align) => (\n        <Popover\n          key={align}\n          anchorRef={anchors[align]}\n          open={open === align}\n          align={align}\n          matchWidth={false}\n          onClose={() => setOpen(null)}\n        >\n          <div className={styles.panel}>\n            <Text>align {align}</Text>\n          </div>\n        </Popover>\n      ))}\n    </Stack>\n  );\n}\n"
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button, Popover } from '@korzun/design/control';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\nimport { useRef, useState } from 'react';\n\nconst useStyle = createUseStyles((theme: Theme) => ({\n  panel: {\n    backgroundColor: theme.color.bg.card,\n    border: `1px solid ${theme.color.border.strong}`,\n    borderRadius: theme.radius.md,\n    boxShadow: theme.shadow.hoverLift,\n    padding: theme.space.md,\n  },\n}));\n\ntype Align = 'start' | 'center' | 'end';\n\nexport default function Align() {\n  const styles = useStyle();\n  const startAnchor = useRef<HTMLElement>(null);\n  const centerAnchor = useRef<HTMLElement>(null);\n  const endAnchor = useRef<HTMLElement>(null);\n  const [open, setOpen] = useState<Align | null>(null);\n  const toggle = (align: Align) => setOpen((current) => (current === align ? null : align));\n  const anchors = { start: startAnchor, center: centerAnchor, end: endAnchor };\n  return (\n    <Stack align=\"start\">\n      <Text tone=\"muted\">Open: {open ?? 'none'}</Text>\n      <Button ref={startAnchor} onClick={() => toggle('start')}>\n        align start: popover at the left edge\n      </Button>\n      <Button ref={centerAnchor} onClick={() => toggle('center')}>\n        align center: popover at the middle\n      </Button>\n      <Button ref={endAnchor} onClick={() => toggle('end')}>\n        align end: popover at the right edge\n      </Button>\n      {(['start', 'center', 'end'] as const).map((align) => (\n        <Popover\n          key={align}\n          anchorRef={anchors[align]}\n          open={open === align}\n          align={align}\n          matchWidth={false}\n          onClose={() => setOpen(null)}\n        >\n          <div className={styles.panel}>\n            <Text>align {align}</Text>\n          </div>\n        </Popover>\n      ))}\n    </Stack>\n  );\n}\n"
         },
         {
           "file": "src/control/popover/examples/04-width.tsx",
@@ -3338,7 +3356,7 @@
           "order": 4,
           "title": "Width",
           "description": "`matchWidth` makes the popover exactly as wide as its anchor, as a Select's\nlist is. `matchWidth={false}` lets the content size itself.",
-          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button, Popover } from '@korzun/design/control';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\nimport { useRef, useState } from 'react';\n\nconst useStyle = createUseStyles((theme: Theme) => ({\n  panel: {\n    backgroundColor: theme.color.bg.card,\n    border: `1px solid ${theme.color.border.strong}`,\n    borderRadius: theme.radius.md,\n    boxShadow: theme.shadow.hoverLift,\n    padding: theme.space.md,\n  },\n}));\n\nexport default function Width() {\n  const styles = useStyle();\n  const matchedAnchor = useRef<HTMLElement>(null);\n  const contentAnchor = useRef<HTMLElement>(null);\n  const [open, setOpen] = useState<'matched' | 'content' | null>(null);\n  const toggle = (name: 'matched' | 'content') =>\n    setOpen((current) => (current === name ? null : name));\n  return (\n    <Stack>\n      <Text tone=\"muted\">Open: {open ?? 'none'}</Text>\n      <Button ref={matchedAnchor} onClick={() => toggle('matched')}>\n        matchWidth: as wide as this button\n      </Button>\n      <Button ref={contentAnchor} onClick={() => toggle('content')}>\n        matchWidth false: as wide as its content\n      </Button>\n      <Popover\n        anchorRef={matchedAnchor}\n        open={open === 'matched'}\n        matchWidth\n        onClose={() => setOpen(null)}\n      >\n        <div className={styles.panel}>\n          <Text>Same width as the anchor</Text>\n        </div>\n      </Popover>\n      <Popover\n        anchorRef={contentAnchor}\n        open={open === 'content'}\n        matchWidth={false}\n        onClose={() => setOpen(null)}\n      >\n        <div className={styles.panel}>\n          <Text>Short</Text>\n        </div>\n      </Popover>\n    </Stack>\n  );\n}\n"
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button, Popover } from '@korzun/design/control';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\nimport { useRef, useState } from 'react';\n\nconst useStyle = createUseStyles((theme: Theme) => ({\n  panel: {\n    backgroundColor: theme.color.bg.card,\n    border: `1px solid ${theme.color.border.strong}`,\n    borderRadius: theme.radius.md,\n    boxShadow: theme.shadow.hoverLift,\n    padding: theme.space.md,\n  },\n}));\n\nexport default function Width() {\n  const styles = useStyle();\n  const matchedAnchor = useRef<HTMLElement>(null);\n  const contentAnchor = useRef<HTMLElement>(null);\n  const [open, setOpen] = useState<'matched' | 'content' | null>(null);\n  const toggle = (name: 'matched' | 'content') =>\n    setOpen((current) => (current === name ? null : name));\n  return (\n    <Stack align=\"start\">\n      <Text tone=\"muted\">Open: {open ?? 'none'}</Text>\n      <Button ref={matchedAnchor} onClick={() => toggle('matched')}>\n        matchWidth: as wide as this button\n      </Button>\n      <Button ref={contentAnchor} onClick={() => toggle('content')}>\n        matchWidth false: as wide as its content\n      </Button>\n      <Popover\n        anchorRef={matchedAnchor}\n        open={open === 'matched'}\n        matchWidth\n        onClose={() => setOpen(null)}\n      >\n        <div className={styles.panel}>\n          <Text>Same width as the anchor</Text>\n        </div>\n      </Popover>\n      <Popover\n        anchorRef={contentAnchor}\n        open={open === 'content'}\n        matchWidth={false}\n        onClose={() => setOpen(null)}\n      >\n        <div className={styles.panel}>\n          <Text>Short</Text>\n        </div>\n      </Popover>\n    </Stack>\n  );\n}\n"
         },
         {
           "file": "src/control/popover/examples/05-gap.tsx",
@@ -3362,7 +3380,7 @@
           "order": 7,
           "title": "In a Dialog",
           "description": "A popover whose anchor is inside an open Dialog renders into that dialog, so\nit shows above the backdrop. Escape closes the popover first and the Dialog\non the next press.",
-          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button, Dialog, Popover } from '@korzun/design/control';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\nimport { useRef, useState } from 'react';\n\nconst useStyle = createUseStyles((theme: Theme) => ({\n  panel: {\n    backgroundColor: theme.color.bg.card,\n    border: `1px solid ${theme.color.border.strong}`,\n    borderRadius: theme.radius.md,\n    boxShadow: theme.shadow.hoverLift,\n    padding: theme.space.xs,\n  },\n}));\n\nexport default function InDialog() {\n  const styles = useStyle();\n  const anchor = useRef<HTMLElement>(null);\n  const [dialogOpen, setDialogOpen] = useState(false);\n  const [open, setOpen] = useState(false);\n  const [chosen, setChosen] = useState('nothing yet');\n  const choose = (label: string) => {\n    setChosen(label);\n    setOpen(false);\n  };\n  return (\n    <>\n      <Button onClick={() => setDialogOpen(true)}>Open dialog</Button>\n      <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} title=\"Edit book\">\n        <Stack align=\"start\">\n          <Button ref={anchor} onClick={() => setOpen((value) => !value)}>\n            Status\n          </Button>\n          <Popover anchorRef={anchor} open={open} matchWidth={false} onClose={() => setOpen(false)}>\n            <div className={styles.panel}>\n              <Stack gap=\"xxs\">\n                <Button type=\"text\" onClick={() => choose('Reading')}>\n                  Reading\n                </Button>\n                <Button type=\"text\" onClick={() => choose('Finished')}>\n                  Finished\n                </Button>\n              </Stack>\n            </div>\n          </Popover>\n          <Text tone=\"muted\">Chosen: {chosen}</Text>\n        </Stack>\n      </Dialog>\n    </>\n  );\n}\n"
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button, Dialog, Popover } from '@korzun/design/control';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\nimport { useRef, useState } from 'react';\n\nconst useStyle = createUseStyles((theme: Theme) => ({\n  panel: {\n    backgroundColor: theme.color.bg.card,\n    border: `1px solid ${theme.color.border.strong}`,\n    borderRadius: theme.radius.md,\n    boxShadow: theme.shadow.hoverLift,\n    padding: theme.space.xs,\n  },\n}));\n\nexport default function InDialog() {\n  const styles = useStyle();\n  const anchor = useRef<HTMLElement>(null);\n  const [dialogOpen, setDialogOpen] = useState(false);\n  const [open, setOpen] = useState(false);\n  const [chosen, setChosen] = useState('nothing yet');\n  const choose = (label: string) => {\n    setChosen(label);\n    setOpen(false);\n  };\n  return (\n    <Stack align=\"start\">\n      <Button onClick={() => setDialogOpen(true)}>Open dialog</Button>\n      <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} title=\"Edit book\">\n        <Stack align=\"start\">\n          <Button ref={anchor} onClick={() => setOpen((value) => !value)}>\n            Status\n          </Button>\n          <Popover anchorRef={anchor} open={open} matchWidth={false} onClose={() => setOpen(false)}>\n            <div className={styles.panel}>\n              <Stack gap=\"xxs\">\n                <Button type=\"text\" onClick={() => choose('Reading')}>\n                  Reading\n                </Button>\n                <Button type=\"text\" onClick={() => choose('Finished')}>\n                  Finished\n                </Button>\n              </Stack>\n            </div>\n          </Popover>\n          <Text tone=\"muted\">Chosen: {chosen}</Text>\n        </Stack>\n      </Dialog>\n    </Stack>\n  );\n}\n"
         },
         {
           "file": "src/control/popover/examples/08-without-onclose.tsx",
@@ -3664,7 +3682,7 @@
           "order": 9,
           "title": "In a dialog",
           "description": "The list opens inside the open dialog, so a `Select` works in a modal. Escape\ncloses the list first and a second Escape closes the dialog.",
-          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button, Dialog, Select } from '@korzun/design/control';\nimport { useState } from 'react';\n\nconst SHELVES = ['To read', 'Reading', 'Finished'];\n\nexport default function InDialog() {\n  const [open, setOpen] = useState(false);\n  const [shelf, setShelf] = useState<string | undefined>('To read');\n  return (\n    <Stack>\n      <Button onClick={() => setOpen(true)}>Move book</Button>\n      <Text tone=\"muted\">Shelf: {shelf ?? 'none'}</Text>\n      <Dialog\n        open={open}\n        onClose={() => setOpen(false)}\n        title=\"Move to shelf\"\n        footer={\n          <Button type=\"primary\" onClick={() => setOpen(false)}>\n            Done\n          </Button>\n        }\n      >\n        <Select name=\"shelf\" label=\"Shelf\" value={shelf} options={SHELVES} onChange={setShelf} />\n      </Dialog>\n    </Stack>\n  );\n}\n"
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button, Dialog, Select } from '@korzun/design/control';\nimport { useState } from 'react';\n\nconst SHELVES = ['To read', 'Reading', 'Finished'];\n\nexport default function InDialog() {\n  const [open, setOpen] = useState(false);\n  const [shelf, setShelf] = useState<string | undefined>('To read');\n  return (\n    <Stack align=\"start\">\n      <Button onClick={() => setOpen(true)}>Move book</Button>\n      <Text tone=\"muted\">Shelf: {shelf ?? 'none'}</Text>\n      <Dialog\n        open={open}\n        onClose={() => setOpen(false)}\n        title=\"Move to shelf\"\n        footer={\n          <Button type=\"primary\" onClick={() => setOpen(false)}>\n            Done\n          </Button>\n        }\n      >\n        <Select name=\"shelf\" label=\"Shelf\" value={shelf} options={SHELVES} onChange={setShelf} />\n      </Dialog>\n    </Stack>\n  );\n}\n"
         }
       ],
       "preview": {
@@ -4053,7 +4071,7 @@
           "order": 1,
           "title": "Basic",
           "description": "A few short text options. Declare them `as const` so `value` and `onChange`\nare typed to the option values. The `label` names the group for assistive tech\nand is not drawn, so put a visible label beside the control yourself.",
-          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { SegmentedControl } from '@korzun/design/control';\nimport { useState } from 'react';\n\nconst SORTS = [\n  { value: 'title', label: 'Title' },\n  { value: 'author', label: 'Author' },\n  { value: 'added', label: 'Added' },\n] as const;\n\nexport default function Basic() {\n  const [sort, setSort] = useState<(typeof SORTS)[number]['value']>('title');\n  return (\n    <Stack>\n      <Text tone=\"muted\">Sort by</Text>\n      <SegmentedControl label=\"Sort by\" options={SORTS} value={sort} onChange={setSort} />\n      <Text tone=\"muted\">Sorted by: {sort}</Text>\n    </Stack>\n  );\n}\n"
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { SegmentedControl } from '@korzun/design/control';\nimport { useState } from 'react';\n\nconst SORTS = [\n  { value: 'title', label: 'Title' },\n  { value: 'author', label: 'Author' },\n  { value: 'added', label: 'Added' },\n] as const;\n\nexport default function Basic() {\n  const [sort, setSort] = useState<(typeof SORTS)[number]['value']>('title');\n  return (\n    <Stack align=\"start\">\n      <Text tone=\"muted\">Sort by</Text>\n      <SegmentedControl label=\"Sort by\" options={SORTS} value={sort} onChange={setSort} />\n      <Text tone=\"muted\">Sorted by: {sort}</Text>\n    </Stack>\n  );\n}\n"
         },
         {
           "file": "src/control/segmented-control/examples/02-icons.tsx",
@@ -4061,7 +4079,7 @@
           "order": 2,
           "title": "Icons",
           "description": "An option with an `Icon` draws it above its label, which becomes a small\ncaption. `showLabels={false}` drops the captions and leaves icons only; the\n`label` stays each segment's accessible name. `Icon` takes a component\n(`ThumbDownIcon`), not an element.",
-          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { SegmentedControl } from '@korzun/design/control';\nimport { HandLoveYouIcon, HandOkIcon, ThumbDownIcon } from '@korzun/design/icon';\nimport { useState } from 'react';\n\nconst RATINGS = [\n  { value: 'bad', label: 'Bad', Icon: ThumbDownIcon },\n  { value: 'ok', label: 'Okay', Icon: HandOkIcon },\n  { value: 'great', label: 'Great', Icon: HandLoveYouIcon },\n] as const;\n\nexport default function Icons() {\n  const [rating, setRating] = useState<(typeof RATINGS)[number]['value']>('ok');\n  return (\n    <Stack>\n      <Text tone=\"muted\">With captions</Text>\n      <SegmentedControl label=\"Rating\" options={RATINGS} value={rating} onChange={setRating} />\n      <Text tone=\"muted\">showLabels off</Text>\n      <SegmentedControl\n        label=\"Rating\"\n        options={RATINGS}\n        value={rating}\n        onChange={setRating}\n        showLabels={false}\n      />\n      <Text tone=\"muted\">Rating: {rating}</Text>\n    </Stack>\n  );\n}\n"
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { SegmentedControl } from '@korzun/design/control';\nimport { HandLoveYouIcon, HandOkIcon, ThumbDownIcon } from '@korzun/design/icon';\nimport { useState } from 'react';\n\nconst RATINGS = [\n  { value: 'bad', label: 'Bad', Icon: ThumbDownIcon },\n  { value: 'ok', label: 'Okay', Icon: HandOkIcon },\n  { value: 'great', label: 'Great', Icon: HandLoveYouIcon },\n] as const;\n\nexport default function Icons() {\n  const [rating, setRating] = useState<(typeof RATINGS)[number]['value']>('ok');\n  return (\n    <Stack align=\"start\">\n      <Text tone=\"muted\">With captions</Text>\n      <SegmentedControl label=\"Rating\" options={RATINGS} value={rating} onChange={setRating} />\n      <Text tone=\"muted\">showLabels off</Text>\n      <SegmentedControl\n        label=\"Rating\"\n        options={RATINGS}\n        value={rating}\n        onChange={setRating}\n        showLabels={false}\n      />\n      <Text tone=\"muted\">Rating: {rating}</Text>\n    </Stack>\n  );\n}\n"
         },
         {
           "file": "src/control/segmented-control/examples/03-clearable.tsx",
@@ -4069,7 +4087,7 @@
           "order": 3,
           "title": "Clearable",
           "description": "With `clearable`, clicking the checked segment, Backspace or Delete calls\n`onChange(null)`. Once the value is `null` nothing is checked and no lens is\ndrawn. Without `clearable`, `onChange` never receives `null`.",
-          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { SegmentedControl } from '@korzun/design/control';\nimport { HandLoveYouIcon, HandOkIcon, ThumbDownIcon } from '@korzun/design/icon';\nimport { useState } from 'react';\n\nconst RATINGS = [\n  { value: 'bad', label: 'Bad', Icon: ThumbDownIcon },\n  { value: 'ok', label: 'Okay', Icon: HandOkIcon },\n  { value: 'great', label: 'Great', Icon: HandLoveYouIcon },\n] as const;\n\nexport default function Clearable() {\n  const [rating, setRating] = useState<(typeof RATINGS)[number]['value'] | null>('great');\n  return (\n    <Stack>\n      <SegmentedControl\n        label=\"Rating\"\n        options={RATINGS}\n        value={rating}\n        onChange={setRating}\n        clearable\n        showLabels={false}\n      />\n      <Text tone=\"muted\">Rating: {rating ?? 'none'}</Text>\n    </Stack>\n  );\n}\n"
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { SegmentedControl } from '@korzun/design/control';\nimport { HandLoveYouIcon, HandOkIcon, ThumbDownIcon } from '@korzun/design/icon';\nimport { useState } from 'react';\n\nconst RATINGS = [\n  { value: 'bad', label: 'Bad', Icon: ThumbDownIcon },\n  { value: 'ok', label: 'Okay', Icon: HandOkIcon },\n  { value: 'great', label: 'Great', Icon: HandLoveYouIcon },\n] as const;\n\nexport default function Clearable() {\n  const [rating, setRating] = useState<(typeof RATINGS)[number]['value'] | null>('great');\n  return (\n    <Stack align=\"start\">\n      <SegmentedControl\n        label=\"Rating\"\n        options={RATINGS}\n        value={rating}\n        onChange={setRating}\n        clearable\n        showLabels={false}\n      />\n      <Text tone=\"muted\">Rating: {rating ?? 'none'}</Text>\n    </Stack>\n  );\n}\n"
         },
         {
           "file": "src/control/segmented-control/examples/04-read-only.tsx",
@@ -4077,7 +4095,7 @@
           "order": 4,
           "title": "Read-only",
           "description": "Omit `onChange` to show a value without letting it change: the segments are\nmarked `aria-disabled` and ignore clicks and keys. A `null` value checks\nnothing and draws no lens.",
-          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { SegmentedControl } from '@korzun/design/control';\n\nconst OPTIONS = [\n  { value: 'draft', label: 'Draft' },\n  { value: 'review', label: 'Review' },\n  { value: 'published', label: 'Published' },\n] as const;\n\nexport default function ReadOnly() {\n  return (\n    <Stack>\n      <Text tone=\"muted\">Value review</Text>\n      <SegmentedControl label=\"Status\" options={OPTIONS} value=\"review\" />\n      <Text tone=\"muted\">Value null</Text>\n      <SegmentedControl label=\"Status\" options={OPTIONS} value={null} />\n    </Stack>\n  );\n}\n"
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { SegmentedControl } from '@korzun/design/control';\n\nconst OPTIONS = [\n  { value: 'draft', label: 'Draft' },\n  { value: 'review', label: 'Review' },\n  { value: 'published', label: 'Published' },\n] as const;\n\nexport default function ReadOnly() {\n  return (\n    <Stack align=\"start\">\n      <Text tone=\"muted\">Value review</Text>\n      <SegmentedControl label=\"Status\" options={OPTIONS} value=\"review\" />\n      <Text tone=\"muted\">Value null</Text>\n      <SegmentedControl label=\"Status\" options={OPTIONS} value={null} />\n    </Stack>\n  );\n}\n"
         },
         {
           "file": "src/control/segmented-control/examples/05-surfaces.tsx",
@@ -4322,7 +4340,7 @@
             "Tag",
             "Switch"
           ],
-          "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.5.2 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px."
+          "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.5.2 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px. A text field, `ChipsInput` box or field label directly on a Page also moves its text 16px in from the edge (8px elsewhere), the inset `Button` keeps, so it clears the deeper corner."
         }
       ]
     },
@@ -4596,7 +4614,7 @@
             "Tag",
             "Switch"
           ],
-          "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.5.2 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px."
+          "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.5.2 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px. A text field, `ChipsInput` box or field label directly on a Page also moves its text 16px in from the edge (8px elsewhere), the inset `Button` keeps, so it clears the deeper corner."
         },
         {
           "version": "0.0.6",
@@ -4879,6 +4897,12 @@
           "dark": "0.25rem"
         },
         {
+          "path": "space.xxl",
+          "kind": "value",
+          "light": "1rem",
+          "dark": "1rem"
+        },
+        {
           "path": "space.xxs",
           "kind": "value",
           "light": "0.125rem",
@@ -4899,7 +4923,7 @@
             "Tag",
             "Switch"
           ],
-          "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.5.2 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px."
+          "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.5.2 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px. A text field, `ChipsInput` box or field label directly on a Page also moves its text 16px in from the edge (8px elsewhere), the inset `Button` keeps, so it clears the deeper corner."
         },
         {
           "version": "0.5.2",
@@ -5227,10 +5251,22 @@
           "dark": "0.375rem"
         },
         {
+          "path": "space.xl",
+          "kind": "value",
+          "light": "0.75rem",
+          "dark": "0.75rem"
+        },
+        {
           "path": "space.xs",
           "kind": "value",
           "light": "0.25rem",
           "dark": "0.25rem"
+        },
+        {
+          "path": "space.xxl",
+          "kind": "value",
+          "light": "1rem",
+          "dark": "1rem"
         },
         {
           "path": "space.xxxxxl",
@@ -5259,7 +5295,7 @@
             "Tag",
             "Switch"
           ],
-          "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.5.2 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px."
+          "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.5.2 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px. A text field, `ChipsInput` box or field label directly on a Page also moves its text 16px in from the edge (8px elsewhere), the inset `Button` keeps, so it clears the deeper corner."
         },
         {
           "version": "0.5.2",
@@ -7804,7 +7840,7 @@
           "order": 7,
           "title": "Minimal",
           "description": "`type=\"minimal\"` drops the page's width, margin, padding, gap and header row,\nfor a sign-in or splash screen. You lay it out yourself.",
-          "code": "import { Page, Stack, Text } from '@korzun/design/component';\nimport { Button, TextInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Minimal() {\n  const [name, setName] = useState<string | undefined>('');\n  const [signedIn, setSignedIn] = useState(false);\n  return (\n    <Page type=\"minimal\">\n      <Stack>\n        <TextInput name=\"username\" label=\"Username\" value={name} onChange={setName} />\n        <Button type=\"primary\" onClick={() => setSignedIn(true)}>\n          Sign in\n        </Button>\n        {signedIn && <Text tone=\"muted\">Signed in as {name || 'nobody'}</Text>}\n      </Stack>\n    </Page>\n  );\n}\n"
+          "code": "import { Inline, Page, Stack, Text } from '@korzun/design/component';\nimport { Button, TextInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Minimal() {\n  const [name, setName] = useState<string | undefined>('');\n  const [signedIn, setSignedIn] = useState(false);\n  return (\n    <Page type=\"minimal\">\n      <Stack>\n        <TextInput name=\"username\" label=\"Username\" value={name} onChange={setName} />\n        <Inline>\n          <Button type=\"primary\" onClick={() => setSignedIn(true)}>\n            Sign in\n          </Button>\n        </Inline>\n        {signedIn && <Text tone=\"muted\">Signed in as {name || 'nobody'}</Text>}\n      </Stack>\n    </Page>\n  );\n}\n"
         },
         {
           "file": "src/component/page/examples/08-document-title.tsx",
@@ -9034,7 +9070,7 @@
             "Tag",
             "Switch"
           ],
-          "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.5.2 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px."
+          "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.5.2 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px. A text field, `ChipsInput` box or field label directly on a Page also moves its text 16px in from the edge (8px elsewhere), the inset `Button` keeps, so it clears the deeper corner."
         },
         {
           "version": "0.1.0",
@@ -9720,6 +9756,15 @@
           "text": "`GlobalStyles` (rendered by `ThemeProvider`) ships the reset the components are drawn against: every element is `box-sizing: border-box` with no default margin or padding, as in Bookplate's and Scribe's `index.html`. Without it a text field was 51px tall instead of `layout.controlHeight` (33px). An app that already carries this reset sees no change; one that relied on browser default margins (`p`, `h1`, `ul`) loses them."
         },
         {
+          "version": "0.6.0",
+          "date": "2026-11-26",
+          "tags": [
+            "GlobalStyles",
+            "ThemeProvider"
+          ],
+          "text": "`color-scheme` is set on `html` as well as `body`. With body alone the root's scheme was `normal`, so in dark mode the page scrollbar stayed light and an iframe whose document uses `GlobalStyles` (or is still loading) painted an opaque white box."
+        },
+        {
           "version": "0.2.0",
           "date": "2026-11-21",
           "tags": [
@@ -10195,7 +10240,24 @@
             "Tag",
             "Switch"
           ],
-          "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.5.2 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px."
+          "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.5.2 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px. A text field, `ChipsInput` box or field label directly on a Page also moves its text 16px in from the edge (8px elsewhere), the inset `Button` keeps, so it clears the deeper corner."
+        },
+        {
+          "version": "0.6.0",
+          "date": "2026-11-26",
+          "tags": [
+            "GlobalStyles",
+            "ThemeProvider"
+          ],
+          "text": "`color-scheme` is set on `html` as well as `body`. With body alone the root's scheme was `normal`, so in dark mode the page scrollbar stayed light and an iframe whose document uses `GlobalStyles` (or is still loading) painted an opaque white box."
+        },
+        {
+          "version": "0.6.0",
+          "date": "2026-11-26",
+          "tags": [
+            "General"
+          ],
+          "text": "Docs site: the tokens page shows every theme group (`size`, `fontFamily`, `fontWeight` and `lineHeight` were missing), draws one swatch for a single colour (`color.success`), and keeps long token names clear of their values; props and token tables stack each row on a phone instead of scrolling sideways; overview thumbnails stay hidden until they load, so nothing flashes white; a Guides page lists the guides, the header links to it, and the header marks the current section on component and guide pages; overview card descriptions render their inline markdown; examples keep their buttons, menu triggers and segmented controls at their own width instead of stretching across the demo."
         },
         {
           "version": "0.6.0",

@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { Link, MemoryRouter } from 'react-router';
 
 import { GalleryRoutes } from './app.js';
+import { siteData } from './data.js';
 
 const mount = (path: string) =>
   render(
@@ -24,10 +25,33 @@ describe('gallery routes', () => {
     expect(links).toEqual([
       ['Components', '/'],
       ['Icons', '/components/icon'],
+      ['Guides', '/guides'],
       ['Tokens', '/tokens'],
       ['Changelog', '/changelog'],
     ]);
     expect(screen.getByRole('radiogroup', { name: 'Theme' })).toBeInTheDocument();
+  });
+
+  it.each([
+    ['/', 'Components'],
+    ['/components/button', 'Components'],
+    ['/components/icon', 'Icons'],
+    ['/guides', 'Guides'],
+    ['/guides/corners', 'Guides'],
+    ['/tokens', 'Tokens'],
+    ['/changelog', 'Changelog'],
+  ])('marks the section of %s as current in the header', (path, section) => {
+    mount(path);
+    const nav = screen.getByRole('navigation', { name: 'Site' });
+    const current = Array.from(nav.querySelectorAll('a[aria-current]')).map((a) => a.textContent);
+    expect(current).toEqual([section]);
+  });
+
+  it('lists every guide on the guides page, each linking to its page', () => {
+    const { container } = mount('/guides');
+    expect(container.querySelector('h1')).toHaveTextContent('Guides');
+    const hrefs = Array.from(container.querySelectorAll('main a'), (a) => a.getAttribute('href'));
+    expect(hrefs).toEqual(siteData.guides.map((g) => `/guides/${g.slug}`));
   });
 
   it.each([

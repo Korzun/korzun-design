@@ -38,7 +38,46 @@ export const useTableStyle = createUseStyles((theme: Theme) => ({
       backgroundColor: theme.color.bg.cardHeader,
       whiteSpace: 'nowrap',
     },
+    // On a phone each row stacks instead of scrolling: the short cells (name,
+    // type, default) share a line and the `wide` cell (the description) takes
+    // the full width below. The headings stay for screen readers only, and a
+    // cell's `data-label` names it in their place.
+    [theme.breakpoint.mobile]: {
+      minWidth: 0,
+      '& thead': {
+        position: 'absolute',
+        width: 1,
+        height: 1,
+        overflow: 'hidden',
+        clipPath: 'inset(50%)',
+        whiteSpace: 'nowrap',
+      },
+      '& tbody': { display: 'block' },
+      '& tr': {
+        display: 'flex',
+        flexWrap: 'wrap',
+        alignItems: 'baseline',
+        columnGap: theme.space.xl,
+        rowGap: theme.space.sm,
+        padding: `${theme.space.lg} ${theme.space.xl}`,
+        borderBottom: `1px solid ${theme.color.border.light}`,
+      },
+      '& tr:last-child': { borderBottom: 0 },
+      '& th, & td': { display: 'block', padding: 0, borderBottom: 0, minWidth: 0 },
+      // The label is a flex item, so it stays beside a value that is a box itself (a swatch).
+      '& td[data-label]': { display: 'flex', alignItems: 'baseline', gap: theme.space.xs },
+      '& td[data-label]::before': {
+        content: 'attr(data-label) ":"',
+        flexShrink: 0,
+        color: theme.color.text.faint,
+      },
+      '& td$wide': { flexBasis: '100%' },
+      // The name's required and deprecated tags sit beside it on the shared line.
+      '&& td$name > *': { flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap' },
+    },
   },
+  /** The cell that takes the full width of a stacked row on a phone. */
+  wide: {},
   code: {
     fontFamily: theme.fontFamily.mono,
     overflowWrap: 'break-word',
@@ -200,7 +239,7 @@ export const PropsTable = ({ table, tables, typePages = NO_PAGES, from }: PropsT
                     )}
                   </Stack>
                 </td>
-                <td>
+                <td data-label="Type">
                   <TypeText
                     text={row.type}
                     linkable={linkable}
@@ -208,7 +247,7 @@ export const PropsTable = ({ table, tables, typePages = NO_PAGES, from }: PropsT
                     self={table.name}
                   />
                 </td>
-                <td>
+                <td data-label="Default">
                   {row.default && row.defaultProse ? (
                     <Text>{row.default}</Text>
                   ) : row.default ? (
@@ -217,7 +256,7 @@ export const PropsTable = ({ table, tables, typePages = NO_PAGES, from }: PropsT
                     <Text tone="faint">–</Text>
                   )}
                 </td>
-                <td>
+                <td className={styles.wide}>
                   <Markdown source={row.description} from={from} inline />
                 </td>
               </tr>

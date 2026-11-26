@@ -10,6 +10,7 @@ import { NotFound } from './not-found.js';
 import { ChangelogPage } from './page/changelog.js';
 import { ComponentPage } from './page/component.js';
 import { GuidePage } from './page/guide.js';
+import { GuidesPage } from './page/guides.js';
 import { OverviewPage } from './page/overview.js';
 import { TokensPage } from './page/tokens.js';
 
@@ -62,6 +63,7 @@ export const GalleryRoutes = (): ReactElement => {
       <Route element={<Shell />}>
         <Route index element={<OverviewPage />} />
         <Route path="/components/:slug" element={<ComponentPage />} />
+        <Route path="/guides" element={<GuidesPage />} />
         <Route path="/guides/:slug" element={<GuidePage />} />
         <Route path="/tokens" element={<TokensPage />} />
         <Route path="/changelog" element={<ChangelogPage />} />

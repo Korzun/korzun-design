@@ -1,8 +1,9 @@
 import { Inline, Text } from '@korzun/design/component';
 import { SegmentedControl } from '@korzun/design/control';
 import { createUseStyles, useThemeSetting, type Theme } from '@korzun/design/theme';
+import cx from 'classnames';
 import { useEffect } from 'react';
-import { Link, NavLink } from 'react-router';
+import { Link, useLocation } from 'react-router';
 
 import { siteData } from '../data.js';
 import { postToWindow } from '../messages.js';
@@ -24,11 +25,21 @@ const useStyle = createUseStyles((theme: Theme) => ({
   brand: { color: theme.color.text.primary, textDecoration: 'none' },
 }));
 
-const LINKS = [
-  { to: '/', label: 'Components', end: true },
-  { to: '/components/icon', label: 'Icons', end: false },
-  { to: '/tokens', label: 'Tokens', end: false },
-  { to: '/changelog', label: 'Changelog', end: false },
+const under = (pathname: string, base: string) =>
+  pathname === base || pathname.startsWith(`${base}/`);
+
+/** Each section's link and the routes it is active on. */
+export const NAV_LINKS: { to: string; label: string; active: (pathname: string) => boolean }[] = [
+  {
+    to: '/',
+    label: 'Components',
+    // The overview and every component page but icons, which has its own link.
+    active: (p) => p === '/' || (under(p, '/components') && !under(p, '/components/icon')),
+  },
+  { to: '/components/icon', label: 'Icons', active: (p) => under(p, '/components/icon') },
+  { to: '/guides', label: 'Guides', active: (p) => under(p, '/guides') },
+  { to: '/tokens', label: 'Tokens', active: (p) => under(p, '/tokens') },
+  { to: '/changelog', label: 'Changelog', active: (p) => under(p, '/changelog') },
 ];
 
 const THEMES = [
@@ -41,6 +52,7 @@ const THEMES = [
 export const Header = () => {
   const styles = useStyle();
   const [setting, setSetting] = useThemeSetting();
+  const { pathname } = useLocation();
 
   // Example frames run their own ThemeProvider; tell each one about the change.
   useEffect(() => {
@@ -62,11 +74,20 @@ export const Header = () => {
             </Inline>
           </Link>
           <Inline as="nav" gap="lg" wrap aria-label="Site">
-            {LINKS.map(({ to, label, end }) => (
-              <NavLink key={to} to={to} end={end} className={styles.link}>
-                <Text size="md">{label}</Text>
-              </NavLink>
-            ))}
+            {NAV_LINKS.map(({ to, label, active }) => {
+              const current = active(pathname);
+              return (
+                <Link
+                  key={to}
+                  to={to}
+                  className={cx(styles.link, current && 'active')}
+                  // `page` on the section's own route, `true` on a page inside the section.
+                  aria-current={current ? (pathname === to ? 'page' : 'true') : undefined}
+                >
+                  <Text size="md">{label}</Text>
+                </Link>
+              );
+            })}
           </Inline>
         </Inline>
         <SegmentedControl label="Theme" value={setting} options={THEMES} onChange={setSetting} />

@@ -79,7 +79,15 @@ export const useStyle = createUseStyles((theme: Theme) => ({
   isAction: {},
   // Corners follow surface depth: the shaded row and the field inside it are
   // flush, so both take the depth radius (md, the default, is depth 1).
-  depth0: { '&, & $input': { borderRadius: theme.radius.lg } },
+  // On the page (lg) the corner curve is twice as deep, so the text and the
+  // label move in to clear it: the 16px inset a Button keeps at the same radius.
+  depth0: {
+    '&, & $input': { borderRadius: theme.radius.lg },
+    '&& $input': { paddingLeft: theme.space.xxl, paddingRight: theme.space.xxl },
+    '&& $input$isAction': { paddingRight: theme.space.xxxxxl },
+    '&& $label': { marginLeft: theme.space.xxl },
+    '& $action': { right: theme.space.xl },
+  },
   depth1: {},
   depth2: { '&, & $input': { borderRadius: theme.radius.sm } },
 }));

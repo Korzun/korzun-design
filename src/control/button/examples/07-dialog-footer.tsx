@@ -4,6 +4,7 @@
  * keeps the dialog open until it finishes. Inside a Dialog the corners step down
  * by themselves: no `radius` prop.
  */
+import { Stack } from '@korzun/design/component';
 import { Button, Dialog } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -19,7 +20,7 @@ export default function DialogFooter() {
     setTimeout(close, 1000);
   };
   return (
-    <>
+    <Stack align="start">
       <Button danger onClick={() => setOpen(true)}>
         Delete book
       </Button>
@@ -41,6 +42,6 @@ export default function DialogFooter() {
       >
         It is removed from every device. This cannot be undone.
       </Dialog>
-    </>
+    </Stack>
   );
 }

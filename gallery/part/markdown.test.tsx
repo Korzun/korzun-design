@@ -83,6 +83,24 @@ describe('Markdown', () => {
     Reflect.deleteProperty(Element.prototype, 'scrollIntoView');
   });
 
+  it('renders links as their text with links={false}, for markdown inside a link', () => {
+    const { container } = render(
+      <ThemeProvider identity="test">
+        <MemoryRouter>
+          <Markdown
+            source="Uses `Stack`; see [corners](../corners.md) and ![a logo](x.png)."
+            inline
+            links={false}
+          />
+        </MemoryRouter>
+      </ThemeProvider>
+    );
+    const span = container.querySelector('span')!;
+    expect(span.querySelector('a, img')).toBeNull();
+    expect(span.querySelector('code')).toHaveTextContent('Stack');
+    expect(span).toHaveTextContent('Uses Stack; see corners and a logo.');
+  });
+
   it('gives headings the slug ids section links use, unique on the page', () => {
     const { container } = mount('## Header slot\n\n### `Layers`\n\n## Notes\n\n## Notes\n');
     const ids = Array.from(container.querySelectorAll('h2, h3')).map((h) => h.id);

@@ -14,7 +14,7 @@ export default function Align() {
     { label: 'Close', onClick: () => setChosen(`Close (${align})`) },
   ];
   return (
-    <Stack>
+    <Stack align="start">
       <Text tone="muted">Chosen: {chosen}</Text>
       <Menu
         align="start"
