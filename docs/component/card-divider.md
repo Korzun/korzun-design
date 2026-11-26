@@ -1,6 +1,15 @@
+---
+title: CardDivider
+description: A horizontal rule that splits a Card body into sections, optionally labelled and with actions.
+category: Layout
+---
 # CardDivider
 
-`import { CardDivider } from '@korzun/design/component'`
+<!-- generated:import -->
+
+`import { CardDivider, type CardDividerAlign, type CardDividerProps } from '@korzun/design/component'`
+
+<!-- /generated:import -->
 
 A horizontal rule that splits one `Card` body into sections, optionally with a
 label ("Devices", "Validation") and/or actions sitting on the line. It is
@@ -10,53 +19,17 @@ borders. Renders `role="separator"`.
 Use something else for: separating whole features (use separate `Card`s),
 separating menu items (`PageActionItem.separatorBefore`).
 
-## Props
+## Usage
 
-| Prop | Type | Default | Notes |
-|---|---|---|---|
-| `children` | `ReactNode` | | Optional label. Without a label and without actions it is a plain full-width line. |
-| `align` | `'left' \| 'center' \| 'right'` | `'left'` | Label position. `left`/`right` hug that edge with a short stub of line poking past it; `center` leaves equal line on both sides. |
-| `actions` | `ReactNode` | | Optional controls rendered on the line (e.g. a bulk-action button). |
-| `actionsAlign` | `'left' \| 'center' \| 'right'` | `'right'` | Actions position. If it equals `align`, label and actions share one group, label first. |
+No `className`.
 
-No `className`. `null`, `undefined` and `false` count as absent for both
-`children` and `actions`.
-
-## Surprising behaviour
+### Surprising behaviour
 
 - **Assumes a `space.xl` parent padding.** The full-bleed is a fixed
   `margin: 0 -space.xl`, which matches a `size="large"` Card body. Inside
   `Card size="small"` (1px padding) or any other container it overhangs.
 - It always reserves one label line of height, labelled or not, so swapping a
   plain divider for a labelled one does not shift the layout.
-- The label does not wrap (`white-space: nowrap`); keep it to a word or two.
-- The exported type names `CardDividerProps` / `CardDividerAlign` are not
-  re-exported from the `component` barrel.
-
-## Examples
-
-```tsx
-// A plain rule between a form's fields and its submit button.
-<Card title="New request">
-  <form action={create}>
-    <TextInput … />
-    <CardDivider />
-    <Button type="primary" submit>Request</Button>
-  </form>
-</Card>
-
-// A labelled section inside a card.
-<Card title="Notifications">
-  …
-  <CardDivider>Devices</CardDivider>
-  <ul>{devices.map(…)}</ul>
-</Card>
-
-// Label left, an action on the right end of the same line.
-<CardDivider actions={<Button type="link" onClick={clearAll}>Clear all</Button>}>
-  Pending
-</CardDivider>
-```
 
 ## Do / don't
 
@@ -65,3 +38,158 @@ No `className`. `null`, `undefined` and `false` count as absent for both
 - Do use `type="link"` Buttons or small `Tag`s as `actions`; the line is one
   text line tall.
 - Don't use it for the gap between Cards on a page; `Page` already spaces them.
+
+<!-- generated:examples -->
+
+## Examples
+
+### Basic
+
+A plain rule between a form's fields and its submit button. It is full-bleed: it cancels the
+Card body's padding, so the line meets the Card's borders.
+
+```tsx
+import { Card, CardDivider, Stack, Text } from '@korzun/design/component';
+import { Button, TextInput } from '@korzun/design/control';
+import { useState } from 'react';
+
+export default function Basic() {
+  const [title, setTitle] = useState<string | undefined>('Middlemarch');
+  const [requested, setRequested] = useState<string | undefined>();
+  return (
+    <Card title="New request">
+      <form
+        noValidate
+        onSubmit={(event) => {
+          event.preventDefault();
+          setRequested(title);
+        }}
+      >
+        <Stack>
+          <TextInput name="title" label="Title" value={title} onChange={setTitle} />
+          <CardDivider />
+          <Button type="primary" submit>
+            Request
+          </Button>
+          <Text tone="muted">Requested: {requested ?? 'nothing yet'}</Text>
+        </Stack>
+      </form>
+    </Card>
+  );
+}
+```
+
+### Labelled
+
+A label names the section below the line. `align` places it: `left` and `right` hug that edge
+with a short stub of line past it, `center` leaves equal line on both sides.
+
+```tsx
+import { Card, CardDivider, Stack, Text } from '@korzun/design/component';
+
+export default function Labelled() {
+  return (
+    <Card title="Notifications">
+      <Stack>
+        <Text>Email me when a book is ready.</Text>
+        <CardDivider>align left</CardDivider>
+        <Text>Devices</Text>
+        <CardDivider align="center">align center</CardDivider>
+        <Text>Validation</Text>
+        <CardDivider align="right">align right</CardDivider>
+        <Text>History</Text>
+      </Stack>
+    </Card>
+  );
+}
+```
+
+### Actions
+
+`actions` puts controls on the line, on the right by default: use link Buttons, the line is one
+text line tall. `actionsAlign` moves them; when it equals `align` the label and the actions
+share one group, label first.
+
+```tsx
+import { Card, CardDivider, Stack, Text } from '@korzun/design/component';
+import { Button } from '@korzun/design/control';
+import { useState } from 'react';
+
+export default function Actions() {
+  const [pending, setPending] = useState(['Middlemarch', 'Persuasion']);
+  const [archived, setArchived] = useState(0);
+  return (
+    <Card title="Requests">
+      <Stack>
+        <CardDivider
+          actions={
+            <Button type="link" onClick={() => setPending([])}>
+              Clear all
+            </Button>
+          }
+        >
+          Pending
+        </CardDivider>
+        <Text>{pending.length > 0 ? pending.join(', ') : 'Nothing pending'}</Text>
+        <CardDivider
+          align="right"
+          actionsAlign="right"
+          actions={
+            <Button type="link" onClick={() => setArchived((n) => n + 1)}>
+              Archive
+            </Button>
+          }
+        >
+          Same side, label first
+        </CardDivider>
+        <Text tone="muted">Archived: {archived}</Text>
+      </Stack>
+    </Card>
+  );
+}
+```
+
+<!-- /generated:examples -->
+
+<!-- generated:props -->
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `children` | `ReactNode` |  | Optional label, one word or two: it does not wrap. Without a label and without actions the divider is a plain full-width line. `null`, `undefined` and `false` count as absent. |
+| `actions` | `ReactNode` |  | Optional controls rendered on the line (e.g. a bulk-action button); keep them one text line tall. `null`, `undefined` and `false` count as absent. |
+| `actionsAlign` | `'left' \| 'center' \| 'right'` | `'right'` | Where the actions sit. When it equals `align`, label and actions share one group, label first. |
+| `align` | `'left' \| 'center' \| 'right'` | `'left'` | Where the label sits. `'left'` and `'right'` hug that edge with a short stub of line poking past; `'center'` leaves equal line on both sides. |
+
+### Types
+
+```ts
+/** Where a divider's label or actions sit on the line. */
+type CardDividerAlign = 'left' | 'center' | 'right';
+```
+
+<!-- /generated:props -->
+
+<!-- generated:tokens -->
+
+## Tokens
+
+| Token | Light | Dark |
+| --- | --- | --- |
+| `theme.color.border.strong` | `#DDDDDD` | `#48494F` |
+| `theme.color.text.faint` | `#9ca3af` | `#6E7480` |
+| `theme.fontSize.md` | `0.875rem` | `0.875rem` |
+| `theme.lineHeight.body` | `1.3` | `1.3` |
+| `theme.space.md` | `0.5rem` | `0.5rem` |
+| `theme.space.xl` | `0.75rem` | `0.75rem` |
+
+<!-- /generated:tokens -->
+
+<!-- generated:changelog -->
+
+## Changelog
+
+No changes yet.
+
+<!-- /generated:changelog -->

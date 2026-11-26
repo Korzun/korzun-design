@@ -5465,6 +5465,130 @@
       ]
     },
     {
+      "id": "component/card-divider",
+      "slug": "card-divider",
+      "entry": "@korzun/design/component",
+      "docPath": "docs/component/card-divider.md",
+      "title": "CardDivider",
+      "description": "A horizontal rule that splits a Card body into sections, optionally labelled and with actions.",
+      "category": "Layout",
+      "values": [
+        "CardDivider"
+      ],
+      "types": [
+        "CardDividerAlign",
+        "CardDividerProps"
+      ],
+      "importLine": "import { CardDivider, type CardDividerAlign, type CardDividerProps } from '@korzun/design/component'",
+      "body": "A horizontal rule that splits one `Card` body into sections, optionally with a\nlabel (\"Devices\", \"Validation\") and/or actions sitting on the line. It is\nfull-bleed: it cancels the card body's padding so the line meets the card\nborders. Renders `role=\"separator\"`.\n\nUse something else for: separating whole features (use separate `Card`s),\nseparating menu items (`PageActionItem.separatorBefore`).\n\n## Usage\n\nNo `className`.\n\n### Surprising behaviour\n\n- **Assumes a `space.xl` parent padding.** The full-bleed is a fixed\n  `margin: 0 -space.xl`, which matches a `size=\"large\"` Card body. Inside\n  `Card size=\"small\"` (1px padding) or any other container it overhangs.\n- It always reserves one label line of height, labelled or not, so swapping a\n  plain divider for a labelled one does not shift the layout.\n\n## Do / don't\n\n- Do use it directly inside a large Card body, not wrapped in a padded `div`\n  (the negative margin would then overshoot your wrapper instead).\n- Do use `type=\"link\"` Buttons or small `Tag`s as `actions`; the line is one\n  text line tall.\n- Don't use it for the gap between Cards on a page; `Page` already spaces them.",
+      "examples": [
+        {
+          "file": "src/component/card-divider/examples/01-basic.tsx",
+          "slug": "basic",
+          "order": 1,
+          "title": "Basic",
+          "description": "A plain rule between a form's fields and its submit button. It is full-bleed: it cancels the\nCard body's padding, so the line meets the Card's borders.",
+          "code": "import { Card, CardDivider, Stack, Text } from '@korzun/design/component';\nimport { Button, TextInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Basic() {\n  const [title, setTitle] = useState<string | undefined>('Middlemarch');\n  const [requested, setRequested] = useState<string | undefined>();\n  return (\n    <Card title=\"New request\">\n      <form\n        noValidate\n        onSubmit={(event) => {\n          event.preventDefault();\n          setRequested(title);\n        }}\n      >\n        <Stack>\n          <TextInput name=\"title\" label=\"Title\" value={title} onChange={setTitle} />\n          <CardDivider />\n          <Button type=\"primary\" submit>\n            Request\n          </Button>\n          <Text tone=\"muted\">Requested: {requested ?? 'nothing yet'}</Text>\n        </Stack>\n      </form>\n    </Card>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/card-divider/examples/02-labelled.tsx",
+          "slug": "labelled",
+          "order": 2,
+          "title": "Labelled",
+          "description": "A label names the section below the line. `align` places it: `left` and `right` hug that edge\nwith a short stub of line past it, `center` leaves equal line on both sides.",
+          "code": "import { Card, CardDivider, Stack, Text } from '@korzun/design/component';\n\nexport default function Labelled() {\n  return (\n    <Card title=\"Notifications\">\n      <Stack>\n        <Text>Email me when a book is ready.</Text>\n        <CardDivider>align left</CardDivider>\n        <Text>Devices</Text>\n        <CardDivider align=\"center\">align center</CardDivider>\n        <Text>Validation</Text>\n        <CardDivider align=\"right\">align right</CardDivider>\n        <Text>History</Text>\n      </Stack>\n    </Card>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/card-divider/examples/03-actions.tsx",
+          "slug": "actions",
+          "order": 3,
+          "title": "Actions",
+          "description": "`actions` puts controls on the line, on the right by default: use link Buttons, the line is one\ntext line tall. `actionsAlign` moves them; when it equals `align` the label and the actions\nshare one group, label first.",
+          "code": "import { Card, CardDivider, Stack, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Actions() {\n  const [pending, setPending] = useState(['Middlemarch', 'Persuasion']);\n  const [archived, setArchived] = useState(0);\n  return (\n    <Card title=\"Requests\">\n      <Stack>\n        <CardDivider\n          actions={\n            <Button type=\"link\" onClick={() => setPending([])}>\n              Clear all\n            </Button>\n          }\n        >\n          Pending\n        </CardDivider>\n        <Text>{pending.length > 0 ? pending.join(', ') : 'Nothing pending'}</Text>\n        <CardDivider\n          align=\"right\"\n          actionsAlign=\"right\"\n          actions={\n            <Button type=\"link\" onClick={() => setArchived((n) => n + 1)}>\n              Archive\n            </Button>\n          }\n        >\n          Same side, label first\n        </CardDivider>\n        <Text tone=\"muted\">Archived: {archived}</Text>\n      </Stack>\n    </Card>\n  );\n}\n"
+        }
+      ],
+      "tables": [
+        {
+          "name": "CardDividerProps",
+          "kind": "props",
+          "rows": [
+            {
+              "name": "children",
+              "type": "ReactNode",
+              "required": false,
+              "description": "Optional label, one word or two: it does not wrap. Without a label and without actions the divider is a plain full-width line. `null`, `undefined` and `false` count as absent."
+            },
+            {
+              "name": "actions",
+              "type": "ReactNode",
+              "required": false,
+              "description": "Optional controls rendered on the line (e.g. a bulk-action button); keep them one text line tall. `null`, `undefined` and `false` count as absent."
+            },
+            {
+              "name": "actionsAlign",
+              "type": "'left' | 'center' | 'right'",
+              "required": false,
+              "description": "Where the actions sit. When it equals `align`, label and actions share one group, label first.",
+              "default": "'right'"
+            },
+            {
+              "name": "align",
+              "type": "'left' | 'center' | 'right'",
+              "required": false,
+              "description": "Where the label sits. `'left'` and `'right'` hug that edge with a short stub of line poking past; `'center'` leaves equal line on both sides.",
+              "default": "'left'"
+            }
+          ]
+        },
+        {
+          "name": "CardDividerAlign",
+          "kind": "alias",
+          "rows": [],
+          "text": "'left' | 'center' | 'right'",
+          "description": "Where a divider's label or actions sit on the line."
+        }
+      ],
+      "tokens": [
+        {
+          "path": "color.border.strong",
+          "kind": "color",
+          "light": "#DDDDDD",
+          "dark": "#48494F"
+        },
+        {
+          "path": "color.text.faint",
+          "kind": "color",
+          "light": "#9ca3af",
+          "dark": "#6E7480"
+        },
+        {
+          "path": "fontSize.md",
+          "kind": "value",
+          "light": "0.875rem",
+          "dark": "0.875rem"
+        },
+        {
+          "path": "lineHeight.body",
+          "kind": "value",
+          "light": "1.3",
+          "dark": "1.3"
+        },
+        {
+          "path": "space.md",
+          "kind": "value",
+          "light": "0.5rem",
+          "dark": "0.5rem"
+        },
+        {
+          "path": "space.xl",
+          "kind": "value",
+          "light": "0.75rem",
+          "dark": "0.75rem"
+        }
+      ],
+      "changelog": []
+    },
+    {
       "id": "component/card-row",
       "slug": "card-row",
       "entry": "@korzun/design/component",
