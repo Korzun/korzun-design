@@ -21,9 +21,15 @@ export default function Elements() {
           as="ul"
         </Text>
         <Inline as="ul" gap="xl">
-          <li>Middlemarch</li>
-          <li>Bleak House</li>
-          <li>Persuasion</li>
+          <li>
+            <Text>Middlemarch</Text>
+          </li>
+          <li>
+            <Text>Bleak House</Text>
+          </li>
+          <li>
+            <Text>Persuasion</Text>
+          </li>
         </Inline>
       </Stack>
     </Stack>

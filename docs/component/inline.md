@@ -125,8 +125,7 @@ export default function Gaps() {
 `center` is the usual choice; `baseline` lines up text of different sizes.
 
 ```tsx
-import { Heading, Inline, Stack, Text } from '@korzun/design/component';
-import { Button } from '@korzun/design/control';
+import { Inline, Stack, Tag, Text } from '@korzun/design/component';
 
 const aligns = ['center', 'start', 'end', 'baseline', 'stretch'] as const;
 
@@ -140,8 +139,8 @@ export default function Align() {
           </Text>
           <Inline align={align}>
             <Text size="sm">Small</Text>
-            <Heading level={1}>Large</Heading>
-            <Button>Action</Button>
+            <Text size="xxl">Large</Text>
+            <Tag>Chip</Tag>
           </Inline>
         </Stack>
       ))}
@@ -268,9 +267,15 @@ export default function Elements() {
           as="ul"
         </Text>
         <Inline as="ul" gap="xl">
-          <li>Middlemarch</li>
-          <li>Bleak House</li>
-          <li>Persuasion</li>
+          <li>
+            <Text>Middlemarch</Text>
+          </li>
+          <li>
+            <Text>Bleak House</Text>
+          </li>
+          <li>
+            <Text>Persuasion</Text>
+          </li>
         </Inline>
       </Stack>
     </Stack>
