@@ -1,31 +1,24 @@
+import { Page } from '@korzun/design/component';
 import { createUseStyles, ThemeProvider, type Theme } from '@korzun/design/theme';
 import { ToastProvider } from '@korzun/design/toast';
 import { useState, type ReactElement } from 'react';
-import { HashRouter, Navigate, Outlet, Route, Routes, useLocation } from 'react-router';
+import { HashRouter, Outlet, Route, Routes, useLocation } from 'react-router';
 
-import { AllStories } from './all.js';
 import { Frame, FrameNavigatedAway } from './frame.js';
-import { StoryNotFound } from './not-found.js';
+import { Header } from './layout/header.js';
+import { NotFound } from './not-found.js';
+import { OverviewPage } from './page/overview.js';
+import { ChangelogPage, ComponentPage, GuidePage } from './page/pending.js';
 import { TokensPage } from './page/tokens.js';
-import { Preview, PreviewNavigatedAway } from './preview.js';
-import { Sidebar } from './shell/sidebar.js';
-import { StoryView } from './shell/story-view.js';
-import { stories } from './stories.js';
 
 const useStyle = createUseStyles((theme: Theme) => ({
+  // Apps reset the body margin in their own CSS; the site has none.
+  '@global': { body: { margin: 0 } },
   root: {
-    display: 'flex',
-    height: '100vh',
+    minHeight: '100vh',
     fontFamily: theme.fontFamily.body,
     color: theme.color.text.primary,
     backgroundColor: theme.color.bg.page,
-  },
-  content: {
-    flex: 1,
-    minWidth: 0,
-    overflowY: 'auto',
-    padding: theme.space.xxxxl,
-    boxSizing: 'border-box',
   },
 }));
 
@@ -33,10 +26,8 @@ const ShellBody = (): ReactElement => {
   const styles = useStyle();
   return (
     <div className={styles.root}>
-      <Sidebar />
-      <main className={styles.content}>
-        <Outlet />
-      </main>
+      <Header />
+      <Outlet />
     </div>
   );
 };
@@ -49,43 +40,36 @@ const Shell = (): ReactElement => (
   </ThemeProvider>
 );
 
-const ShellNotFound = (): ReactElement => <StoryNotFound id={useLocation().pathname} />;
+// The tokens page predates the site and has no Page of its own.
+const Tokens = (): ReactElement => (
+  <Page documentTitle="Tokens · @korzun/design">
+    <TokensPage />
+  </Page>
+);
 
 export const GalleryRoutes = (): ReactElement => {
   const { pathname } = useLocation();
-  // A window opened on a preview or example frame (the canvas iframe, a
-  // screenshot link) stays a frame: links inside must not load the shell into it.
-  const [previewHome] = useState(() =>
-    pathname.startsWith('/preview/') || pathname.startsWith('/frame/') ? pathname : null
-  );
+  // A window opened on an example frame (a thumbnail, a demo, a screenshot
+  // link) stays a frame: links inside must not load the site into it.
+  const [frameHome] = useState(() => (pathname.startsWith('/frame/') ? pathname : null));
 
-  if (previewHome)
+  if (frameHome)
     return (
       <Routes>
-        <Route path="/preview/*" element={<Preview />} />
         <Route path="/frame/:module/:example" element={<Frame />} />
-        <Route
-          path="*"
-          element={
-            previewHome.startsWith('/frame/') ? (
-              <FrameNavigatedAway home={previewHome} />
-            ) : (
-              <PreviewNavigatedAway home={previewHome} />
-            )
-          }
-        />
+        <Route path="*" element={<FrameNavigatedAway home={frameHome} />} />
       </Routes>
     );
   return (
     <Routes>
-      <Route path="/" element={<Navigate to={`/story/${stories[0].id}`} replace />} />
-      <Route path="/preview/*" element={<Preview />} />
       <Route path="/frame/:module/:example" element={<Frame />} />
       <Route element={<Shell />}>
-        <Route path="/story/*" element={<StoryView />} />
-        <Route path="/all" element={<AllStories />} />
-        <Route path="/tokens" element={<TokensPage />} />
-        <Route path="*" element={<ShellNotFound />} />
+        <Route index element={<OverviewPage />} />
+        <Route path="/components/:slug" element={<ComponentPage />} />
+        <Route path="/guides/:slug" element={<GuidePage />} />
+        <Route path="/tokens" element={<Tokens />} />
+        <Route path="/changelog" element={<ChangelogPage />} />
+        <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>
   );

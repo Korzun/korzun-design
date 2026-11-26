@@ -5,7 +5,7 @@ import { Link, useLocation, useParams, useSearchParams } from 'react-router';
 
 import { useThemeSetting } from '../src/theme/use-theme-setting.js';
 import { exampleFor, moduleBySlug } from './data.js';
-import { isShellToPreview, isThemeValue, type ThemeValue } from './messages.js';
+import { isThemeMessage, isThemeValue, type ThemeValue } from './messages.js';
 
 const ThemeSync = ({ theme }: { theme: ThemeValue }) => {
   const setSetting = useThemeSetting()[1];
@@ -27,7 +27,7 @@ export const Frame = () => {
     const onMessage = (event: MessageEvent) => {
       if (event.origin !== window.location.origin) return;
       const data: unknown = event.data;
-      if (isShellToPreview(data) && data.type === 'gallery:theme') setTheme(data.theme);
+      if (isThemeMessage(data)) setTheme(data.theme);
     };
     window.addEventListener('message', onMessage);
     return () => window.removeEventListener('message', onMessage);
