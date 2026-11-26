@@ -247,3 +247,41 @@ test('props: zero-row table renders placeholder, or just its Also accepts line',
     '## Props\n\nAlso accepts: \`HTMLAttributes\`.'
   );
 });
+
+test('props: object tables link type cells to other supporting tables, Props-named ones too', () => {
+  const tables = [
+    {
+      name: 'MenuIntentProps',
+      kind: 'props',
+      rows: [row({ name: 'onFocus', type: '() => void' })],
+    },
+    {
+      name: 'MenuItem',
+      kind: 'object',
+      rows: [row({ name: 'intentProps', type: 'MenuIntentProps' })],
+    },
+    { name: 'MenuProps', kind: 'props', rows: [row({ name: 'items', type: 'MenuItem[]' })] },
+  ];
+  const out = renderRegion('props', mod({ values: ['Menu'], tables }));
+  assert.ok(out.includes('| `intentProps` | [MenuIntentProps](#menuintentprops) |'));
+  assert.ok(out.includes('| `items` | [MenuItem](#menuitem) `[]` |'));
+});
+
+test('props: main <Name>Props first, then other props tables, then objects, then aliases', () => {
+  const tables = [
+    { name: 'Align', kind: 'alias', rows: [], text: "'start' | 'end'" },
+    { name: 'MenuIntentProps', kind: 'props', rows: [row()] },
+    { name: 'MenuItem', kind: 'object', rows: [row()] },
+    { name: 'MenuProps', kind: 'props', rows: [row()] },
+    { name: 'MenuTriggerProps', kind: 'props', rows: [row()] },
+  ];
+  const out = renderRegion('props', mod({ values: ['Menu'], tables }));
+  const headings = [...out.matchAll(/^### (\w+)/gm)].map((m) => m[1]);
+  assert.deepEqual(headings, [
+    'MenuProps',
+    'MenuIntentProps',
+    'MenuTriggerProps',
+    'MenuItem',
+    'Types',
+  ]);
+});

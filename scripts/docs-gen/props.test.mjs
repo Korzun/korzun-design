@@ -255,3 +255,35 @@ test(
     assert.ok(t.extends.includes('HTMLAttributes'));
   }
 );
+
+test('discriminated union: forbidden (never) branches drop out of type, description and required', () => {
+  const t = table(
+    `interface Base { /** Visible text. */ label: string }
+interface ActionItem extends Base {
+  /** Receives no event. */
+  onClick: () => void;
+  /** Not allowed on an action item. */
+  to?: never;
+}
+interface LinkItem extends Base {
+  /** Router path to navigate to. */
+  to: string;
+  /** Not allowed on a link item. */
+  onClick?: never;
+}
+export type Item = ActionItem | LinkItem;`,
+    'Item'
+  );
+  assert.equal(row(t, 'label').required, true);
+  assert.equal(row(t, 'to').type, 'string');
+  assert.equal(row(t, 'to').description, 'Router path to navigate to.');
+  assert.equal(row(t, 'to').required, false);
+  assert.equal(row(t, 'onClick').type, '() => void');
+  assert.equal(row(t, 'onClick').description, 'Receives no event.');
+  assert.equal(row(t, 'onClick').required, false);
+});
+
+test('union: a never part is dropped from a defining branch type', () => {
+  const t = table(`export type X = { a?: string | never } | { a?: number };`, 'X');
+  assert.equal(row(t, 'a').type, 'string | number');
+});

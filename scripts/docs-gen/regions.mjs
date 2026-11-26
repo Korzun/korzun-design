@@ -99,16 +99,24 @@ function tableBlock(table, linkable, heading) {
   return parts;
 }
 
+/**
+ * Props tables first, the module's own `<Value>Props` leading, then object
+ * tables, then the alias block. Every table with a `###` heading is a link
+ * target for the other tables' type cells.
+ */
 function renderProps(mod) {
-  const propsTables = mod.tables.filter((t) => t.kind === 'props');
+  const mains = new Set(mod.values.map((v) => `${v}Props`));
+  const propsTables = mod.tables
+    .filter((t) => t.kind === 'props')
+    .sort((a, b) => Number(mains.has(b.name)) - Number(mains.has(a.name)));
   const objects = mod.tables.filter((t) => t.kind === 'object');
   const aliases = mod.tables.filter((t) => t.kind === 'alias');
-  const linkable = new Set([...objects, ...aliases].map((t) => t.name));
+  const headed = propsTables.length > 1;
+  const targets = [...(headed ? propsTables : []), ...objects, ...aliases].map((t) => t.name);
+  const linkable = (self) => new Set(targets.filter((n) => n !== self.name));
   const parts = ['## Props'];
-  for (const t of propsTables) {
-    parts.push(...tableBlock(t, linkable, propsTables.length > 1));
-  }
-  for (const t of objects) parts.push(...tableBlock(t, new Set(), true));
+  for (const t of propsTables) parts.push(...tableBlock(t, linkable(t), headed));
+  for (const t of objects) parts.push(...tableBlock(t, linkable(t), true));
   if (aliases.length > 0) {
     const text = aliases.map((t) => `type ${t.name} = ${(t.text ?? '').trim()};`).join('\n');
     parts.push('### Types', `\`\`\`ts\n${text}\n\`\`\``);

@@ -216,8 +216,11 @@ function createFlattener(loader) {
     return rows;
   }
 
-  // Each prop listed once: first documented description wins, types are the union of
-  // the branches' types minus branches that only forbid the prop (`false | undefined`).
+  // Each prop listed once. A branch that only forbids the prop (`never`, or
+  // `false | undefined`) does not define it: the row takes its type (minus `never`)
+  // and first documented description from the defining branches, and is required
+  // only when every branch defines it as required.
+  const FORBIDS = new Set(['never', 'false', 'undefined']);
   function unionRows(node, file, depth) {
     const branches = [];
     for (const part of node.types) {
@@ -229,17 +232,18 @@ function createFlattener(loader) {
     const rows = new Map();
     for (const name of names) {
       const present = branches.map((b) => b.get(name)).filter(Boolean);
+      const partsOf = (row) => row.type.split('|').map((t) => t.trim());
+      const defining = present.filter((row) => !partsOf(row).every((t) => FORBIDS.has(t)));
       const types = [];
-      for (const row of present) {
-        const parts = row.type.split('|').map((t) => t.trim());
-        if (parts.every((t) => t === 'false' || t === 'undefined')) continue;
-        for (const t of parts) if (!types.includes(t)) types.push(t);
+      for (const row of defining) {
+        for (const t of partsOf(row)) if (t !== 'never' && !types.includes(t)) types.push(t);
       }
-      const documented = present.find((r) => r.description) ?? present[0];
+      const documented =
+        defining.find((r) => r.description) ?? present.find((r) => r.description) ?? present[0];
       const merged = {
         ...documented,
         type: types.length ? types.join(' | ') : present[0].type,
-        required: present.length === branches.length && present.every((r) => r.required),
+        required: defining.length === branches.length && defining.every((r) => r.required),
       };
       rows.set(name, merged);
     }
