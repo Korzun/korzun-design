@@ -29,7 +29,7 @@ import { useLayer } from '../layer-stack/index.js';
  *
  * @param isOpen The single source of truth: `true` calls `showModal()`, `false` calls `close()`.
  * @param onDismiss Called on Escape and a backdrop click; receives no event and closes nothing itself.
- * @param canDismiss When `false`, Escape and backdrop clicks are swallowed; pass `!loading`. Default `true`.
+ * @param canDismiss When `false`, Escape and backdrop clicks are swallowed; pass `!loading`.
  * @returns A ref to attach to a `<dialog>` that stays mounted.
  */
 export function useModalDialog(

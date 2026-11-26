@@ -1,6 +1,15 @@
+---
+title: useModalDialog
+description: A hook that drives a native dialog element from an open flag and routes Escape and backdrop clicks to a dismiss callback.
+category: Overlays
+---
 # useModalDialog
 
+<!-- generated:import -->
+
 `import { useModalDialog } from '@korzun/design/control'`
+
+<!-- /generated:import -->
 
 A hook that drives a native `<dialog>` from an `isOpen` boolean: it calls
 `showModal()` / `close()` for you and routes Escape and backdrop clicks to
@@ -11,7 +20,9 @@ built from this hook plus the `theme.recipe.modal.*` styles.
 Use something else for: a plain yes/no confirmation (`ConfirmModal`), or a
 dropdown or non-modal floating layer (`Popover`).
 
-## Signature
+## Usage
+
+### Signature
 
 ```ts
 function useModalDialog(
@@ -29,7 +40,7 @@ function useModalDialog(
 
 Returns a ref to attach to the `<dialog>`.
 
-## Behaviour to know
+### Behaviour to know
 
 - Escape fires the dialog's `cancel` event; the hook always calls
   `preventDefault()` so the browser never closes the dialog behind React's back.
@@ -45,26 +56,12 @@ Returns a ref to attach to the `<dialog>`.
   any form state yourself when reopening.
 - Never call `showModal()` / `close()` yourself.
 
-## Example
+### Styling
 
-```tsx
-const ref = useModalDialog(isOpen, onClose, !saving);
-
-<dialog ref={ref} className={styles.dialog} onClick={(e) => e.stopPropagation()}>
-  <div className={styles.header}>Edit progress</div>
-  <div className={styles.body}>…</div>
-  <div className={styles.footer}>
-    <Button type="text" radius="modal" disabled={saving} onClick={onClose}>Cancel</Button>
-    <Button type="primary" radius="modal" loading={saving} onClick={save}>Save</Button>
-  </div>
-</dialog>
-
-// style.ts
-dialog: { ...theme.recipe.modal.dialog },   // radius.lg: the dialog sits on the page
-header: { ...theme.recipe.modal.header },
-body: { padding: `0 ${theme.space.xxl} ${theme.space.xxl}` },
-footer: { ...theme.recipe.modal.footer },
-```
+Build the dialog from the recipe styles: `dialog: { ...theme.recipe.modal.dialog }`
+(`radius.lg`: the dialog sits on the page), `header`, `body` and `footer` from
+`theme.recipe.modal.*`, and pad the body with `theme.space.xxl`. The examples
+show it in full.
 
 ## Do / don't
 
@@ -76,6 +73,204 @@ footer: { ...theme.recipe.modal.footer },
 - Do also pass `surface="card"` on `Select`s inside (or prefer `Dialog`): a modal declared at page level sits at depth 0, so an unset `Select` would take the page look (16px and shadow). Hand-drawn boxes are invisible to depth.
 - Do set `radius="modal"` on Buttons inside: this hook provides no surface depth (unlike `Dialog`), so it is an explicit override here. Use `md` corners for any inset
   surface inside (see [corners](../corners.md)).
-- Don't put a `Select` or `ChipsInput` in a modal without testing it: their
-  dropdowns portal to `document.body`, outside the dialog's top layer (see
+- A `Select` or `ChipsInput` works inside the modal: their dropdowns render
+  inside the open `<dialog>` that contains their anchor (see
   [popover](popover.md)).
+
+<!-- generated:examples -->
+
+## Examples
+
+### Basic
+
+The hook returns a ref for a `<dialog>` that stays mounted. `isOpen` drives
+`showModal()` and `close()`; Escape and a click on the backdrop call `onDismiss`,
+which closes nothing itself, so it sets `isOpen` to `false`. The `<dialog>` takes
+the `theme.recipe.modal.*` styles.
+
+```tsx
+import { Inline, Text } from '@korzun/design/component';
+import { Button, useModalDialog } from '@korzun/design/control';
+import { createUseStyles, type Theme } from '@korzun/design/theme';
+import { useState } from 'react';
+
+const useStyles = createUseStyles((theme: Theme) => ({
+  dialog: { ...theme.recipe.modal.dialog, backgroundColor: theme.color.bg.card },
+  header: { ...theme.recipe.modal.header },
+  body: {
+    padding: `0 ${theme.space.xxl} ${theme.space.xxl}`,
+    color: theme.color.text.secondary,
+  },
+  footer: { ...theme.recipe.modal.footer },
+}));
+
+export default function Basic() {
+  const styles = useStyles();
+  const [isOpen, setIsOpen] = useState(false);
+  const [saves, setSaves] = useState(0);
+  const close = () => setIsOpen(false);
+  const ref = useModalDialog(isOpen, close);
+  return (
+    <Inline>
+      <Button onClick={() => setIsOpen(true)}>Edit progress</Button>
+      <Text tone="muted">Saved: {saves}</Text>
+      <dialog ref={ref} className={styles.dialog}>
+        <div className={styles.header}>Edit progress</div>
+        <div className={styles.body}>You are on page 42 of 310.</div>
+        <div className={styles.footer}>
+          <Button type="text" radius="modal" onClick={close}>
+            Cancel
+          </Button>
+          <Button
+            type="primary"
+            radius="modal"
+            onClick={() => {
+              setSaves((n) => n + 1);
+              close();
+            }}
+          >
+            Save
+          </Button>
+        </div>
+      </dialog>
+    </Inline>
+  );
+}
+```
+
+### Gated dismissal
+
+`canDismiss` is `!saving`, so Escape and backdrop clicks do nothing while a request
+runs, and the Cancel button is disabled to match so every exit is gated the same.
+The switch holds the busy state on. The `onClick` that stops propagation keeps a
+click in the dialog from reaching a clickable ancestor; dismissal is the hook's job.
+
+```tsx
+import { Stack } from '@korzun/design/component';
+import { Button, Switch, useModalDialog } from '@korzun/design/control';
+import { createUseStyles, type Theme } from '@korzun/design/theme';
+import { useState } from 'react';
+
+const useStyles = createUseStyles((theme: Theme) => ({
+  dialog: { ...theme.recipe.modal.dialog, backgroundColor: theme.color.bg.card },
+  header: { ...theme.recipe.modal.header },
+  body: {
+    padding: `0 ${theme.space.xxl} ${theme.space.xxl}`,
+    color: theme.color.text.secondary,
+  },
+  footer: { ...theme.recipe.modal.footer },
+}));
+
+export default function GatedDismissal() {
+  const styles = useStyles();
+  const [isOpen, setIsOpen] = useState(false);
+  const [saving, setSaving] = useState(true);
+  const close = () => setIsOpen(false);
+  const ref = useModalDialog(isOpen, close, !saving);
+  return (
+    <>
+      <Button onClick={() => setIsOpen(true)}>Open busy modal</Button>
+      <dialog ref={ref} className={styles.dialog} onClick={(event) => event.stopPropagation()}>
+        <div className={styles.header}>Saving progress</div>
+        <div className={styles.body}>
+          <Stack>
+            Escape and the backdrop are ignored while the request is in flight.
+            <Switch name="saving" label="Request in flight" checked={saving} onChange={setSaving} />
+          </Stack>
+        </div>
+        <div className={styles.footer}>
+          <Button type="text" radius="modal" disabled={saving} onClick={close}>
+            Cancel
+          </Button>
+          <Button type="primary" radius="modal" loading={saving} onClick={close}>
+            Save
+          </Button>
+        </div>
+      </dialog>
+    </>
+  );
+}
+```
+
+### Select inside
+
+A `Select` list opens inside the modal and takes Escape before the modal does. The
+hook gives no surface depth, so the `Select` gets `surface="card"` to look like it
+sits in a card instead of on the page.
+
+```tsx
+import { Inline, Text } from '@korzun/design/component';
+import { Button, Select, useModalDialog } from '@korzun/design/control';
+import { createUseStyles, type Theme } from '@korzun/design/theme';
+import { useState } from 'react';
+
+const SHELVES = ['Reading', 'To read', 'Finished', 'Abandoned'];
+
+const useStyles = createUseStyles((theme: Theme) => ({
+  dialog: { ...theme.recipe.modal.dialog, backgroundColor: theme.color.bg.card },
+  header: { ...theme.recipe.modal.header },
+  body: {
+    padding: `0 ${theme.space.xxl} ${theme.space.xxl}`,
+  },
+  footer: { ...theme.recipe.modal.footer },
+}));
+
+export default function SelectInside() {
+  const styles = useStyles();
+  const [isOpen, setIsOpen] = useState(false);
+  const [shelf, setShelf] = useState<string | undefined>('Reading');
+  const close = () => setIsOpen(false);
+  const ref = useModalDialog(isOpen, close);
+  return (
+    <Inline>
+      <Button onClick={() => setIsOpen(true)}>Move book</Button>
+      <Text tone="muted">Shelf: {shelf ?? 'none'}</Text>
+      <dialog ref={ref} className={styles.dialog}>
+        <div className={styles.header}>Move book</div>
+        <div className={styles.body}>
+          <Select
+            name="shelf"
+            label="Shelf"
+            layout="vertical"
+            surface="card"
+            options={SHELVES}
+            value={shelf}
+            onChange={setShelf}
+          />
+        </div>
+        <div className={styles.footer}>
+          <Button type="primary" radius="modal" onClick={close}>
+            Done
+          </Button>
+        </div>
+      </dialog>
+    </Inline>
+  );
+}
+```
+
+<!-- /generated:examples -->
+
+<!-- generated:props -->
+
+## Props
+
+This module takes no props; see Usage for its API.
+
+<!-- /generated:props -->
+
+<!-- generated:tokens -->
+
+## Tokens
+
+This module has no styles of its own.
+
+<!-- /generated:tokens -->
+
+<!-- generated:changelog -->
+
+## Changelog
+
+No changes yet.
+
+<!-- /generated:changelog -->
