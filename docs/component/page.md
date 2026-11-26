@@ -319,14 +319,14 @@ export default function DocumentTitle() {
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `children` | `React.ReactNode` |  | The screen's content, usually one `Card` per feature. Direct children get the column gap. |
+| `children` | `ReactNode` |  | The screen's content, usually one `Card` per feature. Direct children get the column gap. |
 | `actionsLabel` | `string` | `'More…'` | Label of the desktop overflow trigger, e.g. "Actions" when every action lives in the menu. |
 | `back` | `string` |  | Route path for the back button, which shows on mobile only. It navigates to the path with `state: { restoreScroll: true }` (a new history entry); needs a react-router router above the page. |
 | `bottomNav` | `boolean` | `false` | Mobile only: reserves space under the content for a floating `NavMobile`. |
 | `documentTitle` | `string` |  | Sets `document.title` when given. The title is not restored on unmount, so leave it out when the app manages the title itself. |
-| `footerActions` | `FooterAction[]` |  | Buttons in a row after the children (type from `@korzun/design/control`; shape in [FooterAction](../control/page-footer-actions.md#footeraction)), rendered as a `PageFooterActions` row. Not sticky. |
-| `header` | `React.ReactNode` |  | Content for the header row, leading the desktop actions bar in the same row; ignored on `minimal`. See [Header slot](#header-slot). |
-| `headerActions` | `PageActionItem[]` |  | Page-level actions (type from `@korzun/design/control`; shape in [PageActionItem](../control/page-actions-menu.md#pageactionitem)). On desktop `primary` items are buttons and the rest sit in a "More…" menu; on mobile all of them sit in a floating menu next to the back button. |
+| `footerActions` | [FooterAction](../control/page-footer-actions.md#footeraction)`[]` |  | Buttons in a row after the children (type from `@korzun/design/control`), rendered as a `PageFooterActions` row. Not sticky. |
+| `header` | `ReactNode` |  | Content for the header row, leading the desktop actions bar in the same row; ignored on `minimal`. See [Header slot](#header-slot). |
+| `headerActions` | [PageActionItem](../control/page-actions-menu.md#pageactionitem)`[]` |  | Page-level actions (type from `@korzun/design/control`). On desktop `primary` items are buttons and the rest sit in a "More…" menu; on mobile all of them sit in a floating menu next to the back button. |
 | `type` | `'default' \| 'minimal'` | `'default'` | `'minimal'` drops all layout styles (no width, margin, padding or gap) and the header row, for a screen with no chrome such as a sign-in. |
 
 ### Types

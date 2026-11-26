@@ -27,10 +27,9 @@ export type PageProps = PropsWithChildren<{
    */
   back?: string;
   /**
-   * Page-level actions (type from `@korzun/design/control`; shape in
-   * [PageActionItem](../control/page-actions-menu.md#pageactionitem)). On desktop `primary` items
-   * are buttons and the rest sit in a "More…" menu; on mobile all of them sit in a floating menu
-   * next to the back button.
+   * Page-level actions (type from `@korzun/design/control`). On desktop `primary` items are
+   * buttons and the rest sit in a "More…" menu; on mobile all of them sit in a floating menu next
+   * to the back button.
    */
   headerActions?: PageActionItem[];
   /**
@@ -44,8 +43,7 @@ export type PageProps = PropsWithChildren<{
    */
   header?: React.ReactNode;
   /**
-   * Buttons in a row after the children (type from `@korzun/design/control`; shape in
-   * [FooterAction](../control/page-footer-actions.md#footeraction)), rendered as a
+   * Buttons in a row after the children (type from `@korzun/design/control`), rendered as a
    * `PageFooterActions` row. Not sticky.
    */
   footerActions?: FooterAction[];

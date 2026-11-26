@@ -2960,6 +2960,143 @@
       ]
     },
     {
+      "id": "control/page-footer-actions",
+      "slug": "page-footer-actions",
+      "entry": "@korzun/design/control",
+      "docPath": "docs/control/page-footer-actions.md",
+      "title": "PageFooterActions",
+      "description": "A row of Buttons for the bottom of a page, split into leading and trailing sides.",
+      "category": "Actions",
+      "values": [
+        "PageFooterActions"
+      ],
+      "types": [
+        "FooterAction",
+        "PageFooterActionsProps"
+      ],
+      "importLine": "import { PageFooterActions, type FooterAction, type PageFooterActionsProps } from '@korzun/design/control'",
+      "body": "A row of Buttons for the bottom of a page, split into leading and trailing\nsides: typically Cancel / Save for a form that spans several cards. Leading\nitems sit left, trailing items right. It is a plain flex row (not sticky, shown\nat every width). `Page` renders it after its children when you pass\n`footerActions`; you can also render it directly after your form.\n\nUse something else for: header actions (`PageActionsBar` / `PageActionsMenu`\nvia `Page headerActions`), a Card's own submit (`Button` in the Card `footer`),\nmodal buttons (`Dialog` footer).\n\n## Usage\n\n### Submitting a form\n\nThe row sits outside the form, below the cards, so a submit item needs `form`\n(the id of the `<form>`) as well as `submit`. `onClick` is required on every\nitem but is never called for a submit one; the form's `action` or `onSubmit`\nruns instead. Drive `loading` and `disabled` from your own pending and\nvalidation state.\n\n### Corners\n\nThe Buttons follow surface depth: the row sits on the page background below the\ncards, so on a `Page` they get the page's 16px corners; see\n[corners](../corners.md). No `className`.\n\n## Do / don't\n\n- Do give exactly one item `emphasis`.\n- Do pair `submit` with `form` when the row is outside the `<form>`.\n- Don't put a destructive action beside Save without `danger` and\n  `align: 'leading'`.\n- Don't put PageFooterActions inside a `Card`; a Card's own submit goes in its\n  `footer`.",
+      "examples": [
+        {
+          "file": "src/control/page-footer-actions/examples/01-basic.tsx",
+          "slug": "basic",
+          "order": 1,
+          "title": "Basic",
+          "description": "Cancel and Save on the trailing side. Give exactly one item `emphasis` so\nthe main action reads as primary. `onClick` takes no arguments.",
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { PageFooterActions } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Basic() {\n  const [last, setLast] = useState('nothing yet');\n  return (\n    <Stack>\n      <PageFooterActions\n        items={[\n          { label: 'Cancel', onClick: () => setLast('Cancel') },\n          { label: 'Save', onClick: () => setLast('Save'), emphasis: true },\n        ]}\n      />\n      <Text tone=\"muted\">Last pressed: {last}</Text>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/page-footer-actions/examples/02-leading-and-trailing.tsx",
+          "slug": "leading-and-trailing",
+          "order": 2,
+          "title": "Leading and trailing",
+          "description": "`align: 'leading'` puts an item on the left, so a destructive action sits\naway from Save; `danger` gives it the red treatment.",
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { PageFooterActions } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function LeadingAndTrailing() {\n  const [last, setLast] = useState('nothing yet');\n  return (\n    <Stack>\n      <PageFooterActions\n        items={[\n          { label: 'Delete', onClick: () => setLast('Delete'), danger: true, align: 'leading' },\n          { label: 'Cancel', onClick: () => setLast('Cancel') },\n          { label: 'Save', onClick: () => setLast('Save'), emphasis: true },\n        ]}\n      />\n      <Text tone=\"muted\">Last pressed: {last}</Text>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/page-footer-actions/examples/03-loading-and-disabled.tsx",
+          "slug": "loading-and-disabled",
+          "order": 3,
+          "title": "Loading and disabled",
+          "description": "`loading` shows a spinner and blocks clicks; `disabled` greys the item out.\nThe label can change between renders (`Save` to `Saving…`) without\nremounting the button. Both switches hold their state on.",
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { PageFooterActions, Switch } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function LoadingAndDisabled() {\n  const [saving, setSaving] = useState(true);\n  const [invalid, setInvalid] = useState(true);\n  const [last, setLast] = useState('nothing yet');\n  return (\n    <Stack>\n      <Switch name=\"saving\" label=\"Saving\" checked={saving} onChange={setSaving} />\n      <Switch name=\"invalid\" label=\"Form invalid\" checked={invalid} onChange={setInvalid} />\n      <PageFooterActions\n        items={[\n          { label: 'Cancel', onClick: () => setLast('Cancel'), disabled: saving },\n          {\n            label: saving ? 'Saving…' : 'Save',\n            onClick: () => setLast('Save'),\n            emphasis: true,\n            loading: saving,\n            disabled: invalid,\n          },\n        ]}\n      />\n      <Text tone=\"muted\">Last pressed: {last}</Text>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/page-footer-actions/examples/04-submit-a-form.tsx",
+          "slug": "submit-a-form",
+          "order": 4,
+          "title": "Submit a form",
+          "description": "The row sits below the cards, outside the `<form>`, so the submit item names\nthe form with `form`. `onClick` is required on every item but never called\nfor a submit one (pass an empty function): the form's `action` runs instead. `loading` follows the\npending save, and Save is disabled while a field is empty.",
+          "code": "import { Card, Stack, Text } from '@korzun/design/component';\nimport { PageFooterActions, TextInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function SubmitAForm() {\n  const [title, setTitle] = useState<string | undefined>('Dune');\n  const [author, setAuthor] = useState<string | undefined>('Frank Herbert');\n  const [saving, setSaving] = useState(false);\n  const [status, setStatus] = useState('Not saved');\n  const hasInvalidFields = !title?.trim() || !author?.trim();\n  return (\n    <Stack>\n      <form\n        id=\"book-form\"\n        action={async (data) => {\n          setSaving(true);\n          await new Promise((resolve) => setTimeout(resolve, 1500));\n          setSaving(false);\n          setStatus(`Saved ${String(data.get('title'))}`);\n        }}\n      >\n        <Stack>\n          <Card title=\"Details\">\n            <TextInput name=\"title\" label=\"Title\" value={title} onChange={setTitle} />\n          </Card>\n          <Card title=\"Identifiers\">\n            <TextInput name=\"author\" label=\"Author\" value={author} onChange={setAuthor} />\n          </Card>\n        </Stack>\n      </form>\n      <PageFooterActions\n        items={[\n          { label: 'Cancel', onClick: () => setStatus('Cancelled'), disabled: saving },\n          {\n            label: saving ? 'Saving…' : 'Save',\n            onClick: () => {},\n            submit: true,\n            form: 'book-form',\n            emphasis: true,\n            loading: saving,\n            disabled: hasInvalidFields,\n          },\n        ]}\n      />\n      <Text tone=\"muted\">{status}</Text>\n    </Stack>\n  );\n}\n"
+        }
+      ],
+      "tables": [
+        {
+          "name": "PageFooterActionsProps",
+          "kind": "props",
+          "rows": [
+            {
+              "name": "items",
+              "type": "FooterAction[]",
+              "required": true,
+              "description": "Items in order within each side: leading items first, then trailing ones."
+            }
+          ]
+        },
+        {
+          "name": "FooterAction",
+          "kind": "object",
+          "rows": [
+            {
+              "name": "align",
+              "type": "'leading' | 'trailing'",
+              "required": false,
+              "description": "Which side of the row the button sits on: leading is left, trailing is right.",
+              "default": "'trailing'"
+            },
+            {
+              "name": "danger",
+              "type": "boolean",
+              "required": false,
+              "description": "Red treatment."
+            },
+            {
+              "name": "disabled",
+              "type": "boolean",
+              "required": false,
+              "description": "Greys the button out and blocks clicks."
+            },
+            {
+              "name": "emphasis",
+              "type": "boolean",
+              "required": false,
+              "description": "Renders `type=\"primary\"`; otherwise `type=\"default\"`."
+            },
+            {
+              "name": "form",
+              "type": "string",
+              "required": false,
+              "description": "Id of the `<form>` to submit; needed because the row sits outside the form."
+            },
+            {
+              "name": "label",
+              "type": "string",
+              "required": true,
+              "description": "Button text; may change between renders (`Save` → `Saving…`) without remounting."
+            },
+            {
+              "name": "loading",
+              "type": "boolean",
+              "required": false,
+              "description": "Spinner; blocks clicks."
+            },
+            {
+              "name": "onClick",
+              "type": "() => void",
+              "required": true,
+              "description": "Required even for a `submit` item, where it is never called (the form submits); pass `() => {}`. Receives no event. Not called while `disabled` or `loading`."
+            },
+            {
+              "name": "submit",
+              "type": "boolean",
+              "required": false,
+              "description": "Renders a native submit button; `onClick` is then ignored. Pair it with `form` when the row sits outside the `<form>`."
+            }
+          ],
+          "description": "One button in a `PageFooterActions` row."
+        }
+      ],
+      "tokens": [
+        {
+          "path": "space.md",
+          "kind": "value",
+          "light": "0.5rem",
+          "dark": "0.5rem"
+        }
+      ],
+      "changelog": []
+    },
+    {
       "id": "control/popover",
       "slug": "popover",
       "entry": "@korzun/design/control",
@@ -5123,8 +5260,8 @@
           "slug": "back-and-actions-on-mobile",
           "order": 5,
           "title": "Back and actions on mobile",
-          "description": "On a phone `back` shows a round back button and `headerActions` collapses into\none \"More actions\" menu beside it, in a sticky row at the top. The back button\ngoes to the given path, so pressing it navigates the demo away.",
-          "code": "import { Card, Page, Text } from '@korzun/design/component';\nimport { useState } from 'react';\n\nexport default function BackAndActionsOnMobile() {\n  const [last, setLast] = useState('nothing yet');\n  return (\n    <Page\n      back=\"/library\"\n      headerActions={[\n        { label: 'Edit', onClick: () => setLast('Edit'), primary: true },\n        { label: 'Delete', onClick: () => setLast('Delete'), danger: true, separatorBefore: true },\n      ]}\n    >\n      <Card title=\"Dune\">\n        <Text>Last action: {last}</Text>\n      </Card>\n    </Page>\n  );\n}\n",
+          "description": "On a phone `back` shows a round back button and `headerActions` collapses into\none \"More actions\" menu beside it, in a sticky row at the top. The `header`\ncontent, a search field here, leads the page content.",
+          "code": "import { Card, Page, Stack, Text } from '@korzun/design/component';\nimport { TextInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function BackAndActionsOnMobile() {\n  const [query, setQuery] = useState<string | undefined>('');\n  const [last, setLast] = useState('nothing yet');\n  return (\n    <Page\n      back=\"/library\"\n      header={<TextInput name=\"search\" placeholder=\"Search\" value={query} onChange={setQuery} />}\n      headerActions={[\n        { label: 'Edit', onClick: () => setLast('Edit'), primary: true },\n        { label: 'Delete', onClick: () => setLast('Delete'), danger: true, separatorBefore: true },\n      ]}\n    >\n      <Card title=\"Dune\">\n        <Stack>\n          <Text>Searching for: {query || 'nothing'}</Text>\n          <Text tone=\"muted\">Last action: {last}</Text>\n        </Stack>\n      </Card>\n    </Page>\n  );\n}\n",
           "viewport": "mobile"
         },
         {
@@ -5160,7 +5297,7 @@
           "rows": [
             {
               "name": "children",
-              "type": "React.ReactNode",
+              "type": "ReactNode",
               "required": false,
               "description": "The screen's content, usually one `Card` per feature. Direct children get the column gap."
             },
@@ -5175,7 +5312,7 @@
               "name": "back",
               "type": "string",
               "required": false,
-              "description": "Route path for the back button, which shows on mobile only. It navigates to the path (a new history entry) and asks the destination to restore its scroll position; needs a react-router router above the page."
+              "description": "Route path for the back button, which shows on mobile only. It navigates to the path with `state: { restoreScroll: true }` (a new history entry); needs a react-router router above the page."
             },
             {
               "name": "bottomNav",
@@ -5194,11 +5331,11 @@
               "name": "footerActions",
               "type": "FooterAction[]",
               "required": false,
-              "description": "Buttons in a row after the children, rendered as a [PageFooterActions](../control/page-footer-actions.md) row. Not sticky."
+              "description": "Buttons in a row after the children (type from `@korzun/design/control`), rendered as a `PageFooterActions` row. Not sticky."
             },
             {
               "name": "header",
-              "type": "React.ReactNode",
+              "type": "ReactNode",
               "required": false,
               "description": "Content for the header row, leading the desktop actions bar in the same row; ignored on `minimal`. See [Header slot](#header-slot)."
             },
@@ -5206,7 +5343,7 @@
               "name": "headerActions",
               "type": "PageActionItem[]",
               "required": false,
-              "description": "Page-level actions. On desktop `primary` items are buttons and the rest sit in a \"More…\" menu; on mobile all of them sit in a floating menu next to the back button."
+              "description": "Page-level actions (type from `@korzun/design/control`). On desktop `primary` items are buttons and the rest sit in a \"More…\" menu; on mobile all of them sit in a floating menu next to the back button."
             },
             {
               "name": "type",
