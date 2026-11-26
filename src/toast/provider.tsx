@@ -8,7 +8,9 @@ import { Toast } from './toast.js';
 const TOAST_DURATION = 4000;
 
 type ToastProviderProps = {
+  /** The app. */
   children: ReactNode;
+  /** How many toasts show at once. When a new toast would exceed it, the oldest starts its exit animation. */
   maxToasts?: number;
 };
 
