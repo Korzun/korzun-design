@@ -3,12 +3,7 @@ import type { ComponentType, ReactNode } from 'react';
 import type { IconProps } from '../../icon/index.js';
 import type { PopoverAlign, PopoverSide } from '../popover/index.js';
 
-/**
- * Hover, focus and touch handlers spread onto a menu item, e.g. to prefetch
- * what selecting it is about to need. Structurally the `intentProps` of a
- * prefetch-on-intent hook, declared as a plain shape so this control has no
- * data-layer dependency.
- */
+/** Hover, focus and touch handlers spread onto a menu item, e.g. to prefetch what selecting it needs. */
 export interface MenuIntentProps {
   /** Pointer entered the item. */
   onMouseEnter: () => void;
@@ -26,11 +21,11 @@ export interface MenuItemBase {
   Icon?: ComponentType<IconProps>;
   /** Red text. Styling only; it does not add a separator. */
   danger?: boolean;
-  /** Greys the item out; it cannot be activated and arrow keys skip it. */
+  /** Greyed out, cannot be activated, skipped by arrow keys. A disabled link renders without `href`, so middle-click cannot open it either. */
   disabled?: boolean;
-  /** Divider above this item (ignored on the first). */
+  /** Divider above this item. Ignored on the first item. */
   separatorBefore?: boolean;
-  /** Spread onto the item element, e.g. to prefetch. */
+  /** Handlers spread onto the item element, e.g. to prefetch. */
   intentProps?: MenuIntentProps;
 }
 
@@ -44,7 +39,7 @@ export interface MenuActionItem extends MenuItemBase {
 
 /** An item that navigates: a react-router `<Link>`, so middle-click and open-in-new-tab work. */
 export interface MenuLinkItem extends MenuItemBase {
-  /** Router path to navigate to. Needs a react-router router above the Menu. */
+  /** Router path. Needs a router above the Menu; a Menu of action items only does not. */
   to: string;
   /** Not allowed on a link item: an item is an action or a link, never both. */
   onClick?: never;
@@ -77,13 +72,13 @@ export interface MenuProps {
    * `trigger={(p) => <Button {...p}>Sort</Button>}`.
    */
   trigger: (props: MenuTriggerProps) => ReactNode;
-  /** Items in order. Labels must be unique. */
+  /** Items in order. Labels must be unique (they are the React key). Filter the array for conditional items. */
   items: MenuItem[];
-  /** `'solid'` (default): card background with a border; `'glass'`: the frosted glass recipe. */
+  /** `'solid'` draws a card background, border and shadow; `'glass'` draws the frosted glass recipe. */
   surface?: 'solid' | 'glass';
-  /** Preferred side of the trigger (default `'bottom'`); flips when there is no room. */
+  /** Preferred side of the trigger; flips to the other side when there is no room. */
   side?: PopoverSide;
-  /** Alignment to the trigger's start edge (default), centre, or end edge. */
+  /** Alignment to the trigger's start edge, centre or end edge. Use `'end'` for a trigger at the right edge. */
   align?: PopoverAlign;
   /** Accessible name for the menu. Without it the menu is labelled by the trigger. */
   ariaLabel?: string;

@@ -511,6 +511,567 @@
       ]
     },
     {
+      "id": "control/menu",
+      "slug": "menu",
+      "entry": "@korzun/design/control",
+      "docPath": "docs/control/menu.md",
+      "title": "Menu",
+      "description": "A button that opens a list of actions and links, described as data, with keyboard handling built in.",
+      "category": "Overlays",
+      "values": [
+        "Menu"
+      ],
+      "types": [
+        "MenuActionItem",
+        "MenuIntentProps",
+        "MenuItem",
+        "MenuLinkItem",
+        "MenuProps",
+        "MenuTriggerProps"
+      ],
+      "importLine": "import { Menu, type MenuActionItem, type MenuIntentProps, type MenuItem, type MenuLinkItem, type MenuProps, type MenuTriggerProps } from '@korzun/design/control'",
+      "body": "A button that opens a list of actions and links, described as data, with keyboard\nhandling built in. It follows the WAI-ARIA menu button pattern. You render the\ntrigger; Menu gives it the props it needs, draws the\nlist in a [`Popover`](popover.md) anchored to it, and handles focus and the\nkeyboard. Describe the items as data in `items`. There are no child\ncomponents and no style file to write.\n\n[`PageActionsBar`](page-actions-bar.md) and [`PageActionsMenu`](page-actions-menu.md)\nare built on Menu.\n\nUse something else for: choosing a value ([`Select`](select.md)), page-header\nactions ([`PageActionsBar`](page-actions-bar.md) on desktop,\n[`PageActionsMenu`](page-actions-menu.md) on mobile).\n\n## Usage\n\n### The trigger\n\n`MenuTriggerProps` is `{ ref, onClick, ariaExpanded, ariaControls, ariaHasPopup: 'menu' }`,\nshaped for [`Button`](button.md), so `{...p}` needs no glue. `ref` is a\ncallback ref (`(node: HTMLElement | null) => void`), so it attaches to any\nelement without a cast. `ariaControls` is the menu's id while open and\n`undefined` while closed. For any other element, pass `ref={p.ref}`, call\n`onClick` on click, and map the rest to `aria-expanded`, `aria-controls` and\n`aria-haspopup`; the \"Other triggers\" example shows it.\n\n### Items\n\nAn item is either an action or a link. TypeScript rejects an item with both\n`onClick` and `to`, or with neither. Every item takes `label`, `Icon`, `danger`,\n`disabled`, `separatorBefore` and `intentProps`; actions add `onClick`, links add\n`to`. The generated tables below list each field.\n\n### Keyboard\n\n| Key                                  | Does                                                                                                                                                                                                                     |\n| ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |\n| Click, Enter or Space on the trigger | Opens the menu and focuses the first enabled item.                                                                                                                                                                       |\n| Down / Up                            | Next / previous enabled item, wrapping.                                                                                                                                                                                  |\n| Home / End                           | First / last enabled item.                                                                                                                                                                                               |\n| Enter, Space (or a click)            | Activates the item: the menu closes, focus returns to the trigger, then the action runs or the link navigates.                                                                                                           |\n| Escape                               | Closes the menu and returns focus to the trigger.                                                                                                                                                                        |\n| Tab / Shift+Tab                      | Closes the menu; focus moves to the tabbable element after / before the trigger, skipping inert and hidden ones. Inside an open `<dialog>` it stays within the dialog; with nothing there, focus returns to the trigger. |\n| Pointer-down outside                 | Closes the menu without moving focus.                                                                                                                                                                                    |\n\n### Behaviour to know\n\n- Escape and outside presses go to the innermost open layer first: a Select\n  list opened over the menu closes before it, and a Menu inside a\n  [`Dialog`](dialog.md) closes before the Dialog.\n- Opening another Menu closes the first (the press on its trigger is outside).\n- If the focused item disappears while the menu is open, focus moves to the\n  first enabled item. With every item disabled, the menu itself takes focus.\n- The menu sits `space.sm` from the trigger and portals out of clipping\n  ancestors (into an open `<dialog>` when inside one).\n\n## Do / don't\n\n- Do use Menu for any list of actions or links behind a button.\n- Do pass icon components (`Icon: BookIcon`), not elements.\n- Don't hand-build `role=\"menu\"`, or wire a Popover and buttons yourself.\n- Don't wrap the trigger in another `<button>`; spread the props onto it.\n- Don't use a Menu to pick a value that stays shown; that is a `Select`.",
+      "examples": [
+        {
+          "file": "src/control/menu/examples/01-basic.tsx",
+          "slug": "basic",
+          "order": 1,
+          "title": "Basic",
+          "description": "A trigger button and a list of actions. Spread the `trigger` props onto the\nbutton; choosing an item closes the menu and calls its `onClick`, which takes\nno arguments.",
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button, Menu } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Basic() {\n  const [chosen, setChosen] = useState('nothing yet');\n  return (\n    <Stack>\n      <Menu\n        trigger={(p) => <Button {...p}>Sort by</Button>}\n        items={[\n          { label: 'Title', onClick: () => setChosen('Title') },\n          { label: 'Author', onClick: () => setChosen('Author') },\n          { label: 'Date added', onClick: () => setChosen('Date added') },\n        ]}\n      />\n      <Text tone=\"muted\">Chosen: {chosen}</Text>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/menu/examples/02-links-and-icons.tsx",
+          "slug": "links-and-icons",
+          "order": 2,
+          "title": "Links and icons",
+          "description": "An item with `to` is a link and one with `onClick` is an action; one item is\nnever both. `Icon` takes an icon component (`HomeIcon`), not an element. A link\nitem needs a router above the Menu, and middle-click opens it in a new tab.",
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button, Menu } from '@korzun/design/control';\nimport { BooksIcon, HomeIcon, SettingsIcon } from '@korzun/design/icon';\nimport { useState } from 'react';\n\nexport default function LinksAndIcons() {\n  const [chosen, setChosen] = useState('nothing yet');\n  return (\n    <Stack>\n      <Menu\n        trigger={(p) => <Button {...p}>Go to</Button>}\n        items={[\n          { label: 'Home', to: '/', Icon: HomeIcon },\n          { label: 'Library', to: '/library', Icon: BooksIcon },\n          { label: 'Settings', onClick: () => setChosen('Settings'), Icon: SettingsIcon },\n        ]}\n      />\n      <Text tone=\"muted\">Chosen: {chosen}</Text>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/menu/examples/03-danger-and-separator.tsx",
+          "slug": "danger-and-separator",
+          "order": 3,
+          "title": "Danger and separator",
+          "description": "`danger` turns an item's text red and does nothing else: Archive is red\nwith no divider. `separatorBefore` draws the divider above an item, so the\ndestructive item sits apart from the rest.",
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button, Menu } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function DangerAndSeparator() {\n  const [chosen, setChosen] = useState('nothing yet');\n  return (\n    <Stack>\n      <Menu\n        trigger={(p) => <Button {...p}>Book</Button>}\n        items={[\n          { label: 'Edit metadata', onClick: () => setChosen('Edit metadata') },\n          { label: 'Archive', danger: true, onClick: () => setChosen('Archive') },\n          {\n            label: 'Delete book',\n            danger: true,\n            separatorBefore: true,\n            onClick: () => setChosen('Delete book'),\n          },\n        ]}\n      />\n      <Text tone=\"muted\">Chosen: {chosen}</Text>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/menu/examples/04-disabled-and-conditional.tsx",
+          "slug": "disabled-and-conditional",
+          "order": 4,
+          "title": "Disabled and conditional items",
+          "description": "A disabled item is greyed out and arrow keys skip it; a disabled link renders\nwithout `href`, so middle-click cannot open it either. For an item that should\nnot appear at all, filter the `items` array: the button adds the last item.",
+          "code": "import { Inline, Stack, Text } from '@korzun/design/component';\nimport { Button, Menu } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function DisabledAndConditional() {\n  const [chosen, setChosen] = useState('nothing yet');\n  const [admin, setAdmin] = useState(false);\n  return (\n    <Stack>\n      <Inline>\n        <Menu\n          trigger={(p) => <Button {...p}>Devices</Button>}\n          items={[\n            { label: 'Sync now', onClick: () => setChosen('Sync now') },\n            { label: 'Clear editions', disabled: true, onClick: () => setChosen('Clear editions') },\n            { label: 'Device settings', to: '/settings', disabled: true },\n            ...(admin\n              ? [{ label: 'Reset all', danger: true, onClick: () => setChosen('Reset all') }]\n              : []),\n          ]}\n        />\n        <Button onClick={() => setAdmin((value) => !value)}>\n          {admin ? 'Remove admin item' : 'Add admin item'}\n        </Button>\n      </Inline>\n      <Text tone=\"muted\">Chosen: {chosen}</Text>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/menu/examples/05-surface.tsx",
+          "slug": "surface",
+          "order": 5,
+          "title": "Surface",
+          "description": "`solid` draws a card background, border and shadow; `glass` draws the frosted\nglass recipe, for a menu over an image or a glass control. Each trigger is\nlabelled with its value.",
+          "code": "import { Inline, Stack, Text } from '@korzun/design/component';\nimport { Button, Menu } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Surface() {\n  const [chosen, setChosen] = useState('nothing yet');\n  const items = (surface: string) => [\n    { label: `Accept (${surface})`, onClick: () => setChosen(`Accept (${surface})`) },\n    { label: `Reject (${surface})`, danger: true, onClick: () => setChosen(`Reject (${surface})`) },\n  ];\n  return (\n    <Stack>\n      <Inline>\n        <Menu\n          surface=\"solid\"\n          trigger={(p) => <Button {...p}>solid</Button>}\n          items={items('solid')}\n        />\n        <Menu\n          surface=\"glass\"\n          trigger={(p) => <Button {...p}>glass</Button>}\n          items={items('glass')}\n        />\n      </Inline>\n      <Text tone=\"muted\">Chosen: {chosen}</Text>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/menu/examples/06-align.tsx",
+          "slug": "align",
+          "order": 6,
+          "title": "Align",
+          "description": "`align` lines the menu up with the trigger's start edge, centre or end edge.\nThe wide triggers show it: each menu is narrower than its trigger. Use `end` for\na trigger at the right edge of the screen. An open menu covers the triggers\nbeside it; the menus open upward (`side=\"top\"`) to stay inside the demo.",
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button, Menu } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Align() {\n  const [chosen, setChosen] = useState('nothing yet');\n  const items = (align: string) => [\n    { label: 'Open', onClick: () => setChosen(`Open (${align})`) },\n    { label: 'Close', onClick: () => setChosen(`Close (${align})`) },\n  ];\n  return (\n    <Stack>\n      <Text tone=\"muted\">Chosen: {chosen}</Text>\n      <Menu\n        side=\"top\"\n        align=\"start\"\n        trigger={(p) => <Button {...p}>align start: menu at the left edge</Button>}\n        items={items('start')}\n      />\n      <Menu\n        side=\"top\"\n        align=\"center\"\n        trigger={(p) => <Button {...p}>align center: menu at the middle</Button>}\n        items={items('center')}\n      />\n      <Menu\n        side=\"top\"\n        align=\"end\"\n        trigger={(p) => <Button {...p}>align end: menu at the right edge</Button>}\n        items={items('end')}\n      />\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/menu/examples/07-side.tsx",
+          "slug": "side",
+          "order": 7,
+          "title": "Side",
+          "description": "`side=\"top\"` opens the menu above the trigger. It flips to the other side when\nthere is no room, so the trigger sits below other content here.",
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button, Menu } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Side() {\n  const [chosen, setChosen] = useState('nothing yet');\n  return (\n    <Stack>\n      <Text tone=\"muted\">Chosen: {chosen}</Text>\n      <Menu\n        side=\"top\"\n        trigger={(p) => <Button {...p}>Opens above</Button>}\n        items={[\n          { label: 'Reply', onClick: () => setChosen('Reply') },\n          { label: 'Forward', onClick: () => setChosen('Forward') },\n          { label: 'Mark unread', onClick: () => setChosen('Mark unread') },\n        ]}\n      />\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/menu/examples/08-book-actions.tsx",
+          "slug": "book-actions",
+          "order": 8,
+          "title": "Book actions",
+          "description": "The usual full menu: a link item, action items with icons, and a `danger` item\nset apart by `separatorBefore`. `align=\"end\"` fits a trigger at the right edge.",
+          "code": "import { Inline, Stack, Text } from '@korzun/design/component';\nimport { Button, Menu } from '@korzun/design/control';\nimport { BookIcon, SettingsIcon } from '@korzun/design/icon';\nimport { useState } from 'react';\n\nexport default function BookActions() {\n  const [chosen, setChosen] = useState('nothing yet');\n  return (\n    <Stack>\n      <Inline justify=\"end\">\n        <Menu\n          align=\"end\"\n          trigger={(p) => <Button {...p}>Book</Button>}\n          items={[\n            { label: 'Open reader', to: '/books/1/read', Icon: BookIcon },\n            {\n              label: 'Edit metadata',\n              onClick: () => setChosen('Edit metadata'),\n              Icon: SettingsIcon,\n            },\n            {\n              label: 'Delete book',\n              onClick: () => setChosen('Delete book'),\n              danger: true,\n              separatorBefore: true,\n            },\n          ]}\n        />\n      </Inline>\n      <Text tone=\"muted\">Chosen: {chosen}</Text>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/menu/examples/09-custom-trigger.tsx",
+          "slug": "custom-trigger",
+          "order": 9,
+          "title": "Other triggers",
+          "description": "An icon-only `Button` takes an `ariaLabel` for its name; `ariaLabel` on the Menu\nnames the list, which is otherwise labelled by the trigger. For any other\nelement, attach `ref` and `onClick` and map the rest to `aria-*` attributes.",
+          "code": "import { Inline, Stack, Text } from '@korzun/design/component';\nimport { Button, Menu } from '@korzun/design/control';\nimport { MoreIcon } from '@korzun/design/icon';\nimport { useState } from 'react';\n\nexport default function CustomTrigger() {\n  const [chosen, setChosen] = useState('nothing yet');\n  const items = [\n    { label: 'Rename', onClick: () => setChosen('Rename') },\n    { label: 'Duplicate', onClick: () => setChosen('Duplicate') },\n  ];\n  return (\n    <Stack>\n      <Inline>\n        <Menu\n          ariaLabel=\"Row actions\"\n          trigger={(p) => <Button {...p} prefix={MoreIcon} ariaLabel=\"More actions\" />}\n          items={items}\n        />\n        <Menu\n          trigger={(p) => (\n            <button\n              ref={p.ref}\n              type=\"button\"\n              aria-expanded={p.ariaExpanded}\n              aria-controls={p.ariaControls}\n              aria-haspopup={p.ariaHasPopup}\n              onClick={p.onClick}\n            >\n              Plain button\n            </button>\n          )}\n          items={items}\n        />\n      </Inline>\n      <Text tone=\"muted\">Chosen: {chosen}</Text>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/menu/examples/10-intent-props.tsx",
+          "slug": "intent-props",
+          "order": 10,
+          "title": "Intent props",
+          "description": "`intentProps` are spread onto the item element: here hovering, focusing or\ntouching “Open reader” counts a prefetch, which is what a router's prefetch\nhook would do.",
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button, Menu } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function IntentProps() {\n  const [prefetches, setPrefetches] = useState(0);\n  const count = () => setPrefetches((n) => n + 1);\n  return (\n    <Stack>\n      <Menu\n        trigger={(p) => <Button {...p}>Book</Button>}\n        items={[\n          {\n            label: 'Open reader',\n            to: '/books/1/read',\n            intentProps: { onMouseEnter: count, onFocus: count, onTouchStart: count },\n          },\n          { label: 'Reset count', onClick: () => setPrefetches(0) },\n        ]}\n      />\n      <Text tone=\"muted\">Prefetches: {prefetches}</Text>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/menu/examples/11-in-card.tsx",
+          "slug": "in-card",
+          "order": 11,
+          "title": "In a Card",
+          "description": "A Menu in a card's `headerAction`. The list renders in a portal, so the card\ndoes not clip it, and its corners step down by themselves: no `radius` prop.",
+          "code": "import { Card, Stack, Text } from '@korzun/design/component';\nimport { Button, Menu } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function InCard() {\n  const [chosen, setChosen] = useState('nothing yet');\n  return (\n    <Card\n      title=\"Reading list\"\n      headerAction={\n        <Menu\n          align=\"end\"\n          trigger={(p) => <Button {...p}>Manage</Button>}\n          items={[\n            { label: 'Rename list', onClick: () => setChosen('Rename list') },\n            { label: 'Clear list', danger: true, onClick: () => setChosen('Clear list') },\n          ]}\n        />\n      }\n    >\n      <Stack>\n        <Text>Three books queued.</Text>\n        <Text tone=\"muted\">Chosen: {chosen}</Text>\n      </Stack>\n    </Card>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/menu/examples/12-in-dialog.tsx",
+          "slug": "in-dialog",
+          "order": 12,
+          "title": "In a Dialog",
+          "description": "A Menu inside a Dialog opens into the dialog, so it shows above the dialog's\nbackdrop. Escape closes the menu first and the Dialog on the next press.",
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button, Dialog, Menu } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function InDialog() {\n  const [open, setOpen] = useState(false);\n  const [chosen, setChosen] = useState('nothing yet');\n  return (\n    <>\n      <Button onClick={() => setOpen(true)}>Open dialog</Button>\n      <Dialog open={open} onClose={() => setOpen(false)} title=\"Edit book\">\n        <Stack>\n          <Menu\n            trigger={(p) => <Button {...p}>Actions</Button>}\n            items={[\n              { label: 'Rename', onClick: () => setChosen('Rename') },\n              { label: 'Duplicate', onClick: () => setChosen('Duplicate') },\n              { label: 'Delete', danger: true, onClick: () => setChosen('Delete') },\n            ]}\n          />\n          <Text tone=\"muted\">Chosen: {chosen}</Text>\n        </Stack>\n      </Dialog>\n    </>\n  );\n}\n"
+        }
+      ],
+      "tables": [
+        {
+          "name": "MenuProps",
+          "kind": "props",
+          "rows": [
+            {
+              "name": "align",
+              "type": "'start' | 'center' | 'end'",
+              "required": false,
+              "description": "Alignment to the trigger's start edge, centre or end edge. Use `'end'` for a trigger at the right edge.",
+              "default": "'start'"
+            },
+            {
+              "name": "ariaLabel",
+              "type": "string",
+              "required": false,
+              "description": "Accessible name for the menu. Without it the menu is labelled by the trigger."
+            },
+            {
+              "name": "items",
+              "type": "MenuItem[]",
+              "required": true,
+              "description": "Items in order. Labels must be unique (they are the React key). Filter the array for conditional items."
+            },
+            {
+              "name": "side",
+              "type": "'bottom' | 'top'",
+              "required": false,
+              "description": "Preferred side of the trigger; flips to the other side when there is no room.",
+              "default": "'bottom'"
+            },
+            {
+              "name": "surface",
+              "type": "'solid' | 'glass'",
+              "required": false,
+              "description": "`'solid'` draws a card background, border and shadow; `'glass'` draws the frosted glass recipe.",
+              "default": "'solid'"
+            },
+            {
+              "name": "trigger",
+              "type": "(props: MenuTriggerProps) => ReactNode",
+              "required": true,
+              "description": "Renders the element that opens the menu. Spread `props` onto it: `trigger={(p) => <Button {...p}>Sort</Button>}`."
+            }
+          ]
+        },
+        {
+          "name": "MenuIntentProps",
+          "kind": "props",
+          "rows": [
+            {
+              "name": "onFocus",
+              "type": "() => void",
+              "required": true,
+              "description": "The item took focus (arrow keys or opening the menu)."
+            },
+            {
+              "name": "onMouseEnter",
+              "type": "() => void",
+              "required": true,
+              "description": "Pointer entered the item."
+            },
+            {
+              "name": "onTouchStart",
+              "type": "() => void",
+              "required": true,
+              "description": "A touch started on the item."
+            }
+          ],
+          "description": "Hover, focus and touch handlers spread onto a menu item, e.g. to prefetch what selecting it needs."
+        },
+        {
+          "name": "MenuTriggerProps",
+          "kind": "props",
+          "rows": [
+            {
+              "name": "ariaControls",
+              "type": "string | undefined",
+              "required": true,
+              "description": "The id of the `role=\"menu\"` element while open; `undefined` while closed."
+            },
+            {
+              "name": "ariaExpanded",
+              "type": "boolean",
+              "required": true,
+              "description": "Whether the menu is open."
+            },
+            {
+              "name": "ariaHasPopup",
+              "type": "'menu'",
+              "required": true,
+              "description": "Always `'menu'`."
+            },
+            {
+              "name": "onClick",
+              "type": "() => void",
+              "required": true,
+              "description": "Toggles the menu."
+            },
+            {
+              "name": "ref",
+              "type": "(node: HTMLElement | null) => void",
+              "required": true,
+              "description": "Callback ref: attach it to the trigger element (`<button ref={p.ref}>`, `<a ref={p.ref}>`, or a `Button` through the spread). The menu anchors to that element and returns focus to it."
+            }
+          ],
+          "description": "What `trigger` receives; spread it onto the element that opens the menu (a `Button` takes it as-is)."
+        },
+        {
+          "name": "MenuActionItem",
+          "kind": "object",
+          "rows": [
+            {
+              "name": "danger",
+              "type": "boolean",
+              "required": false,
+              "description": "Red text. Styling only; it does not add a separator."
+            },
+            {
+              "name": "disabled",
+              "type": "boolean",
+              "required": false,
+              "description": "Greyed out, cannot be activated, skipped by arrow keys. A disabled link renders without `href`, so middle-click cannot open it either."
+            },
+            {
+              "name": "Icon",
+              "type": "ComponentType<IconProps>",
+              "required": false,
+              "description": "Leading icon component (`HomeIcon`), not an element. Drawn at the text size, hidden from assistive tech."
+            },
+            {
+              "name": "intentProps",
+              "type": "MenuIntentProps",
+              "required": false,
+              "description": "Handlers spread onto the item element, e.g. to prefetch."
+            },
+            {
+              "name": "label",
+              "type": "string",
+              "required": true,
+              "description": "Visible text. Must be unique within the menu: it is the React key."
+            },
+            {
+              "name": "onClick",
+              "type": "() => void",
+              "required": true,
+              "description": "Receives no event. The menu closes first, then this is called."
+            },
+            {
+              "name": "separatorBefore",
+              "type": "boolean",
+              "required": false,
+              "description": "Divider above this item. Ignored on the first item."
+            },
+            {
+              "name": "to",
+              "type": "never",
+              "required": false,
+              "description": "Not allowed on an action item: an item is an action or a link, never both."
+            }
+          ],
+          "description": "An item that runs code."
+        },
+        {
+          "name": "MenuItem",
+          "kind": "object",
+          "rows": [
+            {
+              "name": "danger",
+              "type": "boolean",
+              "required": false,
+              "description": "Red text. Styling only; it does not add a separator."
+            },
+            {
+              "name": "disabled",
+              "type": "boolean",
+              "required": false,
+              "description": "Greyed out, cannot be activated, skipped by arrow keys. A disabled link renders without `href`, so middle-click cannot open it either."
+            },
+            {
+              "name": "Icon",
+              "type": "ComponentType<IconProps>",
+              "required": false,
+              "description": "Leading icon component (`HomeIcon`), not an element. Drawn at the text size, hidden from assistive tech."
+            },
+            {
+              "name": "intentProps",
+              "type": "MenuIntentProps",
+              "required": false,
+              "description": "Handlers spread onto the item element, e.g. to prefetch."
+            },
+            {
+              "name": "label",
+              "type": "string",
+              "required": true,
+              "description": "Visible text. Must be unique within the menu: it is the React key."
+            },
+            {
+              "name": "onClick",
+              "type": "() => void",
+              "required": false,
+              "description": "Receives no event. The menu closes first, then this is called."
+            },
+            {
+              "name": "separatorBefore",
+              "type": "boolean",
+              "required": false,
+              "description": "Divider above this item. Ignored on the first item."
+            },
+            {
+              "name": "to",
+              "type": "string",
+              "required": false,
+              "description": "Router path. Needs a router above the Menu; a Menu of action items only does not."
+            }
+          ],
+          "description": "One menu entry: an action (`onClick`) or a link (`to`)."
+        },
+        {
+          "name": "MenuLinkItem",
+          "kind": "object",
+          "rows": [
+            {
+              "name": "danger",
+              "type": "boolean",
+              "required": false,
+              "description": "Red text. Styling only; it does not add a separator."
+            },
+            {
+              "name": "disabled",
+              "type": "boolean",
+              "required": false,
+              "description": "Greyed out, cannot be activated, skipped by arrow keys. A disabled link renders without `href`, so middle-click cannot open it either."
+            },
+            {
+              "name": "Icon",
+              "type": "ComponentType<IconProps>",
+              "required": false,
+              "description": "Leading icon component (`HomeIcon`), not an element. Drawn at the text size, hidden from assistive tech."
+            },
+            {
+              "name": "intentProps",
+              "type": "MenuIntentProps",
+              "required": false,
+              "description": "Handlers spread onto the item element, e.g. to prefetch."
+            },
+            {
+              "name": "label",
+              "type": "string",
+              "required": true,
+              "description": "Visible text. Must be unique within the menu: it is the React key."
+            },
+            {
+              "name": "onClick",
+              "type": "never",
+              "required": false,
+              "description": "Not allowed on a link item: an item is an action or a link, never both."
+            },
+            {
+              "name": "separatorBefore",
+              "type": "boolean",
+              "required": false,
+              "description": "Divider above this item. Ignored on the first item."
+            },
+            {
+              "name": "to",
+              "type": "string",
+              "required": true,
+              "description": "Router path. Needs a router above the Menu; a Menu of action items only does not."
+            }
+          ],
+          "description": "An item that navigates: a react-router `<Link>`, so middle-click and open-in-new-tab work."
+        }
+      ],
+      "tokens": [
+        {
+          "path": "color.bg.card",
+          "kind": "color",
+          "light": "#FCFCFC",
+          "dark": "#1A1B1E"
+        },
+        {
+          "path": "color.bg.hover",
+          "kind": "color",
+          "light": "rgba(0, 0, 0, 0.07)",
+          "dark": "rgba(255, 255, 255, 0.12)"
+        },
+        {
+          "path": "color.border.strong",
+          "kind": "color",
+          "light": "#DDDDDD",
+          "dark": "#48494F"
+        },
+        {
+          "path": "color.danger.default",
+          "kind": "color",
+          "light": "#FF4D4F",
+          "dark": "#FF4D4F"
+        },
+        {
+          "path": "color.text.primary",
+          "kind": "color",
+          "light": "#111",
+          "dark": "#F5F5F7"
+        },
+        {
+          "path": "fontFamily.body",
+          "kind": "value",
+          "light": "system-ui, sans-serif",
+          "dark": "system-ui, sans-serif"
+        },
+        {
+          "path": "fontSize.md",
+          "kind": "value",
+          "light": "0.875rem",
+          "dark": "0.875rem"
+        },
+        {
+          "path": "radius.md",
+          "kind": "value",
+          "light": "8px",
+          "dark": "8px"
+        },
+        {
+          "path": "radius.sm",
+          "kind": "value",
+          "light": "4px",
+          "dark": "4px"
+        },
+        {
+          "path": "recipe.glass",
+          "kind": "recipe",
+          "light": null,
+          "dark": null
+        },
+        {
+          "path": "shadow.cardStack",
+          "kind": "value",
+          "light": "0px 2px 0px rgba(217, 217, 217, 0.2)",
+          "dark": "0px 2px 0px rgba(0, 0, 0, 0.4)"
+        },
+        {
+          "path": "space.lg",
+          "kind": "value",
+          "light": "0.625rem",
+          "dark": "0.625rem"
+        },
+        {
+          "path": "space.md",
+          "kind": "value",
+          "light": "0.5rem",
+          "dark": "0.5rem"
+        },
+        {
+          "path": "space.sm",
+          "kind": "value",
+          "light": "0.375rem",
+          "dark": "0.375rem"
+        },
+        {
+          "path": "space.xs",
+          "kind": "value",
+          "light": "0.25rem",
+          "dark": "0.25rem"
+        },
+        {
+          "path": "space.xxs",
+          "kind": "value",
+          "light": "0.125rem",
+          "dark": "0.125rem"
+        }
+      ],
+      "changelog": [
+        {
+          "version": "0.5.0",
+          "date": "2026-11-24",
+          "tags": [
+            "Page",
+            "Dialog",
+            "Card",
+            "CardRow",
+            "Alert",
+            "Surface",
+            "Popover",
+            "Menu",
+            "Select",
+            "Button"
+          ],
+          "text": "Surface depth: corners are concentric site-wide with no radius props. `Page` provides depth 0, `Dialog` 1, and `Card`, `CardRow` and `Alert` each provide one level deeper than where they sit; `Popover` (so `Menu` and the `Select` list) provides a fixed 2. Depth 0 is `radius.lg`, 1 is `md`, 2 and deeper is `sm`. `Button`, `Select`, `Card`, `CardRow` and `Alert` follow it; an explicit `Button radius` or `Select surface` still wins. With no `Page`, `Dialog`, `Card`, `CardRow`, `Alert` or `Surface` above it, a component keeps its 0.4.0 look; a bare `Card` (no `Page`) still counts as depth 0 and gives its contents depth 1, so its Buttons and nested Cards change as below."
+        },
+        {
+          "version": "0.5.0",
+          "date": "2026-11-24",
+          "tags": [
+            "Button",
+            "Select",
+            "Card",
+            "CardRow",
+            "Popover",
+            "Menu",
+            "Dialog",
+            "Page"
+          ],
+          "text": "**Visible changes:**\n  - Buttons in a Card default to 8px (they were 16px unless `radius=\"card\"` was set), and Buttons in a Dialog body are 8px.\n  - Selects directly on a Page get the page look (16px and the card shadow); in a Card or Dialog they stay 8px. This includes Selects in your own boxes on a Page (a `useModalDialog` modal, a `recipe.card.shell` or `recipe.row` box), because depth cannot see hand-drawn boxes: wrap their contents in `Surface`, or pass `surface=\"card\"`.\n  - Without a Page, a bare `Card` counts as depth 0: its Buttons go from 16px to 8px, a Card nested in it steps down, and a `CardRow` in it is 8px.\n  - A Card nested in a Card or Dialog steps down (8px, then 4px), and so do its Buttons and Selects; `size=\"small\"` keeps its extra 1px.\n  - `CardRow` is 16px on a Page and 8px inside a Card (it was always 16px).\n  - Buttons and Selects inside a Popover or Menu are 4px."
+        },
+        {
+          "version": "0.5.0",
+          "date": "2026-11-24",
+          "tags": [
+            "Popover",
+            "Menu"
+          ],
+          "text": "`theme.space` values are typed as `SpaceValue` (`${number}rem`), so `gap={theme.space.sm}` on `Popover` and `Menu` needs no `as PopoverGap` cast. `Theme['space']` is now typed `${number}rem`, so hand-built Theme objects or mocks with `px` values stop type-checking."
+        },
+        {
+          "version": "0.4.0",
+          "date": "2026-11-23",
+          "tags": [
+            "Menu"
+          ],
+          "text": "New `Menu` (control): a button that opens a list of actions and links, described as an `items` array (`onClick` for actions, `to` for links; `Icon`, `danger`, `disabled`, `separatorBefore`, `intentProps`). Arrow keys, Home and End move between items, and Escape returns focus to the trigger. `surface` is `solid` or `glass`."
+        },
+        {
+          "version": "0.4.0",
+          "date": "2026-11-23",
+          "tags": [
+            "Menu"
+          ],
+          "text": "`Menu` trigger props: `ref` is a callback ref, so it attaches to a `<button>`, an `<a>` or a `Button` without a cast; `ariaControls` is set only while the menu is open. Tab from an open menu skips inert, hidden and `tabindex=\"-1\"` elements and stays inside an open `<dialog>`. A disabled link item has no `href`."
+        },
+        {
+          "version": "0.4.0",
+          "date": "2026-11-23",
+          "tags": [
+            "PageActionsMenu",
+            "PageActionsBar",
+            "Menu"
+          ],
+          "text": "`PageActionsMenu` and `PageActionsBar` are rebuilt on `Menu`: arrow keys, Home and End move between actions, and Escape returns focus to the trigger. `PageActionItem` is now `MenuActionItem & { primary?, align? }`: it gains an optional `Icon` (shown in the menus, ignored by the bar's primary Buttons), and `to` is not allowed."
+        }
+      ]
+    },
+    {
       "id": "component/alert",
       "slug": "alert",
       "entry": "@korzun/design/component",
