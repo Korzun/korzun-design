@@ -10,9 +10,9 @@ export interface StackProps extends Omit<HTMLAttributes<HTMLElement>, 'style'> {
   as?: 'div' | 'section' | 'ul' | 'ol' | 'li';
   /** Space between children, from the theme's `space` tokens, or `'none'`. Default `'md'`. */
   gap?: Gap;
-  /** Cross-axis (horizontal) alignment of children. Default `'stretch'`. */
+  /** Cross-axis (horizontal) alignment of children; `start`/`end` map to `flex-start`/`flex-end`. Default `'stretch'`. */
   align?: 'stretch' | 'start' | 'center' | 'end';
-  /** Extra class on the root. Override with `'&&'` specificity, never `!important`. */
+  /** Extra class, added last on the root. Override with `'&&'` specificity, never `!important`. */
   className?: string;
   /** The children, laid out top to bottom. */
   children?: ReactNode;

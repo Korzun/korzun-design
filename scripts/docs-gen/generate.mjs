@@ -72,10 +72,15 @@ function withDefaults(repo, mod, tables) {
   return tables;
 }
 
-/** Token paths from a style file and the relative modules it imports, transitively within src/. */
+/**
+ * Token paths from a style file and the relative modules it imports, transitively
+ * within src/. A module outside src/theme/ does not follow imports into it: they
+ * bring the provider and global styles, not tokens the module itself uses.
+ */
 function styleTokenPaths(repo, entry) {
   const seen = new Set();
   const paths = new Set();
+  const inTheme = entry.startsWith('src/theme/');
   const visit = (rel) => {
     if (seen.has(rel)) return;
     seen.add(rel);
@@ -84,7 +89,7 @@ function styleTokenPaths(repo, entry) {
     for (const p of collectTokenPaths(source)) paths.add(p);
     for (const [, spec] of source.matchAll(/(?:from|import)\s*['"](\.{1,2}\/[^'"]+)['"]/g)) {
       const base = posix.normalize(posix.join(posix.dirname(rel), spec.replace(/\.js$/, '')));
-      if (!base.startsWith('src/')) continue;
+      if (!base.startsWith('src/') || (!inTheme && base.startsWith('src/theme/'))) continue;
       const hit = [`${base}.ts`, `${base}.tsx`, `${base}/index.ts`, `${base}/index.tsx`].find((f) =>
         existsSync(join(repo, f))
       );

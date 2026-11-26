@@ -1,6 +1,986 @@
 {
   "version": "0.5.0",
-  "modules": [],
+  "modules": [
+    {
+      "id": "control/button",
+      "slug": "button",
+      "entry": "@korzun/design/control",
+      "docPath": "docs/control/button.md",
+      "title": "Button",
+      "description": "A clickable action with a visual variant, optional icons, and a loading state.",
+      "category": "Actions",
+      "values": [
+        "Button"
+      ],
+      "types": [
+        "ButtonProps",
+        "ButtonRadiusValue",
+        "ButtonTypeValue"
+      ],
+      "importLine": "import { Button, type ButtonProps, type ButtonRadiusValue, type ButtonTypeValue } from '@korzun/design/control'",
+      "body": "A clickable action with a visual variant, optional icons, and a loading state.\nRenders a `<div role=\"button\">` (keyboard: Enter and Space, which it\npreventDefaults, so Space does not scroll the page) unless `submit` is\nset, in which case it renders a native `<button type=\"submit\">`.\n\nUse something else for: navigating back (`BackButton`), page-level actions in\nthe header (`PageActionsBar`, `PageActionsMenu`), sticky footer actions\n(`PageFooterActions`), picking one of several options (`SegmentedControl`).\n\n## Usage\n\n### Choosing a variant\n\n- `primary`: the one main action of a card, modal, or page (Save, Confirm).\n- `default`: secondary actions; bordered.\n- `text`: Cancel in a modal footer.\n- `link`: inline row actions (Remove, Load more). It has no padding, so `radius`\n  doesn't matter for it.\n- `dashed`: an \"add a row\" affordance (as in `FieldList`).\n- Add `danger` for destructive actions (Delete, Log out), on `primary` in a\n  confirm or on `default` otherwise.\n\n### Corners\n\nThe radius follows where the button sits (16px on a page, 8px in a `Card` or\n`Dialog`, 4px in a `Popover` or nested Card), so pass no `radius`; see\n[corners](../corners.md). Pass it only to override.\n\n### Submitting a form\n\n`submit` renders a native submit button and `onClick` is then ignored: handle\nthe form's `action` or `onSubmit`. For a button outside its form (a `Card`\nfooter), pass the form's id as `form`. While the form action is pending the\nbutton shows its spinner by itself.\n\n## Do / don't\n\n- Don't set `radius` to match the surface; it follows depth. Pass it only to\n  override.\n- Do give repeated row actions a distinguishing `ariaLabel` (\"Remove Kindle\").\n- Don't pass `type=\"submit\"`: it is not a valid variant. Use `submit`.\n- Don't pass `onClick` to a submit button and expect it to run.\n- Don't pass an element to `prefix`/`suffix` (`prefix={<SearchIcon />}`); pass\n  the component.\n- Don't wrap Button in a `<button>` or `<a>`: it is already interactive.",
+      "examples": [
+        {
+          "file": "src/control/button/examples/01-basic.tsx",
+          "slug": "basic",
+          "order": 1,
+          "title": "Basic",
+          "description": "One `primary` action for the main step and a `default` button beside it.\n`onClick` takes no arguments: the button passes no event.",
+          "code": "import { Inline, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Basic() {\n  const [saves, setSaves] = useState(0);\n  return (\n    <Inline>\n      <Button onClick={() => setSaves(0)}>Reset</Button>\n      <Button type=\"primary\" onClick={() => setSaves((n) => n + 1)}>\n        Save\n      </Button>\n      <Text tone=\"muted\">Saves: {saves}</Text>\n    </Inline>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/button/examples/02-variants.tsx",
+          "slug": "variants",
+          "order": 2,
+          "title": "Variants",
+          "description": "`type` picks the look, not the HTML attribute. `primary` is the one main action,\n`default` a secondary one, `text` a Cancel in a modal footer, `link` an inline\nrow action, and `dashed` an \"add a row\" affordance.",
+          "code": "import { Inline } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\n\nexport default function Variants() {\n  return (\n    <Inline wrap>\n      <Button type=\"primary\">Primary</Button>\n      <Button>Default</Button>\n      <Button type=\"text\">Text</Button>\n      <Button type=\"link\">Link</Button>\n      <Button type=\"dashed\">Dashed</Button>\n    </Inline>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/button/examples/03-danger-and-success.tsx",
+          "slug": "danger-and-success",
+          "order": 3,
+          "title": "Danger and success",
+          "description": "Add `danger` to a destructive action: on `primary` when it confirms the\ndeletion, on `default` otherwise. `success` is the green treatment. The two\ncannot both be set; TypeScript rejects it.",
+          "code": "import { Inline } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\n\nexport default function DangerAndSuccess() {\n  return (\n    <Inline wrap>\n      <Button danger>Log out</Button>\n      <Button type=\"primary\" danger>\n        Delete book\n      </Button>\n      <Button type=\"primary\" success>\n        Mark as read\n      </Button>\n    </Inline>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/button/examples/04-icons.tsx",
+          "slug": "icons",
+          "order": 4,
+          "title": "Icons",
+          "description": "`prefix` and `suffix` take an icon component (`prefix={SearchIcon}`), not an\nelement. An icon-only button needs an `ariaLabel` so it has an accessible name.",
+          "code": "import { Inline } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { ChevronIcon, SearchIcon, SettingsIcon } from '@korzun/design/icon';\n\nexport default function Icons() {\n  return (\n    <Inline wrap>\n      <Button prefix={SearchIcon}>Search</Button>\n      <Button type=\"primary\" suffix={ChevronIcon}>\n        Next\n      </Button>\n      <Button prefix={SettingsIcon} ariaLabel=\"Settings\" />\n    </Inline>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/button/examples/05-loading-and-disabled.tsx",
+          "slug": "loading-and-disabled",
+          "order": 5,
+          "title": "Loading and disabled",
+          "description": "`loading` swaps the icons for a spinner and blocks clicks; `disabled` greys the\nbutton out. Both take the button out of the tab order.",
+          "code": "import { Inline } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { UploadIcon } from '@korzun/design/icon';\nimport { useState } from 'react';\n\nexport default function LoadingAndDisabled() {\n  const [uploading, setUploading] = useState(false);\n  return (\n    <Inline wrap>\n      <Button\n        type=\"primary\"\n        prefix={UploadIcon}\n        loading={uploading}\n        onClick={() => setUploading(true)}\n      >\n        {uploading ? 'Uploading' : 'Upload'}\n      </Button>\n      <Button type=\"text\" disabled={!uploading} onClick={() => setUploading(false)}>\n        Cancel upload\n      </Button>\n      <Button disabled>Disabled</Button>\n    </Inline>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/button/examples/06-submit-in-card.tsx",
+          "slug": "submit-in-card",
+          "order": 6,
+          "title": "Submit button in a card footer",
+          "description": "`submit` renders a native submit button; `form` points it at a form elsewhere\nin the card. `onClick` is ignored on a submit button, so handle the form's\n`action`. Inside a Card the corners step down by themselves: no `radius` prop.",
+          "code": "import { Card, Stack, Text } from '@korzun/design/component';\nimport { Button, TextInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function SubmitInCard() {\n  const [name, setName] = useState<string | undefined>('Ada');\n  const [saved, setSaved] = useState<string | null>(null);\n  return (\n    <Card\n      title=\"Profile\"\n      footer={\n        <Button type=\"primary\" submit form=\"profile-form\">\n          Save\n        </Button>\n      }\n    >\n      <form id=\"profile-form\" action={(data) => setSaved(String(data.get('name') ?? ''))}>\n        <Stack>\n          <TextInput name=\"name\" label=\"Name\" value={name} onChange={setName} />\n          {saved !== null && <Text tone=\"success\">Saved as {saved}</Text>}\n        </Stack>\n      </form>\n    </Card>\n  );\n}\n"
+        }
+      ],
+      "tables": [
+        {
+          "name": "ButtonProps",
+          "kind": "props",
+          "rows": [
+            {
+              "name": "children",
+              "type": "ReactNode",
+              "required": false,
+              "description": "The label."
+            },
+            {
+              "name": "ariaControls",
+              "type": "string",
+              "required": false,
+              "description": "For a disclosure button: the id of the element it controls."
+            },
+            {
+              "name": "ariaExpanded",
+              "type": "boolean",
+              "required": false,
+              "description": "For a disclosure button: whether the element it controls is expanded."
+            },
+            {
+              "name": "ariaHasPopup",
+              "type": "'menu' | 'listbox' | 'dialog' | boolean",
+              "required": false,
+              "description": "Announces that the button opens a popup of this kind (`'menu'` for a menu trigger). Rendered in both modes."
+            },
+            {
+              "name": "ariaLabel",
+              "type": "string",
+              "required": false,
+              "description": "Accessible name when the visible children are not distinguishing enough on their own — several \"Remove\" buttons in a list, each belonging to a different row."
+            },
+            {
+              "name": "className",
+              "type": "string",
+              "required": false,
+              "description": "Extra class; win specificity with `'&&'` in your sheet, never `!important`."
+            },
+            {
+              "name": "danger",
+              "type": "boolean",
+              "required": false,
+              "description": "Red treatment for destructive actions. Mutually exclusive with `success` (setting both is a type error).",
+              "default": "false"
+            },
+            {
+              "name": "disabled",
+              "type": "boolean",
+              "required": false,
+              "description": "Greys the button out and blocks clicks.",
+              "default": "false"
+            },
+            {
+              "name": "form",
+              "type": "string",
+              "required": false,
+              "description": "Id of the `<form>` to submit, for a `submit` button outside its form (e.g. in a `Card` footer)."
+            },
+            {
+              "name": "loading",
+              "type": "boolean",
+              "required": false,
+              "description": "Shows a spinner in place of the icons and blocks clicks.",
+              "default": "false"
+            },
+            {
+              "name": "onClick",
+              "type": "() => void",
+              "required": false,
+              "description": "Click and Enter/Space handler. **Ignored when `submit` is set**; the form submits instead. Receives no event. Not called while `disabled` or `loading`.",
+              "default": "() => {}"
+            },
+            {
+              "name": "prefix",
+              "type": "ComponentType<IconProps>",
+              "required": false,
+              "description": "Icon component shown before the label (`prefix={SearchIcon}`), not an element."
+            },
+            {
+              "name": "radius",
+              "type": "'background' | 'card' | 'inset' | 'modal'",
+              "required": false,
+              "description": "The surface the button sits on: `'background'`, `'card'`, `'inset'`, `'modal'`. Unset (the default), the radius follows surface depth: 16px on a page or outside any surface, 8px in a Card or Dialog, 4px in a Popover or nested Card. Pass it only to override; see `docs/corners.md`."
+            },
+            {
+              "name": "ref",
+              "type": "Ref<HTMLElement>",
+              "required": false,
+              "description": "Ref to the root element (the `<div role=\"button\">`, or the `<button>` in submit mode), e.g. to `.focus()` it. A plain prop; no `forwardRef`."
+            },
+            {
+              "name": "submit",
+              "type": "boolean",
+              "required": false,
+              "description": "Render a native `<button type=\"submit\">`. Also shows the spinner while the enclosing form action is pending (`useFormStatus`). `onClick` is then ignored.",
+              "default": "false"
+            },
+            {
+              "name": "success",
+              "type": "boolean",
+              "required": false,
+              "description": "Green treatment. Mutually exclusive with `danger` (setting both is a type error).",
+              "default": "false"
+            },
+            {
+              "name": "suffix",
+              "type": "ComponentType<IconProps>",
+              "required": false,
+              "description": "Icon component shown after the label (`suffix={ChevronIcon}`), not an element."
+            },
+            {
+              "name": "tabIndex",
+              "type": "number",
+              "required": false,
+              "description": "Div mode defaults to `0`, so the button is keyboard-focusable; an explicit value wins, except it is forced to `-1` while `disabled` or `loading`. Submit mode uses the native `<button>`, so the value is passed through.",
+              "default": "0 (div mode)"
+            },
+            {
+              "name": "title",
+              "type": "string",
+              "required": false,
+              "description": "Native tooltip; passed through."
+            },
+            {
+              "name": "type",
+              "type": "'default' | 'primary' | 'text' | 'link' | 'dashed'",
+              "required": false,
+              "description": "**Visual variant** (`'default'`, `'primary'`, `'text'`, `'link'`, `'dashed'`), not the HTML `type`. Use `submit` for a submit button.",
+              "default": "'default'"
+            }
+          ]
+        },
+        {
+          "name": "ButtonRadiusValue",
+          "kind": "alias",
+          "rows": [],
+          "text": "'background' | 'card' | 'inset' | 'modal'"
+        },
+        {
+          "name": "ButtonTypeValue",
+          "kind": "alias",
+          "rows": [],
+          "text": "'default' | 'primary' | 'text' | 'link' | 'dashed'"
+        }
+      ],
+      "tokens": [
+        {
+          "path": "color.bg.hover",
+          "kind": "color",
+          "light": "rgba(0, 0, 0, 0.07)",
+          "dark": "rgba(255, 255, 255, 0.12)"
+        },
+        {
+          "path": "color.bg.input",
+          "kind": "color",
+          "light": "#FFFFFF",
+          "dark": "#1A1B1E"
+        },
+        {
+          "path": "color.bg.success",
+          "kind": "color",
+          "light": "#f0fdf4",
+          "dark": "rgba(34, 197, 94, 0.14)"
+        },
+        {
+          "path": "color.border.default",
+          "kind": "color",
+          "light": "#D9D9D9",
+          "dark": "#3A3B40"
+        },
+        {
+          "path": "color.border.loading",
+          "kind": "color",
+          "light": "#e6e6e6",
+          "dark": "#34353A"
+        },
+        {
+          "path": "color.border.success",
+          "kind": "color",
+          "light": "#bbf7d0",
+          "dark": "rgba(34, 197, 94, 0.4)"
+        },
+        {
+          "path": "color.brand.active",
+          "kind": "color",
+          "light": "#0758d9",
+          "dark": "#91CAFF"
+        },
+        {
+          "path": "color.brand.default",
+          "kind": "color",
+          "light": "#1777FF",
+          "dark": "#3696fe"
+        },
+        {
+          "path": "color.brand.hover",
+          "kind": "color",
+          "light": "#3696fe",
+          "dark": "#87BAFF"
+        },
+        {
+          "path": "color.brand.linkHover",
+          "kind": "color",
+          "light": "#87BAFF",
+          "dark": "#91CAFF"
+        },
+        {
+          "path": "color.brand.loading",
+          "kind": "color",
+          "light": "#73A6FF",
+          "dark": "#3E5A8A"
+        },
+        {
+          "path": "color.brand.loadingActive",
+          "kind": "color",
+          "light": "#6893e7",
+          "dark": "#33507F"
+        },
+        {
+          "path": "color.brand.loadingHover",
+          "kind": "color",
+          "light": "#87BAFF",
+          "dark": "#1D4ED8"
+        },
+        {
+          "path": "color.brand.outline",
+          "kind": "color",
+          "light": "#91CAFF",
+          "dark": "rgba(54, 150, 254, 0.45)"
+        },
+        {
+          "path": "color.danger.active",
+          "kind": "color",
+          "light": "#D9373e",
+          "dark": "#D9373e"
+        },
+        {
+          "path": "color.danger.default",
+          "kind": "color",
+          "light": "#FF4D4F",
+          "dark": "#FF4D4F"
+        },
+        {
+          "path": "color.danger.hover",
+          "kind": "color",
+          "light": "#ff7874",
+          "dark": "#FF8E8E"
+        },
+        {
+          "path": "color.danger.light",
+          "kind": "color",
+          "light": "#fff1f0",
+          "dark": "rgba(255, 77, 79, 0.18)"
+        },
+        {
+          "path": "color.danger.loading",
+          "kind": "color",
+          "light": "#FF8E8E",
+          "dark": "#FF8E8E"
+        },
+        {
+          "path": "color.danger.loadingActive",
+          "kind": "color",
+          "light": "#e98182",
+          "dark": "#D9373e"
+        },
+        {
+          "path": "color.danger.loadingHover",
+          "kind": "color",
+          "light": "#FFA8A6",
+          "dark": "#e98182"
+        },
+        {
+          "path": "color.danger.outline",
+          "kind": "color",
+          "light": "rgba(255, 120, 116, 0.5)",
+          "dark": "rgba(255, 120, 116, 0.5)"
+        },
+        {
+          "path": "color.success",
+          "kind": "color",
+          "light": "#16a34a",
+          "dark": "#22C55E"
+        },
+        {
+          "path": "color.text.muted",
+          "kind": "color",
+          "light": "#6E6E6E",
+          "dark": "#9CA1AB"
+        },
+        {
+          "path": "color.text.onPrimary",
+          "kind": "color",
+          "light": "#FFFFFF",
+          "dark": "#FFFFFF"
+        },
+        {
+          "path": "color.text.primary",
+          "kind": "color",
+          "light": "#111",
+          "dark": "#F5F5F7"
+        },
+        {
+          "path": "fontFamily.body",
+          "kind": "value",
+          "light": "system-ui, sans-serif",
+          "dark": "system-ui, sans-serif"
+        },
+        {
+          "path": "radius.lg",
+          "kind": "value",
+          "light": "16px",
+          "dark": "16px"
+        },
+        {
+          "path": "radius.md",
+          "kind": "value",
+          "light": "8px",
+          "dark": "8px"
+        },
+        {
+          "path": "radius.sm",
+          "kind": "value",
+          "light": "4px",
+          "dark": "4px"
+        },
+        {
+          "path": "recipe.focusRing",
+          "kind": "recipe",
+          "light": null,
+          "dark": null
+        },
+        {
+          "path": "recipe.spinner",
+          "kind": "recipe",
+          "light": null,
+          "dark": null
+        },
+        {
+          "path": "shadow.brandStack",
+          "kind": "value",
+          "light": "0px 2px 0px rgba(23, 119, 255, 0.2)",
+          "dark": "0px 2px 0px rgba(0, 0, 0, 0.4)"
+        },
+        {
+          "path": "shadow.cardStack",
+          "kind": "value",
+          "light": "0px 2px 0px rgba(217, 217, 217, 0.2)",
+          "dark": "0px 2px 0px rgba(0, 0, 0, 0.4)"
+        },
+        {
+          "path": "shadow.dangerStack",
+          "kind": "value",
+          "light": "0px 2px 0px rgba(255, 77, 79, 0.1)",
+          "dark": "0px 2px 0px rgba(0, 0, 0, 0.4)"
+        },
+        {
+          "path": "space.md",
+          "kind": "value",
+          "light": "0.5rem",
+          "dark": "0.5rem"
+        },
+        {
+          "path": "space.xxl",
+          "kind": "value",
+          "light": "1rem",
+          "dark": "1rem"
+        }
+      ],
+      "changelog": [
+        {
+          "version": "0.5.0",
+          "date": "2026-11-24",
+          "tags": [
+            "Page",
+            "Dialog",
+            "Card",
+            "CardRow",
+            "Alert",
+            "Surface",
+            "Popover",
+            "Menu",
+            "Select",
+            "Button"
+          ],
+          "text": "Surface depth: corners are concentric site-wide with no radius props. `Page` provides depth 0, `Dialog` 1, and `Card`, `CardRow` and `Alert` each provide one level deeper than where they sit; `Popover` (so `Menu` and the `Select` list) provides a fixed 2. Depth 0 is `radius.lg`, 1 is `md`, 2 and deeper is `sm`. `Button`, `Select`, `Card`, `CardRow` and `Alert` follow it; an explicit `Button radius` or `Select surface` still wins. With no `Page`, `Dialog`, `Card`, `CardRow`, `Alert` or `Surface` above it, a component keeps its 0.4.0 look; a bare `Card` (no `Page`) still counts as depth 0 and gives its contents depth 1, so its Buttons and nested Cards change as below."
+        },
+        {
+          "version": "0.5.0",
+          "date": "2026-11-24",
+          "tags": [
+            "Button",
+            "Select",
+            "Card",
+            "CardRow",
+            "Popover",
+            "Menu",
+            "Dialog",
+            "Page"
+          ],
+          "text": "**Visible changes:**\n  - Buttons in a Card default to 8px (they were 16px unless `radius=\"card\"` was set), and Buttons in a Dialog body are 8px.\n  - Selects directly on a Page get the page look (16px and the card shadow); in a Card or Dialog they stay 8px. This includes Selects in your own boxes on a Page (a `useModalDialog` modal, a `recipe.card.shell` or `recipe.row` box), because depth cannot see hand-drawn boxes: wrap their contents in `Surface`, or pass `surface=\"card\"`.\n  - Without a Page, a bare `Card` counts as depth 0: its Buttons go from 16px to 8px, a Card nested in it steps down, and a `CardRow` in it is 8px.\n  - A Card nested in a Card or Dialog steps down (8px, then 4px), and so do its Buttons and Selects; `size=\"small\"` keeps its extra 1px.\n  - `CardRow` is 16px on a Page and 8px inside a Card (it was always 16px).\n  - Buttons and Selects inside a Popover or Menu are 4px."
+        },
+        {
+          "version": "0.5.0",
+          "date": "2026-11-24",
+          "tags": [
+            "Dialog",
+            "Button"
+          ],
+          "text": "The internal `ButtonRadiusContext` is removed; Dialog footer Buttons are unchanged (8px)."
+        },
+        {
+          "version": "0.4.0",
+          "date": "2026-11-23",
+          "tags": [
+            "Button"
+          ],
+          "text": "`Button` takes a `ref` and `ariaHasPopup`. Its interactive `<div role=\"button\">` now defaults to `tabIndex={0}` so it is reachable by keyboard (`-1` when disabled or loading; an explicit `tabIndex` wins). Its keydown now calls `preventDefault()` on Enter and Space, so Space no longer scrolls the page and Enter opening a menu does not also activate its first item."
+        },
+        {
+          "version": "0.3.0",
+          "date": "2026-11-22",
+          "tags": [
+            "Button",
+            "Dialog"
+          ],
+          "text": "Buttons in a `Dialog` footer default to `radius=\"modal\"`; an explicit `radius` still wins. The radius applies to the footer only (a Dialog nested in a footer is unaffected), and `footer={false}`, `''` and `null` render no footer bar."
+        }
+      ]
+    },
+    {
+      "id": "component/alert",
+      "slug": "alert",
+      "entry": "@korzun/design/component",
+      "docPath": "docs/component/alert.md",
+      "title": "Alert",
+      "description": "A tinted box for a status message in the page flow, with an optional title, icon and action.",
+      "category": "Feedback",
+      "values": [
+        "Alert"
+      ],
+      "types": [
+        "AlertProps",
+        "AlertTone"
+      ],
+      "importLine": "import { Alert, type AlertProps, type AlertTone } from '@korzun/design/component'",
+      "body": "A tinted, bordered box for a status message that sits in the page flow: a tone,\nan optional title, body text, an optional icon and an optional action. The\ntone's `theme.color.chip[tone]` colours the background, border, title and icon;\nthe body text uses the normal text colour so a sentence stays readable.\n\nUse something else for: inline field or form failure text (`ErrorMessage`), or a\nsingle status word in a row (`Tag`). An Alert is for a message with weight that\nmay carry an action.\n\n## Usage\n\n### Choosing a tone\n\n- `warning`: needs attention (overdue, about to expire).\n- `danger`: something failed.\n- `success`: something finished.\n- `info`: neutral news.\n\n`warning` and `danger` render `role=\"alert\"` and are announced the moment they\nmount; `success` and `info` render `role=\"status\"` and are announced politely.\n\n### Behaviour\n\n- Corners follow surface depth (see [corners](../corners.md)): 16px on a Page,\n  8px in a Card. With no provider the Alert counts as depth 0.\n- Its contents, including `action`, sit one level deeper, so a Button in the\n  action is already one step smaller than the Alert. Do not pass `radius`.\n- There is no default icon per tone; pass `Icon` when you want one.\n- Spacing and font sizes come from theme tokens; there is no `style` prop.\n\n## Do / don't\n\n- Do pick the tone by meaning, not by colour.\n- Do put the one recovery action in `action`.\n- Don't use it for field errors; use `ErrorMessage`.\n- Don't mount a `danger` or `warning` Alert for static, always-visible copy:\n  it is announced as an alert when it appears.",
+      "examples": [
+        {
+          "file": "src/component/alert/examples/01-basic.tsx",
+          "slug": "basic",
+          "order": 1,
+          "title": "Basic",
+          "description": "A `tone`, a short `title` and a sentence of body text. Pick the tone by\nmeaning: `warning` needs attention.",
+          "code": "import { Alert } from '@korzun/design/component';\n\nexport default function Basic() {\n  return (\n    <Alert tone=\"warning\" title=\"Frame is overdue\">\n      No check-in for 2h 14m.\n    </Alert>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/alert/examples/02-danger.tsx",
+          "slug": "danger",
+          "order": 2,
+          "title": "Danger",
+          "description": "Something failed. `Icon` takes an icon component and draws it before the title\nin the tone's colour; no tone has a default icon. `danger` and `warning` are\nannounced as `role=\"alert\"`, so mount them when the problem happens.",
+          "code": "import { Alert } from '@korzun/design/component';\nimport { AlertOctagonIcon } from '@korzun/design/icon';\n\nexport default function Danger() {\n  return (\n    <Alert tone=\"danger\" title=\"Upload failed\" Icon={AlertOctagonIcon}>\n      The file is larger than 20 MB.\n    </Alert>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/alert/examples/03-success.tsx",
+          "slug": "success",
+          "order": 3,
+          "title": "Success",
+          "description": "Something finished. `success` and `info` are polite (`role=\"status\"`).",
+          "code": "import { Alert } from '@korzun/design/component';\nimport { CheckIcon } from '@korzun/design/icon';\n\nexport default function Success() {\n  return (\n    <Alert tone=\"success\" title=\"Library synced\" Icon={CheckIcon}>\n      42 books are up to date on this device.\n    </Alert>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/alert/examples/04-info.tsx",
+          "slug": "info",
+          "order": 4,
+          "title": "Info",
+          "description": "Neutral news. `title` is optional: a body alone is fine for a single sentence.",
+          "code": "import { Alert } from '@korzun/design/component';\n\nexport default function Info() {\n  return <Alert tone=\"info\">Reading progress syncs when this device is online.</Alert>;\n}\n"
+        },
+        {
+          "file": "src/component/alert/examples/05-with-action.tsx",
+          "slug": "with-action",
+          "order": 5,
+          "title": "With an action, inside a card",
+          "description": "`action` holds the one recovery step, usually a Button, on the right; it wraps\nunder the text when narrow. Inside a Card the Alert's corners and its Button's\ncorners step down by themselves, so pass no `radius`.",
+          "code": "import { Alert, Card, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function WithAction() {\n  const [overdue, setOverdue] = useState(true);\n  return (\n    <Card title=\"Kitchen frame\">\n      {overdue ? (\n        <Alert\n          tone=\"warning\"\n          title=\"Frame is overdue\"\n          action={<Button onClick={() => setOverdue(false)}>Retry</Button>}\n        >\n          No check-in for 2h 14m.\n        </Alert>\n      ) : (\n        <Text tone=\"muted\">Checked in just now.</Text>\n      )}\n    </Card>\n  );\n}\n"
+        }
+      ],
+      "tables": [
+        {
+          "name": "AlertProps",
+          "kind": "props",
+          "rows": [
+            {
+              "name": "children",
+              "type": "ReactNode",
+              "required": false,
+              "description": "Body text."
+            },
+            {
+              "name": "Icon",
+              "type": "ComponentType<IconProps>",
+              "required": false,
+              "description": "Icon shown before the title, in the tone's text colour. There is no default icon per tone."
+            },
+            {
+              "name": "action",
+              "type": "ReactNode",
+              "required": false,
+              "description": "Content on the right, usually a Button; wraps under the text when narrow."
+            },
+            {
+              "name": "className",
+              "type": "string",
+              "required": false,
+              "description": "Extra class, added last on the root. Override with `'&&'` specificity, never `!important`."
+            },
+            {
+              "name": "title",
+              "type": "ReactNode",
+              "required": false,
+              "description": "Short semibold heading above the body."
+            },
+            {
+              "name": "tone",
+              "type": "'warning' | 'danger' | 'success' | 'info'",
+              "required": true,
+              "description": "Colour family. `warning` and `danger` are announced (`role=\"alert\"`); `success` and `info` are polite (`role=\"status\"`)."
+            }
+          ]
+        },
+        {
+          "name": "AlertTone",
+          "kind": "alias",
+          "rows": [],
+          "text": "'warning' | 'danger' | 'success' | 'info'"
+        }
+      ],
+      "tokens": [
+        {
+          "path": "color.chip.danger.bg",
+          "kind": "color",
+          "light": "rgba(255, 77, 79, 0.08)",
+          "dark": "rgba(255, 77, 79, 0.16)"
+        },
+        {
+          "path": "color.chip.danger.border",
+          "kind": "color",
+          "light": "rgba(255, 77, 79, 0.22)",
+          "dark": "rgba(255, 77, 79, 0.3)"
+        },
+        {
+          "path": "color.chip.danger.text",
+          "kind": "color",
+          "light": "#D9373e",
+          "dark": "#FF8E8E"
+        },
+        {
+          "path": "color.chip.info.bg",
+          "kind": "color",
+          "light": "rgba(23, 119, 255, 0.08)",
+          "dark": "rgba(54, 150, 254, 0.18)"
+        },
+        {
+          "path": "color.chip.info.border",
+          "kind": "color",
+          "light": "rgba(23, 119, 255, 0.24)",
+          "dark": "rgba(54, 150, 254, 0.36)"
+        },
+        {
+          "path": "color.chip.info.text",
+          "kind": "color",
+          "light": "#0758d9",
+          "dark": "#87BAFF"
+        },
+        {
+          "path": "color.chip.success.bg",
+          "kind": "color",
+          "light": "rgba(22, 163, 74, 0.08)",
+          "dark": "rgba(34, 197, 94, 0.16)"
+        },
+        {
+          "path": "color.chip.success.border",
+          "kind": "color",
+          "light": "rgba(22, 163, 74, 0.22)",
+          "dark": "rgba(34, 197, 94, 0.3)"
+        },
+        {
+          "path": "color.chip.success.text",
+          "kind": "color",
+          "light": "#15803d",
+          "dark": "#86EFAC"
+        },
+        {
+          "path": "color.chip.warning.bg",
+          "kind": "color",
+          "light": "rgba(234,179,8,0.16)",
+          "dark": "rgba(234,179,8,0.20)"
+        },
+        {
+          "path": "color.chip.warning.border",
+          "kind": "color",
+          "light": "rgba(202,138,4,0.40)",
+          "dark": "rgba(234,179,8,0.42)"
+        },
+        {
+          "path": "color.chip.warning.text",
+          "kind": "color",
+          "light": "#854d0e",
+          "dark": "#FDE047"
+        },
+        {
+          "path": "color.text.primary",
+          "kind": "color",
+          "light": "#111",
+          "dark": "#F5F5F7"
+        },
+        {
+          "path": "fontSize.md",
+          "kind": "value",
+          "light": "0.875rem",
+          "dark": "0.875rem"
+        },
+        {
+          "path": "fontWeight.semibold",
+          "kind": "value",
+          "light": "600",
+          "dark": "600"
+        },
+        {
+          "path": "lineHeight.body",
+          "kind": "value",
+          "light": "1.3",
+          "dark": "1.3"
+        },
+        {
+          "path": "radius.lg",
+          "kind": "value",
+          "light": "16px",
+          "dark": "16px"
+        },
+        {
+          "path": "radius.md",
+          "kind": "value",
+          "light": "8px",
+          "dark": "8px"
+        },
+        {
+          "path": "radius.sm",
+          "kind": "value",
+          "light": "4px",
+          "dark": "4px"
+        },
+        {
+          "path": "space.lg",
+          "kind": "value",
+          "light": "0.625rem",
+          "dark": "0.625rem"
+        },
+        {
+          "path": "space.md",
+          "kind": "value",
+          "light": "0.5rem",
+          "dark": "0.5rem"
+        },
+        {
+          "path": "space.sm",
+          "kind": "value",
+          "light": "0.375rem",
+          "dark": "0.375rem"
+        },
+        {
+          "path": "space.xxs",
+          "kind": "value",
+          "light": "0.125rem",
+          "dark": "0.125rem"
+        }
+      ],
+      "changelog": [
+        {
+          "version": "0.5.0",
+          "date": "2026-11-24",
+          "tags": [
+            "Page",
+            "Dialog",
+            "Card",
+            "CardRow",
+            "Alert",
+            "Surface",
+            "Popover",
+            "Menu",
+            "Select",
+            "Button"
+          ],
+          "text": "Surface depth: corners are concentric site-wide with no radius props. `Page` provides depth 0, `Dialog` 1, and `Card`, `CardRow` and `Alert` each provide one level deeper than where they sit; `Popover` (so `Menu` and the `Select` list) provides a fixed 2. Depth 0 is `radius.lg`, 1 is `md`, 2 and deeper is `sm`. `Button`, `Select`, `Card`, `CardRow` and `Alert` follow it; an explicit `Button radius` or `Select surface` still wins. With no `Page`, `Dialog`, `Card`, `CardRow`, `Alert` or `Surface` above it, a component keeps its 0.4.0 look; a bare `Card` (no `Page`) still counts as depth 0 and gives its contents depth 1, so its Buttons and nested Cards change as below."
+        },
+        {
+          "version": "0.5.0",
+          "date": "2026-11-24",
+          "tags": [
+            "Alert"
+          ],
+          "text": "New `Alert` (component): a tinted box with a `tone` (`warning`, `danger`, `success`, `info`), optional `title`, `Icon` and `action`, and body text. `danger` and `warning` get `role=\"alert\"`, `success` and `info` get `role=\"status\"`."
+        }
+      ]
+    },
+    {
+      "id": "component/stack",
+      "slug": "stack",
+      "entry": "@korzun/design/component",
+      "docPath": "docs/component/stack.md",
+      "title": "Stack",
+      "description": "A vertical column with a themed gap between children.",
+      "category": "Layout",
+      "values": [
+        "Stack"
+      ],
+      "types": [
+        "StackProps"
+      ],
+      "importLine": "import { Stack, type StackProps } from '@korzun/design/component'",
+      "body": "A vertical flex column with a themed gap between children. Use it to space\nthings on a screen instead of writing a style file: a form's fields, the\nsections of a page, the rows of a list.\n\nUse something else for: a horizontal row (`Inline`), a bordered surface\n(`Card`), a divider line between items (`CardDivider`), text styling (`Text`,\n`Heading`).\n\n## Usage\n\n### Choosing a gap\n\nPick `gap` from the theme's `space` scale so spacing is the same everywhere:\n`xs` for tight groups, `md` (the default) for most content, `xxl` between\nsections. `gap=\"none\"` emits `gap: 0`, for children that supply their own\nspacing.\n\n### Behaviour\n\n- `align` is the horizontal (cross-axis) alignment. The default `stretch` makes\n  children full width; `start` keeps buttons and tags at their own width.\n- `as=\"ul\"` and `as=\"ol\"` also reset the list's margin, padding and bullets.\n  Children should be `li` (`<Stack as=\"li\">` works).\n- Every other HTML attribute (`id`, `aria-*`, `data-*`, event handlers) passes\n  through. There is no `style` prop: spacing comes from tokens only.\n- Override with `className` at `'&&'` specificity, never `!important`.\n- `as=\"form\"` is not offered. Put a `<form>` around the Stack instead.\n\n## Do / don't\n\n- Do nest a Stack in a Stack for sections with different gaps.\n- Do use `align=\"start\"` when children (buttons, tags) should not stretch.\n- Don't add margins to children to space them; use `gap`.\n- Don't reach for `className` to set a gap; use the prop.\n- Don't use a Stack for a row; use `Inline`.",
+      "examples": [
+        {
+          "file": "src/component/stack/examples/01-basic.tsx",
+          "slug": "basic",
+          "order": 1,
+          "title": "Basic",
+          "description": "A form's fields, spaced by the default `md` gap. Put the `<form>` around the\nStack; children stretch to the full width.",
+          "code": "import { Stack } from '@korzun/design/component';\nimport { TextInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Basic() {\n  const [title, setTitle] = useState<string | undefined>('Middlemarch');\n  const [author, setAuthor] = useState<string | undefined>('George Eliot');\n  return (\n    <form noValidate onSubmit={(event) => event.preventDefault()}>\n      <Stack>\n        <TextInput name=\"title\" label=\"Title\" value={title} onChange={setTitle} />\n        <TextInput name=\"author\" label=\"Author\" value={author} onChange={setAuthor} />\n      </Stack>\n    </form>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/stack/examples/02-gaps.tsx",
+          "slug": "gaps",
+          "order": 2,
+          "title": "Gaps",
+          "description": "`gap` takes a key of the theme's `space` scale: `xs` for tight groups, `md`\n(the default) for most content, `xxl` between sections. `none` is for\nchildren that bring their own spacing.",
+          "code": "import { Inline, Stack, Tag, Text } from '@korzun/design/component';\n\nconst gaps = ['none', 'xs', 'md', 'xxl'] as const;\n\nexport default function Gaps() {\n  return (\n    <Inline gap=\"xxl\" align=\"start\" wrap>\n      {gaps.map((gap) => (\n        <Stack key={gap} gap=\"xs\" align=\"start\">\n          <Text size=\"sm\" tone=\"muted\">\n            gap=&quot;{gap}&quot;\n          </Text>\n          <Stack gap={gap} align=\"start\">\n            <Tag>One</Tag>\n            <Tag>Two</Tag>\n            <Tag>Three</Tag>\n          </Stack>\n        </Stack>\n      ))}\n    </Inline>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/stack/examples/03-align.tsx",
+          "slug": "align",
+          "order": 3,
+          "title": "Alignment",
+          "description": "`align` sets the horizontal (cross-axis) placement. The default `stretch` makes\nevery child full width; use `start` so buttons and tags keep their own width.",
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\n\nconst aligns = ['stretch', 'start', 'center', 'end'] as const;\n\nexport default function Align() {\n  return (\n    <Stack gap=\"lg\">\n      {aligns.map((align) => (\n        <Stack key={align} gap=\"xs\" align={align}>\n          <Text size=\"sm\" tone=\"muted\">\n            align=&quot;{align}&quot;\n          </Text>\n          <Button>Add a book</Button>\n        </Stack>\n      ))}\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/stack/examples/04-list.tsx",
+          "slug": "list",
+          "order": 4,
+          "title": "A semantic list",
+          "description": "`as=\"ul\"` renders a list and resets its margin, padding and bullets. Make each\nchild an `li`; `<Stack as=\"li\">` works.",
+          "code": "import { Stack, Text } from '@korzun/design/component';\n\nconst books = [\n  { id: 1, title: 'Middlemarch', author: 'George Eliot' },\n  { id: 2, title: 'Bleak House', author: 'Charles Dickens' },\n  { id: 3, title: 'Persuasion', author: 'Jane Austen' },\n];\n\nexport default function List() {\n  return (\n    <Stack as=\"ul\" gap=\"sm\">\n      {books.map((book) => (\n        <Stack as=\"li\" key={book.id} gap=\"none\">\n          <Text weight=\"semibold\">{book.title}</Text>\n          <Text size=\"sm\" tone=\"muted\">\n            {book.author}\n          </Text>\n        </Stack>\n      ))}\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/stack/examples/05-nested-with-inline.tsx",
+          "slug": "nested-with-inline",
+          "order": 5,
+          "title": "Nested with Inline",
+          "description": "Nest Stacks for sections with different gaps, and use `Inline` for each row.\nThe outer `xxl` gap separates sections; the inner `sm` gap groups a heading\nwith its content.",
+          "code": "import { Heading, Inline, Stack, Tag, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\n\nexport default function NestedWithInline() {\n  return (\n    <Stack gap=\"xxl\">\n      <Stack as=\"section\" gap=\"sm\">\n        <Inline justify=\"between\">\n          <Heading level={3}>Currently reading</Heading>\n          <Button type=\"link\">See all</Button>\n        </Inline>\n        <Inline wrap>\n          <Tag>Fiction</Tag>\n          <Tag tone=\"author\">George Eliot</Tag>\n        </Inline>\n      </Stack>\n      <Stack as=\"section\" gap=\"sm\">\n        <Heading level={3}>Up next</Heading>\n        <Text tone=\"muted\">Nothing queued yet.</Text>\n      </Stack>\n    </Stack>\n  );\n}\n"
+        }
+      ],
+      "tables": [
+        {
+          "name": "StackProps",
+          "kind": "props",
+          "rows": [
+            {
+              "name": "children",
+              "type": "ReactNode",
+              "required": false,
+              "description": "The children, laid out top to bottom."
+            },
+            {
+              "name": "align",
+              "type": "'stretch' | 'start' | 'center' | 'end'",
+              "required": false,
+              "description": "Cross-axis (horizontal) alignment of children; `start`/`end` map to `flex-start`/`flex-end`. Default `'stretch'`.",
+              "default": "'stretch'"
+            },
+            {
+              "name": "as",
+              "type": "'div' | 'section' | 'ul' | 'ol' | 'li'",
+              "required": false,
+              "description": "The element to render. `ul`/`ol` also reset list margin, padding and bullets. Default `'div'`.",
+              "default": "'div'"
+            },
+            {
+              "name": "className",
+              "type": "string",
+              "required": false,
+              "description": "Extra class, added last on the root. Override with `'&&'` specificity, never `!important`."
+            },
+            {
+              "name": "gap",
+              "type": "keyof Theme['space'] | 'none'",
+              "required": false,
+              "description": "Space between children, from the theme's `space` tokens, or `'none'`. Default `'md'`.",
+              "default": "'md'"
+            },
+            {
+              "name": "ref",
+              "type": "Ref<HTMLElement>",
+              "required": false,
+              "description": "Ref to the root element."
+            }
+          ],
+          "extends": [
+            "HTMLAttributes"
+          ]
+        }
+      ],
+      "tokens": [
+        {
+          "path": "space.lg",
+          "kind": "value",
+          "light": "0.625rem",
+          "dark": "0.625rem"
+        },
+        {
+          "path": "space.md",
+          "kind": "value",
+          "light": "0.5rem",
+          "dark": "0.5rem"
+        },
+        {
+          "path": "space.sm",
+          "kind": "value",
+          "light": "0.375rem",
+          "dark": "0.375rem"
+        },
+        {
+          "path": "space.xl",
+          "kind": "value",
+          "light": "0.75rem",
+          "dark": "0.75rem"
+        },
+        {
+          "path": "space.xs",
+          "kind": "value",
+          "light": "0.25rem",
+          "dark": "0.25rem"
+        },
+        {
+          "path": "space.xxl",
+          "kind": "value",
+          "light": "1rem",
+          "dark": "1rem"
+        },
+        {
+          "path": "space.xxs",
+          "kind": "value",
+          "light": "0.125rem",
+          "dark": "0.125rem"
+        },
+        {
+          "path": "space.xxxl",
+          "kind": "value",
+          "light": "1.25rem",
+          "dark": "1.25rem"
+        },
+        {
+          "path": "space.xxxs",
+          "kind": "value",
+          "light": "0.1rem",
+          "dark": "0.1rem"
+        },
+        {
+          "path": "space.xxxxl",
+          "kind": "value",
+          "light": "1.5rem",
+          "dark": "1.5rem"
+        },
+        {
+          "path": "space.xxxxxl",
+          "kind": "value",
+          "light": "2rem",
+          "dark": "2rem"
+        }
+      ],
+      "changelog": [
+        {
+          "version": "0.2.0",
+          "date": "2026-11-21",
+          "tags": [
+            "Stack",
+            "Inline",
+            "Text",
+            "Heading"
+          ],
+          "text": "New `Stack` (vertical flex column; `gap`, default `md`), `Inline` (horizontal row; `gap` default `sm`, `justify` including `between`), `Text` (`size`, `tone`, `weight`; unset props inherit), and `Heading` (`level` 1–4), so layout and text are set with props instead of style files."
+        },
+        {
+          "version": "0.2.0",
+          "date": "2026-11-21",
+          "tags": [
+            "Text",
+            "Heading",
+            "Stack",
+            "Inline"
+          ],
+          "text": "`truncate` on `Text` and `Heading` clips inside `Stack` (any `align`), `Inline`, and a `Stack` nested in an `Inline`; `Stack` and `Inline` roots have `min-width: 0`."
+        }
+      ]
+    }
+  ],
   "guides": [],
   "changelog": [
     {

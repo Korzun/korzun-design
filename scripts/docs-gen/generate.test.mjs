@@ -167,6 +167,30 @@ test('tokens follow style.ts imports transitively, cycle-safe', () => {
   );
 });
 
+test('tokens do not follow imports into src/theme (the provider and global styles)', () => {
+  const root = fixture();
+  put(
+    root,
+    'src/control/widget/style.ts',
+    "import { createUseStyles } from '../../theme/index.js';\nexport const s = (theme) => ({ color: theme.color.text });\n"
+  );
+  put(
+    root,
+    'src/theme/index.ts',
+    'export const createUseStyles = (theme) => ({ bg: theme.color.page });\n'
+  );
+  put(
+    root,
+    'dist/theme/theme.js',
+    "export const lightTheme = { color: { text: '#111111', page: '#ffffff' } };\nexport const darkTheme = lightTheme;\n"
+  );
+  const site = JSON.parse(generate(root).get('gallery/generated/site-data.json'));
+  assert.deepEqual(
+    site.modules[0].tokens.map((t) => t.path),
+    ['color.text']
+  );
+});
+
 test(
   'real repo: stack tokens include a space path',
   { skip: !existsSync(join(realRepo, 'dist')) && 'dist missing; run npm run build' },

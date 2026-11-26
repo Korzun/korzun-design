@@ -1,5 +1,5 @@
 import cx from 'classnames';
-import { ComponentType, Ref, useCallback } from 'react';
+import { ComponentType, ReactNode, Ref, useCallback } from 'react';
 import { useFormStatus } from 'react-dom';
 
 import { depthClass, useSurfaceDepth } from '../../component/surface/index.js';
@@ -8,67 +8,77 @@ import { ButtonType, ButtonTypeValue, ButtonRadius, ButtonRadiusValue, useStyle 
 
 type ButtonVariant =
   | {
-      /** Red treatment for destructive actions. Mutually exclusive with `success`. */
+      /** Red treatment for destructive actions. Mutually exclusive with `success` (setting both is a type error). */
       danger?: boolean;
       success?: false | undefined;
     }
   | {
-      /** Green treatment. Mutually exclusive with `danger`. */
+      /** Green treatment. Mutually exclusive with `danger` (setting both is a type error). */
       success?: boolean;
       danger?: false | undefined;
     };
 
 export type ButtonProps = React.PropsWithChildren<
   {
+    /** The label. */
+    children?: ReactNode;
     /**
      * Accessible name when the visible children are not distinguishing enough
      * on their own — several "Remove" buttons in a list, each belonging to a
      * different row.
      */
     ariaLabel?: string;
-    /** For a disclosure button: the state of what it controls, and its id. */
+    /** For a disclosure button: whether the element it controls is expanded. */
     ariaExpanded?: boolean;
     /** For a disclosure button: the id of the element it controls. */
     ariaControls?: string;
-    /** Announces that the button opens a popup of this kind (`'menu'` for a menu trigger). */
+    /** Announces that the button opens a popup of this kind (`'menu'` for a menu trigger). Rendered in both modes. */
     ariaHasPopup?: 'menu' | 'listbox' | 'dialog' | boolean;
     /** Extra class; win specificity with `'&&'` in your sheet, never `!important`. */
     className?: string;
     /** Greys the button out and blocks clicks. */
     disabled?: boolean;
-    /** Id of the `<form>` to submit, for a `submit` button outside its form. */
+    /** Id of the `<form>` to submit, for a `submit` button outside its form (e.g. in a `Card` footer). */
     form?: string;
     /** Shows a spinner in place of the icons and blocks clicks. */
     loading?: boolean;
     /**
-     * Applies to the default (div) mode only. In submit mode it is ignored:
-     * native form submission (driven by the associated <form>) fires instead.
-     * Receives no event.
+     * Click and Enter/Space handler. **Ignored when `submit` is set**; the form
+     * submits instead. Receives no event. Not called while `disabled` or `loading`.
+     * @default () => {}
      */
     onClick?: () => void;
     /** Icon component shown before the label (`prefix={SearchIcon}`), not an element. */
     prefix?: ComponentType<IconProps>;
-    /** The surface the button sits on: `'background'`, `'card'`, `'inset'`, `'modal'`. Unset, it follows where the button sits (16px on a page, 8px in a card or dialog, 4px deeper, 16px outside any surface). */
+    /**
+     * The surface the button sits on: `'background'`, `'card'`, `'inset'`, `'modal'`.
+     * Unset (the default), the radius follows surface depth: 16px on a page or
+     * outside any surface, 8px in a Card or Dialog, 4px in a Popover or nested
+     * Card. Pass it only to override; see `docs/corners.md`.
+     */
     radius?: ButtonRadiusValue;
-    /** Ref to the root element (the `<div role="button">`, or the `<button>` in submit mode), e.g. to `.focus()` it. */
+    /** Ref to the root element (the `<div role="button">`, or the `<button>` in submit mode), e.g. to `.focus()` it. A plain prop; no `forwardRef`. */
     ref?: Ref<HTMLElement>;
     /**
-     * Render a native `<button type="submit">`; also spins while the enclosing
-     * form action is pending. `onClick` is then ignored.
+     * Render a native `<button type="submit">`. Also shows the spinner while the
+     * enclosing form action is pending (`useFormStatus`). `onClick` is then ignored.
      */
     submit?: boolean;
     /** Icon component shown after the label (`suffix={ChevronIcon}`), not an element. */
     suffix?: ComponentType<IconProps>;
     /**
-     * Defaults to 0 so the div-mode button is keyboard-focusable; an explicit
-     * value wins, except it is forced to -1 while disabled or loading (div mode).
+     * Div mode defaults to `0`, so the button is keyboard-focusable; an explicit
+     * value wins, except it is forced to `-1` while `disabled` or `loading`.
+     * Submit mode uses the native `<button>`, so the value is passed through.
+     * @default 0 (div mode)
      */
     tabIndex?: number;
     /** Native tooltip; passed through. */
     title?: string;
     /**
-     * Visual variant (`'default'`, `'primary'`, `'text'`, `'link'`, `'dashed'`),
+     * **Visual variant** (`'default'`, `'primary'`, `'text'`, `'link'`, `'dashed'`),
      * not the HTML `type`. Use `submit` for a submit button.
+     * @default 'default'
      */
     type?: ButtonTypeValue;
   } & ButtonVariant

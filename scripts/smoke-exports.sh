@@ -23,6 +23,18 @@ while IFS= read -r doc; do
   grep -qx "package/$doc" <<<"$listing" || { echo "smoke: tarball is missing $doc"; exit 1; }
 done < <(find docs -name '*.md' -not -path 'docs/superpowers/*' | sort)
 if grep -q '^package/docs/superpowers/' <<<"$listing"; then echo "smoke: tarball contains docs/superpowers"; exit 1; fi
+if grep '/examples/' <<<"$listing"; then echo "smoke: tarball contains examples"; exit 1; fi
+mkdir "$tmp/pkg"
+tar -xzf "${tarballs[0]}" -C "$tmp/pkg"
+node -e '
+  const fs = require("node:fs");
+  const path = require("node:path");
+  const empty = /<!-- generated:([a-z]+) -->\s*<!-- \/generated:\1 -->/;
+  const walk = (d) => fs.readdirSync(d, { withFileTypes: true }).flatMap((e) =>
+    e.isDirectory() ? walk(path.join(d, e.name)) : e.name.endsWith(".md") ? [path.join(d, e.name)] : []);
+  const bad = walk(process.argv[1]).filter((f) => empty.test(fs.readFileSync(f, "utf8")));
+  if (bad.length) { console.log("smoke: empty generated region in " + bad.join(", ")); process.exit(1); }
+' "$tmp/pkg/package/docs"
 tarball="$(basename "${tarballs[0]}")"
 
 peer() { node -p "require('$repo/package.json').peerDependencies['$1']"; }
