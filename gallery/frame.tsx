@@ -69,22 +69,35 @@ const Flow = ({ children }: { children: ReactNode }) => {
       postToWindow(window.parent, { type: 'gallery:height', height });
     };
     post();
+    // Measured a frame later, not inside the event: when the frame resizes, a
+    // top-side popover (anchored by CSS `bottom`) moves with the viewport
+    // until it re-measures on the same resize, and measuring before that would
+    // read a position it is about to leave and feed it back into the height.
+    let pending = 0;
+    const later = () => {
+      if (pending) return;
+      pending = requestAnimationFrame(() => {
+        pending = 0;
+        post();
+      });
+    };
     // Overlays open, move and close through DOM changes (a portal added, a
     // dialog's `open`, a popover's position style) and on frame resize.
-    const mutations = new MutationObserver(post);
+    const mutations = new MutationObserver(later);
     mutations.observe(document.body, {
       childList: true,
       subtree: true,
       attributes: true,
       attributeFilter: ['open', 'style'],
     });
-    window.addEventListener('resize', post);
-    const resize = typeof ResizeObserver === 'undefined' ? undefined : new ResizeObserver(post);
+    window.addEventListener('resize', later);
+    const resize = typeof ResizeObserver === 'undefined' ? undefined : new ResizeObserver(later);
     resize?.observe(el);
     return () => {
       mutations.disconnect();
-      window.removeEventListener('resize', post);
+      window.removeEventListener('resize', later);
       resize?.disconnect();
+      cancelAnimationFrame(pending);
     };
   }, []);
   return (

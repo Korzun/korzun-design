@@ -34,6 +34,16 @@ describe('contentHeight', () => {
     expect(contentHeight(wrapper)).toBe(300 + 2 * 16);
   });
 
+  it('leaves out a top-side popover (placed by CSS bottom): it ends at its trigger', () => {
+    const popover = place(document.createElement('div'), 300, 200);
+    popover.style.bottom = '52px';
+    document.body.append(popover);
+    expect(contentHeight(wrapper)).toBe(100);
+    popover.style.bottom = '';
+    popover.style.top = '300px';
+    expect(contentHeight(wrapper)).toBe(300 + 200 + 16);
+  });
+
   it('reaches a fixed popover inside an open dialog', () => {
     const dialog = place(document.createElement('dialog'), 0, 50);
     dialog.setAttribute('open', '');
@@ -95,6 +105,22 @@ describe('overlayTop', () => {
   });
 
   it('is null when nothing is open', () => {
+    expect(overlayTop(wrapper)).toBeNull();
+  });
+
+  it('ignores body elements that render nothing (the dev module script, a hidden node)', () => {
+    const script = place(document.createElement('script'), 0, 0);
+    script.type = 'module';
+    document.body.append(script);
+    const hidden = place(document.createElement('div'), 0, 0);
+    hidden.style.display = 'none';
+    document.body.append(hidden);
+    expect(overlayTop(wrapper)).toBeNull();
+    expect(contentHeight(wrapper)).toBe(100);
+    const popover = place(document.createElement('div'), -40, 100);
+    document.body.append(popover);
+    expect(overlayTop(wrapper)).toBe(-40);
+    popover.remove();
     expect(overlayTop(wrapper)).toBeNull();
   });
 

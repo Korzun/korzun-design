@@ -1,4 +1,4 @@
-import { act, render, screen } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router';
 
 import { Frame, FrameNavigatedAway } from './frame.js';
@@ -72,9 +72,9 @@ describe('Frame', () => {
     const portal = document.createElement('div');
     portal.getBoundingClientRect = () => ({ bottom: 900 }) as DOMRect;
     await act(async () => document.body.append(portal));
-    expect(heights().at(-1)).toBeGreaterThanOrEqual(900);
+    await waitFor(() => expect(heights().at(-1)).toBeGreaterThanOrEqual(900));
     await act(async () => portal.remove());
-    expect(heights().at(-1)).toBe(base);
+    await waitFor(() => expect(heights().at(-1)).toBe(base));
     post.mockRestore();
   });
 
@@ -85,6 +85,11 @@ describe('Frame', () => {
         .map((call) => call[0] as { type?: string; height?: number })
         .filter((m) => m.type === 'gallery:height')
         .map((m) => m.height);
+    // The dev server keeps its module script in the body: it is not an overlay.
+    const script = document.createElement('script');
+    script.type = 'module';
+    script.getBoundingClientRect = () => ({ top: 0, bottom: 0 }) as DOMRect;
+    document.body.append(script);
     mount('/frame/button/basic');
     const [base] = heights();
     const padded = () =>
@@ -96,15 +101,17 @@ describe('Frame', () => {
     const portal = document.createElement('div');
     portal.getBoundingClientRect = () => ({ top: -60, bottom: 40 }) as DOMRect;
     await act(async () => document.body.append(portal));
+    await waitFor(() => expect(padded()).toHaveLength(1));
     const [flow] = padded();
     expect(flow).toContainElement(screen.getByRole('button', { name: 'Save' }));
     expect(parseFloat(flow.style.paddingTop)).toBeGreaterThanOrEqual(60);
     // The popover re-measures against the moved anchor.
     expect(resized).toHaveBeenCalled();
     await act(async () => portal.remove());
-    expect(padded()).toEqual([]);
-    expect(heights().at(-1)).toBe(base);
+    await waitFor(() => expect(padded()).toEqual([]));
+    await waitFor(() => expect(heights().at(-1)).toBe(base));
     window.removeEventListener('resize', resized);
+    script.remove();
     post.mockRestore();
   });
 

@@ -11,12 +11,22 @@ const viewportGap = (dialog: HTMLElement, view: Window) => {
   return m ? Number(m[1]) : 0;
 };
 
+// Elements that never paint a box: the dev server keeps its module <script>
+// in the body, and a zero rect at the top would read as an overlay at 0.
+const NON_RENDERING = new Set(['SCRIPT', 'STYLE', 'LINK', 'TEMPLATE', 'NOSCRIPT', 'META']);
+
 // Overlays outside the flow: body children that do not hold the wrapper (a
-// portalled popover), and fixed children of an open dialog (a popover in it).
+// portalled popover) and render a box, and fixed children of an open dialog
+// (a popover in it).
 const overlays = (wrapper: HTMLElement): Element[] => {
   const doc = wrapper.ownerDocument;
   const view = doc.defaultView ?? window;
-  const found = [...doc.body.children].filter((child) => !child.contains(wrapper));
+  const found = [...doc.body.children].filter(
+    (child) =>
+      !child.contains(wrapper) &&
+      !NON_RENDERING.has(child.tagName) &&
+      view.getComputedStyle(child).display !== 'none'
+  );
   for (const dialog of doc.querySelectorAll<HTMLElement>('dialog[open]')) {
     for (const child of dialog.children) {
       if (view.getComputedStyle(child).position === 'fixed') found.push(child);
@@ -42,7 +52,9 @@ export const contentHeight = (wrapper: HTMLElement): number => {
   const pad = parseFloat(view.getComputedStyle(wrapper).paddingBottom) || 0;
   const bottom = (el: Element) => el.getBoundingClientRect().bottom + view.scrollY + pad;
   let height = wrapper.getBoundingClientRect().height;
-  for (const el of overlays(wrapper)) height = Math.max(height, bottom(el));
+  for (const el of overlays(wrapper)) {
+    if (!bottomAnchored(el)) height = Math.max(height, bottom(el));
+  }
   for (const dialog of doc.querySelectorAll<HTMLElement>('dialog[open]')) {
     const full = dialogHeight(dialog);
     const top = dialog.getBoundingClientRect().top + view.scrollY;
@@ -52,6 +64,13 @@ export const contentHeight = (wrapper: HTMLElement): number => {
   }
   return Math.ceil(height);
 };
+
+// A popover on the top side is placed by CSS `bottom` and ends at its trigger,
+// inside the wrapper; its rect also slides with the viewport until it
+// re-measures, so counting its bottom would feed the frame's own resize back
+// into the height.
+const bottomAnchored = (el: Element) =>
+  el instanceof HTMLElement && el.style.bottom !== '' && el.style.top === '';
 
 /**
  * The highest top edge (document coordinates) of any overlay open outside the
