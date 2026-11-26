@@ -105,14 +105,14 @@ export default function Basic() {
 
 The same `items` array drives `PageActionsBar`, so items carry `primary` and
 `align`; this menu lists every item in order and ignores both. Edit and Read
-are marked `primary` and still appear. `Icon` takes an icon component,
-`intentProps` runs when the pointer, focus or a touch reaches Download,
+are marked `primary` and still appear. `Icon` takes an icon component (Read
+shows a book), `intentProps` runs when the pointer, focus or a touch reaches Download,
 Archive is `disabled`, and Delete is `danger` with a `separatorBefore`.
 
 ```tsx
 import { Stack, Text } from '@korzun/design/component';
 import { PageActionsMenu } from '@korzun/design/control';
-import { UploadIcon } from '@korzun/design/icon';
+import { BookIcon } from '@korzun/design/icon';
 import { useState } from 'react';
 
 export default function ItemOptions() {
@@ -124,11 +124,16 @@ export default function ItemOptions() {
       <PageActionsMenu
         items={[
           { label: 'Edit', onClick: () => setChosen('Edit'), primary: true },
-          { label: 'Read', onClick: () => setChosen('Read'), primary: true, align: 'leading' },
+          {
+            label: 'Read',
+            onClick: () => setChosen('Read'),
+            primary: true,
+            align: 'leading',
+            Icon: BookIcon,
+          },
           {
             label: 'Download',
             onClick: () => setChosen('Download'),
-            Icon: UploadIcon,
             intentProps: { onMouseEnter: prefetch, onFocus: prefetch, onTouchStart: prefetch },
           },
           { label: 'Archive', onClick: () => setChosen('Archive'), disabled: true },
@@ -150,19 +155,35 @@ export default function ItemOptions() {
 ### In a Page
 
 The usual way to get it: pass `headerActions` to `Page`, which renders this
-menu at phone width and `PageActionsBar` on desktop from the same array.
+menu at phone width and `PageActionsBar` on desktop from the same array. With
+`back` the back button leads the row and the menu sits at the trailing end.
+Read is `primary` and `leading` and Download carries `intentProps`; the menu
+lists them all in order. Delete is `danger`, set apart by `separatorBefore`.
 
 ```tsx
-import { Card, Page, Text } from '@korzun/design/component';
+import { Card, Page, Stack, Text } from '@korzun/design/component';
 import { useState } from 'react';
 
 export default function InPage() {
   const [message, setMessage] = useState('Nothing chosen yet.');
+  const [prefetched, setPrefetched] = useState('nothing yet');
+  const prefetch = () => setPrefetched('Download');
   return (
     <Page
+      back="/library"
       headerActions={[
         { label: 'Edit', onClick: () => setMessage('Edit chosen'), primary: true },
-        { label: 'Download', onClick: () => setMessage('Download chosen') },
+        {
+          label: 'Read',
+          onClick: () => setMessage('Read chosen'),
+          primary: true,
+          align: 'leading',
+        },
+        {
+          label: 'Download',
+          onClick: () => setMessage('Download chosen'),
+          intentProps: { onMouseEnter: prefetch, onFocus: prefetch, onTouchStart: prefetch },
+        },
         {
           label: 'Delete',
           onClick: () => setMessage('Delete chosen'),
@@ -172,7 +193,10 @@ export default function InPage() {
       ]}
     >
       <Card title="Dune">
-        <Text>{message}</Text>
+        <Stack>
+          <Text>{message}</Text>
+          <Text tone="muted">Prefetched: {prefetched}</Text>
+        </Stack>
       </Card>
     </Page>
   );
