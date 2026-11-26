@@ -4,7 +4,7 @@
  * The switch holds the busy state on. The `onClick` that stops propagation keeps a
  * click in the dialog from reaching a clickable ancestor; dismissal is the hook's job.
  */
-import { Stack } from '@korzun/design/component';
+import { Inline, Stack, Surface } from '@korzun/design/component';
 import { Button, Switch, useModalDialog } from '@korzun/design/control';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { useState } from 'react';
@@ -26,25 +26,32 @@ export default function GatedDismissal() {
   const close = () => setIsOpen(false);
   const ref = useModalDialog(isOpen, close, !saving);
   return (
-    <>
+    <Inline>
       <Button onClick={() => setIsOpen(true)}>Open busy modal</Button>
       <dialog ref={ref} className={styles.dialog} onClick={(event) => event.stopPropagation()}>
-        <div className={styles.header}>Saving progress</div>
-        <div className={styles.body}>
-          <Stack>
-            Escape and the backdrop are ignored while the request is in flight.
-            <Switch name="saving" label="Request in flight" checked={saving} onChange={setSaving} />
-          </Stack>
-        </div>
-        <div className={styles.footer}>
-          <Button type="text" radius="modal" disabled={saving} onClick={close}>
-            Cancel
-          </Button>
-          <Button type="primary" radius="modal" loading={saving} onClick={close}>
-            Save
-          </Button>
-        </div>
+        <Surface>
+          <div className={styles.header}>Saving progress</div>
+          <div className={styles.body}>
+            <Stack>
+              Escape and the backdrop are ignored while the request is in flight.
+              <Switch
+                name="saving"
+                label="Request in flight"
+                checked={saving}
+                onChange={setSaving}
+              />
+            </Stack>
+          </div>
+          <div className={styles.footer}>
+            <Button type="text" disabled={saving} onClick={close}>
+              Cancel
+            </Button>
+            <Button type="primary" loading={saving} onClick={close}>
+              Save
+            </Button>
+          </div>
+        </Surface>
       </dialog>
-    </>
+    </Inline>
   );
 }

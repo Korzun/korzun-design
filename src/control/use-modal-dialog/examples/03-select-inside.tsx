@@ -1,9 +1,9 @@
 /** Select inside
  * A `Select` list opens inside the modal and takes Escape before the modal does. The
- * hook gives no surface depth, so the `Select` gets `surface="card"` to look like it
- * sits in a card instead of on the page.
+ * hook gives no surface depth, so the contents are wrapped in `Surface` and the
+ * `Select` gets card corners.
  */
-import { Inline, Text } from '@korzun/design/component';
+import { Inline, Surface, Text } from '@korzun/design/component';
 import { Button, Select, useModalDialog } from '@korzun/design/control';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { useState } from 'react';
@@ -30,23 +30,24 @@ export default function SelectInside() {
       <Button onClick={() => setIsOpen(true)}>Move book</Button>
       <Text tone="muted">Shelf: {shelf ?? 'none'}</Text>
       <dialog ref={ref} className={styles.dialog}>
-        <div className={styles.header}>Move book</div>
-        <div className={styles.body}>
-          <Select
-            name="shelf"
-            label="Shelf"
-            layout="vertical"
-            surface="card"
-            options={SHELVES}
-            value={shelf}
-            onChange={setShelf}
-          />
-        </div>
-        <div className={styles.footer}>
-          <Button type="primary" radius="modal" onClick={close}>
-            Done
-          </Button>
-        </div>
+        <Surface>
+          <div className={styles.header}>Move book</div>
+          <div className={styles.body}>
+            <Select
+              name="shelf"
+              label="Shelf"
+              layout="vertical"
+              options={SHELVES}
+              value={shelf}
+              onChange={setShelf}
+            />
+          </div>
+          <div className={styles.footer}>
+            <Button type="primary" onClick={close}>
+              Done
+            </Button>
+          </div>
+        </Surface>
       </dialog>
     </Inline>
   );

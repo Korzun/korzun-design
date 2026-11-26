@@ -54,6 +54,9 @@ Returns a ref to attach to the `<dialog>`.
 - The `<dialog>` must stay mounted. Rendering it conditionally (`{isOpen && <dialog…>}`)
   breaks `showModal()`; its children also stay mounted while closed, so reset
   any form state yourself when reopening.
+- A `Select` or `ChipsInput` works inside the modal: their dropdowns render
+  inside the open `<dialog>` that contains their anchor (see
+  [popover](popover.md)).
 - Never call `showModal()` / `close()` yourself.
 
 ### Styling
@@ -70,12 +73,10 @@ show it in full.
 - Do keep the `onClick={(e) => e.stopPropagation()}` on the `<dialog>` when it
   is rendered inside a clickable ancestor (a card row); it only stops bubbling,
   dismissal is the hook's job.
-- Do also pass `surface="card"` on `Select`s inside (or prefer `Dialog`): a modal declared at page level sits at depth 0, so an unset `Select` would take the page look (16px and shadow). Hand-drawn boxes are invisible to depth.
-- Do set `radius="modal"` on Buttons inside: this hook provides no surface depth (unlike `Dialog`), so it is an explicit override here. Use `md` corners for any inset
-  surface inside (see [corners](../corners.md)).
-- A `Select` or `ChipsInput` works inside the modal: their dropdowns render
-  inside the open `<dialog>` that contains their anchor (see
-  [popover](popover.md)).
+- Do wrap the dialog's contents (header, body, footer) in
+  [`Surface`](../component/surface.md): hand-drawn boxes are invisible to depth,
+  so the Buttons and Selects inside then get the same `md` corners as in a
+  `Dialog`, with no `radius` or `surface` override.
 
 <!-- generated:examples -->
 
@@ -86,10 +87,11 @@ show it in full.
 The hook returns a ref for a `<dialog>` that stays mounted. `isOpen` drives
 `showModal()` and `close()`; Escape and a click on the backdrop call `onDismiss`,
 which closes nothing itself, so it sets `isOpen` to `false`. The `<dialog>` takes
-the `theme.recipe.modal.*` styles.
+the `theme.recipe.modal.*` styles, and its contents are wrapped in `Surface` so the
+Buttons get the corners they would have in a `Dialog`.
 
 ```tsx
-import { Inline, Text } from '@korzun/design/component';
+import { Inline, Surface, Text } from '@korzun/design/component';
 import { Button, useModalDialog } from '@korzun/design/control';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { useState } from 'react';
@@ -115,23 +117,24 @@ export default function Basic() {
       <Button onClick={() => setIsOpen(true)}>Edit progress</Button>
       <Text tone="muted">Saved: {saves}</Text>
       <dialog ref={ref} className={styles.dialog}>
-        <div className={styles.header}>Edit progress</div>
-        <div className={styles.body}>You are on page 42 of 310.</div>
-        <div className={styles.footer}>
-          <Button type="text" radius="modal" onClick={close}>
-            Cancel
-          </Button>
-          <Button
-            type="primary"
-            radius="modal"
-            onClick={() => {
-              setSaves((n) => n + 1);
-              close();
-            }}
-          >
-            Save
-          </Button>
-        </div>
+        <Surface>
+          <div className={styles.header}>Edit progress</div>
+          <div className={styles.body}>You are on page 42 of 310.</div>
+          <div className={styles.footer}>
+            <Button type="text" onClick={close}>
+              Cancel
+            </Button>
+            <Button
+              type="primary"
+              onClick={() => {
+                setSaves((n) => n + 1);
+                close();
+              }}
+            >
+              Save
+            </Button>
+          </div>
+        </Surface>
       </dialog>
     </Inline>
   );
@@ -146,7 +149,7 @@ The switch holds the busy state on. The `onClick` that stops propagation keeps a
 click in the dialog from reaching a clickable ancestor; dismissal is the hook's job.
 
 ```tsx
-import { Stack } from '@korzun/design/component';
+import { Inline, Stack, Surface } from '@korzun/design/component';
 import { Button, Switch, useModalDialog } from '@korzun/design/control';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { useState } from 'react';
@@ -168,26 +171,33 @@ export default function GatedDismissal() {
   const close = () => setIsOpen(false);
   const ref = useModalDialog(isOpen, close, !saving);
   return (
-    <>
+    <Inline>
       <Button onClick={() => setIsOpen(true)}>Open busy modal</Button>
       <dialog ref={ref} className={styles.dialog} onClick={(event) => event.stopPropagation()}>
-        <div className={styles.header}>Saving progress</div>
-        <div className={styles.body}>
-          <Stack>
-            Escape and the backdrop are ignored while the request is in flight.
-            <Switch name="saving" label="Request in flight" checked={saving} onChange={setSaving} />
-          </Stack>
-        </div>
-        <div className={styles.footer}>
-          <Button type="text" radius="modal" disabled={saving} onClick={close}>
-            Cancel
-          </Button>
-          <Button type="primary" radius="modal" loading={saving} onClick={close}>
-            Save
-          </Button>
-        </div>
+        <Surface>
+          <div className={styles.header}>Saving progress</div>
+          <div className={styles.body}>
+            <Stack>
+              Escape and the backdrop are ignored while the request is in flight.
+              <Switch
+                name="saving"
+                label="Request in flight"
+                checked={saving}
+                onChange={setSaving}
+              />
+            </Stack>
+          </div>
+          <div className={styles.footer}>
+            <Button type="text" disabled={saving} onClick={close}>
+              Cancel
+            </Button>
+            <Button type="primary" loading={saving} onClick={close}>
+              Save
+            </Button>
+          </div>
+        </Surface>
       </dialog>
-    </>
+    </Inline>
   );
 }
 ```
@@ -195,11 +205,11 @@ export default function GatedDismissal() {
 ### Select inside
 
 A `Select` list opens inside the modal and takes Escape before the modal does. The
-hook gives no surface depth, so the `Select` gets `surface="card"` to look like it
-sits in a card instead of on the page.
+hook gives no surface depth, so the contents are wrapped in `Surface` and the
+`Select` gets card corners.
 
 ```tsx
-import { Inline, Text } from '@korzun/design/component';
+import { Inline, Surface, Text } from '@korzun/design/component';
 import { Button, Select, useModalDialog } from '@korzun/design/control';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { useState } from 'react';
@@ -226,23 +236,24 @@ export default function SelectInside() {
       <Button onClick={() => setIsOpen(true)}>Move book</Button>
       <Text tone="muted">Shelf: {shelf ?? 'none'}</Text>
       <dialog ref={ref} className={styles.dialog}>
-        <div className={styles.header}>Move book</div>
-        <div className={styles.body}>
-          <Select
-            name="shelf"
-            label="Shelf"
-            layout="vertical"
-            surface="card"
-            options={SHELVES}
-            value={shelf}
-            onChange={setShelf}
-          />
-        </div>
-        <div className={styles.footer}>
-          <Button type="primary" radius="modal" onClick={close}>
-            Done
-          </Button>
-        </div>
+        <Surface>
+          <div className={styles.header}>Move book</div>
+          <div className={styles.body}>
+            <Select
+              name="shelf"
+              label="Shelf"
+              layout="vertical"
+              options={SHELVES}
+              value={shelf}
+              onChange={setShelf}
+            />
+          </div>
+          <div className={styles.footer}>
+            <Button type="primary" onClick={close}>
+              Done
+            </Button>
+          </div>
+        </Surface>
       </dialog>
     </Inline>
   );
