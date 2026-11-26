@@ -6509,6 +6509,272 @@
       ]
     },
     {
+      "id": "component/progress-indicator",
+      "slug": "progress-indicator",
+      "entry": "@korzun/design/component",
+      "docPath": "docs/component/progress-indicator.md",
+      "title": "ProgressIndicator",
+      "description": "A small pie-style progress mark with a \"Not started\", percentage or \"Completed\" label.",
+      "category": "Feedback",
+      "values": [
+        "ProgressIndicator"
+      ],
+      "types": [
+        "ProgressIndicatorProps"
+      ],
+      "importLine": "import { ProgressIndicator, type ProgressIndicatorProps } from '@korzun/design/component'",
+      "body": "A small pie-style progress mark (a brand-coloured sector inside a ring) followed\nby a text label: \"Not started\" at 0, \"N%\" in between, \"Completed\" at 100%. The\nSVG is a `role=\"progressbar\"` with `aria-valuenow` 0–100.\n\nUse something else for: an indeterminate wait (`Spinner`, or `loading` on\na `Button`), a pull-to-refresh indicator (`usePullToRefresh`).\n\n## Usage\n\n### Surprising behaviour\n\n- **No SVG at exactly 0 or 1**: only the text label renders, so there is then\n  no `role=\"progressbar\"` and `ariaLabel` is not used. The visible text\n  (\"Not started\" / \"Completed\") carries the meaning.\n- The label is `Math.round`ed, so values just inside the range show \"0%\" or\n  \"100%\" next to a sliver or near-full pie (e.g. `0.996` shows \"100%\", not\n  \"Completed\").\n- Passing a percentage (`42`) clamps to 1 and shows \"Completed\".\n\n### Styling\n\nNo `className`.\n\n## Do / don't\n\n- Do pass a 0–1 fraction.\n- Do write an `ariaLabel` that names the thing in progress.\n- Don't render your own \"42%\" next to it; it already prints the label.\n- Don't use it for indeterminate loading.",
+      "examples": [
+        {
+          "file": "src/component/progress-indicator/examples/01-basic.tsx",
+          "slug": "basic",
+          "order": 1,
+          "title": "Basic",
+          "description": "`value` is a fraction from 0 to 1, not a percentage: `0.42` shows \"42%\". `ariaLabel` names the progress for assistive tech. The buttons step the value by a tenth.",
+          "code": "import { Inline, ProgressIndicator, Stack, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Basic() {\n  const [value, setValue] = useState(0.4);\n  return (\n    <Stack>\n      <ProgressIndicator value={value} ariaLabel=\"Reading progress for Middlemarch\" />\n      <Inline>\n        <Button onClick={() => setValue((v) => Math.max(0, Math.round((v - 0.1) * 10) / 10))}>\n          Less\n        </Button>\n        <Button onClick={() => setValue((v) => Math.min(1, Math.round((v + 0.1) * 10) / 10))}>\n          More\n        </Button>\n        <Text tone=\"muted\">value: {value}</Text>\n      </Inline>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/progress-indicator/examples/02-label-states.tsx",
+          "slug": "label-states",
+          "order": 2,
+          "title": "Label states",
+          "description": "The label reads \"Not started\" at 0, \"N%\" in between and \"Completed\" at 1. At exactly 0 or 1 only the label renders, with no pie. The label is rounded, so `0.996` shows \"100%\" next to a near-full pie, not \"Completed\". Each is labelled with its `value`.",
+          "code": "import { Inline, ProgressIndicator, Stack, Text } from '@korzun/design/component';\n\nexport default function LabelStates() {\n  return (\n    <Stack gap=\"sm\">\n      <Inline>\n        <ProgressIndicator value={0} ariaLabel=\"Upload progress\" />\n        <Text tone=\"muted\">value 0</Text>\n      </Inline>\n      <Inline>\n        <ProgressIndicator value={0.42} ariaLabel=\"Upload progress\" />\n        <Text tone=\"muted\">value 0.42</Text>\n      </Inline>\n      <Inline>\n        <ProgressIndicator value={0.996} ariaLabel=\"Upload progress\" />\n        <Text tone=\"muted\">value 0.996</Text>\n      </Inline>\n      <Inline>\n        <ProgressIndicator value={1} ariaLabel=\"Upload progress\" />\n        <Text tone=\"muted\">value 1</Text>\n      </Inline>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/progress-indicator/examples/03-sizes.tsx",
+          "slug": "sizes",
+          "order": 3,
+          "title": "Sizes",
+          "description": "`size` is the width and height of the pie in px. The label's font size does not scale with it. Each is labelled with its `size`.",
+          "code": "import { Inline, ProgressIndicator, Stack, Text } from '@korzun/design/component';\n\nexport default function Sizes() {\n  return (\n    <Stack gap=\"sm\">\n      <Inline>\n        <ProgressIndicator value={0.6} ariaLabel=\"Reading progress, 14\" size={14} />\n        <Text tone=\"muted\">size 14</Text>\n      </Inline>\n      <Inline>\n        <ProgressIndicator value={0.6} ariaLabel=\"Reading progress, 24\" size={24} />\n        <Text tone=\"muted\">size 24</Text>\n      </Inline>\n      <Inline>\n        <ProgressIndicator value={0.6} ariaLabel=\"Reading progress, 40\" size={40} />\n        <Text tone=\"muted\">size 40</Text>\n      </Inline>\n      <Inline>\n        <ProgressIndicator value={0.6} ariaLabel=\"Reading progress, 64\" size={64} />\n        <Text tone=\"muted\">size 64</Text>\n      </Inline>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/progress-indicator/examples/04-from-percent.tsx",
+          "slug": "from-percent",
+          "order": 4,
+          "title": "From a percentage",
+          "description": "A 0–100 API value is divided by 100 before it is passed; passing `42` itself would clamp to 1 and show \"Completed\". Pick a percent and the indicator follows.",
+          "code": "import { Inline, ProgressIndicator, Stack, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function FromPercent() {\n  const [percent, setPercent] = useState(42);\n  return (\n    <Stack>\n      <ProgressIndicator value={percent / 100} ariaLabel=\"Upload progress\" />\n      <Inline>\n        <Button onClick={() => setPercent(0)}>0%</Button>\n        <Button onClick={() => setPercent(42)}>42%</Button>\n        <Button onClick={() => setPercent(100)}>100%</Button>\n        <Text tone=\"muted\">API percent: {percent}</Text>\n      </Inline>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/progress-indicator/examples/05-in-a-row.tsx",
+          "slug": "in-a-row",
+          "order": 5,
+          "title": "In a row",
+          "description": "A small indicator beside a title in a list row. It prints its own label, so the row adds no \"42%\" next to it, and `ariaLabel` names the book.",
+          "code": "import { Card, Inline, ProgressIndicator, Stack, Text } from '@korzun/design/component';\n\nexport default function InARow() {\n  return (\n    <Card title=\"Reading\">\n      <Stack gap=\"sm\">\n        <Inline justify=\"between\">\n          <Text weight=\"semibold\">Middlemarch</Text>\n          <ProgressIndicator value={0.42} ariaLabel=\"Reading progress for Middlemarch\" size={14} />\n        </Inline>\n        <Inline justify=\"between\">\n          <Text weight=\"semibold\">Persuasion</Text>\n          <ProgressIndicator value={1} ariaLabel=\"Reading progress for Persuasion\" size={14} />\n        </Inline>\n      </Stack>\n    </Card>\n  );\n}\n"
+        }
+      ],
+      "tables": [
+        {
+          "name": "ProgressIndicatorProps",
+          "kind": "props",
+          "rows": [
+            {
+              "name": "ariaLabel",
+              "type": "string",
+              "required": true,
+              "description": "Accessible name of the progressbar: say what progress it is (`Reading progress for ${title}`), because a bare \"42%\" means nothing out of context. Not used at exactly 0 or 1, where no progressbar renders."
+            },
+            {
+              "name": "size",
+              "type": "number",
+              "required": false,
+              "description": "Width and height of the SVG in px. The label's font size is fixed (`fontSize.sm`) and does not scale.",
+              "default": "40"
+            },
+            {
+              "name": "value",
+              "type": "number",
+              "required": true,
+              "description": "A **fraction from 0 to 1**, not a percentage (`0.42` shows \"42%\"). Clamped to 0–1, so `42` shows \"Completed\"."
+            }
+          ]
+        }
+      ],
+      "tokens": [
+        {
+          "path": "color.brand.default",
+          "kind": "color",
+          "light": "#1777FF",
+          "dark": "#3696fe"
+        },
+        {
+          "path": "color.text.primary",
+          "kind": "color",
+          "light": "#111",
+          "dark": "#F5F5F7"
+        },
+        {
+          "path": "fontSize.sm",
+          "kind": "value",
+          "light": "0.75rem",
+          "dark": "0.75rem"
+        },
+        {
+          "path": "space.xs",
+          "kind": "value",
+          "light": "0.25rem",
+          "dark": "0.25rem"
+        }
+      ],
+      "changelog": []
+    },
+    {
+      "id": "component/spinner",
+      "slug": "spinner",
+      "entry": "@korzun/design/component",
+      "docPath": "docs/component/spinner.md",
+      "title": "Spinner",
+      "description": "A rotating loading indicator that takes the surrounding text colour and size.",
+      "category": "Feedback",
+      "values": [
+        "Spinner"
+      ],
+      "types": [
+        "SpinnerProps"
+      ],
+      "importLine": "import { Spinner, type SpinnerProps } from '@korzun/design/component'",
+      "body": "A rotating loading indicator. It is `1em` square, takes the surrounding text\ncolour (`currentColor`), and by default the surrounding font size, so it sits\ninline with text without any sizing. Use it for a page, panel or inline load\nthat has no progress value.\n\nUse something else for: a load with a known fraction (`ProgressIndicator`).\n`Button` (`loading`), `Select` (`loading`) and `Switch` (`loading`) draw their\nown spinner; do not add one beside them.\n\n## Usage\n\n### Behaviour\n\n- By default the root is a `span` with `role=\"status\"` and `aria-label={label}`,\n  so a screen reader announces the load. The inner icon is always `aria-hidden`.\n- With `decorative`, the root has no role and is `aria-hidden`.\n- Override with `className` at `'&&'` specificity, never `!important`.\n\n### Styling\n\nThere is no `style` prop and no other attribute passthrough.\n\n## Do / don't\n\n- Do use `decorative` when adjacent text names the load.\n- Do give a specific `label` when the spinner stands alone.\n- Don't hand-write `role=\"status\"` around it; it already has one.\n- Don't add a Spinner inside `Button`, `Select` or `Switch`; they draw their\n  own.",
+      "examples": [
+        {
+          "file": "src/component/spinner/examples/01-basic.tsx",
+          "slug": "basic",
+          "order": 1,
+          "title": "Basic",
+          "description": "With no props the spinner is `1em` square and takes the colour and font size of the text around it, so it sits inline without any sizing. The text names the load, so the spinner is `decorative`.",
+          "code": "import { Spinner, Stack, Text } from '@korzun/design/component';\n\nexport default function Basic() {\n  return (\n    <Stack gap=\"sm\">\n      <Text>\n        Syncing your library <Spinner decorative />\n      </Text>\n      <Text size=\"xl\" tone=\"muted\">\n        Fetching covers <Spinner decorative />\n      </Text>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/spinner/examples/02-sizes.tsx",
+          "slug": "sizes",
+          "order": 2,
+          "title": "Sizes",
+          "description": "`size` takes a `fontSize` token and sets the spinner to that many `em`. Each spinner is labelled with its size.",
+          "code": "import { Inline, Stack, Spinner, Text } from '@korzun/design/component';\n\nexport default function Sizes() {\n  return (\n    <Stack gap=\"sm\">\n      <Inline>\n        <Spinner size=\"xxs\" label=\"Loading, xxs\" />\n        <Text tone=\"muted\">xxs</Text>\n      </Inline>\n      <Inline>\n        <Spinner size=\"xs\" label=\"Loading, xs\" />\n        <Text tone=\"muted\">xs</Text>\n      </Inline>\n      <Inline>\n        <Spinner size=\"sm\" label=\"Loading, sm\" />\n        <Text tone=\"muted\">sm</Text>\n      </Inline>\n      <Inline>\n        <Spinner size=\"md\" label=\"Loading, md\" />\n        <Text tone=\"muted\">md</Text>\n      </Inline>\n      <Inline>\n        <Spinner size=\"lg\" label=\"Loading, lg\" />\n        <Text tone=\"muted\">lg</Text>\n      </Inline>\n      <Inline>\n        <Spinner size=\"xl\" label=\"Loading, xl\" />\n        <Text tone=\"muted\">xl</Text>\n      </Inline>\n      <Inline>\n        <Spinner size=\"xxl\" label=\"Loading, xxl\" />\n        <Text tone=\"muted\">xxl</Text>\n      </Inline>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/spinner/examples/03-decorative.tsx",
+          "slug": "decorative",
+          "order": 3,
+          "title": "Decorative",
+          "description": "Beside text that already names the load, set `decorative` so the spinner is hidden from assistive tech and `label` is ignored. With it off, the spinner is a `role=\"status\"` that a screen reader announces by its `label`, here a second time.",
+          "code": "import { Inline, Spinner, Stack, Text } from '@korzun/design/component';\nimport { Switch } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Decorative() {\n  const [decorative, setDecorative] = useState(true);\n  return (\n    <Stack>\n      <Switch name=\"decorative\" label=\"Decorative\" checked={decorative} onChange={setDecorative} />\n      <Inline gap=\"xs\">\n        <Spinner decorative={decorative} label=\"Loading books\" />\n        <Text>Loading books</Text>\n      </Inline>\n      <Text tone=\"muted\">\n        Screen readers: {decorative ? 'the spinner is hidden' : 'announce “Loading books” twice'}\n      </Text>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/spinner/examples/04-loading-page.tsx",
+          "slug": "loading-page",
+          "order": 4,
+          "title": "Loading page",
+          "description": "A page or panel load with no progress value: a large spinner above a line of text. The text names the load, so the spinner is `decorative`; with no text, give it a specific `label` instead.",
+          "code": "import { Spinner, Stack, Text } from '@korzun/design/component';\n\nexport default function LoadingPage() {\n  return (\n    <Stack align=\"center\" gap=\"sm\">\n      <Spinner size=\"xxl\" decorative />\n      <Text tone=\"muted\">Loading your library</Text>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/spinner/examples/05-standalone.tsx",
+          "slug": "standalone",
+          "order": 5,
+          "title": "Standalone",
+          "description": "With no text beside it, a spinner stands alone and the `label` is what a screen reader announces: make it specific.",
+          "code": "import { Spinner } from '@korzun/design/component';\n\nexport default function Standalone() {\n  return <Spinner size=\"xl\" label=\"Loading books\" />;\n}\n"
+        }
+      ],
+      "tables": [
+        {
+          "name": "SpinnerProps",
+          "kind": "props",
+          "rows": [
+            {
+              "name": "className",
+              "type": "string",
+              "required": false,
+              "description": "Added last on the root. Override with `'&&'` specificity, never `!important`."
+            },
+            {
+              "name": "decorative",
+              "type": "boolean",
+              "required": false,
+              "description": "Hides it from assistive tech (no role, `aria-hidden`), for use beside text that already names the load.",
+              "default": "false"
+            },
+            {
+              "name": "label",
+              "type": "string",
+              "required": false,
+              "description": "Accessible name of the status, announced as the loading state. Ignored when `decorative`.",
+              "default": "'Loading'"
+            },
+            {
+              "name": "size",
+              "type": "'xxs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl'",
+              "required": false,
+              "description": "Sets the font size from the theme's `fontSize` tokens, so the spinner is that many `em` square. Unset, it takes the surrounding font size."
+            }
+          ]
+        }
+      ],
+      "tokens": [
+        {
+          "path": "fontSize.lg",
+          "kind": "value",
+          "light": "1rem",
+          "dark": "1rem"
+        },
+        {
+          "path": "fontSize.md",
+          "kind": "value",
+          "light": "0.875rem",
+          "dark": "0.875rem"
+        },
+        {
+          "path": "fontSize.sm",
+          "kind": "value",
+          "light": "0.75rem",
+          "dark": "0.75rem"
+        },
+        {
+          "path": "fontSize.xl",
+          "kind": "value",
+          "light": "1.25rem",
+          "dark": "1.25rem"
+        },
+        {
+          "path": "fontSize.xs",
+          "kind": "value",
+          "light": "0.7rem",
+          "dark": "0.7rem"
+        },
+        {
+          "path": "fontSize.xxl",
+          "kind": "value",
+          "light": "1.75rem",
+          "dark": "1.75rem"
+        },
+        {
+          "path": "fontSize.xxs",
+          "kind": "value",
+          "light": "0.6rem",
+          "dark": "0.6rem"
+        },
+        {
+          "path": "recipe.spinner",
+          "kind": "recipe",
+          "light": null,
+          "dark": null
+        }
+      ],
+      "changelog": [
+        {
+          "version": "0.3.0",
+          "date": "2026-11-22",
+          "tags": [
+            "Spinner"
+          ],
+          "text": "New `Spinner` (component): a loading indicator that takes the surrounding text colour and size."
+        }
+      ]
+    },
+    {
       "id": "component/stack",
       "slug": "stack",
       "entry": "@korzun/design/component",
@@ -6706,6 +6972,442 @@
             "Inline"
           ],
           "text": "`truncate` on `Text` and `Heading` clips inside `Stack` (any `align`), `Inline`, and a `Stack` nested in an `Inline`; `Stack` and `Inline` roots have `min-width: 0`."
+        }
+      ]
+    },
+    {
+      "id": "component/tag",
+      "slug": "tag",
+      "entry": "@korzun/design/component",
+      "docPath": "docs/component/tag.md",
+      "title": "Tag",
+      "description": "A small coloured chip for a category, status or value, optionally clickable.",
+      "category": "Data display",
+      "values": [
+        "Tag"
+      ],
+      "types": [
+        "TagProps",
+        "TagTone"
+      ],
+      "importLine": "import { Tag, type TagProps, type TagTone } from '@korzun/design/component'",
+      "body": "A small coloured chip (an inline `<span>`) for a category, status, or value:\nan author, a subject, \"Read only\". Optionally clickable, in which case it\nbecomes `role=\"button\"` with `tabIndex=0` and Enter/Space.\n\nUse something else for: an editable list of chips (`ChipsInput` in\n`@korzun/design/control`), an action (`Button`), a count on a nav tab\n(`NavItem.badge`).\n\n## Usage\n\n### Choosing a tone\n\n`TagTone` is `keyof Theme['color']['chip']`. There are two groups: label tones\nare **domain names** (what kind of thing the tag names) and status tones are\n**meanings** (what state it reports). Neither group is a set of colour names:\nnever pick a tone for its colour. Pick by what the tag *is*:\n\nStatus tones report a state:\n\n| Tone | Use for |\n|---|---|\n| `success` | Something went well (Published, Paid). |\n| `warning` | Needs attention soon (Overdue, Expiring). |\n| `danger` | Something failed or is blocked (Failed, Rejected). |\n| `info` | Neutral news (Scheduled, New). |\n| `neutral` | A state with no category (\"no change\"): quiet grey. |\n\nLabel tones name a kind of thing:\n\n| Tone | Use for |\n|---|---|\n| `status` | Legacy; kept for Bookplate's existing chips. Don't pick it for new state tags. |\n| `author` | A person who wrote something. |\n| `series` | A series name. |\n| `subject` | A subject / genre / keyword. The default. |\n| `book` | A book or title. |\n| `entryType` | The kind of an entry or record. |\n| `user` | An app user / account. |\n| `rating` | A rating value. |\n\nNote the name clash: `status` is a legacy label tone despite its name; for a state use `success`/`warning`/`danger`/`info`, or `neutral` when it carries no meaning.\n\nEach tone has its own `text`, `bg`, and `border` in both light and dark themes.\nA consumer's theme can't add tones; the list is fixed by the `Theme` type.\n\n### Styling\n\nNo `className`, no `ariaLabel`.\n\n### Corners\n\n`radius.md` at both sizes, which is right inside a Card or modal; see\n[corners](../corners.md).\n\n## Do / don't\n\n- Do choose `tone` by meaning, so the same kind of thing is the same colour\n  everywhere.\n- Do use `tone=\"warning\"` for \"Overdue\".\n- Do use `size=\"sm\"` inside text rows and lists.\n- Don't use `neutral` just to make a tag grey when it has a category.\n- Don't use `subject` or `author` to mean warning or success.\n- Don't use `info` to look like a link (it shares a hue with links; use\n  `Button type=\"link\"` for actions).\n- Don't use `status` for a new state tag; it is a legacy label tone.\n- Don't nest a clickable Tag inside another clickable element (Button, a\n  clickable Card); both would fire.",
+      "examples": [
+        {
+          "file": "src/component/tag/examples/01-basic.tsx",
+          "slug": "basic",
+          "order": 1,
+          "title": "Basic",
+          "description": "Chips beside a title: the label is the child. An author chip names a person; a subject or keyword chip needs no `tone`.",
+          "code": "import { Inline, Tag, Text } from '@korzun/design/component';\n\nexport default function Basic() {\n  return (\n    <Inline>\n      <Text weight=\"semibold\">Middlemarch</Text>\n      <Tag tone=\"author\">George Eliot</Tag>\n      <Tag>Fiction</Tag>\n    </Inline>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/tag/examples/02-status-tones.tsx",
+          "slug": "status-tones",
+          "order": 2,
+          "title": "Status tones",
+          "description": "Status tones report a state: `success`, `warning`, `danger`, `info`, and `neutral` for a state with no meaning to signal. Each tag is labelled with its tone.",
+          "code": "import { Inline, Stack, Tag, Text } from '@korzun/design/component';\n\nexport default function StatusTones() {\n  return (\n    <Stack gap=\"sm\" align=\"start\">\n      <Inline>\n        <Tag tone=\"success\">Published</Tag>\n        <Text tone=\"muted\">success: something went well</Text>\n      </Inline>\n      <Inline>\n        <Tag tone=\"warning\">Overdue</Tag>\n        <Text tone=\"muted\">warning: needs attention soon</Text>\n      </Inline>\n      <Inline>\n        <Tag tone=\"danger\">Failed</Tag>\n        <Text tone=\"muted\">danger: something failed or is blocked</Text>\n      </Inline>\n      <Inline>\n        <Tag tone=\"info\">Scheduled</Tag>\n        <Text tone=\"muted\">info: neutral news</Text>\n      </Inline>\n      <Inline>\n        <Tag tone=\"neutral\">No change</Tag>\n        <Text tone=\"muted\">neutral: a state with no category</Text>\n      </Inline>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/tag/examples/03-label-tones.tsx",
+          "slug": "label-tones",
+          "order": 3,
+          "title": "Label tones",
+          "description": "Label tones name a kind of thing, so the same kind of thing is the same colour everywhere. `status` is a legacy label tone despite its name: it is listed for completeness, and a new state tag uses a status tone. Each tag is labelled with its tone.",
+          "code": "import { Inline, Stack, Tag, Text } from '@korzun/design/component';\n\nexport default function LabelTones() {\n  return (\n    <Stack gap=\"sm\" align=\"start\">\n      <Inline>\n        <Tag tone=\"author\">George Eliot</Tag>\n        <Text tone=\"muted\">author: a person who wrote something</Text>\n      </Inline>\n      <Inline>\n        <Tag tone=\"series\">Discworld</Tag>\n        <Text tone=\"muted\">series: a series name</Text>\n      </Inline>\n      <Inline>\n        <Tag tone=\"subject\">Fiction</Tag>\n        <Text tone=\"muted\">subject: a subject, genre or keyword</Text>\n      </Inline>\n      <Inline>\n        <Tag tone=\"book\">Middlemarch</Tag>\n        <Text tone=\"muted\">book: a book or title</Text>\n      </Inline>\n      <Inline>\n        <Tag tone=\"entryType\">Essay</Tag>\n        <Text tone=\"muted\">entryType: the kind of an entry or record</Text>\n      </Inline>\n      <Inline>\n        <Tag tone=\"user\">simon</Tag>\n        <Text tone=\"muted\">user: an app user or account</Text>\n      </Inline>\n      <Inline>\n        <Tag tone=\"rating\">4.5</Tag>\n        <Text tone=\"muted\">rating: a rating value</Text>\n      </Inline>\n      <Inline>\n        <Tag tone=\"status\">Legacy</Tag>\n        <Text tone=\"muted\">status: legacy label tone</Text>\n      </Inline>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/tag/examples/04-sizes.tsx",
+          "slug": "sizes",
+          "order": 4,
+          "title": "Sizes",
+          "description": "`md` is the regular chip and `sm` the compact one. `sm` sits inside a line of text without making the row taller.",
+          "code": "import { Inline, Stack, Tag, Text } from '@korzun/design/component';\n\nexport default function Sizes() {\n  return (\n    <Stack gap=\"sm\" align=\"start\">\n      <Inline>\n        <Tag size=\"md\">Medium</Tag>\n        <Text tone=\"muted\">md</Text>\n      </Inline>\n      <Inline>\n        <Tag size=\"sm\">Small</Tag>\n        <Text tone=\"muted\">sm</Text>\n      </Inline>\n      <Text>\n        Chapter 12 <Tag size=\"sm\">Fiction</Tag> <Tag size=\"sm\">Classic</Tag> in a line of text\n      </Text>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/tag/examples/05-clickable.tsx",
+          "slug": "clickable",
+          "order": 5,
+          "title": "Clickable",
+          "description": "`onClick` makes a tag a button: focusable, Enter and Space activate it, and hover deepens the tone. It receives no event. Here an author chip filters the list, and clearing the filter is an action, so it is a link `Button`.",
+          "code": "import { Inline, Stack, Tag, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { useState } from 'react';\n\nconst authors = ['George Eliot', 'Terry Pratchett', 'Ursula K. Le Guin'];\n\nexport default function Clickable() {\n  const [author, setAuthor] = useState<string | undefined>(undefined);\n  return (\n    <Stack gap=\"sm\" align=\"start\">\n      <Inline wrap>\n        {authors.map((name) => (\n          <Tag key={name} tone=\"author\" onClick={() => setAuthor(name)}>\n            {name}\n          </Tag>\n        ))}\n        <Button type=\"link\" onClick={() => setAuthor(undefined)}>\n          Clear\n        </Button>\n      </Inline>\n      <Text tone=\"muted\">Filter: {author ?? 'none'}</Text>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/tag/examples/06-in-card.tsx",
+          "slug": "in-card",
+          "order": 6,
+          "title": "In a card",
+          "description": "Compact `sm` chips in rows inside a `Card`. A kind of thing keeps its own tone; a state with no meaning to signal is `neutral`.",
+          "code": "import { Card, Inline, Stack, Tag, Text } from '@korzun/design/component';\n\nexport default function InCard() {\n  return (\n    <Card title=\"Metadata fixes\">\n      <Stack gap=\"sm\">\n        <Inline wrap gap=\"xs\">\n          <Text>Middlemarch</Text>\n          <Tag size=\"sm\" tone=\"author\">\n            George Eliot\n          </Tag>\n          <Tag size=\"sm\">Fiction</Tag>\n          <Tag size=\"sm\">Classic</Tag>\n        </Inline>\n        <Inline gap=\"xs\">\n          <Text>Access</Text>\n          <Tag size=\"sm\" tone=\"neutral\">\n            Read only\n          </Tag>\n        </Inline>\n      </Stack>\n    </Card>\n  );\n}\n"
+        }
+      ],
+      "tables": [
+        {
+          "name": "TagProps",
+          "kind": "props",
+          "rows": [
+            {
+              "name": "children",
+              "type": "ReactNode",
+              "required": true,
+              "description": "The label."
+            },
+            {
+              "name": "onClick",
+              "type": "() => void",
+              "required": false,
+              "description": "Makes it a button: `role=\"button\"`, focusable, pointer cursor, Enter/Space activate it, and hover deepens the tone. Receives no event."
+            },
+            {
+              "name": "size",
+              "type": "'sm' | 'md'",
+              "required": false,
+              "description": "`sm` is compact (tight line height) and fits inside a normal text line, so rows keep the same height with or without chips.",
+              "default": "'md'"
+            },
+            {
+              "name": "tone",
+              "type": "'status' | 'author' | 'series' | 'subject' | 'book' | 'entryType' | 'user' | 'rating' | 'neutral' | 'success' | 'warning' | 'danger' | 'info'",
+              "required": false,
+              "description": "Colour, from the theme's `color.chip` tokens. Status tones report a state; label tones name a kind of thing, and `status` is a legacy label tone despite its name. See [Choosing a tone](#choosing-a-tone).",
+              "default": "'subject'"
+            }
+          ]
+        },
+        {
+          "name": "TagTone",
+          "kind": "alias",
+          "rows": [],
+          "text": "'status' | 'author' | 'series' | 'subject' | 'book' | 'entryType' | 'user' | 'rating' | 'neutral' | 'success' | 'warning' | 'danger' | 'info'"
+        }
+      ],
+      "tokens": [
+        {
+          "path": "color.chip.author.bg",
+          "kind": "color",
+          "light": "rgba(26,122,82,0.08)",
+          "dark": "rgba(52,211,153,0.16)"
+        },
+        {
+          "path": "color.chip.author.border",
+          "kind": "color",
+          "light": "rgba(26,122,82,0.22)",
+          "dark": "rgba(52,211,153,0.30)"
+        },
+        {
+          "path": "color.chip.author.text",
+          "kind": "color",
+          "light": "#1a7a52",
+          "dark": "#7EE6B4"
+        },
+        {
+          "path": "color.chip.book.bg",
+          "kind": "color",
+          "light": "rgba(14, 107, 125, 0.08)",
+          "dark": "rgba(45, 170, 190, 0.18)"
+        },
+        {
+          "path": "color.chip.book.border",
+          "kind": "color",
+          "light": "rgba(14, 107, 125, 0.22)",
+          "dark": "rgba(45, 170, 190, 0.32)"
+        },
+        {
+          "path": "color.chip.book.text",
+          "kind": "color",
+          "light": "#0e6b7d",
+          "dark": "#7FD0DE"
+        },
+        {
+          "path": "color.chip.danger.bg",
+          "kind": "color",
+          "light": "rgba(255, 77, 79, 0.08)",
+          "dark": "rgba(255, 77, 79, 0.16)"
+        },
+        {
+          "path": "color.chip.danger.border",
+          "kind": "color",
+          "light": "rgba(255, 77, 79, 0.22)",
+          "dark": "rgba(255, 77, 79, 0.3)"
+        },
+        {
+          "path": "color.chip.danger.text",
+          "kind": "color",
+          "light": "#D9373e",
+          "dark": "#FF8E8E"
+        },
+        {
+          "path": "color.chip.entryType.bg",
+          "kind": "color",
+          "light": "rgba(192, 65, 94, 0.08)",
+          "dark": "rgba(192, 65, 94, 0.18)"
+        },
+        {
+          "path": "color.chip.entryType.border",
+          "kind": "color",
+          "light": "rgba(192, 65, 94, 0.22)",
+          "dark": "rgba(192, 65, 94, 0.32)"
+        },
+        {
+          "path": "color.chip.entryType.text",
+          "kind": "color",
+          "light": "#c0415e",
+          "dark": "#E89BAC"
+        },
+        {
+          "path": "color.chip.info.bg",
+          "kind": "color",
+          "light": "rgba(23, 119, 255, 0.08)",
+          "dark": "rgba(54, 150, 254, 0.18)"
+        },
+        {
+          "path": "color.chip.info.border",
+          "kind": "color",
+          "light": "rgba(23, 119, 255, 0.24)",
+          "dark": "rgba(54, 150, 254, 0.36)"
+        },
+        {
+          "path": "color.chip.info.text",
+          "kind": "color",
+          "light": "#0758d9",
+          "dark": "#87BAFF"
+        },
+        {
+          "path": "color.chip.neutral.bg",
+          "kind": "color",
+          "light": "rgba(110, 110, 110, 0.08)",
+          "dark": "rgba(156, 161, 171, 0.16)"
+        },
+        {
+          "path": "color.chip.neutral.border",
+          "kind": "color",
+          "light": "rgba(110, 110, 110, 0.22)",
+          "dark": "rgba(156, 161, 171, 0.3)"
+        },
+        {
+          "path": "color.chip.neutral.text",
+          "kind": "color",
+          "light": "#6E6E6E",
+          "dark": "#9CA1AB"
+        },
+        {
+          "path": "color.chip.rating.bg",
+          "kind": "color",
+          "light": "rgba(181,69,27,0.08)",
+          "dark": "rgba(181,69,27,0.18)"
+        },
+        {
+          "path": "color.chip.rating.border",
+          "kind": "color",
+          "light": "rgba(181,69,27,0.22)",
+          "dark": "rgba(181,69,27,0.32)"
+        },
+        {
+          "path": "color.chip.rating.text",
+          "kind": "color",
+          "light": "#b5451b",
+          "dark": "#F2A07B"
+        },
+        {
+          "path": "color.chip.series.bg",
+          "kind": "color",
+          "light": "rgba(26,95,168,0.08)",
+          "dark": "rgba(96,165,250,0.16)"
+        },
+        {
+          "path": "color.chip.series.border",
+          "kind": "color",
+          "light": "rgba(26,95,168,0.22)",
+          "dark": "rgba(96,165,250,0.30)"
+        },
+        {
+          "path": "color.chip.series.text",
+          "kind": "color",
+          "light": "#1a5fa8",
+          "dark": "#8EC3F5"
+        },
+        {
+          "path": "color.chip.status.bg",
+          "kind": "color",
+          "light": "rgba(109,63,192,0.08)",
+          "dark": "rgba(167,139,250,0.16)"
+        },
+        {
+          "path": "color.chip.status.border",
+          "kind": "color",
+          "light": "rgba(109,63,192,0.22)",
+          "dark": "rgba(167,139,250,0.30)"
+        },
+        {
+          "path": "color.chip.status.text",
+          "kind": "color",
+          "light": "#6d3fc0",
+          "dark": "#C9B0F2"
+        },
+        {
+          "path": "color.chip.subject.bg",
+          "kind": "color",
+          "light": "rgba(138,94,0,0.08)",
+          "dark": "rgba(217,168,67,0.16)"
+        },
+        {
+          "path": "color.chip.subject.border",
+          "kind": "color",
+          "light": "rgba(138,94,0,0.22)",
+          "dark": "rgba(217,168,67,0.30)"
+        },
+        {
+          "path": "color.chip.subject.text",
+          "kind": "color",
+          "light": "#8a5e00",
+          "dark": "#E8C879"
+        },
+        {
+          "path": "color.chip.success.bg",
+          "kind": "color",
+          "light": "rgba(22, 163, 74, 0.08)",
+          "dark": "rgba(34, 197, 94, 0.16)"
+        },
+        {
+          "path": "color.chip.success.border",
+          "kind": "color",
+          "light": "rgba(22, 163, 74, 0.22)",
+          "dark": "rgba(34, 197, 94, 0.3)"
+        },
+        {
+          "path": "color.chip.success.text",
+          "kind": "color",
+          "light": "#15803d",
+          "dark": "#86EFAC"
+        },
+        {
+          "path": "color.chip.user.bg",
+          "kind": "color",
+          "light": "rgba(162,58,149,0.08)",
+          "dark": "rgba(162,58,149,0.16)"
+        },
+        {
+          "path": "color.chip.user.border",
+          "kind": "color",
+          "light": "rgba(162,58,149,0.22)",
+          "dark": "rgba(162,58,149,0.30)"
+        },
+        {
+          "path": "color.chip.user.text",
+          "kind": "color",
+          "light": "#a23a95",
+          "dark": "#E7A6DA"
+        },
+        {
+          "path": "color.chip.warning.bg",
+          "kind": "color",
+          "light": "rgba(234,179,8,0.16)",
+          "dark": "rgba(234,179,8,0.20)"
+        },
+        {
+          "path": "color.chip.warning.border",
+          "kind": "color",
+          "light": "rgba(202,138,4,0.40)",
+          "dark": "rgba(234,179,8,0.42)"
+        },
+        {
+          "path": "color.chip.warning.text",
+          "kind": "color",
+          "light": "#854d0e",
+          "dark": "#FDE047"
+        },
+        {
+          "path": "fontSize.sm",
+          "kind": "value",
+          "light": "0.75rem",
+          "dark": "0.75rem"
+        },
+        {
+          "path": "fontSize.xs",
+          "kind": "value",
+          "light": "0.7rem",
+          "dark": "0.7rem"
+        },
+        {
+          "path": "fontWeight.medium",
+          "kind": "value",
+          "light": "500",
+          "dark": "500"
+        },
+        {
+          "path": "lineHeight.tight",
+          "kind": "value",
+          "light": "1",
+          "dark": "1"
+        },
+        {
+          "path": "radius.md",
+          "kind": "value",
+          "light": "8px",
+          "dark": "8px"
+        },
+        {
+          "path": "space.md",
+          "kind": "value",
+          "light": "0.5rem",
+          "dark": "0.5rem"
+        },
+        {
+          "path": "space.sm",
+          "kind": "value",
+          "light": "0.375rem",
+          "dark": "0.375rem"
+        },
+        {
+          "path": "space.xs",
+          "kind": "value",
+          "light": "0.25rem",
+          "dark": "0.25rem"
+        },
+        {
+          "path": "space.xxxs",
+          "kind": "value",
+          "light": "0.1rem",
+          "dark": "0.1rem"
+        }
+      ],
+      "changelog": [
+        {
+          "version": "0.1.0",
+          "date": "2026-11-21",
+          "tags": [
+            "Tag",
+            "lightTheme",
+            "darkTheme"
+          ],
+          "text": "`Tag` status tones: `success`, `warning` (yellow, stronger fill), `danger`, `info` (brand blue). New `color.warning` and `color.info` solid colours. Status tones report state; label tones name things. No visual change to existing tags."
+        },
+        {
+          "version": "0.0.3",
+          "date": "2026-11-21",
+          "tags": [
+            "Tag"
+          ],
+          "text": "`Tag` takes a `tone` prop that picks any `theme.color.chip` token (`status`, `author`, `series`, `subject`, `book`, `entryType`, `user`, `rating`, `neutral`) for text, background and border. It defaults to `subject`, so existing tags look the same. The clickable hover now comes from the tone too; with `subject` in light mode it matches the old amber."
+        },
+        {
+          "version": "0.0.3",
+          "date": "2026-11-21",
+          "tags": [
+            "Tag",
+            "lightTheme",
+            "darkTheme"
+          ],
+          "text": "New `color.chip.neutral` token: a quiet grey built from each mode's muted text colour (light 0.08 / 0.22 alphas, dark 0.16 / 0.30, matching the other chips in each mode)."
+        },
+        {
+          "version": "0.0.3",
+          "date": "2026-11-21",
+          "tags": [
+            "Tag"
+          ],
+          "text": "`TagTone` type exported from the package root and `/component`."
         }
       ]
     },

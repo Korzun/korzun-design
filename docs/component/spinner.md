@@ -185,15 +185,6 @@ export default function Standalone() {
 
 | Token | Light | Dark |
 | --- | --- | --- |
-| `theme.color.chip.danger.text` | `#D9373e` | `#FF8E8E` |
-| `theme.color.chip.success.text` | `#15803d` | `#86EFAC` |
-| `theme.color.text.description` | `#585863` | `#A8ADB6` |
-| `theme.color.text.faint` | `#9ca3af` | `#6E7480` |
-| `theme.color.text.muted` | `#6E6E6E` | `#9CA1AB` |
-| `theme.color.text.onDanger` | `#FFFFFF` | `#FFFFFF` |
-| `theme.color.text.onPrimary` | `#FFFFFF` | `#FFFFFF` |
-| `theme.color.text.primary` | `#111` | `#F5F5F7` |
-| `theme.color.text.secondary` | `#5A6375` | `#C8CBD2` |
 | `theme.fontSize.lg` | `1rem` | `1rem` |
 | `theme.fontSize.md` | `0.875rem` | `0.875rem` |
 | `theme.fontSize.sm` | `0.75rem` | `0.75rem` |
@@ -201,11 +192,6 @@ export default function Standalone() {
 | `theme.fontSize.xs` | `0.7rem` | `0.7rem` |
 | `theme.fontSize.xxl` | `1.75rem` | `1.75rem` |
 | `theme.fontSize.xxs` | `0.6rem` | `0.6rem` |
-| `theme.fontWeight.bold` | `700` | `700` |
-| `theme.fontWeight.extrabold` | `800` | `800` |
-| `theme.fontWeight.medium` | `500` | `500` |
-| `theme.fontWeight.regular` | `400` | `400` |
-| `theme.fontWeight.semibold` | `600` | `600` |
 | `theme.recipe.spinner` | `recipe` | `recipe` |
 
 <!-- /generated:tokens -->

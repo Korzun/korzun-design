@@ -279,7 +279,7 @@ export default function InCard() {
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `children` (required) | `React.ReactNode` |  | The label. |
+| `children` (required) | `ReactNode` |  | The label. |
 | `onClick` | `() => void` |  | Makes it a button: `role="button"`, focusable, pointer cursor, Enter/Space activate it, and hover deepens the tone. Receives no event. |
 | `size` | `'sm' \| 'md'` | `'md'` | `sm` is compact (tight line height) and fits inside a normal text line, so rows keep the same height with or without chips. |
 | `tone` | `'status' \| 'author' \| 'series' \| 'subject' \| 'book' \| 'entryType' \| 'user' \| 'rating' \| 'neutral' \| 'success' \| 'warning' \| 'danger' \| 'info'` | `'subject'` | Colour, from the theme's `color.chip` tokens. Status tones report a state; label tones name a kind of thing, and `status` is a legacy label tone despite its name. See [Choosing a tone](#choosing-a-tone). |
