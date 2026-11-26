@@ -82,7 +82,7 @@ options={[{ value: 'grid', label: 'Grid', Icon: BooksIcon }]} // SegmentedContro
 
 ### Kinds of icon
 
-The import line lists every icon, and the grid on the docs page shows them. Each is one of three kinds.
+Every icon is listed in the table below, and the docs site also shows them as a grid. Each is one of three kinds.
 
 - **Stroke** icons draw outlines and take `stroke` and `strokeWidth`.
 - **Filled** icons (`AlertOctagonIcon`, `CheckIcon`, `CircleXIcon`,
@@ -100,6 +100,39 @@ directions. `SpinnerIcon` is a quarter arc that **does not spin by itself**; use
 ```tsx
 <Spinner label="Loading books" />
 ```
+
+### Every icon
+
+| Export | Kind | Depicts |
+|---|---|---|
+| `AdjustmentsHorizontalIcon` | stroke | Three horizontal sliders (general settings, filters). |
+| `AlertOctagonIcon` | filled | Octagon with `!` (danger/warning; confirm modals). |
+| `BookIcon` | stroke | A single book (Tabler `book-2`). |
+| `BooksIcon` | stroke | Books standing on a shelf. |
+| `CheckIcon` | filled | A check mark (success). |
+| `ChevronCircleIcon` | stroke | Right chevron in a circle (Card's collapse toggle). |
+| `ChevronIcon` | stroke | Right-pointing chevron; rotate it via `className` for other directions. |
+| `CircleXIcon` | filled | X in a filled circle (clear, error). |
+| `ClockIcon` | stroke | Clock face (time, pending). |
+| `DeviceIcon` | stroke | A tablet / e-reader (Tabler `device-tablet`). |
+| `HandLoveYouIcon` | emoji | 🤟 silhouette (rating 5, "Love"). |
+| `HandOkIcon` | emoji | 👌 silhouette (rating 2, "Okay"). |
+| `HandPeaceIcon` | emoji | ✌️ silhouette (rating 3, "Nice"). |
+| `HandsClapIcon` | emoji | 👏 silhouette (rating 4, "Great"). |
+| `HomeIcon` | stroke | A house. |
+| `InfoCircleIcon` | filled | `i` in a filled circle (info). |
+| `KeyIcon` | stroke | A key (passwords, credentials). |
+| `ListCheckIcon` | stroke | Checklist (requests, tasks). |
+| `MoreIcon` | stroke | Three horizontal dots (overflow menu). |
+| `RowRemoveIcon` | stroke | A table row with an X under it (remove row). |
+| `SearchIcon` | stroke | Magnifying glass. |
+| `SettingsIcon` | stroke | Gear. |
+| `SpinnerIcon` | stroke | A quarter arc. **Does not spin by itself**; use `Spinner` (component) for a ready-made loader. |
+| `ThumbDownIcon` | emoji | 👎 silhouette (rating 1, "Bad"). |
+| `UploadIcon` | stroke | Arrow up out of a tray. |
+| `UserIcon` | stroke | One person. |
+| `UsersIcon` | stroke | Two people. |
+| `XIcon` | stroke | An X (close, dismiss, error toast). |
 
 ## Do / don't
 
