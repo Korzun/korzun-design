@@ -1,7 +1,7 @@
 /** Gaps
  * `gap` takes a key of the theme's `space` scale: `xs` for tight groups, `md`
- * (the default) for most content, `xxl` between sections. `none` is for
- * children that bring their own spacing.
+ * for most content, `xxl` between sections. `none` is for children that bring
+ * their own spacing.
  */
 import { Inline, Stack, Tag, Text } from '@korzun/design/component';
 

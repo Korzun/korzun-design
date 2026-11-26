@@ -162,7 +162,7 @@
               "name": "radius",
               "type": "'background' | 'card' | 'inset' | 'modal'",
               "required": false,
-              "description": "The surface the button sits on, which sets its corner radius. Unset (the default), the radius follows surface depth: 16px on a page or outside any surface, 8px in a Card or Dialog, 4px in a Popover or nested Card. Pass it only to override; see [corners](../corners.md)."
+              "description": "Unset, it follows surface depth: 16px on a page or outside any surface, 8px in a Card or Dialog, 4px in a Popover or nested Card. Set, it names the surface the button sits on, which sets its corner radius. Pass it only to override; see [corners](../corners.md)."
             },
             {
               "name": "ref",
@@ -809,7 +809,7 @@
           "slug": "basic",
           "order": 1,
           "title": "Basic",
-          "description": "A form's fields, spaced by the default `md` gap. Put the `<form>` around the\nStack; children stretch to the full width.",
+          "description": "A form's fields, spaced with no `gap` prop. Put the `<form>` around the\nStack; children stretch to the full width.",
           "code": "import { Stack } from '@korzun/design/component';\nimport { TextInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Basic() {\n  const [title, setTitle] = useState<string | undefined>('Middlemarch');\n  const [author, setAuthor] = useState<string | undefined>('George Eliot');\n  return (\n    <form noValidate onSubmit={(event) => event.preventDefault()}>\n      <Stack>\n        <TextInput name=\"title\" label=\"Title\" value={title} onChange={setTitle} />\n        <TextInput name=\"author\" label=\"Author\" value={author} onChange={setAuthor} />\n      </Stack>\n    </form>\n  );\n}\n"
         },
         {
@@ -817,7 +817,7 @@
           "slug": "gaps",
           "order": 2,
           "title": "Gaps",
-          "description": "`gap` takes a key of the theme's `space` scale: `xs` for tight groups, `md`\n(the default) for most content, `xxl` between sections. `none` is for\nchildren that bring their own spacing.",
+          "description": "`gap` takes a key of the theme's `space` scale: `xs` for tight groups, `md`\nfor most content, `xxl` between sections. `none` is for children that bring\ntheir own spacing.",
           "code": "import { Inline, Stack, Tag, Text } from '@korzun/design/component';\n\nconst gaps = ['none', 'xs', 'md', 'xxl'] as const;\n\nexport default function Gaps() {\n  return (\n    <Inline gap=\"xxl\" align=\"start\" wrap>\n      {gaps.map((gap) => (\n        <Stack key={gap} gap=\"xs\" align=\"start\">\n          <Text size=\"sm\" tone=\"muted\">\n            {`gap=\"${gap}\"`}\n          </Text>\n          <Stack gap={gap} align=\"start\">\n            <Tag>One</Tag>\n            <Tag>Two</Tag>\n            <Tag>Three</Tag>\n          </Stack>\n        </Stack>\n      ))}\n    </Inline>\n  );\n}\n"
         },
         {
@@ -825,7 +825,7 @@
           "slug": "align",
           "order": 3,
           "title": "Alignment",
-          "description": "`align` sets the horizontal (cross-axis) placement. The default `stretch` makes\nevery child full width; use `start` so buttons and tags keep their own width.",
+          "description": "`align` sets the horizontal (cross-axis) placement. `stretch` makes every\nchild full width; use `start` so buttons and tags keep their own width.",
           "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\n\nconst aligns = ['stretch', 'start', 'center', 'end'] as const;\n\nexport default function Align() {\n  return (\n    <Stack gap=\"lg\">\n      {aligns.map((align) => (\n        <Stack key={align} gap=\"xs\" align={align}>\n          <Text size=\"sm\" tone=\"muted\">\n            {`align=\"${align}\"`}\n          </Text>\n          <Button>Add a book</Button>\n        </Stack>\n      ))}\n    </Stack>\n  );\n}\n"
         },
         {

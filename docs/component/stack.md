@@ -53,7 +53,7 @@ spacing.
 
 ### Basic
 
-A form's fields, spaced by the default `md` gap. Put the `<form>` around the
+A form's fields, spaced with no `gap` prop. Put the `<form>` around the
 Stack; children stretch to the full width.
 
 ```tsx
@@ -78,8 +78,8 @@ export default function Basic() {
 ### Gaps
 
 `gap` takes a key of the theme's `space` scale: `xs` for tight groups, `md`
-(the default) for most content, `xxl` between sections. `none` is for
-children that bring their own spacing.
+for most content, `xxl` between sections. `none` is for children that bring
+their own spacing.
 
 ```tsx
 import { Inline, Stack, Tag, Text } from '@korzun/design/component';
@@ -108,8 +108,8 @@ export default function Gaps() {
 
 ### Alignment
 
-`align` sets the horizontal (cross-axis) placement. The default `stretch` makes
-every child full width; use `start` so buttons and tags keep their own width.
+`align` sets the horizontal (cross-axis) placement. `stretch` makes every
+child full width; use `start` so buttons and tags keep their own width.
 
 ```tsx
 import { Stack, Text } from '@korzun/design/component';

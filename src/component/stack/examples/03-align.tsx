@@ -1,6 +1,6 @@
 /** Alignment
- * `align` sets the horizontal (cross-axis) placement. The default `stretch` makes
- * every child full width; use `start` so buttons and tags keep their own width.
+ * `align` sets the horizontal (cross-axis) placement. `stretch` makes every
+ * child full width; use `start` so buttons and tags keep their own width.
  */
 import { Stack, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';

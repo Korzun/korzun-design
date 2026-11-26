@@ -50,10 +50,10 @@ export type ButtonProps = React.PropsWithChildren<
     /** Icon component shown before the label (`prefix={SearchIcon}`), not an element. */
     prefix?: ComponentType<IconProps>;
     /**
-     * The surface the button sits on, which sets its corner radius. Unset (the
-     * default), the radius follows surface depth: 16px on a page or outside any
-     * surface, 8px in a Card or Dialog, 4px in a Popover or nested Card. Pass it
-     * only to override; see [corners](../corners.md).
+     * Unset, it follows surface depth: 16px on a page or outside any surface,
+     * 8px in a Card or Dialog, 4px in a Popover or nested Card. Set, it names the
+     * surface the button sits on, which sets its corner radius. Pass it only to
+     * override; see [corners](../corners.md).
      */
     radius?: ButtonRadiusValue;
     /** Ref to the root element (the `<div role="button">`, or the `<button>` in submit mode), e.g. to `.focus()` it. A plain prop; no `forwardRef`. */

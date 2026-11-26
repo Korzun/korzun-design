@@ -299,7 +299,7 @@ export default function DialogFooter() {
 | `loading` | `boolean` | `false` | Shows a spinner in place of the icons and blocks clicks. |
 | `onClick` | `() => void` | `() => {}` | Click and Enter/Space handler. **Ignored when `submit` is set**; the form submits instead. Receives no event. Not called while `disabled` or `loading`. |
 | `prefix` | `ComponentType<IconProps>` |  | Icon component shown before the label (`prefix={SearchIcon}`), not an element. |
-| `radius` | `'background' \| 'card' \| 'inset' \| 'modal'` |  | The surface the button sits on, which sets its corner radius. Unset (the default), the radius follows surface depth: 16px on a page or outside any surface, 8px in a Card or Dialog, 4px in a Popover or nested Card. Pass it only to override; see [corners](../corners.md). |
+| `radius` | `'background' \| 'card' \| 'inset' \| 'modal'` |  | Unset, it follows surface depth: 16px on a page or outside any surface, 8px in a Card or Dialog, 4px in a Popover or nested Card. Set, it names the surface the button sits on, which sets its corner radius. Pass it only to override; see [corners](../corners.md). |
 | `ref` | `Ref<HTMLElement>` |  | Ref to the root element (the `<div role="button">`, or the `<button>` in submit mode), e.g. to `.focus()` it. A plain prop; no `forwardRef`. |
 | `submit` | `boolean` | `false` | Render a native `<button type="submit">`. Also shows the spinner while the enclosing form action is pending (`useFormStatus`). `onClick` is then ignored. |
 | `success` | `boolean` | `false` | Green treatment. Mutually exclusive with `danger` (setting both is a type error). |

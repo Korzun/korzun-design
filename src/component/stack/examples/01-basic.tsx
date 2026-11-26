@@ -1,5 +1,5 @@
 /** Basic
- * A form's fields, spaced by the default `md` gap. Put the `<form>` around the
+ * A form's fields, spaced with no `gap` prop. Put the `<form>` around the
  * Stack; children stretch to the full width.
  */
 import { Stack } from '@korzun/design/component';
