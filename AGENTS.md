@@ -91,8 +91,14 @@ Every component exports its props type as `<Name>Props` (`ButtonProps`,
     `Tabs`, `Tooltip`, or `Checkbox` yet. Build them in app code from tokens
     following these rules, and don't pull in another UI library.
 
+## Recipes
+
+Before building a whole screen or a common group of parts (sign-in, …), check
+`docs/recipes/` for a recipe and start from its code.
+
 ## Docs index
 
 [docs]|theme.md: ThemeProvider, the light and dark themes, and createUseStyles for writing token-based styles.|corners.md: Corner radius by nesting depth, one radius step per level.|patterns.md: How screens are built: forms in cards, confirmations, menus, modals, toasts and style overrides.|tokens.md: Every theme token key in detail, group by group.|philosophy.md: The design rules the code enforces, and why.|icon.md: Inline SVG icon components that take the surrounding text colour, with the shared IconProps.|toast.md: Short, transient confirmations and errors that slide in from a corner and leave on their own.|hooks.md: Mobile-chrome hooks: standalone detection, minimize on scroll, pull to refresh.
 [docs/control]|{back-button,button,chips-input,confirm-modal,date-time-input,dialog,field-list,menu,number-input,page-actions-bar,page-actions-menu,page-footer-actions,popover,segmented-control,select,switch,text-area,text-input,use-modal-dialog}.md
 [docs/component]|{alert,card,card-divider,card-row,collapsible-section,empty-state,error-message,heading,inline,meta-line,metadata-list,nav-desktop,nav-mobile,page,progress-indicator,spinner,stack,surface,tag,text,theme-setting,top-fade}.md
+[docs/recipes]|{login}.md
