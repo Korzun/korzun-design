@@ -1,10 +1,12 @@
-import { PropsWithChildren, ReactNode, useCallback, useState } from 'react';
+import { ReactNode, useCallback, useState } from 'react';
 
 import { useStyle } from './style.js';
 
-export type CollapsibleSectionProps = PropsWithChildren<{
+export type CollapsibleSectionProps = {
   /** Rendered at the header's right end. An array of keyed elements; clicking one also toggles the section. */
   actions?: ReactNode[];
+  /** Shown only while open; unmounted when closed. */
+  children?: ReactNode;
   /** Controlled open state. Omit for uncontrolled, which starts closed (there is no `defaultOpen`). */
   open?: boolean;
   /** Faint text after the title, e.g. a count ("3 items"). */
@@ -13,7 +15,7 @@ export type CollapsibleSectionProps = PropsWithChildren<{
   title: string;
   /** Called on every header click/Enter/Space. Receives no value: flip your own state. */
   onOpenToggle?: () => void;
-}>;
+};
 
 /** A disclosure section with no card chrome. Children are unmounted while closed. */
 export function CollapsibleSection({
