@@ -7,7 +7,7 @@ category: Feedback
 
 <!-- generated:import -->
 
-`import { ToastProvider, useToast } from '@korzun/design/toast'`
+`import { ToastProvider, useToast, type ToastProviderProps } from '@korzun/design/toast'`
 
 <!-- /generated:import -->
 
@@ -23,11 +23,6 @@ needing an answer (`ConfirmModal`).
 ## Usage
 
 ### `ToastProvider`
-
-| Prop | Type | Default | Notes |
-|---|---|---|---|
-| `children` | `ReactNode` | required | The app. |
-| `maxToasts` | `number` | `3` | When a new toast would exceed this, the oldest starts its exit animation. |
 
 Placement:
 
@@ -194,7 +189,10 @@ export default function MaxToasts() {
 
 ## Props
 
-This module takes no props; see Usage for its API.
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `children` (required) | `ReactNode` |  | The app. |
+| `maxToasts` | `number` | `3` | How many toasts show at once. When a new toast would exceed it, the oldest starts its exit animation. |
 
 <!-- /generated:props -->
 
