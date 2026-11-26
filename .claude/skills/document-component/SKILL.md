@@ -22,10 +22,9 @@ earlier runs fail review, and what to do instead.
 
 ## 0. Branch check
 
-Run `ls scripts/docs-gen/cli.mjs`.
+The generator lives on `main`. Run `ls scripts/docs-gen/cli.mjs`.
 - It exists: continue.
-- It is missing and your dispatch says to fast-forward: `git merge --ff-only docs-site`, then continue.
-- It is missing otherwise: stop and report "branch has no docs generator".
+- It is missing: your branch predates it; rebase on `main` (or stop and report "branch has no docs generator").
 
 ## 1. Read
 

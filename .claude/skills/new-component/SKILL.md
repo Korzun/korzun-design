@@ -168,8 +168,9 @@ props>.`` The tag is the value name, so the site links it.
 1. `npx oxfmt src/<area>/<slug>`, then `npm run docs:gen`.
 2. The module is on the site:
    `node -p "require('./gallery/generated/site-data.json').modules.some(m => m.slug === '<slug>')"`
-   prints `true`. `false` means the doc has no front matter or the barrel
-   export is missing: the generator skips such a doc silently.
+   prints `true`. `false` means the barrel export is missing: the generator
+   skips a module its barrel does not export, silently. (A doc without front
+   matter does not get this far: `docs:gen` throws `missing front matter`.)
 3. `document-component` §6.2: the notes check on the generated tables.
 4. `npm run lint`.
 5. `npm test` once (build, vitest, script tests, docs:check). Fix until green.
@@ -208,7 +209,7 @@ props>.`` The tag is the value name, so the site links it.
 |---|---|---|
 | "Every control gets a stories file." | Examples replace stories (CLAUDE.md asks for a test and examples); a stories file is dead code. | Write `examples/`; no `*.stories.tsx`. |
 | "Switch does it this way" (literal px, `display`/`gap`, fixed radius). | Old modules predate the rules; copying them copies the violation. | Follow the AGENTS rule; a needed literal gets a comment with its reason. |
-| "I'll write the doc like `switch.md`." | A doc without front matter never reaches the site, and nothing fails. | Use `document-component`'s template; check `site-data.json` (§6.2). |
+| "I'll write the doc like `switch.md`." | A doc without front matter fails `docs:gen` (`missing front matter`), and one written by hand misses the template sections reviewers check. | Use `document-component`'s template; check `site-data.json` (§6.2). |
 | "A hand Props table is clearer." | It duplicates the JSDoc and drifts. | JSDoc every prop; the generated region renders it. |
 | "It has no `name`; callers can send it from state." | AGENTS rule 6: every field needs a `name`, and a native input submits for free. | Take `name` and test it with `FormData`. |
 | "Hover and focus can share the ring." | A keyboard user then cannot see where focus is. | Give `:focus-visible` its own look. |
