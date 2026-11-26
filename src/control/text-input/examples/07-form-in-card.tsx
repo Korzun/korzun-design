@@ -3,7 +3,7 @@
  * validity through `onValidChange`, so Save stays disabled while any is
  * invalid.
  */
-import { Card, Stack } from '@korzun/design/component';
+import { Card, Stack, Text } from '@korzun/design/component';
 import { Button, TextInput } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -11,12 +11,13 @@ export default function FormInCard() {
   const [name, setName] = useState<string | undefined>('Ada Lovelace');
   const [password, setPassword] = useState('');
   const [valid, setValid] = useState<Record<string, boolean>>({});
+  const [saved, setSaved] = useState<string | null>(null);
   const invalid = Object.values(valid).some((ok) => !ok);
   return (
     <Card
       title="Account"
       footer={
-        <Button type="primary" disabled={invalid}>
+        <Button type="primary" disabled={invalid} onClick={() => setSaved(name ?? '')}>
           Save
         </Button>
       }
@@ -39,6 +40,7 @@ export default function FormInCard() {
           value={password}
           onChange={(v) => setPassword(v ?? '')}
         />
+        {saved !== null && <Text tone="success">Saved: {saved}</Text>}
       </Stack>
     </Card>
   );

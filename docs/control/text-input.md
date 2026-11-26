@@ -108,7 +108,7 @@ export default function Layouts() {
 `validate` receives the raw text on each keystroke. While it returns `false`
 the label and border turn red, `onChange` is not called (the saved value stays
 at the last valid text) and `onValidChange` fires once when validity flips.
-Clear the field to see it.
+Type past ten characters to see it.
 
 ```tsx
 import { Stack, Text } from '@korzun/design/component';
@@ -123,10 +123,10 @@ export default function Validation() {
       <TextInput
         name="title"
         layout="vertical"
-        label="Title (required)"
+        label="Title (up to 10)"
         value={title}
         onChange={setTitle}
-        validate={(text) => text.trim().length > 0}
+        validate={(text) => text.length <= 10}
         onValidChange={(_name, ok) => setValid(ok)}
       />
       <Text tone={valid ? 'success' : 'danger'}>{valid ? 'Valid' : 'Invalid'}</Text>
@@ -243,7 +243,7 @@ validity through `onValidChange`, so Save stays disabled while any is
 invalid.
 
 ```tsx
-import { Card, Stack } from '@korzun/design/component';
+import { Card, Stack, Text } from '@korzun/design/component';
 import { Button, TextInput } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -251,12 +251,13 @@ export default function FormInCard() {
   const [name, setName] = useState<string | undefined>('Ada Lovelace');
   const [password, setPassword] = useState('');
   const [valid, setValid] = useState<Record<string, boolean>>({});
+  const [saved, setSaved] = useState<string | null>(null);
   const invalid = Object.values(valid).some((ok) => !ok);
   return (
     <Card
       title="Account"
       footer={
-        <Button type="primary" disabled={invalid}>
+        <Button type="primary" disabled={invalid} onClick={() => setSaved(name ?? '')}>
           Save
         </Button>
       }
@@ -279,6 +280,7 @@ export default function FormInCard() {
           value={password}
           onChange={(v) => setPassword(v ?? '')}
         />
+        {saved !== null && <Text tone="success">Saved: {saved}</Text>}
       </Stack>
     </Card>
   );
