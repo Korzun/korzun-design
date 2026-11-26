@@ -23,3 +23,8 @@ export const exampleFor = (
   const Component = info && exampleComponents[info.file];
   return info && Component ? { info, Component } : undefined;
 };
+
+/** Type name -> slug of the module page that has its table, so other pages link to it. */
+export const typePages: ReadonlyMap<string, string> = new Map(
+  siteData.modules.flatMap((m) => m.tables.map((t) => [t.name, m.slug] as const))
+);

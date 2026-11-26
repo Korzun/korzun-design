@@ -67,14 +67,19 @@ const scrollTo = (event: MouseEvent, id: string) => {
   document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 };
 
-/** Type text in code, with each name that has its own table on the page linked to it. */
+/**
+ * Type text in code, with each name that has its own table linked to it: on
+ * this page (`linkable`) or, failing that, on another module's page (`typePages`).
+ */
 const TypeText = ({
   text,
   linkable,
+  typePages,
   bare = false,
 }: {
   text: string;
   linkable: Set<string>;
+  typePages: ReadonlyMap<string, string>;
   /** Inside a `<code>` already: render the parts without a wrapper. */
   bare?: boolean;
 }) => {
@@ -84,18 +89,27 @@ const TypeText = ({
   const parts: ReactNode[] = [];
   let last = 0;
   for (const match of text.matchAll(/[A-Za-z_$][\w$]*/g)) {
-    if (!linkable.has(match[0])) continue;
+    const here = linkable.has(match[0]);
+    const page = typePages.get(match[0]);
+    if (!here && !page) continue;
     parts.push(text.slice(last, match.index));
     const id = tableId(match[0]);
     parts.push(
-      <a
-        key={match.index}
-        href={`#${pathname}#${id}`}
-        className={styles.link}
-        onClick={(e) => scrollTo(e, id)}
-      >
-        {match[0]}
-      </a>
+      here ? (
+        <a
+          key={match.index}
+          href={`#${pathname}#${id}`}
+          className={styles.link}
+          onClick={(e) => scrollTo(e, id)}
+        >
+          {match[0]}
+        </a>
+      ) : (
+        // Another page: the router navigates and the page scrolls to the hash.
+        <a key={match.index} href={`#/components/${page}#${id}`} className={styles.link}>
+          {match[0]}
+        </a>
+      )
     );
     last = match.index + match[0].length;
   }
@@ -108,12 +122,16 @@ export type PropsTableProps = {
   table: TypeTable;
   /** Every table on the page, so type names that have one link to it. */
   tables: TypeTable[];
+  /** Type name -> slug of the module page that has its table, for types documented elsewhere. */
+  typePages?: ReadonlyMap<string, string>;
   /** The doc the descriptions come from, for resolving their relative links. */
   from: string;
 };
 
 /** One generated type table, anchored by `id={name.toLowerCase()}`. */
-export const PropsTable = ({ table, tables, from }: PropsTableProps) => {
+const NO_PAGES: ReadonlyMap<string, string> = new Map();
+
+export const PropsTable = ({ table, tables, typePages = NO_PAGES, from }: PropsTableProps) => {
   const styles = useTableStyle();
   const linkable = new Set(tables.filter((t) => t.name !== table.name).map((t) => t.name));
   const caption = (
@@ -133,7 +151,7 @@ export const PropsTable = ({ table, tables, from }: PropsTableProps) => {
         <pre className={styles.alias}>
           <code>
             {`type ${table.name} = `}
-            <TypeText text={table.text ?? ''} linkable={linkable} bare />
+            <TypeText text={table.text ?? ''} linkable={linkable} typePages={typePages} bare />
           </code>
         </pre>
       </Stack>
@@ -173,7 +191,7 @@ export const PropsTable = ({ table, tables, from }: PropsTableProps) => {
                   </Stack>
                 </td>
                 <td>
-                  <TypeText text={row.type} linkable={linkable} />
+                  <TypeText text={row.type} linkable={linkable} typePages={typePages} />
                 </td>
                 <td>
                   {row.default && row.defaultProse ? (

@@ -1,7 +1,14 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
-import { orderTables, REGIONS, renderRegion, replaceRegions, stripRegions } from './regions.mjs';
+import {
+  orderTables,
+  REGIONS,
+  renderRegion,
+  replaceRegions,
+  stripRegions,
+  tableAnchors,
+} from './regions.mjs';
 
 const mod = (over = {}) => ({
   id: 'control/button',
@@ -332,7 +339,7 @@ test('props: linked type cells read as their natural text, spaces outside code s
   ];
   const out = renderRegion('props', mod({ values: ['Menu'], tables }));
   assert.ok(out.includes('| `on` | `(item:` [MenuItem](#menuitem)`) => void` |'), out);
-  assert.ok(out.includes('| `pair` | [MenuItem](#menuitem) `\\|` [Align](#align) |'), out);
+  assert.ok(out.includes('| `pair` | [MenuItem](#menuitem) `\\|` [Align](#types) |'), out);
   assert.ok(out.includes('| `list` | [MenuItem](#menuitem)`[] \\| null` |'), out);
 });
 
@@ -371,4 +378,82 @@ test('props: a type with backticks is fenced by a longer run, padded when it sta
     out
   );
   assert.ok(out.includes('| `unit` | `` `${number}px` `` | `` `1px` `` |'), out);
+});
+
+test('props: a type documented in another doc links to that doc and anchor', () => {
+  const tables = [
+    {
+      name: 'PageActionsBarProps',
+      kind: 'props',
+      rows: [row({ name: 'items', type: 'PageActionItem[]' })],
+    },
+  ];
+  const m = mod({
+    docPath: 'docs/control/page-actions-bar.md',
+    values: ['PageActionsBar'],
+    tables,
+  });
+  const typeDocs = new Map([
+    ['PageActionItem', 'docs/control/page-actions-menu.md#pageactionitem'],
+    ['Theme', 'docs/theme.md#theme'],
+  ]);
+  const out = renderRegion('props', m, { typeDocs });
+  assert.ok(
+    out.includes(
+      '| `items` | [PageActionItem](../control/page-actions-menu.md#pageactionitem)`[]` |'
+    ),
+    out
+  );
+  const fromComponent = renderRegion(
+    'props',
+    mod({
+      docPath: 'docs/component/page.md',
+      values: ['Page'],
+      tables: [
+        {
+          name: 'PageProps',
+          kind: 'props',
+          rows: [row({ name: 'theme', type: 'Theme | PageActionItem' })],
+        },
+      ],
+    }),
+    { typeDocs }
+  );
+  assert.ok(
+    fromComponent.includes(
+      '| `theme` | [Theme](../theme.md#theme) `\\|` [PageActionItem](../control/page-actions-menu.md#pageactionitem) |'
+    ),
+    fromComponent
+  );
+});
+
+test('props: a type in this doc wins over one of the same name in another doc', () => {
+  const tables = [
+    { name: 'MenuProps', kind: 'props', rows: [row({ name: 'items', type: 'MenuItem[]' })] },
+    { name: 'MenuItem', kind: 'object', rows: [row({ name: 'id', type: 'string' })] },
+  ];
+  const out = renderRegion('props', mod({ values: ['Menu'], tables }), {
+    typeDocs: new Map([['MenuItem', 'docs/control/other.md#menuitem']]),
+  });
+  assert.ok(out.includes('| `items` | [MenuItem](#menuitem)`[]` |'), out);
+});
+
+test('tableAnchors: headed tables, aliases at the Types block, so other docs can link to them', () => {
+  const tables = [
+    { name: 'MenuProps', kind: 'props', rows: [row()] },
+    { name: 'MenuItem', kind: 'object', rows: [row()] },
+    { name: 'Align', kind: 'alias', rows: [], text: "'a'" },
+  ];
+  assert.deepEqual(
+    [...tableAnchors(mod({ values: ['Menu'], tables }))],
+    [
+      ['MenuItem', 'menuitem'],
+      ['Align', 'types'],
+    ]
+  );
+  const two = [...tables, { name: 'MenuIntentProps', kind: 'props', rows: [row()] }];
+  assert.deepEqual(
+    [...tableAnchors(mod({ values: ['Menu'], tables: two })).keys()],
+    ['MenuProps', 'MenuIntentProps', 'MenuItem', 'Align']
+  );
 });

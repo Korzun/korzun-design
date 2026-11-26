@@ -4,7 +4,7 @@ import { useEffect, type ReactNode } from 'react';
 import { useLocation, useParams } from 'react-router';
 
 import type { ChangelogEntry, ModuleInfo } from '../../scripts/docs-gen/types.js';
-import { moduleBySlug } from '../data.js';
+import { moduleBySlug, typePages } from '../data.js';
 import { siteColumn } from '../layout/column.js';
 import { NotFound } from '../not-found.js';
 import { CopyButton } from '../part/copy-button.js';
@@ -140,6 +140,7 @@ export const ComponentPage = () => {
                     key={table.name}
                     table={table}
                     tables={mod.tables}
+                    typePages={typePages}
                     from={mod.docPath}
                   />
                 ))}

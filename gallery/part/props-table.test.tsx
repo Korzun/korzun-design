@@ -74,3 +74,49 @@ describe('PropsTable', () => {
     expect(link.closest('code')).toHaveTextContent(/^MenuItem\[\]$/);
   });
 });
+
+describe('PropsTable links to types documented on other pages', () => {
+  const props: TypeTable = {
+    name: 'PageActionsBarProps',
+    kind: 'props',
+    rows: [{ name: 'items', type: 'PageActionItem[]', required: true, description: '' }],
+  };
+
+  it('links a type another module documents to that page and its table', () => {
+    render(
+      <ThemeProvider identity="test">
+        <MemoryRouter>
+          <PropsTable
+            table={props}
+            tables={[props]}
+            typePages={new Map([['PageActionItem', 'page-actions-menu']])}
+            from="docs/control/page-actions-bar.md"
+          />
+        </MemoryRouter>
+      </ThemeProvider>
+    );
+    const link = screen.getByRole('link', { name: 'PageActionItem' });
+    expect(link).toHaveAttribute('href', '#/components/page-actions-menu#pageactionitem');
+    expect(link.closest('code')).toHaveTextContent(/^PageActionItem\[\]$/);
+  });
+
+  it('prefers a table on this page over one elsewhere', () => {
+    const item: TypeTable = { name: 'PageActionItem', kind: 'object', rows: [] };
+    render(
+      <ThemeProvider identity="test">
+        <MemoryRouter initialEntries={['/components/page-actions-bar']}>
+          <PropsTable
+            table={props}
+            tables={[props, item]}
+            typePages={new Map([['PageActionItem', 'page-actions-menu']])}
+            from="docs/control/page-actions-bar.md"
+          />
+        </MemoryRouter>
+      </ThemeProvider>
+    );
+    expect(screen.getByRole('link', { name: 'PageActionItem' })).toHaveAttribute(
+      'href',
+      '#/components/page-actions-bar#pageactionitem'
+    );
+  });
+});

@@ -168,6 +168,36 @@ test('site data lists tables in the doc order: the main <Name>Props first', () =
   assert.equal(site.modules[0].tables[1].description, 'Extra fields.');
 });
 
+test("a type cell links to a type whose table is in another module's doc", () => {
+  const root = fixture();
+  put(
+    root,
+    'src/control/index.ts',
+    "export { Widget, type WidgetItem, type WidgetProps } from './widget/index.js';\n" +
+      "export { Gadget, type GadgetProps } from './gadget/index.js';\n"
+  );
+  put(
+    root,
+    'dist/control/widget/index.d.ts',
+    `${DTS}export type WidgetItem = { /** Item label. */ label: string };\n`
+  );
+  put(
+    root,
+    'dist/control/gadget/index.d.ts',
+    "import type { WidgetItem } from '../widget/index.js';\n" +
+      'export interface GadgetProps {\n  /** Shown items. */\n  items: WidgetItem[];\n}\n'
+  );
+  put(root, 'src/control/gadget/index.tsx', 'export function Gadget() { return null; }\n');
+  put(root, 'docs/control/gadget.md', DOC.replaceAll('Widget', 'Gadget'));
+  const files = generate(root);
+  const gadget = files.get('docs/control/gadget.md');
+  assert.ok(
+    gadget.includes('| `items` (required) | [WidgetItem](../control/widget.md#widgetitem)`[]` |'),
+    gadget
+  );
+  assert.ok(files.get('docs/control/widget.md').includes('### WidgetItem'));
+});
+
 test('tokens follow style.ts imports transitively, cycle-safe', () => {
   const root = fixture();
   put(

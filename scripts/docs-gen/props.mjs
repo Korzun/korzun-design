@@ -528,6 +528,15 @@ export function extractTypeTables(dtsPath, names, readFile = defaultRead) {
     return { name, ...found };
   });
   const exported = new Map(resolved.map(({ name, decl }) => [decl, name]));
+  // `type PageActionIntentProps = MenuIntentProps` requested here: references
+  // to MenuIntentProps print the name this module documents.
+  for (const { name, decl, file } of resolved) {
+    const ann = decl.type === 'TSTypeAliasDeclaration' ? decl.typeAnnotation : null;
+    if (ann?.type !== 'TSTypeReference' || ann.typeName.type !== 'Identifier') continue;
+    if (ann.typeArguments || decl.typeParameters?.params?.length) continue;
+    const target = loader.resolveName(file, ann.typeName.name)?.decl;
+    if (target && !exported.has(target)) exported.set(target, name);
+  }
   const { flatten, aliasText } = createFlattener(loader, exported);
   return resolved.map(({ name, decl, file }) => {
     const { rows, skipped } = flatten(decl, file);

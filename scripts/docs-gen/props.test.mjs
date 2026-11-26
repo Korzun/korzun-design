@@ -594,3 +594,25 @@ export type Shape = React.ReactNode | string;`,
   );
   assert.deepEqual(ext.extends, ['HTMLAttributes']);
 });
+
+test('a reference to a type this module re-aliases prints the alias the module documents', () => {
+  const src = `import type { MenuIntentProps } from './menu.js';
+export type PageActionIntentProps = MenuIntentProps;
+export type PageActionItem = { label: string; intentProps?: MenuIntentProps };`;
+  const menu = `export type MenuIntentProps = { /** Focus. */ onFocus: () => void };`;
+  const [alias, item] = extractTypeTables(
+    '/x/a.d.ts',
+    ['PageActionIntentProps', 'PageActionItem'],
+    files({ '/x/a.d.ts': src, '/x/menu.d.ts': menu })
+  );
+  assert.equal(row(item, 'intentProps').type, 'PageActionIntentProps');
+  // The alias table itself still lists the members it shares.
+  assert.equal(row(alias, 'onFocus').type, '() => void');
+  // Without the alias requested, the original name stays.
+  const [only] = extractTypeTables(
+    '/x/a.d.ts',
+    ['PageActionItem'],
+    files({ '/x/a.d.ts': src, '/x/menu.d.ts': menu })
+  );
+  assert.equal(row(only, 'intentProps').type, 'MenuIntentProps');
+});

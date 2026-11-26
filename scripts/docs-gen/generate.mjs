@@ -11,7 +11,13 @@ import { readExample } from './examples.mjs';
 import { parseFrontMatter } from './front-matter.mjs';
 import { listModules } from './inventory.mjs';
 import { extractTypeTables } from './props.mjs';
-import { importNames, orderTables, replaceRegions, stripRegions } from './regions.mjs';
+import {
+  importNames,
+  orderTables,
+  replaceRegions,
+  stripRegions,
+  tableAnchors,
+} from './regions.mjs';
 import { collectTokenPaths, resolveTokens } from './tokens.mjs';
 
 /** @typedef {import('./types.js').ModuleInfo} ModuleInfo */
@@ -211,15 +217,23 @@ export function generate(repo, { strict = false } = {}) {
       changelog: entries,
     };
     info.importLine = importLine(info);
+    modules.push(info);
+  }
 
-    const rewritten = replaceRegions(parsed.content, info, skel.docPath);
-    const raw = readFileSync(join(repo, skel.docPath), 'utf8');
+  // Every type with a table in some doc, so another doc's type cells link to it.
+  const typeDocs = new Map();
+  for (const info of modules) {
+    for (const [name, id] of tableAnchors(info)) typeDocs.set(name, `${info.docPath}#${id}`);
+  }
+  for (const info of modules) {
+    const parsed = fm.get(info.docPath);
+    const rewritten = replaceRegions(parsed.content, info, info.docPath, { typeDocs });
+    const raw = readFileSync(join(repo, info.docPath), 'utf8');
     const head = raw.slice(0, raw.length - parsed.content.length);
-    out.set(skel.docPath, head + rewritten);
+    out.set(info.docPath, head + rewritten);
     info.body = stripRegions(rewritten)
       .replace(/^\s*# [^\n]*\n?/, '')
       .trim();
-    modules.push(info);
   }
 
   const guides = [];

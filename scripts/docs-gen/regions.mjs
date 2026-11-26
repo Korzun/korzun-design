@@ -35,6 +35,17 @@ function anchor(name) {
     .replace(/[^a-z0-9_-]/g, '');
 }
 
+/**
+ * Link from the doc at `from` to `to`, a repo path with its anchor
+ * (`docs/control/menu.md#menuitem`, `docs/theme.md#theme`). From an area
+ * folder the link goes up to `docs/` first, as hand-written doc links do
+ * (`../control/menu.md#menuitem`).
+ */
+function docLink(from, to) {
+  const up = from.split('/').length > 2 ? '../' : '';
+  return `${up}${to.slice('docs/'.length)}`;
+}
+
 /** Import specifiers as written in an import line: `A, B, type C`. Empty when none. */
 export function importNames(mod) {
   return [
@@ -63,9 +74,10 @@ function renderExamples(mod) {
 }
 
 /**
- * Type cell; names of supporting tables become links to their `###` heading.
- * The text between links is code; its edge spaces sit outside the code span,
- * so the cell reads as the type does (`MenuItem[]`, `(item: MenuItem) => void`).
+ * Type cell; names in `linkable` (name -> link) become links to their table,
+ * in this doc or another. The text between links is code; its edge spaces sit
+ * outside the code span, so the cell reads as the type does (`MenuItem[]`,
+ * `(item: MenuItem) => void`).
  */
 function typeCell(type, linkable) {
   if (linkable.size === 0) return code(type);
@@ -82,7 +94,7 @@ function typeCell(type, linkable) {
   for (const piece of pieces) {
     if (linkable.has(piece)) {
       flush();
-      out.push(`[${piece}](#${anchor(piece)})`);
+      out.push(`[${piece}](${linkable.get(piece)})`);
     } else {
       plain += piece;
     }
@@ -138,19 +150,42 @@ export function orderTables(tables, values) {
 }
 
 /**
+ * The anchor of each table the props region gives a heading, by type name, in
+ * render order: an object's `###` heading, every props table's when there are
+ * several, and the shared `### Types` block for an alias. Other docs link
+ * to these too.
+ * @param {ModuleInfo} mod
+ * @returns {Map<string, string>}
+ */
+export function tableAnchors(mod) {
+  const ordered = orderTables(mod.tables, mod.values);
+  const headed = ordered.filter((t) => t.kind === 'props').length > 1;
+  return new Map(
+    ordered
+      .filter((t) => headed || t.kind !== 'props')
+      .map((t) => [t.name, t.kind === 'alias' ? 'types' : anchor(t.name)])
+  );
+}
+
+/**
  * The tables in `orderTables` order: props, objects, then one alias block,
  * each with its type description under the heading (an alias's as a doc
- * comment in the block). Every table with a `###` heading is a link target
- * for the other tables' type cells.
+ * comment in the block). Every headed table is a link target for the other
+ * tables' type cells (see `tableAnchors`). `typeDocs` (type name -> doc path
+ * and anchor) adds the tables of other docs; a name this doc has wins.
  */
-function renderProps(mod) {
+function renderProps(mod, { typeDocs = new Map() } = {}) {
   const ordered = orderTables(mod.tables, mod.values);
   const propsTables = ordered.filter((t) => t.kind === 'props');
   const objects = ordered.filter((t) => t.kind === 'object');
   const aliases = ordered.filter((t) => t.kind === 'alias');
   const headed = propsTables.length > 1;
-  const targets = [...(headed ? propsTables : []), ...objects, ...aliases].map((t) => t.name);
-  const linkable = (self) => new Set(targets.filter((n) => n !== self.name));
+  const own = new Set(mod.tables.map((t) => t.name));
+  const external = [...typeDocs]
+    .filter(([name]) => !own.has(name))
+    .map(([name, to]) => [name, docLink(mod.docPath, to)]);
+  const anchors = [...tableAnchors(mod)].map(([name, id]) => [name, `#${id}`]);
+  const linkable = (self) => new Map([...external, ...anchors.filter(([n]) => n !== self.name)]);
   const parts = ['## Props'];
   for (const t of propsTables) parts.push(...tableBlock(t, linkable(t), headed));
   for (const t of objects) parts.push(...tableBlock(t, linkable(t), true));
@@ -203,11 +238,12 @@ const RENDERERS = {
 /**
  * @param {string} name one of REGIONS
  * @param {ModuleInfo} mod
+ * @param {{ typeDocs?: Map<string, string> }} [ctx] type name -> `docs/…md#anchor` of its table in another doc
  */
-export function renderRegion(name, mod) {
+export function renderRegion(name, mod, ctx = {}) {
   const render = RENDERERS[name];
   if (!render) throw new Error(`unknown region: ${name}`);
-  return render(mod);
+  return render(mod, ctx);
 }
 
 const open = (name) => `<!-- generated:${name} -->`;
@@ -218,8 +254,9 @@ const close = (name) => `<!-- /generated:${name} -->`;
  * @param {string} md
  * @param {ModuleInfo} mod
  * @param {string} file used in error messages
+ * @param {{ typeDocs?: Map<string, string> }} [ctx] passed to each region's renderer
  */
-export function replaceRegions(md, mod, file) {
+export function replaceRegions(md, mod, file, ctx = {}) {
   const spans = REGIONS.map((name) => {
     const start = md.indexOf(open(name));
     if (start === -1) throw new Error(`${file}: missing ${open(name)}`);
@@ -236,7 +273,7 @@ export function replaceRegions(md, mod, file) {
   let out = '';
   let cursor = 0;
   for (const s of spans) {
-    const content = renderRegion(s.name, mod);
+    const content = renderRegion(s.name, mod, ctx);
     out += md.slice(cursor, s.contentStart);
     out += `\n\n${content}\n\n`;
     cursor = s.end;
