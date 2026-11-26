@@ -1,9 +1,10 @@
-import { Heading, Page, Stack, Text } from '@korzun/design/component';
+import { Heading, Page, Stack } from '@korzun/design/component';
 import { createUseStyles, useTheme, type Theme } from '@korzun/design/theme';
 import type { ReactNode } from 'react';
 
 import { siteColumn } from '../layout/column.js';
 import { siteLink } from '../layout/link.js';
+import { Lead } from '../part/lead.js';
 
 // Preview sizes. Each is the size of a sample, not a spacing or radius token, so
 // it is named here rather than read from the theme.
@@ -198,7 +199,7 @@ export function TokensPage() {
         <Stack gap="xxxxl">
           <Stack gap="sm">
             <Heading level={1}>Tokens</Heading>
-            <Text as="p" size="lg" tone="description">
+            <Lead>
               {'Every theme value, as the current theme resolves it ('}
               <code>colorScheme: {theme.colorScheme}</code>
               {'). The '}
@@ -206,7 +207,7 @@ export function TokensPage() {
                 tokens guide
               </a>
               {' explains each group.'}
-            </Text>
+            </Lead>
           </Stack>
 
           {tokenGroups(theme).map((group) => (

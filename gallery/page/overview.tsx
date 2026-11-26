@@ -29,6 +29,15 @@ const useStyle = createUseStyles((theme: Theme) => ({
     display: 'grid',
     gridTemplateColumns: 'repeat(auto-fill, minmax(16rem, 1fr))',
     gap: theme.space.xl,
+    // On a phone the cards are a list: a full-width thumbnail per card ran the
+    // page past 12,000px with its text scaled to 7px.
+    [theme.breakpoint.mobile]: { gap: theme.space.md },
+  },
+  // A phone row: a small thumbnail beside the name and description.
+  cardText: { minWidth: 0 },
+  cardBody: {
+    // Doubled, to win over Stack's own column direction.
+    [theme.breakpoint.mobile]: { '&&': { flexDirection: 'row', alignItems: 'flex-start' } },
   },
   card: {
     display: 'block',
@@ -47,9 +56,9 @@ const ModuleCard = ({ mod }: { mod: ModuleInfo }) => {
   return (
     <Link to={`/components/${mod.slug}`} className={styles.card}>
       <Card>
-        <Stack gap="md">
-          <Thumbnail owner={moduleOwner(mod)} />
-          <Stack gap="xs">
+        <Stack gap="md" className={styles.cardBody}>
+          <Thumbnail owner={moduleOwner(mod)} compact />
+          <Stack gap="xs" className={styles.cardText}>
             <Heading level={3} size="md">
               {mod.title}
             </Heading>

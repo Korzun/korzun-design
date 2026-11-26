@@ -5,6 +5,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { Page } from '../../component/page/index.js';
 import { Surface } from '../../component/surface/index.js';
 import { renderWithProviders } from '../../test-utils.js';
+import { lightTheme } from '../../theme/theme.js';
 import { Select } from './index.js';
 
 const options = ['Fantasy', 'Horror', 'Science Fiction', 'Thriller'];
@@ -481,5 +482,59 @@ describe('Select surface follows depth', () => {
   it('explicit surface="card" wins directly on a Page', () => {
     renderWithProviders(<Page>{select('card')}</Page>);
     expect(triggerStyle().borderRadius).toBe('8px');
+  });
+});
+
+describe('option list matches Menu', () => {
+  const css = () =>
+    Array.from(document.querySelectorAll('style'))
+      .map((el) => el.textContent ?? '')
+      .join('\n');
+  const ruleBody = (selector: string) =>
+    [...css().matchAll(/([^{}]+)\{([^{}]*)\}/g)].find(([, s]) => s.trim() === selector)?.[2] ?? '';
+
+  const open = async () => {
+    const user = userEvent.setup();
+    renderWithProviders(
+      <Select
+        name="genre"
+        options={options}
+        value="Horror"
+        placeholder="Pick…"
+        searchable={false}
+      />
+    );
+    await user.click(screen.getByRole('button', { name: 'Horror' }));
+    return user;
+  };
+
+  it('insets the list 4px and gives items sm corners and 14px text', async () => {
+    await open();
+    expect(getComputedStyle(screen.getByRole('listbox')).padding).toBe(lightTheme.space.xs);
+    const option = screen.getByRole('option', { name: 'Fantasy' });
+    expect(getComputedStyle(option).borderRadius).toBe(lightTheme.radius.sm);
+    expect(getComputedStyle(option).fontSize).toBe(lightTheme.fontSize.md);
+  });
+
+  it('uses the cardStack shadow, like Menu', async () => {
+    await open();
+    const dropdown = screen.getByRole('listbox').parentElement as HTMLElement;
+    expect(getComputedStyle(dropdown).boxShadow).toBe(lightTheme.shadow.cardStack);
+  });
+
+  it('hovers with bg.hover, and keeps the keyboard highlight on top', async () => {
+    const user = await open();
+    const option = screen.getByRole('option', { name: 'Fantasy' });
+    const [hover] = [...option.classList].map((cls) => ruleBody(`.${cls}:hover`)).filter(Boolean);
+    expect(hover).toContain(`background-color: ${lightTheme.color.bg.hover}`);
+
+    await user.keyboard('{ArrowDown}');
+    const highlighted = screen
+      .getAllByRole('option')
+      .find((el) => el.className.includes('highlighted'));
+    expect(highlighted).toBeDefined();
+    expect(getComputedStyle(highlighted as HTMLElement).backgroundColor).not.toBe(
+      'rgba(0, 0, 0, 0)'
+    );
   });
 });

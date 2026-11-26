@@ -426,7 +426,7 @@ type ChipColor = 'status' | 'author' | 'series' | 'subject' | 'book' | 'entryTyp
 | `theme.color.chip.info.text` | `#0758d9` | `#87BAFF` |
 | `theme.color.chip.neutral.bg` | `rgba(110, 110, 110, 0.08)` | `rgba(156, 161, 171, 0.16)` |
 | `theme.color.chip.neutral.border` | `rgba(110, 110, 110, 0.22)` | `rgba(156, 161, 171, 0.3)` |
-| `theme.color.chip.neutral.text` | `#6E6E6E` | `#9CA1AB` |
+| `theme.color.chip.neutral.text` | `#5E5E5E` | `#A8ADB6` |
 | `theme.color.chip.rating.bg` | `rgba(181,69,27,0.08)` | `rgba(181,69,27,0.18)` |
 | `theme.color.chip.rating.border` | `rgba(181,69,27,0.22)` | `rgba(181,69,27,0.32)` |
 | `theme.color.chip.rating.text` | `#b5451b` | `#F2A07B` |
@@ -474,7 +474,8 @@ type ChipColor = 'status' | 'author' | 'series' | 'subject' | 'book' | 'entryTyp
 
 ## Changelog
 
-- **0.7.0** (2026-11-26): Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.5.2 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px. A text field, `ChipsInput` box or field label directly on a Page also moves its text 16px in from the edge (8px elsewhere), the inset `Button` keeps, so it clears the deeper corner.
+- **0.7.0** (2026-11-26): Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.6.0 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px. A text field, `ChipsInput` box or field label directly on a Page also moves its text 16px in from the edge (8px elsewhere), the inset `Button` keeps, so it clears the deeper corner.
+- **0.7.0** (2026-11-26): `color.chip.neutral` text is a step stronger, so a neutral Tag or chip holds 4.5:1 on its tint over `bg.page`, `bg.card` and `bg.cardHeader`: light `#5E5E5E` (was `#6E6E6E`, 4.0:1 over `cardHeader`), dark `#A8ADB6`, the mode's `text.description` (was `#9CA1AB`, 4.47:1 over `page`). Fill and border are unchanged.
 - **0.3.0** (2026-11-22): `Popover` renders inside an open `<dialog>` that contains its anchor, so `Select` and `ChipsInput` work in modals.
 - **0.1.0** (2026-11-21): `Popover`:
   - `side` (`bottom`/`top`) and `align` (`start`/`center`/`end`).

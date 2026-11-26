@@ -36,7 +36,7 @@ const Value = ({
 }) => {
   const styles = useStyle();
   const table = useTableStyle();
-  if (value === null) return <Text tone="faint">–</Text>;
+  if (value === null) return <Text tone="muted">–</Text>;
   return (
     <Inline gap="sm" align="center" wrap={false}>
       {color && (

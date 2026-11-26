@@ -132,11 +132,12 @@ describe('new semantic tokens — dark values exist and differ from light', () =
     expect(darkTheme.color.chip.neutral.bg).not.toBe(lightTheme.color.chip.neutral.bg);
     expect(darkTheme.color.chip.neutral.border).not.toBe(lightTheme.color.chip.neutral.border);
   });
-  it('chip.neutral is built from each mode’s muted text colour', () => {
-    expect(lightTheme.color.chip.neutral.text).toBe(lightTheme.color.text.muted);
+  it('chip.neutral is a tint of each mode’s muted text colour, with stronger text', () => {
     expect(lightTheme.color.chip.neutral.bg).toBe('rgba(110, 110, 110, 0.08)');
     expect(lightTheme.color.chip.neutral.border).toBe('rgba(110, 110, 110, 0.22)');
-    expect(darkTheme.color.chip.neutral.text).toBe(darkTheme.color.text.muted);
+    expect(lightTheme.color.chip.neutral.text).toBe('#5E5E5E');
+    expect(darkTheme.color.chip.neutral.bg).toBe('rgba(156, 161, 171, 0.16)');
+    expect(darkTheme.color.chip.neutral.text).toBe(darkTheme.color.text.description);
   });
   it('chip.user dark differs from light', () => {
     expect(darkTheme.color.chip.user.text).not.toBe(lightTheme.color.chip.user.text);
@@ -242,6 +243,84 @@ describe('bg.track separates the segmented-control track from what it sits on', 
 
   it('leaves light mode exactly as it rendered before', () => {
     expect(lightTheme.color.bg.track).toBe(lightTheme.color.gray[100]);
+  });
+});
+
+// WCAG 2 relative luminance (gamma-decoded, unlike `luminance` above).
+const relativeLuminance = (hex: string) => {
+  const [r, g, b] = [1, 3, 5].map((i) => {
+    const c = parseInt(hex.slice(i, i + 2), 16) / 255;
+    return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+  });
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+};
+
+// WCAG 2 contrast ratio of two opaque hex colours.
+const contrast = (a: string, b: string) => {
+  const [x, y] = [relativeLuminance(a), relativeLuminance(b)].sort((p, q) => q - p);
+  return (x + 0.05) / (y + 0.05);
+};
+
+// An `rgba(r, g, b, a)` or hex colour laid over an opaque hex surface, as hex.
+const over = (color: string, surface: string) => {
+  const [r, g, b, a = 1] = color.startsWith('#')
+    ? [1, 3, 5].map((i) => parseInt(color.slice(i, i + 2), 16))
+    : color.match(/[\d.]+/g)!.map(Number);
+  return `#${[r, g, b]
+    .map((c, i) => {
+      const under = parseInt(surface.slice(1 + i * 2, 3 + i * 2), 16);
+      return Math.round(c! * a + under * (1 - a))
+        .toString(16)
+        .padStart(2, '0');
+    })
+    .join('')}`;
+};
+
+describe('chip.neutral text (4.5:1) on its own tint over every surface', () => {
+  it.each([
+    ['light', lightTheme],
+    ['dark', darkTheme],
+  ] as const)('%s mode', (_mode, theme) => {
+    const chip = theme.color.chip.neutral;
+    for (const surface of ['page', 'card', 'cardHeader'] as const) {
+      const fill = over(chip.bg, theme.color.bg[surface]);
+      expect(contrast(chip.text, fill), surface).toBeGreaterThanOrEqual(4.5);
+    }
+  });
+});
+
+describe('border.light, the hairline divider', () => {
+  it('in dark mode is a visible step on page and card, at least light mode’s', () => {
+    const step = (theme: typeof lightTheme, surface: 'page' | 'card') =>
+      contrast(theme.color.border.light, theme.color.bg[surface]);
+    expect(darkTheme.color.border.light).toBe('#333439');
+    expect(step(darkTheme, 'page')).toBeGreaterThanOrEqual(step(lightTheme, 'page'));
+    expect(step(darkTheme, 'card')).toBeGreaterThanOrEqual(step(lightTheme, 'card'));
+    expect(step(darkTheme, 'page')).toBeLessThan(
+      contrast(darkTheme.color.border.default, darkTheme.color.bg.page)
+    );
+  });
+});
+
+describe('non-text contrast (3:1) on every surface', () => {
+  const surfaces = ['page', 'card', 'cardHeader'] as const;
+
+  it.each([
+    ['light', lightTheme],
+    ['dark', darkTheme],
+  ] as const)('bg.switchOff, the unchecked Switch track, in %s mode', (_mode, theme) => {
+    for (const surface of surfaces) {
+      expect(contrast(theme.color.bg.switchOff, theme.color.bg[surface])).toBeGreaterThanOrEqual(3);
+    }
+  });
+
+  it.each([
+    ['light', lightTheme],
+    ['dark', darkTheme],
+  ] as const)('border.focus, the text/link Button focus ring, in %s mode', (_mode, theme) => {
+    for (const surface of [...surfaces, 'footer', 'input'] as const) {
+      expect(contrast(theme.color.border.focus, theme.color.bg[surface])).toBeGreaterThanOrEqual(3);
+    }
   });
 });
 

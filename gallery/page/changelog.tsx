@@ -5,6 +5,7 @@ import { Link } from 'react-router';
 
 import { siteData } from '../data.js';
 import { siteColumn } from '../layout/column.js';
+import { PROSE_WIDTH } from '../layout/type.js';
 import { Markdown } from '../part/markdown.js';
 
 const useStyle = createUseStyles((theme: Theme) => ({
@@ -14,8 +15,9 @@ const useStyle = createUseStyles((theme: Theme) => ({
     paddingBottom: theme.space.xxxxxl,
   },
   // No bullets: each entry opens with its row of tag chips, and a bullet beside
-  // the chips left the text wrapping under it. A hairline separates entries.
-  entries: { margin: 0, padding: 0, listStyle: 'none' },
+  // the chips left the text wrapping under it. A hairline separates entries,
+  // and lines of prose stop at a readable length, not the 1200px column.
+  entries: { margin: 0, padding: 0, listStyle: 'none', maxWidth: PROSE_WIDTH },
   entry: {
     '& + &': {
       marginTop: theme.space.xl,
@@ -67,7 +69,7 @@ export const ChangelogPage = () => {
         <Stack gap="xxxxl">
           <Heading level={1}>Changelog</Heading>
           {siteData.changelog.map((release) => (
-            <Stack as="section" gap="lg" key={release.version} aria-label={release.version}>
+            <Stack as="section" gap="xl" key={release.version} aria-label={release.version}>
               <Inline gap="md" align="baseline">
                 <Heading level={2}>{release.version}</Heading>
                 <Text size="sm" tone="muted">

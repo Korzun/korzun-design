@@ -1,10 +1,12 @@
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import cx from 'classnames';
 import { Marked, type Token, type Tokens } from 'marked';
-import { useMemo, type MouseEvent } from 'react';
+import { useMemo, useRef, type MouseEvent } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 
 import { anchor } from '../../scripts/docs-gen/slug.mjs';
+import { useScrollHint } from '../layout/scroll-hint.js';
+import { codeBlock, inlineCode, pageCodeEdge, PROSE_WIDTH, scrollHint } from '../layout/type.js';
 import { highlight, useHighlightStyle } from './highlight.js';
 
 // Schemes a rendered link may use; any other (`javascript:`, `data:`) becomes `#`.
@@ -125,29 +127,51 @@ const useStyle = createUseStyles((theme: Theme) => ({
     lineHeight: theme.lineHeight.body,
     '& > :first-child': { marginTop: 0 },
     '& > :last-child': { marginBottom: 0 },
+    // The page templates' scale (layout/type.ts): an h2 here matches a page's
+    // `<Heading level={2}>` section, an h3 an example or props title.
+    '& h2, & h3, & h4': { lineHeight: theme.lineHeight.tight },
     '& h2': {
       fontSize: theme.fontSize.xl,
-      fontWeight: theme.fontWeight.semibold,
-      margin: `${theme.space.xxxxl} 0 ${theme.space.lg}`,
+      fontWeight: theme.fontWeight.bold,
+      margin: `${theme.space.xxxxxl} 0 ${theme.space.xl}`,
     },
     '& h3': {
       fontSize: theme.fontSize.lg,
       fontWeight: theme.fontWeight.semibold,
       margin: `${theme.space.xxxl} 0 ${theme.space.md}`,
     },
+    '& h4': {
+      fontSize: theme.fontSize.md,
+      fontWeight: theme.fontWeight.semibold,
+      margin: `${theme.space.xxl} 0 ${theme.space.sm}`,
+    },
+    // Lines of prose stop at a readable length; tables and code keep the full width.
+    '& > p, & > ul, & > ol, & > blockquote, & > h2, & > h3, & > h4': { maxWidth: PROSE_WIDTH },
     '& p, & ul, & ol': { margin: `0 0 ${theme.space.lg}` },
     '& ul, & ol': { paddingLeft: theme.space.xxxl },
     '& li + li': { marginTop: theme.space.xs },
     '& li > ul': { margin: `${theme.space.xs} 0 0` },
     '& pre': {
+      ...codeBlock(theme),
       margin: `0 0 ${theme.space.lg}`,
       padding: theme.space.xl,
       overflowX: 'auto',
       // A box on the page background.
       borderRadius: theme.radius.lg,
       backgroundColor: theme.color.bg.cardHeader,
+      ...pageCodeEdge(theme),
+      ...scrollHint,
     },
-    '& pre code': { padding: 0, backgroundColor: 'transparent' },
+    // Inline code here sits on the page too, so it takes the same edge.
+    '& :not(pre) > code': pageCodeEdge(theme),
+    // The block sets the size; its code is not an inline span.
+    '& pre code': {
+      fontSize: 'inherit',
+      padding: 0,
+      borderRadius: 0,
+      backgroundColor: 'transparent',
+      overflowWrap: 'normal',
+    },
     // Guides lean on tables (corners, tokens): ruled rows, left-aligned heads.
     '& table': {
       display: 'block',
@@ -167,14 +191,8 @@ const useStyle = createUseStyles((theme: Theme) => ({
   },
   // Inline runs (a prop or example description) share the code and link look.
   text: {
-    '& code': {
-      fontFamily: theme.fontFamily.mono,
-      fontSize: theme.fontSize.sm,
-      padding: `0 ${theme.space.xxs}`,
-      borderRadius: theme.radius.sm,
-      backgroundColor: theme.color.bg.cardHeader,
-      overflowWrap: 'anywhere',
-    },
+    // In em, so code in a heading takes the heading's size.
+    '& code': inlineCode(theme),
     '& a': {
       color: theme.color.brand.default,
       textDecoration: 'none',
@@ -211,10 +229,13 @@ export const Markdown = ({
   const tokens = useHighlightStyle();
   const { pathname } = useLocation();
   const navigate = useNavigate();
+  // A div or a span (`inline`); the hook only needs an element.
+  const ref = useRef<HTMLDivElement & HTMLSpanElement>(null);
   const html = useMemo(
     () => render(source, from, inline, pathname, links),
     [source, from, inline, pathname, links]
   );
+  useScrollHint(ref, html);
 
   // A link to a section of this page scrolls there and records the fragment;
   // the browser would otherwise route the whole hash. Modified clicks stay native.
@@ -234,6 +255,7 @@ export const Markdown = ({
   const Tag = inline ? 'span' : 'div';
   return (
     <Tag
+      ref={ref}
       className={cx(styles.text, !inline && styles.root, tokens.tokens, className)}
       onClick={onClick}
       // Repo docs and JSDoc, with raw HTML escaped and link schemes allowlisted above.

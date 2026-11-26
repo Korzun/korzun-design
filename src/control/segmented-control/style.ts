@@ -23,6 +23,12 @@ export const useStyle = createUseStyles((theme: Theme) => {
     minWidth: 0,
     boxSizing: 'border-box',
     fontFamily: theme.fontFamily.body,
+    // The segment is a <button>, which the UA gives its own 13.33px font
+    // rather than the page's; the reveal's copies are spans that inherit the
+    // page's. Pin both to the label's size so the segment's own text metrics
+    // (line box, anything sized in em) match the 14px label it holds and the
+    // two rows stay identical whatever the page sets.
+    fontSize: theme.fontSize.md,
     padding: `${theme.space.sm} ${theme.space.xl}`,
   } as const;
   // The lens's window, in the root's own width: one column, starting at the

@@ -74,6 +74,12 @@ export interface Theme {
        * rail invisible on the page.
        */
       track: string;
+      /**
+       * An unchecked Switch's track. Mid-grey rather than a border colour: it
+       * has to hold 3:1 against `page`, `card` and `cardHeader` (the shaded
+       * row a switch usually sits in) in both modes.
+       */
+      switchOff: string;
       input: string;
       footer: string;
       glass: string;
@@ -134,8 +140,8 @@ export interface Theme {
       entryType: { text: string; bg: string; border: string };
       user: { text: string; bg: string; border: string };
       rating: { text: string; bg: string; border: string };
-      // Quiet grey for states that carry no category (e.g. "no change"), built
-      // from the mode's muted text colour.
+      // Quiet grey for states that carry no category (e.g. "no change"): a tint
+      // of the mode's muted text colour, with text a step stronger for 4.5:1.
       neutral: { text: string; bg: string; border: string };
       // Status tones for state, as opposed to the label tones above.
       success: { text: string; bg: string; border: string };
@@ -260,6 +266,8 @@ function buildTheme(mode: ThemeMode): Theme {
       // Unchanged from the `cardHeader` this used to borrow: in light mode the
       // track was already a step darker than the page, so light renders as before.
       track: gray[100],
+      // 3.1:1 on cardHeader, 3.4:1 on page, 3.5:1 on card.
+      switchOff: '#868686',
       input: '#FFFFFF',
       footer: gray[100],
       glass: applyTransparency('#FFFFFF', 0.6),
@@ -326,8 +334,10 @@ function buildTheme(mode: ThemeMode): Theme {
       },
       user: { text: '#a23a95', bg: 'rgba(162,58,149,0.08)', border: 'rgba(162,58,149,0.22)' },
       rating: { text: '#b5451b', bg: 'rgba(181,69,27,0.08)', border: 'rgba(181,69,27,0.22)' },
+      // Text a step darker than the muted grey it is built from: muted itself
+      // was 4.0:1 on its own tint over `cardHeader`, under AA at chip size.
       neutral: {
-        text: gray[600],
+        text: '#5E5E5E',
         bg: applyTransparency(gray[600], 0.08),
         border: applyTransparency(gray[600], 0.22),
       },
@@ -374,6 +384,8 @@ function buildTheme(mode: ThemeMode): Theme {
       // colliding with the lens. Raising it instead keeps the same ~8-per-channel
       // separation light mode has, in the only direction that is still free.
       track: '#2C2D31',
+      // 3.3:1 on page and cardHeader, 3.7:1 on card.
+      switchOff: '#6E7480',
       input: '#1A1B1E',
       footer: '#232427',
       glass: applyTransparency('#1C1C1E', 0.6),
@@ -387,7 +399,9 @@ function buildTheme(mode: ThemeMode): Theme {
     border: {
       default: '#3A3B40',
       strong: '#48494F',
-      light: '#2B2C30',
+      // Lifted from #2B2C30 (1.10:1 on page), at which rules and frames vanished;
+      // now about light mode's step (1.24:1 on page, 1.39:1 on card).
+      light: '#333439',
       faint: '#3A3B40',
       focus: blue[400],
       hover: blue[600],
@@ -438,7 +452,9 @@ function buildTheme(mode: ThemeMode): Theme {
       rating: { text: '#F2A07B', bg: 'rgba(181,69,27,0.18)', border: 'rgba(181,69,27,0.32)' },
       // Dark chips run stronger alphas (0.16 / 0.30) than light (0.08 / 0.22).
       neutral: {
-        text: darkMuted,
+        // `text.description`, a step lighter than muted: muted was 4.47:1 on
+        // its own tint over `page`, under AA at chip size.
+        text: '#A8ADB6',
         bg: applyTransparency(darkMuted, 0.16),
         border: applyTransparency(darkMuted, 0.3),
       },
