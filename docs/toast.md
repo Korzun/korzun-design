@@ -244,6 +244,7 @@ export default function MaxToasts() {
 
 ## Changelog
 
+- **0.5.1** (2026-11-26): `ToastProviderProps` is exported from `@korzun/design/toast`.
 - **0.0.1** (2026-11-15): Toast: `ToastProvider`, `useToast`.
 
 <!-- /generated:changelog -->

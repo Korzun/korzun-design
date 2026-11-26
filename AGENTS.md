@@ -5,6 +5,9 @@ other libraries such as MUI, Chakra, or shadcn. Before using a module, read its
 doc in `docs/`. The doc paths below are relative to this file, so in a
 consuming app they are under `node_modules/@korzun/design/`.
 
+The same docs are on the docs site, https://korzun.github.io/korzun-design/,
+with an index for agents at https://korzun.github.io/korzun-design/llms.txt.
+
 To load this guide in a consuming app, add this line to its `CLAUDE.md` or
 `AGENTS.md`:
 

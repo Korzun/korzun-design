@@ -15,8 +15,7 @@ as they are (step 7 says what to do when they would need to change).
 Below, `<area>/<module>` is the module folder (`control/menu`), `<slug>` the
 folder name (`menu`), `<Name>` the main exported value (`Menu`). For an
 entry-point module (`theme`, `toast`, `icon`) the doc is `docs/<area>.md`, the
-source `src/<area>/`, the slug `<area>`, and stories are
-`src/<area>/*.stories.tsx` (e.g. `src/toast/toast.stories.tsx`).
+source `src/<area>/` and the slug `<area>`.
 
 Before you start, read [red-flags.md](red-flags.md): the thoughts that made
 earlier runs fail review, and what to do instead.
@@ -63,6 +62,7 @@ Every rule below applies to type-level comments too. A finished JSDoc line is:
   - The prop's unset value is computed from where the component sits (it follows surface depth): no `@default`, and the description starts "Unset, it follows …" (Button `radius`).
   - A `@default` that is not a value is prose (`@default accepts numeric text`) and shows as plain text. The generator tells them apart by parsing: a single word (`@default none`) parses as a name and renders as code. Write a prose default as two words or more (`@default no limit`), or as a value (`@default undefined`).
 - **Links as markdown, never a bare "see X".** Another doc: `[corners](../corners.md)`, `[Popover](../control/popover.md)`. A section of this doc: `[Forms](#forms)`.
+- **`children` gets a home when it needs a note.** A props type written `PropsWithChildren<{ … }>` has no member to carry a `children` note. Replacing it with an explicit, JSDoc'd `children?: ReactNode` inside the object (and dropping the wrapper) is allowed: the type is equivalent, so it is not an API change and needs no CHANGELOG line. Keep `children` required only if it already was (`children: ReactNode`).
 - **Characters as written.** Typed Unicode stays (… – “ ” ✕); never replace it with ASCII (`...`, `-`, `"`).
 
 Rewrite example (the Default column then shows `'medium'`):
@@ -191,8 +191,8 @@ showing all values side by side, each labelled with its value.
 
 ## 5. Delete stories
 
-`git rm src/<area>/<module>/*.stories.tsx`. Examples replace stories;
-CLAUDE.md's stories rule is obsolete.
+No `*.stories.tsx` remain (0.5.1 replaced the story gallery with the docs
+site). If one turns up in the module, `git rm` it; examples replace it.
 
 ## 6. Verify (REQUIRED, in order)
 
@@ -247,7 +247,7 @@ CLAUDE.md's stories rule is obsolete.
 
 - Doc, JSDoc, examples and the stories deletion: one commit, `docs(<slug>): generated docs and examples`.
 - An unrelated fix you needed (a brittle test, a typo elsewhere): its own commit, before it.
-- CHANGELOG: if the diff in `src/` changes only comments, `examples/` and `*.stories.tsx`, no CHANGELOG line (the 0.5.1 `[General]` line covers the migration). If documenting it would need a change to runtime code or a type (a bug, a missing prop), stop and report it: that change is made elsewhere, with its own CHANGELOG line, and this skill then refreshes the doc.
+- CHANGELOG: if the diff in `src/` changes only comments and `examples/` (or swaps `PropsWithChildren<{ … }>` for an explicit `children`, see §2), no CHANGELOG line: a doc refresh is runtime-neutral (0.5.1's `[General]` line announced the migration itself; the 0.5.1 `[Popover]` line, `data-preferred-side`, is the kind of runtime change that does get one). If documenting it would need a change to runtime code or a type (a bug, a missing prop), stop and report it: that change is made elsewhere, with its own CHANGELOG line, and this skill then refreshes the doc.
 
 ## 8. Report
 

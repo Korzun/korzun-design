@@ -13,7 +13,7 @@ has one checklist slot per section; an empty slot means the work is not done.
 Below, `<area>` is `control` or `component`, `<slug>` the kebab-case folder
 (`checkbox`), `<Name>` the exported value (`Checkbox`).
 
-**Examples replace stories; CLAUDE.md's stories rule is obsolete.** Write no
+**Examples replace stories (CLAUDE.md: a test and examples).** Write no
 `*.stories.tsx` (nothing reads it). The doc format is the one from the
 `document-component` skill, not the old `# Name` + Props table.
 
@@ -206,7 +206,7 @@ props>.`` The tag is the value name, so the site links it.
 
 | Thought | Reality | Do instead |
 |---|---|---|
-| "CLAUDE.md says every control gets a stories file." | Examples replace stories; that rule is obsolete and a stories file is dead code. | Write `examples/`; no `*.stories.tsx`. |
+| "Every control gets a stories file." | Examples replace stories (CLAUDE.md asks for a test and examples); a stories file is dead code. | Write `examples/`; no `*.stories.tsx`. |
 | "Switch does it this way" (literal px, `display`/`gap`, fixed radius). | Old modules predate the rules; copying them copies the violation. | Follow the AGENTS rule; a needed literal gets a comment with its reason. |
 | "I'll write the doc like `switch.md`." | A doc without front matter never reaches the site, and nothing fails. | Use `document-component`'s template; check `site-data.json` (§6.2). |
 | "A hand Props table is clearer." | It duplicates the JSDoc and drifts. | JSDoc every prop; the generated region renders it. |

@@ -1,5 +1,5 @@
 {
-  "version": "0.5.0",
+  "version": "0.5.1",
   "modules": [
     {
       "id": "control/back-button",
@@ -3277,6 +3277,14 @@
         }
       ],
       "changelog": [
+        {
+          "version": "0.5.1",
+          "date": "2026-11-26",
+          "tags": [
+            "Popover"
+          ],
+          "text": "The popover wrapper carries `data-preferred-side` (the `side` you asked for) alongside `data-side` (the side used after flipping)."
+        },
         {
           "version": "0.5.0",
           "date": "2026-11-24",
@@ -9268,6 +9276,14 @@
       ],
       "changelog": [
         {
+          "version": "0.5.1",
+          "date": "2026-11-26",
+          "tags": [
+            "ToastProvider"
+          ],
+          "text": "`ToastProviderProps` is exported from `@korzun/design/toast`."
+        },
+        {
           "version": "0.0.1",
           "date": "2026-11-15",
           "tags": [
@@ -9435,7 +9451,7 @@
       "docPath": "docs/corners.md",
       "title": "Corners",
       "description": "Corner radius by nesting depth, one radius step per level.",
-      "body": "Corner radius tracks **depth**, not size. Surfaces on the page background have\nthe roundest corners. Each surface nested inside another gets a squarer,\nconcentric corner, so the inner curve follows the outer one.\n\n## Tokens\n\n| Token | Value | Use |\n|---|---|---|\n| `theme.radius.lg` | 16px | Surfaces on the page background |\n| `theme.radius.md` | 8px | One level in: inside a card or modal; also floating layers |\n| `theme.radius.sm` | 4px | Two levels in: inside an input, inset box, row, or menu |\n| `theme.radius.pill` | 999px | Capsules: nav bar, a Switch with no nearby corner |\n| `theme.radius.circle` | 50% | Round glass buttons |\n\n## The rule\n\nFind where the element sits, then read its radius from this table:\n\n| Where the element sits | Radius | Examples |\n|---|---|---|\n| On the page background | `lg` | `Card`, modal dialog (`recipe.modal.dialog`), `Button`, `Select` and `CardRow` directly on a `Page` (automatic) |\n| Inside a card or modal | `md` | inputs (`recipe.input`), Buttons and Selects in a Card or Dialog (automatic), `Tag`, shaded rows (`recipe.row`), inset boxes |\n| Inside one of those | `sm` | a chip inside an input, Buttons and Selects in a nested Card, inset box (`Surface`) or Popover (automatic), a menu item, a Switch track in a shaded row |\n| Flush with its parent (zero inset, edges touch) | the parent's radius | an unlabelled Select's trigger, an input filling its row |\n| Inset 4px or less from its parent | `calc(parent − inset)` | a Switch thumb 2px inside a 4px track is 2px |\n| A small control with no nearby corner | `pill` / `circle` | a Switch in a full-width card header |\n| A floating layer (popover, menu, dropdown, toast) | `md`, plus `shadow.hoverLift` or `recipe.glass` | its items are `sm` |\n\n**Step down one token per level** (`lg` → `md` → `sm`). Do not subtract the\npadding: a Card has 13px of inset, but the inputs inside it are `md` (8px), not\n16 − 13 = 3px. Exact subtraction applies only to tight insets of 4px or less.\n\n## It's automatic\n\nComponents read their corners from the **surface depth** they sit at, so you\npass no radius prop:\n\n| Depth | Radius | Where |\n|---|---|---|\n| 0 | `lg` (16px) | On the page background, inside a `Page` |\n| 1 | `md` (8px) | Inside a `Card`, `CardRow`, `Alert` or `Dialog` on the page |\n| 2+ | `sm` (4px) | One more level in; deeper levels stay `sm` |\n| none | each component's old default | No `Page`, `Dialog`, `Card`, `CardRow`, `Alert` or `Surface` above it (tests, bare stories) |\n\nWho provides depth:\n\n- `Page` provides 0, to its header, content and footer actions.\n- `Dialog` provides 1 to its header, body and footer.\n- `Card`, `CardRow` and `Alert` each provide one level deeper than where\n  they sit, so a Card in a Card steps down.\n- `Popover` (and so `Menu` and the `Select` list) provides a fixed 2: a\n  floating layer is `md` and its items `sm`, whatever opened it.\n\nWhat follows depth with no prop: `Button`, `Select`, `Card`, `CardRow`,\n`Alert`. For a hand-made box that holds Buttons or Selects, wrap its contents\nin `<Surface>` and read its own radius with `useSurfaceRadius()`; see\n[surface](component/surface.md).\n\nHand-drawn boxes (your own `recipe.card.shell` or `recipe.row` styles, a `useModalDialog` modal) are invisible to depth: wrap their contents in `Surface`.\n\nAn explicit prop (`Button radius`, `Select surface`) is an **override** and\nalways wins over depth. It pins that radius even where depth would step down,\nwhich breaks concentricity, so set it only when the surface really is different\n(`radius=\"background\"` on a Button that must stay round inside a Card).\n\n`Switch` still takes `radius` (`inset` or `pill`) by hand, and `type=\"link\"`\nbuttons have no padding or background, so radius doesn't apply.\n\n## In your own styles\n\n```ts\nconst useStyles = createUseStyles((theme: Theme) => ({\n  panel: { ...theme.recipe.card.shell },  // already lg\n  inset: {\n    backgroundColor: theme.color.bg.cardHeader,\n    borderRadius: theme.radius.md,        // one level in\n    padding: theme.space.md,\n  },\n  chip: { borderRadius: theme.radius.sm }, // two levels in\n  knob: { borderRadius: `calc(${theme.radius.sm} - 2px)` }, // 2px inset\n}));\n```\n\n- Never write a literal `borderRadius` (`'12px'`, `'50%'`). The only\n  non-token form allowed is `calc(theme.radius.X ± Npx)` for tight insets.\n- A 1px inset works the other way too: `Card size=\"small\"` is\n  `calc(radius.md + 1px)` so its flush `md` children stay concentric."
+      "body": "Corner radius tracks **depth**, not size. Surfaces on the page background have\nthe roundest corners. Each surface nested inside another gets a squarer,\nconcentric corner, so the inner curve follows the outer one.\n\n## Tokens\n\n| Token | Value | Use |\n|---|---|---|\n| `theme.radius.lg` | 16px | Surfaces on the page background |\n| `theme.radius.md` | 8px | One level in: inside a card or modal; also floating layers |\n| `theme.radius.sm` | 4px | Two levels in: inside an input, inset box, row, or menu |\n| `theme.radius.pill` | 999px | Capsules: nav bar, a Switch with no nearby corner |\n| `theme.radius.circle` | 50% | Round glass buttons |\n\n## The rule\n\nFind where the element sits, then read its radius from this table:\n\n| Where the element sits | Radius | Examples |\n|---|---|---|\n| On the page background | `lg` | `Card`, modal dialog (`recipe.modal.dialog`), `Button`, `Select` and `CardRow` directly on a `Page` (automatic) |\n| Inside a card or modal | `md` | inputs (`recipe.input`), Buttons and Selects in a Card or Dialog (automatic), `Tag`, shaded rows (`recipe.row`), inset boxes |\n| Inside one of those | `sm` | a chip inside an input, Buttons and Selects in a nested Card, inset box (`Surface`) or Popover (automatic), a menu item, a Switch track in a shaded row |\n| Flush with its parent (zero inset, edges touch) | the parent's radius | an unlabelled Select's trigger, an input filling its row |\n| Inset 4px or less from its parent | `calc(parent − inset)` | a Switch thumb 2px inside a 4px track is 2px |\n| A small control with no nearby corner | `pill` / `circle` | a Switch in a full-width card header |\n| A floating layer (popover, menu, dropdown, toast) | `md`, plus `shadow.hoverLift` or `recipe.glass` | its items are `sm` |\n\n**Step down one token per level** (`lg` → `md` → `sm`). Do not subtract the\npadding: a Card has 13px of inset, but the inputs inside it are `md` (8px), not\n16 − 13 = 3px. Exact subtraction applies only to tight insets of 4px or less.\n\n## It's automatic\n\nComponents read their corners from the **surface depth** they sit at, so you\npass no radius prop:\n\n| Depth | Radius | Where |\n|---|---|---|\n| 0 | `lg` (16px) | On the page background, inside a `Page` |\n| 1 | `md` (8px) | Inside a `Card`, `CardRow`, `Alert` or `Dialog` on the page |\n| 2+ | `sm` (4px) | One more level in; deeper levels stay `sm` |\n| none | each component's old default | No `Page`, `Dialog`, `Card`, `CardRow`, `Alert` or `Surface` above it (tests, a component rendered on its own) |\n\nWho provides depth:\n\n- `Page` provides 0, to its header, content and footer actions.\n- `Dialog` provides 1 to its header, body and footer.\n- `Card`, `CardRow` and `Alert` each provide one level deeper than where\n  they sit, so a Card in a Card steps down.\n- `Popover` (and so `Menu` and the `Select` list) provides a fixed 2: a\n  floating layer is `md` and its items `sm`, whatever opened it.\n\nWhat follows depth with no prop: `Button`, `Select`, `Card`, `CardRow`,\n`Alert`. For a hand-made box that holds Buttons or Selects, wrap its contents\nin `<Surface>` and read its own radius with `useSurfaceRadius()`; see\n[surface](component/surface.md).\n\nHand-drawn boxes (your own `recipe.card.shell` or `recipe.row` styles, a `useModalDialog` modal) are invisible to depth: wrap their contents in `Surface`.\n\nAn explicit prop (`Button radius`, `Select surface`) is an **override** and\nalways wins over depth. It pins that radius even where depth would step down,\nwhich breaks concentricity, so set it only when the surface really is different\n(`radius=\"background\"` on a Button that must stay round inside a Card).\n\n`Switch` still takes `radius` (`inset` or `pill`) by hand, and `type=\"link\"`\nbuttons have no padding or background, so radius doesn't apply.\n\n## In your own styles\n\n```ts\nconst useStyles = createUseStyles((theme: Theme) => ({\n  panel: { ...theme.recipe.card.shell },  // already lg\n  inset: {\n    backgroundColor: theme.color.bg.cardHeader,\n    borderRadius: theme.radius.md,        // one level in\n    padding: theme.space.md,\n  },\n  chip: { borderRadius: theme.radius.sm }, // two levels in\n  knob: { borderRadius: `calc(${theme.radius.sm} - 2px)` }, // 2px inset\n}));\n```\n\n- Never write a literal `borderRadius` (`'12px'`, `'50%'`). The only\n  non-token form allowed is `calc(theme.radius.X ± Npx)` for tight insets.\n- A 1px inset works the other way too: `Card size=\"small\"` is\n  `calc(radius.md + 1px)` so its flush `md` children stay concentric."
     },
     {
       "slug": "hooks",
@@ -9467,6 +9483,36 @@
     }
   ],
   "changelog": [
+    {
+      "version": "0.5.1",
+      "date": "2026-11-26",
+      "entries": [
+        {
+          "version": "0.5.1",
+          "date": "2026-11-26",
+          "tags": [
+            "General"
+          ],
+          "text": "Docs: every module doc has front matter and generated import, examples, props, tokens and changelog sections; prop notes moved into JSDoc; docs site with overview, component pages, llms.txt and llms-full.txt replaces the story gallery. The props types of `Card`, `CardRow`, `CollapsibleSection`, `ConfirmModal`, `Page` and `Button` declare `children` explicitly, so it has a doc line; the types are equivalent, no change for callers."
+        },
+        {
+          "version": "0.5.1",
+          "date": "2026-11-26",
+          "tags": [
+            "ToastProvider"
+          ],
+          "text": "`ToastProviderProps` is exported from `@korzun/design/toast`."
+        },
+        {
+          "version": "0.5.1",
+          "date": "2026-11-26",
+          "tags": [
+            "Popover"
+          ],
+          "text": "The popover wrapper carries `data-preferred-side` (the `side` you asked for) alongside `data-side` (the side used after flipping)."
+        }
+      ]
+    },
     {
       "version": "0.5.0",
       "date": "2026-11-24",

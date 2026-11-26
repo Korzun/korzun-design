@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.5.1 — 2026-11-26
+
+- [General] Docs: every module doc has front matter and generated import, examples, props, tokens and changelog sections; prop notes moved into JSDoc; docs site with overview, component pages, llms.txt and llms-full.txt replaces the story gallery. The props types of `Card`, `CardRow`, `CollapsibleSection`, `ConfirmModal`, `Page` and `Button` declare `children` explicitly, so it has a doc line; the types are equivalent, no change for callers.
+- [ToastProvider] `ToastProviderProps` is exported from `@korzun/design/toast`.
+- [Popover] The popover wrapper carries `data-preferred-side` (the `side` you asked for) alongside `data-side` (the side used after flipping).
+
 ## 0.5.0 — 2026-11-24
 
 - [Page, Dialog, Card, CardRow, Alert, Surface, Popover, Menu, Select, Button] Surface depth: corners are concentric site-wide with no radius props. `Page` provides depth 0, `Dialog` 1, and `Card`, `CardRow` and `Alert` each provide one level deeper than where they sit; `Popover` (so `Menu` and the `Select` list) provides a fixed 2. Depth 0 is `radius.lg`, 1 is `md`, 2 and deeper is `sm`. `Button`, `Select`, `Card`, `CardRow` and `Alert` follow it; an explicit `Button radius` or `Select surface` still wins. With no `Page`, `Dialog`, `Card`, `CardRow`, `Alert` or `Surface` above it, a component keeps its 0.4.0 look; a bare `Card` (no `Page`) still counts as depth 0 and gives its contents depth 1, so its Buttons and nested Cards change as below.

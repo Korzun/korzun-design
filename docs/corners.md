@@ -47,7 +47,7 @@ pass no radius prop:
 | 0 | `lg` (16px) | On the page background, inside a `Page` |
 | 1 | `md` (8px) | Inside a `Card`, `CardRow`, `Alert` or `Dialog` on the page |
 | 2+ | `sm` (4px) | One more level in; deeper levels stay `sm` |
-| none | each component's old default | No `Page`, `Dialog`, `Card`, `CardRow`, `Alert` or `Surface` above it (tests, bare stories) |
+| none | each component's old default | No `Page`, `Dialog`, `Card`, `CardRow`, `Alert` or `Surface` above it (tests, a component rendered on its own) |
 
 Who provides depth:
 
