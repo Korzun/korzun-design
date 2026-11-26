@@ -1,7 +1,7 @@
 /** Custom values and suggestions only
  * Enter or Tab also adds text that matches no suggestion. With
  * `allowCustom={false}` only a suggestion can be added: unmatched text stays in
- * the field, and Enter does not submit the surrounding form.
+ * the field.
  */
 import { Stack, Text } from '@korzun/design/component';
 import { ChipsInput } from '@korzun/design/control';

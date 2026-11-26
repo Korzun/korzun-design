@@ -22,7 +22,7 @@ export type ChipsInputProps = {
   allowCustom?: boolean;
   /** Disables typing and the chip remove buttons. */
   disabled?: boolean;
-  /** Field label. Ignored in the default `block` layout; set `layout` to show it. */
+  /** Field label. Ignored in the `block` layout; set `layout` to show it. */
   label?: string;
   /** `'block'` is the bare box, with no label. `'horizontal'` and `'vertical'` add a label on a `bg.cardHeader` row (`radius.md`), like the other fields. */
   layout?: 'horizontal' | 'vertical' | 'block';

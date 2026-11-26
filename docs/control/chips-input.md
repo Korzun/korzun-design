@@ -40,9 +40,9 @@ No `className`. The label is linked to the input with a generated id.
 - Do set `layout="horizontal"` and `dense` when it sits among other form fields
   in a `Card`; otherwise the label silently disappears.
 - Do pick a `chipColor` that matches how the same values are tagged elsewhere.
-- Don't rely on `name` for form submission.
 - Do use it inside a `Dialog`: the dropdown opens inside the open dialog, so it
   is not hidden behind it (see [popover](popover.md)).
+- Don't rely on `name` for form submission.
 
 <!-- generated:examples -->
 
@@ -83,7 +83,7 @@ export default function Basic() {
 
 Enter or Tab also adds text that matches no suggestion. With
 `allowCustom={false}` only a suggestion can be added: unmatched text stays in
-the field, and Enter does not submit the surrounding form.
+the field.
 
 ```tsx
 import { Stack, Text } from '@korzun/design/component';
@@ -345,7 +345,7 @@ export default function InDialog() {
 | `chipColor` | `'status' \| 'author' \| 'series' \| 'subject' \| 'book' \| 'entryType' \| 'user' \| 'rating' \| 'neutral' \| 'success' \| 'warning' \| 'danger' \| 'info'` | `'subject'` | Chip colour family: `status`, `author`, `series`, `subject`, `book`, `entryType`, `user`, `rating`, `neutral`, `success`, `warning`, `danger` or `info`. Pick the one that tags the same values elsewhere. |
 | `dense` | `boolean` | `false` | Matches a standard input's height, so the field lines up with `TextInput` and `Select` rows. Leave it off for a roomy standalone tag box. |
 | `disabled` | `boolean` | `false` | Disables typing and the chip remove buttons. |
-| `label` | `string` |  | Field label. Ignored in the default `block` layout; set `layout` to show it. |
+| `label` | `string` |  | Field label. Ignored in the `block` layout; set `layout` to show it. |
 | `layout` | `'horizontal' \| 'vertical' \| 'block'` | `'block'` | `'block'` is the bare box, with no label. `'horizontal'` and `'vertical'` add a label on a `bg.cardHeader` row (`radius.md`), like the other fields. |
 | `name` | `string` |  | Set on the text input only: form data gets the half-typed text, not the chips. |
 | `onChange` (required) | `(values: string[]) => void` |  | Receives the whole new array, not an event. |
