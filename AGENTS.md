@@ -90,6 +90,6 @@ Every component exports its props type as `<Name>Props` (`ButtonProps`,
 
 ## Docs index
 
-[docs]|theme.md: provider, createUseStyles, token summary, recipes|corners.md: Corner radius by nesting depth, one radius step per level.|patterns.md: How screens are built: forms in cards, confirmations, menus, modals, toasts and style overrides.|tokens.md: Every theme token key in detail, group by group.|philosophy.md: The design rules the code enforces, and why.|icon.md|toast.md|hooks.md: Mobile-chrome hooks: standalone detection, minimize on scroll, pull to refresh.
+[docs]|theme.md: ThemeProvider, the light and dark themes, and createUseStyles for writing token-based styles.|corners.md: Corner radius by nesting depth, one radius step per level.|patterns.md: How screens are built: forms in cards, confirmations, menus, modals, toasts and style overrides.|tokens.md: Every theme token key in detail, group by group.|philosophy.md: The design rules the code enforces, and why.|icon.md|toast.md|hooks.md: Mobile-chrome hooks: standalone detection, minimize on scroll, pull to refresh.
 [docs/control]|{back-button,button,chips-input,confirm-modal,date-time-input,dialog,field-list,menu,number-input,page-actions-bar,page-actions-menu,page-footer-actions,popover,segmented-control,select,switch,text-area,text-input,use-modal-dialog}.md
 [docs/component]|{alert,card,card-divider,card-row,collapsible-section,empty-state,error-message,heading,inline,meta-line,metadata-list,nav-desktop,nav-mobile,page,progress-indicator,spinner,stack,surface,tag,text,theme-setting,top-fade}.md

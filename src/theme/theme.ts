@@ -44,9 +44,10 @@ const red = {
 type Recipe = { [key: string]: Recipe | string | number };
 
 // ─── Theme interface ───
-// A rem length, so a space value can feed props that only accept rem (Popover `gap`).
+/** A rem length, so a space value can feed props that only accept rem (Popover `gap`). */
 export type SpaceValue = `${number}rem`;
 
+/** The token object that `useTheme` returns and `createUseStyles` passes to a style function. Every key is described in [tokens](tokens.md). */
 export interface Theme {
   colorScheme: ThemeMode;
   color: {

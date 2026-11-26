@@ -2,6 +2,7 @@ import { createContext } from 'react';
 
 import type { ThemeMode } from './theme.js';
 
+/** The user's appearance choice; `'auto'` follows the operating system. */
 export type ThemeSetting = 'light' | 'dark' | 'auto';
 
 export type ThemeModeContext = {
