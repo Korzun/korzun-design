@@ -45,16 +45,25 @@ When a module disagrees with an AGENTS rule, the rule wins.
 
 `src/<area>/<slug>/style.ts`:
 - `createUseStyles((theme: Theme) => …)`; every colour, space, font size,
-  radius, shadow and z-index from `theme.*`, tints via `applyTransparency`.
-  No literal hex, px or rem. A size that must track the text uses `em`
-  (`'1em'`). A literal you cannot replace goes in a comment block at the top of
-  the file, one line each with its reason, as Button's `style.ts` does.
+  radius, shadow, z-index and transition from `theme.*`
+  (`transitionDuration: theme.transition.fast`), tints via `applyTransparency`.
+  Recipes before hand-written rules: the focus ring is
+  `...theme.recipe.focusRing` on the root with only `outlineColor` set on
+  `:focus-visible`, never a hand-written `outlineWidth`/`outlineStyle`. No
+  literal hex, px, rem or seconds. A size that must track the text uses `em`
+  (`'1em'`). A literal a token or recipe already covers is not a needed
+  literal. Every literal that remains, with no exception, goes in a comment
+  block at the top of the file, one line each with its reason, as Button's
+  `style.ts` does.
 - Layout is `Stack`/`Inline` and text is `Text`/`Heading`, composed in
-  `index.tsx`; `style.ts` never sets `gap`, `fontSize`, `fontWeight` or text
-  `color`. Inside a `<label>` or `<button>` root use `<Inline as="span">` and
-  `<Text as="span">`, or make the root itself `<Text as="label">`. `display`
-  on the root element is allowed only when no `as` value can express it, with a
-  one-line comment saying why.
+  `index.tsx`; `style.ts` never sets `gap`, `alignItems`, `fontSize`,
+  `fontWeight` or text `color`. Inside a `<label>` or `<button>` root, wrap the
+  children in `<Inline as="span" gap="…">` and set text with
+  `<Text as="span">`, or make the root itself `<Text as="label">`. `Inline`
+  renders block-level, full-width `flex`, so a root that must hug its content
+  (a checkbox row, whose click target would otherwise span the line) keeps
+  `display: 'inline-flex'` on the root with a one-line comment saying so; the
+  gap still comes from the inner `Inline`. No other `display` on the root.
 - Corners follow depth. Read `useSurfaceDepth()` and pick a class with
   `depthClass(depth)` as Button and Select do, or draw a box with
   `useSurfaceRadius()`. A fixed radius is allowed only for a glyph smaller than
@@ -62,9 +71,12 @@ When a module disagrees with an AGENTS rule, the rule wins.
   comment in `style.ts`, and a `### Corners` Usage sentence in the doc saying
   it is fixed and linking `[corners](../corners.md)`.
 - States are told apart: `:focus-visible` looks different from `:hover`;
-  disabled uses the library's fade (`opacity: 0.5`, as Button); an unchecked or
-  empty control's outline uses a border token that stays visible on
-  `bg.input` in both themes.
+  disabled uses the library's fade (`opacity: 0.5`, as Button). An unchecked
+  or empty control's outline reaches 3:1 non-text contrast against `bg.input`
+  in both themes (WCAG 1.4.11). No `border.*` token does (`border.default` is
+  1.4:1 light, 1.5:1 dark), so use `theme.color.text.muted` (5.1:1 light,
+  6.6:1 dark). A disabled unchecked control stays visible: check both in the
+  dark screenshot.
 
 `src/<area>/<slug>/index.test.tsx` (`renderWithProviders` from
 `../../test-utils.js`). One test per row, named for the behaviour:
@@ -136,14 +148,17 @@ grep -m1 '^## ' CHANGELOG.md                 # top heading
 The release is unreleased when `package.json`'s version or the top
 `## X.Y.Z` heading is above the tag.
 - Unreleased: add the bullet under that version's heading; if the version is
-  ahead but there is no heading for it, create `## X.Y.Z — $(date +%F)` at the
-  top. If the unreleased version is only a patch over the tag (v0.5.0 →
-  0.5.1), raise it to the next minor: `npm version <next minor>
-  --no-git-tag-version` and rename the heading to match.
+  ahead but there is no heading for it, create
+  `## X.Y.Z — $(TZ=America/New_York date +%F)` at the top.
+  If the unreleased version is only a patch over the tag (v0.5.0 → 0.5.1),
+  raise it to the next minor: `npm version <next minor> --no-git-tag-version`
+  and rename the heading to match.
 - Not unreleased (version and top heading equal the tag):
   `npm version minor --no-git-tag-version` and add a new
-  `## X.Y.0 — $(date +%F)` heading at the top.
+  `## X.Y.0 — $(TZ=America/New_York date +%F)` heading at the top.
 - `package.json` and the top heading name the same version when you finish.
+- The date is the owner's local date (America/New_York); a UTC shell after
+  19:00 local gives tomorrow, so always set `TZ`.
 
 Bullet: ``- [<Name>] New `<Name>` (<area>): <what it renders and its main
 props>.`` The tag is the value name, so the site links it.
@@ -162,7 +177,8 @@ props>.`` The tag is the value name, so the site links it.
 7. Screenshots per `document-component` §6.5, last: the full page
    `#/components/<slug>` light and dark, every overlay example, and the
    reshoot `find` check. The page shows `<Name>`'s title and every example;
-   a not-found page means step 2 failed.
+   a not-found page means step 2 failed. In the dark shot every unchecked,
+   empty and disabled state is visible.
 
 ## 7. Commits
 
@@ -196,6 +212,8 @@ props>.`` The tag is the value name, so the site links it.
 | "A hand Props table is clearer." | It duplicates the JSDoc and drifts. | JSDoc every prop; the generated region renders it. |
 | "It has no `name`; callers can send it from state." | AGENTS rule 6: every field needs a `name`, and a native input submits for free. | Take `name` and test it with `FormData`. |
 | "Hover and focus can share the ring." | A keyboard user then cannot see where focus is. | Give `:focus-visible` its own look. |
+| "I saw it was faint, but it's the border token Button uses, so I shipped." | Below 3:1 it is invisible to many readers; in dark mode it vanishes, and disabled vanishes in both. | Use `text.muted` for the outline; do not ship until both shots show unchecked and disabled-unchecked boxes. |
+| "I'll write the outline and the 0.1s transition by hand." | `recipe.focusRing` and `transition.fast` exist; a hand copy drifts. | Spread the recipe, use the token; list any remaining literal at the top. |
 | "The imports table is enough." | Rule 11 still tells consumers it does not exist. | Edit rule 11 too. |
 | "Tests and lint pass, so it ships." | Smoke and the page screenshot catch what they cannot. | Run `npm run smoke` and shoot the page. |
 | "The count test broke; bump 41 to 42." | The next module breaks it again, and it rides in your commit. | Assert the invariant, in its own commit. |
