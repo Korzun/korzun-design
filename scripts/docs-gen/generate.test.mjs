@@ -222,6 +222,80 @@ test('tokens follow style.ts imports transitively, cycle-safe', () => {
   );
 });
 
+// A second style module whose tokens show only when it is imported for its values.
+const withOtherStyle = (root) => {
+  put(
+    root,
+    'src/control/other/style.ts',
+    'export type OtherSize = string;\nexport const useOther = (theme) => ({ c: theme.color.other });\n'
+  );
+  put(
+    root,
+    'dist/theme/theme.js',
+    "export const lightTheme = { color: { text: '#111111', other: '#222222' } };\nexport const darkTheme = lightTheme;\n"
+  );
+};
+const tokenPaths = (root) =>
+  JSON.parse(generate(root).get('gallery/generated/site-data.json')).modules[0].tokens.map(
+    (t) => t.path
+  );
+
+test('tokens do not follow type-only imports in a style file', () => {
+  const root = fixture();
+  withOtherStyle(root);
+  put(
+    root,
+    'src/control/widget/style.ts',
+    "import type { OtherSize } from '../other/style.js';\n" +
+      "import { type OtherSize as O2 } from '../other/style.js';\n" +
+      'export const s = (theme) => ({ color: theme.color.text });\n'
+  );
+  assert.deepEqual(tokenPaths(root), ['color.text']);
+  put(
+    root,
+    'src/control/widget/style.ts',
+    "import { useOther, type OtherSize } from '../other/style.js';\n" +
+      'export const s = (theme) => ({ color: theme.color.text, ...useOther(theme) });\n'
+  );
+  assert.deepEqual(tokenPaths(root), ['color.other', 'color.text']);
+});
+
+test("tokens follow the entry's value imports of style modules, not of components", () => {
+  const root = fixture();
+  withOtherStyle(root);
+  put(root, 'src/control/other/index.tsx', 'export const Other = (theme) => theme.color.other;\n');
+  put(
+    root,
+    'src/control/widget/index.tsx',
+    "import { Other } from '../other/index.js';\n" +
+      "import type { OtherSize } from '../other/style.js';\n" +
+      'export function Widget() { return Other; }\n'
+  );
+  assert.deepEqual(tokenPaths(root), ['color.text']);
+  put(
+    root,
+    'src/control/widget/index.tsx',
+    "import { useOther } from '../other/style.js';\n" +
+      'export function Widget() { return useOther; }\n'
+  );
+  assert.deepEqual(tokenPaths(root), ['color.other', 'color.text']);
+});
+
+test('a computed token access (theme.fontSize[size]) lists the whole group', () => {
+  const root = fixture();
+  put(
+    root,
+    'src/control/widget/style.ts',
+    'export const s = (theme) => Object.keys(theme.fontSize).map((k) => theme.fontSize[k]);\n'
+  );
+  put(
+    root,
+    'dist/theme/theme.js',
+    "export const lightTheme = { fontSize: { sm: '12px', md: '14px' } };\nexport const darkTheme = lightTheme;\n"
+  );
+  assert.deepEqual(tokenPaths(root), ['fontSize.md', 'fontSize.sm']);
+});
+
 test('tokens do not follow imports into src/theme (the provider and global styles)', () => {
   const root = fixture();
   put(

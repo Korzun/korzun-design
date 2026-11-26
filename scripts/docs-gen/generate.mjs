@@ -2,6 +2,8 @@ import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { join, posix } from 'node:path';
 
+import { parseSync } from 'oxc-parser';
+
 import { barrelStatements, knownNames } from './barrels.mjs';
 import { CATEGORIES } from './categories.mjs';
 import { parseChangelog, validateTags } from './changelog.mjs';
@@ -69,30 +71,71 @@ function withDefaults(repo, mod, tables) {
 }
 
 /**
- * Token paths from a style file and the relative modules it imports, transitively
- * within src/. A module outside src/theme/ does not follow imports into it: they
+ * Relative specifiers `source` imports or re-exports for a value: `import type`,
+ * `import { type A }` with only type specifiers, and `export type … from` bring
+ * no styles and are left out.
+ */
+function valueImports(file, source) {
+  const { program } = parseSync(file, source, { lang: file.endsWith('x') ? 'tsx' : 'ts' });
+  const specs = [];
+  for (const st of program.body) {
+    if (!st.source || !String(st.source.value).startsWith('.')) continue;
+    if (st.type === 'ImportDeclaration') {
+      if (st.importKind === 'type') continue;
+      const list = st.specifiers ?? [];
+      if (list.length > 0 && list.every((sp) => sp.importKind === 'type')) continue;
+    } else if (st.type === 'ExportNamedDeclaration' || st.type === 'ExportAllDeclaration') {
+      if (st.exportKind === 'type') continue;
+    } else continue;
+    specs.push(String(st.source.value));
+  }
+  return specs;
+}
+
+/**
+ * Token paths of a module: from its `style.ts` and the relative modules that
+ * imports for a value, transitively within src/, plus the style modules its
+ * entry (`index.tsx`/`index.ts`) imports for a value (Heading renders with
+ * Text's `useTypography` from `../text/style.js`). The entry's other imports
+ * (components, helpers) are not followed: a component it renders lists its own
+ * tokens. A module outside src/theme/ does not follow imports into it: they
  * bring the provider and global styles, not tokens the module itself uses.
  */
-function styleTokenPaths(repo, entry) {
+function styleTokenPaths(repo, srcDir) {
   const seen = new Set();
   const paths = new Set();
-  const inTheme = entry.startsWith('src/theme/');
+  const inTheme = srcDir.startsWith('src/theme');
+  const resolveSpec = (rel, spec) => {
+    const base = posix.normalize(posix.join(posix.dirname(rel), spec.replace(/\.js$/, '')));
+    if (!base.startsWith('src/') || (!inTheme && base.startsWith('src/theme/'))) return null;
+    return (
+      [`${base}.ts`, `${base}.tsx`, `${base}/index.ts`, `${base}/index.tsx`].find((f) =>
+        existsSync(join(repo, f))
+      ) ?? null
+    );
+  };
   const visit = (rel) => {
     if (seen.has(rel)) return;
     seen.add(rel);
     const source = readIf(join(repo, rel));
     if (source === null) return;
     for (const p of collectTokenPaths(source)) paths.add(p);
-    for (const [, spec] of source.matchAll(/(?:from|import)\s*['"](\.{1,2}\/[^'"]+)['"]/g)) {
-      const base = posix.normalize(posix.join(posix.dirname(rel), spec.replace(/\.js$/, '')));
-      if (!base.startsWith('src/') || (!inTheme && base.startsWith('src/theme/'))) continue;
-      const hit = [`${base}.ts`, `${base}.tsx`, `${base}/index.ts`, `${base}/index.tsx`].find((f) =>
-        existsSync(join(repo, f))
-      );
+    for (const spec of valueImports(rel, source)) {
+      const hit = resolveSpec(rel, spec);
       if (hit) visit(hit);
     }
   };
-  visit(entry);
+  visit(`${srcDir}/style.ts`);
+  const entry = [`${srcDir}/index.tsx`, `${srcDir}/index.ts`].find((f) =>
+    existsSync(join(repo, f))
+  );
+  const entrySource = entry && readIf(join(repo, entry));
+  if (entrySource) {
+    for (const spec of valueImports(entry, entrySource)) {
+      const hit = resolveSpec(entry, spec);
+      if (hit && /(^|\/)style\.tsx?$/.test(hit)) visit(hit);
+    }
+  }
   return [...paths].sort();
 }
 
@@ -187,7 +230,7 @@ export function generate(repo, { strict = false } = {}) {
       skel,
       extractTypeTables(join(repo, skel.dtsDir, 'index.d.ts'), skel.types)
     );
-    const stylePaths = styleTokenPaths(repo, `${skel.srcDir}/style.ts`);
+    const stylePaths = styleTokenPaths(repo, skel.srcDir);
     let tokens = [];
     if (stylePaths.length > 0) {
       themes ??= loadThemes(repo);
