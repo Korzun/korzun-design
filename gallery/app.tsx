@@ -7,8 +7,9 @@ import { HashRouter, Outlet, Route, Routes, useLocation } from 'react-router';
 import { Frame, FrameNavigatedAway } from './frame.js';
 import { Header } from './layout/header.js';
 import { NotFound } from './not-found.js';
+import { ComponentPage } from './page/component.js';
 import { OverviewPage } from './page/overview.js';
-import { ChangelogPage, ComponentPage, GuidePage } from './page/pending.js';
+import { ChangelogPage, GuidePage } from './page/pending.js';
 import { TokensPage } from './page/tokens.js';
 
 const useStyle = createUseStyles((theme: Theme) => ({

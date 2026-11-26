@@ -1,24 +1,11 @@
 import { Heading, Page, Text } from '@korzun/design/component';
 import { useParams } from 'react-router';
 
-import { moduleBySlug, siteData } from '../data.js';
+import { siteData } from '../data.js';
 import { NotFound } from '../not-found.js';
 
-// Placeholders until the component, guide and changelog pages land: each
-// renders its title so routing works end to end.
-
-export const ComponentPage = () => {
-  const mod = moduleBySlug(useParams().slug ?? '');
-  if (!mod) return <NotFound />;
-  return (
-    <Page documentTitle={`${mod.title} · @korzun/design`}>
-      <Heading level={1}>{mod.title}</Heading>
-      <Text as="p" tone="description">
-        {mod.description}
-      </Text>
-    </Page>
-  );
-};
+// Placeholders until the guide and changelog pages land: each renders its
+// title so routing works end to end.
 
 export const GuidePage = () => {
   const slug = useParams().slug ?? '';

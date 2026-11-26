@@ -1,11 +1,11 @@
 import { createUseStyles, ThemeProvider, type Theme } from '@korzun/design/theme';
 import { ToastProvider } from '@korzun/design/toast';
-import { useEffect, useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { Link, useLocation, useParams, useSearchParams } from 'react-router';
 
 import { useThemeSetting } from '../src/theme/use-theme-setting.js';
 import { exampleFor, moduleBySlug } from './data.js';
-import { isThemeMessage, isThemeValue, type ThemeValue } from './messages.js';
+import { isThemeMessage, isThemeValue, postToWindow, type ThemeValue } from './messages.js';
 
 const ThemeSync = ({ theme }: { theme: ThemeValue }) => {
   const setSetting = useThemeSetting()[1];
@@ -27,6 +27,8 @@ const useStyle = createUseStyles((theme: Theme) => ({
     padding: theme.space.xxxxl,
     boxSizing: 'border-box',
   },
+  // Room for focus rings and shadows, which the iframe edge would clip.
+  flow: { padding: theme.space.xxl },
 }));
 
 // Thumbnails ask for `fit=center`: a small example sits in the middle of the
@@ -36,6 +38,32 @@ const Centered = ({ children }: { children: ReactNode }) => (
     {children}
   </div>
 );
+
+// A docs demo in the normal flow. It tells the page its height whenever it
+// changes, so the page sizes the iframe to fit with no inner scrollbar. The
+// body is at least the viewport tall, so the wrapper is what gets measured.
+const Flow = ({ children }: { children: ReactNode }) => {
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const post = () =>
+      postToWindow(window.parent, {
+        type: 'gallery:height',
+        height: Math.ceil(el.getBoundingClientRect().height),
+      });
+    post();
+    if (typeof ResizeObserver === 'undefined') return;
+    const observer = new ResizeObserver(post);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+  return (
+    <div ref={ref} className={useStyle().flow}>
+      {children}
+    </div>
+  );
+};
 
 // Renders one docs example on its own: the site embeds it in an iframe so the
 // example gets its own theme provider and cannot leak styles into the page.
@@ -70,7 +98,9 @@ export const Frame = () => {
             <Component />
           </Centered>
         ) : (
-          <Component />
+          <Flow>
+            <Component />
+          </Flow>
         )}
       </ToastProvider>
     </ThemeProvider>

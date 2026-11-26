@@ -47,6 +47,19 @@ describe('Frame', () => {
     send(window.location.origin);
     expect(localStorage.getItem('theme-setting:gallery-frame')).toBe('light');
   });
+  it('posts its content height to the page, not in fit=center mode', () => {
+    const post = vi.spyOn(window, 'postMessage');
+    const height = (call: unknown[]) => (call[0] as { type?: string }).type === 'gallery:height';
+    const { unmount } = mount('/frame/button/basic?fit=center');
+    expect(post.mock.calls.filter(height)).toEqual([]);
+    unmount();
+    mount('/frame/button/basic');
+    expect(post.mock.calls.filter(height)).toEqual([
+      [{ type: 'gallery:height', height: expect.any(Number) }, window.location.origin],
+    ]);
+    post.mockRestore();
+  });
+
   it('centres the example only when the URL asks for fit=center', () => {
     const { unmount } = mount('/frame/button/basic?fit=center');
     expect(
