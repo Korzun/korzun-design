@@ -1,23 +1,36 @@
-import { Heading, Page, Text } from '@korzun/design/component';
+import { Heading, Page, Stack, Text } from '@korzun/design/component';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { Link, useLocation } from 'react-router';
 
+import { siteColumn } from './layout/column.js';
+import { siteLink } from './layout/link.js';
+
 const useStyle = createUseStyles((theme: Theme) => ({
-  link: { color: theme.color.brand.default },
+  // The site column, like every other page, so the heading lines up with the header.
+  column: {
+    ...siteColumn(theme),
+    paddingTop: theme.space.xxxxxl,
+    paddingBottom: theme.space.xxxxxl,
+  },
+  link: siteLink(theme),
 }));
 
 /** Shown for any route, component or guide the site does not have. */
 export const NotFound = () => {
   const styles = useStyle();
   return (
-    <Page>
-      <Heading level={1}>Not found</Heading>
-      <Text as="p">
-        Nothing lives at <code>{useLocation().pathname}</code>.
-      </Text>
-      <Link to="/" className={styles.link}>
-        Back to the components
-      </Link>
-    </Page>
+    <div className={styles.column}>
+      <Page type="minimal" documentTitle="Not found · @korzun/design">
+        <Stack gap="md">
+          <Heading level={1}>Not found</Heading>
+          <Text as="p">
+            Nothing lives at <code>{useLocation().pathname}</code>.
+          </Text>
+          <Link to="/" className={styles.link}>
+            Back to the components
+          </Link>
+        </Stack>
+      </Page>
+    </div>
   );
 };

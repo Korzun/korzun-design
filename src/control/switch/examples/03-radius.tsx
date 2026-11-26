@@ -11,18 +11,26 @@ export default function Radius() {
   const [inset, setInset] = useState(true);
   const [pill, setPill] = useState(true);
   return (
-    <Stack>
-      <Text tone="muted">radius inset, in a shaded row</Text>
-      <Switch
-        name="inset"
-        label="Inset track"
-        layout="horizontal"
-        radius="inset"
-        checked={inset}
-        onChange={setInset}
-      />
-      <Text tone="muted">radius pill, no corner nearby</Text>
-      <Switch name="pill" label="Pill track" radius="pill" checked={pill} onChange={setPill} />
+    <Stack gap="xl">
+      <Stack gap="xs">
+        <Text size="sm" tone="muted">
+          radius="inset", in a shaded row
+        </Text>
+        <Switch
+          name="inset"
+          label="Inset track"
+          layout="horizontal"
+          radius="inset"
+          checked={inset}
+          onChange={setInset}
+        />
+      </Stack>
+      <Stack gap="xs">
+        <Text size="sm" tone="muted">
+          radius="pill", no corner nearby
+        </Text>
+        <Switch name="pill" label="Pill track" radius="pill" checked={pill} onChange={setPill} />
+      </Stack>
     </Stack>
   );
 }

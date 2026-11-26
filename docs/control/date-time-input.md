@@ -87,31 +87,43 @@ export default function Layouts() {
   const [vertical, setVertical] = useState<string | undefined>('2023-06-06');
   const [inline, setInline] = useState<string | undefined>(undefined);
   return (
-    <Stack>
-      <Text tone="muted">layout horizontal</Text>
-      <DateTimeInput
-        name="horizontal"
-        label="Published"
-        layout="horizontal"
-        value={horizontal}
-        onChange={setHorizontal}
-      />
-      <Text tone="muted">layout vertical</Text>
-      <DateTimeInput
-        name="vertical"
-        label="Published"
-        layout="vertical"
-        value={vertical}
-        onChange={setVertical}
-      />
-      <Text tone="muted">layout inline</Text>
-      <DateTimeInput
-        name="inline"
-        label="Published"
-        layout="inline"
-        value={inline}
-        onChange={setInline}
-      />
+    <Stack gap="xl">
+      <Stack gap="xs">
+        <Text size="sm" tone="muted">
+          layout="horizontal"
+        </Text>
+        <DateTimeInput
+          name="horizontal"
+          label="Published"
+          layout="horizontal"
+          value={horizontal}
+          onChange={setHorizontal}
+        />
+      </Stack>
+      <Stack gap="xs">
+        <Text size="sm" tone="muted">
+          layout="vertical"
+        </Text>
+        <DateTimeInput
+          name="vertical"
+          label="Published"
+          layout="vertical"
+          value={vertical}
+          onChange={setVertical}
+        />
+      </Stack>
+      <Stack gap="xs">
+        <Text size="sm" tone="muted">
+          layout="inline"
+        </Text>
+        <DateTimeInput
+          name="inline"
+          label="Published"
+          layout="inline"
+          value={inline}
+          onChange={setInline}
+        />
+      </Stack>
     </Stack>
   );
 }

@@ -14,8 +14,8 @@ export default function Controlled() {
         <Button onClick={() => setOpen((o) => !o)}>
           {open ? 'Collapse' : 'Expand'} from outside
         </Button>
-        <Text tone="muted">Open: {open ? 'yes' : 'no'}</Text>
       </Inline>
+      <Text tone="muted">Open: {open ? 'yes' : 'no'}</Text>
       <CollapsibleSection title="Advanced" open={open} onOpenToggle={() => setOpen((o) => !o)}>
         <Text>Extra settings go here.</Text>
       </CollapsibleSection>

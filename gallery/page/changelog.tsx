@@ -13,8 +13,16 @@ const useStyle = createUseStyles((theme: Theme) => ({
     paddingTop: theme.space.xxxxxl,
     paddingBottom: theme.space.xxxxxl,
   },
-  entries: { margin: 0, paddingLeft: theme.space.xxxl },
-  entry: { '& + &': { marginTop: theme.space.xl } },
+  // No bullets: each entry opens with its row of tag chips, and a bullet beside
+  // the chips left the text wrapping under it. A hairline separates entries.
+  entries: { margin: 0, padding: 0, listStyle: 'none' },
+  entry: {
+    '& + &': {
+      marginTop: theme.space.xl,
+      paddingTop: theme.space.xl,
+      borderTop: `1px solid ${theme.color.border.light}`,
+    },
+  },
   // inline-flex, so a linked chip sits on the same line as a plain one.
   chipLink: {
     display: 'inline-flex',

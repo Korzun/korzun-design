@@ -1,6 +1,7 @@
 /** Clearable and required
  * A set value shows a ✕ that sends `undefined` to `onChange`. Pass
- * `clearable={false}` for a required field, so it can only change to another option.
+ * `clearable={false}` for a required field, so it can only change to another option:
+ * Shelf can be cleared; Home shelf cannot.
  */
 import { Stack } from '@korzun/design/component';
 import { Select } from '@korzun/design/control';
@@ -15,14 +16,14 @@ export default function Clearable() {
     <Stack>
       <Select
         name="optional"
-        label="Optional shelf"
+        label="Shelf"
         value={optional}
         options={SHELVES}
         onChange={setOptional}
       />
       <Select
         name="required"
-        label="Required shelf"
+        label="Home shelf"
         value={required}
         options={SHELVES}
         clearable={false}

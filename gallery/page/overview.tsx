@@ -1,5 +1,5 @@
-import { Card, Heading, Page, Stack, Text } from '@korzun/design/component';
-import { TextInput } from '@korzun/design/control';
+import { Card, EmptyState, Heading, Page, Stack, Text } from '@korzun/design/component';
+import { Button, TextInput } from '@korzun/design/control';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { useState } from 'react';
 import { Link } from 'react-router';
@@ -97,7 +97,12 @@ export const OverviewPage = () => {
         <Stack gap="xxxxl">
           <SearchBox value={query} onChange={setQuery} />
           {groups.length === 0 && (
-            <Text tone="muted">{`No components match “${query.trim()}”.`}</Text>
+            <EmptyState title={`No components match “${query.trim()}”.`}>
+              <Stack gap="md" align="center">
+                Try a component name, a word from its description, or a prop.
+                <Button onClick={() => setQuery('')}>Clear search</Button>
+              </Stack>
+            </EmptyState>
           )}
           {groups.map(({ category, modules }) => (
             <Stack as="section" gap="lg" key={category}>

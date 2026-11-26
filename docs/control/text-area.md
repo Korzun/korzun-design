@@ -64,31 +64,46 @@ the label above the field on that row, and `inline` paints nothing around the
 pair.
 
 ```tsx
-import { Stack } from '@korzun/design/component';
+import { Stack, Text } from '@korzun/design/component';
 import { TextArea } from '@korzun/design/control';
 import { useState } from 'react';
 
 export default function Layouts() {
-  const [horizontal, setHorizontal] = useState<string | undefined>('Horizontal');
-  const [vertical, setVertical] = useState<string | undefined>('Vertical');
-  const [inline, setInline] = useState<string | undefined>('Inline');
+  const [horizontal, setHorizontal] = useState<string | undefined>('Read on the train.');
+  const [vertical, setVertical] = useState<string | undefined>('Lend to Sam.');
+  const [inline, setInline] = useState<string | undefined>('Reread next year.');
   return (
-    <Stack>
-      <TextArea
-        name="horizontal"
-        layout="horizontal"
-        label="Horizontal"
-        value={horizontal}
-        onChange={setHorizontal}
-      />
-      <TextArea
-        name="vertical"
-        layout="vertical"
-        label="Vertical"
-        value={vertical}
-        onChange={setVertical}
-      />
-      <TextArea name="inline" layout="inline" label="Inline" value={inline} onChange={setInline} />
+    <Stack gap="xl">
+      <Stack gap="xs">
+        <Text size="sm" tone="muted">
+          layout="horizontal"
+        </Text>
+        <TextArea
+          name="horizontal"
+          layout="horizontal"
+          label="Note"
+          value={horizontal}
+          onChange={setHorizontal}
+        />
+      </Stack>
+      <Stack gap="xs">
+        <Text size="sm" tone="muted">
+          layout="vertical"
+        </Text>
+        <TextArea
+          name="vertical"
+          layout="vertical"
+          label="Note"
+          value={vertical}
+          onChange={setVertical}
+        />
+      </Stack>
+      <Stack gap="xs">
+        <Text size="sm" tone="muted">
+          layout="inline"
+        </Text>
+        <TextArea name="inline" layout="inline" label="Note" value={inline} onChange={setInline} />
+      </Stack>
     </Stack>
   );
 }
@@ -214,28 +229,47 @@ export default function CharacterCounter() {
 `placeholder` shows while the field is empty. `validate` receives the raw text
 on each keystroke; while it returns `false` the label turns red, `onChange` is
 not called (the saved text stays at the last valid one) and `onValidChange`
-fires once when validity flips. Add a second line to see it.
+fires once when validity flips. The demo opens with two lines typed in, so it
+starts invalid; remove the line break to fix it.
 
 ```tsx
 import { Stack, Text } from '@korzun/design/component';
 import { TextArea } from '@korzun/design/control';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+
+// Types `text` into the field once on mount, as a user would, so the demo opens
+// in the state that text produces (the ref survives Strict Mode's second run).
+function useTypeOnMount(text: string) {
+  const box = useRef<HTMLDivElement>(null);
+  const typed = useRef(false);
+  useEffect(() => {
+    const field = box.current?.querySelector('textarea');
+    if (typed.current || !field) return;
+    typed.current = true;
+    Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, 'value')?.set?.call(field, text);
+    field.dispatchEvent(new Event('input', { bubbles: true }));
+  }, [text]);
+  return box;
+}
 
 export default function Validation() {
   const [text, setText] = useState<string | undefined>(undefined);
   const [valid, setValid] = useState(true);
+  const box = useTypeOnMount('Read on the train.\nLend to Sam.');
   return (
     <Stack>
-      <TextArea
-        name="one-line"
-        layout="vertical"
-        label="One line only"
-        placeholder="No line breaks allowed"
-        value={text}
-        onChange={setText}
-        validate={(v) => !v.includes('\n')}
-        onValidChange={(_name, ok) => setValid(ok)}
-      />
+      <div ref={box}>
+        <TextArea
+          name="one-line"
+          layout="vertical"
+          label="One line only"
+          placeholder="No line breaks allowed"
+          value={text}
+          onChange={setText}
+          validate={(v) => !v.includes('\n')}
+          onValidChange={(_name, ok) => setValid(ok)}
+        />
+      </div>
       <Text tone={valid ? 'success' : 'danger'}>{valid ? 'Valid' : 'Invalid'}</Text>
       <Text tone="muted">Saved text: {text === undefined ? 'nothing' : `“${text}”`}</Text>
     </Stack>

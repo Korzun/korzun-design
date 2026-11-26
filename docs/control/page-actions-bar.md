@@ -174,8 +174,9 @@ export default function ItemOptions() {
 
 The usual way to get it: pass `headerActions` to `Page`, which puts the bar
 in the header row on desktop and `PageActionsMenu` at phone width from the
-same array. Read is `primary` and `leading`, Edit is `primary`, and Download
-and Delete go in the overflow menu.
+same array. `primary: true` means shown inline as its own button, not a blue
+button: Read (also `align: 'leading'`, so it sits on the left) and Edit get one,
+and Download and Delete go in the overflow menu.
 
 ```tsx
 import { Card, Page, Text } from '@korzun/design/component';

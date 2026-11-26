@@ -49,26 +49,24 @@ No `className`.
 A yes/no question with a `title`, a body and custom `confirmText` and `cancelText`.
 `onConfirm` and `onCancel` take no arguments, and `onConfirm` does not close the
 modal: it sets `isOpen` to `false` itself. `onCancel` also runs for Escape and a
-click on the backdrop.
+click on the backdrop. This demo starts open; Sync library opens it again.
 
 ```tsx
-import { Inline, Stack, Text } from '@korzun/design/component';
+import { Stack, Text } from '@korzun/design/component';
 import { Button, ConfirmModal } from '@korzun/design/control';
 import { useState } from 'react';
 
 export default function Basic() {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
   const [answer, setAnswer] = useState('none yet');
   const answerWith = (value: string) => {
     setAnswer(value);
     setIsOpen(false);
   };
   return (
-    <Stack>
-      <Inline>
-        <Button onClick={() => setIsOpen(true)}>Sync library</Button>
-        <Text tone="muted">Answer: {answer}</Text>
-      </Inline>
+    <Stack align="start">
+      <Button onClick={() => setIsOpen(true)}>Sync library</Button>
+      <Text tone="muted">Answer: {answer}</Text>
       <ConfirmModal
         isOpen={isOpen}
         title="Sync library?"
@@ -92,7 +90,7 @@ puts a spinner on Confirm, disables both buttons and ignores Escape and the
 backdrop. `onConfirm` closes the modal itself once the work is done.
 
 ```tsx
-import { Inline, Stack, Text } from '@korzun/design/component';
+import { Stack, Text } from '@korzun/design/component';
 import { Button, ConfirmModal } from '@korzun/design/control';
 import { AlertOctagonIcon } from '@korzun/design/icon';
 import { useState } from 'react';
@@ -110,13 +108,11 @@ export default function Danger() {
     }, 1000);
   };
   return (
-    <Stack>
-      <Inline>
-        <Button danger onClick={() => setIsOpen(true)}>
-          Delete
-        </Button>
-        <Text tone="muted">Books deleted: {deleted}</Text>
-      </Inline>
+    <Stack align="start">
+      <Button danger onClick={() => setIsOpen(true)}>
+        Delete
+      </Button>
+      <Text tone="muted">Books deleted: {deleted}</Text>
       <ConfirmModal
         isOpen={isOpen}
         title="Delete book?"
@@ -141,7 +137,7 @@ backdrop do nothing. The switch holds it on so you can try to dismiss the modal;
 turn it off and Cancel, Escape and the backdrop work again.
 
 ```tsx
-import { Inline, Stack } from '@korzun/design/component';
+import { Stack } from '@korzun/design/component';
 import { Button, ConfirmModal, Switch } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -149,7 +145,7 @@ export default function Loading() {
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   return (
-    <Inline>
+    <Stack align="start">
       <Button onClick={() => setIsOpen(true)}>Publish</Button>
       <ConfirmModal
         isOpen={isOpen}
@@ -164,7 +160,7 @@ export default function Loading() {
           <Switch name="loading" label="Loading" checked={loading} onChange={setLoading} />
         </Stack>
       </ConfirmModal>
-    </Inline>
+    </Stack>
   );
 }
 ```
@@ -175,7 +171,7 @@ export default function Loading() {
 Cancel and dismissal keep working.
 
 ```tsx
-import { Inline, Stack } from '@korzun/design/component';
+import { Stack } from '@korzun/design/component';
 import { Button, ConfirmModal, Switch } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -187,7 +183,7 @@ export default function ConfirmDisabled() {
     setUnderstood(false);
   };
   return (
-    <Inline>
+    <Stack align="start">
       <Button onClick={() => setIsOpen(true)}>Reset library</Button>
       <ConfirmModal
         isOpen={isOpen}
@@ -208,7 +204,7 @@ export default function ConfirmDisabled() {
           />
         </Stack>
       </ConfirmModal>
-    </Inline>
+    </Stack>
   );
 }
 ```

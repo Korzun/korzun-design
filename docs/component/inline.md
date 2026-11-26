@@ -79,31 +79,31 @@ export default function Basic() {
 ### Gaps
 
 `gap` takes a key of the theme's `space` scale, or `none` for children
-that bring their own spacing.
+that bring their own spacing. Five steps of the scale are shown.
 
 ```tsx
-import { Inline, Stack, Tag, Text } from '@korzun/design/component';
+import { Inline, Tag, Text } from '@korzun/design/component';
+import { createUseStyles, type Theme } from '@korzun/design/theme';
+import { Fragment } from 'react';
 
-const gaps = [
-  'none',
-  'xxxs',
-  'xxs',
-  'xs',
-  'sm',
-  'md',
-  'lg',
-  'xl',
-  'xxl',
-  'xxxl',
-  'xxxxl',
-  'xxxxxl',
-] as const;
+const gaps = ['none', 'xs', 'md', 'xl', 'xxxl'] as const;
+
+// Two columns, so every row of tags starts at the same x.
+const useStyles = createUseStyles((theme: Theme) => ({
+  grid: {
+    display: 'grid',
+    gridTemplateColumns: 'max-content 1fr',
+    alignItems: 'center',
+    gap: `${theme.space.md} ${theme.space.xl}`,
+  },
+}));
 
 export default function Gaps() {
+  const styles = useStyles();
   return (
-    <Stack gap="sm">
+    <div className={styles.grid}>
       {gaps.map((gap) => (
-        <Inline key={gap} gap="xl">
+        <Fragment key={gap}>
           <Text size="sm" tone="muted">
             {`gap="${gap}"`}
           </Text>
@@ -112,9 +112,9 @@ export default function Gaps() {
             <Tag>Two</Tag>
             <Tag>Three</Tag>
           </Inline>
-        </Inline>
+        </Fragment>
       ))}
-    </Stack>
+    </div>
   );
 }
 ```
@@ -182,10 +182,13 @@ export default function Justify() {
 ### Wrap
 
 A row of chips too long for its container gets `wrap`: children move onto
-further lines. Without it they stay on one line and shrink or overflow.
+further lines. Without it they stay on one line and shrink or overflow. Both rows sit
+in the same fixed-width box; the box clips with `overflow: hidden`, so the cut-off
+tags at its edge are the overflow.
 
 ```tsx
 import { Inline, Stack, Tag, Text } from '@korzun/design/component';
+import { createUseStyles, type Theme } from '@korzun/design/theme';
 
 const subjects = [
   'Fiction',
@@ -214,28 +217,45 @@ const subjects = [
   'Charity',
 ];
 
+// A fixed-width container with a visible edge, so the overflow is plain to see.
+const useStyles = createUseStyles((theme: Theme) => ({
+  box: {
+    width: `calc(${theme.space.xxxxxl} * 12)`,
+    maxWidth: '100%',
+    overflow: 'hidden',
+    padding: theme.space.md,
+    border: `1px dashed ${theme.color.border.strong}`,
+    borderRadius: theme.radius.md,
+  },
+}));
+
 export default function Wrap() {
+  const styles = useStyles();
   return (
-    <Stack gap="lg">
+    <Stack gap="xl">
       <Stack gap="xs">
         <Text size="sm" tone="muted">
           wrap
         </Text>
-        <Inline wrap gap="xs">
-          {subjects.map((subject) => (
-            <Tag key={subject}>{subject}</Tag>
-          ))}
-        </Inline>
+        <div className={styles.box}>
+          <Inline wrap gap="xs">
+            {subjects.map((subject) => (
+              <Tag key={subject}>{subject}</Tag>
+            ))}
+          </Inline>
+        </div>
       </Stack>
       <Stack gap="xs">
         <Text size="sm" tone="muted">
-          no wrap
+          no wrap: clipped at the box edge
         </Text>
-        <Inline gap="xs">
-          {subjects.map((subject) => (
-            <Tag key={subject}>{subject}</Tag>
-          ))}
-        </Inline>
+        <div className={styles.box}>
+          <Inline gap="xs">
+            {subjects.map((subject) => (
+              <Tag key={subject}>{subject}</Tag>
+            ))}
+          </Inline>
+        </div>
       </Stack>
     </Stack>
   );
@@ -245,21 +265,38 @@ export default function Wrap() {
 ### Elements
 
 `as="nav"` makes a row of links a navigation landmark. `as="ul"` renders a
-list and resets its margin, padding and bullets: make each child an `li`.
+list and resets its margin, padding and bullets: make each child an `li`. The links
+take the brand colour from the theme.
 
 ```tsx
 import { Inline, Stack, Text } from '@korzun/design/component';
+import { createUseStyles, type Theme } from '@korzun/design/theme';
+
+const useStyles = createUseStyles((theme: Theme) => ({
+  link: {
+    color: theme.color.brand.default,
+    fontWeight: theme.fontWeight.medium,
+    textDecoration: 'none',
+    borderRadius: theme.radius.sm,
+    '&:hover': { color: theme.color.brand.linkHover, textDecoration: 'underline' },
+  },
+}));
 
 export default function Elements() {
+  const styles = useStyles();
   return (
-    <Stack gap="lg">
+    <Stack gap="xl">
       <Stack gap="xs">
         <Text size="sm" tone="muted">
           as="nav"
         </Text>
         <Inline as="nav" gap="xl">
-          <a href="/books">Books</a>
-          <a href="/authors">Authors</a>
+          <a className={styles.link} href="/books">
+            Books
+          </a>
+          <a className={styles.link} href="/authors">
+            Authors
+          </a>
         </Inline>
       </Stack>
       <Stack gap="xs">

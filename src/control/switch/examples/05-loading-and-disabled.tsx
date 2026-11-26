@@ -29,8 +29,8 @@ export default function LoadingAndDisabled() {
         <Button onClick={() => setSaving((s) => !s)}>
           {saving ? 'Finish save' : 'Start save'}
         </Button>
-        <Text tone="muted">Changes made: {changes}</Text>
       </Inline>
+      <Text tone="muted">Changes made: {changes}</Text>
       <Switch
         name="push-email"
         label="Email (not available)"

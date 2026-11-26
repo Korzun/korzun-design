@@ -74,20 +74,22 @@ One `primary` action for the main step and a `default` button beside it.
 `onClick` takes no arguments: the button passes no event.
 
 ```tsx
-import { Inline, Text } from '@korzun/design/component';
+import { Inline, Stack, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { useState } from 'react';
 
 export default function Basic() {
   const [saves, setSaves] = useState(0);
   return (
-    <Inline>
-      <Button onClick={() => setSaves(0)}>Reset</Button>
-      <Button type="primary" onClick={() => setSaves((n) => n + 1)}>
-        Save
-      </Button>
+    <Stack align="start">
+      <Inline>
+        <Button onClick={() => setSaves(0)}>Reset</Button>
+        <Button type="primary" onClick={() => setSaves((n) => n + 1)}>
+          Save
+        </Button>
+      </Inline>
       <Text tone="muted">Saves: {saves}</Text>
-    </Inline>
+    </Stack>
   );
 }
 ```
@@ -99,29 +101,31 @@ export default function Basic() {
 row action, and `dashed` an "add a row" affordance.
 
 ```tsx
-import { Inline, Text } from '@korzun/design/component';
+import { Inline, Stack, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { useState } from 'react';
 
 export default function Variants() {
   const [pressed, setPressed] = useState('nothing yet');
   return (
-    <Inline wrap>
-      <Button type="primary" onClick={() => setPressed('Primary')}>
-        Primary
-      </Button>
-      <Button onClick={() => setPressed('Default')}>Default</Button>
-      <Button type="text" onClick={() => setPressed('Text')}>
-        Text
-      </Button>
-      <Button type="link" onClick={() => setPressed('Link')}>
-        Link
-      </Button>
-      <Button type="dashed" onClick={() => setPressed('Dashed')}>
-        Dashed
-      </Button>
+    <Stack align="start">
+      <Inline wrap>
+        <Button type="primary" onClick={() => setPressed('Primary')}>
+          Primary
+        </Button>
+        <Button onClick={() => setPressed('Default')}>Default</Button>
+        <Button type="text" onClick={() => setPressed('Text')}>
+          Text
+        </Button>
+        <Button type="link" onClick={() => setPressed('Link')}>
+          Link
+        </Button>
+        <Button type="dashed" onClick={() => setPressed('Dashed')}>
+          Dashed
+        </Button>
+      </Inline>
       <Text tone="muted">Pressed: {pressed}</Text>
-    </Inline>
+    </Stack>
   );
 }
 ```
@@ -133,25 +137,27 @@ deletion, on `default` otherwise. `success` is the green treatment. The two
 cannot both be set; TypeScript rejects it.
 
 ```tsx
-import { Inline, Text } from '@korzun/design/component';
+import { Inline, Stack, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { useState } from 'react';
 
 export default function DangerAndSuccess() {
   const [pressed, setPressed] = useState('nothing yet');
   return (
-    <Inline wrap>
-      <Button danger onClick={() => setPressed('Log out')}>
-        Log out
-      </Button>
-      <Button type="primary" danger onClick={() => setPressed('Delete book')}>
-        Delete book
-      </Button>
-      <Button type="primary" success onClick={() => setPressed('Mark as read')}>
-        Mark as read
-      </Button>
+    <Stack align="start">
+      <Inline wrap>
+        <Button danger onClick={() => setPressed('Log out')}>
+          Log out
+        </Button>
+        <Button type="primary" danger onClick={() => setPressed('Delete book')}>
+          Delete book
+        </Button>
+        <Button type="primary" success onClick={() => setPressed('Mark as read')}>
+          Mark as read
+        </Button>
+      </Inline>
       <Text tone="muted">Pressed: {pressed}</Text>
-    </Inline>
+    </Stack>
   );
 }
 ```
@@ -162,7 +168,7 @@ export default function DangerAndSuccess() {
 element. An icon-only button needs an `ariaLabel` so it has an accessible name.
 
 ```tsx
-import { Inline, Text } from '@korzun/design/component';
+import { Inline, Stack, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { ChevronIcon, SearchIcon, SettingsIcon } from '@korzun/design/icon';
 import { useState } from 'react';
@@ -170,16 +176,18 @@ import { useState } from 'react';
 export default function Icons() {
   const [pressed, setPressed] = useState('nothing yet');
   return (
-    <Inline wrap>
-      <Button prefix={SearchIcon} onClick={() => setPressed('Search')}>
-        Search
-      </Button>
-      <Button type="primary" suffix={ChevronIcon} onClick={() => setPressed('Next')}>
-        Next
-      </Button>
-      <Button prefix={SettingsIcon} ariaLabel="Settings" onClick={() => setPressed('Settings')} />
+    <Stack align="start">
+      <Inline wrap>
+        <Button prefix={SearchIcon} onClick={() => setPressed('Search')}>
+          Search
+        </Button>
+        <Button type="primary" suffix={ChevronIcon} onClick={() => setPressed('Next')}>
+          Next
+        </Button>
+        <Button prefix={SettingsIcon} ariaLabel="Settings" onClick={() => setPressed('Settings')} />
+      </Inline>
       <Text tone="muted">Pressed: {pressed}</Text>
-    </Inline>
+    </Stack>
   );
 }
 ```

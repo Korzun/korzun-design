@@ -18,17 +18,25 @@ const RATINGS = [
 export default function Icons() {
   const [rating, setRating] = useState<(typeof RATINGS)[number]['value']>('ok');
   return (
-    <Stack align="start">
-      <Text tone="muted">With captions</Text>
-      <SegmentedControl label="Rating" options={RATINGS} value={rating} onChange={setRating} />
-      <Text tone="muted">showLabels off</Text>
-      <SegmentedControl
-        label="Rating"
-        options={RATINGS}
-        value={rating}
-        onChange={setRating}
-        showLabels={false}
-      />
+    <Stack gap="xl" align="start">
+      <Stack gap="xs" align="start">
+        <Text size="sm" tone="muted">
+          With captions
+        </Text>
+        <SegmentedControl label="Rating" options={RATINGS} value={rating} onChange={setRating} />
+      </Stack>
+      <Stack gap="xs" align="start">
+        <Text size="sm" tone="muted">
+          {'showLabels={false}'}
+        </Text>
+        <SegmentedControl
+          label="Rating"
+          options={RATINGS}
+          value={rating}
+          onChange={setRating}
+          showLabels={false}
+        />
+      </Stack>
       <Text tone="muted">Rating: {rating}</Text>
     </Stack>
   );

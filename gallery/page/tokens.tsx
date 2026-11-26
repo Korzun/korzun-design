@@ -3,6 +3,23 @@ import { createUseStyles, useTheme, type Theme } from '@korzun/design/theme';
 import type { ReactNode } from 'react';
 
 import { siteColumn } from '../layout/column.js';
+import { siteLink } from '../layout/link.js';
+
+// Preview sizes. Each is the size of a sample, not a spacing or radius token, so
+// it is named here rather than read from the theme.
+/** The narrowest colour swatch column; the grid fits as many as the row allows. */
+const SWATCH_MIN_WIDTH = '8rem';
+/** A colour swatch's height. */
+const SWATCH_HEIGHT = '2.75rem';
+/** The bar that previews a space or size value: its width is the value. */
+const BAR_HEIGHT = '0.75rem';
+/** The tile that previews a radius value. */
+const RADIUS_TILE = { width: '3rem', height: '2rem' };
+/** The widest a line-height sample runs, so it wraps and shows the leading. */
+const LINE_SAMPLE_MAX_WIDTH = '16rem';
+/** A shadow tile's height and its grid's narrowest column. */
+const SHADOW_TILE_HEIGHT = '4rem';
+const SHADOW_MIN_WIDTH = '11.25rem';
 
 const useStyle = createUseStyles((theme: Theme) => ({
   // The shared site column, like the overview and component pages.
@@ -12,20 +29,16 @@ const useStyle = createUseStyles((theme: Theme) => ({
     paddingBottom: theme.space.xxxxxl,
   },
   section: { display: 'flex', flexDirection: 'column', gap: theme.space.xl },
-  link: {
-    color: theme.color.brand.default,
-    textDecoration: 'none',
-    '&:hover': { textDecoration: 'underline' },
-  },
+  link: siteLink(theme),
   group: { margin: 0, fontSize: theme.fontSize.md, color: theme.color.text.muted },
   grid: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))',
+    gridTemplateColumns: `repeat(auto-fill, minmax(${SWATCH_MIN_WIDTH}, 1fr))`,
     gap: theme.space.xl,
   },
   swatch: { display: 'flex', flexDirection: 'column', gap: theme.space.xs },
   chip: {
-    height: 44,
+    height: SWATCH_HEIGHT,
     // Swatches and shadow boxes are tiles on the page background.
     borderRadius: theme.radius.lg,
     border: `1px solid ${theme.color.border.default}`,
@@ -60,16 +73,17 @@ const useStyle = createUseStyles((theme: Theme) => ({
     fontFamily: theme.fontFamily.mono,
     overflowWrap: 'anywhere',
   },
-  bar: { height: 12, maxWidth: '100%', backgroundColor: theme.color.brand.default },
-  sample: { maxWidth: '16rem' },
+  bar: { height: BAR_HEIGHT, maxWidth: '100%', backgroundColor: theme.color.brand.default },
+  radiusTile: { ...RADIUS_TILE, backgroundColor: theme.color.brand.default },
+  sample: { maxWidth: LINE_SAMPLE_MAX_WIDTH },
   box: {
-    height: 64,
+    height: SHADOW_TILE_HEIGHT,
     borderRadius: theme.radius.lg,
     backgroundColor: theme.color.bg.card,
   },
   boxes: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))',
+    gridTemplateColumns: `repeat(auto-fill, minmax(${SHADOW_MIN_WIDTH}, 1fr))`,
     gap: theme.space.xxxl,
   },
 }));
@@ -118,9 +132,7 @@ export function TokensPage() {
   const previews: Partial<Record<keyof Theme, (value: string) => ReactNode>> = {
     space: (v) => <div className={styles.bar} style={{ width: v }} />,
     size: (v) => <div className={styles.bar} style={{ width: v }} />,
-    radius: (v) => (
-      <div className={styles.bar} style={{ width: 48, height: 32, borderRadius: v }} />
-    ),
+    radius: (v) => <div className={styles.radiusTile} style={{ borderRadius: v }} />,
     fontSize: (v) => <span style={{ fontSize: v }}>{SAMPLE}</span>,
     fontFamily: (v) => <span style={{ fontFamily: v }}>{SAMPLE}</span>,
     fontWeight: (v) => <span style={{ fontWeight: Number(v) }}>{SAMPLE}</span>,

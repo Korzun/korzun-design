@@ -14,8 +14,8 @@ export default function FromPercent() {
         <Button onClick={() => setPercent(0)}>0%</Button>
         <Button onClick={() => setPercent(42)}>42%</Button>
         <Button onClick={() => setPercent(100)}>100%</Button>
-        <Text tone="muted">API percent: {percent}</Text>
       </Inline>
+      <Text tone="muted">API percent: {percent}</Text>
     </Stack>
   );
 }

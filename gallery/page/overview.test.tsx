@@ -120,6 +120,15 @@ describe('OverviewPage', () => {
     expect(screen.getByText('No components match “zzz”.')).toBeInTheDocument();
   });
 
+  it('clears an empty search from its Clear search button', async () => {
+    mount();
+    await userEvent.type(screen.getByRole('textbox', { name: 'Search components' }), 'zzz');
+    await userEvent.click(screen.getByRole('button', { name: 'Clear search' }));
+    expect(screen.queryByText('No components match “zzz”.')).not.toBeInTheDocument();
+    expect(screen.getAllByRole('heading', { level: 2 }).length).toBeGreaterThan(0);
+    expect(screen.getByRole('textbox', { name: 'Search components' })).toHaveValue('');
+  });
+
   it('navigates to the component page when a card is clicked', async () => {
     mount();
     await userEvent.click(screen.getByRole('link', { name: /^Button\b/ }));

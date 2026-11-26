@@ -29,7 +29,6 @@ export default function Align() {
   const anchors = { start: startAnchor, center: centerAnchor, end: endAnchor };
   return (
     <Stack align="start">
-      <Text tone="muted">Open: {open ?? 'none'}</Text>
       <Button ref={startAnchor} onClick={() => toggle('start')}>
         align start: popover at the left edge
       </Button>
@@ -39,6 +38,7 @@ export default function Align() {
       <Button ref={endAnchor} onClick={() => toggle('end')}>
         align end: popover at the right edge
       </Button>
+      <Text tone="muted">Open: {open ?? 'none'}</Text>
       {(['start', 'center', 'end'] as const).map((align) => (
         <Popover
           key={align}

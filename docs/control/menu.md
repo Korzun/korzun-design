@@ -94,19 +94,32 @@ An item is either an action or a link. TypeScript rejects an item with both
 
 A trigger button and a list of actions. Spread the `trigger` props onto the
 button; choosing an item closes the menu and calls its `onClick`, which takes
-no arguments.
+no arguments. Menu has no `open` prop, so this demo calls the trigger's
+`onClick` once on mount to start open.
 
 ```tsx
 import { Stack, Text } from '@korzun/design/component';
-import { Button, Menu } from '@korzun/design/control';
-import { useState } from 'react';
+import { Button, Menu, type MenuTriggerProps } from '@korzun/design/control';
+import { useEffect, useRef, useState } from 'react';
+
+// Opens the menu once on mount (the ref survives Strict Mode's second effect run).
+function OpenOnMount(props: MenuTriggerProps) {
+  const { onClick } = props;
+  const opened = useRef(false);
+  useEffect(() => {
+    if (opened.current) return;
+    opened.current = true;
+    onClick();
+  }, [onClick]);
+  return <Button {...props}>Sort by</Button>;
+}
 
 export default function Basic() {
   const [chosen, setChosen] = useState('nothing yet');
   return (
     <Stack align="start">
       <Menu
-        trigger={(p) => <Button {...p}>Sort by</Button>}
+        trigger={(p) => <OpenOnMount {...p} />}
         items={[
           { label: 'Title', onClick: () => setChosen('Title') },
           { label: 'Author', onClick: () => setChosen('Author') },
@@ -277,7 +290,6 @@ export default function Align() {
   ];
   return (
     <Stack align="start">
-      <Text tone="muted">Chosen: {chosen}</Text>
       <Menu
         align="start"
         trigger={(p) => <Button {...p}>align start: menu at the left edge</Button>}
@@ -293,6 +305,7 @@ export default function Align() {
         trigger={(p) => <Button {...p}>align end: menu at the right edge</Button>}
         items={items('end')}
       />
+      <Text tone="muted">Chosen: {chosen}</Text>
     </Stack>
   );
 }
@@ -372,22 +385,41 @@ export default function BookActions() {
 
 An icon-only `Button` takes an `ariaLabel` for its name; `ariaLabel` on the Menu
 names the list, which is otherwise labelled by the trigger. For any other
-element, attach `ref` and `onClick` and map the rest to `aria-*` attributes.
+element, attach `ref` and `onClick` and map the rest to `aria-*` attributes: here a
+native `<button>` styled from theme tokens.
 
 ```tsx
 import { Inline, Stack, Text } from '@korzun/design/component';
 import { Button, Menu } from '@korzun/design/control';
 import { MoreIcon } from '@korzun/design/icon';
+import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { useState } from 'react';
 
+// Your own trigger element, drawn with theme tokens.
+const useStyles = createUseStyles((theme: Theme) => ({
+  trigger: {
+    font: 'inherit',
+    fontSize: theme.fontSize.sm,
+    color: theme.color.text.primary,
+    backgroundColor: theme.color.bg.cardHeader,
+    border: `1px dashed ${theme.color.border.strong}`,
+    borderRadius: theme.radius.sm,
+    minHeight: theme.layout.controlHeight,
+    padding: `0 ${theme.space.lg}`,
+    cursor: 'pointer',
+    '&:hover': { borderColor: theme.color.border.hover },
+  },
+}));
+
 export default function CustomTrigger() {
+  const styles = useStyles();
   const [chosen, setChosen] = useState('nothing yet');
   const items = [
     { label: 'Rename', onClick: () => setChosen('Rename') },
     { label: 'Duplicate', onClick: () => setChosen('Duplicate') },
   ];
   return (
-    <Stack>
+    <Stack align="start">
       <Inline>
         <Menu
           ariaLabel="Row actions"
@@ -399,12 +431,13 @@ export default function CustomTrigger() {
             <button
               ref={p.ref}
               type="button"
+              className={styles.trigger}
               aria-expanded={p.ariaExpanded}
               aria-controls={p.ariaControls}
               aria-haspopup={p.ariaHasPopup}
               onClick={p.onClick}
             >
-              Plain button
+              Your own element
             </button>
           )}
           items={items}
