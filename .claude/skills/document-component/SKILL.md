@@ -32,22 +32,29 @@ Run `ls scripts/docs-gen/cli.mjs`.
 
 1. `git show HEAD:docs/<area>/<slug>.md`: the old doc, before you edit anything. Keep it open; steps 2, 3 and 6 check against it.
 2. `src/<area>/<module>/`: `index.tsx` (or `types.ts`), `style.ts`, `index.test.tsx`.
-3. The module's changelog lines: `grep -n "\[<Name>\]" CHANGELOG.md`. They say what changed since the old prose was written.
+3. The module's changelog entries. A tag list can name several modules (`- [Popover, Select, ChipsInput, Dialog] …`), so match the name anywhere in it:
+   ```
+   grep -nE "^\s*- \[([^]]*, )?<Name>(, [^]]*)?\]" CHANGELOG.md
+   ```
+   Read each hit and the sub-bullets indented under it (`sed -n '<line>,+12p' CHANGELOG.md`). They say what changed since the old prose was written.
 4. The doc of every module it builds on: each `../<other>/` import in its source has a doc at `docs/<area>/<other>.md` (Select and Menu build on Popover: read `docs/control/popover.md`).
 5. `AGENTS.md` (the styling rules examples must follow).
 6. One pilot doc and its `examples/` as the shape reference: Button for a control, Alert or Stack for a component.
 
 ## 2. JSDoc audit (REQUIRED, every prop)
 
-Every row of every generated table comes from a JSDoc line, so the JSDoc is
-the doc. Audit **every** prop of every exported type of the module, the lines
-already there as well as the ones you add. Fill in this table; it goes in your
-final report:
+Every row of every generated table comes from a JSDoc line, and each type's
+own comment renders under its table heading, so the JSDoc is the doc. Audit
+**every** prop of every exported type of the module, and **every type-level
+comment** (on an interface or type alias: `SwitchRadiusValue`, `MenuIntentProps`),
+the lines already there as well as the ones you add. Fill in this table, one
+row per prop and one row per type (`Type` alone in the first column); it goes
+in your final report:
 
-| Type.prop | Old table note (verbatim, or "none") | JSDoc after | Default column shows |
+| Type.prop or Type | Old table note (verbatim, or "none") | JSDoc after | Default column shows ("–" for a type row) |
 |---|---|---|---|
 
-A finished JSDoc line is:
+Every rule below applies to type-level comments too. A finished JSDoc line is:
 - **On the prop itself.** Each clause of the old note (every behaviour, every "needs X", every "type error when Y", every "so Z works") appears on that prop's own `/** */`. The comment on an interface or type alias renders as a paragraph under that type's table heading; it carries only what is true of the type as a whole ("An item that navigates."). A note about one prop that sits in a type comment moves onto the prop: that is a comment-only change and allowed.
 - **Behaviour only, at most three sentences.** What it does, when it is ignored, what it flips to, what TypeScript rejects. No history ("as it has always looked", "since 0.3"), no naming rationale, no restated union values (the Type column lists them; describe only values that carry extra meaning, as Alert `tone` does for which ones are announced). A longer explanation lives in a Usage subsection and the JSDoc links to it.
 - **Default-free prose.** The Default column carries defaults: no "(default)", "(the default)", "`'solid'` (default)" or "defaults to". The generator fills the column from the component's destructuring as written: literals (`side = 'bottom'`), functions (`onChange = () => {}` shows `() => {}`) and other expressions. Two cases need you:
@@ -141,7 +148,7 @@ The first comment line is the title; the rest is the description shown above the
 - Imports: entry points only (`@korzun/design/<entry>`), all `@korzun/design/*` first then `react`, one block.
 - Default export, no props. Layout with `Stack`/`Inline`, text with `Text`/`Heading`, no inline styles or literals.
 - Text is typed Unicode (`Loading…`, `2–5`), never HTML entities and never ASCII stand-ins; strings match the component's own (`Loading…`, not `Loading...`).
-- Every interactive control is wired to state, so using it visibly changes the demo: a controlled value with its setter, plus a `Text` readout where the control does not display its own value ("Chosen: Edit"). No `() => {}` anywhere: `grep -rn '() => {}' src/<area>/<module>/examples/` prints nothing. A shared `items` constant becomes a function of the setter, or moves inside the component.
+- Every interactive control is wired to state, so using it visibly changes the demo: a controlled value with its setter, plus a `Text` readout where the control does not display its own value ("Chosen: Edit"). No handler that does nothing (`() => {}`, `() => undefined`, `() => null`, `noop`, a function with an empty body). Quick check, which must print nothing: `grep -rnE '\(\) => (\{\s*\}|undefined|null)|noop' src/<area>/<module>/examples/`; it does not catch every do-nothing handler, so also read each handler. A shared `items` constant becomes a function of the setter, or moves inside the component.
 - Titles and descriptions name no defaults: no "(the default)", no "`solid` by default".
 - Each description sentence is shown by the demo. "Set `ariaLabel` when the trigger is an icon" means the demo's trigger is an icon `Button` with `ariaLabel`.
 - Examples follow the Usage and Do / don't of this doc and of every component they use (read `docs/component/surface.md` before using `Surface`). An example never demonstrates a use those docs advise against (a `Surface` with no drawn box around it).
@@ -157,7 +164,7 @@ Coverage checklist (REQUIRED; fill in every row, it goes in your report). Each r
 | each state the module has (`disabled`, `loading`, error, empty, read-only) | each | |
 | the old doc's main `## Example` | list every prop and item kind it uses (Menu: `align="end"`, link item, action item, `Icon`, `danger`, `separatorBefore`); one example contains all of them | |
 | the common composition with its usual neighbours (in a `Card`, `Dialog`, form, row) | one | |
-| every interactive control wired to state with a visible effect | the grep above prints nothing; each control's effect named | all |
+| every interactive control wired to state with a visible effect | no do-nothing handler (grep above prints nothing, each handler read); each control's effect named | all |
 | each description sentence shown by its demo | checked, sentence by sentence | all |
 | examples follow this doc's and the used components' Usage and Do / don't | checked | all |
 
