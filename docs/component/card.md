@@ -143,11 +143,12 @@ export default function Collapsible() {
 
 ### Clickable rows
 
-`size="small"` with `onClick` makes a whole-card list row: 1px body padding and a pointer
-cursor. Clicking anywhere on a row fires `onClick`.
+`size="small"` with `onClick` makes a whole-card list row: a pointer cursor and only 1px of body
+padding, so the child supplies its own padding and corner. A `CardRow` inside is flush with the
+card and concentric with it. Clicking anywhere on a row fires `onClick`.
 
 ```tsx
-import { Card, Stack, Text } from '@korzun/design/component';
+import { Card, CardRow, Stack, Text } from '@korzun/design/component';
 import { useState } from 'react';
 
 const books = ['Middlemarch', 'Persuasion', 'Villette'];
@@ -158,7 +159,9 @@ export default function ClickableRows() {
     <Stack>
       {books.map((book) => (
         <Card key={book} size="small" onClick={() => setOpened(book)}>
-          <Text>{book}</Text>
+          <CardRow>
+            <Text>{book}</Text>
+          </CardRow>
         </Card>
       ))}
       <Text tone="muted">Opened: {opened ?? 'nothing yet'}</Text>
@@ -206,20 +209,29 @@ for a group that is itself a feature; to split one body into sections use `CardD
 ```tsx
 import { Card, Stack, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
+import { useState } from 'react';
 
 export default function Nested() {
+  const [pressed, setPressed] = useState<string | undefined>();
   return (
-    <Card title="On the page (16px)" footer={<Button>Button in this card</Button>}>
+    <Card
+      title="Library (16px)"
+      footer={<Button onClick={() => setPressed('Sync library')}>Sync library</Button>}
+    >
       <Stack>
-        <Text>This Card sits on the page.</Text>
-        <Card title="In a Card (8px)" footer={<Button>Button in this card</Button>}>
+        <Text>The feature sits on the page.</Text>
+        <Card
+          title="Devices (8px)"
+          footer={<Button onClick={() => setPressed('Pair device')}>Pair device</Button>}
+        >
           <Stack>
-            <Text>This Card is one level in.</Text>
-            <Card title="Two levels in (4px)">
+            <Text>A group inside the feature, one level in.</Text>
+            <Card title="Kitchen frame (4px)">
               <Text>Deeper Cards stay at the smallest step.</Text>
             </Card>
           </Stack>
         </Card>
+        <Text tone="muted">Pressed: {pressed ?? 'nothing yet'}</Text>
       </Stack>
     </Card>
   );
