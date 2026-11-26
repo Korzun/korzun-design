@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { existsSync } from 'node:fs';
 import { test } from 'node:test';
 
-import { extractTypeTables } from './props.mjs';
+import { componentPropsTypes, extractTypeTables } from './props.mjs';
 
 const files = (map) => (p) => {
   if (!(p in map)) throw new Error(`no such file ${p}`);
@@ -715,5 +715,47 @@ export type PageActionItem = MenuActionItem & { primary?: boolean };`;
         })
       ),
     /PageActionItem: @member Icn: no such member/
+  );
+});
+
+const propsTypes = (src) =>
+  Object.fromEntries(
+    componentPropsTypes(
+      '/x/a.d.ts',
+      [...src.matchAll(/declare (?:const|function) ([A-Z]\w*)/g)].map((m) => m[1]),
+      files({ '/x/a.d.ts': src })
+    )
+  );
+
+test('componentPropsTypes: a component function or a component wrapper, by its props type', () => {
+  assert.deepEqual(
+    propsTypes(`export declare function A(props: AProps): null;
+export declare const B: ({ x }: BProps) => null;
+export declare const C: import("react").ForwardRefExoticComponent<CProps & import("react").RefAttributes<HTMLDivElement>>;
+export declare const D: React.MemoExoticComponent<(props: DProps) => null>;
+export declare const E: FC<EProps>;
+export declare const F: React.FunctionComponent<FProps>;
+export declare function G(): null;
+export declare const H: ({ x }: { x: string }) => null;`),
+    { A: 'AProps', B: 'BProps', C: 'CProps', D: 'DProps', E: 'EProps', F: 'FProps' }
+  );
+});
+
+test('componentPropsTypes: a non-component generic value is not a component', () => {
+  assert.deepEqual(
+    propsTypes(`export declare const ThemeContext: React.Context<Theme>;
+export declare const Items: Array<Item>;
+export declare const Boxed: import("react").Context<Box>;`),
+    {}
+  );
+});
+
+test('componentPropsTypes: Readonly and PropsWithChildren unwrap, qualified or not', () => {
+  assert.deepEqual(
+    propsTypes(`export declare function A(props: Readonly<AProps>): null;
+export declare const B: FC<PropsWithChildren<BProps>>;
+export declare const C: React.FC<React.PropsWithChildren<CProps>>;
+export declare function D(props: React.PropsWithChildren<Readonly<DProps>>): null;`),
+    { A: 'AProps', B: 'BProps', C: 'CProps', D: 'DProps' }
   );
 });

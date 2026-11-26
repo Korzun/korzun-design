@@ -631,9 +631,40 @@ export function declarationFiles(dtsPath, names, readFile = defaultRead) {
   return out;
 }
 
+// The last name of a type reference or import type: `FC`, `React.FC` and
+// `import("react").FC` are all `FC`; null for any other node.
+function refName(node) {
+  if (node?.type === 'TSTypeReference') {
+    const tn = node.typeName;
+    return tn.type === 'Identifier'
+      ? tn.name
+      : tn.type === 'TSQualifiedName'
+        ? tn.right.name
+        : null;
+  }
+  if (node?.type === 'TSImportType') {
+    const q = node.qualifier;
+    return q?.type === 'Identifier' ? q.name : q?.type === 'TSQualifiedName' ? q.right.name : null;
+  }
+  return null;
+}
+
+// React's component types: a value typed as one of these takes the props in its first type argument.
+const COMPONENT_TYPES = new Set([
+  'FC',
+  'FunctionComponent',
+  'ExoticComponent',
+  'NamedExoticComponent',
+  'MemoExoticComponent',
+  'ForwardRefExoticComponent',
+]);
+// Wrappers around a props type that name no props of their own.
+const PROPS_WRAPPERS = new Set(['Readonly', 'PropsWithChildren']);
+
 // The type name a props parameter or wrapper argument refers to: `P` in
-// `(props: P)`, `ForwardRefExoticComponent<P & RefAttributes<…>>`, or null for
-// an inline type.
+// `(props: P)`, `Readonly<P>`, `PropsWithChildren<P>`, `P & RefAttributes<…>`;
+// null for an inline type. A function type (`memo`'s argument) gives its first
+// parameter's.
 function propsTypeName(node) {
   if (!node) return null;
   if (node.type === 'TSIntersectionType') {
@@ -643,17 +674,22 @@ function propsTypeName(node) {
     }
     return null;
   }
-  if (node.type === 'TSTypeReference' && node.typeName.type === 'Identifier') {
-    return node.typeName.name;
-  }
-  return null;
+  if (node.type === 'TSFunctionType') return paramTypeName(node);
+  const name = refName(node);
+  if (!name) return null;
+  if (PROPS_WRAPPERS.has(name)) return propsTypeName(node.typeArguments?.params?.[0]);
+  return node.type === 'TSTypeReference' && node.typeName.type === 'Identifier' ? name : null;
 }
+
+const paramTypeName = (fn) => propsTypeName(fn.params[0]?.typeAnnotation?.typeAnnotation);
 
 /**
  * The props type each exported component takes, by name: the type of a
- * function's first parameter, or the first type argument of a wrapper
- * (`memo`, `forwardRef`). A component with no parameter, or one typed inline,
- * is absent; so is a name that is not a declared value.
+ * function's first parameter, or the first type argument of a React component
+ * type (`FC`, `MemoExoticComponent`, `ForwardRefExoticComponent`, …),
+ * through `Readonly` and `PropsWithChildren`. A component with no parameter,
+ * one typed inline, a value of any other type (`Context<Theme>`) and a name
+ * that is not a declared value are absent.
  * @param {string} dtsPath
  * @param {string[]} names
  * @param {(p: string) => string} [readFile]
@@ -669,8 +705,8 @@ export function componentPropsTypes(dtsPath, names, readFile = defaultRead) {
     const fn = decl.type === 'TSDeclareFunction' ? decl : decl.id?.typeAnnotation?.typeAnnotation;
     let type = null;
     if (fn?.type === 'TSDeclareFunction' || fn?.type === 'TSFunctionType') {
-      type = propsTypeName(fn.params[0]?.typeAnnotation?.typeAnnotation);
-    } else if (fn?.type === 'TSTypeReference' || fn?.type === 'TSImportType') {
+      type = paramTypeName(fn);
+    } else if (COMPONENT_TYPES.has(refName(fn))) {
       type = propsTypeName(fn.typeArguments?.params?.[0]);
     }
     if (type) out.set(name, type);
