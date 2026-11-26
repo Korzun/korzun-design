@@ -2,6 +2,82 @@
   "version": "0.5.0",
   "modules": [
     {
+      "id": "control/back-button",
+      "slug": "back-button",
+      "entry": "@korzun/design/control",
+      "docPath": "docs/control/back-button.md",
+      "title": "BackButton",
+      "description": "A round glass \"Back\" button for mobile that navigates to a fixed path.",
+      "category": "Navigation",
+      "values": [
+        "BackButton"
+      ],
+      "types": [
+        "BackButtonProps"
+      ],
+      "importLine": "import { BackButton, type BackButtonProps } from '@korzun/design/control'",
+      "body": "A round glass \"Back\" button that navigates to a fixed path. It is mobile-only:\nat widths of 641px and up it renders `display: none`, because desktop has its\nown navigation. Usually you don't render it yourself: pass `back` to `Page`.\n\nUse something else for: any other action (`Button`), header actions\n(`PageActionsMenu` / `PageActionsBar`, also via `Page`).\n\n## Usage\n\n### Navigation\n\n- **It pushes `to`, it does not go back in history.** Click (or Enter / Space)\n  calls `navigate(to, { state: { restoreScroll: true } })`: a new history entry,\n  with a state flag asking the destination's scroll manager to restore its\n  remembered position instead of jumping to the top.\n- Requires a `react-router` (v8, a peer dependency) router above it; it calls\n  `useNavigate()` and throws without one.\n\n### Appearance\n\n- Renders a `<div role=\"button\" tabIndex={0} aria-label=\"Back\">` with a\n  left-pointing chevron, 46×46px, `radius.circle`, `recipe.glass`.\n- It does not position itself. `Page` puts it in its sticky controls row; if\n  you render it elsewhere, you place it.\n- That is the whole API. No `className`, no label, no `onClick`.\n\n## Do / don't\n\n- Do use `Page back=\"…\"` instead of rendering `BackButton` directly, so it lines\n  up with the mobile actions menu.\n- Do pass the logical parent route (`/library`, the book page), not a guess at\n  the previous URL: it always goes to `to`.\n- Don't expect it on desktop; it is hidden at 641px and up.\n- Don't wrap it in a `<button>` or `<a>`, or try to restyle it: there is no\n  `className`.",
+      "examples": [
+        {
+          "file": "src/control/back-button/examples/01-basic.tsx",
+          "slug": "basic",
+          "order": 1,
+          "title": "Basic",
+          "description": "A round glass button that pushes `to` as a new history entry, asking the\ndestination to restore its scroll position. It does not go back in history,\nso pass the logical parent route. Mobile only: it is hidden at 641px and up,\nwhere the desktop navigation takes over. It does not position itself, so you\nplace it in your own row.",
+          "code": "import { Inline, Text } from '@korzun/design/component';\nimport { BackButton } from '@korzun/design/control';\n\nexport default function Basic() {\n  return (\n    <Inline>\n      <BackButton to=\"/library\" />\n      <Text tone=\"muted\">The button shows below 641px wide.</Text>\n    </Inline>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/back-button/examples/02-in-page.tsx",
+          "slug": "in-page",
+          "order": 2,
+          "title": "In a page",
+          "description": "Usually you do not render it yourself: pass `back` to `Page`, which puts the\nbutton in its sticky controls row on mobile.",
+          "code": "import { Card, Page } from '@korzun/design/component';\n\nexport default function InPage() {\n  return (\n    <Page back=\"/library\">\n      <Card title=\"Dune\">Frank Herbert, 1965.</Card>\n    </Page>\n  );\n}\n"
+        }
+      ],
+      "tables": [
+        {
+          "name": "BackButtonProps",
+          "kind": "props",
+          "rows": [
+            {
+              "name": "to",
+              "type": "string",
+              "required": true,
+              "description": "Path to navigate to. Pushes a new history entry (it does not go back in history), asking the destination to restore its scroll position."
+            }
+          ]
+        }
+      ],
+      "tokens": [
+        {
+          "path": "breakpoint.normal",
+          "kind": "value",
+          "light": "@media (min-width: 641px)",
+          "dark": "@media (min-width: 641px)"
+        },
+        {
+          "path": "color.text.primary",
+          "kind": "color",
+          "light": "#111",
+          "dark": "#F5F5F7"
+        },
+        {
+          "path": "radius.circle",
+          "kind": "value",
+          "light": "50%",
+          "dark": "50%"
+        },
+        {
+          "path": "recipe.glass",
+          "kind": "recipe",
+          "light": null,
+          "dark": null
+        }
+      ],
+      "changelog": []
+    },
+    {
       "id": "control/button",
       "slug": "button",
       "entry": "@korzun/design/control",
