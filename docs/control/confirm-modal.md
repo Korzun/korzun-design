@@ -138,10 +138,10 @@ export default function Danger() {
 
 `loading` puts a spinner on Confirm, disables both buttons and makes Escape and the
 backdrop do nothing. The switch holds it on so you can try to dismiss the modal;
-turn it off to close the modal again.
+turn it off and Cancel, Escape and the backdrop work again.
 
 ```tsx
-import { Stack } from '@korzun/design/component';
+import { Inline, Stack } from '@korzun/design/component';
 import { Button, ConfirmModal, Switch } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -149,7 +149,7 @@ export default function Loading() {
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   return (
-    <>
+    <Inline>
       <Button onClick={() => setIsOpen(true)}>Publish</Button>
       <ConfirmModal
         isOpen={isOpen}
@@ -164,7 +164,7 @@ export default function Loading() {
           <Switch name="loading" label="Loading" checked={loading} onChange={setLoading} />
         </Stack>
       </ConfirmModal>
-    </>
+    </Inline>
   );
 }
 ```
@@ -175,7 +175,7 @@ export default function Loading() {
 Cancel and dismissal keep working.
 
 ```tsx
-import { Stack } from '@korzun/design/component';
+import { Inline, Stack } from '@korzun/design/component';
 import { Button, ConfirmModal, Switch } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -187,7 +187,7 @@ export default function ConfirmDisabled() {
     setUnderstood(false);
   };
   return (
-    <>
+    <Inline>
       <Button onClick={() => setIsOpen(true)}>Reset library</Button>
       <ConfirmModal
         isOpen={isOpen}
@@ -208,7 +208,7 @@ export default function ConfirmDisabled() {
           />
         </Stack>
       </ConfirmModal>
-    </>
+    </Inline>
   );
 }
 ```

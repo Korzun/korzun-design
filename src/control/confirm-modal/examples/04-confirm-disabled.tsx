@@ -2,7 +2,7 @@
  * `confirmDisabled` disables only Confirm, here until the switch in the body is on.
  * Cancel and dismissal keep working.
  */
-import { Stack } from '@korzun/design/component';
+import { Inline, Stack } from '@korzun/design/component';
 import { Button, ConfirmModal, Switch } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -14,7 +14,7 @@ export default function ConfirmDisabled() {
     setUnderstood(false);
   };
   return (
-    <>
+    <Inline>
       <Button onClick={() => setIsOpen(true)}>Reset library</Button>
       <ConfirmModal
         isOpen={isOpen}
@@ -35,6 +35,6 @@ export default function ConfirmDisabled() {
           />
         </Stack>
       </ConfirmModal>
-    </>
+    </Inline>
   );
 }
