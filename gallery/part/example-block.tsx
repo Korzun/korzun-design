@@ -9,6 +9,7 @@ import type { ExampleInfo, ModuleInfo } from '../../scripts/docs-gen/types.js';
 import { frameSrc, MOBILE_WIDTH, useFrameTheme } from '../frame-url.js';
 import { isHeightMessage } from '../messages.js';
 import { CopyButton } from './copy-button.js';
+import { highlight, useHighlightStyle } from './highlight.js';
 import { Markdown } from './markdown.js';
 
 const useStyle = createUseStyles((theme: Theme) => ({
@@ -60,6 +61,7 @@ export type ExampleBlockProps = {
 /** One example: its live demo in a frame sized to fit, title, description and copyable code. */
 export const ExampleBlock = ({ mod, example, headingId }: ExampleBlockProps) => {
   const styles = useStyle();
+  const tokens = useHighlightStyle();
   const [theme, onLoad] = useFrameTheme();
   const [height, setHeight] = useState<number | null>(null);
   const [loaded, setLoaded] = useState(false);
@@ -127,8 +129,9 @@ export const ExampleBlock = ({ mod, example, headingId }: ExampleBlockProps) => 
         </Inline>
       </Stack>
       {showCode && (
-        <pre className={styles.code} id={codeId}>
-          <code>{example.code}</code>
+        <pre className={cx(styles.code, tokens.tokens)} id={codeId}>
+          {/* highlight.js escapes the source; the spans are its own. */}
+          <code dangerouslySetInnerHTML={{ __html: highlight(example.code) }} />
         </pre>
       )}
     </section>

@@ -1,5 +1,6 @@
 import { Heading, Inline, Page, Stack, Text } from '@korzun/design/component';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
+import cx from 'classnames';
 import type { ReactNode } from 'react';
 import { useParams } from 'react-router';
 
@@ -10,6 +11,7 @@ import { useScrollToHash } from '../layout/scroll.js';
 import { NotFound } from '../not-found.js';
 import { CopyButton } from '../part/copy-button.js';
 import { ExampleBlock } from '../part/example-block.js';
+import { highlight, useHighlightStyle } from '../part/highlight.js';
 import { IconGrid } from '../part/icon-grid.js';
 import { createSlugger, headingTexts, Markdown } from '../part/markdown.js';
 import { PropsTable } from '../part/props-table.js';
@@ -79,6 +81,7 @@ const Section = ({ title, id, children }: { title: string; id: string; children:
 /** `#/components/<slug>`: everything about one module, from the generated site data. */
 export const ComponentPage = () => {
   const styles = useStyle();
+  const tokens = useHighlightStyle();
   const mod = moduleBySlug(useParams().slug ?? '');
   // A link to a supporting type (`#/components/button#buttontypevalue`) or a
   // Usage section (`#/components/popover#layers`) lands on it.
@@ -112,7 +115,11 @@ export const ComponentPage = () => {
               </Text>
             </Stack>
             <Inline gap="md" align="center" className={styles.importBox}>
-              <code className={styles.importCode}>{mod.importLine}</code>
+              <code
+                className={cx(styles.importCode, tokens.tokens)}
+                // highlight() escapes the line; the spans are its own.
+                dangerouslySetInnerHTML={{ __html: highlight(mod.importLine) }}
+              />
               <CopyButton text={mod.importLine} label="Copy import" />
             </Inline>
             <Text size="sm" tone="description">
