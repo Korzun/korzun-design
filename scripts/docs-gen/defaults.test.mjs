@@ -65,3 +65,8 @@ test('a parameter default wins over a body destructure of the same prop', () => 
 };`;
   assert.deepEqual(readDefaults(src, 'X'), { a: '1', b: '3' });
 });
+
+test('reads a default for a prop named like an Object.prototype member', () => {
+  const src = `export function X({ toString = 'x', constructor = 1 }) {}`;
+  assert.deepEqual(readDefaults(src, 'X'), { toString: "'x'", constructor: '1' });
+});

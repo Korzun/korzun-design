@@ -36,7 +36,7 @@ function patternDefaults(target, tsxSource, result) {
   for (const prop of target.properties) {
     if (prop.type !== 'Property' || prop.value.type !== 'AssignmentPattern') continue;
     const key = prop.key.type === 'Identifier' ? prop.key.name : String(prop.key.value);
-    if (key in result) continue;
+    if (Object.hasOwn(result, key)) continue;
     const right = unwrapAssertion(prop.value.right);
     const text = tsxSource.slice(right.start, right.end);
     result[key] = right.type === 'Literal' ? text : text.replace(/\s+/g, ' ');
