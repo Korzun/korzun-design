@@ -5,8 +5,9 @@ import cx from 'classnames';
 import { useEffect, useId, useRef, useState } from 'react';
 
 import { anchor } from '../../scripts/docs-gen/slug.mjs';
-import type { ExampleInfo, ModuleInfo } from '../../scripts/docs-gen/types.js';
-import { frameSrc, MOBILE_WIDTH, useFrameTheme } from '../frame-url.js';
+import type { ExampleInfo } from '../../scripts/docs-gen/types.js';
+import type { ExampleOwner } from '../data.js';
+import { frameSrc, MOBILE_WIDTH, SCREEN_HEIGHT, useFrameTheme } from '../frame-url.js';
 import { isHeightMessage } from '../messages.js';
 import { CopyButton } from './copy-button.js';
 import { highlight, useHighlightStyle } from './highlight.js';
@@ -50,8 +51,8 @@ const useStyle = createUseStyles((theme: Theme) => ({
 }));
 
 export type ExampleBlockProps = {
-  /** The module the example belongs to. */
-  mod: ModuleInfo;
+  /** The module or recipe the example belongs to. */
+  owner: ExampleOwner;
   /** The example to show. */
   example: ExampleInfo;
   /** Id of the title heading. Default: the slug of the title, as the doc's `### <title>` has. */
@@ -59,11 +60,13 @@ export type ExampleBlockProps = {
 };
 
 /** One example: its live demo in a frame sized to fit, title, description and copyable code. */
-export const ExampleBlock = ({ mod, example, headingId }: ExampleBlockProps) => {
+export const ExampleBlock = ({ owner, example, headingId }: ExampleBlockProps) => {
   const styles = useStyle();
   const tokens = useHighlightStyle();
   const [theme, onLoad] = useFrameTheme();
   const [height, setHeight] = useState<number | null>(null);
+  // A full-height screen sizes itself to the frame, so the frame gets a fixed height.
+  const fixedHeight = example.viewport === 'screen' ? SCREEN_HEIGHT : null;
   const [loaded, setLoaded] = useState(false);
   const [showCode, setShowCode] = useState(false);
   const frameRef = useRef<HTMLIFrameElement>(null);
@@ -77,11 +80,11 @@ export const ExampleBlock = ({ mod, example, headingId }: ExampleBlockProps) => 
       if (event.origin !== window.location.origin) return;
       if (!frameRef.current || event.source !== frameRef.current.contentWindow) return;
       const data: unknown = event.data;
-      if (isHeightMessage(data)) setHeight(data.height);
+      if (isHeightMessage(data) && fixedHeight === null) setHeight(data.height);
     };
     window.addEventListener('message', onMessage);
     return () => window.removeEventListener('message', onMessage);
-  }, []);
+  }, [fixedHeight]);
 
   return (
     <section
@@ -89,7 +92,7 @@ export const ExampleBlock = ({ mod, example, headingId }: ExampleBlockProps) => 
       aria-labelledby={titleId}
       id={`example-${example.slug}`}
       // For screenshot scripts: the demo has loaded and sized itself.
-      data-ready={loaded && height !== null ? '' : undefined}
+      data-ready={loaded && (fixedHeight ?? height) !== null ? '' : undefined}
     >
       <div className={styles.demo}>
         <iframe
@@ -101,10 +104,10 @@ export const ExampleBlock = ({ mod, example, headingId }: ExampleBlockProps) => 
             !loaded && height === null && styles.pending
           )}
           data-viewport={example.viewport}
-          src={frameSrc(mod.slug, example.slug, theme)}
-          title={`${mod.title}: ${example.title}`}
+          src={frameSrc(owner.framePath, example.slug, theme)}
+          title={`${owner.title}: ${example.title}`}
           // Eager: a demo sizing itself on scroll would shift the page under the reader.
-          height={height ?? undefined}
+          height={fixedHeight ?? height ?? undefined}
           onLoad={() => {
             setLoaded(true);
             onLoad();
@@ -115,7 +118,9 @@ export const ExampleBlock = ({ mod, example, headingId }: ExampleBlockProps) => 
         <Heading level={3} size="md" id={titleId}>
           {example.title}
         </Heading>
-        {example.description && <Markdown source={example.description} from={mod.docPath} inline />}
+        {example.description && (
+          <Markdown source={example.description} from={owner.docPath} inline />
+        )}
         <Inline gap="md" wrap>
           <Button
             type="link"

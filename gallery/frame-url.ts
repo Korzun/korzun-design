@@ -6,17 +6,21 @@ import type { ThemeValue } from './messages.js';
 /** Width in px of a `@viewport mobile` example's frame: a common phone's CSS width. */
 export const MOBILE_WIDTH = 390;
 
+/** Height in px of a `@viewport screen` example's frame: a full-height screen at a laptop-ish height. */
+export const SCREEN_HEIGHT = 640;
+
 /**
- * The URL of one example frame. `fit: 'center'` centres a small example in the
+ * The URL of one example frame. `framePath` is its owner's (`ExampleOwner.framePath`:
+ * `button`, `recipe/login`). `fit: 'center'` centres a small example in the
  * viewport; overview thumbnails ask for it, docs demos keep the normal flow.
  */
 export const frameSrc = (
-  moduleSlug: string,
+  framePath: string,
   exampleSlug: string,
   theme: ThemeValue,
   fit?: 'center'
 ): string =>
-  `${import.meta.env.BASE_URL}#/frame/${moduleSlug}/${exampleSlug}?theme=${theme}${fit ? `&fit=${fit}` : ''}`;
+  `${import.meta.env.BASE_URL}#/frame/${framePath}/${exampleSlug}?theme=${theme}${fit ? `&fit=${fit}` : ''}`;
 
 /**
  * The theme for a frame's URL, and the iframe's `onLoad`. Until the frame

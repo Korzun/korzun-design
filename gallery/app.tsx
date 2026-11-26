@@ -53,12 +53,14 @@ export const GalleryRoutes = (): ReactElement => {
     return (
       <Routes>
         <Route path="/frame/:module/:example" element={<Frame />} />
+        <Route path="/frame/recipe/:recipe/:example" element={<Frame />} />
         <Route path="*" element={<FrameNavigatedAway home={frameHome} />} />
       </Routes>
     );
   return (
     <Routes>
       <Route path="/frame/:module/:example" element={<Frame />} />
+      <Route path="/frame/recipe/:recipe/:example" element={<Frame />} />
       <Route element={<Shell />}>
         <Route index element={<OverviewPage />} />
         <Route path="/components/:slug" element={<ComponentPage />} />
