@@ -540,7 +540,7 @@
           "slug": "layouts",
           "order": 2,
           "title": "Layouts",
-          "description": "`horizontal` and `vertical` paint a shaded row, with the label beside the inputs or\nabove them. `inline` paints no row and sizes to its content, for a spot inside\nyour own layout.",
+          "description": "`horizontal` and `vertical` paint a shaded row, with the label beside the inputs or\nabove them. `inline` paints no row, for a spot inside your own layout.",
           "code": "import { Stack, Text } from '@korzun/design/component';\nimport { DateTimeInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Layouts() {\n  const [horizontal, setHorizontal] = useState<string | undefined>('2023-06-06T16:30:00Z');\n  const [vertical, setVertical] = useState<string | undefined>('2023-06-06');\n  const [inline, setInline] = useState<string | undefined>(undefined);\n  return (\n    <Stack>\n      <Text tone=\"muted\">layout horizontal</Text>\n      <DateTimeInput\n        name=\"horizontal\"\n        label=\"Published\"\n        layout=\"horizontal\"\n        value={horizontal}\n        onChange={setHorizontal}\n      />\n      <Text tone=\"muted\">layout vertical</Text>\n      <DateTimeInput\n        name=\"vertical\"\n        label=\"Published\"\n        layout=\"vertical\"\n        value={vertical}\n        onChange={setVertical}\n      />\n      <Text tone=\"muted\">layout inline</Text>\n      <DateTimeInput\n        name=\"inline\"\n        label=\"Published\"\n        layout=\"inline\"\n        value={inline}\n        onChange={setInline}\n      />\n    </Stack>\n  );\n}\n"
         },
         {
@@ -557,7 +557,7 @@
           "order": 4,
           "title": "In a Card",
           "description": "A form field beside the others in a Card. Keep the composed string from\n`onChange` in state and send that: native form data holds the date and the time as\ntwo separate fields (`publishDate`, `publishDateTime`).",
-          "code": "import { Card, Stack, Text } from '@korzun/design/component';\nimport { Button, DateTimeInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function InACard() {\n  const [publishDate, setPublishDate] = useState<string | undefined>('2023-06-06T16:30:00Z');\n  const [sent, setSent] = useState<string | null>(null);\n  return (\n    <Card\n      title=\"Publication\"\n      footer={\n        <Button type=\"primary\" onClick={() => setSent(publishDate ?? 'no date')}>\n          Save\n        </Button>\n      }\n    >\n      <Stack>\n        <DateTimeInput\n          name=\"publishDate\"\n          label=\"Publish date\"\n          value={publishDate}\n          onChange={setPublishDate}\n        />\n        {sent !== null && <Text tone=\"success\">Sent: {sent}</Text>}\n      </Stack>\n    </Card>\n  );\n}\n"
+          "code": "import { Card, Stack, Text } from '@korzun/design/component';\nimport { Button, DateTimeInput, TextInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function InACard() {\n  const [title, setTitle] = useState<string | undefined>('Dune');\n  const [publishDate, setPublishDate] = useState<string | undefined>('2023-06-06T16:30:00Z');\n  const [sent, setSent] = useState<string | null>(null);\n  return (\n    <Card\n      title=\"Publication\"\n      footer={\n        <Button\n          type=\"primary\"\n          onClick={() => setSent(`${title ?? ''}, ${publishDate ?? 'no date'}`)}\n        >\n          Save\n        </Button>\n      }\n    >\n      <Stack>\n        <TextInput name=\"title\" label=\"Title\" value={title} onChange={setTitle} />\n        <DateTimeInput\n          name=\"publishDate\"\n          label=\"Publish date\"\n          value={publishDate}\n          onChange={setPublishDate}\n        />\n        {sent !== null && <Text tone=\"success\">Sent: {sent}</Text>}\n      </Stack>\n    </Card>\n  );\n}\n"
         }
       ],
       "tables": [
@@ -1893,7 +1893,7 @@
           "slug": "read-only",
           "order": 4,
           "title": "Read-only",
-          "description": "Omit `onChange` to show a value without letting it change: the segments are\nmarked `aria-disabled` and ignore clicks and keys. A `value` no option has\nchecks nothing.",
+          "description": "Omit `onChange` to show a value without letting it change: the segments are\nmarked `aria-disabled` and ignore clicks and keys. A `null` value checks\nnothing and draws no lens.",
           "code": "import { Stack, Text } from '@korzun/design/component';\nimport { SegmentedControl } from '@korzun/design/control';\n\nconst OPTIONS = [\n  { value: 'draft', label: 'Draft' },\n  { value: 'review', label: 'Review' },\n  { value: 'published', label: 'Published' },\n] as const;\n\nexport default function ReadOnly() {\n  return (\n    <Stack>\n      <Text tone=\"muted\">Value review</Text>\n      <SegmentedControl label=\"Status\" options={OPTIONS} value=\"review\" />\n      <Text tone=\"muted\">Value null</Text>\n      <SegmentedControl label=\"Status\" options={OPTIONS} value={null} />\n    </Stack>\n  );\n}\n"
         },
         {
@@ -1902,7 +1902,7 @@
           "order": 5,
           "title": "Surfaces",
           "description": "In a Card body the control paints its own track. In the shaded Card header the\nheader is the track, so `surface=\"row\"` paints nothing and only the lens\nshows. The corner is the same in both: the control belongs inside a card or\nmodal.",
-          "code": "import { Card, Stack } from '@korzun/design/component';\nimport { SegmentedControl } from '@korzun/design/control';\nimport { useState } from 'react';\n\nconst VIEWS = [\n  { value: 'grid', label: 'Grid' },\n  { value: 'list', label: 'List' },\n] as const;\n\ntype View = (typeof VIEWS)[number]['value'];\n\nexport default function Surfaces() {\n  const [body, setBody] = useState<View>('grid');\n  const [header, setHeader] = useState<View>('list');\n  return (\n    <Stack>\n      <Card title=\"surface card, in the body\">\n        <SegmentedControl label=\"Body view\" options={VIEWS} value={body} onChange={setBody} />\n      </Card>\n      <Card\n        title=\"surface row, in the header\"\n        headerAction={\n          <SegmentedControl\n            label=\"Header view\"\n            options={VIEWS}\n            value={header}\n            onChange={setHeader}\n            surface=\"row\"\n          />\n        }\n      >\n        Showing {header}.\n      </Card>\n    </Stack>\n  );\n}\n"
+          "code": "import { Card, Stack, Text } from '@korzun/design/component';\nimport { SegmentedControl } from '@korzun/design/control';\nimport { useState } from 'react';\n\nconst VIEWS = [\n  { value: 'grid', label: 'Grid' },\n  { value: 'list', label: 'List' },\n] as const;\n\ntype View = (typeof VIEWS)[number]['value'];\n\nexport default function Surfaces() {\n  const [body, setBody] = useState<View>('grid');\n  const [header, setHeader] = useState<View>('list');\n  return (\n    <Stack>\n      <Card title=\"surface card, in the body\">\n        <SegmentedControl label=\"Body view\" options={VIEWS} value={body} onChange={setBody} />\n      </Card>\n      <Card\n        title=\"surface row, in the header\"\n        headerAction={\n          <SegmentedControl\n            label=\"Header view\"\n            options={VIEWS}\n            value={header}\n            onChange={setHeader}\n            surface=\"row\"\n          />\n        }\n      >\n        <Text>Showing {header}.</Text>\n      </Card>\n    </Stack>\n  );\n}\n"
         }
       ],
       "tables": [
@@ -1927,7 +1927,7 @@
               "name": "onChange",
               "type": "((value: V | null) => void) | ((value: V) => void)",
               "required": false,
-              "description": "Absent means read-only: the control shows the value, and segments get `aria-disabled` and ignore clicks and keys."
+              "description": "Receives `null` (a clear) only when `clearable` is set. Absent means read-only: the control shows the value, and segments get `aria-disabled` and ignore clicks and keys."
             },
             {
               "name": "options",
@@ -2146,8 +2146,8 @@
           "slug": "radius",
           "order": 3,
           "title": "Radius",
-          "description": "`inset` is the track corner for a switch in a shaded row: concentric with the\nrow's own corner. `pill` is the capsule for a switch on an unshaded surface,\nwith no nearby corner to echo.",
-          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Switch } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Radius() {\n  const [inset, setInset] = useState(true);\n  const [pill, setPill] = useState(true);\n  return (\n    <Stack>\n      <Text tone=\"muted\">radius inset, in a shaded row</Text>\n      <Switch\n        name=\"inset\"\n        label=\"Inset track\"\n        layout=\"horizontal\"\n        radius=\"inset\"\n        checked={inset}\n        onChange={setInset}\n      />\n      <Text tone=\"muted\">radius pill, on an unshaded surface</Text>\n      <Switch name=\"pill\" label=\"Pill track\" radius=\"pill\" checked={pill} onChange={setPill} />\n    </Stack>\n  );\n}\n"
+          "description": "`inset` is the track corner for a switch in a shaded row: concentric with the\nrow's own corner. `pill` is the capsule for a switch with no nearby corner to\necho.",
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Switch } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Radius() {\n  const [inset, setInset] = useState(true);\n  const [pill, setPill] = useState(true);\n  return (\n    <Stack>\n      <Text tone=\"muted\">radius inset, in a shaded row</Text>\n      <Switch\n        name=\"inset\"\n        label=\"Inset track\"\n        layout=\"horizontal\"\n        radius=\"inset\"\n        checked={inset}\n        onChange={setInset}\n      />\n      <Text tone=\"muted\">radius pill, no corner nearby</Text>\n      <Switch name=\"pill\" label=\"Pill track\" radius=\"pill\" checked={pill} onChange={setPill} />\n    </Stack>\n  );\n}\n"
         },
         {
           "file": "src/control/switch/examples/04-in-a-card.tsx",
@@ -2206,7 +2206,7 @@
               "name": "layout",
               "type": "'default' | 'horizontal'",
               "required": false,
-              "description": "`'default'`: track then label, inline. `'horizontal'`: a full-width shaded row with label and description on the left and the track on the right; the whole row toggles, description included.",
+              "description": "`'default'`: track then label, inline. `'horizontal'`: a full-width shaded row (`bg.cardHeader`, `radius.md`) with label and description on the left and the track on the right; the whole row toggles, description included.",
               "default": "'default'"
             },
             {

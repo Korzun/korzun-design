@@ -1,7 +1,6 @@
 /** Layouts
  * `horizontal` and `vertical` paint a shaded row, with the label beside the inputs or
- * above them. `inline` paints no row and sizes to its content, for a spot inside
- * your own layout.
+ * above them. `inline` paints no row, for a spot inside your own layout.
  */
 import { Stack, Text } from '@korzun/design/component';
 import { DateTimeInput } from '@korzun/design/control';

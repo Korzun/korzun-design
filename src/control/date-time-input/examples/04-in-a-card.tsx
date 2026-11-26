@@ -4,22 +4,27 @@
  * two separate fields (`publishDate`, `publishDateTime`).
  */
 import { Card, Stack, Text } from '@korzun/design/component';
-import { Button, DateTimeInput } from '@korzun/design/control';
+import { Button, DateTimeInput, TextInput } from '@korzun/design/control';
 import { useState } from 'react';
 
 export default function InACard() {
+  const [title, setTitle] = useState<string | undefined>('Dune');
   const [publishDate, setPublishDate] = useState<string | undefined>('2023-06-06T16:30:00Z');
   const [sent, setSent] = useState<string | null>(null);
   return (
     <Card
       title="Publication"
       footer={
-        <Button type="primary" onClick={() => setSent(publishDate ?? 'no date')}>
+        <Button
+          type="primary"
+          onClick={() => setSent(`${title ?? ''}, ${publishDate ?? 'no date'}`)}
+        >
           Save
         </Button>
       }
     >
       <Stack>
+        <TextInput name="title" label="Title" value={title} onChange={setTitle} />
         <DateTimeInput
           name="publishDate"
           label="Publish date"
