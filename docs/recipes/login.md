@@ -31,6 +31,8 @@ const useStyle = createUseStyles((theme: Theme) => ({
   screen: {
     display: 'grid',
     placeItems: 'center',
+    // A shrinkable track, so the column's maxWidth holds on a narrow screen.
+    gridTemplateColumns: 'minmax(0, 1fr)',
     minHeight: '100vh',
     boxSizing: 'border-box',
     padding: `0 ${theme.space.xxl}`,
