@@ -11,7 +11,16 @@ export default defineConfig({
     globals: true,
     setupFiles: ['./src/setup.ts'],
     projects: [
-      { extends: true, test: { name: 'src', include: ['src/**/*.test.{ts,tsx}'] } },
+      {
+        extends: true,
+        test: {
+          name: 'src',
+          include: ['src/**/*.test.{ts,tsx}'],
+          // A file's first test pays its cold imports (ThemeSetting, FieldList),
+          // which can pass 5 s on a loaded machine.
+          testTimeout: 15_000,
+        },
+      },
       {
         extends: true,
         test: {
