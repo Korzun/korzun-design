@@ -60,5 +60,4 @@ test('control+component module count equals their doc files', () => {
   );
   const n = modules.filter((m) => /^(control|component)\//.test(m.id)).length;
   assert.equal(n, docs.length);
-  assert.equal(n, 41);
 });

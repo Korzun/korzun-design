@@ -22,7 +22,7 @@ describe('ChangelogPage', () => {
     mount();
     const h2 = screen.getAllByRole('heading', { level: 2 }).map((h) => h.textContent);
     expect(h2).toEqual(siteData.changelog.map((v) => v.version));
-    expect(h2[0]).toBe('0.5.0');
+    expect(h2[0]).toBe(siteData.version);
   });
 
   it('links a module tag to its component page', () => {
