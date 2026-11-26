@@ -23,9 +23,10 @@ describe('examples', () => {
 
   it('lists every example file in the generated site data', () => {
     const listed = new Set(
-      siteData.modules.flatMap((m) =>
-        [...m.examples, ...(m.preview ? [m.preview] : [])].map((e) => e.file)
-      )
+      [
+        ...siteData.modules.flatMap((m) => [...m.examples, ...(m.preview ? [m.preview] : [])]),
+        ...siteData.recipes.flatMap((r) => r.examples),
+      ].map((e) => e.file)
     );
     expect(Object.keys(exampleComponents).filter((file) => !listed.has(file))).toEqual([]);
   });

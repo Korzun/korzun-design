@@ -27,6 +27,15 @@ describe('docHref', () => {
     expect(docHref('corners.md', 'docs/index.md', route)).toBe('#/guides/corners');
   });
 
+  it('maps a recipe doc link to its recipe route, not a component page', () => {
+    expect(docHref('recipes/login.md', 'docs/patterns.md', '/guides/patterns')).toBe(
+      '#/recipes/login'
+    );
+    expect(docHref('../recipes/login.md#why', 'docs/control/button.md', route)).toBe(
+      '#/recipes/login#why'
+    );
+  });
+
   it('leaves http(s), mailto and non-doc relative links alone', () => {
     expect(docHref('https://github.com/x#readme', from, route)).toBe('https://github.com/x#readme');
     expect(docHref('http://example.com', from, route)).toBe('http://example.com');

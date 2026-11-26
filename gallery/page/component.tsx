@@ -5,7 +5,7 @@ import type { ReactNode } from 'react';
 import { useParams } from 'react-router';
 
 import type { ChangelogEntry, ModuleInfo } from '../../scripts/docs-gen/types.js';
-import { moduleBySlug, typePages } from '../data.js';
+import { moduleBySlug, moduleOwner, typePages } from '../data.js';
 import { siteColumn } from '../layout/column.js';
 import { useScrollToHash } from '../layout/scroll.js';
 import { NotFound } from '../not-found.js';
@@ -142,7 +142,7 @@ export const ComponentPage = () => {
                 {mod.examples.map((example) => (
                   <ExampleBlock
                     key={example.slug}
-                    mod={mod}
+                    owner={moduleOwner(mod)}
                     example={example}
                     headingId={ids.example.get(example.slug)}
                   />

@@ -25,6 +25,7 @@ describe('gallery routes', () => {
     expect(links).toEqual([
       ['Components', '/'],
       ['Icons', '/components/icon'],
+      ['Recipes', '/recipes'],
       ['Guides', '/guides'],
       ['Tokens', '/tokens'],
       ['Changelog', '/changelog'],
@@ -36,6 +37,7 @@ describe('gallery routes', () => {
     ['/', 'Components'],
     ['/components/button', 'Components'],
     ['/components/icon', 'Icons'],
+    ['/recipes', 'Recipes'],
     ['/guides', 'Guides'],
     ['/guides/corners', 'Guides'],
     ['/tokens', 'Tokens'],

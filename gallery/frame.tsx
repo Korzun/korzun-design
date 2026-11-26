@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { Link, useLocation, useParams, useSearchParams } from 'react-router';
 
 import { useThemeSetting } from '../src/theme/use-theme-setting.js';
-import { exampleFor, moduleBySlug } from './data.js';
+import { exampleFor, moduleBySlug, recipeBySlug } from './data.js';
 import { contentHeight, nextHeadroom, overlayTop, type Headroom } from './frame-height.js';
 import { isThemeMessage, isThemeValue, postToWindow, type ThemeValue } from './messages.js';
 
@@ -111,7 +111,9 @@ const Flow = ({ children }: { children: ReactNode }) => {
 // Renders one docs example on its own: the site embeds it in an iframe so the
 // example gets its own theme provider and cannot leak styles into the page.
 export const Frame = () => {
-  const { module: moduleSlug = '', example: exampleSlug = '' } = useParams();
+  // `/frame/recipe/:recipe/:example` or `/frame/:module/:example`: a recipe is looked
+  // up among recipes only, so a recipe and a module may share a slug.
+  const { module: moduleSlug, recipe: recipeSlug, example: exampleSlug = '' } = useParams();
   const [params] = useSearchParams();
   const rawTheme = params.get('theme');
   const centered = params.get('fit') === 'center';
@@ -127,16 +129,22 @@ export const Frame = () => {
     return () => window.removeEventListener('message', onMessage);
   }, []);
 
-  const mod = moduleBySlug(moduleSlug);
-  const found = mod && exampleFor(mod, exampleSlug);
-  if (!found) return <p>{`No example "${moduleSlug}/${exampleSlug}".`}</p>;
+  const owner =
+    recipeSlug === undefined ? moduleBySlug(moduleSlug ?? '') : recipeBySlug(recipeSlug);
+  const found = owner && exampleFor(owner, exampleSlug);
+  const ownerPath = recipeSlug === undefined ? (moduleSlug ?? '') : `recipe/${recipeSlug}`;
+  if (!found) return <p>{`No example "${ownerPath}/${exampleSlug}".`}</p>;
 
-  const { Component } = found;
+  const { Component, info } = found;
   return (
     <ThemeProvider identity="gallery-frame">
       <ToastProvider>
         {theme && <ThemeSync theme={theme} />}
-        {centered ? (
+        {info.viewport === 'screen' ? (
+          // A full-height screen fills the frame itself: no centring padding, and no
+          // height posts, since its height follows the frame's (the page fixes it).
+          <Component />
+        ) : centered ? (
           <Centered>
             <Component />
           </Centered>

@@ -15,7 +15,8 @@ const SAFE_SCHEMES = new Set(['http:', 'https:', 'mailto:']);
  * - `#section` goes after the route (`#/components/popover#layers`): the
  *   route lives in the hash, so a bare fragment would be read as a route.
  * - A relative link to a doc becomes its route, fragment kept: a top-level
- *   doc is a guide (`#/guides/tokens#recipe`), an area doc a component page.
+ *   doc is a guide (`#/guides/tokens#recipe`), a `docs/recipes/` doc a recipe
+ *   (`#/recipes/login`), any other area doc a component page.
  * - http(s) and mailto links and other relative links pass through; any
  *   other scheme becomes `#`.
  */
@@ -31,6 +32,8 @@ export const docHref = (href: string, from: string, route: string): string => {
   const fragment = hashAt === -1 ? '' : href.slice(hashAt);
   if (!path.endsWith('.md')) return href;
   const resolved = new URL(path, `file:///${from}`).pathname.slice(1);
+  const recipe = /^docs\/recipes\/([^/]+)\.md$/.exec(resolved);
+  if (recipe) return `#/recipes/${recipe[1]}${fragment}`;
   const guide = /^docs\/([^/]+)\.md$/.exec(resolved);
   if (guide) return `#/guides/${guide[1]}${fragment}`;
   const component = /^docs\/[^/]+\/([^/]+)\.md$/.exec(resolved);

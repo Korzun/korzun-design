@@ -18,5 +18,5 @@
       "@korzun/design/*": ["./src/*/index.ts"]
     }
   },
-  "include": ["src", "gallery", "scripts"]
+  "include": ["src", "gallery", "scripts", "recipes"]
 }

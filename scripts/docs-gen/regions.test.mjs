@@ -254,7 +254,7 @@ test('props: zero-row table renders placeholder, or just its Also accepts line',
   );
   assert.equal(
     renderRegion('props', mod({ tables: [{ ...empty, extends: ['HTMLAttributes'] }] })),
-    '## Props\n\nAlso accepts: \`HTMLAttributes\`.'
+    '## Props\n\nAlso accepts: `HTMLAttributes`.'
   );
 });
 
@@ -466,4 +466,20 @@ test('replaceRegions: a second marker pair throws with file name instead of stay
   assert.throws(() => replaceRegions(twice, mod(), 'docs/b.md'), {
     message: 'docs/b.md: duplicate <!-- generated:tokens -->',
   });
+});
+
+test('replaceRegions: a names list replaces only those regions and requires only those', () => {
+  const md = '# R\n\n<!-- generated:examples -->\n<!-- /generated:examples -->\n';
+  const m = mod({ examples: [{ title: 'Sign in', description: '', code: 'x\n' }] });
+  const out = replaceRegions(md, m, 'docs/recipes/r.md', {}, ['examples']);
+  assert.match(out, /### Sign in/);
+  assert.equal(replaceRegions(out, m, 'docs/recipes/r.md', {}, ['examples']), out);
+});
+
+test('replaceRegions: a names list still rejects a duplicate marker', () => {
+  const pair = '<!-- generated:examples -->\n<!-- /generated:examples -->\n';
+  assert.throws(
+    () => replaceRegions(`# R\n\n${pair}${pair}`, mod(), 'docs/recipes/r.md', {}, ['examples']),
+    /duplicate <!-- generated:examples -->/
+  );
 });

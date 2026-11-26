@@ -3,8 +3,8 @@ import { ToastProvider } from '@korzun/design/toast';
 import { act, fireEvent, render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 
-import { moduleBySlug } from '../data.js';
-import { MOBILE_WIDTH } from '../frame-url.js';
+import { moduleBySlug, moduleOwner, type ExampleOwner } from '../data.js';
+import { MOBILE_WIDTH, SCREEN_HEIGHT } from '../frame-url.js';
 import { ExampleBlock } from './example-block.js';
 
 const button = moduleBySlug('button')!;
@@ -15,7 +15,7 @@ describe('ExampleBlock', () => {
       <ThemeProvider identity="test">
         <ToastProvider>
           <MemoryRouter>
-            <ExampleBlock mod={button} example={button.examples[0]} />
+            <ExampleBlock owner={moduleOwner(button)} example={button.examples[0]} />
           </MemoryRouter>
         </ToastProvider>
       </ThemeProvider>
@@ -43,7 +43,7 @@ describe('ExampleBlock', () => {
       <ThemeProvider identity="test">
         <ToastProvider>
           <MemoryRouter>
-            <ExampleBlock mod={button} example={button.examples[0]} />
+            <ExampleBlock owner={moduleOwner(button)} example={button.examples[0]} />
           </MemoryRouter>
         </ToastProvider>
       </ThemeProvider>
@@ -68,8 +68,8 @@ describe('ExampleBlock', () => {
       <ThemeProvider identity="test">
         <ToastProvider>
           <MemoryRouter>
-            <ExampleBlock mod={button} example={mobile} />
-            <ExampleBlock mod={button} example={button.examples[1]} />
+            <ExampleBlock owner={moduleOwner(button)} example={mobile} />
+            <ExampleBlock owner={moduleOwner(button)} example={button.examples[1]} />
           </MemoryRouter>
         </ToastProvider>
       </ThemeProvider>
@@ -80,6 +80,50 @@ describe('ExampleBlock', () => {
     expect(wide).not.toHaveAttribute('data-viewport');
     expect(getComputedStyle(wide).width).toBe('100%');
   });
+
+  const mountBlock = (owner: ExampleOwner, example = button.examples[0]!) =>
+    render(
+      <ThemeProvider identity="test">
+        <ToastProvider>
+          <MemoryRouter>
+            <ExampleBlock owner={owner} example={example} />
+          </MemoryRouter>
+        </ToastProvider>
+      </ThemeProvider>
+    );
+  const recipe: ExampleOwner = {
+    title: 'Sign in',
+    docPath: 'docs/recipes/login.md',
+    framePath: 'recipe/login',
+    examples: button.examples,
+  };
+
+  it('points a module example at its module frame and a recipe example at the recipe frame', () => {
+    const mod = mountBlock(moduleOwner(button)).container.querySelector('iframe')!;
+    expect(mod.getAttribute('src')).toContain(`#/frame/button/${button.examples[0]!.slug}?`);
+    const rec = mountBlock(recipe).container.querySelector('iframe')!;
+    expect(rec.getAttribute('src')).toContain(`#/frame/recipe/login/${button.examples[0]!.slug}?`);
+    expect(rec).toHaveAttribute('title', `Sign in: ${button.examples[0]!.title}`);
+  });
+
+  it('gives a @viewport screen example a fixed height that height messages do not change', () => {
+    const screenEx = { ...button.examples[0]!, viewport: 'screen' as const };
+    const iframe = mountBlock(recipe, screenEx).container.querySelector('iframe')!;
+    expect(iframe).toHaveAttribute('height', String(SCREEN_HEIGHT));
+    expect(SCREEN_HEIGHT).toBe(640);
+    act(() => {
+      window.dispatchEvent(
+        new MessageEvent('message', {
+          origin: window.location.origin,
+          source: iframe.contentWindow,
+          data: { type: 'gallery:height', height: 2000 },
+        })
+      );
+    });
+    expect(iframe).toHaveAttribute('height', String(SCREEN_HEIGHT));
+    fireEvent.load(iframe);
+    expect(getComputedStyle(iframe).visibility).not.toBe('hidden');
+  });
 });
 
 describe('ExampleBlock code', () => {
@@ -88,7 +132,7 @@ describe('ExampleBlock code', () => {
       <ThemeProvider identity="test">
         <ToastProvider>
           <MemoryRouter>
-            <ExampleBlock mod={button} example={button.examples[0]} />
+            <ExampleBlock owner={moduleOwner(button)} example={button.examples[0]!} />
           </MemoryRouter>
         </ToastProvider>
       </ThemeProvider>

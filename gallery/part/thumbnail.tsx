@@ -2,7 +2,7 @@ import { createUseStyles, type Theme } from '@korzun/design/theme';
 import cx from 'classnames';
 import { useLayoutEffect, useRef, useState } from 'react';
 
-import type { ModuleInfo } from '../../scripts/docs-gen/types.js';
+import type { ExampleOwner } from '../data.js';
 import { DESKTOP_WIDTH, frameSrc, MOBILE_WIDTH, useFrameTheme } from '../frame-url.js';
 
 // The frame lays out larger than the box and is scaled down to fit, so the
@@ -50,16 +50,16 @@ const useStyle = createUseStyles((theme: Theme) => ({
 }));
 
 export type ThumbnailProps = {
-  /** The module whose preview (`examples/preview.tsx`, else its first example) the thumbnail shows. */
-  mod: ModuleInfo;
+  /** The module or recipe whose preview (`examples/preview.tsx`, else its first example) the thumbnail shows. */
+  owner: ExampleOwner;
 };
 
-/** A lazy, non-interactive, scaled-down live render of a module's preview. */
-export const Thumbnail = ({ mod }: ThumbnailProps) => {
+/** A lazy, non-interactive, scaled-down live render of a module's preview or a recipe's first example. */
+export const Thumbnail = ({ owner }: ThumbnailProps) => {
   const styles = useStyle();
   const [theme, onLoad] = useFrameTheme();
   const [loaded, setLoaded] = useState(false);
-  const first = mod.preview ?? mod.examples[0];
+  const first = owner.preview ?? owner.examples[0];
   const boxRef = useRef<HTMLDivElement>(null);
   const [desktopScale, setDesktopScale] = useState<number | null>(null);
   const desktop = first?.viewport === 'desktop';
@@ -86,8 +86,8 @@ export const Thumbnail = ({ mod }: ThumbnailProps) => {
         )}
         style={desktop ? { transform: `scale(${desktopScale ?? SCALE})` } : undefined}
         data-viewport={first.viewport}
-        src={frameSrc(mod.slug, first.slug, theme, 'center')}
-        title={`${mod.title}: ${first.title}`}
+        src={frameSrc(owner.framePath, first.slug, theme, 'center')}
+        title={`${owner.title}: ${first.title}`}
         loading="lazy"
         tabIndex={-1}
         aria-hidden

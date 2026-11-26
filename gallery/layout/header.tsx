@@ -37,6 +37,7 @@ export const NAV_LINKS: { to: string; label: string; active: (pathname: string) 
     active: (p) => p === '/' || (under(p, '/components') && !under(p, '/components/icon')),
   },
   { to: '/components/icon', label: 'Icons', active: (p) => under(p, '/components/icon') },
+  { to: '/recipes', label: 'Recipes', active: (p) => under(p, '/recipes') },
   { to: '/guides', label: 'Guides', active: (p) => under(p, '/guides') },
   { to: '/tokens', label: 'Tokens', active: (p) => under(p, '/tokens') },
   { to: '/changelog', label: 'Changelog', active: (p) => under(p, '/changelog') },
