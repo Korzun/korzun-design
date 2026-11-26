@@ -26,9 +26,9 @@ export type TextInputProps = {
   autoComplete?: React.HTMLInputAutoCompleteAttribute | undefined;
   /** Visible label. Not linked to the input (no `htmlFor`). */
   label?: string;
-  /** Default `'horizontal'`; `horizontal`/`vertical` paint a card-header row, `inline` paints nothing. */
+  /** `horizontal` and `vertical` paint a shaded card-header row with `md` corners; `inline` paints nothing. */
   layout?: 'horizontal' | 'vertical' | 'inline';
-  /** Native limit, plus an `n/max` counter once within `max(10% of max, 10)` characters. */
+  /** Native limit, plus an `n/max` counter once within `max(10% of max, 10)` characters; the counter turns red at the limit. */
   maxLength?: number;
   /** The input's `name` (form data) and the key passed to `onValidChange`. */
   name: string;
@@ -42,9 +42,9 @@ export type TextInputProps = {
   password?: boolean;
   /** Placeholder text for the input. */
   placeholder?: string;
-  /** Receives the raw text on each keystroke; `false` turns label and border red. Default accepts all. */
+  /** Receives the raw text on each keystroke; `false` turns label and border red. */
   validate?: (newValue: string) => boolean;
-  /** Typed as required (pass `undefined` for empty). Re-syncs into the field only when the prop changes. */
+  /** Typed as required: pass it, even as `undefined` for empty. Re-syncs into the field only when the prop changes; see [Controlled-ish](#controlled-ish). */
   value: string | undefined;
 };
 

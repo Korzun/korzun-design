@@ -1516,6 +1516,292 @@
       ]
     },
     {
+      "id": "control/text-input",
+      "slug": "text-input",
+      "entry": "@korzun/design/control",
+      "docPath": "docs/control/text-input.md",
+      "title": "TextInput",
+      "description": "A single-line text or password field with a label, validation, and a character counter near `maxLength`.",
+      "category": "Inputs",
+      "values": [
+        "TextInput"
+      ],
+      "types": [
+        "TextInputAction",
+        "TextInputProps"
+      ],
+      "importLine": "import { TextInput, type TextInputAction, type TextInputProps } from '@korzun/design/control'",
+      "body": "A single-line text (or password) field with an optional label, optional\nvalidation, and a character counter that appears near `maxLength`. The default\n`horizontal` layout puts the label and field on one shaded row, which is how\nform fields look inside a `Card`.\n\nUse something else for: multi-line text (`TextArea`), numbers (`NumberInput`),\npicking from a list (`Select`), a list of tags (`ChipsInput`), dates\n(`DateTimeInput`).\n\n## Usage\n\n### Controlled-ish\n\nThe field keeps its own text. It re-syncs from `value` only when the `value`\nprop changes. While `validate` fails, the field shows the invalid text but\n`onChange` is not called, so your state keeps the last valid value. Track\n`onValidChange` to block submit.\n\n### What it has no prop for\n\nNo `className`, no `disabled`, no `id`.\n\n## Do / don't\n\n- Do keep the default `horizontal` layout for fields in a `Card` body; use\n  `vertical` when the label is long or the field is wide.\n- Do coalesce `undefined` (`v ?? ''`) if your state is a plain string.\n- Don't pass an `action`; render a separate `Button` beside the field instead.\n- Don't rely on clicking the label to focus the field; it isn't associated.",
+      "examples": [
+        {
+          "file": "src/control/text-input/examples/01-basic.tsx",
+          "slug": "basic",
+          "order": 1,
+          "title": "Basic",
+          "description": "A controlled field. `onChange` receives the string, not an event, and\n`undefined` once the field is emptied.",
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { TextInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Basic() {\n  const [name, setName] = useState<string | undefined>('Ada');\n  return (\n    <Stack>\n      <TextInput name=\"name\" label=\"Name\" value={name} onChange={setName} />\n      <Text tone=\"muted\">Value: {name === undefined ? 'undefined' : `“${name}”`}</Text>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/text-input/examples/02-layouts.tsx",
+          "slug": "layouts",
+          "order": 2,
+          "title": "Layouts",
+          "description": "`horizontal` puts the label and field on one shaded row, `vertical` stacks\nthe label above the field on that row, and `inline` paints nothing around the\npair.",
+          "code": "import { Stack } from '@korzun/design/component';\nimport { TextInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Layouts() {\n  const [horizontal, setHorizontal] = useState<string | undefined>('Horizontal');\n  const [vertical, setVertical] = useState<string | undefined>('Vertical');\n  const [inline, setInline] = useState<string | undefined>('Inline');\n  return (\n    <Stack>\n      <TextInput\n        name=\"horizontal\"\n        layout=\"horizontal\"\n        label=\"Horizontal\"\n        value={horizontal}\n        onChange={setHorizontal}\n      />\n      <TextInput\n        name=\"vertical\"\n        layout=\"vertical\"\n        label=\"Vertical\"\n        value={vertical}\n        onChange={setVertical}\n      />\n      <TextInput name=\"inline\" layout=\"inline\" label=\"Inline\" value={inline} onChange={setInline} />\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/text-input/examples/03-validation.tsx",
+          "slug": "validation",
+          "order": 3,
+          "title": "Validation",
+          "description": "`validate` receives the raw text on each keystroke. While it returns `false`\nthe label and border turn red, `onChange` is not called (the saved value stays\nat the last valid text) and `onValidChange` fires once when validity flips.\nClear the field to see it.",
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { TextInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Validation() {\n  const [title, setTitle] = useState<string | undefined>('Dune');\n  const [valid, setValid] = useState(true);\n  return (\n    <Stack>\n      <TextInput\n        name=\"title\"\n        layout=\"vertical\"\n        label=\"Title (required)\"\n        value={title}\n        onChange={setTitle}\n        validate={(text) => text.trim().length > 0}\n        onValidChange={(_name, ok) => setValid(ok)}\n      />\n      <Text tone={valid ? 'success' : 'danger'}>{valid ? 'Valid' : 'Invalid'}</Text>\n      <Text tone=\"muted\">Saved value: {title === undefined ? 'undefined' : `“${title}”`}</Text>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/text-input/examples/04-password.tsx",
+          "slug": "password",
+          "order": 4,
+          "title": "Password",
+          "description": "`password` renders `type=\"password\"`; `autoComplete=\"new-password\"` tells the\nbrowser to offer a generated one rather than a saved one.",
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { TextInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Password() {\n  const [password, setPassword] = useState('');\n  return (\n    <Stack>\n      <TextInput\n        name=\"new-password\"\n        label=\"New\"\n        password\n        autoComplete=\"new-password\"\n        value={password}\n        onChange={(v) => setPassword(v ?? '')}\n      />\n      <Text tone=\"muted\">Length: {password.length}</Text>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/text-input/examples/05-character-counter.tsx",
+          "slug": "character-counter",
+          "order": 5,
+          "title": "Character counter",
+          "description": "`maxLength` limits the text natively. The `n/max` counter appears once the field is\nwithin the last 10% of the limit (at least 10 characters) and turns red at the limit.\nThe first field is near its limit, the second is at it.",
+          "code": "import { Stack } from '@korzun/design/component';\nimport { TextInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function CharacterCounter() {\n  const [near, setNear] = useState<string | undefined>('Short story collection, volume two');\n  const [full, setFull] = useState<string | undefined>('Exactly thirty characters long');\n  return (\n    <Stack>\n      <TextInput\n        name=\"near\"\n        layout=\"vertical\"\n        label=\"Near the limit\"\n        maxLength={40}\n        value={near}\n        onChange={setNear}\n      />\n      <TextInput\n        name=\"full\"\n        layout=\"vertical\"\n        label=\"At the limit\"\n        maxLength={30}\n        value={full}\n        onChange={setFull}\n      />\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/text-input/examples/06-placeholder-and-keys.tsx",
+          "slug": "placeholder-and-keys",
+          "order": 6,
+          "title": "Placeholder and key handling",
+          "description": "`placeholder` shows while the field is empty. `onKeyDown` is passed through and,\nunlike `onChange`, receives the event. `autoCapitalize=\"none\"` keeps\nmobile keyboards from capitalising the first letter.",
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { TextInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function PlaceholderAndKeys() {\n  const [username, setUsername] = useState<string | undefined>(undefined);\n  const [submitted, setSubmitted] = useState<string | null>(null);\n  return (\n    <Stack>\n      <TextInput\n        name=\"username\"\n        layout=\"inline\"\n        label=\"Username\"\n        placeholder=\"Type, then press Enter\"\n        autoCapitalize=\"none\"\n        autoComplete=\"username\"\n        value={username}\n        onChange={setUsername}\n        onKeyDown={(event) => {\n          if (event.key === 'Enter') setSubmitted(username ?? '');\n        }}\n      />\n      <Text tone=\"muted\">Submitted: {submitted === null ? 'nothing yet' : `“${submitted}”`}</Text>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/text-input/examples/07-form-in-card.tsx",
+          "slug": "form-in-card",
+          "order": 7,
+          "title": "Form in a card",
+          "description": "The `horizontal` layout is made for a `Card` body. Fields report their\nvalidity through `onValidChange`, so Save stays disabled while any is\ninvalid.",
+          "code": "import { Card, Stack } from '@korzun/design/component';\nimport { Button, TextInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function FormInCard() {\n  const [name, setName] = useState<string | undefined>('Ada Lovelace');\n  const [password, setPassword] = useState('');\n  const [valid, setValid] = useState<Record<string, boolean>>({});\n  const invalid = Object.values(valid).some((ok) => !ok);\n  return (\n    <Card\n      title=\"Account\"\n      footer={\n        <Button type=\"primary\" disabled={invalid}>\n          Save\n        </Button>\n      }\n    >\n      <Stack>\n        <TextInput\n          name=\"name\"\n          label=\"Name\"\n          maxLength={64}\n          validate={(v) => v.length <= 64 && v.trim().length > 0}\n          onValidChange={(field, ok) => setValid((s) => ({ ...s, [field]: ok }))}\n          value={name}\n          onChange={setName}\n        />\n        <TextInput\n          name=\"new-password\"\n          label=\"New\"\n          password\n          autoComplete=\"new-password\"\n          value={password}\n          onChange={(v) => setPassword(v ?? '')}\n        />\n      </Stack>\n    </Card>\n  );\n}\n"
+        }
+      ],
+      "tables": [
+        {
+          "name": "TextInputProps",
+          "kind": "props",
+          "rows": [
+            {
+              "name": "action",
+              "type": "Action",
+              "required": false,
+              "description": "Broken, do not use: the icon button is drawn but its `action` callback is never wired up."
+            },
+            {
+              "name": "autoCapitalize",
+              "type": "'none' | 'sentences' | 'words' | 'characters'",
+              "required": false,
+              "description": "Passed through to the input."
+            },
+            {
+              "name": "autoComplete",
+              "type": "React.HTMLInputAutoCompleteAttribute | undefined",
+              "required": false,
+              "description": "Passed through to the input."
+            },
+            {
+              "name": "label",
+              "type": "string",
+              "required": false,
+              "description": "Visible label. Not linked to the input (no `htmlFor`)."
+            },
+            {
+              "name": "layout",
+              "type": "'horizontal' | 'vertical' | 'inline'",
+              "required": false,
+              "description": "`horizontal` and `vertical` paint a shaded card-header row with `md` corners; `inline` paints nothing.",
+              "default": "'horizontal'"
+            },
+            {
+              "name": "maxLength",
+              "type": "number",
+              "required": false,
+              "description": "Native limit, plus an `n/max` counter once within `max(10% of max, 10)` characters; the counter turns red at the limit."
+            },
+            {
+              "name": "name",
+              "type": "string",
+              "required": true,
+              "description": "The input's `name` (form data) and the key passed to `onValidChange`."
+            },
+            {
+              "name": "onChange",
+              "type": "(newValue: string | undefined) => void",
+              "required": false,
+              "description": "Receives the string, or `undefined` when emptied; not an event. Not called while `validate` fails.",
+              "default": "() => {}"
+            },
+            {
+              "name": "onKeyDown",
+              "type": "(event: React.KeyboardEvent<HTMLInputElement>) => void",
+              "required": false,
+              "description": "Passed through; unlike `onChange`, this one receives the event."
+            },
+            {
+              "name": "onValidChange",
+              "type": "(fieldName: string, newValid: boolean) => void",
+              "required": false,
+              "description": "Called with `name` and the new validity; fires only when validity flips.",
+              "default": "() => {}"
+            },
+            {
+              "name": "password",
+              "type": "boolean",
+              "required": false,
+              "description": "Renders `type=\"password\"`.",
+              "default": "false"
+            },
+            {
+              "name": "placeholder",
+              "type": "string",
+              "required": false,
+              "description": "Placeholder text for the input."
+            },
+            {
+              "name": "validate",
+              "type": "(newValue: string) => boolean",
+              "required": false,
+              "description": "Receives the raw text on each keystroke; `false` turns label and border red.",
+              "default": "() => true"
+            },
+            {
+              "name": "value",
+              "type": "string | undefined",
+              "required": true,
+              "description": "Typed as required: pass it, even as `undefined` for empty. Re-syncs into the field only when the prop changes; see [Controlled-ish](#controlled-ish).",
+              "default": "''"
+            }
+          ]
+        },
+        {
+          "name": "TextInputAction",
+          "kind": "object",
+          "rows": [
+            {
+              "name": "action",
+              "type": "() => void",
+              "required": true,
+              "description": "Never wired up: clicking the icon does nothing."
+            },
+            {
+              "name": "danger",
+              "type": "boolean",
+              "required": false,
+              "description": "Red icon."
+            },
+            {
+              "name": "icon",
+              "type": "React.ComponentType<IconProps>",
+              "required": true,
+              "description": "Icon component, not an element."
+            }
+          ],
+          "description": "Trailing icon button of a `TextInput`. Broken: `action` is never called."
+        }
+      ],
+      "tokens": [
+        {
+          "path": "color.bg.cardHeader",
+          "kind": "color",
+          "light": "#EEEEEE",
+          "dark": "#232427"
+        },
+        {
+          "path": "color.danger.default",
+          "kind": "color",
+          "light": "#FF4D4F",
+          "dark": "#FF4D4F"
+        },
+        {
+          "path": "color.text.faint",
+          "kind": "color",
+          "light": "#9ca3af",
+          "dark": "#6E7480"
+        },
+        {
+          "path": "fontSize.xxs",
+          "kind": "value",
+          "light": "0.6rem",
+          "dark": "0.6rem"
+        },
+        {
+          "path": "layout.controlHeight",
+          "kind": "value",
+          "light": "2.0625rem",
+          "dark": "2.0625rem"
+        },
+        {
+          "path": "lineHeight.tight",
+          "kind": "value",
+          "light": "1",
+          "dark": "1"
+        },
+        {
+          "path": "radius.md",
+          "kind": "value",
+          "light": "8px",
+          "dark": "8px"
+        },
+        {
+          "path": "recipe.input",
+          "kind": "recipe",
+          "light": null,
+          "dark": null
+        },
+        {
+          "path": "recipe.label",
+          "kind": "recipe",
+          "light": null,
+          "dark": null
+        },
+        {
+          "path": "space.md",
+          "kind": "value",
+          "light": "0.5rem",
+          "dark": "0.5rem"
+        },
+        {
+          "path": "space.sm",
+          "kind": "value",
+          "light": "0.375rem",
+          "dark": "0.375rem"
+        },
+        {
+          "path": "space.xs",
+          "kind": "value",
+          "light": "0.25rem",
+          "dark": "0.25rem"
+        },
+        {
+          "path": "space.xxxxxl",
+          "kind": "value",
+          "light": "2rem",
+          "dark": "2rem"
+        },
+        {
+          "path": "zIndex.base",
+          "kind": "value",
+          "light": "1",
+          "dark": "1"
+        }
+      ],
+      "changelog": []
+    },
+    {
       "id": "component/alert",
       "slug": "alert",
       "entry": "@korzun/design/component",
