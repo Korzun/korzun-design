@@ -1072,6 +1072,450 @@
       ]
     },
     {
+      "id": "control/select",
+      "slug": "select",
+      "entry": "@korzun/design/control",
+      "docPath": "docs/control/select.md",
+      "title": "Select",
+      "description": "A single-value dropdown with type-to-search, an optional \"Add: …\" entry for new values, a clear button, and a loading state.",
+      "category": "Inputs",
+      "values": [
+        "Select"
+      ],
+      "types": [
+        "SelectOption",
+        "SelectProps"
+      ],
+      "importLine": "import { Select, type SelectOption, type SelectProps } from '@korzun/design/control'",
+      "body": "A single-value dropdown with type-to-search (on by default), an optional \"Add:\n…\" entry for new values, a clear button, and a loading state. The dropdown is a\n`Popover`, so it escapes clipping cards.\n\nUse something else for: 2–5 options that fit in one row (`SegmentedControl`),\nseveral values (`ChipsInput`), on/off (`Switch`).\n\n## Usage\n\n### Choosing a surface\n\nFollow [corners](../corners.md):\n\n- Usually omit it: the default follows where the select sits. Directly on a\n  `Page` it is `'page'`; in a card or dialog (and outside any surface) it is\n  `'card'`; two or more surfaces deep it is `'inset'`.\n- `'card'`: `radius.md`, no shadow.\n- `'page'`: `radius.lg` + `shadow.cardStack`, like a card.\n- `'inset'`: `radius.sm`, no shadow, for a select nested inside an inset box.\n- Pass `surface` only to override the depth.\n\n### Forms\n\nThere is no hidden input carrying `value`: native `FormData` will not contain\nthe selection (only the search text while open). Keep `value` in state and\nsubmit that. The `<label>` targets the search box, so it is not the closed\ntrigger's accessible name; the trigger announces the selected label or\nplaceholder.\n\n### Keyboard\n\nClosed: Enter, Space or ArrowDown open it. Open: ArrowUp/ArrowDown move (and\nwrap), Enter selects, Escape or Tab close. The highlight starts on the first\noption, not the current value.\n\n### Styling\n\nNo `className`.\n\n## Do / don't\n\n- Do pass `clearable={false}` when an empty value is invalid.\n- Do use it inside a `Dialog` or a modal `<dialog>`: the list opens inside the\n  open dialog (see [popover](popover.md)).\n- Don't pass `surface=\"page\"` inside a card; let the depth decide.",
+      "examples": [
+        {
+          "file": "src/control/select/examples/01-basic.tsx",
+          "slug": "basic",
+          "order": 1,
+          "title": "Basic",
+          "description": "A controlled single-value picker. Opening it swaps the trigger for a search\nbox; `onChange` receives the option's value, not an event, and the ✕ clears it.",
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Select } from '@korzun/design/control';\nimport { useState } from 'react';\n\nconst FRUITS = ['Apple', 'Banana', 'Cherry', 'Fig', 'Grape', 'Mango', 'Pear'];\n\nexport default function Basic() {\n  const [fruit, setFruit] = useState<string | undefined>('Banana');\n  return (\n    <Stack>\n      <Select name=\"fruit\" label=\"Fruit\" value={fruit} options={FRUITS} onChange={setFruit} />\n      <Text tone=\"muted\">Chosen: {fruit ?? 'nothing'}</Text>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/select/examples/02-surfaces.tsx",
+          "slug": "surfaces",
+          "order": 2,
+          "title": "Surfaces",
+          "description": "The corners and elevation follow where the select sits, so none of these\npasses `surface`: `'page'` directly on a `Page` (16px, with a shadow),\n`'card'` in a `Card` (8px, flat), `'inset'` in a `Card` inside a `Card` (4px, flat).",
+          "code": "import { Card, Page, Stack, Text } from '@korzun/design/component';\nimport { Select } from '@korzun/design/control';\nimport { useState } from 'react';\n\nconst FRUITS = ['Apple', 'Banana', 'Cherry', 'Fig'];\n\nexport default function Surfaces() {\n  const [onPage, setOnPage] = useState<string | undefined>('Apple');\n  const [inCard, setInCard] = useState<string | undefined>('Banana');\n  const [nested, setNested] = useState<string | undefined>('Cherry');\n  return (\n    <Page type=\"minimal\">\n      <Stack>\n        <Text tone=\"muted\">On a Page: page</Text>\n        <Select name=\"on-page\" value={onPage} options={FRUITS} onChange={setOnPage} />\n        <Card title=\"In a Card: card\">\n          <Select name=\"in-card\" value={inCard} options={FRUITS} onChange={setInCard} />\n          <Card title=\"In a Card in a Card: inset\">\n            <Select name=\"nested\" value={nested} options={FRUITS} onChange={setNested} />\n          </Card>\n        </Card>\n      </Stack>\n    </Page>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/select/examples/03-layouts.tsx",
+          "slug": "layouts",
+          "order": 3,
+          "title": "Layouts",
+          "description": "`horizontal` puts the label and trigger in one card-header row, `vertical`\nstacks the label above the trigger in that row, and `inline` is just the\ntrigger with the label beside it.",
+          "code": "import { Stack } from '@korzun/design/component';\nimport { Select } from '@korzun/design/control';\nimport { useState } from 'react';\n\nconst SIZES = ['Small', 'Medium', 'Large'];\n\nexport default function Layouts() {\n  const [horizontal, setHorizontal] = useState<string | undefined>('Small');\n  const [vertical, setVertical] = useState<string | undefined>('Medium');\n  const [inline, setInline] = useState<string | undefined>('Large');\n  return (\n    <Stack>\n      <Select\n        name=\"horizontal\"\n        layout=\"horizontal\"\n        label=\"Horizontal\"\n        value={horizontal}\n        options={SIZES}\n        onChange={setHorizontal}\n      />\n      <Select\n        name=\"vertical\"\n        layout=\"vertical\"\n        label=\"Vertical\"\n        value={vertical}\n        options={SIZES}\n        onChange={setVertical}\n      />\n      <Select\n        name=\"inline\"\n        layout=\"inline\"\n        label=\"Inline\"\n        value={inline}\n        options={SIZES}\n        onChange={setInline}\n      />\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/select/examples/04-allow-create.tsx",
+          "slug": "allow-create",
+          "order": 4,
+          "title": "Creating a value",
+          "description": "`allowCreate` adds an \"Add: …\" entry when what you type matches no label\nexactly. Choosing it passes the trimmed text to `onChange`, and the typed value\nthen shows as the raw string because it is not in `options`.",
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Select } from '@korzun/design/control';\nimport { useState } from 'react';\n\nconst SERIES = ['Discworld', 'The Expanse', 'Earthsea'];\n\nexport default function AllowCreate() {\n  const [series, setSeries] = useState<string | undefined>();\n  return (\n    <Stack>\n      <Select\n        name=\"series\"\n        label=\"Series\"\n        layout=\"vertical\"\n        placeholder=\"Pick or type a series…\"\n        value={series}\n        options={SERIES}\n        allowCreate\n        onChange={setSeries}\n      />\n      <Text tone=\"muted\">Chosen: {series ?? 'nothing'}</Text>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/select/examples/05-plain-list.tsx",
+          "slug": "plain-list",
+          "order": 5,
+          "title": "Plain list with descriptions",
+          "description": "`searchable={false}` opens a plain list driven by the arrow keys. Options can\nbe plain strings or `{ label, value, description }` objects, mixed in one list.",
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Select } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function PlainList() {\n  const [fit, setFit] = useState<string | undefined>('contain');\n  return (\n    <Stack>\n      <Select\n        name=\"fit\"\n        label=\"Cover fit\"\n        value={fit}\n        searchable={false}\n        options={[\n          { label: 'Contain', value: 'contain', description: 'Letterbox the cover' },\n          { label: 'Cover', value: 'cover', description: 'Crop to fill the frame' },\n          'stretch',\n        ]}\n        onChange={setFit}\n      />\n      <Text tone=\"muted\">Value: {fit ?? 'nothing'}</Text>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/select/examples/06-clearable.tsx",
+          "slug": "clearable",
+          "order": 6,
+          "title": "Clearable and required",
+          "description": "A set value shows a ✕ that sends `undefined` to `onChange`. Pass\n`clearable={false}` for a required field, so it can only change to another option.",
+          "code": "import { Stack } from '@korzun/design/component';\nimport { Select } from '@korzun/design/control';\nimport { useState } from 'react';\n\nconst SHELVES = ['To read', 'Reading', 'Finished'];\n\nexport default function Clearable() {\n  const [optional, setOptional] = useState<string | undefined>('Reading');\n  const [required, setRequired] = useState<string | undefined>('To read');\n  return (\n    <Stack>\n      <Select\n        name=\"optional\"\n        label=\"Optional shelf\"\n        value={optional}\n        options={SHELVES}\n        onChange={setOptional}\n      />\n      <Select\n        name=\"required\"\n        label=\"Required shelf\"\n        value={required}\n        options={SHELVES}\n        clearable={false}\n        onChange={setRequired}\n      />\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/select/examples/07-loading-and-disabled.tsx",
+          "slug": "loading-and-disabled",
+          "order": 7,
+          "title": "Loading and disabled",
+          "description": "`loading` shows a spinner and \"Loading…\" and the select can't open; here it\nclears when the options arrive. `disabled` fades it, hides the ✕ and blocks opening.",
+          "code": "import { Inline, Stack } from '@korzun/design/component';\nimport { Button, Select } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function LoadingAndDisabled() {\n  const [loading, setLoading] = useState(false);\n  const [options, setOptions] = useState<string[]>([]);\n  const [author, setAuthor] = useState<string | undefined>();\n  const load = () => {\n    setLoading(true);\n    setTimeout(() => {\n      setOptions(['Ursula K. Le Guin', 'Terry Pratchett', 'N. K. Jemisin']);\n      setLoading(false);\n    }, 1200);\n  };\n  return (\n    <Stack>\n      <Inline>\n        <Button disabled={loading || options.length > 0} onClick={load}>\n          Load authors\n        </Button>\n      </Inline>\n      <Select\n        name=\"author\"\n        label=\"Author\"\n        placeholder=\"No authors yet\"\n        value={author}\n        options={options}\n        loading={loading}\n        onChange={setAuthor}\n      />\n      <Select name=\"locked\" label=\"Disabled\" value=\"Terry Pratchett\" options={options} disabled />\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/select/examples/08-form-in-card.tsx",
+          "slug": "form-in-card",
+          "order": 8,
+          "title": "In a card form",
+          "description": "A `Select` with no label sits directly on the `Page` and labelled ones in the\n`Card`. Fit is a required plain list; Series takes new values with\n`allowCreate` and shows `loading` while its options arrive. The selections are\nstate, so submit `value`: native form data never carries it.",
+          "code": "import { Card, Page, Stack, Text } from '@korzun/design/component';\nimport { Button, Select } from '@korzun/design/control';\nimport { useEffect, useState } from 'react';\n\nconst LIBRARIES = ['Home library', 'Work library'];\n\nexport default function FormInCard() {\n  const [library, setLibrary] = useState<string | undefined>();\n  const [fit, setFit] = useState<string | undefined>('contain');\n  const [series, setSeries] = useState<string | undefined>();\n  const [seriesNames, setSeriesNames] = useState<string[]>([]);\n  const [loading, setLoading] = useState(true);\n  const [saved, setSaved] = useState<string | null>(null);\n  useEffect(() => {\n    const timer = setTimeout(() => {\n      setSeriesNames(['Discworld', 'The Expanse']);\n      setLoading(false);\n    }, 1200);\n    return () => clearTimeout(timer);\n  }, []);\n  return (\n    <Page type=\"minimal\">\n      <Stack>\n        <Select\n          name=\"library\"\n          placeholder=\"Select library…\"\n          value={library}\n          options={LIBRARIES}\n          onChange={setLibrary}\n        />\n        <Card\n          title=\"Cover\"\n          footer={\n            <Button\n              type=\"primary\"\n              onClick={() => setSaved(`${fit ?? ''} / ${series ?? 'no series'}`)}\n            >\n              Save\n            </Button>\n          }\n        >\n          <Stack>\n            <Select\n              name=\"coverFit\"\n              label=\"Fit\"\n              value={fit}\n              options={[\n                { label: 'Contain', value: 'contain', description: 'Letterbox the cover' },\n                { label: 'Cover', value: 'cover' },\n              ]}\n              searchable={false}\n              clearable={false}\n              onChange={setFit}\n            />\n            <Select\n              name=\"seriesName\"\n              label=\"Series\"\n              value={series}\n              options={seriesNames}\n              loading={loading}\n              allowCreate\n              onChange={setSeries}\n            />\n            {saved !== null && <Text tone=\"success\">Saved: {saved}</Text>}\n          </Stack>\n        </Card>\n      </Stack>\n    </Page>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/select/examples/09-in-dialog.tsx",
+          "slug": "in-dialog",
+          "order": 9,
+          "title": "In a dialog",
+          "description": "The list opens inside the open dialog, so a `Select` works in a modal. Escape\ncloses the list first and a second Escape closes the dialog.",
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button, Dialog, Select } from '@korzun/design/control';\nimport { useState } from 'react';\n\nconst SHELVES = ['To read', 'Reading', 'Finished'];\n\nexport default function InDialog() {\n  const [open, setOpen] = useState(false);\n  const [shelf, setShelf] = useState<string | undefined>('To read');\n  return (\n    <Stack>\n      <Button onClick={() => setOpen(true)}>Move book</Button>\n      <Text tone=\"muted\">Shelf: {shelf ?? 'none'}</Text>\n      <Dialog\n        open={open}\n        onClose={() => setOpen(false)}\n        title=\"Move to shelf\"\n        footer={\n          <Button type=\"primary\" onClick={() => setOpen(false)}>\n            Done\n          </Button>\n        }\n      >\n        <Select name=\"shelf\" label=\"Shelf\" value={shelf} options={SHELVES} onChange={setShelf} />\n      </Dialog>\n    </Stack>\n  );\n}\n"
+        }
+      ],
+      "tables": [
+        {
+          "name": "SelectProps",
+          "kind": "props",
+          "rows": [
+            {
+              "name": "allowCreate",
+              "type": "boolean",
+              "required": false,
+              "description": "With a search query that matches no label exactly, offers an \"Add: *query*\" option.",
+              "default": "false"
+            },
+            {
+              "name": "clearable",
+              "type": "boolean",
+              "required": false,
+              "description": "Shows a ✕ when a value is set. Pass `false` for required fields.",
+              "default": "true"
+            },
+            {
+              "name": "disabled",
+              "type": "boolean",
+              "required": false,
+              "description": "Faded to 50%; can't open; no clear button.",
+              "default": "false"
+            },
+            {
+              "name": "label",
+              "type": "string",
+              "required": false,
+              "description": "Visible label. It targets the search box, so it is not the closed trigger's accessible name; see [Forms](#forms)."
+            },
+            {
+              "name": "layout",
+              "type": "'horizontal' | 'vertical' | 'inline'",
+              "required": false,
+              "description": "`'horizontal'` and `'vertical'` paint a `bg.cardHeader` row; `'inline'` does not.",
+              "default": "'horizontal'"
+            },
+            {
+              "name": "loading",
+              "type": "boolean",
+              "required": false,
+              "description": "Shows a spinner and \"Loading…\"; can't open.",
+              "default": "false"
+            },
+            {
+              "name": "name",
+              "type": "string",
+              "required": true,
+              "description": "Only lands on the search box while it is open: form data never carries the selection. See [Forms](#forms)."
+            },
+            {
+              "name": "onChange",
+              "type": "(value: string | undefined) => void",
+              "required": false,
+              "description": "Receives the option's `value`, `undefined` from the clear button, or the trimmed typed text from \"Add:\". Not an event.",
+              "default": "() => {}"
+            },
+            {
+              "name": "options",
+              "type": "SelectOption[]",
+              "required": true,
+              "description": "Strings or `{ label, value, description? }` objects, mixed freely."
+            },
+            {
+              "name": "placeholder",
+              "type": "string",
+              "required": false,
+              "description": "Shown when nothing is selected.",
+              "default": "'Select…'"
+            },
+            {
+              "name": "searchable",
+              "type": "boolean",
+              "required": false,
+              "description": "Opening swaps the trigger for a search box. `false` gives a plain list, arrow keys only.",
+              "default": "true"
+            },
+            {
+              "name": "surface",
+              "type": "'card' | 'page' | 'inset'",
+              "required": false,
+              "description": "Unset, it follows the surface depth: `'page'` directly on a `Page`, `'card'` in a card, a dialog or outside any surface, `'inset'` two or more surfaces deep. Set, it overrides that and sets the corner radius and the elevation together; see [Choosing a surface](#choosing-a-surface)."
+            },
+            {
+              "name": "value",
+              "type": "string | undefined",
+              "required": true,
+              "description": "Controlled selection. A value not in `options` displays as the raw string."
+            }
+          ]
+        },
+        {
+          "name": "SelectOption",
+          "kind": "alias",
+          "rows": [],
+          "text": "string | {\n    label: string;\n    value: string;\n    description?: string;\n}",
+          "description": "A `Select` option: a plain string (label and value alike), or `{ label, value, description? }`."
+        }
+      ],
+      "tokens": [
+        {
+          "path": "breakpoint.mobile",
+          "kind": "value",
+          "light": "@media (max-width: 640px)",
+          "dark": "@media (max-width: 640px)"
+        },
+        {
+          "path": "color.bg.card",
+          "kind": "color",
+          "light": "#FCFCFC",
+          "dark": "#1A1B1E"
+        },
+        {
+          "path": "color.bg.cardHeader",
+          "kind": "color",
+          "light": "#EEEEEE",
+          "dark": "#232427"
+        },
+        {
+          "path": "color.bg.selected",
+          "kind": "color",
+          "light": "#dbeafe",
+          "dark": "rgba(23, 119, 255, 0.24)"
+        },
+        {
+          "path": "color.border.default",
+          "kind": "color",
+          "light": "#D9D9D9",
+          "dark": "#3A3B40"
+        },
+        {
+          "path": "color.border.focus",
+          "kind": "color",
+          "light": "#0758d9",
+          "dark": "#3696fe"
+        },
+        {
+          "path": "color.border.light",
+          "kind": "color",
+          "light": "#e5e7eb",
+          "dark": "#2B2C30"
+        },
+        {
+          "path": "color.border.strong",
+          "kind": "color",
+          "light": "#DDDDDD",
+          "dark": "#48494F"
+        },
+        {
+          "path": "color.brand.default",
+          "kind": "color",
+          "light": "#1777FF",
+          "dark": "#3696fe"
+        },
+        {
+          "path": "color.brand.light",
+          "kind": "color",
+          "light": "#EFF6FF",
+          "dark": "rgba(23, 119, 255, 0.2)"
+        },
+        {
+          "path": "color.text.faint",
+          "kind": "color",
+          "light": "#9ca3af",
+          "dark": "#6E7480"
+        },
+        {
+          "path": "color.text.muted",
+          "kind": "color",
+          "light": "#6E6E6E",
+          "dark": "#9CA1AB"
+        },
+        {
+          "path": "color.text.primary",
+          "kind": "color",
+          "light": "#111",
+          "dark": "#F5F5F7"
+        },
+        {
+          "path": "fontFamily.body",
+          "kind": "value",
+          "light": "system-ui, sans-serif",
+          "dark": "system-ui, sans-serif"
+        },
+        {
+          "path": "fontSize.sm",
+          "kind": "value",
+          "light": "0.75rem",
+          "dark": "0.75rem"
+        },
+        {
+          "path": "fontWeight.semibold",
+          "kind": "value",
+          "light": "600",
+          "dark": "600"
+        },
+        {
+          "path": "layout.controlHeight",
+          "kind": "value",
+          "light": "2.0625rem",
+          "dark": "2.0625rem"
+        },
+        {
+          "path": "radius.lg",
+          "kind": "value",
+          "light": "16px",
+          "dark": "16px"
+        },
+        {
+          "path": "radius.md",
+          "kind": "value",
+          "light": "8px",
+          "dark": "8px"
+        },
+        {
+          "path": "radius.sm",
+          "kind": "value",
+          "light": "4px",
+          "dark": "4px"
+        },
+        {
+          "path": "recipe.input",
+          "kind": "recipe",
+          "light": null,
+          "dark": null
+        },
+        {
+          "path": "recipe.label",
+          "kind": "recipe",
+          "light": null,
+          "dark": null
+        },
+        {
+          "path": "recipe.spinner",
+          "kind": "recipe",
+          "light": null,
+          "dark": null
+        },
+        {
+          "path": "shadow.cardStack",
+          "kind": "value",
+          "light": "0px 2px 0px rgba(217, 217, 217, 0.2)",
+          "dark": "0px 2px 0px rgba(0, 0, 0, 0.4)"
+        },
+        {
+          "path": "shadow.hoverLift",
+          "kind": "value",
+          "light": "0 2px 8px rgba(0,0,0,0.15)",
+          "dark": "0 2px 8px rgba(0,0,0,0.6)"
+        },
+        {
+          "path": "space.md",
+          "kind": "value",
+          "light": "0.5rem",
+          "dark": "0.5rem"
+        },
+        {
+          "path": "space.sm",
+          "kind": "value",
+          "light": "0.375rem",
+          "dark": "0.375rem"
+        },
+        {
+          "path": "space.xs",
+          "kind": "value",
+          "light": "0.25rem",
+          "dark": "0.25rem"
+        },
+        {
+          "path": "space.xxl",
+          "kind": "value",
+          "light": "1rem",
+          "dark": "1rem"
+        },
+        {
+          "path": "space.xxs",
+          "kind": "value",
+          "light": "0.125rem",
+          "dark": "0.125rem"
+        },
+        {
+          "path": "transition.fast",
+          "kind": "value",
+          "light": "0.1s ease-in",
+          "dark": "0.1s ease-in"
+        }
+      ],
+      "changelog": [
+        {
+          "version": "0.5.0",
+          "date": "2026-11-24",
+          "tags": [
+            "Page",
+            "Dialog",
+            "Card",
+            "CardRow",
+            "Alert",
+            "Surface",
+            "Popover",
+            "Menu",
+            "Select",
+            "Button"
+          ],
+          "text": "Surface depth: corners are concentric site-wide with no radius props. `Page` provides depth 0, `Dialog` 1, and `Card`, `CardRow` and `Alert` each provide one level deeper than where they sit; `Popover` (so `Menu` and the `Select` list) provides a fixed 2. Depth 0 is `radius.lg`, 1 is `md`, 2 and deeper is `sm`. `Button`, `Select`, `Card`, `CardRow` and `Alert` follow it; an explicit `Button radius` or `Select surface` still wins. With no `Page`, `Dialog`, `Card`, `CardRow`, `Alert` or `Surface` above it, a component keeps its 0.4.0 look; a bare `Card` (no `Page`) still counts as depth 0 and gives its contents depth 1, so its Buttons and nested Cards change as below."
+        },
+        {
+          "version": "0.5.0",
+          "date": "2026-11-24",
+          "tags": [
+            "Button",
+            "Select",
+            "Card",
+            "CardRow",
+            "Popover",
+            "Menu",
+            "Dialog",
+            "Page"
+          ],
+          "text": "**Visible changes:**\n  - Buttons in a Card default to 8px (they were 16px unless `radius=\"card\"` was set), and Buttons in a Dialog body are 8px.\n  - Selects directly on a Page get the page look (16px and the card shadow); in a Card or Dialog they stay 8px. This includes Selects in your own boxes on a Page (a `useModalDialog` modal, a `recipe.card.shell` or `recipe.row` box), because depth cannot see hand-drawn boxes: wrap their contents in `Surface`, or pass `surface=\"card\"`.\n  - Without a Page, a bare `Card` counts as depth 0: its Buttons go from 16px to 8px, a Card nested in it steps down, and a `CardRow` in it is 8px.\n  - A Card nested in a Card or Dialog steps down (8px, then 4px), and so do its Buttons and Selects; `size=\"small\"` keeps its extra 1px.\n  - `CardRow` is 16px on a Page and 8px inside a Card (it was always 16px).\n  - Buttons and Selects inside a Popover or Menu are 4px."
+        },
+        {
+          "version": "0.5.0",
+          "date": "2026-11-24",
+          "tags": [
+            "Select"
+          ],
+          "text": "`Select` `surface` gains `'inset'` (`radius.sm`, no shadow), used two or more levels deep."
+        },
+        {
+          "version": "0.3.0",
+          "date": "2026-11-22",
+          "tags": [
+            "Popover",
+            "Select",
+            "ChipsInput",
+            "Dialog"
+          ],
+          "text": "`Popover` renders inside an open `<dialog>` that contains its anchor, so `Select` and `ChipsInput` work in modals."
+        },
+        {
+          "version": "0.1.0",
+          "date": "2026-11-21",
+          "tags": [
+            "Popover",
+            "Select",
+            "ChipsInput"
+          ],
+          "text": "`Popover`:\n  - `side` (`bottom`/`top`) and `align` (`start`/`center`/`end`).\n  - Flips when the preferred side has no room.\n  - Stays inside the viewport horizontally, unless `matchWidth` (then it lines up with the anchor exactly).\n  - On the top side it is anchored by its bottom edge, and it re-measures when its content resizes (`ResizeObserver`), so it stays attached as content grows or shrinks.\n  - The provisional first render is transparent rather than hidden, so an `autoFocus` child takes focus.\n  - Exposes `data-side`.\n  - Escape calls `onClose` unless already handled, without closing a surrounding dialog.\n  - Defaults keep the same position when there is room below; `Select` and `ChipsInput` now open upward near the bottom of the viewport."
+        }
+      ]
+    },
+    {
       "id": "component/alert",
       "slug": "alert",
       "entry": "@korzun/design/component",
