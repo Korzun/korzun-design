@@ -5527,6 +5527,76 @@
           "text": "`truncate` on `Text` and `Heading` clips inside `Stack` (any `align`), `Inline`, and a `Stack` nested in an `Inline`; `Stack` and `Inline` roots have `min-width: 0`."
         }
       ]
+    },
+    {
+      "id": "component/top-fade",
+      "slug": "top-fade",
+      "entry": "@korzun/design/component",
+      "docPath": "docs/component/top-fade.md",
+      "title": "TopFade",
+      "description": "A decorative, mobile-only frosted scrim at the top of the viewport that blurs content scrolling under the status bar.",
+      "category": "Layout",
+      "values": [
+        "TopFade"
+      ],
+      "types": [
+        "TopFadeProps"
+      ],
+      "importLine": "import { TopFade, type TopFadeProps } from '@korzun/design/component'",
+      "body": "A decorative, mobile-only scrim: a `position: fixed` frosted-glass band at the\ntop of the viewport, as tall as the status-bar safe-area inset plus\n`space.md`, that blurs content scrolling under the device status bar and fades\nto nothing below it (Safari style). It is `aria-hidden`,\n`pointer-events: none`, and hidden at `min-width: 641px`.\n\nUse something else for: a header or toolbar (`Page` header row / actions),\ndimming behind a modal (the modal's own backdrop).\n\n## Usage\n\n### When to render it\n\n- **Only in the installed (standalone) app**, gated with `isStandalone()` from\n  `@korzun/design/hooks`. In a browser tab the OS status bar is not drawn over\n  the page, `env(safe-area-inset-top)` is 0, and the band would be a thin\n  blurred strip with no purpose.\n- Once, in the layout route, not per page.\n- It sits at `theme.zIndex.header`: above page content, below the floating\n  controls and nav (`zIndex.sticky`).\n\n```tsx\n// Layout route for nav-bearing pages.\nexport const NavLayout = () => (\n  <>\n    <NavDesktop items={items} />\n    <NavMobile main={…} settings={…} expanded={…} />\n    {isStandalone() && (\n      <>\n        <TopFade />\n        <PullToRefreshIndicator /> {/* your own, built on usePullToRefresh */}\n      </>\n    )}\n    <Outlet />\n  </>\n);\n```\n\n### Behaviour\n\n- It takes no props and no `className`.\n- Its height comes from `env(safe-area-inset-top)`, which is non-zero only when\n  the page opts into the safe area (`<meta name=\"viewport\"\n  content=\"…, viewport-fit=cover\">`). Without that it is `space.md` tall.\n- The tail is deliberately short so chrome resting near the top edge\n  (`theme.layout.floatingControlTopBase`) is never drawn through the blur.\n  Don't place your own content in the first `space.md` below the inset.\n\n## Do / don't\n\n- Do gate it on `isStandalone()`.\n- Do render it once per app layout.\n- Don't use it as a visual header; it carries no content and ignores clicks.",
+      "examples": [
+        {
+          "file": "src/component/top-fade/examples/01-basic.tsx",
+          "slug": "basic",
+          "order": 1,
+          "title": "Basic",
+          "description": "A frosted band fixed to the top of the viewport that blurs content under the\ndevice status bar and fades to nothing below it. Render it only in the\ninstalled app: the switch stands in for the `isStandalone()` check.",
+          "code": "import { Stack, Text, TopFade } from '@korzun/design/component';\nimport { Switch } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Basic() {\n  const [installed, setInstalled] = useState(true);\n  return (\n    <>\n      {installed && <TopFade />}\n      <Stack>\n        <Text>Scroll content under the fade band, line 1.</Text>\n        <Text>Scroll content under the fade band, line 2.</Text>\n        <Switch\n          name=\"installed\"\n          label=\"Installed app\"\n          checked={installed}\n          onChange={setInstalled}\n        />\n      </Stack>\n    </>\n  );\n}\n",
+          "viewport": "mobile"
+        }
+      ],
+      "tables": [
+        {
+          "name": "TopFadeProps",
+          "kind": "alias",
+          "rows": [],
+          "text": "Record<string, never>",
+          "description": "TopFade takes no props."
+        }
+      ],
+      "tokens": [
+        {
+          "path": "breakpoint.normal",
+          "kind": "value",
+          "light": "@media (min-width: 641px)",
+          "dark": "@media (min-width: 641px)"
+        },
+        {
+          "path": "color.bg.glass",
+          "kind": "color",
+          "light": "rgba(255, 255, 255, 0.6)",
+          "dark": "rgba(28, 28, 30, 0.6)"
+        },
+        {
+          "path": "color.bg.glassFallback",
+          "kind": "color",
+          "light": "rgba(255, 255, 255, 0.92)",
+          "dark": "rgba(28, 28, 30, 0.92)"
+        },
+        {
+          "path": "space.md",
+          "kind": "value",
+          "light": "0.5rem",
+          "dark": "0.5rem"
+        },
+        {
+          "path": "zIndex.header",
+          "kind": "value",
+          "light": "10",
+          "dark": "10"
+        }
+      ],
+      "changelog": []
     }
   ],
   "guides": [
