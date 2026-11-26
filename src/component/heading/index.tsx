@@ -13,15 +13,15 @@ const LEVELS = {
 } as const satisfies Record<1 | 2 | 3 | 4, { size: TextSize; weight: TextWeight }>;
 
 export interface HeadingProps extends Omit<HTMLAttributes<HTMLHeadingElement>, 'style'> {
-  /** The heading level, rendered as `h1` to `h4`. Sets the default size and weight. */
+  /** The heading level, rendered as `h1` to `h4`. Also sets the default size and weight, see [Level defaults](#level-defaults). */
   level: 1 | 2 | 3 | 4;
-  /** Font size, from the theme's `fontSize` tokens. Default follows `level`: 1 `xxl`, 2 `xl`, 3 `lg`, 4 `md`. */
+  /** Font size, from the theme's `fontSize` tokens. Unset, it follows `level`: 1 `xxl`, 2 `xl`, 3 `lg`, 4 `md`. A size you set wins over the level default. */
   size?: TextSize;
-  /** Text colour. Default `'primary'`. */
+  /** Text colour. `danger` and `success` are for inline error and confirmation text. */
   tone?: TextTone;
-  /** Font weight, from the theme's `fontWeight` tokens. Default follows `level`: 1 and 2 `bold`, 3 and 4 `semibold`. */
+  /** Font weight, from the theme's `fontWeight` tokens. Unset, it follows `level`: 1 and 2 `bold`, 3 and 4 `semibold`. A weight you set wins over the level default. */
   weight?: TextWeight;
-  /** Clip to one line with an ellipsis. Default `false`. */
+  /** Clips to one line with an ellipsis. Also sets `min-width: 0` and `max-width: 100%`, so it clips inside an `Inline` or `Stack` with any `align`. */
   truncate?: boolean;
   /** Extra class on the root. Override with `'&&'` specificity, never `!important`. */
   className?: string;
