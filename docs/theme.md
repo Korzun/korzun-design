@@ -48,7 +48,7 @@ the full list of token keys ([tokens](tokens.md)).
 - `ThemeProvider` renders `GlobalStyles`: the page background, the body font,
   a 16px input floor on iOS, scroll lock while a `<dialog>` is open, and the
   `theme-rotation` and `theme-slide-*` keyframes. Don't render
-  `GlobalStyles` yourself.
+  `GlobalStyles` yourself, or `useThemeGlobalStyles()`, the hook it calls.
 - `lightTheme` / `darkTheme` are the two concrete themes (for tests).
 
 ### `useThemeSetting()`
@@ -100,6 +100,32 @@ The token groups (`color`, `space`, `radius`, `fontSize`, `shadow`, `zIndex`,
 `breakpoint` and the rest) are listed key by key in [tokens](tokens.md). Use the
 semantic tokens, never the primitive `gray`, `blue` and `red` scales. Radii are
 chosen by nesting depth; see [corners](corners.md).
+
+| Group | Keys | Notes |
+|---|---|---|
+| `color.text` | `primary`, `secondary`, `muted`, `faint`, `description`, `onPrimary`, `onDanger` | `muted` for labels and meta, `faint` for placeholders |
+| `color.bg` | `page`, `card`, `cardHeader`, `track`, `input`, `footer`, `glass`, `glassFallback`, `glassActive`, `selected`, `hover`, `success`, `placeholder` | `cardHeader` is also the shaded-row and inset-box fill; `hover` is a translucent scrim |
+| `color.border` | `default`, `strong`, `light`, `focus`, `hover`, `danger`, `glass`, `glassActive`, `faint`, `loading`, `success`, `section` | Cards and dividers use `strong`; inputs use `default` |
+| `color.brand` | `default`, `hover`, `active`, `light`, `outline`, `loading*`, `linkHover` | The primary action colour |
+| `color.danger` | `default`, `hover`, `active`, `light`, `outline`, `loading*` | Destructive actions and errors |
+| `color.success` | (a string) | Solid green |
+| `color.warning` | (a string) | Solid amber |
+| `color.info` | (a string) | Solid blue, the mode's `brand.default` |
+| `color.chip.<tone>` | `{ text, bg, border }` for 13 tones. Status tones: `success`, `warning`, `danger`, `info`, `neutral`. Label tones: `status`, `author`, `series`, `subject`, `book`, `entryType`, `user`, `rating` | Used by `Tag` |
+| `color.overlay` | `backdrop` | Modal backdrop |
+| `color.gray` / `blue` / `red` | primitive scales | Don't use these in app code; use the semantic tokens above |
+| `space` | `xxxs` 0.1rem, `xxs` 0.125, `xs` 0.25, `sm` 0.375, `md` 0.5, `lg` 0.625, `xl` 0.75, `xxl` 1, `xxxl` 1.25, `xxxxl` 1.5, `xxxxxl` 2rem | `md` is the default gap between stacked fields |
+| `radius` | `sm` 4px, `md` 8px, `lg` 16px, `circle`, `pill` | Chosen by nesting depth; see [corners](corners.md) |
+| `fontSize` | `xxs` 0.6rem, `xs` 0.7, `sm` 0.75, `md` 0.875, `lg` 1, `xl` 1.25, `xxl` 1.75rem | Control text is `'0.80rem'`, the one sanctioned literal (already applied by `recipe.input` and Button) |
+| `fontWeight` | `regular` 400, `medium` 500, `semibold` 600, `bold` 700, `extrabold` 800 | |
+| `lineHeight` | `tight` 1, `body` 1.3 | |
+| `fontFamily` | `body`, `mono` | |
+| `shadow` | `card`, `cardStack`, `hoverLift`, `dangerStack`, `brandStack`, `glass`, `glassActive` | Floating layers use `hoverLift` |
+| `transition` | `fast`, `medium`, `slide`, `slow`, `spring` | Values like `'0.2s ease-in'` |
+| `zIndex` | `behind`, `base`, `stack.{lo,md,hi}`, `header`, `sticky`, `toast` | |
+| `breakpoint` | `mobile` (≤640px), `normal` | Media query strings |
+| `layout` | `navHeightMobile`, `modalWidth`, `controlHeight`, `floatingControlTopBase` | Measured chrome sizes to lay out around |
+| `size` | `metadataValue` | |
 
 ### Recipes
 
@@ -174,7 +200,7 @@ export default function Styles() {
 
 ### Light, dark or auto
 
-`useThemeSetting` returns the choice and its setter; `useTheme().colorScheme` is the mode it resolved to. Pass `ThemeProvider` an `identity` and the choice is saved for that user and restored when they return; with `null` nothing is saved. Switch the identity below and the choice follows it.
+`useThemeSetting` returns the choice and its setter; `useTheme().colorScheme` is the mode it resolved to. Pass the app's root `ThemeProvider` an `identity` and the choice is saved for that user and restored when they return; with `null` nothing is saved. Switch the identity below and the choice follows it.
 
 ```tsx
 import { Inline, Stack, Text } from '@korzun/design/component';
@@ -267,7 +293,7 @@ export default function Values() {
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `children` (required) | `ReactNode` |  | The app. |
-| `identity` | `string \| null` | `null` | Whose light, dark or auto choice this is, for example the signed-in user's id. The choice is saved per identity in `localStorage` and restored when it comes back; with `null`, nothing is saved and the mode is `'auto'`. |
+| `identity` | `string \| null` | `null` | Whose light, dark or auto choice this is, for example the signed-in user's id. The choice is saved per identity in `localStorage` under `theme-setting:<identity>` and restored when it comes back; with `null`, nothing is saved and the mode is `'auto'`. |
 
 ### Theme
 

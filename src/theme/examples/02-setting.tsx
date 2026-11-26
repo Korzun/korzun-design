@@ -1,5 +1,5 @@
 /** Light, dark or auto
- * `useThemeSetting` returns the choice and its setter; `useTheme().colorScheme` is the mode it resolved to. Pass `ThemeProvider` an `identity` and the choice is saved for that user and restored when they return; with `null` nothing is saved. Switch the identity below and the choice follows it.
+ * `useThemeSetting` returns the choice and its setter; `useTheme().colorScheme` is the mode it resolved to. Pass the app's root `ThemeProvider` an `identity` and the choice is saved for that user and restored when they return; with `null` nothing is saved. Switch the identity below and the choice follows it.
  */
 import { Inline, Stack, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';

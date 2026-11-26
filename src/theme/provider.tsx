@@ -26,7 +26,7 @@ export type ThemeProviderProps = {
   /** The app. */
   children: ReactNode;
   /**
-   * Whose light, dark or auto choice this is, for example the signed-in user's id. The choice is saved per identity in `localStorage` and restored when it comes back; with `null`, nothing is saved and the mode is `'auto'`.
+   * Whose light, dark or auto choice this is, for example the signed-in user's id. The choice is saved per identity in `localStorage` under `theme-setting:<identity>` and restored when it comes back; with `null`, nothing is saved and the mode is `'auto'`.
    */
   identity?: string | null;
 };
