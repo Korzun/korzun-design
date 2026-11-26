@@ -85,7 +85,7 @@ No `className`, no `ariaLabel`.
 
 ### Basic
 
-Chips beside a title: the label is the child. An author chip names a person; an unset `tone` suits a subject or keyword.
+Chips beside a title: the label is the child. An author chip names a person; a subject or keyword chip needs no `tone`.
 
 ```tsx
 import { Inline, Tag, Text } from '@korzun/design/component';
@@ -211,10 +211,11 @@ export default function Sizes() {
 
 ### Clickable
 
-`onClick` makes a tag a button: focusable, Enter and Space activate it, and hover deepens the tone. It receives no event. Here an author chip filters the list.
+`onClick` makes a tag a button: focusable, Enter and Space activate it, and hover deepens the tone. It receives no event. Here an author chip filters the list, and clearing the filter is an action, so it is a link `Button`.
 
 ```tsx
 import { Inline, Stack, Tag, Text } from '@korzun/design/component';
+import { Button } from '@korzun/design/control';
 import { useState } from 'react';
 
 const authors = ['George Eliot', 'Terry Pratchett', 'Ursula K. Le Guin'];
@@ -229,9 +230,9 @@ export default function Clickable() {
             {name}
           </Tag>
         ))}
-        <Tag tone="neutral" onClick={() => setAuthor(undefined)}>
+        <Button type="link" onClick={() => setAuthor(undefined)}>
           Clear
-        </Tag>
+        </Button>
       </Inline>
       <Text tone="muted">Filter: {author ?? 'none'}</Text>
     </Stack>
