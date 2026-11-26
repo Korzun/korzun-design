@@ -133,43 +133,32 @@ export default function ActionsLabel() {
 ### Item options
 
 A primary Button takes `danger` and `disabled`: Remove is red and Publish is
-greyed out. It ignores `Icon` and `intentProps`, so Edit shows no icon. In the
-overflow menu Download shows its `Icon` and runs `intentProps` when the
+greyed out. Primary Buttons take neither `Icon` nor `intentProps`; the menu
+does: Read online shows its `Icon`, Download runs `intentProps` when the
 pointer, focus or a touch reaches it, and Archive is `disabled`.
 
 ```tsx
 import { Stack, Text } from '@korzun/design/component';
 import { PageActionsBar } from '@korzun/design/control';
-import { UploadIcon } from '@korzun/design/icon';
+import { BookIcon } from '@korzun/design/icon';
 import { useState } from 'react';
 
 export default function ItemOptions() {
   const [chosen, setChosen] = useState('nothing yet');
   const [prefetched, setPrefetched] = useState('nothing yet');
-  const prefetch = (label: string) => () => setPrefetched(label);
-  const intent = (label: string) => ({
-    onMouseEnter: prefetch(label),
-    onFocus: prefetch(label),
-    onTouchStart: prefetch(label),
-  });
+  const prefetch = () => setPrefetched('Download');
   return (
     <Stack>
       <PageActionsBar
         items={[
-          {
-            label: 'Edit',
-            onClick: () => setChosen('Edit'),
-            primary: true,
-            Icon: UploadIcon,
-            intentProps: intent('Edit'),
-          },
+          { label: 'Edit', onClick: () => setChosen('Edit'), primary: true },
           { label: 'Publish', onClick: () => setChosen('Publish'), primary: true, disabled: true },
           { label: 'Remove', onClick: () => setChosen('Remove'), primary: true, danger: true },
+          { label: 'Read online', onClick: () => setChosen('Read online'), Icon: BookIcon },
           {
             label: 'Download',
             onClick: () => setChosen('Download'),
-            Icon: UploadIcon,
-            intentProps: intent('Download'),
+            intentProps: { onMouseEnter: prefetch, onFocus: prefetch, onTouchStart: prefetch },
           },
           { label: 'Archive', onClick: () => setChosen('Archive'), disabled: true },
         ]}
@@ -183,9 +172,10 @@ export default function ItemOptions() {
 
 ### In a Page
 
-The usual way to get it: pass `headerActions` and `actionsLabel` to `Page`,
-which puts the bar in the header row on desktop and `PageActionsMenu` at
-phone width from the same array.
+The usual way to get it: pass `headerActions` to `Page`, which puts the bar
+in the header row on desktop and `PageActionsMenu` at phone width from the
+same array. Read is `primary` and `leading`, Edit is `primary`, and Download
+and Delete go in the overflow menu.
 
 ```tsx
 import { Card, Page, Text } from '@korzun/design/component';
@@ -195,8 +185,13 @@ export default function InPage() {
   const [message, setMessage] = useState('Nothing chosen yet.');
   return (
     <Page
-      actionsLabel="Actions"
       headerActions={[
+        {
+          label: 'Read',
+          onClick: () => setMessage('Read chosen'),
+          primary: true,
+          align: 'leading',
+        },
         { label: 'Edit', onClick: () => setMessage('Edit chosen'), primary: true },
         { label: 'Download', onClick: () => setMessage('Download chosen') },
         {

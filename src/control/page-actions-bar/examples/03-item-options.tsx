@@ -1,41 +1,30 @@
 /** Item options
  * A primary Button takes `danger` and `disabled`: Remove is red and Publish is
- * greyed out. It ignores `Icon` and `intentProps`, so Edit shows no icon. In the
- * overflow menu Download shows its `Icon` and runs `intentProps` when the
+ * greyed out. Primary Buttons take neither `Icon` nor `intentProps`; the menu
+ * does: Read online shows its `Icon`, Download runs `intentProps` when the
  * pointer, focus or a touch reaches it, and Archive is `disabled`.
  */
 import { Stack, Text } from '@korzun/design/component';
 import { PageActionsBar } from '@korzun/design/control';
-import { UploadIcon } from '@korzun/design/icon';
+import { BookIcon } from '@korzun/design/icon';
 import { useState } from 'react';
 
 export default function ItemOptions() {
   const [chosen, setChosen] = useState('nothing yet');
   const [prefetched, setPrefetched] = useState('nothing yet');
-  const prefetch = (label: string) => () => setPrefetched(label);
-  const intent = (label: string) => ({
-    onMouseEnter: prefetch(label),
-    onFocus: prefetch(label),
-    onTouchStart: prefetch(label),
-  });
+  const prefetch = () => setPrefetched('Download');
   return (
     <Stack>
       <PageActionsBar
         items={[
-          {
-            label: 'Edit',
-            onClick: () => setChosen('Edit'),
-            primary: true,
-            Icon: UploadIcon,
-            intentProps: intent('Edit'),
-          },
+          { label: 'Edit', onClick: () => setChosen('Edit'), primary: true },
           { label: 'Publish', onClick: () => setChosen('Publish'), primary: true, disabled: true },
           { label: 'Remove', onClick: () => setChosen('Remove'), primary: true, danger: true },
+          { label: 'Read online', onClick: () => setChosen('Read online'), Icon: BookIcon },
           {
             label: 'Download',
             onClick: () => setChosen('Download'),
-            Icon: UploadIcon,
-            intentProps: intent('Download'),
+            intentProps: { onMouseEnter: prefetch, onFocus: prefetch, onTouchStart: prefetch },
           },
           { label: 'Archive', onClick: () => setChosen('Archive'), disabled: true },
         ]}
