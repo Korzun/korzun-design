@@ -12,36 +12,43 @@ import { useStyle, PageType, PageTypeValue } from './style.js';
 export type { PageTypeValue };
 
 export type PageProps = PropsWithChildren<{
-  /** `'default'` (default) or `'minimal'`, which drops all layout styles and the header row. */
+  /** The screen's content, usually one `Card` per feature. Direct children get the column gap. */
+  children?: React.ReactNode;
+  /**
+   * `'minimal'` drops all layout styles (no width, margin, padding or gap) and the header row,
+   * for a screen with no chrome such as a sign-in.
+   * @default 'default'
+   */
   type?: PageTypeValue;
-  /** Route path for the back button. **Mobile only**: there is no back button on desktop. */
+  /**
+   * Route path for the back button, which shows on mobile only. It navigates to the path (a new
+   * history entry) and asks the destination to restore its scroll position; needs a react-router
+   * router above the page.
+   */
   back?: string;
   /**
-   * Page-level actions. Desktop: `primary` items as buttons, the rest in a "More…" menu.
-   * Mobile: all in a floating menu.
+   * Page-level actions. On desktop `primary` items are buttons and the rest sit in a "More…"
+   * menu; on mobile all of them sit in a floating menu next to the back button.
    */
   headerActions?: PageActionItem[];
-  /** Overrides the overflow trigger's label (default "More…") on the desktop
-   * action bar — e.g. "Actions" when every action lives in the menu. */
+  /**
+   * Label of the desktop overflow trigger, e.g. "Actions" when every action lives in the menu.
+   * @default 'More…'
+   */
   actionsLabel?: string;
   /**
-   * The page's own chrome for the header row — the row the desktop actions bar
-   * occupies, which every default page holds open whether or not it has
-   * actions (see `style.ts`).
-   *
-   * `page/library` passes its `<SearchBar />` here rather than rendering it as
-   * the first child: as a child it would sit BELOW the reserved row, starting
-   * the one page anyone lands on first lower than every other page. In the
-   * slot it lines up with every other page's actions instead.
+   * Content for the header row, leading the desktop actions bar in the same row; ignored on
+   * `minimal`. See [Header slot](#header-slot).
    */
   header?: React.ReactNode;
-  /** Sticky footer buttons. */
+  /** Buttons in a row after the children, rendered as a [PageFooterActions](../control/page-footer-actions.md) row. Not sticky. */
   footerActions?: FooterAction[];
-  /** Sets `document.title` when given; the title is not restored on unmount. Leave it
-   * out when the app manages the title itself. */
+  /**
+   * Sets `document.title` when given. The title is not restored on unmount, so leave it out when
+   * the app manages the title itself.
+   */
   documentTitle?: string;
-  /** Reserve space under the content for a floating bottom navigation bar
-   * (`NavMobile`) on mobile. Default `false`. */
+  /** Mobile only: reserves space under the content for a floating `NavMobile`. */
   bottomNav?: boolean;
 }>;
 

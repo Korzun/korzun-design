@@ -5069,6 +5069,265 @@
       ]
     },
     {
+      "id": "component/page",
+      "slug": "page",
+      "entry": "@korzun/design/component",
+      "docPath": "docs/component/page.md",
+      "title": "Page",
+      "description": "The `<main>` of every screen: a centred column of Cards, plus back button, header and footer actions.",
+      "category": "Layout",
+      "values": [
+        "Page"
+      ],
+      "types": [
+        "PageProps",
+        "PageTypeValue"
+      ],
+      "importLine": "import { Page, type PageProps, type PageTypeValue } from '@korzun/design/component'",
+      "body": "The `<main>` of every screen: a centred 800px column (gutter `space.xxl`) that\nstacks its children vertically with a fixed gap. A screen is a `Page` holding a\nvertical stack of `Card`s, one per feature. Page also owns the screen's chrome:\nthe mobile back button, the header actions (a bar on desktop, a floating `⋯`\nmenu on mobile), and the footer actions row.\n\nUse something else for: a sign-in or splash screen with no chrome\n(`type=\"minimal\"` here, then lay it out yourself), a section inside a screen\n(`Card`).\n\n## Usage\n\n### Header slot\n\n`header` is the page's own content for the header row, the row the desktop\nactions bar occupies. Pass a search bar there rather than rendering it as the\nfirst child: as a child it would sit below the reserved row and start this page\nlower than every other page.\n\n### Behaviour\n\n- Page marks everything inside it (header, content, footer actions, every `type`) as surface depth 0, so controls and cards inside pick their corner radius from where they sit; see `Surface`.\n- **The header row is always reserved on default pages**, even with no actions\n  and no `header` (min-height `2.25rem` on desktop), so content starts at the\n  same height on every page. On mobile the row collapses (`display: contents`).\n- On mobile the back button and the actions menu sit in a **sticky** row at the\n  top that rides up with the page and then pins (at\n  `theme.layout.floatingControlTopBase`); it also renders on `minimal` pages\n  if you pass `back` or `headerActions`.\n- `footerActions` is a plain `PageFooterActions` row after the children. It is\n  not sticky.\n- The column gap is `theme.fontSize.md` (0.875rem), a historical value, not a\n  `space` token.\n- `PageActionItem` and `FooterAction` are exported from\n  `@korzun/design/control`, not from `component`.\n- No `className`.\n\n## Do / don't\n\n- Do make each feature its own `Card`, as direct children of `Page`.\n- Do pass `bottomNav` on every page shown under `NavMobile`.\n- Do mark the one or two main actions `primary: true` so desktop shows them as\n  buttons rather than burying them in \"More…\".\n- Don't render your own search bar as the first child; use `header`.\n- Don't wrap Page in another `<main>`; it is the `<main>`.\n- Don't rely on `back` for desktop navigation.",
+      "examples": [
+        {
+          "file": "src/component/page/examples/01-basic.tsx",
+          "slug": "basic",
+          "order": 1,
+          "title": "Basic",
+          "description": "A screen is a `Page` holding one `Card` per feature as direct children. The\nheader row stays reserved above the first card even with no actions, so every\npage starts its content at the same height.",
+          "code": "import { Card, Page, Stack, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Basic() {\n  const [loggedOut, setLoggedOut] = useState(false);\n  return (\n    <Page documentTitle=\"Settings\">\n      <Card title=\"Device password\">\n        <Text>Locks this device after five minutes away.</Text>\n      </Card>\n      <Card title=\"Change password\">\n        <Text>Choose a new password for your account.</Text>\n      </Card>\n      <Stack align=\"start\">\n        <Button danger onClick={() => setLoggedOut(true)}>\n          Log out\n        </Button>\n        {loggedOut && <Text tone=\"muted\">Logged out</Text>}\n      </Stack>\n    </Page>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/page/examples/02-header-actions.tsx",
+          "slug": "header-actions",
+          "order": 2,
+          "title": "Header actions",
+          "description": "`headerActions` puts page-level actions in the header row. On desktop the\n`primary` item is a button and the rest sit in the \"More…\" menu; mark the one\nor two main actions `primary`. An action with `danger` and `separatorBefore`\nsets itself apart.",
+          "code": "import { Card, Page, Text } from '@korzun/design/component';\nimport { useState } from 'react';\n\nexport default function HeaderActions() {\n  const [last, setLast] = useState('nothing yet');\n  return (\n    <Page\n      headerActions={[\n        { label: 'Edit', onClick: () => setLast('Edit'), primary: true },\n        { label: 'Duplicate', onClick: () => setLast('Duplicate') },\n        { label: 'Delete', onClick: () => setLast('Delete'), danger: true, separatorBefore: true },\n      ]}\n    >\n      <Card title=\"Dune\">\n        <Text>Last action: {last}</Text>\n      </Card>\n    </Page>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/page/examples/03-header-slot.tsx",
+          "slug": "header-slot",
+          "order": 3,
+          "title": "Header slot",
+          "description": "`header` is the page's own content for the header row, here a search field,\nleading the actions bar in the same row. `actionsLabel` renames the overflow\ntrigger when every action lives in the menu.",
+          "code": "import { Card, Page, Stack, Text } from '@korzun/design/component';\nimport { TextInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function HeaderSlot() {\n  const [query, setQuery] = useState<string | undefined>('');\n  const [last, setLast] = useState('nothing yet');\n  return (\n    <Page\n      header={<TextInput name=\"search\" placeholder=\"Search\" value={query} onChange={setQuery} />}\n      actionsLabel=\"Actions\"\n      headerActions={[\n        { label: 'Import', onClick: () => setLast('Import') },\n        { label: 'Export', onClick: () => setLast('Export') },\n      ]}\n    >\n      <Card title=\"Library\">\n        <Stack>\n          <Text>Searching for: {query || 'nothing'}</Text>\n          <Text tone=\"muted\">Last action: {last}</Text>\n        </Stack>\n      </Card>\n    </Page>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/page/examples/04-footer-actions.tsx",
+          "slug": "footer-actions",
+          "order": 4,
+          "title": "Footer actions",
+          "description": "`footerActions` renders a `PageFooterActions` row after the children. It is\nnot sticky: it sits below the last card. Cancel and Save here, with Delete on\nthe leading side.",
+          "code": "import { Card, Page, Text } from '@korzun/design/component';\nimport { useState } from 'react';\n\nexport default function FooterActions() {\n  const [last, setLast] = useState('nothing yet');\n  return (\n    <Page\n      footerActions={[\n        { label: 'Delete', onClick: () => setLast('Delete'), danger: true, align: 'leading' },\n        { label: 'Cancel', onClick: () => setLast('Cancel') },\n        { label: 'Save', onClick: () => setLast('Save'), emphasis: true },\n      ]}\n    >\n      <Card title=\"Details\">\n        <Text>Last pressed: {last}</Text>\n      </Card>\n    </Page>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/page/examples/05-back-and-actions-on-mobile.tsx",
+          "slug": "back-and-actions-on-mobile",
+          "order": 5,
+          "title": "Back and actions on mobile",
+          "description": "On a phone `back` shows a round back button and `headerActions` collapses into\none \"More actions\" menu beside it, in a sticky row at the top. The back button\ngoes to the given path, so pressing it navigates the demo away.",
+          "code": "import { Card, Page, Text } from '@korzun/design/component';\nimport { useState } from 'react';\n\nexport default function BackAndActionsOnMobile() {\n  const [last, setLast] = useState('nothing yet');\n  return (\n    <Page\n      back=\"/library\"\n      headerActions={[\n        { label: 'Edit', onClick: () => setLast('Edit'), primary: true },\n        { label: 'Delete', onClick: () => setLast('Delete'), danger: true, separatorBefore: true },\n      ]}\n    >\n      <Card title=\"Dune\">\n        <Text>Last action: {last}</Text>\n      </Card>\n    </Page>\n  );\n}\n",
+          "viewport": "mobile"
+        },
+        {
+          "file": "src/component/page/examples/06-bottom-nav.tsx",
+          "slug": "bottom-nav",
+          "order": 6,
+          "title": "Bottom nav",
+          "description": "`bottomNav` reserves space under the content so the last card clears the\nfloating `NavMobile`. Pass it on every page shown under that bar.",
+          "code": "import { Card, NavMobile, Page, Text } from '@korzun/design/component';\nimport { BookIcon, HomeIcon, SettingsIcon, UploadIcon } from '@korzun/design/icon';\n\nexport default function BottomNav() {\n  return (\n    <>\n      <NavMobile\n        main={{\n          items: [\n            { to: '/library', label: 'Library', Icon: BookIcon, active: true },\n            { to: '/upload', label: 'Upload', Icon: UploadIcon, active: false },\n          ],\n          collapsed: { to: '/library', label: 'Back to library', Icon: HomeIcon, active: false },\n        }}\n        settings={{\n          items: [],\n          collapsed: { to: '/settings', label: 'Settings', Icon: SettingsIcon, active: false },\n        }}\n        expanded=\"main\"\n      />\n      <Page bottomNav>\n        <Card title=\"Reading now\">\n          <Text>Dune</Text>\n        </Card>\n        <Card title=\"Up next\">\n          <Text>Hyperion</Text>\n        </Card>\n      </Page>\n    </>\n  );\n}\n",
+          "viewport": "mobile"
+        },
+        {
+          "file": "src/component/page/examples/07-minimal.tsx",
+          "slug": "minimal",
+          "order": 7,
+          "title": "Minimal",
+          "description": "`type=\"minimal\"` drops the page's width, margin, padding, gap and header row,\nfor a sign-in or splash screen. You lay it out yourself.",
+          "code": "import { Page, Stack, Text } from '@korzun/design/component';\nimport { Button, TextInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Minimal() {\n  const [name, setName] = useState<string | undefined>('');\n  const [signedIn, setSignedIn] = useState(false);\n  return (\n    <Page type=\"minimal\">\n      <Stack>\n        <TextInput name=\"username\" label=\"Username\" value={name} onChange={setName} />\n        <Button type=\"primary\" onClick={() => setSignedIn(true)}>\n          Sign in\n        </Button>\n        {signedIn && <Text tone=\"muted\">Signed in as {name || 'nobody'}</Text>}\n      </Stack>\n    </Page>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/page/examples/08-document-title.tsx",
+          "slug": "document-title",
+          "order": 8,
+          "title": "Document title",
+          "description": "`documentTitle` sets the browser tab's title when the page renders and\nwhenever it changes. It is not restored on unmount, so omit it when the app\nmanages titles itself.",
+          "code": "import { Card, Page, Stack, Text } from '@korzun/design/component';\nimport { TextInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function DocumentTitle() {\n  const [title, setTitle] = useState<string | undefined>('Library');\n  return (\n    <Page documentTitle={title}>\n      <Card title=\"Tab title\">\n        <Stack>\n          <TextInput name=\"title\" label=\"Title\" value={title} onChange={setTitle} />\n          <Text tone=\"muted\">Tab title: {title}</Text>\n        </Stack>\n      </Card>\n    </Page>\n  );\n}\n"
+        }
+      ],
+      "tables": [
+        {
+          "name": "PageProps",
+          "kind": "props",
+          "rows": [
+            {
+              "name": "children",
+              "type": "React.ReactNode",
+              "required": false,
+              "description": "The screen's content, usually one `Card` per feature. Direct children get the column gap."
+            },
+            {
+              "name": "actionsLabel",
+              "type": "string",
+              "required": false,
+              "description": "Label of the desktop overflow trigger, e.g. \"Actions\" when every action lives in the menu.",
+              "default": "'More…'"
+            },
+            {
+              "name": "back",
+              "type": "string",
+              "required": false,
+              "description": "Route path for the back button, which shows on mobile only. It navigates to the path (a new history entry) and asks the destination to restore its scroll position; needs a react-router router above the page."
+            },
+            {
+              "name": "bottomNav",
+              "type": "boolean",
+              "required": false,
+              "description": "Mobile only: reserves space under the content for a floating `NavMobile`.",
+              "default": "false"
+            },
+            {
+              "name": "documentTitle",
+              "type": "string",
+              "required": false,
+              "description": "Sets `document.title` when given. The title is not restored on unmount, so leave it out when the app manages the title itself."
+            },
+            {
+              "name": "footerActions",
+              "type": "FooterAction[]",
+              "required": false,
+              "description": "Buttons in a row after the children, rendered as a [PageFooterActions](../control/page-footer-actions.md) row. Not sticky."
+            },
+            {
+              "name": "header",
+              "type": "React.ReactNode",
+              "required": false,
+              "description": "Content for the header row, leading the desktop actions bar in the same row; ignored on `minimal`. See [Header slot](#header-slot)."
+            },
+            {
+              "name": "headerActions",
+              "type": "PageActionItem[]",
+              "required": false,
+              "description": "Page-level actions. On desktop `primary` items are buttons and the rest sit in a \"More…\" menu; on mobile all of them sit in a floating menu next to the back button."
+            },
+            {
+              "name": "type",
+              "type": "'default' | 'minimal'",
+              "required": false,
+              "description": "`'minimal'` drops all layout styles (no width, margin, padding or gap) and the header row, for a screen with no chrome such as a sign-in.",
+              "default": "'default'"
+            }
+          ]
+        },
+        {
+          "name": "PageTypeValue",
+          "kind": "alias",
+          "rows": [],
+          "text": "'default' | 'minimal'"
+        }
+      ],
+      "tokens": [
+        {
+          "path": "breakpoint.mobile",
+          "kind": "value",
+          "light": "@media (max-width: 640px)",
+          "dark": "@media (max-width: 640px)"
+        },
+        {
+          "path": "breakpoint.normal",
+          "kind": "value",
+          "light": "@media (min-width: 641px)",
+          "dark": "@media (min-width: 641px)"
+        },
+        {
+          "path": "fontSize.md",
+          "kind": "value",
+          "light": "0.875rem",
+          "dark": "0.875rem"
+        },
+        {
+          "path": "layout.floatingControlTopBase",
+          "kind": "value",
+          "light": "max(1.25rem, calc(env(safe-area-inset-top) + 1.5rem))",
+          "dark": "max(1.25rem, calc(env(safe-area-inset-top) + 1.5rem))"
+        },
+        {
+          "path": "layout.navHeightMobile",
+          "kind": "value",
+          "light": "96px",
+          "dark": "96px"
+        },
+        {
+          "path": "space.lg",
+          "kind": "value",
+          "light": "0.625rem",
+          "dark": "0.625rem"
+        },
+        {
+          "path": "space.md",
+          "kind": "value",
+          "light": "0.5rem",
+          "dark": "0.5rem"
+        },
+        {
+          "path": "space.xxl",
+          "kind": "value",
+          "light": "1rem",
+          "dark": "1rem"
+        },
+        {
+          "path": "space.xxxxl",
+          "kind": "value",
+          "light": "1.5rem",
+          "dark": "1.5rem"
+        },
+        {
+          "path": "space.xxxxxl",
+          "kind": "value",
+          "light": "2rem",
+          "dark": "2rem"
+        },
+        {
+          "path": "zIndex.sticky",
+          "kind": "value",
+          "light": "1000",
+          "dark": "1000"
+        }
+      ],
+      "changelog": [
+        {
+          "version": "0.5.0",
+          "date": "2026-11-24",
+          "tags": [
+            "Page",
+            "Dialog",
+            "Card",
+            "CardRow",
+            "Alert",
+            "Surface",
+            "Popover",
+            "Menu",
+            "Select",
+            "Button"
+          ],
+          "text": "Surface depth: corners are concentric site-wide with no radius props. `Page` provides depth 0, `Dialog` 1, and `Card`, `CardRow` and `Alert` each provide one level deeper than where they sit; `Popover` (so `Menu` and the `Select` list) provides a fixed 2. Depth 0 is `radius.lg`, 1 is `md`, 2 and deeper is `sm`. `Button`, `Select`, `Card`, `CardRow` and `Alert` follow it; an explicit `Button radius` or `Select surface` still wins. With no `Page`, `Dialog`, `Card`, `CardRow`, `Alert` or `Surface` above it, a component keeps its 0.4.0 look; a bare `Card` (no `Page`) still counts as depth 0 and gives its contents depth 1, so its Buttons and nested Cards change as below."
+        },
+        {
+          "version": "0.5.0",
+          "date": "2026-11-24",
+          "tags": [
+            "Button",
+            "Select",
+            "Card",
+            "CardRow",
+            "Popover",
+            "Menu",
+            "Dialog",
+            "Page"
+          ],
+          "text": "**Visible changes:**\n  - Buttons in a Card default to 8px (they were 16px unless `radius=\"card\"` was set), and Buttons in a Dialog body are 8px.\n  - Selects directly on a Page get the page look (16px and the card shadow); in a Card or Dialog they stay 8px. This includes Selects in your own boxes on a Page (a `useModalDialog` modal, a `recipe.card.shell` or `recipe.row` box), because depth cannot see hand-drawn boxes: wrap their contents in `Surface`, or pass `surface=\"card\"`.\n  - Without a Page, a bare `Card` counts as depth 0: its Buttons go from 16px to 8px, a Card nested in it steps down, and a `CardRow` in it is 8px.\n  - A Card nested in a Card or Dialog steps down (8px, then 4px), and so do its Buttons and Selects; `size=\"small\"` keeps its extra 1px.\n  - `CardRow` is 16px on a Page and 8px inside a Card (it was always 16px).\n  - Buttons and Selects inside a Popover or Menu are 4px."
+        }
+      ]
+    },
+    {
       "id": "component/stack",
       "slug": "stack",
       "entry": "@korzun/design/component",
