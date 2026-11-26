@@ -26,7 +26,7 @@ A button that opens a list of actions and links, described as data, with keyboar
 handling built in. It follows the WAI-ARIA menu button pattern. You render the
 trigger; Menu gives it the props it needs, draws the
 list in a [`Popover`](popover.md) anchored to it, and handles focus and the
-keyboard. Describe the items as data in `items`. There are no child
+keyboard. Pass the items in `items`. There are no child
 components and no style file to write.
 
 [`PageActionsBar`](page-actions-bar.md) and [`PageActionsMenu`](page-actions-menu.md)
@@ -53,7 +53,7 @@ element without a cast. `ariaControls` is the menu's id while open and
 An item is either an action or a link. TypeScript rejects an item with both
 `onClick` and `to`, or with neither. Every item takes `label`, `Icon`, `danger`,
 `disabled`, `separatorBefore` and `intentProps`; actions add `onClick`, links add
-`to`. The generated tables below list each field.
+`to`. The tables under Props list each field.
 
 ### Keyboard
 
@@ -262,8 +262,7 @@ export default function Surface() {
 
 `align` lines the menu up with the trigger's start edge, centre or end edge.
 The wide triggers show it: each menu is narrower than its trigger. Use `end` for
-a trigger at the right edge of the screen. An open menu covers the triggers
-beside it; the menus open upward (`side="top"`) to stay inside the demo.
+a trigger at the right edge of the screen.
 
 ```tsx
 import { Stack, Text } from '@korzun/design/component';
@@ -280,19 +279,16 @@ export default function Align() {
     <Stack>
       <Text tone="muted">Chosen: {chosen}</Text>
       <Menu
-        side="top"
         align="start"
         trigger={(p) => <Button {...p}>align start: menu at the left edge</Button>}
         items={items('start')}
       />
       <Menu
-        side="top"
         align="center"
         trigger={(p) => <Button {...p}>align center: menu at the middle</Button>}
         items={items('center')}
       />
       <Menu
-        side="top"
         align="end"
         trigger={(p) => <Button {...p}>align end: menu at the right edge</Button>}
         items={items('end')}
@@ -589,7 +585,7 @@ One menu entry: an action (`onClick`) or a link (`to`).
 | `label` (required) | `string` |  | Visible text. Must be unique within the menu: it is the React key. |
 | `onClick` | `() => void` |  | Receives no event. The menu closes first, then this is called. |
 | `separatorBefore` | `boolean` |  | Divider above this item. Ignored on the first item. |
-| `to` | `string` |  | Router path. Needs a router above the Menu; a Menu of action items only does not. |
+| `to` | `string` |  | Router path. Renders a react-router `<Link>`, so middle-click and open-in-new-tab work. Needs a router above the Menu; a Menu of action items only does not. |
 
 ### MenuLinkItem
 
@@ -604,7 +600,7 @@ An item that navigates: a react-router `<Link>`, so middle-click and open-in-new
 | `label` (required) | `string` |  | Visible text. Must be unique within the menu: it is the React key. |
 | `onClick` | `never` |  | Not allowed on a link item: an item is an action or a link, never both. |
 | `separatorBefore` | `boolean` |  | Divider above this item. Ignored on the first item. |
-| `to` (required) | `string` |  | Router path. Needs a router above the Menu; a Menu of action items only does not. |
+| `to` (required) | `string` |  | Router path. Renders a react-router `<Link>`, so middle-click and open-in-new-tab work. Needs a router above the Menu; a Menu of action items only does not. |
 
 <!-- /generated:props -->
 

@@ -39,7 +39,10 @@ export interface MenuActionItem extends MenuItemBase {
 
 /** An item that navigates: a react-router `<Link>`, so middle-click and open-in-new-tab work. */
 export interface MenuLinkItem extends MenuItemBase {
-  /** Router path. Needs a router above the Menu; a Menu of action items only does not. */
+  /**
+   * Router path. Renders a react-router `<Link>`, so middle-click and open-in-new-tab
+   * work. Needs a router above the Menu; a Menu of action items only does not.
+   */
   to: string;
   /** Not allowed on a link item: an item is an action or a link, never both. */
   onClick?: never;
