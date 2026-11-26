@@ -511,6 +511,571 @@
       ]
     },
     {
+      "id": "control/chips-input",
+      "slug": "chips-input",
+      "entry": "@korzun/design/control",
+      "docPath": "docs/control/chips-input.md",
+      "title": "ChipsInput",
+      "description": "A tag field: the values show as coloured chips in an input box, typing filters a suggestion dropdown, and Enter adds a chip.",
+      "category": "Inputs",
+      "values": [
+        "ChipsInput"
+      ],
+      "types": [
+        "ChipColor",
+        "ChipsInputProps"
+      ],
+      "importLine": "import { ChipsInput, type ChipColor, type ChipsInputProps } from '@korzun/design/control'",
+      "body": "A tag field: the current values render as coloured chips inside an input box,\ntyping filters a suggestion dropdown (a `Popover`), and Enter adds a chip. Fully\ncontrolled: you own the `string[]`.\n\nUse something else for: one value from a list (`Select`), one of a few fixed\noptions (`SegmentedControl`), free text (`TextInput`).\n\n## Usage\n\n### Keyboard\n\n- ArrowDown / ArrowUp move the highlight; Enter or Tab adds the highlighted\n  suggestion, else (with `allowCustom`) the trimmed typed text.\n- **Tab with text typed adds a chip and keeps focus in the field** (it calls\n  `preventDefault`); Tab on an empty field moves focus normally.\n- Enter never submits the surrounding form while text is typed, even when\n  nothing could be added.\n- Backspace on an empty field removes the last chip.\n- A value that matches an existing chip case-insensitively is not added.\n\n### Styling\n\nNo `className`. The label is linked to the input with a generated id.\n\n## Do / don't\n\n- Do set `layout=\"horizontal\"` and `dense` when it sits among other form fields\n  in a `Card`; otherwise the label silently disappears.\n- Do pick a `chipColor` that matches how the same values are tagged elsewhere.\n- Don't rely on `name` for form submission.\n- Do use it inside a `Dialog`: the dropdown opens inside the open dialog, so it\n  is not hidden behind it (see [popover](popover.md)).",
+      "examples": [
+        {
+          "file": "src/control/chips-input/examples/01-basic.tsx",
+          "slug": "basic",
+          "order": 1,
+          "title": "Basic",
+          "description": "A controlled tag box in a `Card`. Typing filters the suggestions and Enter\nadds the highlighted one, or the typed text; Backspace on an empty field\nremoves the last chip. `onChange` receives the whole new array, not an event.",
+          "code": "import { Card, Stack, Text } from '@korzun/design/component';\nimport { ChipsInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nconst SUBJECTS = ['Astronomy', 'Biology', 'Cooking', 'History', 'Poetry', 'Travel'];\n\nexport default function Basic() {\n  const [subjects, setSubjects] = useState(['History']);\n  return (\n    <Card title=\"Subjects\">\n      <Stack>\n        <ChipsInput\n          value={subjects}\n          suggestions={SUBJECTS}\n          onChange={setSubjects}\n          placeholder=\"Add subject…\"\n        />\n        <Text tone=\"muted\">Chosen: {subjects.join(', ') || 'nothing'}</Text>\n      </Stack>\n    </Card>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/chips-input/examples/02-suggestions-only.tsx",
+          "slug": "suggestions-only",
+          "order": 2,
+          "title": "Custom values and suggestions only",
+          "description": "Enter or Tab also adds text that matches no suggestion. With\n`allowCustom={false}` only a suggestion can be added: unmatched text stays in\nthe field, and Enter does not submit the surrounding form.",
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { ChipsInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nconst COLOURS = ['Amber', 'Blue', 'Crimson', 'Teal'];\n\nexport default function SuggestionsOnly() {\n  const [anything, setAnything] = useState<string[]>([]);\n  const [listed, setListed] = useState<string[]>([]);\n  return (\n    <Stack>\n      <Text>Custom values allowed</Text>\n      <ChipsInput\n        value={anything}\n        suggestions={COLOURS}\n        onChange={setAnything}\n        placeholder=\"Type any colour…\"\n      />\n      <Text>Suggestions only</Text>\n      <ChipsInput\n        value={listed}\n        suggestions={COLOURS}\n        onChange={setListed}\n        allowCustom={false}\n        placeholder=\"Pick a listed colour…\"\n      />\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/chips-input/examples/03-layouts.tsx",
+          "slug": "layouts",
+          "order": 3,
+          "title": "Layouts",
+          "description": "`block` is the bare box and shows no label, even when `label` is set.\n`horizontal` and `vertical` add the label on a header row, like the other\nfields in a form.",
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { ChipsInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nconst TAGS = ['Fiction', 'Memoir', 'Reference'];\n\nexport default function Layouts() {\n  const [block, setBlock] = useState(['Fiction']);\n  const [horizontal, setHorizontal] = useState(['Memoir']);\n  const [vertical, setVertical] = useState(['Reference']);\n  return (\n    <Stack>\n      <Text>block</Text>\n      <ChipsInput label=\"Tags\" value={block} suggestions={TAGS} onChange={setBlock} />\n      <Text>horizontal</Text>\n      <ChipsInput\n        label=\"Tags\"\n        layout=\"horizontal\"\n        value={horizontal}\n        suggestions={TAGS}\n        onChange={setHorizontal}\n      />\n      <Text>vertical</Text>\n      <ChipsInput\n        label=\"Tags\"\n        layout=\"vertical\"\n        value={vertical}\n        suggestions={TAGS}\n        onChange={setVertical}\n      />\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/chips-input/examples/04-chip-colors.tsx",
+          "slug": "chip-colors",
+          "order": 4,
+          "title": "Chip colors",
+          "description": "`chipColor` picks the colour family for a field's chips. Use the one that\ntags the same values elsewhere in the app, so a subject looks like a subject\neverywhere.",
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { ChipsInput, type ChipColor } from '@korzun/design/control';\nimport { useState } from 'react';\n\nconst COLORS: ChipColor[] = [\n  'status',\n  'author',\n  'series',\n  'subject',\n  'book',\n  'entryType',\n  'user',\n  'rating',\n  'neutral',\n  'success',\n  'warning',\n  'danger',\n  'info',\n];\n\nfunction ColorRow({ chipColor }: { chipColor: ChipColor }) {\n  const [value, setValue] = useState<string[]>([chipColor]);\n  return (\n    <Stack gap=\"xs\">\n      <Text tone=\"muted\">{chipColor}</Text>\n      <ChipsInput value={value} suggestions={[]} onChange={setValue} chipColor={chipColor} />\n    </Stack>\n  );\n}\n\nexport default function ChipColors() {\n  return (\n    <Stack>\n      {COLORS.map((chipColor) => (\n        <ColorRow key={chipColor} chipColor={chipColor} />\n      ))}\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/chips-input/examples/05-disabled.tsx",
+          "slug": "disabled",
+          "order": 5,
+          "title": "Disabled",
+          "description": "`disabled` blocks typing and turns the chips' remove buttons off. A switch\ntoggles it so both states can be tried.",
+          "code": "import { Stack } from '@korzun/design/component';\nimport { ChipsInput, Switch } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Disabled() {\n  const [disabled, setDisabled] = useState(true);\n  const [value, setValue] = useState(['Cherry', 'Date']);\n  return (\n    <Stack>\n      <Switch name=\"disabled\" label=\"Disabled\" checked={disabled} onChange={setDisabled} />\n      <ChipsInput\n        value={value}\n        suggestions={['Apple', 'Banana']}\n        onChange={setValue}\n        disabled={disabled}\n        placeholder=\"Add fruit…\"\n      />\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/chips-input/examples/06-form-row.tsx",
+          "slug": "form-row",
+          "order": 6,
+          "title": "Form row",
+          "description": "Among other fields in a `Card`, set `layout=\"horizontal\"` and `dense` so the\nlabel shows and the height matches a `TextInput`. `allowCustom={false}`\nrestricts it to known users, `chipColor=\"user\"` matches how users are tagged\nelsewhere, and `placeholder` and `disabled` follow the loading state. `name`\nis set on the text input only: form data gets the half-typed text, so submit\nthe chips from state.",
+          "code": "import { Card, Stack, Text } from '@korzun/design/component';\nimport { Button, ChipsInput, TextInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nconst USERS = ['Ada', 'Grace', 'Linus', 'Margaret'];\n\nexport default function FormRow() {\n  const [title, setTitle] = useState<string | undefined>('Reading group');\n  const [users, setUsers] = useState(['Ada']);\n  const [loading, setLoading] = useState(true);\n  return (\n    <Card\n      title=\"Share\"\n      footer={\n        <Button type=\"text\" onClick={() => setLoading((l) => !l)}>\n          {loading ? 'Finish loading' : 'Reload users'}\n        </Button>\n      }\n    >\n      <Stack>\n        <ChipsInput\n          name=\"users\"\n          label=\"Users\"\n          layout=\"horizontal\"\n          dense\n          value={users}\n          suggestions={USERS}\n          onChange={setUsers}\n          allowCustom={false}\n          chipColor=\"user\"\n          disabled={loading}\n          placeholder={loading ? 'Loading…' : 'Add users…'}\n        />\n        <TextInput\n          name=\"title\"\n          label=\"Title\"\n          layout=\"horizontal\"\n          value={title}\n          onChange={setTitle}\n        />\n        <Text tone=\"muted\">Shared with: {users.join(', ') || 'nobody'}</Text>\n      </Stack>\n    </Card>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/chips-input/examples/07-in-dialog.tsx",
+          "slug": "in-dialog",
+          "order": 7,
+          "title": "In a dialog",
+          "description": "The suggestion list opens inside an open `Dialog` that contains the field,\nso it works in a modal.",
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button, ChipsInput, Dialog } from '@korzun/design/control';\nimport { useState } from 'react';\n\nconst SUBJECTS = ['Astronomy', 'Biology', 'Cooking', 'History', 'Poetry', 'Travel'];\n\nexport default function InDialog() {\n  const [open, setOpen] = useState(false);\n  const [subjects, setSubjects] = useState<string[]>([]);\n  return (\n    <Stack>\n      <Button onClick={() => setOpen(true)}>Edit subjects</Button>\n      <Text tone=\"muted\">Subjects: {subjects.join(', ') || 'none'}</Text>\n      <Dialog\n        open={open}\n        onClose={() => setOpen(false)}\n        title=\"Edit subjects\"\n        footer={\n          <Button type=\"primary\" onClick={() => setOpen(false)}>\n            Done\n          </Button>\n        }\n      >\n        <ChipsInput\n          value={subjects}\n          suggestions={SUBJECTS}\n          onChange={setSubjects}\n          placeholder=\"Add subject…\"\n        />\n      </Dialog>\n    </Stack>\n  );\n}\n"
+        }
+      ],
+      "tables": [
+        {
+          "name": "ChipsInputProps",
+          "kind": "props",
+          "rows": [
+            {
+              "name": "allowCustom",
+              "type": "boolean",
+              "required": false,
+              "description": "Enter or Tab adds the typed text as a chip. `false`: only suggestions can be added.",
+              "default": "true"
+            },
+            {
+              "name": "chipColor",
+              "type": "'status' | 'author' | 'series' | 'subject' | 'book' | 'entryType' | 'user' | 'rating' | 'neutral' | 'success' | 'warning' | 'danger' | 'info'",
+              "required": false,
+              "description": "Chip colour family: `status`, `author`, `series`, `subject`, `book`, `entryType`, `user`, `rating`, `neutral`, `success`, `warning`, `danger` or `info`. Pick the one that tags the same values elsewhere.",
+              "default": "'subject'"
+            },
+            {
+              "name": "dense",
+              "type": "boolean",
+              "required": false,
+              "description": "Matches a standard input's height, so the field lines up with `TextInput` and `Select` rows. Leave it off for a roomy standalone tag box.",
+              "default": "false"
+            },
+            {
+              "name": "disabled",
+              "type": "boolean",
+              "required": false,
+              "description": "Disables typing and the chip remove buttons.",
+              "default": "false"
+            },
+            {
+              "name": "label",
+              "type": "string",
+              "required": false,
+              "description": "Field label. Ignored in the default `block` layout; set `layout` to show it."
+            },
+            {
+              "name": "layout",
+              "type": "'horizontal' | 'vertical' | 'block'",
+              "required": false,
+              "description": "`'block'` is the bare box, with no label. `'horizontal'` and `'vertical'` add a label on a `bg.cardHeader` row (`radius.md`), like the other fields.",
+              "default": "'block'"
+            },
+            {
+              "name": "name",
+              "type": "string",
+              "required": false,
+              "description": "Set on the text input only: form data gets the half-typed text, not the chips."
+            },
+            {
+              "name": "onChange",
+              "type": "(values: string[]) => void",
+              "required": true,
+              "description": "Receives the whole new array, not an event."
+            },
+            {
+              "name": "placeholder",
+              "type": "string",
+              "required": false,
+              "description": "Shown only while there are no chips."
+            },
+            {
+              "name": "suggestions",
+              "type": "string[]",
+              "required": true,
+              "description": "Suggestion pool; pass `[]` for none. Values already chosen are hidden, and matching is a case-insensitive substring."
+            },
+            {
+              "name": "value",
+              "type": "string[]",
+              "required": true,
+              "description": "The chips. Controlled: you own the array."
+            }
+          ]
+        },
+        {
+          "name": "ChipColor",
+          "kind": "alias",
+          "rows": [],
+          "text": "'status' | 'author' | 'series' | 'subject' | 'book' | 'entryType' | 'user' | 'rating' | 'neutral' | 'success' | 'warning' | 'danger' | 'info'",
+          "description": "A chip colour family: a key of `theme.color.chip` (`'subject'`, `'user'`, `'neutral'`, …)."
+        }
+      ],
+      "tokens": [
+        {
+          "path": "breakpoint.mobile",
+          "kind": "value",
+          "light": "@media (max-width: 640px)",
+          "dark": "@media (max-width: 640px)"
+        },
+        {
+          "path": "color.bg.cardHeader",
+          "kind": "color",
+          "light": "#EEEEEE",
+          "dark": "#232427"
+        },
+        {
+          "path": "color.bg.input",
+          "kind": "color",
+          "light": "#FFFFFF",
+          "dark": "#1A1B1E"
+        },
+        {
+          "path": "color.border.default",
+          "kind": "color",
+          "light": "#D9D9D9",
+          "dark": "#3A3B40"
+        },
+        {
+          "path": "color.border.focus",
+          "kind": "color",
+          "light": "#0758d9",
+          "dark": "#3696fe"
+        },
+        {
+          "path": "color.border.hover",
+          "kind": "color",
+          "light": "#91CAFF",
+          "dark": "#1D4ED8"
+        },
+        {
+          "path": "color.brand.light",
+          "kind": "color",
+          "light": "#EFF6FF",
+          "dark": "rgba(23, 119, 255, 0.2)"
+        },
+        {
+          "path": "color.chip.author.bg",
+          "kind": "color",
+          "light": "rgba(26,122,82,0.08)",
+          "dark": "rgba(52,211,153,0.16)"
+        },
+        {
+          "path": "color.chip.author.border",
+          "kind": "color",
+          "light": "rgba(26,122,82,0.22)",
+          "dark": "rgba(52,211,153,0.30)"
+        },
+        {
+          "path": "color.chip.author.text",
+          "kind": "color",
+          "light": "#1a7a52",
+          "dark": "#7EE6B4"
+        },
+        {
+          "path": "color.chip.book.bg",
+          "kind": "color",
+          "light": "rgba(14, 107, 125, 0.08)",
+          "dark": "rgba(45, 170, 190, 0.18)"
+        },
+        {
+          "path": "color.chip.book.border",
+          "kind": "color",
+          "light": "rgba(14, 107, 125, 0.22)",
+          "dark": "rgba(45, 170, 190, 0.32)"
+        },
+        {
+          "path": "color.chip.book.text",
+          "kind": "color",
+          "light": "#0e6b7d",
+          "dark": "#7FD0DE"
+        },
+        {
+          "path": "color.chip.danger.bg",
+          "kind": "color",
+          "light": "rgba(255, 77, 79, 0.08)",
+          "dark": "rgba(255, 77, 79, 0.16)"
+        },
+        {
+          "path": "color.chip.danger.border",
+          "kind": "color",
+          "light": "rgba(255, 77, 79, 0.22)",
+          "dark": "rgba(255, 77, 79, 0.3)"
+        },
+        {
+          "path": "color.chip.danger.text",
+          "kind": "color",
+          "light": "#D9373e",
+          "dark": "#FF8E8E"
+        },
+        {
+          "path": "color.chip.entryType.bg",
+          "kind": "color",
+          "light": "rgba(192, 65, 94, 0.08)",
+          "dark": "rgba(192, 65, 94, 0.18)"
+        },
+        {
+          "path": "color.chip.entryType.border",
+          "kind": "color",
+          "light": "rgba(192, 65, 94, 0.22)",
+          "dark": "rgba(192, 65, 94, 0.32)"
+        },
+        {
+          "path": "color.chip.entryType.text",
+          "kind": "color",
+          "light": "#c0415e",
+          "dark": "#E89BAC"
+        },
+        {
+          "path": "color.chip.info.bg",
+          "kind": "color",
+          "light": "rgba(23, 119, 255, 0.08)",
+          "dark": "rgba(54, 150, 254, 0.18)"
+        },
+        {
+          "path": "color.chip.info.border",
+          "kind": "color",
+          "light": "rgba(23, 119, 255, 0.24)",
+          "dark": "rgba(54, 150, 254, 0.36)"
+        },
+        {
+          "path": "color.chip.info.text",
+          "kind": "color",
+          "light": "#0758d9",
+          "dark": "#87BAFF"
+        },
+        {
+          "path": "color.chip.neutral.bg",
+          "kind": "color",
+          "light": "rgba(110, 110, 110, 0.08)",
+          "dark": "rgba(156, 161, 171, 0.16)"
+        },
+        {
+          "path": "color.chip.neutral.border",
+          "kind": "color",
+          "light": "rgba(110, 110, 110, 0.22)",
+          "dark": "rgba(156, 161, 171, 0.3)"
+        },
+        {
+          "path": "color.chip.neutral.text",
+          "kind": "color",
+          "light": "#6E6E6E",
+          "dark": "#9CA1AB"
+        },
+        {
+          "path": "color.chip.rating.bg",
+          "kind": "color",
+          "light": "rgba(181,69,27,0.08)",
+          "dark": "rgba(181,69,27,0.18)"
+        },
+        {
+          "path": "color.chip.rating.border",
+          "kind": "color",
+          "light": "rgba(181,69,27,0.22)",
+          "dark": "rgba(181,69,27,0.32)"
+        },
+        {
+          "path": "color.chip.rating.text",
+          "kind": "color",
+          "light": "#b5451b",
+          "dark": "#F2A07B"
+        },
+        {
+          "path": "color.chip.series.bg",
+          "kind": "color",
+          "light": "rgba(26,95,168,0.08)",
+          "dark": "rgba(96,165,250,0.16)"
+        },
+        {
+          "path": "color.chip.series.border",
+          "kind": "color",
+          "light": "rgba(26,95,168,0.22)",
+          "dark": "rgba(96,165,250,0.30)"
+        },
+        {
+          "path": "color.chip.series.text",
+          "kind": "color",
+          "light": "#1a5fa8",
+          "dark": "#8EC3F5"
+        },
+        {
+          "path": "color.chip.status.bg",
+          "kind": "color",
+          "light": "rgba(109,63,192,0.08)",
+          "dark": "rgba(167,139,250,0.16)"
+        },
+        {
+          "path": "color.chip.status.border",
+          "kind": "color",
+          "light": "rgba(109,63,192,0.22)",
+          "dark": "rgba(167,139,250,0.30)"
+        },
+        {
+          "path": "color.chip.status.text",
+          "kind": "color",
+          "light": "#6d3fc0",
+          "dark": "#C9B0F2"
+        },
+        {
+          "path": "color.chip.subject.bg",
+          "kind": "color",
+          "light": "rgba(138,94,0,0.08)",
+          "dark": "rgba(217,168,67,0.16)"
+        },
+        {
+          "path": "color.chip.subject.border",
+          "kind": "color",
+          "light": "rgba(138,94,0,0.22)",
+          "dark": "rgba(217,168,67,0.30)"
+        },
+        {
+          "path": "color.chip.subject.text",
+          "kind": "color",
+          "light": "#8a5e00",
+          "dark": "#E8C879"
+        },
+        {
+          "path": "color.chip.success.bg",
+          "kind": "color",
+          "light": "rgba(22, 163, 74, 0.08)",
+          "dark": "rgba(34, 197, 94, 0.16)"
+        },
+        {
+          "path": "color.chip.success.border",
+          "kind": "color",
+          "light": "rgba(22, 163, 74, 0.22)",
+          "dark": "rgba(34, 197, 94, 0.3)"
+        },
+        {
+          "path": "color.chip.success.text",
+          "kind": "color",
+          "light": "#15803d",
+          "dark": "#86EFAC"
+        },
+        {
+          "path": "color.chip.user.bg",
+          "kind": "color",
+          "light": "rgba(162,58,149,0.08)",
+          "dark": "rgba(162,58,149,0.16)"
+        },
+        {
+          "path": "color.chip.user.border",
+          "kind": "color",
+          "light": "rgba(162,58,149,0.22)",
+          "dark": "rgba(162,58,149,0.30)"
+        },
+        {
+          "path": "color.chip.user.text",
+          "kind": "color",
+          "light": "#a23a95",
+          "dark": "#E7A6DA"
+        },
+        {
+          "path": "color.chip.warning.bg",
+          "kind": "color",
+          "light": "rgba(234,179,8,0.16)",
+          "dark": "rgba(234,179,8,0.20)"
+        },
+        {
+          "path": "color.chip.warning.border",
+          "kind": "color",
+          "light": "rgba(202,138,4,0.40)",
+          "dark": "rgba(234,179,8,0.42)"
+        },
+        {
+          "path": "color.chip.warning.text",
+          "kind": "color",
+          "light": "#854d0e",
+          "dark": "#FDE047"
+        },
+        {
+          "path": "color.danger.default",
+          "kind": "color",
+          "light": "#FF4D4F",
+          "dark": "#FF4D4F"
+        },
+        {
+          "path": "color.text.muted",
+          "kind": "color",
+          "light": "#6E6E6E",
+          "dark": "#9CA1AB"
+        },
+        {
+          "path": "color.text.primary",
+          "kind": "color",
+          "light": "#111",
+          "dark": "#F5F5F7"
+        },
+        {
+          "path": "fontSize.md",
+          "kind": "value",
+          "light": "0.875rem",
+          "dark": "0.875rem"
+        },
+        {
+          "path": "fontSize.sm",
+          "kind": "value",
+          "light": "0.75rem",
+          "dark": "0.75rem"
+        },
+        {
+          "path": "fontWeight.medium",
+          "kind": "value",
+          "light": "500",
+          "dark": "500"
+        },
+        {
+          "path": "layout.controlHeight",
+          "kind": "value",
+          "light": "2.0625rem",
+          "dark": "2.0625rem"
+        },
+        {
+          "path": "lineHeight.tight",
+          "kind": "value",
+          "light": "1",
+          "dark": "1"
+        },
+        {
+          "path": "radius.md",
+          "kind": "value",
+          "light": "8px",
+          "dark": "8px"
+        },
+        {
+          "path": "radius.sm",
+          "kind": "value",
+          "light": "4px",
+          "dark": "4px"
+        },
+        {
+          "path": "recipe.label",
+          "kind": "recipe",
+          "light": null,
+          "dark": null
+        },
+        {
+          "path": "shadow.hoverLift",
+          "kind": "value",
+          "light": "0 2px 8px rgba(0,0,0,0.15)",
+          "dark": "0 2px 8px rgba(0,0,0,0.6)"
+        },
+        {
+          "path": "space.md",
+          "kind": "value",
+          "light": "0.5rem",
+          "dark": "0.5rem"
+        },
+        {
+          "path": "space.sm",
+          "kind": "value",
+          "light": "0.375rem",
+          "dark": "0.375rem"
+        },
+        {
+          "path": "space.xl",
+          "kind": "value",
+          "light": "0.75rem",
+          "dark": "0.75rem"
+        },
+        {
+          "path": "space.xs",
+          "kind": "value",
+          "light": "0.25rem",
+          "dark": "0.25rem"
+        },
+        {
+          "path": "space.xxs",
+          "kind": "value",
+          "light": "0.125rem",
+          "dark": "0.125rem"
+        }
+      ],
+      "changelog": [
+        {
+          "version": "0.3.0",
+          "date": "2026-11-22",
+          "tags": [
+            "Popover",
+            "Select",
+            "ChipsInput",
+            "Dialog"
+          ],
+          "text": "`Popover` renders inside an open `<dialog>` that contains its anchor, so `Select` and `ChipsInput` work in modals."
+        },
+        {
+          "version": "0.1.0",
+          "date": "2026-11-21",
+          "tags": [
+            "Popover",
+            "Select",
+            "ChipsInput"
+          ],
+          "text": "`Popover`:\n  - `side` (`bottom`/`top`) and `align` (`start`/`center`/`end`).\n  - Flips when the preferred side has no room.\n  - Stays inside the viewport horizontally, unless `matchWidth` (then it lines up with the anchor exactly).\n  - On the top side it is anchored by its bottom edge, and it re-measures when its content resizes (`ResizeObserver`), so it stays attached as content grows or shrinks.\n  - The provisional first render is transparent rather than hidden, so an `autoFocus` child takes focus.\n  - Exposes `data-side`.\n  - Escape calls `onClose` unless already handled, without closing a surrounding dialog.\n  - Defaults keep the same position when there is room below; `Select` and `ChipsInput` now open upward near the bottom of the viewport."
+        }
+      ]
+    },
+    {
       "id": "control/date-time-input",
       "slug": "date-time-input",
       "entry": "@korzun/design/control",
