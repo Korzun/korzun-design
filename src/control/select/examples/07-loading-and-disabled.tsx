@@ -1,39 +1,29 @@
 /** Loading and disabled
- * `loading` shows a spinner and "Loading…" and the select can't open; here it
- * clears when the options arrive. `disabled` fades it, hides the ✕ and blocks opening.
+ * `loading` shows a spinner and "Loading…" in place of the value, and the select
+ * can't open; turn it on while the options are on their way. `disabled` fades it,
+ * hides the ✕ and blocks opening.
  */
-import { Inline, Stack } from '@korzun/design/component';
-import { Button, Select } from '@korzun/design/control';
+import { Stack } from '@korzun/design/component';
+import { Select, Switch } from '@korzun/design/control';
 import { useState } from 'react';
 
+const AUTHORS = ['Ursula K. Le Guin', 'Terry Pratchett', 'N. K. Jemisin'];
+
 export default function LoadingAndDisabled() {
-  const [loading, setLoading] = useState(false);
-  const [options, setOptions] = useState<string[]>([]);
-  const [author, setAuthor] = useState<string | undefined>();
-  const load = () => {
-    setLoading(true);
-    setTimeout(() => {
-      setOptions(['Ursula K. Le Guin', 'Terry Pratchett', 'N. K. Jemisin']);
-      setLoading(false);
-    }, 1200);
-  };
+  const [loading, setLoading] = useState(true);
+  const [author, setAuthor] = useState<string | undefined>('Terry Pratchett');
   return (
     <Stack>
-      <Inline>
-        <Button disabled={loading || options.length > 0} onClick={load}>
-          Load authors
-        </Button>
-      </Inline>
+      <Switch name="loading" label="Loading" checked={loading} onChange={setLoading} />
       <Select
         name="author"
         label="Author"
-        placeholder="No authors yet"
         value={author}
-        options={options}
+        options={AUTHORS}
         loading={loading}
         onChange={setAuthor}
       />
-      <Select name="locked" label="Disabled" value="Terry Pratchett" options={options} disabled />
+      <Select name="locked" label="Disabled" value="N. K. Jemisin" options={AUTHORS} disabled />
     </Stack>
   );
 }
