@@ -21,14 +21,16 @@ export type PageProps = PropsWithChildren<{
    */
   type?: PageTypeValue;
   /**
-   * Route path for the back button, which shows on mobile only. It navigates to the path (a new
-   * history entry) and asks the destination to restore its scroll position; needs a react-router
-   * router above the page.
+   * Route path for the back button, which shows on mobile only. It navigates to the path with
+   * `state: { restoreScroll: true }` (a new history entry); needs a react-router router above the
+   * page.
    */
   back?: string;
   /**
-   * Page-level actions. On desktop `primary` items are buttons and the rest sit in a "More…"
-   * menu; on mobile all of them sit in a floating menu next to the back button.
+   * Page-level actions (type from `@korzun/design/control`; shape in
+   * [PageActionItem](../control/page-actions-menu.md#pageactionitem)). On desktop `primary` items
+   * are buttons and the rest sit in a "More…" menu; on mobile all of them sit in a floating menu
+   * next to the back button.
    */
   headerActions?: PageActionItem[];
   /**
@@ -41,7 +43,11 @@ export type PageProps = PropsWithChildren<{
    * `minimal`. See [Header slot](#header-slot).
    */
   header?: React.ReactNode;
-  /** Buttons in a row after the children, rendered as a [PageFooterActions](../control/page-footer-actions.md) row. Not sticky. */
+  /**
+   * Buttons in a row after the children (type from `@korzun/design/control`; shape in
+   * [FooterAction](../control/page-footer-actions.md#footeraction)), rendered as a
+   * `PageFooterActions` row. Not sticky.
+   */
   footerActions?: FooterAction[];
   /**
    * Sets `document.title` when given. The title is not restored on unmount, so leave it out when

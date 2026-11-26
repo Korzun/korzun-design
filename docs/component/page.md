@@ -188,25 +188,31 @@ export default function FooterActions() {
 ### Back and actions on mobile
 
 On a phone `back` shows a round back button and `headerActions` collapses into
-one "More actions" menu beside it, in a sticky row at the top. The back button
-goes to the given path, so pressing it navigates the demo away.
+one "More actions" menu beside it, in a sticky row at the top. The `header`
+content, a search field here, leads the page content.
 
 ```tsx
-import { Card, Page, Text } from '@korzun/design/component';
+import { Card, Page, Stack, Text } from '@korzun/design/component';
+import { TextInput } from '@korzun/design/control';
 import { useState } from 'react';
 
 export default function BackAndActionsOnMobile() {
+  const [query, setQuery] = useState<string | undefined>('');
   const [last, setLast] = useState('nothing yet');
   return (
     <Page
       back="/library"
+      header={<TextInput name="search" placeholder="Search" value={query} onChange={setQuery} />}
       headerActions={[
         { label: 'Edit', onClick: () => setLast('Edit'), primary: true },
         { label: 'Delete', onClick: () => setLast('Delete'), danger: true, separatorBefore: true },
       ]}
     >
       <Card title="Dune">
-        <Text>Last action: {last}</Text>
+        <Stack>
+          <Text>Searching for: {query || 'nothing'}</Text>
+          <Text tone="muted">Last action: {last}</Text>
+        </Stack>
       </Card>
     </Page>
   );
@@ -315,12 +321,12 @@ export default function DocumentTitle() {
 | --- | --- | --- | --- |
 | `children` | `React.ReactNode` |  | The screen's content, usually one `Card` per feature. Direct children get the column gap. |
 | `actionsLabel` | `string` | `'More…'` | Label of the desktop overflow trigger, e.g. "Actions" when every action lives in the menu. |
-| `back` | `string` |  | Route path for the back button, which shows on mobile only. It navigates to the path (a new history entry) and asks the destination to restore its scroll position; needs a react-router router above the page. |
+| `back` | `string` |  | Route path for the back button, which shows on mobile only. It navigates to the path with `state: { restoreScroll: true }` (a new history entry); needs a react-router router above the page. |
 | `bottomNav` | `boolean` | `false` | Mobile only: reserves space under the content for a floating `NavMobile`. |
 | `documentTitle` | `string` |  | Sets `document.title` when given. The title is not restored on unmount, so leave it out when the app manages the title itself. |
-| `footerActions` | `FooterAction[]` |  | Buttons in a row after the children, rendered as a [PageFooterActions](../control/page-footer-actions.md) row. Not sticky. |
+| `footerActions` | `FooterAction[]` |  | Buttons in a row after the children (type from `@korzun/design/control`; shape in [FooterAction](../control/page-footer-actions.md#footeraction)), rendered as a `PageFooterActions` row. Not sticky. |
 | `header` | `React.ReactNode` |  | Content for the header row, leading the desktop actions bar in the same row; ignored on `minimal`. See [Header slot](#header-slot). |
-| `headerActions` | `PageActionItem[]` |  | Page-level actions. On desktop `primary` items are buttons and the rest sit in a "More…" menu; on mobile all of them sit in a floating menu next to the back button. |
+| `headerActions` | `PageActionItem[]` |  | Page-level actions (type from `@korzun/design/control`; shape in [PageActionItem](../control/page-actions-menu.md#pageactionitem)). On desktop `primary` items are buttons and the rest sit in a "More…" menu; on mobile all of them sit in a floating menu next to the back button. |
 | `type` | `'default' \| 'minimal'` | `'default'` | `'minimal'` drops all layout styles (no width, margin, padding or gap) and the header row, for a screen with no chrome such as a sign-in. |
 
 ### Types
