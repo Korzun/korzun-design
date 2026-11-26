@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router';
 
 import { CATEGORIES } from '../../scripts/docs-gen/categories.mjs';
-import { siteData } from '../data.js';
+import { moduleOwner, siteData } from '../data.js';
 import { DESKTOP_WIDTH, MOBILE_WIDTH } from '../frame-url.js';
 import { Thumbnail } from '../part/thumbnail.js';
 import { OverviewPage } from './overview.js';
@@ -48,7 +48,7 @@ describe('OverviewPage', () => {
     const button = siteData.modules.find((m) => m.slug === 'button')!;
     const { container } = render(
       <ThemeProvider identity="test">
-        <Thumbnail mod={{ ...button, preview: undefined }} />
+        <Thumbnail owner={moduleOwner({ ...button, preview: undefined })} />
       </ThemeProvider>
     );
     expect(container.querySelector('iframe')!.getAttribute('src')).toMatch(
@@ -60,8 +60,10 @@ describe('OverviewPage', () => {
     const button = siteData.modules.find((m) => m.slug === 'button')!;
     const { container } = render(
       <ThemeProvider identity="test">
-        <Thumbnail mod={{ ...button, preview: { ...button.preview!, viewport: 'mobile' } }} />
-        <Thumbnail mod={button} />
+        <Thumbnail
+          owner={moduleOwner({ ...button, preview: { ...button.preview!, viewport: 'mobile' } })}
+        />
+        <Thumbnail owner={moduleOwner(button)} />
       </ThemeProvider>
     );
     const [phone, wide] = container.querySelectorAll('iframe');
@@ -75,7 +77,7 @@ describe('OverviewPage', () => {
     expect(bar.preview?.viewport).toBe('desktop');
     const { container } = render(
       <ThemeProvider identity="test">
-        <Thumbnail mod={bar} />
+        <Thumbnail owner={moduleOwner(bar)} />
       </ThemeProvider>
     );
     const frame = container.querySelector('iframe')!;

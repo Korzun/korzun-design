@@ -1,5 +1,5 @@
 {
-  "version": "0.6.0",
+  "version": "0.7.0",
   "modules": [
     {
       "id": "control/back-button",
@@ -1162,7 +1162,7 @@
       ],
       "changelog": [
         {
-          "version": "0.6.0",
+          "version": "0.7.0",
           "date": "2026-11-26",
           "tags": [
             "TextInput",
@@ -1174,7 +1174,7 @@
             "Tag",
             "Switch"
           ],
-          "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.5.2 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px."
+          "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.6.0 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px."
         },
         {
           "version": "0.3.0",
@@ -1547,7 +1547,7 @@
       ],
       "changelog": [
         {
-          "version": "0.6.0",
+          "version": "0.7.0",
           "date": "2026-11-26",
           "tags": [
             "TextInput",
@@ -1559,7 +1559,7 @@
             "Tag",
             "Switch"
           ],
-          "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.5.2 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px."
+          "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.6.0 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px."
         }
       ]
     },
@@ -2743,7 +2743,7 @@
       ],
       "changelog": [
         {
-          "version": "0.6.0",
+          "version": "0.7.0",
           "date": "2026-11-26",
           "tags": [
             "TextInput",
@@ -2755,7 +2755,7 @@
             "Tag",
             "Switch"
           ],
-          "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.5.2 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px."
+          "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.6.0 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px."
         },
         {
           "version": "0.5.2",
@@ -4310,7 +4310,7 @@
       ],
       "changelog": [
         {
-          "version": "0.6.0",
+          "version": "0.7.0",
           "date": "2026-11-26",
           "tags": [
             "TextInput",
@@ -4322,7 +4322,7 @@
             "Tag",
             "Switch"
           ],
-          "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.5.2 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px."
+          "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.6.0 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px."
         }
       ]
     },
@@ -4584,7 +4584,7 @@
       ],
       "changelog": [
         {
-          "version": "0.6.0",
+          "version": "0.7.0",
           "date": "2026-11-26",
           "tags": [
             "TextInput",
@@ -4596,7 +4596,7 @@
             "Tag",
             "Switch"
           ],
-          "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.5.2 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px."
+          "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.6.0 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px."
         },
         {
           "version": "0.0.6",
@@ -4887,7 +4887,7 @@
       ],
       "changelog": [
         {
-          "version": "0.6.0",
+          "version": "0.7.0",
           "date": "2026-11-26",
           "tags": [
             "TextInput",
@@ -4899,7 +4899,7 @@
             "Tag",
             "Switch"
           ],
-          "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.5.2 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px."
+          "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.6.0 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px."
         },
         {
           "version": "0.5.2",
@@ -5247,7 +5247,7 @@
       ],
       "changelog": [
         {
-          "version": "0.6.0",
+          "version": "0.7.0",
           "date": "2026-11-26",
           "tags": [
             "TextInput",
@@ -5259,7 +5259,7 @@
             "Tag",
             "Switch"
           ],
-          "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.5.2 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px."
+          "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.6.0 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px."
         },
         {
           "version": "0.5.2",
@@ -9022,7 +9022,7 @@
       ],
       "changelog": [
         {
-          "version": "0.6.0",
+          "version": "0.7.0",
           "date": "2026-11-26",
           "tags": [
             "TextInput",
@@ -9034,7 +9034,7 @@
             "Tag",
             "Switch"
           ],
-          "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.5.2 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px."
+          "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.6.0 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px."
         },
         {
           "version": "0.1.0",
@@ -9535,7 +9535,7 @@
         "ThemeSetting"
       ],
       "importLine": "import { GlobalStyles, ThemeProvider, createUseStyles, darkTheme, lightTheme, useTheme, useThemeGlobalStyles, useThemeSetting, type SpaceValue, type Theme, type ThemeMode, type ThemeProviderProps, type ThemeSetting } from '@korzun/design/theme'",
-      "body": "Every visual value comes from the theme. App styles use `createUseStyles` (the\nsame function react-jss exports, re-exported here) with a typed `theme`\nargument. Don't add another CSS-in-JS library, and don't write literal colours,\nspacing, font sizes, or radii.\n\nUse something else for: a ready-made light/dark/auto picker (`ThemeSetting`),\nthe full list of token keys ([tokens](tokens.md)).\n\n## Usage\n\n### Setup\n\n```tsx\n<ThemeProvider identity={userId /* or null when signed out */}>\n  <ToastProvider>{app}</ToastProvider>\n</ThemeProvider>\n```\n\n- `ThemeProvider` renders `GlobalStyles`: a reset (every element\n  `box-sizing: border-box` with no default margin or padding; components are\n  sized against it), the page background, the body font,\n  a 16px input floor on iOS, scroll lock while a `<dialog>` is open, and the\n  `theme-rotation` and `theme-slide-*` keyframes. Don't render\n  `GlobalStyles` yourself, or `useThemeGlobalStyles()`, the hook it calls.\n- `lightTheme` / `darkTheme` are the two concrete themes (for tests).\n\n### `useThemeSetting()`\n\n```ts\nuseThemeSetting(): [ThemeSetting, (setting: ThemeSetting) => void]\n```\n\nReturns `[setting, setSetting]`, where `ThemeSetting` is `'light' | 'dark' |\n'auto'`. `'auto'` follows the OS `prefers-color-scheme` live. The\n`ThemeSetting` component is a ready-made picker for it. Without a\n`ThemeProvider` above it, the setter does nothing.\n\n### `useTheme()`\n\n```ts\nuseTheme(): Theme\n```\n\nReturns the current `Theme` object, for values needed outside a stylesheet.\n`theme.colorScheme` is the mode it resolved to, `'light'` or `'dark'`.\n\n### Writing styles\n\n```ts\n// style.ts, next to the component\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\nimport { applyTransparency } from '@korzun/design';\n\nexport const useStyle = createUseStyles((theme: Theme) => ({\n  root: {\n    padding: theme.space.md,\n    backgroundColor: theme.color.bg.card,\n  },\n  highlight: { backgroundColor: applyTransparency(theme.color.brand.default, 0.12) },\n  [theme.breakpoint.mobile]: { root: { padding: theme.space.sm } },\n}));\n```\n\n- Style files are for padding, borders, backgrounds, and one-offs (borders come from the border tokens). Lay out with\n  `Stack`/`Inline` and set text with `Text`/`Heading`.\n- `applyTransparency(color, alpha)` turns a hex or rgb token into an `rgba()`\n  string. Use it for tints instead of writing an rgba literal.\n- Media queries: use the `theme.breakpoint.mobile` / `.normal` strings as keys.\n\n### Tokens\n\nThe token groups (`color`, `space`, `radius`, `fontSize`, `shadow`, `zIndex`,\n`breakpoint` and the rest) are listed key by key in [tokens](tokens.md). Use the\nsemantic tokens, never the primitive `gray`, `blue` and `red` scales. Radii are\nchosen by nesting depth; see [corners](corners.md).\n\n| Group | Keys | Notes |\n|---|---|---|\n| `color.text` | `primary`, `secondary`, `muted`, `faint`, `description`, `onPrimary`, `onDanger` | `muted` for labels and meta, `faint` for placeholders |\n| `color.bg` | `page`, `card`, `cardHeader`, `track`, `input`, `footer`, `glass`, `glassFallback`, `glassActive`, `selected`, `hover`, `success`, `placeholder` | `cardHeader` is also the shaded-row and inset-box fill; `hover` is a translucent scrim |\n| `color.border` | `default`, `strong`, `light`, `focus`, `hover`, `danger`, `glass`, `glassActive`, `faint`, `loading`, `success`, `section` | Cards and dividers use `strong`; inputs use `default` |\n| `color.brand` | `default`, `hover`, `active`, `light`, `outline`, `loading*`, `linkHover` | The primary action colour |\n| `color.danger` | `default`, `hover`, `active`, `light`, `outline`, `loading*` | Destructive actions and errors |\n| `color.success` | (a string) | Solid green |\n| `color.warning` | (a string) | Solid amber |\n| `color.info` | (a string) | Solid blue, the mode's `brand.default` |\n| `color.chip.<tone>` | `{ text, bg, border }` for 13 tones. Status tones: `success`, `warning`, `danger`, `info`, `neutral`. Label tones: `status`, `author`, `series`, `subject`, `book`, `entryType`, `user`, `rating` | Used by `Tag` |\n| `color.overlay` | `backdrop` | Modal backdrop |\n| `color.gray` / `blue` / `red` | primitive scales | Don't use these in app code; use the semantic tokens above |\n| `space` | `xxxs` 0.1rem, `xxs` 0.125, `xs` 0.25, `sm` 0.375, `md` 0.5, `lg` 0.625, `xl` 0.75, `xxl` 1, `xxxl` 1.25, `xxxxl` 1.5, `xxxxxl` 2rem | `md` is the default gap between stacked fields |\n| `radius` | `sm` 4px, `md` 8px, `lg` 16px, `circle`, `pill` | Chosen by nesting depth; see [corners](corners.md) |\n| `fontSize` | `xxs` 0.6rem, `xs` 0.7, `sm` 0.75, `md` 0.875, `lg` 1, `xl` 1.25, `xxl` 1.75rem | Control text is `'0.80rem'`, the one sanctioned literal (already applied by `recipe.input` and Button) |\n| `fontWeight` | `regular` 400, `medium` 500, `semibold` 600, `bold` 700, `extrabold` 800 | |\n| `lineHeight` | `tight` 1, `body` 1.3 | |\n| `fontFamily` | `body`, `mono` | |\n| `shadow` | `card`, `cardStack`, `hoverLift`, `dangerStack`, `brandStack`, `glass`, `glassActive` | Floating layers use `hoverLift` |\n| `transition` | `fast`, `medium`, `slide`, `slow`, `spring` | Values like `'0.2s ease-in'` |\n| `zIndex` | `behind`, `base`, `stack.{lo,md,hi}`, `header`, `sticky`, `toast` | |\n| `breakpoint` | `mobile` (≤640px), `normal` | Media query strings |\n| `layout` | `navHeightMobile`, `modalWidth`, `controlHeight`, `floatingControlTopBase` | Measured chrome sizes to lay out around |\n| `size` | `metadataValue` | |\n\n### Recipes\n\nRecipes are style fragments that you spread into a rule: `{ ...theme.recipe.input }`.\n\n| Recipe | Gives you |\n|---|---|\n| `recipe.input` | Text-input chrome: font, `md` radius, border, hover and focus colours, iOS 16px floor; `&$danger` turns the border red if your sheet declares a `danger: {}` class |\n| `recipe.label` | Field label: semibold, `md`, muted; `&$danger` |\n| `recipe.focusRing` | Transparent 2px outline; set `outlineColor: theme.color.brand.outline` on `'&:focus'` |\n| `recipe.spinner` | 1em rotating box. `Spinner` is the normal way to show a spinner; use the recipe only for a custom rotating element |\n| `recipe.glass` / `glassHighlight` | Frosted translucent surface (floating chrome) and its active state |\n| `recipe.row` | The shaded field row a control sits in inside a card: `bg.cardHeader`, `md` corners, padding `md lg md sm`. Use it for custom rows next to form fields |\n| `recipe.card.shell` / `header` / `footer` | The Card surface (`lg`), its header bar, and its footer bar |\n| `recipe.modal.dialog` / `header` / `footer` | A `<dialog>` surface (`lg`, shared width, backdrop), its title, and its button bar |\n\nRecipes that use `$name` references need an empty class with that name in the\nsame sheet (`danger: {}`).\n\n## Do / don't\n\n- Do style with `theme.*` tokens and `createUseStyles`.\n- Do use `applyTransparency` for a tint instead of an rgba literal.\n- Don't render `GlobalStyles` yourself; `ThemeProvider` does.\n- Don't use the primitive `gray`, `blue` and `red` scales in app code.",
+      "body": "Every visual value comes from the theme. App styles use `createUseStyles` (the\nsame function react-jss exports, re-exported here) with a typed `theme`\nargument. Don't add another CSS-in-JS library, and don't write literal colours,\nspacing, font sizes, or radii.\n\nUse something else for: a ready-made light/dark/auto picker (`ThemeSetting`),\nthe full list of token keys ([tokens](tokens.md)).\n\n## Usage\n\n### Setup\n\n```tsx\n<ThemeProvider identity={userId /* or null when signed out */}>\n  <ToastProvider>{app}</ToastProvider>\n</ThemeProvider>\n```\n\n- `ThemeProvider` renders `GlobalStyles`: the page background, the body font,\n  a 16px input floor on iOS, scroll lock while a `<dialog>` is open, and the\n  `theme-rotation` and `theme-slide-*` keyframes. Don't render\n  `GlobalStyles` yourself, or `useThemeGlobalStyles()`, the hook it calls.\n- `lightTheme` / `darkTheme` are the two concrete themes (for tests).\n\n### `useThemeSetting()`\n\n```ts\nuseThemeSetting(): [ThemeSetting, (setting: ThemeSetting) => void]\n```\n\nReturns `[setting, setSetting]`, where `ThemeSetting` is `'light' | 'dark' |\n'auto'`. `'auto'` follows the OS `prefers-color-scheme` live. The\n`ThemeSetting` component is a ready-made picker for it. Without a\n`ThemeProvider` above it, the setter does nothing.\n\n### `useTheme()`\n\n```ts\nuseTheme(): Theme\n```\n\nReturns the current `Theme` object, for values needed outside a stylesheet.\n`theme.colorScheme` is the mode it resolved to, `'light'` or `'dark'`.\n\n### Writing styles\n\n```ts\n// style.ts, next to the component\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\nimport { applyTransparency } from '@korzun/design';\n\nexport const useStyle = createUseStyles((theme: Theme) => ({\n  root: {\n    padding: theme.space.md,\n    backgroundColor: theme.color.bg.card,\n  },\n  highlight: { backgroundColor: applyTransparency(theme.color.brand.default, 0.12) },\n  [theme.breakpoint.mobile]: { root: { padding: theme.space.sm } },\n}));\n```\n\n- Style files are for padding, borders, backgrounds, and one-offs (borders come from the border tokens). Lay out with\n  `Stack`/`Inline` and set text with `Text`/`Heading`.\n- `applyTransparency(color, alpha)` turns a hex or rgb token into an `rgba()`\n  string. Use it for tints instead of writing an rgba literal.\n- Media queries: use the `theme.breakpoint.mobile` / `.normal` strings as keys.\n\n### Tokens\n\nThe token groups (`color`, `space`, `radius`, `fontSize`, `shadow`, `zIndex`,\n`breakpoint` and the rest) are listed key by key in [tokens](tokens.md). Use the\nsemantic tokens, never the primitive `gray`, `blue` and `red` scales. Radii are\nchosen by nesting depth; see [corners](corners.md).\n\n| Group | Keys | Notes |\n|---|---|---|\n| `color.text` | `primary`, `secondary`, `muted`, `faint`, `description`, `onPrimary`, `onDanger` | `muted` for labels and meta, `faint` for placeholders |\n| `color.bg` | `page`, `card`, `cardHeader`, `track`, `input`, `footer`, `glass`, `glassFallback`, `glassActive`, `selected`, `hover`, `success`, `placeholder` | `cardHeader` is also the shaded-row and inset-box fill; `hover` is a translucent scrim |\n| `color.border` | `default`, `strong`, `light`, `focus`, `hover`, `danger`, `glass`, `glassActive`, `faint`, `loading`, `success`, `section` | Cards and dividers use `strong`; inputs use `default` |\n| `color.brand` | `default`, `hover`, `active`, `light`, `outline`, `loading*`, `linkHover` | The primary action colour |\n| `color.danger` | `default`, `hover`, `active`, `light`, `outline`, `loading*` | Destructive actions and errors |\n| `color.success` | (a string) | Solid green |\n| `color.warning` | (a string) | Solid amber |\n| `color.info` | (a string) | Solid blue, the mode's `brand.default` |\n| `color.chip.<tone>` | `{ text, bg, border }` for 13 tones. Status tones: `success`, `warning`, `danger`, `info`, `neutral`. Label tones: `status`, `author`, `series`, `subject`, `book`, `entryType`, `user`, `rating` | Used by `Tag` |\n| `color.overlay` | `backdrop` | Modal backdrop |\n| `color.gray` / `blue` / `red` | primitive scales | Don't use these in app code; use the semantic tokens above |\n| `space` | `xxxs` 0.1rem, `xxs` 0.125, `xs` 0.25, `sm` 0.375, `md` 0.5, `lg` 0.625, `xl` 0.75, `xxl` 1, `xxxl` 1.25, `xxxxl` 1.5, `xxxxxl` 2rem | `md` is the default gap between stacked fields |\n| `radius` | `sm` 4px, `md` 8px, `lg` 16px, `circle`, `pill` | Chosen by nesting depth; see [corners](corners.md) |\n| `fontSize` | `xxs` 0.6rem, `xs` 0.7, `sm` 0.75, `md` 0.875, `lg` 1, `xl` 1.25, `xxl` 1.75rem | Control text is `'0.80rem'`, the one sanctioned literal (already applied by `recipe.input` and Button) |\n| `fontWeight` | `regular` 400, `medium` 500, `semibold` 600, `bold` 700, `extrabold` 800 | |\n| `lineHeight` | `tight` 1, `body` 1.3 | |\n| `fontFamily` | `body`, `mono` | |\n| `shadow` | `card`, `cardStack`, `hoverLift`, `dangerStack`, `brandStack`, `glass`, `glassActive` | Floating layers use `hoverLift` |\n| `transition` | `fast`, `medium`, `slide`, `slow`, `spring` | Values like `'0.2s ease-in'` |\n| `zIndex` | `behind`, `base`, `stack.{lo,md,hi}`, `header`, `sticky`, `toast` | |\n| `breakpoint` | `mobile` (≤640px), `normal` | Media query strings |\n| `layout` | `navHeightMobile`, `modalWidth`, `controlHeight`, `floatingControlTopBase` | Measured chrome sizes to lay out around |\n| `size` | `metadataValue` | |\n\n### Recipes\n\nRecipes are style fragments that you spread into a rule: `{ ...theme.recipe.input }`.\n\n| Recipe | Gives you |\n|---|---|\n| `recipe.input` | Text-input chrome: font, `md` radius, border, hover and focus colours, iOS 16px floor; `&$danger` turns the border red if your sheet declares a `danger: {}` class |\n| `recipe.label` | Field label: semibold, `md`, muted; `&$danger` |\n| `recipe.focusRing` | Transparent 2px outline; set `outlineColor: theme.color.brand.outline` on `'&:focus'` |\n| `recipe.spinner` | 1em rotating box. `Spinner` is the normal way to show a spinner; use the recipe only for a custom rotating element |\n| `recipe.glass` / `glassHighlight` | Frosted translucent surface (floating chrome) and its active state |\n| `recipe.row` | The shaded field row a control sits in inside a card: `bg.cardHeader`, `md` corners, padding `md lg md sm`. Use it for custom rows next to form fields |\n| `recipe.card.shell` / `header` / `footer` | The Card surface (`lg`), its header bar, and its footer bar |\n| `recipe.modal.dialog` / `header` / `footer` | A `<dialog>` surface (`lg`, shared width, backdrop), its title, and its button bar |\n\nRecipes that use `$name` references need an empty class with that name in the\nsame sheet (`danger: {}`).\n\n## Do / don't\n\n- Do style with `theme.*` tokens and `createUseStyles`.\n- Do use `applyTransparency` for a tint instead of an rgba literal.\n- Don't render `GlobalStyles` yourself; `ThemeProvider` does.\n- Don't use the primitive `gray`, `blue` and `red` scales in app code.",
       "examples": [
         {
           "file": "src/theme/examples/01-styles.tsx",
@@ -9632,7 +9632,7 @@
             },
             {
               "name": "layout",
-              "type": "{ navHeightMobile: string; modalWidth: string; controlHeight: string; floatingControlTopBase: string; }",
+              "type": "{ navHeightMobile, modalWidth, formWidth, controlHeight, floatingControlTopBase }",
               "required": true,
               "description": ""
             },
@@ -9711,13 +9711,22 @@
       "tokens": [],
       "changelog": [
         {
-          "version": "0.6.0",
+          "version": "0.7.0",
           "date": "2026-11-26",
           "tags": [
             "ThemeProvider",
             "GlobalStyles"
           ],
           "text": "`GlobalStyles` (rendered by `ThemeProvider`) ships the reset the components are drawn against: every element is `box-sizing: border-box` with no default margin or padding, as in Bookplate's and Scribe's `index.html`. Without it a text field was 51px tall instead of `layout.controlHeight` (33px). An app that already carries this reset sees no change; one that relied on browser default margins (`p`, `h1`, `ul`) loses them."
+        },
+        {
+          "version": "0.6.0",
+          "date": "2026-11-26",
+          "tags": [
+            "lightTheme",
+            "darkTheme"
+          ],
+          "text": "New `theme.layout.formWidth` (`400px`): the width of a standalone form column such as sign-in, narrower than a dialog."
         },
         {
           "version": "0.2.0",
@@ -10165,16 +10174,36 @@
       "docPath": "docs/tokens.md",
       "title": "Tokens",
       "description": "Every theme token key in detail, group by group.",
-      "body": "Every token lives in `src/theme/theme.ts`. The `Theme` interface declares the groups; `lightTheme` and `darkTheme` are both built by `buildTheme(mode)` and share every key, differing only in values. Consumers read tokens with `useTheme()` or inside `createUseStyles((theme: Theme) => ...)`. The groups below follow the order of the `Theme` type; the key lists are taken from it.\n\nThe top-level `colorScheme` key holds the mode, `'light'` or `'dark'` (type `ThemeMode`), and is also the only non-group key of the type.\n\n## color\n\nSurfaces, text, borders and state colours, mode-aware. Keys are grouped as follows.\n\n- `color.gray`: primitive palette, steps `50 100 150 200 300 400 500 600 700 900`. Identical in both modes.\n- `color.blue`: primitive palette, steps `50 100 200 300 400 500 600 700 800`. Identical in both modes.\n- `color.red`: primitive palette, steps `50 100 300 400 500 600 700`. Identical in both modes.\n- `color.text`: `primary secondary muted faint onPrimary onDanger description`\n- `color.bg`: `page card cardHeader track input footer glass glassFallback glassActive selected hover success placeholder`. `track` must read against both `page` and `card`; `hover` is a translucent scrim; `glass*` feed `recipe.glass`.\n- `color.border`: `default strong light focus hover danger glass glassActive faint loading success section`\n- `color.success`, `color.warning`, `color.info`: a single value each.\n- `color.brand`: `default hover active light outline loading loadingHover loadingActive linkHover`\n- `color.danger`: `default hover active light outline loading loadingHover loadingActive`\n- `color.overlay`: `backdrop`\n- `color.chip`: thirteen tinted colourways, each `{ text, bg, border }`. Status tones: `success warning danger info neutral`. Label tones: `status author series subject book entryType user rating` (the `status` label tone is not a status tone). See Slated for curation.\n\n## space\n\nThe spacing scale, in `rem`: `xxxs xxs xs sm md lg xl xxl xxxl xxxxl xxxxxl` (`0.1rem` up to `2rem`).\n\n## radius\n\nCorner radii: `sm md lg circle pill` (`4px`, `8px`, `16px`, `50%`, `999px`).\n\n## size\n\nFixed component sizes that are not part of the spacing scale. One key: `metadataValue`. See Slated for curation.\n\n## layout\n\nIntrinsic sizes of chrome that other elements must lay out around. They are measured, not derived, so they are tuned on a device and kept in one place. Keys: `navHeightMobile` (the floating mobile nav, `96px`), `modalWidth` (the one width for every dialog, `500px`), `controlHeight` (the shared single-line control height, `2.0625rem`), and `floatingControlTopBase`, a position rather than a size: the `top` at which the mobile back button and actions menu pin, `max(space.xxxl, env(safe-area-inset-top) + space.xxxxl)`.\n\n## fontSize\n\nThe type scale: `xxs xs sm md lg xl xxl` (`0.6rem` up to `1.75rem`).\n\n## fontFamily\n\nTwo stacks: `body` (`system-ui, sans-serif`) and `mono`.\n\n## fontWeight\n\nNumeric weights: `regular medium semibold bold extrabold` (400, 500, 600, 700, 800).\n\n## lineHeight\n\nTwo values: `tight` (1) and `body` (1.3).\n\n## shadow\n\nMode-aware elevation. `card` is a soft one-pixel shadow (defined, with no consumer outside the theme); `cardStack`, `dangerStack` and `brandStack` are the hard `0px 2px 0px` offset shadows for cards and buttons; `hoverLift` is the elevation of floating surfaces (the toast and the select and chips-input dropdowns); `glass` and `glassActive` belong to `recipe.glass` and `recipe.glassHighlight`. Keys: `card cardStack hoverLift dangerStack brandStack glass glassActive`.\n\n## transition\n\nShorthand durations and easings: `fast medium slide slow spring`.\n\n## zIndex\n\nStacking layers: `behind base stack header sticky toast`, where `stack` is a nested `{ lo, md, hi }` (1, 2, 3). Values run from `-1` (`behind`) to `9999` (`toast`).\n\n## breakpoint\n\nMedia-query strings, ready to use as JSS keys: `mobile` (`@media (max-width: 640px)`) and `normal` (`@media (min-width: 641px)`).\n\n## recipe\n\nJSS-spreadable style fragments (`...theme.recipe.x`), not components.\n\n- `recipe.input`: the base text-field look (border, radius, hover and focus colours, 16px font on mobile).\n- `recipe.focusRing`: a transparent 2px outline that controls recolour on focus.\n- `recipe.label`: form label text, with a `$danger` variant.\n- `recipe.spinner`: a 1em rotating indicator using the `theme-rotation` keyframes.\n- `recipe.glass`: frosted, blurred chrome with a solid fallback where backdrop blur is unsupported.\n- `recipe.glassHighlight`: the active or pressed fill that sits on top of glass.\n- `recipe.row`: the shaded field row (`bg.cardHeader` fill, `radius.md`, padding `space.md space.lg space.md space.sm`) that `Switch`'s horizontal layout uses; spread it for any custom row that sits beside form fields in a card.\n- `recipe.modal.dialog`: the shared dialog shell (one width, backdrop, mobile margins and safe-area insets).\n- `recipe.modal.header`: dialog title row.\n- `recipe.modal.footer`: dialog action row.\n- `recipe.card.shell`: card container with border, radius and `shadow.cardStack`.\n- `recipe.card.header`: card title bar.\n- `recipe.card.footer`: card action row.\n\n## Slated for curation\n\nBoth groups below move into the package byte-for-byte in 0.0.1 and are due for a decision before the API settles.\n\n- `color.chip.*`: the eight label colourways (`status author series subject book entryType user rating`) are named after Bookplate's metadata chips, not after a general role.\n- `size.metadataValue`: `15rem`, a width named after Bookplate's metadata display.\n\nNo other token name or comment in `src/theme/theme.ts` is clearly Bookplate-specific. Two comments mention app internals (`floatingControlTopBase` refers to the admin picker and `router/nav-layout-style`), but the tokens themselves are generic."
+      "body": "Every token lives in `src/theme/theme.ts`. The `Theme` interface declares the groups; `lightTheme` and `darkTheme` are both built by `buildTheme(mode)` and share every key, differing only in values. Consumers read tokens with `useTheme()` or inside `createUseStyles((theme: Theme) => ...)`. The groups below follow the order of the `Theme` type; the key lists are taken from it.\n\nThe top-level `colorScheme` key holds the mode, `'light'` or `'dark'` (type `ThemeMode`), and is also the only non-group key of the type.\n\n## color\n\nSurfaces, text, borders and state colours, mode-aware. Keys are grouped as follows.\n\n- `color.gray`: primitive palette, steps `50 100 150 200 300 400 500 600 700 900`. Identical in both modes.\n- `color.blue`: primitive palette, steps `50 100 200 300 400 500 600 700 800`. Identical in both modes.\n- `color.red`: primitive palette, steps `50 100 300 400 500 600 700`. Identical in both modes.\n- `color.text`: `primary secondary muted faint onPrimary onDanger description`\n- `color.bg`: `page card cardHeader track input footer glass glassFallback glassActive selected hover success placeholder`. `track` must read against both `page` and `card`; `hover` is a translucent scrim; `glass*` feed `recipe.glass`.\n- `color.border`: `default strong light focus hover danger glass glassActive faint loading success section`\n- `color.success`, `color.warning`, `color.info`: a single value each.\n- `color.brand`: `default hover active light outline loading loadingHover loadingActive linkHover`\n- `color.danger`: `default hover active light outline loading loadingHover loadingActive`\n- `color.overlay`: `backdrop`\n- `color.chip`: thirteen tinted colourways, each `{ text, bg, border }`. Status tones: `success warning danger info neutral`. Label tones: `status author series subject book entryType user rating` (the `status` label tone is not a status tone). See Slated for curation.\n\n## space\n\nThe spacing scale, in `rem`: `xxxs xxs xs sm md lg xl xxl xxxl xxxxl xxxxxl` (`0.1rem` up to `2rem`).\n\n## radius\n\nCorner radii: `sm md lg circle pill` (`4px`, `8px`, `16px`, `50%`, `999px`).\n\n## size\n\nFixed component sizes that are not part of the spacing scale. One key: `metadataValue`. See Slated for curation.\n\n## layout\n\nIntrinsic sizes of chrome that other elements must lay out around. They are measured, not derived, so they are tuned on a device and kept in one place. Keys: `navHeightMobile` (the floating mobile nav, `96px`), `modalWidth` (the one width for every dialog, `500px`), `formWidth` (a standalone form column such as sign-in, `400px`), `controlHeight` (the shared single-line control height, `2.0625rem`), and `floatingControlTopBase`, a position rather than a size: the `top` at which the mobile back button and actions menu pin, `max(space.xxxl, env(safe-area-inset-top) + space.xxxxl)`.\n\n## fontSize\n\nThe type scale: `xxs xs sm md lg xl xxl` (`0.6rem` up to `1.75rem`).\n\n## fontFamily\n\nTwo stacks: `body` (`system-ui, sans-serif`) and `mono`.\n\n## fontWeight\n\nNumeric weights: `regular medium semibold bold extrabold` (400, 500, 600, 700, 800).\n\n## lineHeight\n\nTwo values: `tight` (1) and `body` (1.3).\n\n## shadow\n\nMode-aware elevation. `card` is a soft one-pixel shadow (defined, with no consumer outside the theme); `cardStack`, `dangerStack` and `brandStack` are the hard `0px 2px 0px` offset shadows for cards and buttons; `hoverLift` is the elevation of floating surfaces (the toast and the select and chips-input dropdowns); `glass` and `glassActive` belong to `recipe.glass` and `recipe.glassHighlight`. Keys: `card cardStack hoverLift dangerStack brandStack glass glassActive`.\n\n## transition\n\nShorthand durations and easings: `fast medium slide slow spring`.\n\n## zIndex\n\nStacking layers: `behind base stack header sticky toast`, where `stack` is a nested `{ lo, md, hi }` (1, 2, 3). Values run from `-1` (`behind`) to `9999` (`toast`).\n\n## breakpoint\n\nMedia-query strings, ready to use as JSS keys: `mobile` (`@media (max-width: 640px)`) and `normal` (`@media (min-width: 641px)`).\n\n## recipe\n\nJSS-spreadable style fragments (`...theme.recipe.x`), not components.\n\n- `recipe.input`: the base text-field look (border, radius, hover and focus colours, 16px font on mobile).\n- `recipe.focusRing`: a transparent 2px outline that controls recolour on focus.\n- `recipe.label`: form label text, with a `$danger` variant.\n- `recipe.spinner`: a 1em rotating indicator using the `theme-rotation` keyframes.\n- `recipe.glass`: frosted, blurred chrome with a solid fallback where backdrop blur is unsupported.\n- `recipe.glassHighlight`: the active or pressed fill that sits on top of glass.\n- `recipe.row`: the shaded field row (`bg.cardHeader` fill, `radius.md`, padding `space.md space.lg space.md space.sm`) that `Switch`'s horizontal layout uses; spread it for any custom row that sits beside form fields in a card.\n- `recipe.modal.dialog`: the shared dialog shell (one width, backdrop, mobile margins and safe-area insets).\n- `recipe.modal.header`: dialog title row.\n- `recipe.modal.footer`: dialog action row.\n- `recipe.card.shell`: card container with border, radius and `shadow.cardStack`.\n- `recipe.card.header`: card title bar.\n- `recipe.card.footer`: card action row.\n\n## Slated for curation\n\nBoth groups below move into the package byte-for-byte in 0.0.1 and are due for a decision before the API settles.\n\n- `color.chip.*`: the eight label colourways (`status author series subject book entryType user rating`) are named after Bookplate's metadata chips, not after a general role.\n- `size.metadataValue`: `15rem`, a width named after Bookplate's metadata display.\n\nNo other token name or comment in `src/theme/theme.ts` is clearly Bookplate-specific. Two comments mention app internals (`floatingControlTopBase` refers to the admin picker and `router/nav-layout-style`), but the tokens themselves are generic."
+    }
+  ],
+  "recipes": [
+    {
+      "slug": "login",
+      "docPath": "docs/recipes/login.md",
+      "title": "Sign in",
+      "description": "A centred sign-in card with the submit inside it and Forgot password? on the page below.",
+      "body": "A whole sign-in screen: a card with the two fields and a full-width submit,\nand a secondary action on the page below it. Copy the code, then replace the\nstubbed action with your auth call.\n\n## Why it's built this way\n\n- **One column, `formWidth` wide.** `theme.layout.formWidth` (`400px`) sets the\n  column; `maxWidth: '100%'` lets it shrink inside the page gutter on a phone.\n  The card and the button below it are both as wide as the column. See\n  [tokens](../tokens.md).\n- **Two gaps.** The fields sit `md` apart; Sign In sits `xxl` below them, and\n  the card sits `xxl` above Forgot password?. The larger gap separates the\n  action from what it acts on.\n- **The submit is inside the `<form>`.** It is `type=\"primary\" submit`, so Enter\n  in either field submits, and it shows its spinner by itself while the form\n  action runs; no `loading` state to manage.\n- **Forgot password? is outside the form and the card.** It can't submit, and on\n  the page background it is a secondary action, not part of the form.\n- **No radius props.** The card is on the page, so it takes the page radius;\n  Sign In is one level in, so it is a step squarer; Forgot password? is on the\n  page again and matches the card. See [corners](../corners.md).\n- **`autoComplete` on both fields.** `username` and `current-password` let\n  password managers fill the form; keep them when you adapt it.\n- **No label, placeholder only.** On a screen that does one thing the\n  placeholders are enough, as in Bookplate.\n\n## Wiring it up\n\n- Replace `signIn` with your auth call. It can read the fields from state, or\n  take the `FormData` the action receives (`formData.get('username')`).\n- Report failures with a toast (`useToast()`, type `error`): \"Invalid\n  credentials\", \"Too many attempts\", \"Network error\". See [toast](../toast.md).\n- Without email sign-in, use the placeholder `Username` and drop Forgot\n  password?.",
+      "examples": [
+        {
+          "file": "recipes/login/01-sign-in.tsx",
+          "slug": "sign-in",
+          "order": 1,
+          "title": "Sign in",
+          "description": "A centred sign-in card with Forgot password? below it, on the page background.",
+          "code": "import { Card, Page, Stack } from '@korzun/design/component';\nimport { Button, TextInput } from '@korzun/design/control';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\nimport { useToast } from '@korzun/design/toast';\nimport { useState } from 'react';\n\n// In your app this goes in a sibling style.ts.\nconst useStyle = createUseStyles((theme: Theme) => ({\n  // Centring a column in the viewport is the one layout Stack can't express.\n  screen: {\n    display: 'grid',\n    placeItems: 'center',\n    // A shrinkable track, so the column's maxWidth holds on a narrow screen.\n    gridTemplateColumns: 'minmax(0, 1fr)',\n    minHeight: '100vh',\n    boxSizing: 'border-box',\n    padding: `0 ${theme.space.xxl}`,\n  },\n  column: {\n    width: theme.layout.formWidth,\n    maxWidth: '100%',\n  },\n}));\n\n// Stands in for your auth call.\nconst wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));\n\nexport default function SignIn() {\n  const styles = useStyle();\n  const toast = useToast();\n  const [username, setUsername] = useState<string | undefined>();\n  const [password, setPassword] = useState<string | undefined>();\n\n  // A form action: the submit Button shows its spinner while this runs.\n  const signIn = async () => {\n    await wait(600);\n    toast('Signed in', 'success');\n  };\n\n  return (\n    <Page type=\"minimal\">\n      <div className={styles.screen}>\n        <Stack gap=\"xxl\" className={styles.column}>\n          <Card>\n            <form action={signIn}>\n              <Stack gap=\"xxl\">\n                <Stack gap=\"md\">\n                  <TextInput\n                    name=\"username\"\n                    placeholder=\"Username or email\"\n                    autoCapitalize=\"none\"\n                    autoComplete=\"username\"\n                    value={username}\n                    onChange={setUsername}\n                  />\n                  <TextInput\n                    name=\"password\"\n                    placeholder=\"Password\"\n                    password\n                    autoComplete=\"current-password\"\n                    value={password}\n                    onChange={setPassword}\n                  />\n                </Stack>\n                <Button type=\"primary\" submit>\n                  Sign In\n                </Button>\n              </Stack>\n            </form>\n          </Card>\n          <Button onClick={() => toast('Check your email for a reset link', 'info')}>\n            Forgot password?\n          </Button>\n        </Stack>\n      </div>\n    </Page>\n  );\n}\n",
+          "viewport": "screen"
+        }
+      ]
     }
   ],
   "changelog": [
     {
-      "version": "0.6.0",
+      "version": "0.7.0",
       "date": "2026-11-26",
       "entries": [
         {
-          "version": "0.6.0",
+          "version": "0.7.0",
           "date": "2026-11-26",
           "tags": [
             "ThemeProvider",
@@ -10183,7 +10212,7 @@
           "text": "`GlobalStyles` (rendered by `ThemeProvider`) ships the reset the components are drawn against: every element is `box-sizing: border-box` with no default margin or padding, as in Bookplate's and Scribe's `index.html`. Without it a text field was 51px tall instead of `layout.controlHeight` (33px). An app that already carries this reset sees no change; one that relied on browser default margins (`p`, `h1`, `ul`) loses them."
         },
         {
-          "version": "0.6.0",
+          "version": "0.7.0",
           "date": "2026-11-26",
           "tags": [
             "TextInput",
@@ -10195,7 +10224,30 @@
             "Tag",
             "Switch"
           ],
-          "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.5.2 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px."
+          "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.6.0 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px."
+        },
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "General"
+          ],
+          "text": "Docs site: each module has an `examples/preview.tsx` that shows the component alone; the overview thumbnails render it instead of the first example, and it never appears on the component page or in the doc. `npm run docs:check` fails for a module without one."
+        }
+      ]
+    },
+    {
+      "version": "0.6.0",
+      "date": "2026-11-26",
+      "entries": [
+        {
+          "version": "0.6.0",
+          "date": "2026-11-26",
+          "tags": [
+            "lightTheme",
+            "darkTheme"
+          ],
+          "text": "New `theme.layout.formWidth` (`400px`): the width of a standalone form column such as sign-in, narrower than a dialog."
         },
         {
           "version": "0.6.0",
@@ -10203,7 +10255,7 @@
           "tags": [
             "General"
           ],
-          "text": "Docs site: each module has an `examples/preview.tsx` that shows the component alone; the overview thumbnails render it instead of the first example, and it never appears on the component page or in the doc. `npm run docs:check` fails for a module without one."
+          "text": "Recipes: worked assemblies of library parts with live previews, shipped as `docs/recipes/*.md` and indexed in AGENTS.md. First recipe: Sign in (`docs/recipes/login.md`)."
         }
       ]
     },

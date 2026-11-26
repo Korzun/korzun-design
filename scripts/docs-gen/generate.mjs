@@ -28,8 +28,9 @@ const byName = (a, b) => (a < b ? -1 : a > b ? 1 : 0);
 
 const readIf = (path) => (existsSync(path) ? readFileSync(path, 'utf8') : null);
 
-function checkCategory(file, category, allowGuide) {
-  if (!CATEGORIES.includes(category) && !(allowGuide && category === 'Guide')) {
+function checkCategory(file, category, allowDocKinds) {
+  const docKind = category === 'Guide' || category === 'Recipe';
+  if (!CATEGORIES.includes(category) && !(allowDocKinds && docKind)) {
     throw new Error(`${file}: unknown category "${category}"`);
   }
 }
@@ -158,13 +159,56 @@ function loadThemes(repo) {
   return { light: mod.lightTheme, dark: mod.darkTheme };
 }
 
-function readExamples(repo, mod) {
-  const dir = join(repo, mod.srcDir, 'examples');
+/** The examples in repo-relative folder `rel`, by order; none when it is missing. */
+function readExamplesIn(repo, rel) {
+  const dir = join(repo, rel);
   if (!existsSync(dir)) return [];
   return readdirSync(dir)
     .filter((f) => f.endsWith('.tsx') && f !== PREVIEW_FILE)
-    .map((f) => readExample(`${mod.srcDir}/examples/${f}`, readFileSync(join(dir, f), 'utf8')))
+    .map((f) => readExample(`${rel}/${f}`, readFileSync(join(dir, f), 'utf8')))
     .sort((a, b) => a.order - b.order);
+}
+
+const readExamples = (repo, mod) => readExamplesIn(repo, `${mod.srcDir}/examples`);
+
+const RECIPE_DOCS = 'docs/recipes/';
+
+/**
+ * Recipes: each `docs/recipes/<slug>.md` (category Recipe) with its runnable
+ * examples in `recipes/<slug>/`. Fills each doc's `examples` region into `out`.
+ * A doc without examples, or a folder without a doc, throws: a recipe is both.
+ * @returns {import('./types.js').Recipe[]}
+ */
+function collectRecipes(repo, fm, out) {
+  const recipes = [];
+  for (const [rel, parsed] of fm) {
+    const inDir = rel.startsWith(RECIPE_DOCS);
+    const isRecipe = parsed.data.category === 'Recipe';
+    if (isRecipe && !inDir) throw new Error(`${rel}: category Recipe belongs in docs/recipes/`);
+    if (!inDir) continue;
+    if (!isRecipe) throw new Error(`${rel}: category must be Recipe`);
+    const slug = rel.slice(RECIPE_DOCS.length).replace(/\.md$/, '');
+    const examples = readExamplesIn(repo, `recipes/${slug}`);
+    if (examples.length === 0) throw new Error(`${rel}: no examples in recipes/${slug}/`);
+    const { title, description } = parsed.data;
+    const recipe = { slug, docPath: rel, title, description, body: '', examples };
+    const rewritten = replaceRegions(parsed.content, recipe, rel, {}, ['examples']);
+    const raw = readFileSync(join(repo, rel), 'utf8');
+    out.set(rel, raw.slice(0, raw.length - parsed.content.length) + rewritten);
+    recipe.body = stripRegions(rewritten)
+      .replace(/^\s*# [^\n]*\n?/, '')
+      .trim();
+    recipes.push(recipe);
+  }
+  const dir = join(repo, 'recipes');
+  if (existsSync(dir)) {
+    for (const d of readdirSync(dir, { withFileTypes: true })) {
+      if (d.isDirectory() && !recipes.some((r) => r.slug === d.name)) {
+        throw new Error(`recipes/${d.name}/: no docs/recipes/${d.name}.md`);
+      }
+    }
+  }
+  return recipes.sort((a, b) => byName(a.slug, b.slug));
 }
 
 /** The module's `examples/preview.tsx`, shown only as its overview thumbnail. */
@@ -365,6 +409,7 @@ export function generate(repo, { strict = false, warn = console.warn } = {}) {
     }
   }
   guides.sort((a, b) => byName(a.slug, b.slug));
+  const recipes = collectRecipes(repo, fm, out);
 
   const agents = readFileSync(join(repo, 'AGENTS.md'), 'utf8');
   out.set('AGENTS.md', rebuildIndex(agents, repo, fm));
@@ -374,6 +419,7 @@ export function generate(repo, { strict = false, warn = console.warn } = {}) {
     version: pkg.version,
     modules,
     guides,
+    recipes,
     changelog: changelog.map((v) => ({ version: v.version, date: v.date, entries: v.entries })),
     typePages: Object.fromEntries([...owners].map(([name, owner]) => [name, owner.slug])),
   };

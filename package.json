@@ -1,6 +1,6 @@
 {
   "name": "@korzun/design",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "type": "module",
   "license": "SEE LICENSE IN LICENSE",
   "repository": {
@@ -70,8 +70,8 @@
     "test": "npm run build && vitest run && npm run test:scripts && npm run docs:check",
     "test:scripts": "node --test \"scripts/**/*.test.mjs\"",
     "test:watch": "vitest",
-    "lint": "oxlint src gallery scripts && oxfmt --check \"src/**/*.{ts,tsx}\" \"gallery/**/*.{ts,tsx}\" && tsc --noEmit",
-    "lint:fix": "oxlint src gallery scripts --fix && oxfmt \"src/**/*.{ts,tsx}\" \"gallery/**/*.{ts,tsx}\"",
+    "lint": "oxlint src gallery scripts recipes && oxfmt --check \"src/**/*.{ts,tsx}\" \"gallery/**/*.{ts,tsx}\" \"recipes/**/*.{ts,tsx}\" && tsc --noEmit",
+    "lint:fix": "oxlint src gallery scripts recipes --fix && oxfmt \"src/**/*.{ts,tsx}\" \"gallery/**/*.{ts,tsx}\" \"recipes/**/*.{ts,tsx}\"",
     "prepack": "npm run build"
   },
   "peerDependencies": {

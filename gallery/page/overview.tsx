@@ -6,7 +6,7 @@ import { Link } from 'react-router';
 
 import { CATEGORIES } from '../../scripts/docs-gen/categories.mjs';
 import type { ModuleInfo } from '../../scripts/docs-gen/types.js';
-import { siteData } from '../data.js';
+import { moduleOwner, siteData } from '../data.js';
 import { siteColumn } from '../layout/column.js';
 import { Thumbnail } from '../part/thumbnail.js';
 import { filterModules } from '../search.js';
@@ -47,7 +47,7 @@ const ModuleCard = ({ mod }: { mod: ModuleInfo }) => {
     <Link to={`/components/${mod.slug}`} className={styles.card}>
       <Card>
         <Stack gap="md">
-          <Thumbnail mod={mod} />
+          <Thumbnail owner={moduleOwner(mod)} />
           <Stack gap="xs">
             <Heading level={3} size="md">
               {mod.title}

@@ -10,6 +10,7 @@ describe('Frame', () => {
       <MemoryRouter initialEntries={[url]}>
         <Routes>
           <Route path="/frame/:module/:example" element={<Frame />} />
+          <Route path="/frame/recipe/:recipe/:example" element={<Frame />} />
         </Routes>
       </MemoryRouter>
     );
@@ -17,6 +18,12 @@ describe('Frame', () => {
   it('renders the example named in the URL', () => {
     mount('/frame/button/basic');
     expect(screen.getByRole('button', { name: 'Save' })).toBeInTheDocument();
+  });
+
+  it('looks a recipe frame up among recipes, never among modules', () => {
+    mount('/frame/recipe/button/basic');
+    expect(screen.getByText('No example "recipe/button/basic".')).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Save' })).toBeNull();
   });
 
   it('says so for an unknown example', () => {

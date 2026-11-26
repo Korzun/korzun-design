@@ -27,6 +27,7 @@ const useStyle = createUseStyles((theme: Theme) => ({
 const LINKS = [
   { to: '/', label: 'Components', end: true },
   { to: '/components/icon', label: 'Icons', end: false },
+  { to: '/recipes', label: 'Recipes', end: false },
   { to: '/tokens', label: 'Tokens', end: false },
   { to: '/changelog', label: 'Changelog', end: false },
 ];
