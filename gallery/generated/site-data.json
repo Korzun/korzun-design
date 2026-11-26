@@ -4049,6 +4049,98 @@
       "changelog": []
     },
     {
+      "id": "component/metadata-list",
+      "slug": "metadata-list",
+      "entry": "@korzun/design/component",
+      "docPath": "docs/component/metadata-list.md",
+      "title": "MetadataList",
+      "description": "A wrapping row of small labelled values, typically the body of a Card describing one record.",
+      "category": "Data display",
+      "values": [
+        "MetadataList"
+      ],
+      "types": [
+        "Metadata",
+        "MetadataListProps"
+      ],
+      "importLine": "import { MetadataList, type Metadata, type MetadataListProps } from '@korzun/design/component'",
+      "body": "A wrapping row of small labelled values (\"Slug my-kindle\", \"Cover fit\nContain\"): each pair is a faint, capitalized title followed by its value, laid\nout inline with `space.lg` between pairs and `space.sm` between wrapped lines.\nTypically the body of a `Card` describing one record.\n\nUse something else for: unlabelled secondary data on a row (`MetaLine`),\neditable fields (controls in `@korzun/design/control`).\n\n## Usage\n\n### Titles and keys\n\nTitles are CSS `text-transform: capitalize`: \"cover fit\" displays as\n\"Cover Fit\". Write titles in the case you want only if that agrees. Each entry\nis keyed by `title + value`; keep titles unique within one list.\n\n### Values\n\nEach value is truncated to `theme.size.metadataValue` (`15rem`) with an\nellipsis and never wraps (`white-space: nowrap`). Long values are cut off;\nthere is no tooltip. Every entry renders, including ones whose value is\n`null`/`undefined` (title with an empty value). Filter the array first.\n\n### Styling\n\nNo `className`.\n\n## Do / don't\n\n- Do keep values short (a word, a number, a small `Tag size=\"sm\"`).\n- Do keep `title`s unique within one list.\n- Don't use it for long text such as descriptions; it truncates at 15rem.\n- Don't include entries with missing values; filter them out.",
+      "examples": [
+        {
+          "file": "src/component/metadata-list/examples/01-basic.tsx",
+          "slug": "basic",
+          "order": 1,
+          "title": "Basic",
+          "description": "The body of a `Card` describing one record: short text values and a small `Tag` as a value. The header action flips the grayscale entry.",
+          "code": "import { Card, MetadataList, Tag } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Basic() {\n  const [grayscale, setGrayscale] = useState(false);\n  return (\n    <Card\n      title=\"Kindle Scribe\"\n      headerAction={\n        <Button type=\"link\" onClick={() => setGrayscale((on) => !on)}>\n          Toggle grayscale\n        </Button>\n      }\n    >\n      <MetadataList\n        metadata={[\n          { title: 'Slug', value: 'my-kindle' },\n          { title: 'Cover size', value: '1860×2480' },\n          { title: 'Grayscale cover', value: grayscale ? 'Yes' : 'No' },\n          {\n            title: 'Status',\n            value: (\n              <Tag size=\"sm\" tone=\"success\">\n                Active\n              </Tag>\n            ),\n          },\n        ]}\n      />\n    </Card>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/metadata-list/examples/02-truncation.tsx",
+          "slug": "truncation",
+          "order": 2,
+          "title": "Long values",
+          "description": "A value wider than its cap is cut off with an ellipsis and never wraps, so keep values short. Titles are capitalized by CSS: “cover fit” displays as “Cover Fit”.",
+          "code": "import { MetadataList } from '@korzun/design/component';\n\nexport default function Truncation() {\n  return (\n    <MetadataList\n      metadata={[\n        { title: 'cover fit', value: 'Contain' },\n        { title: 'Path', value: '/library/science-fiction/frank-herbert/children-of-dune.epub' },\n      ]}\n    />\n  );\n}\n"
+        },
+        {
+          "file": "src/component/metadata-list/examples/03-optional-entries.tsx",
+          "slug": "optional-entries",
+          "order": 3,
+          "title": "Optional entries",
+          "description": "Every entry renders, even one with no value, so build the array without the entries you do not have. Here “Last sync” is added only once there is a value.",
+          "code": "import { Inline, MetadataList, Stack } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function OptionalEntries() {\n  const [lastSync, setLastSync] = useState<string | undefined>(undefined);\n  return (\n    <Stack gap=\"md\">\n      <Inline>\n        <Button onClick={() => setLastSync(lastSync ? undefined : '12 March 2026')}>\n          {lastSync ? 'Forget sync' : 'Sync now'}\n        </Button>\n      </Inline>\n      <MetadataList\n        metadata={[\n          { title: 'Slug', value: 'my-kindle' },\n          ...(lastSync ? [{ title: 'Last sync', value: lastSync }] : []),\n        ]}\n      />\n    </Stack>\n  );\n}\n"
+        }
+      ],
+      "tables": [
+        {
+          "name": "MetadataListProps",
+          "kind": "props",
+          "rows": [
+            {
+              "name": "metadata",
+              "type": "Metadata[]",
+              "required": true,
+              "description": "The pairs, in order. Every entry renders, even one whose value is `null` or `undefined` (its title shows with an empty value), so filter the array first."
+            }
+          ]
+        },
+        {
+          "name": "Metadata",
+          "kind": "object",
+          "rows": [
+            {
+              "name": "title",
+              "type": "string",
+              "required": true,
+              "description": "The label, shown faint and capitalized by CSS: `'cover fit'` displays as “Cover Fit”. It is part of the React key, so keep it unique within a list."
+            },
+            {
+              "name": "value",
+              "type": "string | ReactNode",
+              "required": true,
+              "description": "The value. It is cut off with an ellipsis at `theme.size.metadataValue` (`15rem`) and never wraps, with no tooltip. With an element as value the key becomes `Title[object Object]`, so entries that share a title and hold elements collide."
+            }
+          ],
+          "description": "One labelled value in a `MetadataList`."
+        }
+      ],
+      "tokens": [
+        {
+          "path": "space.lg",
+          "kind": "value",
+          "light": "0.625rem",
+          "dark": "0.625rem"
+        },
+        {
+          "path": "space.sm",
+          "kind": "value",
+          "light": "0.375rem",
+          "dark": "0.375rem"
+        }
+      ],
+      "changelog": []
+    },
+    {
       "id": "component/stack",
       "slug": "stack",
       "entry": "@korzun/design/component",
@@ -4246,6 +4338,85 @@
             "Inline"
           ],
           "text": "`truncate` on `Text` and `Heading` clips inside `Stack` (any `align`), `Inline`, and a `Stack` nested in an `Inline`; `Stack` and `Inline` roots have `min-width: 0`."
+        }
+      ]
+    },
+    {
+      "id": "component/surface",
+      "slug": "surface",
+      "entry": "@korzun/design/component",
+      "docPath": "docs/component/surface.md",
+      "title": "Surface",
+      "description": "Marks a hand-made box as one more level of nesting, so the library controls inside it take the next corner radius down.",
+      "category": "Layout",
+      "values": [
+        "Surface",
+        "useSurfaceRadius"
+      ],
+      "types": [
+        "SurfaceProps"
+      ],
+      "importLine": "import { Surface, useSurfaceRadius, type SurfaceProps } from '@korzun/design/component'",
+      "body": "Marks a hand-made box as one more level of nesting. Every library control\ninside it (`Button`, `Select`, `Card`, `CardRow`, ...) takes its corner radius\nfrom how deep it sits, following the one-radius-step-per-level rule in\n[corners](../corners.md). `Page` marks its whole area as depth 0, `Dialog` as\ndepth 1, and `Card`, `CardRow` and `Alert` each one level deeper than where\nthey sit. `Surface` adds one more level for a box you draw yourself.\n\nWrap the box's contents, not the box: the box itself takes the surrounding depth.\n\nUse `Surface` when you build your own bordered or filled box that contains\nlibrary controls. Do not use it around a library `Card`, `CardRow` or `Dialog`;\nthey already count themselves.\n\n## Usage\n\n### `useSurfaceRadius()`\n\n```ts\nuseSurfaceRadius(): string\n```\n\nReturns the radius string (a theme `radius` token) for the current depth. Call\nit in the component that draws the box, outside its own `Surface`: the box\nthen gets the radius for where it sits, and `Surface` steps the controls inside\nit one level deeper. With no `Page`, `Dialog`, `Card`, `CardRow`, `Alert` or\n`Surface` above it, it returns the depth 0 radius.\n\n### Depth table\n\n| Depth | Radius                       | Where                                    |\n| ----- | ---------------------------- | ---------------------------------------- |\n| 0     | `radius.lg`                  | on the page background                   |\n| 1     | `radius.md`                  | inside a Card or Dialog                  |\n| 2+    | `radius.sm`                  | inside a surface inside a Card or Dialog |\n| none  | each component's own default | no Page, Dialog, Card, CardRow, Alert or Surface above it |\n\nDepth never goes below `sm`; deeper nesting stays at `sm`. Hand-drawn boxes are invisible to depth, so wrap their contents in `Surface`.\n\n### Styling\n\n`Surface` renders no element of its own, so it has no `className`.\n\n## Do / don't\n\n- Do wrap the contents of a hand-made box that holds library controls in `Surface`.\n- Do take the box's own radius from `useSurfaceRadius()`, never a literal.\n- Don't wrap library `Card`, `CardRow` or `Dialog` in `Surface`.",
+      "examples": [
+        {
+          "file": "src/component/surface/examples/01-basic.tsx",
+          "slug": "basic",
+          "order": 1,
+          "title": "Basic",
+          "description": "A hand-made bordered box inside a `Card`. The box reads its own radius from `useSurfaceRadius()` and wraps its contents in `Surface`, so the Button inside is one corner step smaller than the box.",
+          "code": "import { Card, Inline, Stack, Surface, Text, useSurfaceRadius } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\nimport { useState, type ReactNode } from 'react';\n\nconst useStyle = createUseStyles((theme: Theme) => ({\n  box: {\n    border: `1px solid ${theme.color.border.default}`,\n    padding: theme.space.lg,\n  },\n}));\n\nconst InsetBox = ({ children }: { children: ReactNode }) => {\n  const styles = useStyle();\n  const borderRadius = useSurfaceRadius();\n  return (\n    <div className={styles.box} style={{ borderRadius }}>\n      <Surface>{children}</Surface>\n    </div>\n  );\n};\n\nexport default function Basic() {\n  const [saves, setSaves] = useState(0);\n  return (\n    <Card title=\"Settings\">\n      <InsetBox>\n        <Stack gap=\"sm\">\n          <Text>\n            Your own box: its corners follow the card, and the button inside is one step smaller.\n          </Text>\n          <Inline>\n            <Button onClick={() => setSaves((n) => n + 1)}>Save</Button>\n            <Text tone=\"muted\">Saves: {saves}</Text>\n          </Inline>\n        </Stack>\n      </InsetBox>\n    </Card>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/surface/examples/02-nesting.tsx",
+          "slug": "nesting",
+          "order": 2,
+          "title": "Nesting",
+          "description": "Each hand-made box inside another sits one level deeper, so corners step down one radius per level and stop at `sm`. Each box shows the radius `useSurfaceRadius()` returned for where it sits.",
+          "code": "import { Card, Inline, Stack, Surface, Text, useSurfaceRadius } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\nimport { useState, type ReactNode } from 'react';\n\nconst useStyle = createUseStyles((theme: Theme) => ({\n  box: {\n    border: `1px solid ${theme.color.border.default}`,\n    padding: theme.space.lg,\n  },\n}));\n\nconst LevelBox = ({ name, children }: { name: string; children?: ReactNode }) => {\n  const styles = useStyle();\n  const borderRadius = useSurfaceRadius();\n  const [taps, setTaps] = useState(0);\n  return (\n    <div className={styles.box} style={{ borderRadius }}>\n      <Surface>\n        <Stack gap=\"sm\">\n          <Inline>\n            <Button onClick={() => setTaps((n) => n + 1)}>{name}</Button>\n            <Text tone=\"muted\">\n              Radius {borderRadius}, taps: {taps}\n            </Text>\n          </Inline>\n          {children}\n        </Stack>\n      </Surface>\n    </div>\n  );\n};\n\nexport default function Nesting() {\n  return (\n    <Card title=\"Card\">\n      <LevelBox name=\"Box\">\n        <LevelBox name=\"Box in box\">\n          <LevelBox name=\"Box in box in box\" />\n        </LevelBox>\n      </LevelBox>\n    </Card>\n  );\n}\n"
+        }
+      ],
+      "tables": [
+        {
+          "name": "SurfaceProps",
+          "kind": "props",
+          "rows": [
+            {
+              "name": "children",
+              "type": "ReactNode",
+              "required": false,
+              "description": "The hand-made box's contents, not the box itself. They sit one level deeper than the surface around it, so a Button or Select inside takes the next corner radius down."
+            }
+          ]
+        }
+      ],
+      "tokens": [],
+      "changelog": [
+        {
+          "version": "0.5.0",
+          "date": "2026-11-24",
+          "tags": [
+            "Page",
+            "Dialog",
+            "Card",
+            "CardRow",
+            "Alert",
+            "Surface",
+            "Popover",
+            "Menu",
+            "Select",
+            "Button"
+          ],
+          "text": "Surface depth: corners are concentric site-wide with no radius props. `Page` provides depth 0, `Dialog` 1, and `Card`, `CardRow` and `Alert` each provide one level deeper than where they sit; `Popover` (so `Menu` and the `Select` list) provides a fixed 2. Depth 0 is `radius.lg`, 1 is `md`, 2 and deeper is `sm`. `Button`, `Select`, `Card`, `CardRow` and `Alert` follow it; an explicit `Button radius` or `Select surface` still wins. With no `Page`, `Dialog`, `Card`, `CardRow`, `Alert` or `Surface` above it, a component keeps its 0.4.0 look; a bare `Card` (no `Page`) still counts as depth 0 and gives its contents depth 1, so its Buttons and nested Cards change as below."
+        },
+        {
+          "version": "0.5.0",
+          "date": "2026-11-24",
+          "tags": [
+            "Surface",
+            "useSurfaceRadius"
+          ],
+          "text": "New `Surface` and `useSurfaceRadius` (component) for hand-made boxes that hold library controls: `Surface` marks its children one level deeper, and `useSurfaceRadius()` returns the radius token for the current depth."
         }
       ]
     }

@@ -3,13 +3,13 @@ import { useStyle } from './style.js';
 
 /** One labelled value in a `MetadataList`. */
 export type Metadata = {
-  /** Label, shown faint and CSS-capitalized. Keep it unique within a list (it is part of the key). */
+  /** The label, shown faint and capitalized by CSS: `'cover fit'` displays as “Cover Fit”. It is part of the React key, so keep it unique within a list. */
   title: string;
-  /** The value. Truncated with an ellipsis at `theme.size.metadataValue`; never wraps. */
+  /** The value. It is cut off with an ellipsis at `theme.size.metadataValue` (`15rem`) and never wraps, with no tooltip. With an element as value the key becomes `Title[object Object]`, so entries that share a title and hold elements collide. */
   value: string | React.ReactNode;
 };
 export type MetadataListProps = {
-  /** The pairs, in order. Every entry renders, even with an empty value: filter first. */
+  /** The pairs, in order. Every entry renders, even one whose value is `null` or `undefined` (its title shows with an empty value), so filter the array first. */
   metadata: Metadata[];
 };
 
