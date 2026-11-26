@@ -7,7 +7,7 @@ import { useStyle } from './style.js';
 export type DateTimeInputProps = {
   /** Linked to the date input; the time input is labelled `${label} time` (or `Time`). */
   label?: string;
-  /** Default `'horizontal'`; `horizontal`/`vertical` paint a card-header row. */
+  /** `'horizontal'` and `'vertical'` paint a shaded row (`bg.cardHeader`, `radius.md`); `'inline'` paints none. */
   layout?: 'horizontal' | 'vertical' | 'inline';
   /** The date input's `name`; the time input is `${name}Time`. Form data holds two fields, not the composed value. */
   name: string;
@@ -16,7 +16,7 @@ export type DateTimeInputProps = {
   /**
    * An ISO 8601 date string as the server stores it: a bare date, a
    * timestamp, or a lower-precision year / year-month. `undefined` and `''`
-   * both mean "no date".
+   * both mean "no date". The inputs re-sync when this changes.
    */
   value: string | undefined;
 };

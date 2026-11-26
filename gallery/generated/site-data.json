@@ -511,6 +511,166 @@
       ]
     },
     {
+      "id": "control/date-time-input",
+      "slug": "date-time-input",
+      "entry": "@korzun/design/control",
+      "docPath": "docs/control/date-time-input.md",
+      "title": "DateTimeInput",
+      "description": "A date with an optional time, edited through the browser's native pickers and stored as an ISO 8601 string.",
+      "category": "Inputs",
+      "values": [
+        "DateTimeInput"
+      ],
+      "types": [
+        "DateTimeInputProps"
+      ],
+      "importLine": "import { DateTimeInput, type DateTimeInputProps } from '@korzun/design/control'",
+      "body": "A date with an optional time, edited through the browser's native date and time\npickers and stored as an ISO 8601 string. The time box stays disabled until\nthere is a date; clearing the date clears the time.\n\nUse something else for: free text (`TextInput`), a year-only number\n(`NumberInput`).\n\n## Usage\n\n### Behaviour\n\nNo `className`, no `disabled`, no `min` / `max`.\n\n### Value format\n\n| User has | `onChange` receives |\n|---|---|\n| no date | `undefined` |\n| a date only | `'2023-06-06'` |\n| date and time | `'2023-06-06T16:30:00Z'` |\n\n- **The time is UTC, not local.** A stored `2015-08-04T22:30:00-05:00` displays\n  as 2015-08-05, 03:30, and the user picks times in UTC too.\n- Year and year-month values display as the 1st of the period (`1965` shows\n  1965-01-01). Merely displaying doesn't rewrite them; editing does.\n- An unreadable value (`'June 2023'`, `'2023-13-45'`) displays as empty.\n- Native form data holds the date and the time as **two separate fields**\n  (`name`, `nameTime`), not the composed value. Submit `value` from state.\n\n## Do / don't\n\n- Do keep the composed string from `onChange` in state and send that.\n- Do tell users times are UTC if that matters for the field.\n- Don't read `FormData.get(name)` expecting a timestamp; it is only the date part.",
+      "examples": [
+        {
+          "file": "src/control/date-time-input/examples/01-basic.tsx",
+          "slug": "basic",
+          "order": 1,
+          "title": "Basic",
+          "description": "A date with an optional time. Both come from the browser's native pickers; the time\nbox stays disabled until there is a date. `onChange` receives the recomposed ISO string,\nnot an event, and `undefined` once the date is cleared.",
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { DateTimeInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Basic() {\n  const [value, setValue] = useState<string | undefined>(undefined);\n  return (\n    <Stack>\n      <DateTimeInput name=\"publishDate\" label=\"Publish date\" value={value} onChange={setValue} />\n      <Text tone=\"muted\">Value: {value ?? 'undefined'}</Text>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/date-time-input/examples/02-layouts.tsx",
+          "slug": "layouts",
+          "order": 2,
+          "title": "Layouts",
+          "description": "`horizontal` and `vertical` paint a shaded row, with the label beside the inputs or\nabove them. `inline` paints no row and sizes to its content, for a spot inside\nyour own layout.",
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { DateTimeInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Layouts() {\n  const [horizontal, setHorizontal] = useState<string | undefined>('2023-06-06T16:30:00Z');\n  const [vertical, setVertical] = useState<string | undefined>('2023-06-06');\n  const [inline, setInline] = useState<string | undefined>(undefined);\n  return (\n    <Stack>\n      <Text tone=\"muted\">layout horizontal</Text>\n      <DateTimeInput\n        name=\"horizontal\"\n        label=\"Published\"\n        layout=\"horizontal\"\n        value={horizontal}\n        onChange={setHorizontal}\n      />\n      <Text tone=\"muted\">layout vertical</Text>\n      <DateTimeInput\n        name=\"vertical\"\n        label=\"Published\"\n        layout=\"vertical\"\n        value={vertical}\n        onChange={setVertical}\n      />\n      <Text tone=\"muted\">layout inline</Text>\n      <DateTimeInput\n        name=\"inline\"\n        label=\"Published\"\n        layout=\"inline\"\n        value={inline}\n        onChange={setInline}\n      />\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/date-time-input/examples/03-stored-values.tsx",
+          "slug": "stored-values",
+          "order": 3,
+          "title": "Stored values",
+          "description": "`value` is an ISO 8601 string as a server stores it, and the inputs re-sync when it\nchanges. A year or year-month shows as the 1st of the period, a timestamp shows in UTC\n(22:30 at -05:00 is 03:30 the next day), and an unreadable string or `''` shows as empty.\nPick a sample, then edit the date to see what `onChange` sends back.",
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { DateTimeInput, SegmentedControl } from '@korzun/design/control';\nimport { useState } from 'react';\n\nconst SAMPLES = [\n  { value: '2023', label: 'Year' },\n  { value: '2023-06', label: 'Month' },\n  { value: '2023-06-06', label: 'Day' },\n  { value: '2015-08-04T22:30:00-05:00', label: 'Timestamp' },\n  { value: 'June 2023', label: 'Unreadable' },\n  { value: '', label: 'None' },\n] as const;\n\nexport default function StoredValues() {\n  const [value, setValue] = useState<string | undefined>('2023-06');\n  return (\n    <Stack>\n      <SegmentedControl\n        label=\"Stored value\"\n        options={SAMPLES}\n        value={value ?? null}\n        onChange={setValue}\n      />\n      <DateTimeInput name=\"stored\" label=\"Publish date\" value={value} onChange={setValue} />\n      <Text tone=\"muted\">Value: {value === undefined ? 'undefined' : `'${value}'`}</Text>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/date-time-input/examples/04-in-a-card.tsx",
+          "slug": "in-a-card",
+          "order": 4,
+          "title": "In a Card",
+          "description": "A form field beside the others in a Card. Keep the composed string from\n`onChange` in state and send that: native form data holds the date and the time as\ntwo separate fields (`publishDate`, `publishDateTime`).",
+          "code": "import { Card, Stack, Text } from '@korzun/design/component';\nimport { Button, DateTimeInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function InACard() {\n  const [publishDate, setPublishDate] = useState<string | undefined>('2023-06-06T16:30:00Z');\n  const [sent, setSent] = useState<string | null>(null);\n  return (\n    <Card\n      title=\"Publication\"\n      footer={\n        <Button type=\"primary\" onClick={() => setSent(publishDate ?? 'no date')}>\n          Save\n        </Button>\n      }\n    >\n      <Stack>\n        <DateTimeInput\n          name=\"publishDate\"\n          label=\"Publish date\"\n          value={publishDate}\n          onChange={setPublishDate}\n        />\n        {sent !== null && <Text tone=\"success\">Sent: {sent}</Text>}\n      </Stack>\n    </Card>\n  );\n}\n"
+        }
+      ],
+      "tables": [
+        {
+          "name": "DateTimeInputProps",
+          "kind": "props",
+          "rows": [
+            {
+              "name": "label",
+              "type": "string",
+              "required": false,
+              "description": "Linked to the date input; the time input is labelled `${label} time` (or `Time`)."
+            },
+            {
+              "name": "layout",
+              "type": "'horizontal' | 'vertical' | 'inline'",
+              "required": false,
+              "description": "`'horizontal'` and `'vertical'` paint a shaded row (`bg.cardHeader`, `radius.md`); `'inline'` paints none.",
+              "default": "'horizontal'"
+            },
+            {
+              "name": "name",
+              "type": "string",
+              "required": true,
+              "description": "The date input's `name`; the time input is `${name}Time`. Form data holds two fields, not the composed value."
+            },
+            {
+              "name": "onChange",
+              "type": "(newValue: string | undefined) => void",
+              "required": false,
+              "description": "Receives the recomposed ISO string (time in UTC), or `undefined` when the date is cleared; not an event.",
+              "default": "() => {}"
+            },
+            {
+              "name": "value",
+              "type": "string | undefined",
+              "required": true,
+              "description": "An ISO 8601 date string as the server stores it: a bare date, a timestamp, or a lower-precision year / year-month. `undefined` and `''` both mean \"no date\". The inputs re-sync when this changes."
+            }
+          ]
+        }
+      ],
+      "tokens": [
+        {
+          "path": "color.bg.cardHeader",
+          "kind": "color",
+          "light": "#EEEEEE",
+          "dark": "#232427"
+        },
+        {
+          "path": "color.text.faint",
+          "kind": "color",
+          "light": "#9ca3af",
+          "dark": "#6E7480"
+        },
+        {
+          "path": "color.text.primary",
+          "kind": "color",
+          "light": "#111",
+          "dark": "#F5F5F7"
+        },
+        {
+          "path": "layout.controlHeight",
+          "kind": "value",
+          "light": "2.0625rem",
+          "dark": "2.0625rem"
+        },
+        {
+          "path": "radius.md",
+          "kind": "value",
+          "light": "8px",
+          "dark": "8px"
+        },
+        {
+          "path": "recipe.input",
+          "kind": "recipe",
+          "light": null,
+          "dark": null
+        },
+        {
+          "path": "recipe.label",
+          "kind": "recipe",
+          "light": null,
+          "dark": null
+        },
+        {
+          "path": "space.md",
+          "kind": "value",
+          "light": "0.5rem",
+          "dark": "0.5rem"
+        },
+        {
+          "path": "space.sm",
+          "kind": "value",
+          "light": "0.375rem",
+          "dark": "0.375rem"
+        },
+        {
+          "path": "space.xs",
+          "kind": "value",
+          "light": "0.25rem",
+          "dark": "0.25rem"
+        },
+        {
+          "path": "zIndex.base",
+          "kind": "value",
+          "light": "1",
+          "dark": "1"
+        }
+      ],
+      "changelog": []
+    },
+    {
       "id": "control/menu",
       "slug": "menu",
       "entry": "@korzun/design/control",
