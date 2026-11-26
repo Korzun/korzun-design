@@ -206,7 +206,7 @@ export default function NestedWithInline() {
 | `align` | `'stretch' \| 'start' \| 'center' \| 'end'` | `'stretch'` | Cross-axis (horizontal) alignment of children; `start`/`end` map to `flex-start`/`flex-end`. |
 | `as` | `'div' \| 'section' \| 'ul' \| 'ol' \| 'li'` | `'div'` | The element to render. `ul`/`ol` also reset list margin, padding and bullets. |
 | `className` | `string` |  | Extra class, added last on the root. Override with `'&&'` specificity, never `!important`. |
-| `gap` | `keyof Theme['space'] \| 'none'` | `'md'` | Space between children, from the theme's `space` tokens, or `'none'`. |
+| `gap` | `'xxxs' \| 'xxs' \| 'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl' \| 'xxl' \| 'xxxl' \| 'xxxxl' \| 'xxxxxl' \| 'none'` | `'md'` | Space between children, from the theme's `space` tokens, or `'none'`. |
 | `ref` | `Ref<HTMLElement>` |  | Ref to the root element. |
 
 Also accepts: `HTMLAttributes`.

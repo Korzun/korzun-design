@@ -113,7 +113,7 @@ test('props: multiple props tables get headings; objects and aliases; links', ()
   const out = renderRegion('props', mod({ tables }));
   assert.ok(out.includes('### MenuProps\n\n| Prop'));
   assert.ok(out.includes('### ItemProps\n\n| Prop'));
-  assert.ok(out.includes('| `items` | [MenuItem](#menuitem) `[]` |'));
+  assert.ok(out.includes('| `items` | [MenuItem](#menuitem)`[]` |'));
   assert.ok(out.includes('| `item` | [MenuItem](#menuitem) |'));
   assert.ok(out.includes('### MenuItem\n\n| Prop'));
   assert.ok(out.includes("### Types\n\n```ts\ntype Align = 'start' | 'end';\n```"));
@@ -264,7 +264,7 @@ test('props: object tables link type cells to other supporting tables, Props-nam
   ];
   const out = renderRegion('props', mod({ values: ['Menu'], tables }));
   assert.ok(out.includes('| `intentProps` | [MenuIntentProps](#menuintentprops) |'));
-  assert.ok(out.includes('| `items` | [MenuItem](#menuitem) `[]` |'));
+  assert.ok(out.includes('| `items` | [MenuItem](#menuitem)`[]` |'));
 });
 
 test('props: main <Name>Props first, then other props tables, then objects, then aliases', () => {
@@ -314,4 +314,42 @@ test('orderTables: the order the props region renders, for the site too', () => 
     orderTables(tables, ['Menu']).map((t) => t.name),
     ['MenuProps', 'MenuIntentProps', 'MenuItem', 'Align']
   );
+});
+
+test('props: linked type cells read as their natural text, spaces outside code spans', () => {
+  const tables = [
+    {
+      name: 'MenuProps',
+      kind: 'props',
+      rows: [
+        row({ name: 'on', type: '(item: MenuItem) => void' }),
+        row({ name: 'pair', type: 'MenuItem | Align' }),
+        row({ name: 'list', type: 'MenuItem[] | null' }),
+      ],
+    },
+    { name: 'MenuItem', kind: 'object', rows: [row({ name: 'id', type: 'string' })] },
+    { name: 'Align', kind: 'alias', rows: [], text: "'start' | 'end'" },
+  ];
+  const out = renderRegion('props', mod({ values: ['Menu'], tables }));
+  assert.ok(out.includes('| `on` | `(item:` [MenuItem](#menuitem)`) => void` |'), out);
+  assert.ok(out.includes('| `pair` | [MenuItem](#menuitem) `\\|` [Align](#align) |'), out);
+  assert.ok(out.includes('| `list` | [MenuItem](#menuitem)`[] \\| null` |'), out);
+});
+
+test('props: a prose default renders as plain text, a value default as code', () => {
+  const rows = [
+    row({
+      name: 'validate',
+      type: '() => boolean',
+      default: 'accepts numeric text',
+      defaultProse: true,
+    }),
+    row({ name: 'size', default: "'m'" }),
+  ];
+  const out = renderRegion(
+    'props',
+    mod({ tables: [{ name: 'ButtonProps', kind: 'props', rows }] })
+  );
+  assert.ok(out.includes('| `() => boolean` | accepts numeric text |'), out);
+  assert.ok(out.includes("| `'m'` |"), out);
 });

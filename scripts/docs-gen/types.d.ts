@@ -3,6 +3,8 @@ export type PropRow = {
   type: string;
   required: boolean;
   default?: string;
+  /** The `@default` is prose, not a value (`accepts numeric text`): shown as plain text, not code. */
+  defaultProse?: boolean;
   description: string;
   deprecated?: boolean;
 };

@@ -53,14 +53,21 @@ function renderExamples(mod) {
   return parts.join('\n\n');
 }
 
-/** Type cell; names of supporting tables become links to their `###` heading. */
+/**
+ * Type cell; names of supporting tables become links to their `###` heading.
+ * The text between links is code; its edge spaces sit outside the code span,
+ * so the cell reads as the type does (`MenuItem[]`, `(item: MenuItem) => void`).
+ */
 function typeCell(type, linkable) {
   if (linkable.size === 0) return code(type);
   const pieces = String(type).split(/([A-Za-z_$][\w$]*)/);
   const out = [];
   let plain = '';
   const flush = () => {
-    if (plain.trim()) out.push(code(plain));
+    const m = /^(\s*)([\s\S]*?)(\s*)$/.exec(plain.replace(/\r?\n/g, ' '));
+    if (m[1]) out.push(' ');
+    if (m[2]) out.push(code(m[2]));
+    if (m[3] && m[2]) out.push(' ');
     plain = '';
   };
   for (const piece of pieces) {
@@ -72,7 +79,7 @@ function typeCell(type, linkable) {
     }
   }
   flush();
-  return out.join(' ');
+  return out.join('').trim();
 }
 
 function rowsTable(rows, linkable) {
@@ -80,7 +87,8 @@ function rowsTable(rows, linkable) {
   for (const r of rows) {
     const name = `\`${cell(r.name)}\`${r.required ? ' (required)' : ''}`;
     const desc = (r.deprecated ? '**Deprecated.** ' : '') + cell(r.description ?? '');
-    lines.push(`| ${name} | ${typeCell(r.type, linkable)} | ${code(r.default)} | ${desc.trim()} |`);
+    const def = r.defaultProse ? cell(r.default ?? '') : code(r.default);
+    lines.push(`| ${name} | ${typeCell(r.type, linkable)} | ${def} | ${desc.trim()} |`);
   }
   return lines.join('\n');
 }

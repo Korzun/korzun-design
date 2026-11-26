@@ -141,13 +141,112 @@ function readDoc(file, node, keywords = false) {
     }
   }
   out.description = desc.join(' ');
+  if (out.default !== undefined && !isExpression(out.default)) out.defaultProse = true;
   return out;
+}
+
+/** Whether `text` reads as one TypeScript expression (`'md'`, `() => true`), not prose. */
+function isExpression(text) {
+  if (!text.trim()) return false;
+  const { program, errors } = parseSync('default.ts', `(${text});`, { lang: 'ts' });
+  return errors.length === 0 && program.body.length === 1;
 }
 
 const squash = (s) => s.replace(/\s+/g, ' ').trim();
 
-/** Type members of a flattened type: name -> row. Returns null when it cannot be flattened. */
-function createFlattener(loader) {
+// Most keys a `keyof` type may have and still print as its literal union.
+const MAX_KEYS = 20;
+
+/** Every node nested in `node` (itself included) that satisfies `test`. */
+function findNodes(node, test, out = []) {
+  if (!node || typeof node !== 'object') return out;
+  if (Array.isArray(node)) {
+    for (const n of node) findNodes(n, test, out);
+    return out;
+  }
+  if (typeof node.type === 'string' && test(node)) out.push(node);
+  for (const [k, v] of Object.entries(node)) {
+    if (k !== 'type' && v && typeof v === 'object') findNodes(v, test, out);
+  }
+  return out;
+}
+
+/**
+ * Type members of a flattened type: name -> row. Returns null when it cannot be flattened.
+ * `exported` maps a declaration requested under another name (`type Action`
+ * exported as `TextInputAction`) to that name, so type text prints the name a
+ * reader can import.
+ */
+function createFlattener(loader, exported = new Map()) {
+  // Source text of `node`, with references to renamed exports printed by their exported name.
+  function renamedText(node, file) {
+    const refs = findNodes(
+      node,
+      (n) => n.type === 'TSTypeReference' && n.typeName?.type === 'Identifier'
+    );
+    let text = '';
+    let cursor = node.start;
+    for (const ref of refs.sort((a, b) => a.start - b.start)) {
+      const tn = ref.typeName;
+      if (tn.start < cursor) continue;
+      const decl = loader.resolveName(file, tn.name)?.decl;
+      const name = decl && exported.get(decl);
+      if (!name || name === tn.name) continue;
+      text += file.src.slice(cursor, tn.start) + name;
+      cursor = tn.end;
+    }
+    return squash(text + file.src.slice(cursor, node.end));
+  }
+
+  // The members of an object-shaped type node, with the file they are written in, or null.
+  function membersOf(node, file, depth) {
+    if (!node || depth > 20) return null;
+    if (node.type === 'TSParenthesizedType') return membersOf(node.typeAnnotation, file, depth + 1);
+    if (node.type === 'TSTypeLiteral') return { members: node.members, file };
+    if (node.type === 'TSTypeReference' && node.typeName.type === 'Identifier') {
+      if (node.typeArguments) return null;
+      const found = loader.resolveName(file, node.typeName.name);
+      const decl = found?.decl;
+      if (decl?.type === 'TSInterfaceDeclaration') {
+        return decl.extends?.length ? null : { members: decl.body.body, file: found.file };
+      }
+      if (decl?.type === 'TSTypeAliasDeclaration' && !decl.typeParameters?.params?.length) {
+        return membersOf(decl.typeAnnotation, found.file, depth + 1);
+      }
+      return null;
+    }
+    if (node.type === 'TSIndexedAccessType') {
+      const idx = node.indexType;
+      if (idx.type !== 'TSLiteralType' || typeof idx.literal.value !== 'string') return null;
+      const outer = membersOf(node.objectType, file, depth + 1);
+      const member = outer?.members.find(
+        (m) => m.type === 'TSPropertySignature' && !m.computed && memberKey(m) === idx.literal.value
+      );
+      const ann = member?.typeAnnotation?.typeAnnotation;
+      return ann ? membersOf(ann, outer.file, depth + 1) : null;
+    }
+    return null;
+  }
+
+  const memberKey = (m) => (m.key.type === 'Identifier' ? m.key.name : String(m.key.value));
+
+  // `keyof Theme['color']['chip']` as the literal union of its keys, when they are known and few.
+  function keyofText(node, file) {
+    if (node.type !== 'TSTypeOperator' || node.operator !== 'keyof') return null;
+    const found = membersOf(node.typeAnnotation, file, 0);
+    if (!found) return null;
+    const props = found.members.filter((m) => m.type === 'TSPropertySignature' && !m.computed);
+    if (props.length === 0 || props.length !== found.members.length) return null;
+    if (props.length > MAX_KEYS) return null;
+    return props
+      .map((m) =>
+        m.key.type === 'Identifier' || typeof m.key.value === 'string'
+          ? `'${memberKey(m)}'`
+          : String(m.key.value)
+      )
+      .join(' | ');
+  }
+
   function flattenNode(node, file, depth) {
     if (depth > 20) return null;
     switch (node.type) {
@@ -184,8 +283,10 @@ function createFlattener(loader) {
   // Source text of a type, with the package's own non-generic, non-object aliases
   // substituted by their text. React/DOM, generic and object-shaped types stay by name.
   function inlineType(node, file, depth) {
-    const plain = () => squash(file.src.slice(node.start, node.end));
+    const plain = () => renamedText(node, file);
     if (depth > 20) return plain();
+    const keys = keyofText(node, file);
+    if (keys) return keys;
     if (node.type === 'TSUnionType') {
       const parts = [];
       for (const t of node.types) {
@@ -227,6 +328,7 @@ function createFlattener(loader) {
         description: doc.description,
       };
       if (doc.default !== undefined) row.default = doc.default;
+      if (doc.defaultProse) row.defaultProse = true;
       if (doc.deprecated) row.deprecated = true;
       rows.set(name, row);
     }
@@ -288,6 +390,13 @@ function createFlattener(loader) {
         description: texts.join(' '),
         required: defining.length === branches.length && defining.every((r) => r.required),
       };
+      // A `@default` written on any one defining branch's member is the prop's default.
+      const withDefault = defining.find((r) => r.default !== undefined);
+      if (withDefault) {
+        merged.default = withDefault.default;
+        if (withDefault.defaultProse) merged.defaultProse = true;
+        else delete merged.defaultProse;
+      }
       rows.set(name, merged);
     }
     return rows;
@@ -302,6 +411,8 @@ function createFlattener(loader) {
       const wrapper =
         tn.type === 'Identifier' && ['Omit', 'Pick', 'Partial', 'Required'].includes(tn.name);
       if (wrapper && args.length) return skipName(args[0], file);
+      // A Record says nothing without its key and value types.
+      if (tn.type === 'Identifier' && tn.name === 'Record') return renamedText(node, file);
       return squash(file.src.slice(tn.start, tn.end));
     }
     return squash(file.src.slice(node.start, node.end));
@@ -373,11 +484,18 @@ function createFlattener(loader) {
     return rows;
   }
 
-  return (decl, file) => {
+  const flatten = (decl, file) => {
     skipped = [];
     const rows = flattenDecl(decl, file, 0);
     return { rows, skipped: rows ? skipped : [] };
   };
+  // An alias's declared text; one with a resolvable `keyof` part prints it as the key union.
+  const aliasText = (node, file) => {
+    const parts = node.type === 'TSUnionType' ? node.types : [node];
+    const resolves = parts.some((t) => keyofText(t, file));
+    return resolves ? inlineType(node, file, 0) : file.src.slice(node.start, node.end);
+  };
+  return { flatten, aliasText };
 }
 
 const cmp = (x, y) => (x < y ? -1 : x > y ? 1 : 0);
@@ -399,18 +517,21 @@ const byName = (a, b) => {
  */
 export function extractTypeTables(dtsPath, names, readFile = defaultRead) {
   const loader = createLoader(readFile);
-  const flatten = createFlattener(loader);
   const entry = loader.load(resolve(dtsPath));
-  return names.map((name) => {
+  const resolved = names.map((name) => {
     const found = loader.resolveName(entry, name);
     if (!found) throw new Error(`type ${name} not found from ${dtsPath}`);
-    const { decl, file } = found;
+    return { name, ...found };
+  });
+  const exported = new Map(resolved.map(({ name, decl }) => [decl, name]));
+  const { flatten, aliasText } = createFlattener(loader, exported);
+  return resolved.map(({ name, decl, file }) => {
     const { rows, skipped } = flatten(decl, file);
     const { description } = readDoc(file, decl, true);
     let out;
     if (!rows) {
       const body = decl.type === 'TSTypeAliasDeclaration' ? decl.typeAnnotation : decl;
-      out = { name, kind: 'alias', rows: [], text: file.src.slice(body.start, body.end) };
+      out = { name, kind: 'alias', rows: [], text: aliasText(body, file) };
     } else {
       out = {
         name,

@@ -471,3 +471,98 @@ test(
     );
   }
 );
+
+test('union: a @default on one branch member is kept on the merged row', () => {
+  const t = table(
+    `export type XProps = { a?: string } & (
+  | { /** Clear on click. */ clearable: true }
+  | {
+      /**
+       * Never clears.
+       * @default false
+       */
+      clearable?: false;
+    }
+);`,
+    'XProps'
+  );
+  assert.equal(row(t, 'clearable').default, 'false');
+  assert.equal(row(t, 'clearable').type, 'boolean');
+});
+
+test('keyof an indexed type resolves to the literal union of its keys', () => {
+  const extra = {
+    '/x/theme.d.ts': `export interface Theme {
+  color: { chip: { status: { a: string }; author: { a: string } } };
+  space: { sm: string; md: string };
+  gray: { readonly 50: string; readonly 100: string };
+}`,
+  };
+  const t = extractTypeTables(
+    '/x/a.d.ts',
+    ['XProps', 'ChipColor'],
+    files({
+      '/x/a.d.ts': `import type { Theme } from './theme.js';
+export type ChipColor = keyof Theme['color']['chip'];
+export type Gap = keyof Theme['space'] | 'none';
+export type XProps = { chip?: ChipColor; gap?: Gap; shade?: keyof Theme['gray'] };`,
+      ...extra,
+    })
+  );
+  assert.equal(row(t[0], 'chip').type, "'status' | 'author'");
+  assert.equal(row(t[0], 'gap').type, "'sm' | 'md' | 'none'");
+  assert.equal(row(t[0], 'shade').type, '50 | 100');
+  assert.equal(t[1].kind, 'alias');
+  assert.equal(t[1].text, "'status' | 'author'");
+});
+
+test('keyof an unknown or external type stays as written', () => {
+  const t = table(
+    `import type { CSSProperties } from 'react';
+export type XProps = { k?: keyof CSSProperties; j?: keyof Missing['a'] };`,
+    'XProps'
+  );
+  assert.equal(row(t, 'k').type, 'keyof CSSProperties');
+  assert.equal(row(t, 'j').type, "keyof Missing['a']");
+});
+
+test('a locally renamed type prints under its exported name', () => {
+  const src = `type Action = { danger?: boolean };
+type Item = { id: string };
+export type { Action as TextInputAction, Item as ListItem };
+export type XProps = { action?: Action; items?: Item[]; on?: (item: Item, a: Action) => void };`;
+  const t = extractTypeTables(
+    '/x/a.d.ts',
+    ['XProps', 'TextInputAction', 'ListItem'],
+    files({ '/x/a.d.ts': src })
+  )[0];
+  assert.equal(row(t, 'action').type, 'TextInputAction');
+  assert.equal(row(t, 'items').type, 'ListItem[]');
+  assert.equal(row(t, 'on').type, '(item: ListItem, a: TextInputAction) => void');
+});
+
+test('Record keeps its type arguments in Also accepts', () => {
+  const t = table(
+    `export type FieldRow = { _key: string } & Record<string, string | number | undefined>;`,
+    'FieldRow'
+  );
+  assert.deepEqual(t.extends, ['Record<string, string | number | undefined>']);
+});
+
+test('a @default that is not an expression is marked as prose', () => {
+  const t = table(
+    `export type XProps = {
+  /** @default accepts empty or numeric text */
+  validate?: () => boolean;
+  /** @default 'md' */
+  size?: string;
+  /** @default () => true */
+  check?: () => boolean;
+};`,
+    'XProps'
+  );
+  assert.equal(row(t, 'validate').default, 'accepts empty or numeric text');
+  assert.equal(row(t, 'validate').defaultProse, true);
+  assert.equal(row(t, 'size').defaultProse, undefined);
+  assert.equal(row(t, 'check').defaultProse, undefined);
+});

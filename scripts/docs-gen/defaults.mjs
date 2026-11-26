@@ -31,10 +31,33 @@ function unwrapAssertion(node) {
   return n;
 }
 
+/** Defaults in an object pattern, as written in source, keyed by prop name; keys already set win. */
+function patternDefaults(target, tsxSource, result) {
+  for (const prop of target.properties) {
+    if (prop.type !== 'Property' || prop.value.type !== 'AssignmentPattern') continue;
+    const key = prop.key.type === 'Identifier' ? prop.key.name : String(prop.key.value);
+    if (key in result) continue;
+    const right = unwrapAssertion(prop.value.right);
+    const text = tsxSource.slice(right.start, right.end);
+    result[key] = right.type === 'Literal' ? text : text.replace(/\s+/g, ' ');
+  }
+}
+
+/** Names the props object goes by in the body: the parameter itself, or its `...rest`. */
+function propsNames(target) {
+  if (target?.type === 'Identifier') return [target.name];
+  if (target?.type !== 'ObjectPattern') return [];
+  return target.properties
+    .filter((p) => p.type === 'RestElement' && p.argument.type === 'Identifier')
+    .map((p) => p.argument.name);
+}
+
 /**
- * Defaults from the first parameter's object pattern, as written in source:
- * literals, functions (`() => {}`) and any other expression, with type
- * assertions dropped and whitespace collapsed to single spaces.
+ * Defaults from the first parameter's object pattern, then from top-level
+ * `const { … } = props` destructures in the body (a parameter default wins),
+ * as written in source: literals, functions (`() => {}`) and any other
+ * expression, with type assertions dropped and whitespace collapsed to single
+ * spaces.
  * @param {string} tsxSource
  * @param {string} componentName
  * @returns {Record<string, string>}
@@ -45,13 +68,16 @@ export function readDefaults(tsxSource, componentName) {
   const pattern = fn?.params?.[0];
   const target = pattern?.type === 'AssignmentPattern' ? pattern.left : pattern;
   const result = {};
-  if (target?.type !== 'ObjectPattern') return result;
-  for (const prop of target.properties) {
-    if (prop.type !== 'Property' || prop.value.type !== 'AssignmentPattern') continue;
-    const key = prop.key.type === 'Identifier' ? prop.key.name : String(prop.key.value);
-    const right = unwrapAssertion(prop.value.right);
-    const text = tsxSource.slice(right.start, right.end);
-    result[key] = right.type === 'Literal' ? text : text.replace(/\s+/g, ' ');
+  if (target?.type === 'ObjectPattern') patternDefaults(target, tsxSource, result);
+  const names = propsNames(target);
+  const body = fn?.body?.type === 'BlockStatement' ? fn.body.body : [];
+  for (const stmt of body) {
+    if (stmt.type !== 'VariableDeclaration') continue;
+    for (const d of stmt.declarations) {
+      const init = d.init && unwrapAssertion(d.init);
+      if (d.id.type !== 'ObjectPattern' || init?.type !== 'Identifier') continue;
+      if (names.includes(init.name)) patternDefaults(d.id, tsxSource, result);
+    }
   }
   return result;
 }

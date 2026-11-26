@@ -1883,7 +1883,7 @@
             },
             {
               "name": "gap",
-              "type": "keyof Theme['space'] | 'none'",
+              "type": "'xxxs' | 'xxs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl' | 'xxxxl' | 'xxxxxl' | 'none'",
               "required": false,
               "description": "Space between children, from the theme's `space` tokens, or `'none'`.",
               "default": "'md'"

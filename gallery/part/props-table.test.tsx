@@ -33,4 +33,44 @@ describe('PropsTable', () => {
     mount({ name: 'Gap', kind: 'alias', rows: [], text: 'number', description: 'Pixels.' });
     expect(screen.getByText('Pixels.')).toBeInTheDocument();
   });
+
+  it('shows a prose default as plain text and a value default as code', () => {
+    mount({
+      name: 'NumberInputProps',
+      kind: 'props',
+      rows: [
+        {
+          name: 'validate',
+          type: '() => boolean',
+          required: false,
+          default: 'accepts numeric text',
+          defaultProse: true,
+          description: '',
+        },
+        { name: 'size', type: 'string', required: false, default: "'m'", description: '' },
+      ],
+    });
+    const prose = screen.getByText('accepts numeric text');
+    expect(prose.tagName).not.toBe('CODE');
+    expect(prose.closest('code')).toBeNull();
+    expect(screen.getByText("'m'").tagName).toBe('CODE');
+  });
+
+  it('links an array type with no space before the brackets', () => {
+    const item: TypeTable = { name: 'MenuItem', kind: 'object', rows: [] };
+    const props: TypeTable = {
+      name: 'MenuProps',
+      kind: 'props',
+      rows: [{ name: 'items', type: 'MenuItem[]', required: true, description: '' }],
+    };
+    render(
+      <ThemeProvider identity="test">
+        <MemoryRouter>
+          <PropsTable table={props} tables={[props, item]} from="docs/control/menu.md" />
+        </MemoryRouter>
+      </ThemeProvider>
+    );
+    const link = screen.getByRole('link', { name: 'MenuItem' });
+    expect(link.closest('code')).toHaveTextContent(/^MenuItem\[\]$/);
+  });
 });

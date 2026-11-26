@@ -176,7 +176,9 @@ export const PropsTable = ({ table, tables, from }: PropsTableProps) => {
                   <TypeText text={row.type} linkable={linkable} />
                 </td>
                 <td>
-                  {row.default ? (
+                  {row.default && row.defaultProse ? (
+                    <Text>{row.default}</Text>
+                  ) : row.default ? (
                     <code className={styles.code}>{row.default}</code>
                   ) : (
                     <Text tone="faint">–</Text>

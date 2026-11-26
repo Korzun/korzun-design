@@ -436,7 +436,7 @@ export default function InDialog() {
 | `loading` | `boolean` | `false` | Shows a spinner and "Loading…"; can't open. |
 | `name` (required) | `string` |  | Only lands on the search box while it is open: form data never carries the selection. See [Forms](#forms). |
 | `onChange` | `(value: string \| undefined) => void` | `() => {}` | Receives the option's `value`, `undefined` from the clear button, or the trimmed typed text from "Add:". Not an event. |
-| `options` (required) | [SelectOption](#selectoption) `[]` |  | Strings or `{ label, value, description? }` objects, mixed freely. |
+| `options` (required) | [SelectOption](#selectoption)`[]` |  | Strings or `{ label, value, description? }` objects, mixed freely. |
 | `placeholder` | `string` | `'Select…'` | Shown when nothing is selected. |
 | `searchable` | `boolean` | `true` | Opening swaps the trigger for a search box. `false` gives a plain list, arrow keys only. |
 | `surface` | `'card' \| 'page' \| 'inset'` |  | Unset, it follows the surface depth: `'page'` directly on a `Page`, `'card'` in a card, a dialog or outside any surface, `'inset'` two or more surfaces deep. Set, it overrides that and sets the corner radius and the elevation together; see [Choosing a surface](#choosing-a-surface). |

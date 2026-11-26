@@ -530,10 +530,10 @@ export default function InDialog() {
 | --- | --- | --- | --- |
 | `align` | `'start' \| 'center' \| 'end'` | `'start'` | Alignment to the trigger's start edge, centre or end edge. Use `'end'` for a trigger at the right edge. |
 | `ariaLabel` | `string` |  | Accessible name for the menu. Without it the menu is labelled by the trigger. |
-| `items` (required) | [MenuItem](#menuitem) `[]` |  | Items in order. Labels must be unique (they are the React key). Filter the array for conditional items. |
+| `items` (required) | [MenuItem](#menuitem)`[]` |  | Items in order. Labels must be unique (they are the React key). Filter the array for conditional items. |
 | `side` | `'bottom' \| 'top'` | `'bottom'` | Preferred side of the trigger; flips to the other side when there is no room. |
 | `surface` | `'solid' \| 'glass'` | `'solid'` | `'solid'` draws a card background, border and shadow; `'glass'` draws the frosted glass recipe. |
-| `trigger` (required) | `(props:` [MenuTriggerProps](#menutriggerprops) `) => ReactNode` |  | Renders the element that opens the menu. Spread `props` onto it: `trigger={(p) => <Button {...p}>Sort</Button>}`. |
+| `trigger` (required) | `(props:` [MenuTriggerProps](#menutriggerprops)`) => ReactNode` |  | Renders the element that opens the menu. Spread `props` onto it: `trigger={(p) => <Button {...p}>Sort</Button>}`. |
 
 ### MenuIntentProps
 
