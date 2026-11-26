@@ -274,6 +274,24 @@ describe('a toast stack fixed to the viewport bottom', () => {
     expect(contentHeight(wrapper)).toBe(180 + 24 + 16);
   });
 
+  it('reads top and bottom as declared: a browser resolves a fixed element’s auto top to px', () => {
+    const real = window.getComputedStyle.bind(window);
+    const spy = vi.spyOn(window, 'getComputedStyle').mockImplementation((el, pseudo) => {
+      const style = real(el, pseudo);
+      if (!(el as Element).classList?.contains('toasts')) return style;
+      return new Proxy(style, {
+        get: (target, key) =>
+          key === 'top' ? '-104px' : Reflect.get(target, key as string, target),
+      });
+    });
+    try {
+      document.getElementById('root')!.append(stack(-104, 180));
+      expect(contentHeight(wrapper)).toBe(180 + 24 + 16);
+    } finally {
+      spy.mockRestore();
+    }
+  });
+
   it('keeps the flow height when the stack already fits', () => {
     wrapper = place(wrapper, 0, 400);
     document.body.append(stack(300, 60));

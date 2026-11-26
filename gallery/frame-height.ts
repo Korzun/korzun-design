@@ -16,19 +16,49 @@ const viewportGap = (dialog: HTMLElement, view: Window) => {
 const NON_RENDERING = new Set(['SCRIPT', 'STYLE', 'LINK', 'TEMPLATE', 'NOSCRIPT', 'META']);
 
 /**
+ * The value the stylesheets declare for `prop` on `el`, the last matching rule
+ * winning (react-jss gives each element one class). Computed style cannot tell:
+ * a browser resolves a fixed element's `top: auto` to pixels.
+ */
+const declared = (el: Element, prop: string, view: Window): string => {
+  let value = '';
+  const walk = (rules: CSSRuleList) => {
+    for (const rule of rules) {
+      if (rule instanceof CSSMediaRule) {
+        if (view.matchMedia?.(rule.media.mediaText).matches) walk(rule.cssRules);
+      } else if (rule instanceof CSSStyleRule) {
+        let matches = false;
+        try {
+          matches = el.matches(rule.selectorText);
+        } catch {
+          // a selector this engine cannot parse
+        }
+        const v = matches && rule.style.getPropertyValue(prop);
+        if (v) value = v.trim();
+      }
+    }
+  };
+  for (const sheet of el.ownerDocument.styleSheets) {
+    try {
+      walk(sheet.cssRules);
+    } catch {
+      // a cross-origin sheet hides its rules
+    }
+  }
+  return value;
+};
+
+/**
  * A stack its stylesheet fixes to the viewport's bottom edge (the toast
- * container: `position: fixed`, `bottom` set, `top` auto). A popover placed
- * by an inline `bottom` is not one: it ends at its trigger.
+ * container: `position: fixed`, `bottom` declared, `top` auto). A popover
+ * placed by an inline `bottom` is not one: it ends at its trigger.
  */
 const isBottomStack = (el: Element, view: Window): el is HTMLElement => {
   if (!(el instanceof HTMLElement) || el.style.bottom !== '') return false;
   const style = view.getComputedStyle(el);
-  return (
-    style.position === 'fixed' &&
-    style.display !== 'none' &&
-    !['', 'auto'].includes(style.bottom) &&
-    ['', 'auto'].includes(style.top)
-  );
+  if (style.position !== 'fixed' || style.display === 'none') return false;
+  const top = declared(el, 'top', view);
+  return !['', 'auto'].includes(declared(el, 'bottom', view)) && ['', 'auto'].includes(top);
 };
 
 // Every bottom stack in the document, in the example or beside it, that shows something.
