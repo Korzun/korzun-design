@@ -5,7 +5,7 @@ import { useStyle } from './style.js';
 export interface FooterAction {
   /** Button text; may change between renders (`Save` → `Saving…`) without remounting. */
   label: string;
-  /** Required even for a `submit` item, where it is never called (the form submits). Receives no event. Not called while `disabled` or `loading`. */
+  /** Required even for a `submit` item, where it is never called (the form submits); pass `() => {}`. Receives no event. Not called while `disabled` or `loading`. */
   onClick: () => void;
   /** Greys the button out and blocks clicks. */
   disabled?: boolean;

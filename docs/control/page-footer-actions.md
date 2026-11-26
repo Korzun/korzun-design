@@ -150,16 +150,15 @@ export default function LoadingAndDisabled() {
 
 The row sits below the cards, outside the `<form>`, so the submit item names
 the form with `form`. `onClick` is required on every item but never called
-for a submit one: the form's `action` runs instead. `loading` follows the
+for a submit one (pass an empty function): the form's `action` runs instead. `loading` follows the
 pending save, and Save is disabled while a field is empty.
 
 ```tsx
 import { Card, Stack, Text } from '@korzun/design/component';
 import { PageFooterActions, TextInput } from '@korzun/design/control';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 
 export default function SubmitAForm() {
-  const formRef = useRef<HTMLFormElement>(null);
   const [title, setTitle] = useState<string | undefined>('Dune');
   const [author, setAuthor] = useState<string | undefined>('Frank Herbert');
   const [saving, setSaving] = useState(false);
@@ -169,7 +168,6 @@ export default function SubmitAForm() {
     <Stack>
       <form
         id="book-form"
-        ref={formRef}
         action={async (data) => {
           setSaving(true);
           await new Promise((resolve) => setTimeout(resolve, 1500));
@@ -191,7 +189,7 @@ export default function SubmitAForm() {
           { label: 'Cancel', onClick: () => setStatus('Cancelled'), disabled: saving },
           {
             label: saving ? 'Saving…' : 'Save',
-            onClick: () => formRef.current?.requestSubmit(),
+            onClick: () => {},
             submit: true,
             form: 'book-form',
             emphasis: true,
@@ -229,7 +227,7 @@ One button in a `PageFooterActions` row.
 | `form` | `string` |  | Id of the `<form>` to submit; needed because the row sits outside the form. |
 | `label` (required) | `string` |  | Button text; may change between renders (`Save` → `Saving…`) without remounting. |
 | `loading` | `boolean` |  | Spinner; blocks clicks. |
-| `onClick` (required) | `() => void` |  | Required even for a `submit` item, where it is never called (the form submits). Receives no event. Not called while `disabled` or `loading`. |
+| `onClick` (required) | `() => void` |  | Required even for a `submit` item, where it is never called (the form submits); pass `() => {}`. Receives no event. Not called while `disabled` or `loading`. |
 | `submit` | `boolean` |  | Renders a native submit button; `onClick` is then ignored. Pair it with `form` when the row sits outside the `<form>`. |
 
 <!-- /generated:props -->
