@@ -17,15 +17,14 @@ const mount = (slug: string) =>
   );
 
 describe('GuidePage', () => {
-  it('has a guide for each guide doc', () => {
-    expect(siteData.guides.map((g) => g.slug)).toEqual([
-      'corners',
-      'hooks',
-      'patterns',
-      'philosophy',
-      'tokens',
-    ]);
-  });
+  it.each(siteData.guides.map((g) => [g.slug, g] as const))(
+    'renders the %s guide with its title and description',
+    (slug, guide) => {
+      mount(slug);
+      expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(guide.title);
+      expect(screen.getByText(guide.description)).toBeInTheDocument();
+    }
+  );
 
   it('renders the corners guide: title, description and body headings', () => {
     mount('corners');

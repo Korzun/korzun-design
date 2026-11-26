@@ -8,30 +8,41 @@ import type { SiteData } from '../scripts/docs-gen/types.js';
 // @types/node, and `tsc` checks this file (see alias.ts).
 const repo = decodeURIComponent(new URL('..', import.meta.url).pathname);
 
-/** The first paragraph after AGENTS.md's title, joined onto one line. */
-const summary = (agentsMd: string): string => {
-  const paragraphs = agentsMd
-    .split(/\n\s*\n/)
-    .map((p) => p.trim())
-    .filter((p) => p && !p.startsWith('#'));
-  return (paragraphs[0] ?? '').replace(/\s*\n\s*/g, ' ');
-};
+// Written for llms.txt rather than copied from AGENTS.md, whose opening talks
+// about paths relative to the file in node_modules; here every link is absolute.
+const summary = (siteUrl: string) =>
+  "@korzun/design is a React 19 + react-jss UI component library. Its API is not in your training data: read a module's doc below before using it, and don't guess props from other libraries. " +
+  `[llms-full.txt](${siteUrl}llms-full.txt) has every doc in one file.`;
 
 const item = (title: string, url: string, description: string) =>
   `- [${title}](${url}): ${description}`;
 
 /**
- * `llms.txt` in the llmstxt.org format: the package name, AGENTS.md's summary,
- * one link per documented module grouped by category, the guides, and the
- * full file under `## Optional`. Links are absolute under `siteUrl`.
+ * `llms.txt` in the llmstxt.org format: the package name, a summary, AGENTS.md
+ * under `## Start here`, one link per documented module grouped by category,
+ * the guides, and the full file under `## Optional`. Links are absolute under
+ * `siteUrl`.
  */
-export const buildLlmsTxt = (data: SiteData, agentsMd: string, siteUrl: string): string => {
-  const sections = CATEGORIES.map((category) => ({
-    title: category,
-    items: data.modules
-      .filter((m) => m.category === category)
-      .map((m) => item(m.title, `${siteUrl}${m.docPath}`, m.description)),
-  }));
+export const buildLlmsTxt = (data: SiteData, siteUrl: string): string => {
+  const sections = [
+    {
+      title: 'Start here',
+      items: [
+        item(
+          'Rules for coding agents',
+          `${siteUrl}AGENTS.md`,
+          'setup, imports and the rules every screen must follow'
+        ),
+      ],
+    },
+  ];
+  for (const category of CATEGORIES)
+    sections.push({
+      title: category,
+      items: data.modules
+        .filter((m) => m.category === category)
+        .map((m) => item(m.title, `${siteUrl}${m.docPath}`, m.description)),
+    });
   sections.push({
     title: 'Guides',
     items: data.guides.map((g) => item(g.title, `${siteUrl}${g.docPath}`, g.description)),
@@ -43,7 +54,7 @@ export const buildLlmsTxt = (data: SiteData, agentsMd: string, siteUrl: string):
   const body = sections
     .filter((s) => s.items.length > 0)
     .map((s) => `## ${s.title}\n\n${s.items.join('\n')}`);
-  return `${['# @korzun/design', `> ${summary(agentsMd)}`, ...body].join('\n\n')}\n`;
+  return `${['# @korzun/design', `> ${summary(siteUrl)}`, ...body].join('\n\n')}\n`;
 };
 
 /** `llms-full.txt`: AGENTS.md, then every doc in turn, each after a comment naming its path. */
@@ -58,14 +69,15 @@ const llmsFiles = (siteUrl: string): Map<string, string> => {
   const data = JSON.parse(readRepoFile(repo, 'gallery/generated/site-data.json')) as SiteData;
   const docs = docFiles(repo).map((path) => ({ path, content: readRepoFile(repo, path) }));
   return new Map([
-    ['llms.txt', buildLlmsTxt(data, agentsMd, siteUrl)],
+    ['llms.txt', buildLlmsTxt(data, siteUrl)],
+    ['AGENTS.md', agentsMd],
     ['llms-full.txt', buildLlmsFull(agentsMd, docs)],
     ...docs.map((d) => [d.path, d.content] as [string, string]),
   ]);
 };
 
 /**
- * Publishes `llms.txt`, `llms-full.txt` and the raw `docs/**\/*.md` (without
+ * Publishes `llms.txt`, `llms-full.txt`, `AGENTS.md` and the raw `docs/**\/*.md` (without
  * docs/superpowers) beside the site: emitted into the build, served by the dev
  * server at the same paths, read fresh on every request.
  */
@@ -80,9 +92,15 @@ export const llmsPlugin = ({ siteUrl }: { siteUrl: string }): Plugin => {
       server.middlewares.use((req, res, next) => {
         // Typed loosely: without @types/node, vite's request type has no url.
         const url = ((req as { url?: string }).url ?? '').split(/[?#]/)[0]!;
-        const path = url.startsWith(base) ? decodeURIComponent(url.slice(base.length)) : null;
-        const isLlms = path === 'llms.txt' || path === 'llms-full.txt';
-        if (!path || !(isLlms || (path.startsWith('docs/') && path.endsWith('.md')))) return next();
+        if (!url.startsWith(base)) return next();
+        let path: string;
+        try {
+          path = decodeURIComponent(url.slice(base.length));
+        } catch {
+          return next(); // A malformed escape: not one of ours.
+        }
+        const isTop = ['llms.txt', 'llms-full.txt', 'AGENTS.md'].includes(path);
+        if (!(isTop || (path.startsWith('docs/') && path.endsWith('.md')))) return next();
         const content = llmsFiles(siteUrl).get(path);
         if (content === undefined) return next();
         res.setHeader('Content-Type', 'text/plain; charset=utf-8');

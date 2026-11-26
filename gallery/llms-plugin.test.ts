@@ -1,11 +1,11 @@
-import agents from '../AGENTS.md?raw';
+import { CATEGORIES } from '../scripts/docs-gen/categories.mjs';
 import { siteData } from './data.js';
 import { buildLlmsFull, buildLlmsTxt } from './llms-plugin.js';
 
 const site = 'https://example.test/design/';
 
 describe('buildLlmsTxt', () => {
-  const text = buildLlmsTxt(siteData, agents, site);
+  const text = buildLlmsTxt(siteData, site);
   const section = (title: string) => {
     const start = text.indexOf(`\n## ${title}\n`);
     expect(start).toBeGreaterThan(-1);
@@ -13,12 +13,20 @@ describe('buildLlmsTxt', () => {
     return text.slice(start, end === -1 ? undefined : end);
   };
 
-  it('opens with the title and the first AGENTS.md paragraph as the summary', () => {
+  it('opens with the title and a summary written for absolute links', () => {
     const [title, blank, summary] = text.split('\n');
     expect(title).toBe('# @korzun/design');
     expect(blank).toBe('');
-    expect(summary).toMatch(/^> This package's API is \*\*not in your training data\*\*\./);
-    expect(summary).toMatch(/under `node_modules\/@korzun\/design\/`\.$/);
+    expect(summary).toMatch(/^> @korzun\/design is a React 19 \+ react-jss UI component library\./);
+    expect(summary).toContain('not in your training data');
+    expect(summary).toContain(`(${site}llms-full.txt)`);
+    expect(summary).not.toMatch(/node_modules|relative to this file/);
+  });
+
+  it('links AGENTS.md first, under Start here', () => {
+    expect(section('Start here')).toContain(
+      `- [Rules for coding agents](${site}AGENTS.md): setup, imports and the rules every screen must follow`
+    );
   });
 
   it('lists Button under Actions with its doc link and description', () => {
@@ -28,15 +36,12 @@ describe('buildLlmsTxt', () => {
     );
   });
 
-  it('orders the category sections by the closed list, then Guides and Optional', () => {
+  it('orders Start here, the categories by the closed list, then Guides and Optional', () => {
     const headings = text.split('\n').filter((l) => l.startsWith('## '));
-    expect(headings).toEqual([
-      '## Layout',
-      '## Actions',
-      '## Feedback',
-      '## Guides',
-      '## Optional',
-    ]);
+    const present = CATEGORIES.filter((c) => siteData.modules.some((m) => m.category === c));
+    expect(headings).toEqual(
+      ['Start here', ...present, 'Guides', 'Optional'].map((title) => `## ${title}`)
+    );
   });
 
   it('lists every guide and the full file', () => {
