@@ -39,3 +39,18 @@ describe('ChipsInput corners follow surface depth', () => {
     expect(radius(chip)).toBe(chipPx[px]);
   });
 });
+
+// On the page the chips and text clear the lg corner: 16px in (1rem), 8px (0.5rem) elsewhere.
+describe('ChipsInput insets its chips from the corner on a page', () => {
+  it.each([
+    ['no surface', undefined, '0.5rem'],
+    ['depth 0 (page)', 0, '1rem'],
+    ['depth 1 (card)', 1, '0.5rem'],
+  ] as const)('%s', (_, depth, inset) => {
+    const { getByText } = atDepth(
+      depth,
+      <ChipsInput name="s" value={['Fiction']} onChange={() => {}} suggestions={[]} />
+    );
+    expect(getComputedStyle(getByText('Fiction').parentElement!).paddingLeft).toBe(inset);
+  });
+});

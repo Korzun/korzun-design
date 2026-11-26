@@ -1,5 +1,5 @@
 import { ThemeProvider } from '@korzun/design/theme';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router';
 
@@ -42,6 +42,27 @@ describe('OverviewPage', () => {
     expect(frame.getAttribute('src')).toMatch(
       /^\/#\/frame\/button\/preview\?theme=(light|dark|auto)&fit=center$/
     );
+  });
+
+  it('renders card descriptions as inline markdown, with no block or link inside the card link', () => {
+    mount();
+    const link = screen.getByRole('link', { name: /^TextInput\b/ });
+    expect(link.textContent).not.toContain('`');
+    expect(link.querySelector('code')).toHaveTextContent('maxLength');
+    expect(link.querySelector('a, p, div div p, ul, pre')).toBeNull();
+  });
+
+  it('keeps a thumbnail transparent until its frame loads, so a blank frame never flashes', () => {
+    const button = siteData.modules.find((m) => m.slug === 'button')!;
+    const { container } = render(
+      <ThemeProvider identity="test">
+        <Thumbnail owner={moduleOwner(button)} />
+      </ThemeProvider>
+    );
+    const frame = container.querySelector('iframe')!;
+    expect(getComputedStyle(frame).opacity).toBe('0');
+    fireEvent.load(frame);
+    expect(getComputedStyle(frame).opacity).toBe('1');
   });
 
   it('falls back to the first example for a module with no preview', () => {

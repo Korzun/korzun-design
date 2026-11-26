@@ -52,8 +52,8 @@ export const ChipsInput = ({
   chipColor = 'subject',
   dense = false,
 }: ChipsInputProps) => {
-  const style = useStyle({ chipColor, dense });
   const depthKey = useDepthClassKey();
+  const style = useStyle({ chipColor, dense, onPage: depthKey === 'depth0' });
   // A per-instance DOM id keeps label/input association unique even when two
   // forms with the same `name` mount at once (e.g. the create form plus a row
   // being edited on the device list). `name` stays form-data only.

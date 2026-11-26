@@ -342,6 +342,7 @@ This module has no styles of its own.
 ## Changelog
 
 - **0.7.0** (2026-11-26): `GlobalStyles` (rendered by `ThemeProvider`) ships the reset the components are drawn against: every element is `box-sizing: border-box` with no default margin or padding, as in Bookplate's and Scribe's `index.html`. Without it a text field was 51px tall instead of `layout.controlHeight` (33px). An app that already carries this reset sees no change; one that relied on browser default margins (`p`, `h1`, `ul`) loses them.
+- **0.7.0** (2026-11-26): `color-scheme` is set on `html` as well as `body`. With body alone the root's scheme was `normal`, so in dark mode the page scrollbar stayed light and an iframe whose document uses `GlobalStyles` (or is still loading) painted an opaque white box.
 - **0.7.0** (2026-11-26): The unchecked track is the new `color.bg.switchOff` token (`#868686` light, `#6E7480` dark), about 3:1 on `bg.page`, `bg.card` and `bg.cardHeader`; it was `border.default` (1.16:1 on a shaded row). The loading spinner on an unchecked track is now the thumb colour.
 - **0.6.0** (2026-11-26): New `theme.layout.formWidth` (`400px`): the width of a standalone form column such as sign-in, narrower than a dialog.
 - **0.2.0** (2026-11-21): New `fontWeight.regular` (400) token.

@@ -29,7 +29,7 @@ export default function InDialog() {
     setOpen(false);
   };
   return (
-    <>
+    <Stack align="start">
       <Button onClick={() => setDialogOpen(true)}>Open dialog</Button>
       <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} title="Edit book">
         <Stack align="start">
@@ -51,6 +51,6 @@ export default function InDialog() {
           <Text tone="muted">Chosen: {chosen}</Text>
         </Stack>
       </Dialog>
-    </>
+    </Stack>
   );
 }

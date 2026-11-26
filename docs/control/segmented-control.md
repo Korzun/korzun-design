@@ -79,7 +79,7 @@ const SORTS = [
 export default function Basic() {
   const [sort, setSort] = useState<(typeof SORTS)[number]['value']>('title');
   return (
-    <Stack>
+    <Stack align="start">
       <Text tone="muted">Sort by</Text>
       <SegmentedControl label="Sort by" options={SORTS} value={sort} onChange={setSort} />
       <Text tone="muted">Sorted by: {sort}</Text>
@@ -110,7 +110,7 @@ const RATINGS = [
 export default function Icons() {
   const [rating, setRating] = useState<(typeof RATINGS)[number]['value']>('ok');
   return (
-    <Stack>
+    <Stack align="start">
       <Text tone="muted">With captions</Text>
       <SegmentedControl label="Rating" options={RATINGS} value={rating} onChange={setRating} />
       <Text tone="muted">showLabels off</Text>
@@ -148,7 +148,7 @@ const RATINGS = [
 export default function Clearable() {
   const [rating, setRating] = useState<(typeof RATINGS)[number]['value'] | null>('great');
   return (
-    <Stack>
+    <Stack align="start">
       <SegmentedControl
         label="Rating"
         options={RATINGS}
@@ -181,7 +181,7 @@ const OPTIONS = [
 
 export default function ReadOnly() {
   return (
-    <Stack>
+    <Stack align="start">
       <Text tone="muted">Value review</Text>
       <SegmentedControl label="Status" options={OPTIONS} value="review" />
       <Text tone="muted">Value null</Text>
@@ -300,7 +300,7 @@ One segment of a `SegmentedControl`.
 
 ## Changelog
 
-- **0.7.0** (2026-11-26): Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.6.0 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px.
+- **0.7.0** (2026-11-26): Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.5.2 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px. A text field, `ChipsInput` box or field label directly on a Page also moves its text 16px in from the edge (8px elsewhere), the inset `Button` keeps, so it clears the deeper corner.
 - **0.7.0** (2026-11-26): Segments set their own font size (`fontSize.md`, the 14px of their labels) instead of the browser's 13.33px button default. Labels look the same; the segment's own text metrics no longer depend on the browser or page.
 
 <!-- /generated:changelog -->

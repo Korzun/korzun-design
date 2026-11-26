@@ -16,7 +16,7 @@ const SORTS = [
 export default function Basic() {
   const [sort, setSort] = useState<(typeof SORTS)[number]['value']>('title');
   return (
-    <Stack>
+    <Stack align="start">
       <Text tone="muted">Sort by</Text>
       <SegmentedControl label="Sort by" options={SORTS} value={sort} onChange={setSort} />
       <Text tone="muted">Sorted by: {sort}</Text>

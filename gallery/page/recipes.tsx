@@ -8,6 +8,7 @@ import { siteColumn } from '../layout/column.js';
 import { useScrollToHash } from '../layout/scroll.js';
 import { NotFound } from '../not-found.js';
 import { ExampleBlock } from '../part/example-block.js';
+import { Lead } from '../part/lead.js';
 import { Markdown } from '../part/markdown.js';
 import { Thumbnail } from '../part/thumbnail.js';
 
@@ -46,8 +47,9 @@ const RecipeCard = ({ recipe }: { recipe: Recipe }) => {
             <Heading level={2} size="md">
               {recipe.title}
             </Heading>
+            {/* Inline markdown (code spans), with links as text: the card is a link already. */}
             <Text size="sm" tone="description">
-              {recipe.description}
+              <Markdown source={recipe.description} from={recipe.docPath} inline links={false} />
             </Text>
           </Stack>
         </Stack>
@@ -65,10 +67,10 @@ export const RecipesPage = () => {
         <Stack gap="xxxl">
           <Stack gap="sm">
             <Heading level={1}>Recipes</Heading>
-            <Text as="p" size="lg" tone="description">
+            <Lead>
               Library parts put together for one job: a whole screen or a common group, live and
               ready to copy.
-            </Text>
+            </Lead>
           </Stack>
           <div className={styles.grid}>
             {siteData.recipes.map((recipe) => (
@@ -95,9 +97,7 @@ export const RecipePage = () => {
         <Stack gap="xxxl">
           <Stack gap="sm">
             <Heading level={1}>{recipe.title}</Heading>
-            <Text as="p" size="lg" tone="description">
-              {recipe.description}
-            </Text>
+            <Lead>{recipe.description}</Lead>
           </Stack>
           {recipe.examples.map((example) => (
             <ExampleBlock key={example.slug} owner={owner} example={example} />

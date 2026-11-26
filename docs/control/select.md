@@ -402,7 +402,7 @@ export default function InDialog() {
   const [open, setOpen] = useState(false);
   const [shelf, setShelf] = useState<string | undefined>('To read');
   return (
-    <Stack>
+    <Stack align="start">
       <Button onClick={() => setOpen(true)}>Move book</Button>
       <Text tone="muted">Shelf: {shelf ?? 'none'}</Text>
       <Dialog

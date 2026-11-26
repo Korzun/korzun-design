@@ -1,8 +1,9 @@
-import { Heading, Page, Stack, Text } from '@korzun/design/component';
+import { Heading, Page, Stack } from '@korzun/design/component';
 import { createUseStyles, useTheme, type Theme } from '@korzun/design/theme';
 import type { ReactNode } from 'react';
 
 import { siteColumn } from '../layout/column.js';
+import { Lead } from '../part/lead.js';
 
 const useStyle = createUseStyles((theme: Theme) => ({
   // The shared site column, like the overview and component pages.
@@ -31,10 +32,37 @@ const useStyle = createUseStyles((theme: Theme) => ({
     border: `1px solid ${theme.color.border.default}`,
   },
   path: { fontSize: theme.fontSize.xs, color: theme.color.text.muted, wordBreak: 'break-all' },
-  row: { display: 'flex', alignItems: 'center', gap: theme.space.xl, fontSize: theme.fontSize.md },
-  key: { width: 160, flexShrink: 0, fontFamily: theme.fontFamily.mono },
-  value: { color: theme.color.text.muted, fontFamily: theme.fontFamily.mono },
-  bar: { height: 12, backgroundColor: theme.color.brand.default },
+  // Name and value in two columns: the name column is as wide as the longest
+  // name in the section, so a long name pushes the values over, never into them.
+  rows: {
+    display: 'grid',
+    gridTemplateColumns: 'max-content minmax(0, 1fr)',
+    columnGap: theme.space.xxxl,
+    rowGap: theme.space.xl,
+    alignItems: 'center',
+    fontSize: theme.fontSize.md,
+    // On a phone the name sits above its value.
+    [theme.breakpoint.mobile]: {
+      gridTemplateColumns: 'minmax(0, 1fr)',
+      rowGap: theme.space.xs,
+      '& > $key:not(:first-child)': { marginTop: theme.space.lg },
+    },
+  },
+  key: { fontFamily: theme.fontFamily.mono, overflowWrap: 'anywhere' },
+  cell: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    gap: theme.space.xl,
+    minWidth: 0,
+  },
+  value: {
+    color: theme.color.text.muted,
+    fontFamily: theme.fontFamily.mono,
+    overflowWrap: 'anywhere',
+  },
+  bar: { height: 12, maxWidth: '100%', backgroundColor: theme.color.brand.default },
+  sample: { maxWidth: '16rem' },
   box: {
     height: 64,
     borderRadius: theme.radius.lg,
@@ -51,34 +79,107 @@ type Node = { [key: string]: Node | string | number };
 
 const isNode = (value: unknown): value is Node => typeof value === 'object' && value !== null;
 
-/** Flattens a nested token object to `[path, leafValue]` pairs. */
-const leaves = (node: Node, prefix: string): [string, string | number][] =>
-  Object.entries(node).flatMap(([key, value]) =>
-    isNode(value) ? leaves(value, `${prefix}.${key}`) : [[`${prefix}.${key}`, value]]
-  );
+/** Flattens a token value to `[path, leafValue]` pairs; a plain value is its own one leaf. */
+export const leaves = (value: unknown, prefix: string): [string, string | number][] =>
+  isNode(value)
+    ? Object.entries(value).flatMap(([key, child]) => leaves(child, `${prefix}.${key}`))
+    : [[prefix, value as string | number]];
+
+/** Each recipe's path and the properties it sets; a group (`modal`, `card`) holds only recipes. */
+export const recipeEntries = (node: Node, prefix: string): [string, string[]][] =>
+  Object.entries(node).flatMap(([key, value]): [string, string[]][] => {
+    if (!isNode(value)) return [];
+    const children = Object.values(value);
+    return children.length > 0 && children.every(isNode)
+      ? recipeEntries(value, `${prefix}.${key}`)
+      : [[`${prefix}.${key}`, Object.keys(value)]];
+  });
+
+/** The theme's token groups, in its own order: every key but the `colorScheme` string. */
+export const tokenGroups = (theme: Theme): (keyof Theme)[] =>
+  (Object.keys(theme) as (keyof Theme)[]).filter((key) => isNode(theme[key]));
 
 const Section = ({ title, children }: { title: string; children: ReactNode }) => {
   const styles = useStyle();
   return (
-    <section className={styles.section}>
+    <section className={styles.section} aria-label={title}>
       <Heading level={2}>{title}</Heading>
       {children}
     </section>
   );
 };
 
+const SAMPLE = 'The quick brown fox';
+
 export function TokensPage() {
   const styles = useStyle();
   const theme = useTheme();
 
-  const rows = (name: keyof Theme, render?: (key: string, value: string) => ReactNode) =>
-    leaves(theme[name] as unknown as Node, name).map(([path, value]) => (
-      <div key={path} className={styles.row}>
-        <span className={styles.key}>{path}</span>
-        {render?.(path, String(value))}
-        <span className={styles.value}>{String(value)}</span>
-      </div>
-    ));
+  // A preview per group that has one; every other group lists its values.
+  const previews: Partial<Record<keyof Theme, (value: string) => ReactNode>> = {
+    space: (v) => <div className={styles.bar} style={{ width: v }} />,
+    size: (v) => <div className={styles.bar} style={{ width: v }} />,
+    radius: (v) => (
+      <div className={styles.bar} style={{ width: 48, height: 32, borderRadius: v }} />
+    ),
+    fontSize: (v) => <span style={{ fontSize: v }}>{SAMPLE}</span>,
+    fontFamily: (v) => <span style={{ fontFamily: v }}>{SAMPLE}</span>,
+    fontWeight: (v) => <span style={{ fontWeight: Number(v) }}>{SAMPLE}</span>,
+    lineHeight: (v) => (
+      <span className={styles.sample} style={{ lineHeight: v }}>
+        {`${SAMPLE} jumps over the lazy dog, and back again.`}
+      </span>
+    ),
+  };
+
+  const rows = (entries: [string, string][], preview?: (value: string) => ReactNode) => (
+    <div className={styles.rows}>
+      {entries.flatMap(([path, value]) => [
+        <span key={`${path}:key`} className={styles.key}>
+          {path}
+        </span>,
+        <span key={`${path}:value`} className={styles.cell}>
+          {preview?.(value)}
+          <span className={styles.value}>{value}</span>
+        </span>,
+      ])}
+    </div>
+  );
+
+  const body = (group: keyof Theme): ReactNode => {
+    const value = theme[group] as unknown as Node;
+    if (group === 'color')
+      return Object.entries(value).map(([name, colors]) => (
+        <div key={name}>
+          <h3 className={styles.group}>color.{name}</h3>
+          <div className={styles.grid}>
+            {leaves(colors, `color.${name}`).map(([path, color]) => (
+              <div key={path} className={styles.swatch}>
+                <div className={styles.chip} style={{ background: String(color) }} />
+                <span className={styles.path}>{path}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      ));
+    if (group === 'shadow')
+      return (
+        <div className={styles.boxes}>
+          {leaves(value, 'shadow').map(([path, shadow]) => (
+            <div key={path}>
+              <div className={styles.box} style={{ boxShadow: String(shadow) }} />
+              <span className={styles.path}>{path}</span>
+            </div>
+          ))}
+        </div>
+      );
+    if (group === 'recipe')
+      return rows(recipeEntries(value, 'recipe').map(([path, keys]) => [path, keys.join(', ')]));
+    return rows(
+      leaves(value, group).map(([path, v]) => [path, String(v)]),
+      previews[group]
+    );
+  };
 
   return (
     <div className={styles.column}>
@@ -86,7 +187,7 @@ export function TokensPage() {
         <Stack gap="xxxxl">
           <Stack gap="sm">
             <Heading level={1}>Tokens</Heading>
-            <Text as="p" size="lg" tone="description">
+            <Lead>
               {'Every theme value, as the current theme resolves it ('}
               <code>colorScheme: {theme.colorScheme}</code>
               {'). The '}
@@ -94,68 +195,14 @@ export function TokensPage() {
                 tokens guide
               </a>
               {' explains each group.'}
-            </Text>
+            </Lead>
           </Stack>
 
-          <Section title="color">
-            {Object.entries(theme.color).map(([group, value]) => (
-              <div key={group}>
-                <h3 className={styles.group}>color.{group}</h3>
-                <div className={styles.grid}>
-                  {leaves(value as Node, `color.${group}`).map(([path, color]) => (
-                    <div key={path} className={styles.swatch}>
-                      <div className={styles.chip} style={{ background: String(color) }} />
-                      <span className={styles.path}>{path}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </Section>
-
-          <Section title="space">
-            {rows('space', (_, v) => (
-              <div className={styles.bar} style={{ width: v }} />
-            ))}
-          </Section>
-
-          <Section title="radius">
-            {rows('radius', (_, v) => (
-              <div className={styles.bar} style={{ width: 48, height: 32, borderRadius: v }} />
-            ))}
-          </Section>
-
-          <Section title="fontSize">
-            {rows('fontSize', (_, v) => (
-              <span style={{ fontSize: v }}>The quick brown fox</span>
-            ))}
-          </Section>
-
-          <Section title="layout">{rows('layout')}</Section>
-          <Section title="zIndex">{rows('zIndex')}</Section>
-          <Section title="transition">{rows('transition')}</Section>
-
-          <Section title="shadow">
-            <div className={styles.boxes}>
-              {Object.entries(theme.shadow).map(([key, value]) => (
-                <div key={key}>
-                  <div className={styles.box} style={{ boxShadow: value }} />
-                  <span className={styles.path}>shadow.{key}</span>
-                </div>
-              ))}
-            </div>
-          </Section>
-
-          <Section title="breakpoint">{rows('breakpoint')}</Section>
-
-          <Section title="recipe">
-            {Object.entries(theme.recipe).map(([name, recipe]) => (
-              <div key={name} className={styles.row}>
-                <span className={styles.key}>recipe.{name}</span>
-                <span className={styles.value}>{Object.keys(recipe).join(', ')}</span>
-              </div>
-            ))}
-          </Section>
+          {tokenGroups(theme).map((group) => (
+            <Section key={group} title={group}>
+              {body(group)}
+            </Section>
+          ))}
         </Stack>
       </Page>
     </div>

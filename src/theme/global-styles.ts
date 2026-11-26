@@ -11,8 +11,13 @@ const useGlobalStyles = createUseStyles((theme: Theme) => ({
     // pseudo-element is not understood (jsdom), and would drop the reset.
     '*': { boxSizing: 'border-box', margin: 0, padding: 0 },
     '*::before, *::after': { boxSizing: 'border-box', margin: 0, padding: 0 },
+    // The scheme goes on the root too, not only on body: the root's scheme is
+    // what an iframe's document is matched against and what the page scrollbar
+    // and canvas use, so with body alone a dark app framed in a dark page
+    // painted an opaque white box, and the root scrollbar stayed light.
     html: {
       backgroundColor: theme.color.bg.page,
+      colorScheme: theme.colorScheme,
     },
     body: {
       fontFamily: theme.fontFamily.body,

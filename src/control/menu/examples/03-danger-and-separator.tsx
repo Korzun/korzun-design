@@ -10,7 +10,7 @@ import { useState } from 'react';
 export default function DangerAndSeparator() {
   const [chosen, setChosen] = useState('nothing yet');
   return (
-    <Stack>
+    <Stack align="start">
       <Menu
         trigger={(p) => <Button {...p}>Book</Button>}
         items={[

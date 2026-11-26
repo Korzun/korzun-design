@@ -25,7 +25,7 @@ export default function Width() {
   const toggle = (name: 'matched' | 'content') =>
     setOpen((current) => (current === name ? null : name));
   return (
-    <Stack>
+    <Stack align="start">
       <Text tone="muted">Open: {open ?? 'none'}</Text>
       <Button ref={matchedAnchor} onClick={() => toggle('matched')}>
         matchWidth: as wide as this button
