@@ -206,10 +206,11 @@ function renderProps(mod, { typeDocs = new Map() } = {}) {
 
 function renderTokens(mod) {
   if (mod.tokens.length === 0) return '## Tokens\n\nThis module has no styles of its own.';
+  // A recipe is a style fragment, not one value: link to its entry in the tokens guide.
+  const recipe = `[recipe](${docLink(mod.docPath, 'docs/tokens.md#recipe')})`;
   const rows = mod.tokens.map((t) => {
-    const light = t.kind === 'recipe' ? 'recipe' : t.light;
-    const dark = t.kind === 'recipe' ? 'recipe' : t.dark;
-    return `| ${code(`theme.${t.path}`)} | ${code(light ?? '')} | ${code(dark ?? '')} |`;
+    if (t.kind === 'recipe') return `| ${code(`theme.${t.path}`)} | ${recipe} | ${recipe} |`;
+    return `| ${code(`theme.${t.path}`)} | ${code(t.light ?? '')} | ${code(t.dark ?? '')} |`;
   });
   return ['## Tokens', '', '| Token | Light | Dark |', '| --- | --- | --- |', ...rows].join('\n');
 }

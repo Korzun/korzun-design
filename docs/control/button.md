@@ -376,8 +376,8 @@ type ButtonTypeValue = 'default' | 'primary' | 'text' | 'link' | 'dashed';
 | `theme.radius.lg` | `16px` | `16px` |
 | `theme.radius.md` | `8px` | `8px` |
 | `theme.radius.sm` | `4px` | `4px` |
-| `theme.recipe.focusRing` | `recipe` | `recipe` |
-| `theme.recipe.spinner` | `recipe` | `recipe` |
+| `theme.recipe.focusRing` | [recipe](../tokens.md#recipe) | [recipe](../tokens.md#recipe) |
+| `theme.recipe.spinner` | [recipe](../tokens.md#recipe) | [recipe](../tokens.md#recipe) |
 | `theme.shadow.brandStack` | `0px 2px 0px rgba(23, 119, 255, 0.2)` | `0px 2px 0px rgba(0, 0, 0, 0.4)` |
 | `theme.shadow.cardStack` | `0px 2px 0px rgba(217, 217, 217, 0.2)` | `0px 2px 0px rgba(0, 0, 0, 0.4)` |
 | `theme.shadow.dangerStack` | `0px 2px 0px rgba(255, 77, 79, 0.1)` | `0px 2px 0px rgba(0, 0, 0, 0.4)` |

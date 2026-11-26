@@ -283,7 +283,7 @@ One segment of a `SegmentedControl`.
 | `theme.fontSize.xs` | `0.7rem` | `0.7rem` |
 | `theme.fontWeight.medium` | `500` | `500` |
 | `theme.radius.md` | `8px` | `8px` |
-| `theme.recipe.focusRing` | `recipe` | `recipe` |
+| `theme.recipe.focusRing` | [recipe](../tokens.md#recipe) | [recipe](../tokens.md#recipe) |
 | `theme.shadow.cardStack` | `0px 2px 0px rgba(217, 217, 217, 0.2)` | `0px 2px 0px rgba(0, 0, 0, 0.4)` |
 | `theme.space.sm` | `0.375rem` | `0.375rem` |
 | `theme.space.xl` | `0.75rem` | `0.75rem` |

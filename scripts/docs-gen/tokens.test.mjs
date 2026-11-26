@@ -23,6 +23,30 @@ test('stops at computed access and keeps shared prefixes', () => {
   assert.deepEqual(collectTokenPaths(src), ['color', 'radius.lg', 'space', 'space.md']);
 });
 
+test("a parameter typed Theme['group'] reads that group: the group passed whole is not listed", () => {
+  const src = `import type { Theme } from '../../theme/theme.js';
+export const pick = (radius: Theme['radius'], depth: number): string =>
+  depth <= 0 ? radius.lg : radius.sm;
+export const useR = () => { const theme = useTheme(); return pick(theme.radius, 0); };`;
+  assert.deepEqual(collectTokenPaths(src, 'index.tsx'), ['radius.lg', 'radius.sm']);
+});
+
+test("a nested Theme['color']['text'] parameter keeps both levels", () => {
+  const src = `const f = (text: Theme['color']['text']) => text.primary;
+const g = (theme) => ({ a: f(theme.color.text), b: theme.space.md });`;
+  assert.deepEqual(collectTokenPaths(src), ['color.text.primary', 'space.md']);
+});
+
+test("a computed access on a Theme['group'] parameter lists the whole group", () => {
+  const src = `const f = (space: Theme['space'], k: string) => space[k];`;
+  assert.deepEqual(collectTokenPaths(src), ['space']);
+});
+
+test('reads tsx source (an entry index.tsx)', () => {
+  const src = `export const X = () => { const theme = useTheme(); return <div style={{ gap: theme.space.sm }} />; };`;
+  assert.deepEqual(collectTokenPaths(src, 'index.tsx'), ['space.sm']);
+});
+
 const themePath = resolve(root, 'dist/theme/theme.js');
 
 test(

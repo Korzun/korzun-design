@@ -273,10 +273,10 @@ type SwitchRadiusValue = 'inset' | 'pill';
 | `theme.radius.circle` | `50%` | `50%` |
 | `theme.radius.pill` | `999px` | `999px` |
 | `theme.radius.sm` | `4px` | `4px` |
-| `theme.recipe.focusRing` | `recipe` | `recipe` |
-| `theme.recipe.label` | `recipe` | `recipe` |
-| `theme.recipe.row` | `recipe` | `recipe` |
-| `theme.recipe.spinner` | `recipe` | `recipe` |
+| `theme.recipe.focusRing` | [recipe](../tokens.md#recipe) | [recipe](../tokens.md#recipe) |
+| `theme.recipe.label` | [recipe](../tokens.md#recipe) | [recipe](../tokens.md#recipe) |
+| `theme.recipe.row` | [recipe](../tokens.md#recipe) | [recipe](../tokens.md#recipe) |
+| `theme.recipe.spinner` | [recipe](../tokens.md#recipe) | [recipe](../tokens.md#recipe) |
 | `theme.space.md` | `0.5rem` | `0.5rem` |
 | `theme.space.xs` | `0.25rem` | `0.25rem` |
 

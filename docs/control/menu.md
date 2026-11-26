@@ -619,7 +619,7 @@ An item that navigates: a react-router `<Link>`, so middle-click and open-in-new
 | `theme.fontSize.md` | `0.875rem` | `0.875rem` |
 | `theme.radius.md` | `8px` | `8px` |
 | `theme.radius.sm` | `4px` | `4px` |
-| `theme.recipe.glass` | `recipe` | `recipe` |
+| `theme.recipe.glass` | [recipe](../tokens.md#recipe) | [recipe](../tokens.md#recipe) |
 | `theme.shadow.cardStack` | `0px 2px 0px rgba(217, 217, 217, 0.2)` | `0px 2px 0px rgba(0, 0, 0, 0.4)` |
 | `theme.space.lg` | `0.625rem` | `0.625rem` |
 | `theme.space.md` | `0.5rem` | `0.5rem` |

@@ -141,7 +141,7 @@ test('props: extends renders an Also accepts line under the table', () => {
 test('tokens: colors, recipes, omitted when none', () => {
   const tokens = [
     { path: 'color.text.primary', kind: 'color', light: '#111', dark: '#eee' },
-    { path: 'shadow.raised', kind: 'recipe', light: null, dark: null },
+    { path: 'recipe.glass', kind: 'recipe', light: null, dark: null },
   ];
   const out = renderRegion('tokens', mod({ tokens }));
   assert.equal(
@@ -152,9 +152,12 @@ test('tokens: colors, recipes, omitted when none', () => {
       '| Token | Light | Dark |',
       '| --- | --- | --- |',
       '| `theme.color.text.primary` | `#111` | `#eee` |',
-      '| `theme.shadow.raised` | `recipe` | `recipe` |',
+      '| `theme.recipe.glass` | [recipe](../tokens.md#recipe) | [recipe](../tokens.md#recipe) |',
     ].join('\n')
   );
+  // An entry doc sits in docs/ itself, beside tokens.md.
+  const entry = renderRegion('tokens', mod({ tokens, docPath: 'docs/toast.md' }));
+  assert.ok(entry.includes('| `theme.recipe.glass` | [recipe](tokens.md#recipe) |'), entry);
   assert.equal(renderRegion('tokens', mod()), '## Tokens\n\nThis module has no styles of its own.');
 });
 

@@ -18,6 +18,11 @@ const useStyle = createUseStyles((theme: Theme) => ({
   backdrop: { flexShrink: 0, borderRadius: theme.radius.sm },
   onLight: { backgroundColor: lightTheme.color.bg.page },
   onDark: { backgroundColor: darkTheme.color.bg.page },
+  link: {
+    color: theme.color.brand.default,
+    textDecoration: 'none',
+    '&:hover': { textDecoration: 'underline' },
+  },
 }));
 
 const Value = ({
@@ -45,6 +50,39 @@ const Value = ({
   );
 };
 
+/** The style properties a recipe sets (the same keys in both modes). */
+const recipeKeys = (path: string): string[] => {
+  let cur: unknown = lightTheme;
+  for (const key of path.split('.')) {
+    cur = cur && typeof cur === 'object' ? (cur as Record<string, unknown>)[key] : undefined;
+  }
+  return cur && typeof cur === 'object' ? Object.keys(cur) : [];
+};
+
+/**
+ * A recipe is a style fragment spread into a class, not one value: it links to
+ * the tokens guide and lists the properties it sets, across both mode columns.
+ */
+const Recipe = ({ path }: { path: string }) => {
+  const styles = useStyle();
+  const table = useTableStyle();
+  const keys = recipeKeys(path);
+  return (
+    <Text size="sm">
+      <a href="#/guides/tokens" className={styles.link}>
+        recipe
+      </a>
+      {keys.length > 0 && ' setting '}
+      {keys.map((key, i) => (
+        <span key={key}>
+          {i > 0 && ', '}
+          <code className={table.code}>{key}</code>
+        </span>
+      ))}
+    </Text>
+  );
+};
+
 export type TokensTableProps = {
   /** The theme tokens the component reads, with their resolved values. */
   tokens: TokenRow[];
@@ -69,12 +107,20 @@ export const TokensTable = ({ tokens }: TokensTableProps) => {
               <td>
                 <code className={table.code}>{`theme.${token.path}`}</code>
               </td>
-              <td>
-                <Value value={token.light} color={token.kind === 'color'} mode="light" />
-              </td>
-              <td>
-                <Value value={token.dark} color={token.kind === 'color'} mode="dark" />
-              </td>
+              {token.kind === 'recipe' ? (
+                <td colSpan={2}>
+                  <Recipe path={token.path} />
+                </td>
+              ) : (
+                <>
+                  <td>
+                    <Value value={token.light} color={token.kind === 'color'} mode="light" />
+                  </td>
+                  <td>
+                    <Value value={token.dark} color={token.kind === 'color'} mode="dark" />
+                  </td>
+                </>
+              )}
             </tr>
           ))}
         </tbody>

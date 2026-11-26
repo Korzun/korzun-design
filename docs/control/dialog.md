@@ -257,9 +257,9 @@ export default function Form() {
 | --- | --- | --- |
 | `theme.color.bg.card` | `#FCFCFC` | `#1A1B1E` |
 | `theme.color.text.secondary` | `#5A6375` | `#C8CBD2` |
-| `theme.recipe.modal.dialog` | `recipe` | `recipe` |
-| `theme.recipe.modal.footer` | `recipe` | `recipe` |
-| `theme.recipe.modal.header` | `recipe` | `recipe` |
+| `theme.recipe.modal.dialog` | [recipe](../tokens.md#recipe) | [recipe](../tokens.md#recipe) |
+| `theme.recipe.modal.footer` | [recipe](../tokens.md#recipe) | [recipe](../tokens.md#recipe) |
+| `theme.recipe.modal.header` | [recipe](../tokens.md#recipe) | [recipe](../tokens.md#recipe) |
 | `theme.space.xxl` | `1rem` | `1rem` |
 | `theme.space.xxxxl` | `1.5rem` | `1.5rem` |
 

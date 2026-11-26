@@ -94,14 +94,21 @@ function valueImports(file, source) {
 
 /**
  * Token paths of a module: from its `style.ts` and the relative modules that
- * imports for a value, transitively within src/, plus the style modules its
- * entry (`index.tsx`/`index.ts`) imports for a value (Heading renders with
- * Text's `useTypography` from `../text/style.js`). The entry's other imports
- * (components, helpers) are not followed: a component it renders lists its own
- * tokens. A module outside src/theme/ does not follow imports into it: they
- * bring the provider and global styles, not tokens the module itself uses.
+ * imports for a value, transitively within src/; from `theme.*` read in its
+ * entry (`index.tsx`/`index.ts`) itself, as through `useTheme()`; and from the
+ * style modules the entry imports for a value (Heading renders with Text's
+ * `useTypography` from `../text/style.js`). An internal module the entry
+ * imports for a value (a folder in no barrel, such as `metadata` under
+ * MetadataList) is part of this module, so it is read the same way. The
+ * entry's other imports (exported components, helpers) are not followed: a
+ * component it renders lists its own tokens. A module outside src/theme/ does
+ * not follow imports into it: they bring the provider and global styles, not
+ * tokens the module itself uses.
+ * @param {string} repo
+ * @param {string} srcDir
+ * @param {Set<string>} moduleDirs every module's `srcDir`; a folder outside it is internal
  */
-function styleTokenPaths(repo, srcDir) {
+function styleTokenPaths(repo, srcDir, moduleDirs = new Set()) {
   const seen = new Set();
   const paths = new Set();
   const inTheme = srcDir.startsWith('src/theme');
@@ -119,23 +126,30 @@ function styleTokenPaths(repo, srcDir) {
     seen.add(rel);
     const source = readIf(join(repo, rel));
     if (source === null) return;
-    for (const p of collectTokenPaths(source)) paths.add(p);
+    for (const p of collectTokenPaths(source, rel)) paths.add(p);
     for (const spec of valueImports(rel, source)) {
       const hit = resolveSpec(rel, spec);
       if (hit) visit(hit);
     }
   };
-  visit(`${srcDir}/style.ts`);
-  const entry = [`${srcDir}/index.tsx`, `${srcDir}/index.ts`].find((f) =>
-    existsSync(join(repo, f))
-  );
-  const entrySource = entry && readIf(join(repo, entry));
-  if (entrySource) {
+  const seenDirs = new Set();
+  const visitModule = (dir) => {
+    if (seenDirs.has(dir)) return;
+    seenDirs.add(dir);
+    visit(`${dir}/style.ts`);
+    const entry = [`${dir}/index.tsx`, `${dir}/index.ts`].find((f) => existsSync(join(repo, f)));
+    const entrySource = entry && readIf(join(repo, entry));
+    if (!entrySource) return;
+    for (const p of collectTokenPaths(entrySource, entry)) paths.add(p);
     for (const spec of valueImports(entry, entrySource)) {
       const hit = resolveSpec(entry, spec);
-      if (hit && /(^|\/)style\.tsx?$/.test(hit)) visit(hit);
+      if (!hit) continue;
+      if (/(^|\/)style\.tsx?$/.test(hit)) visit(hit);
+      const internal = /^(src\/(?:control|component)\/[^/]+)\/index\.tsx?$/.exec(hit);
+      if (internal && !moduleDirs.has(internal[1])) visitModule(internal[1]);
     }
-  }
+  };
+  visitModule(srcDir);
   return [...paths].sort();
 }
 
@@ -210,7 +224,9 @@ export function generate(repo, { strict = false } = {}) {
 
   let themes = null;
   const modules = [];
-  for (const skel of listModules(repo)) {
+  const skeletons = listModules(repo);
+  const moduleDirs = new Set(skeletons.map((s) => s.srcDir));
+  for (const skel of skeletons) {
     const parsed = fm.get(skel.docPath);
     if (!parsed) {
       if (strict) throw new Error(`${skel.docPath}: missing front matter`);
@@ -230,7 +246,7 @@ export function generate(repo, { strict = false } = {}) {
       skel,
       extractTypeTables(join(repo, skel.dtsDir, 'index.d.ts'), skel.types)
     );
-    const stylePaths = styleTokenPaths(repo, skel.srcDir);
+    const stylePaths = styleTokenPaths(repo, skel.srcDir, moduleDirs);
     let tokens = [];
     if (stylePaths.length > 0) {
       themes ??= loadThemes(repo);

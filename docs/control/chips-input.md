@@ -424,7 +424,7 @@ type ChipColor = 'status' | 'author' | 'series' | 'subject' | 'book' | 'entryTyp
 | `theme.lineHeight.tight` | `1` | `1` |
 | `theme.radius.md` | `8px` | `8px` |
 | `theme.radius.sm` | `4px` | `4px` |
-| `theme.recipe.label` | `recipe` | `recipe` |
+| `theme.recipe.label` | [recipe](../tokens.md#recipe) | [recipe](../tokens.md#recipe) |
 | `theme.shadow.hoverLift` | `0 2px 8px rgba(0,0,0,0.15)` | `0 2px 8px rgba(0,0,0,0.6)` |
 | `theme.space.md` | `0.5rem` | `0.5rem` |
 | `theme.space.sm` | `0.375rem` | `0.375rem` |

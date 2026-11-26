@@ -481,9 +481,9 @@ type SelectOption = string | {
 | `theme.radius.lg` | `16px` | `16px` |
 | `theme.radius.md` | `8px` | `8px` |
 | `theme.radius.sm` | `4px` | `4px` |
-| `theme.recipe.input` | `recipe` | `recipe` |
-| `theme.recipe.label` | `recipe` | `recipe` |
-| `theme.recipe.spinner` | `recipe` | `recipe` |
+| `theme.recipe.input` | [recipe](../tokens.md#recipe) | [recipe](../tokens.md#recipe) |
+| `theme.recipe.label` | [recipe](../tokens.md#recipe) | [recipe](../tokens.md#recipe) |
+| `theme.recipe.spinner` | [recipe](../tokens.md#recipe) | [recipe](../tokens.md#recipe) |
 | `theme.shadow.cardStack` | `0px 2px 0px rgba(217, 217, 217, 0.2)` | `0px 2px 0px rgba(0, 0, 0, 0.4)` |
 | `theme.shadow.hoverLift` | `0 2px 8px rgba(0,0,0,0.15)` | `0 2px 8px rgba(0,0,0,0.6)` |
 | `theme.space.md` | `0.5rem` | `0.5rem` |

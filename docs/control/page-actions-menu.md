@@ -253,7 +253,7 @@ One page action, shared by `PageActionsBar` and `PageActionsMenu`.
 | `theme.breakpoint.normal` | `@media (min-width: 641px)` | `@media (min-width: 641px)` |
 | `theme.color.text.primary` | `#111` | `#F5F5F7` |
 | `theme.radius.circle` | `50%` | `50%` |
-| `theme.recipe.glass` | `recipe` | `recipe` |
+| `theme.recipe.glass` | [recipe](../tokens.md#recipe) | [recipe](../tokens.md#recipe) |
 
 <!-- /generated:tokens -->
 

@@ -238,7 +238,7 @@ export default function InPage() {
 | `theme.color.text.primary` | `#111` | `#F5F5F7` |
 | `theme.fontFamily.body` | `system-ui, sans-serif` | `system-ui, sans-serif` |
 | `theme.radius.lg` | `16px` | `16px` |
-| `theme.recipe.focusRing` | `recipe` | `recipe` |
+| `theme.recipe.focusRing` | [recipe](../tokens.md#recipe) | [recipe](../tokens.md#recipe) |
 | `theme.shadow.cardStack` | `0px 2px 0px rgba(217, 217, 217, 0.2)` | `0px 2px 0px rgba(0, 0, 0, 0.4)` |
 | `theme.space.md` | `0.5rem` | `0.5rem` |
 | `theme.space.xxl` | `1rem` | `1rem` |

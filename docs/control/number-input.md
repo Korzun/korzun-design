@@ -253,8 +253,8 @@ export default function WithoutLabel() {
 | `theme.color.bg.cardHeader` | `#EEEEEE` | `#232427` |
 | `theme.layout.controlHeight` | `2.0625rem` | `2.0625rem` |
 | `theme.radius.md` | `8px` | `8px` |
-| `theme.recipe.input` | `recipe` | `recipe` |
-| `theme.recipe.label` | `recipe` | `recipe` |
+| `theme.recipe.input` | [recipe](../tokens.md#recipe) | [recipe](../tokens.md#recipe) |
+| `theme.recipe.label` | [recipe](../tokens.md#recipe) | [recipe](../tokens.md#recipe) |
 | `theme.space.md` | `0.5rem` | `0.5rem` |
 | `theme.space.sm` | `0.375rem` | `0.375rem` |
 | `theme.space.xs` | `0.25rem` | `0.25rem` |

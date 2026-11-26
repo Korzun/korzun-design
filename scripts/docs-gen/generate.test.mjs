@@ -263,6 +263,13 @@ test('tokens do not follow type-only imports in a style file', () => {
 test("tokens follow the entry's value imports of style modules, not of components", () => {
   const root = fixture();
   withOtherStyle(root);
+  // Other is a component of its own (exported from the barrel), so it lists its own tokens.
+  put(
+    root,
+    'src/control/index.ts',
+    "export { Widget, type WidgetProps } from './widget/index.js';\n" +
+      "export { Other } from './other/index.js';\n"
+  );
   put(root, 'src/control/other/index.tsx', 'export const Other = (theme) => theme.color.other;\n');
   put(
     root,
@@ -279,6 +286,41 @@ test("tokens follow the entry's value imports of style modules, not of component
       'export function Widget() { return useOther; }\n'
   );
   assert.deepEqual(tokenPaths(root), ['color.other', 'color.text']);
+});
+
+test('tokens include theme.* read in the entry itself (through useTheme())', () => {
+  const root = fixture();
+  withOtherStyle(root);
+  put(
+    root,
+    'src/control/widget/index.tsx',
+    'export function Widget() { const theme = useTheme(); return <i style={{ color: theme.color.other }} />; }\n'
+  );
+  assert.deepEqual(tokenPaths(root), ['color.other', 'color.text']);
+});
+
+test('tokens follow an internal module the entry renders (in no barrel), with its own entry', () => {
+  const root = fixture();
+  withOtherStyle(root);
+  put(
+    root,
+    'dist/theme/theme.js',
+    "export const lightTheme = { color: { text: '#111111', other: '#222222' }, space: { xs: '2px', md: '8px' } };\nexport const darkTheme = lightTheme;\n"
+  );
+  // `inner` is in no barrel: an internal building block of Widget.
+  put(root, 'src/control/inner/style.ts', 'export const s = (theme) => ({ g: theme.space.xs });\n');
+  put(
+    root,
+    'src/control/inner/index.tsx',
+    "import { s } from './style.js';\nimport { useOther } from '../other/style.js';\n" +
+      'export const Inner = () => { const theme = useTheme(); return theme.space.md; };\n'
+  );
+  put(
+    root,
+    'src/control/widget/index.tsx',
+    "import { Inner } from '../inner/index.js';\nexport function Widget() { return Inner; }\n"
+  );
+  assert.deepEqual(tokenPaths(root), ['color.other', 'color.text', 'space.md', 'space.xs']);
 });
 
 test('a computed token access (theme.fontSize[size]) lists the whole group', () => {
