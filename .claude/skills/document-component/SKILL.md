@@ -55,7 +55,7 @@ in your final report:
 |---|---|---|---|
 
 Every rule below applies to type-level comments too. A finished JSDoc line is:
-- **On the prop itself.** Each clause of the old note (every behaviour, every "needs X", every "type error when Y", every "so Z works") appears on that prop's own `/** */`. The comment on an interface or type alias renders as a paragraph under that type's table heading; it carries only what is true of the type as a whole ("An item that navigates."). A note about one prop that sits in a type comment moves onto the prop: that is a comment-only change and allowed.
+- **On the prop itself.** Each clause of the old note (every behaviour, every "needs X", every "type error when Y", every "so Z works") appears on that prop's own `/** */`. The comment on an interface or type alias renders as a paragraph under that type's table heading; it carries only what is true of the type as a whole ("An item that navigates."). A clause that describes one prop (what it renders, needs or rejects) stays on that prop's JSDoc even when the type comment says it too: a merged union table (`MenuItem`, the one `items` links to) shows no type paragraph. A note about one prop that sits only in a type comment moves onto the prop: that is a comment-only change and allowed.
 - **Behaviour only, at most three sentences.** What it does, when it is ignored, what it flips to, what TypeScript rejects. No history ("as it has always looked", "since 0.3"), no naming rationale, no restated union values (the Type column lists them; describe only values that carry extra meaning, as Alert `tone` does for which ones are announced). A longer explanation lives in a Usage subsection and the JSDoc links to it.
 - **Default-free prose.** The Default column carries defaults: no "(default)", "(the default)", "`'solid'` (default)" or "defaults to". The generator fills the column from the component's destructuring as written: literals (`side = 'bottom'`), functions (`onChange = () => {}` shows `() => {}`) and other expressions. Two cases need you:
   - The column shows a name a reader cannot use (an enum constant: `ButtonType.Default`) or is empty for a prop that has a default (a `??` fallback, a value set by a child component): add `@default <value>` (`@default 'default'`).
@@ -154,6 +154,7 @@ The first comment line is the title; the rest is the description shown above the
 - Examples follow the Usage and Do / don't of this doc and of every component they use (read `docs/component/surface.md` before using `Surface`). An example never demonstrates a use those docs advise against (a `Surface` with no drawn box around it).
 - `01` is the canonical compact usage: it is the overview thumbnail.
 - An example with an overlay places its trigger so the overlay opens on the side the example is about (a `side="top"` trigger sits below other content). The frame adds room for an overlay that opens above its trigger; it does not stop one flipping.
+- A description talks about the component, never the demo frame (no "to stay inside the demo"). No prop (`side`, a large `gap`) is set only to fit the frame. When the frame clips an overlay and the example is as it should be, report a gallery defect.
 - Link items and `to` props stay real links. Clicking one in a demo shows the frame's "The example navigated to…" page; that is expected.
 
 Coverage checklist (REQUIRED; fill in every row, it goes in your report). Each row names its example file:
@@ -161,7 +162,7 @@ Coverage checklist (REQUIRED; fill in every row, it goes in your report). Each r
 | What | Value | Example file |
 |---|---|---|
 | each union-typed prop (`type`, `tone`, `size`, `variant`, `side`, `align`, `surface`, `gap`, …) | every value, each visible on its own and labelled | |
-| each state the module has (`disabled`, `loading`, error, empty, read-only) | each | |
+| each state the module has (`disabled`, `loading`, error, empty, read-only) | each, visible on its own and held: a state reached only briefly (a timer, an in-flight request) gets a toggle that keeps it on, and has its own shot | |
 | the old doc's main `## Example` | list every prop and item kind it uses (Menu: `align="end"`, link item, action item, `Icon`, `danger`, `separatorBefore`); one example contains all of them | |
 | the common composition with its usual neighbours (in a `Card`, `Dialog`, form, row) | one | |
 | every interactive control wired to state with a visible effect | no do-nothing handler (grep above prints nothing, each handler read); each control's effect named | all |
@@ -180,10 +181,10 @@ CLAUDE.md).
 ## 6. Verify (REQUIRED, in order)
 
 1. `npx oxfmt src/<area>/<module>` then `npm run docs:gen`.
-2. Notes check, row by row. For each row of your audit table, find every clause of its Old note column in **that prop's own row** of the generated table (or in its type's description paragraph when the clause is about the type as a whole). A clause found only in an example, in Usage, or in another prop's row is lost: put it on the prop's JSDoc and regenerate. Then read every generated row: type, default and description right. A wrong row that right JSDoc cannot fix (a merged union with the wrong type, an unlinked supporting type) is a generator problem: write it in your report with the file and line. The generated text is regenerated, never edited.
+2. Notes check, row by row. For each row of your audit table, find every clause of its Old note column in **that prop's own row** of the generated table. Only a clause no single prop owns may live in its type's description paragraph instead. A clause found only in an example, in Usage, or in another prop's row is lost: put it on the prop's JSDoc and regenerate. Then read every generated row: type, default and description right. A wrong row that right JSDoc cannot fix (a merged union with the wrong type, an unlinked supporting type) is a generator problem: write it in your report with the file and line. The generated text is regenerated, never edited.
 3. `npm run lint`.
 4. `npm test` once (build, vitest, script tests, docs:check). Fix and rerun until green.
-5. Screenshots: the last step before the commit. Any edit after a screenshot (an example, JSDoc, the doc) means you redo 6.1 to 6.5 and reshoot what the edit can change.
+5. Screenshots: the last step before the commit. Any edit after a screenshot (an example, its description, JSDoc, the doc) means you redo 6.1 to 6.5 and reshoot that example's shots and the full page.
 
    Each block below is one Bash call; shell variables do not survive between calls, so the port and process id live in files and every call starts by setting `S` to your scratch directory (the same absolute path each time).
    Start the gallery on a free port, in its own process group:
@@ -216,6 +217,11 @@ CLAUDE.md).
    |---|---|---|---|---|
 
    View every PNG. Each example renders, is not empty, and is legible in dark. Each overlay is fully visible inside its frame. An overlay cut at the frame edge is a defect: fix the example (move the trigger, give the list room), or, when the example is right, report it under generator problems as a gallery defect with the shot path.
+   Reshoot check (REQUIRED, last thing before the commit). With `<oldest>` the oldest PNG of your final set of shots:
+   ```
+   find src/<area>/<module> docs/<area>/<slug>.md -newer <oldest>
+   ```
+   (entry-point module: `find src/<area> docs/<area>.md -newer <oldest>`). It prints nothing. Anything it prints means reshoot that example's shots and the full page, then run it again.
    Stop the server by its process group: `S=<scratch>; kill -- -$(cat $S/gallery.pid)`.
 
 ## 7. Commit

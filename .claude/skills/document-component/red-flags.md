@@ -13,6 +13,10 @@ and do what the right column says.
 | "A similar example already covers the old `## Example`." | A reviewer checks the old snippet's props and item kinds one by one. | List them; one example contains all of them. |
 | "The old prose says so, and I only edit what is wrong." | Old prose goes stale when a module it builds on changes. | Check each sentence against the changelog lines and the related docs before keeping it. |
 | "Plain characters means ASCII." | It means typed characters instead of HTML entities. | Keep … – “ ” as written. |
+| "It's only the description." | The description is inside the frame the shot shows. | Reshoot; the `find -newer` check must print nothing. |
+| "The type comment already says what this prop does." | The merged union table, the one readers reach from `items`, shows no type paragraph. | Keep the clause on the prop's JSDoc. |
+| "Setting `side="top"` (or a big `gap`) keeps it inside the demo." | Readers copy the prop for a reason no app has. | Write the example as an app would; report a clip as a gallery defect. |
+| "The loading state shows for a moment after the click." | Nobody sees a 1.2 s state in a shot or a read. | Give it a toggle that holds it on, and shoot it. |
 | "I only changed the example a little after the last shot." | Nobody has seen the final page. | Redo 6.1 to 6.5 and reshoot. |
 | "(the default) helps the reader." | The Default column says it; prose repeats drift. | Leave defaults out of JSDoc, titles and descriptions. |
 | "This JSDoc explains why the prop is named so." | Rationale and history are not behaviour. | Behaviour only, three sentences at most; link to a Usage section for more. |
