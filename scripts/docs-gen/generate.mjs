@@ -1,6 +1,6 @@
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
-import { join, posix } from 'node:path';
+import { join, posix, sep } from 'node:path';
 
 import { parseSync } from 'oxc-parser';
 
@@ -12,7 +12,7 @@ import { docFiles } from './doc-files.mjs';
 import { readExample } from './examples.mjs';
 import { parseFrontMatter } from './front-matter.mjs';
 import { listModules } from './inventory.mjs';
-import { extractTypeTables } from './props.mjs';
+import { declarationFiles, extractTypeTables } from './props.mjs';
 import {
   importNames,
   orderTables,
@@ -204,10 +204,10 @@ function rebuildIndex(agents, repo, fm) {
 /**
  * Generate docs, AGENTS.md index and site data in memory.
  * @param {string} repo
- * @param {{ strict?: boolean }} [options]
+ * @param {{ strict?: boolean, warn?: (message: string) => void }} [options]
  * @returns {Map<string, string>} repo-relative path to new content
  */
-export function generate(repo, { strict = false } = {}) {
+export function generate(repo, { strict = false, warn = console.warn } = {}) {
   if (!existsSync(join(repo, 'dist'))) throw new Error('dist/ missing: run npm run build');
 
   const pkg = JSON.parse(readFileSync(join(repo, 'package.json'), 'utf8'));
@@ -224,6 +224,8 @@ export function generate(repo, { strict = false } = {}) {
 
   let themes = null;
   const modules = [];
+  /** @type {Map<ModuleInfo, Set<string>>} the types each module's own .d.ts files declare */
+  const defines = new Map();
   const skeletons = listModules(repo);
   const moduleDirs = new Set(skeletons.map((s) => s.srcDir));
   for (const skel of skeletons) {
@@ -277,12 +279,38 @@ export function generate(repo, { strict = false } = {}) {
     };
     info.importLine = importLine(info);
     modules.push(info);
+    const dtsRoot = join(repo, skel.dtsDir) + sep;
+    const declared = declarationFiles(join(repo, skel.dtsDir, 'index.d.ts'), skel.types);
+    defines.set(
+      info,
+      new Set([...declared].filter(([, file]) => file.startsWith(dtsRoot)).map(([n]) => n))
+    );
   }
 
-  // Every type with a table in some doc, so another doc's type cells link to it.
-  const typeDocs = new Map();
+  // The module whose page owns each type's table: the one that declares it
+  // when several document it (one re-exports it), else the first; warn then.
+  const owners = new Map();
   for (const info of modules) {
-    for (const [name, id] of tableAnchors(info)) typeDocs.set(name, `${info.docPath}#${id}`);
+    for (const table of info.tables) {
+      const prev = owners.get(table.name);
+      if (!prev) {
+        owners.set(table.name, info);
+        continue;
+      }
+      const takes = defines.get(info).has(table.name) && !defines.get(prev).has(table.name);
+      const owner = takes ? info : prev;
+      warn(
+        `docs-gen: ${table.name} is documented in ${prev.docPath} and ${info.docPath}; ` +
+          `links go to ${owner.docPath}`
+      );
+      owners.set(table.name, owner);
+    }
+  }
+  // Every type with a headed table in its owner's doc, so another doc's type cells link to it.
+  const typeDocs = new Map();
+  for (const [name, owner] of owners) {
+    const id = tableAnchors(owner).get(name);
+    if (id) typeDocs.set(name, `${owner.docPath}#${id}`);
   }
   for (const info of modules) {
     const parsed = fm.get(info.docPath);
@@ -324,6 +352,7 @@ export function generate(repo, { strict = false } = {}) {
     modules,
     guides,
     changelog: changelog.map((v) => ({ version: v.version, date: v.date, entries: v.entries })),
+    typePages: Object.fromEntries([...owners].map(([name, owner]) => [name, owner.slug])),
   };
   out.set('gallery/generated/site-data.json', `${JSON.stringify(site, null, 2)}\n`);
   return out;

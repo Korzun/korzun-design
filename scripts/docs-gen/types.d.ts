@@ -76,4 +76,6 @@ export type SiteData = {
   modules: ModuleInfo[];
   guides: Guide[];
   changelog: { version: string; date: string; entries: ChangelogEntry[] }[];
+  /** Type name -> slug of the module page that owns its table (the declaring module when several document it). */
+  typePages: Record<string, string>;
 };

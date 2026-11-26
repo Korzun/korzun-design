@@ -198,6 +198,52 @@ test("a type cell links to a type whose table is in another module's doc", () =>
   assert.ok(files.get('docs/control/widget.md').includes('### WidgetItem'));
 });
 
+test('a type two modules document links to the module that declares it, with a warning', () => {
+  const root = fixture();
+  // Gadget declares Shared; Widget (listed after it) re-exports it and documents it too.
+  put(
+    root,
+    'src/control/index.ts',
+    "export { Gadget, type GadgetProps, type Shared } from './gadget/index.js';\n" +
+      "export { Widget, type WidgetProps } from './widget/index.js';\n" +
+      "export { type Shared } from './widget/index.js';\n" +
+      "export { Thing, type ThingProps } from './thing/index.js';\n"
+  );
+  put(
+    root,
+    'dist/control/gadget/index.d.ts',
+    'export type Shared = { /** Id. */ id: string };\n' +
+      'export interface GadgetProps {\n  /** S. */\n  s?: Shared;\n}\n'
+  );
+  put(
+    root,
+    'dist/control/widget/index.d.ts',
+    `${DTS}export type { Shared } from '../gadget/index.js';\n`
+  );
+  put(
+    root,
+    'dist/control/thing/index.d.ts',
+    "import type { Shared } from '../gadget/index.js';\n" +
+      'export interface ThingProps {\n  /** S. */\n  s?: Shared;\n}\n'
+  );
+  for (const m of ['gadget', 'thing']) {
+    put(root, `src/control/${m}/index.tsx`, 'export function X() { return null; }\n');
+    const name = m[0].toUpperCase() + m.slice(1);
+    put(root, `docs/control/${m}.md`, DOC.replaceAll('Widget', name));
+  }
+  const warnings = [];
+  const files = generate(root, { warn: (w) => warnings.push(w) });
+  assert.ok(
+    files.get('docs/control/thing.md').includes('[Shared](../control/gadget.md#shared)'),
+    files.get('docs/control/thing.md')
+  );
+  const site = JSON.parse(files.get('gallery/generated/site-data.json'));
+  assert.equal(site.typePages.Shared, 'gadget');
+  assert.equal(site.typePages.WidgetProps, 'widget');
+  assert.equal(warnings.length, 1);
+  assert.match(warnings[0], /Shared.*gadget\.md.*widget\.md/);
+});
+
 test('tokens follow style.ts imports transitively, cycle-safe', () => {
   const root = fixture();
   put(

@@ -24,7 +24,10 @@ export const exampleFor = (
   return info && Component ? { info, Component } : undefined;
 };
 
-/** Type name -> slug of the module page that has its table, so other pages link to it. */
+/**
+ * Type name -> slug of the module page that owns its table, so other pages
+ * link to it. The generator picks the declaring module when several document one.
+ */
 export const typePages: ReadonlyMap<string, string> = new Map(
-  siteData.modules.flatMap((m) => m.tables.map((t) => [t.name, m.slug] as const))
+  Object.entries(siteData.typePages ?? {})
 );
