@@ -218,6 +218,6 @@ export default function InARow() {
 
 ## Changelog
 
-- **0.6.0** (2026-11-26): A `value` that is not a finite number (`NaN`, `undefined`, `Infinity`) shows "Not started" instead of "NaN%".
+- **0.5.2** (2026-11-26): A `value` that is not a finite number (`NaN`, `undefined`, `Infinity`) shows "Not started" instead of "NaN%".
 
 <!-- /generated:changelog -->

@@ -181,6 +181,6 @@ export default function Actions() {
 
 ## Changelog
 
-- **0.6.0** (2026-11-26): Clicks and Enter/Space inside an action no longer reach the header, so no action toggles the section and a native button or link keeps its key press. Actions sit in a `display: contents` wrapper, so the layout is unchanged.
+- **0.5.2** (2026-11-26): Clicks and Enter/Space inside an action no longer reach the header, so no action toggles the section and a native button or link keeps its key press. Actions sit in a `display: contents` wrapper, so the layout is unchanged.
 
 <!-- /generated:changelog -->

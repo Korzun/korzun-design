@@ -1,5 +1,5 @@
 {
-  "version": "0.6.0",
+  "version": "0.5.2",
   "modules": [
     {
       "id": "control/back-button",
@@ -2609,7 +2609,7 @@
       ],
       "changelog": [
         {
-          "version": "0.6.0",
+          "version": "0.5.2",
           "date": "2026-11-26",
           "tags": [
             "TextInput",
@@ -4605,7 +4605,7 @@
       ],
       "changelog": [
         {
-          "version": "0.6.0",
+          "version": "0.5.2",
           "date": "2026-11-26",
           "tags": [
             "TextInput",
@@ -4930,7 +4930,7 @@
       ],
       "changelog": [
         {
-          "version": "0.6.0",
+          "version": "0.5.2",
           "date": "2026-11-26",
           "tags": [
             "TextInput",
@@ -4940,7 +4940,7 @@
           "text": "The visible `label` is linked to its field (`htmlFor` and a generated `id`), so it names the field and clicking it focuses the field. A new `ariaLabel` prop names a field that has no visible `label`; with a `label` it is ignored."
         },
         {
-          "version": "0.6.0",
+          "version": "0.5.2",
           "date": "2026-11-26",
           "tags": [
             "TextInput"
@@ -5969,7 +5969,7 @@
       ],
       "changelog": [
         {
-          "version": "0.6.0",
+          "version": "0.5.2",
           "date": "2026-11-26",
           "tags": [
             "CollapsibleSection"
@@ -7656,7 +7656,7 @@
       ],
       "changelog": [
         {
-          "version": "0.6.0",
+          "version": "0.5.2",
           "date": "2026-11-26",
           "tags": [
             "ProgressIndicator"
@@ -9591,11 +9591,11 @@
   ],
   "changelog": [
     {
-      "version": "0.6.0",
+      "version": "0.5.2",
       "date": "2026-11-26",
       "entries": [
         {
-          "version": "0.6.0",
+          "version": "0.5.2",
           "date": "2026-11-26",
           "tags": [
             "TextInput",
@@ -9605,7 +9605,7 @@
           "text": "The visible `label` is linked to its field (`htmlFor` and a generated `id`), so it names the field and clicking it focuses the field. A new `ariaLabel` prop names a field that has no visible `label`; with a `label` it is ignored."
         },
         {
-          "version": "0.6.0",
+          "version": "0.5.2",
           "date": "2026-11-26",
           "tags": [
             "TextInput"
@@ -9613,7 +9613,7 @@
           "text": "`action` works: clicking its icon button calls `action.action`. `TextInputAction` gains an optional `ariaLabel` naming that button."
         },
         {
-          "version": "0.6.0",
+          "version": "0.5.2",
           "date": "2026-11-26",
           "tags": [
             "CollapsibleSection"
@@ -9621,7 +9621,7 @@
           "text": "Clicks and Enter/Space inside an action no longer reach the header, so no action toggles the section and a native button or link keeps its key press. Actions sit in a `display: contents` wrapper, so the layout is unchanged."
         },
         {
-          "version": "0.6.0",
+          "version": "0.5.2",
           "date": "2026-11-26",
           "tags": [
             "ProgressIndicator"
