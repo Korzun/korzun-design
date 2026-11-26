@@ -24,6 +24,7 @@ primary title (`Text` or `Heading`).
 
 ### Behaviour
 
+- **Renders `null`** when every item is skipped: no empty line is left behind.
 - Only `null`/`undefined`/`false` are skipped. `''` and `0` are kept and draw a
   separator with nothing (or `0`) after it; filter them yourself.
 - A single datum wider than the line ellipsizes instead of wrapping.
