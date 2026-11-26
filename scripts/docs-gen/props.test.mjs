@@ -418,3 +418,56 @@ test('a type comment is read at the declaration, through a re-export', () => {
   )[0];
   assert.equal(t.description, 'One entry.');
 });
+
+test('only a JSDoc block becomes a type description, not a line or plain block comment', () => {
+  const src = `// A line comment.
+export interface A { a?: string }
+/* A plain block. */
+export interface B { b?: string }
+/** The doc. */
+/* eslint-disable-next-line */
+export interface C { c?: string }`;
+  const tables = extractTypeTables('/x/a.d.ts', ['A', 'B', 'C'], files({ '/x/a.d.ts': src }));
+  assert.deepEqual(
+    tables.map((t) => t.description),
+    [undefined, undefined, undefined]
+  );
+});
+
+test('resolves a renamed local export: export type { Action as TextInputAction }', () => {
+  const src = `/** Trailing icon button. */
+type Action = {
+  /** Red icon. */
+  danger?: boolean;
+};
+export type { Action as TextInputAction };`;
+  const t = table(src, 'TextInputAction');
+  assert.equal(t.description, 'Trailing icon button.');
+  assert.equal(row(t, 'danger').description, 'Red icon.');
+});
+
+test('resolves renamed re-exports and imports across files', () => {
+  const t = extractTypeTables(
+    '/x/a.d.ts',
+    ['Outer', 'Props'],
+    files({
+      '/x/a.d.ts': `export { Inner as Outer } from './b.js';\nimport { Base as B } from './b.js';\nexport type Props = { x?: B };`,
+      '/x/b.d.ts': `export type Inner = { a?: string };\nexport type Base = 'one' | 'two';`,
+    })
+  );
+  assert.equal(row(t[0], 'a').type, 'string');
+  assert.equal(row(t[1], 'x').type, "'one' | 'two'");
+});
+
+test(
+  'real TextInput d.ts: TextInputAction resolves',
+  { skip: !existsSync('dist/control/text-input/index.d.ts') },
+  () => {
+    const [t] = extractTypeTables('dist/control/text-input/index.d.ts', ['TextInputAction']);
+    assert.equal(t.kind, 'object');
+    assert.deepEqual(
+      t.rows.map((r) => r.name),
+      ['action', 'danger', 'icon']
+    );
+  }
+);

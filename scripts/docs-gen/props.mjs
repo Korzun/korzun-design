@@ -19,10 +19,13 @@ function createLoader(readFile) {
     const file = {
       path,
       src,
+      // JSDoc blocks only (`/** … */`): not `//` lines or plain `/* … */` blocks.
       comments: comments.filter((c) => c.type === 'Block' && c.value.startsWith('*')),
       decls: new Map(),
       imports: new Map(),
       reexports: new Map(),
+      // `export type { Action as TextInputAction }`: exported name -> local name.
+      localExports: new Map(),
       exportAll: [],
     };
     for (const stmt of program.body) {
@@ -42,6 +45,13 @@ function createLoader(readFile) {
       const decl = stmt.type === 'ExportNamedDeclaration' ? stmt.declaration : stmt;
       if (decl?.type === 'TSTypeAliasDeclaration' || decl?.type === 'TSInterfaceDeclaration') {
         file.decls.set(decl.id.name, decl);
+      }
+      if (stmt.type === 'ExportNamedDeclaration' && !stmt.source) {
+        for (const s of stmt.specifiers ?? []) {
+          const exported = s.exported.name ?? s.exported.value;
+          const local = s.local.name ?? s.local.value;
+          if (exported !== local) file.localExports.set(exported, local);
+        }
       }
       if (stmt.type === 'ExportNamedDeclaration' && stmt.source) {
         const from = String(stmt.source.value);
@@ -82,6 +92,8 @@ function createLoader(readFile) {
     seen.add(key);
     const local = file.decls.get(name);
     if (local) return { file, decl: local };
+    const renamed = file.localExports.get(name);
+    if (renamed) return resolveName(file, renamed, seen);
     const link = file.imports.get(name) ?? file.reexports.get(name);
     if (link) {
       const target = locate(file, link.from);
