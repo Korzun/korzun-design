@@ -5992,6 +5992,229 @@
       ]
     },
     {
+      "id": "component/inline",
+      "slug": "inline",
+      "entry": "@korzun/design/component",
+      "docPath": "docs/component/inline.md",
+      "title": "Inline",
+      "description": "A horizontal row with a themed gap between children, vertically centred by default.",
+      "category": "Layout",
+      "values": [
+        "Inline"
+      ],
+      "types": [
+        "InlineProps"
+      ],
+      "importLine": "import { Inline, type InlineProps } from '@korzun/design/component'",
+      "body": "A horizontal flex row with a themed gap between children, vertically centred\nby default. Use it for a button group, a header with an action on the right,\nor a row of chips that wraps.\n\nUse something else for: a vertical column (`Stack`), a single chip\n(`Tag`), a line of small metadata (`MetaLine`).\n\n## Usage\n\n### Choosing a gap\n\nPick `gap` from the theme's `space` scale so spacing is the same everywhere:\n`xs` for tight groups such as chips, `sm` for most rows, `xl` between links.\n`gap=\"none\"` emits `gap: 0`, for children that supply their own spacing.\n\n### Behaviour\n\n- `as=\"ul\"` and `as=\"ol\"` also reset the list's margin, padding and bullets.\n  Children should be `li`.\n- Without `wrap`, children stay on one line and may overflow or shrink.\n- Every other HTML attribute (`id`, `aria-*`, `data-*`, event handlers) passes\n  through. There is no `style` prop: spacing comes from tokens only.\n- Override with `className` at `'&&'` specificity, never `!important`.\n\n## Do / don't\n\n- Do use `justify=\"between\"` for a title-and-action row.\n- Do add `wrap` for rows of chips or buttons that may not fit on a phone.\n- Do use `align=\"baseline\"` to line up text of different sizes.\n- Don't add margins to children to space them; use `gap`.\n- Don't use an Inline for a column; use `Stack`.\n- Don't nest `Inline` just to push one child right; use `justify=\"between\"`.",
+      "examples": [
+        {
+          "file": "src/component/inline/examples/01-basic.tsx",
+          "slug": "basic",
+          "order": 1,
+          "title": "Basic",
+          "description": "The spread row: a title on the left and its action on the right, with\n`justify=\"between\"`. Children are vertically centred.",
+          "code": "import { Heading, Inline, Stack, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Basic() {\n  const [books, setBooks] = useState(3);\n  return (\n    <Stack gap=\"xs\">\n      <Inline justify=\"between\">\n        <Heading level={2}>Library</Heading>\n        <Button type=\"primary\" onClick={() => setBooks((n) => n + 1)}>\n          Add book\n        </Button>\n      </Inline>\n      <Text size=\"sm\" tone=\"muted\">\n        Books: {books}\n      </Text>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/inline/examples/02-gaps.tsx",
+          "slug": "gaps",
+          "order": 2,
+          "title": "Gaps",
+          "description": "`gap` takes a key of the theme's `space` scale, or `none` for children\nthat bring their own spacing.",
+          "code": "import { Inline, Stack, Tag, Text } from '@korzun/design/component';\n\nconst gaps = [\n  'none',\n  'xxxs',\n  'xxs',\n  'xs',\n  'sm',\n  'md',\n  'lg',\n  'xl',\n  'xxl',\n  'xxxl',\n  'xxxxl',\n  'xxxxxl',\n] as const;\n\nexport default function Gaps() {\n  return (\n    <Stack gap=\"sm\">\n      {gaps.map((gap) => (\n        <Inline key={gap} gap=\"xl\">\n          <Text size=\"sm\" tone=\"muted\">\n            {`gap=\"${gap}\"`}\n          </Text>\n          <Inline gap={gap}>\n            <Tag>One</Tag>\n            <Tag>Two</Tag>\n            <Tag>Three</Tag>\n          </Inline>\n        </Inline>\n      ))}\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/inline/examples/03-align.tsx",
+          "slug": "align",
+          "order": 3,
+          "title": "Align",
+          "description": "`align` sets the vertical placement of children of different heights.\n`center` is the usual choice; `baseline` lines up text of different sizes.",
+          "code": "import { Heading, Inline, Stack, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\n\nconst aligns = ['center', 'start', 'end', 'baseline', 'stretch'] as const;\n\nexport default function Align() {\n  return (\n    <Stack gap=\"lg\">\n      {aligns.map((align) => (\n        <Stack key={align} gap=\"xs\">\n          <Text size=\"sm\" tone=\"muted\">\n            {`align=\"${align}\"`}\n          </Text>\n          <Inline align={align}>\n            <Text size=\"sm\">Small</Text>\n            <Heading level={1}>Large</Heading>\n            <Button>Action</Button>\n          </Inline>\n        </Stack>\n      ))}\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/inline/examples/04-justify.tsx",
+          "slug": "justify",
+          "order": 4,
+          "title": "Justify",
+          "description": "`justify` distributes children along the row. `between` pushes the first\nand last child to opposite edges.",
+          "code": "import { Inline, Stack, Tag, Text } from '@korzun/design/component';\n\nconst justifies = ['start', 'center', 'end', 'between'] as const;\n\nexport default function Justify() {\n  return (\n    <Stack gap=\"lg\">\n      {justifies.map((justify) => (\n        <Stack key={justify} gap=\"xs\">\n          <Text size=\"sm\" tone=\"muted\">\n            {`justify=\"${justify}\"`}\n          </Text>\n          <Inline justify={justify}>\n            <Tag>One</Tag>\n            <Tag>Two</Tag>\n            <Tag>Three</Tag>\n          </Inline>\n        </Stack>\n      ))}\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/inline/examples/05-wrap.tsx",
+          "slug": "wrap",
+          "order": 5,
+          "title": "Wrap",
+          "description": "A row of chips too long for its container gets `wrap`: children move onto\nfurther lines. Without it they stay on one line and shrink or overflow.",
+          "code": "import { Inline, Stack, Tag, Text } from '@korzun/design/component';\n\nconst subjects = [\n  'Fiction',\n  'Victorian',\n  'Provincial life',\n  'Politics',\n  'Marriage',\n  'Reform',\n  'Medicine',\n  'Class',\n  'Ambition',\n  'Money',\n  'Idealism',\n  'Society',\n  'Education',\n  'Religion',\n  'Inheritance',\n  'Friendship',\n  'Scandal',\n  'Science',\n  'Duty',\n  'Gossip',\n  'Land',\n  'Vocation',\n  'Reputation',\n  'Charity',\n];\n\nexport default function Wrap() {\n  return (\n    <Stack gap=\"lg\">\n      <Stack gap=\"xs\">\n        <Text size=\"sm\" tone=\"muted\">\n          wrap\n        </Text>\n        <Inline wrap gap=\"xs\">\n          {subjects.map((subject) => (\n            <Tag key={subject}>{subject}</Tag>\n          ))}\n        </Inline>\n      </Stack>\n      <Stack gap=\"xs\">\n        <Text size=\"sm\" tone=\"muted\">\n          no wrap\n        </Text>\n        <Inline gap=\"xs\">\n          {subjects.map((subject) => (\n            <Tag key={subject}>{subject}</Tag>\n          ))}\n        </Inline>\n      </Stack>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/inline/examples/06-elements.tsx",
+          "slug": "elements",
+          "order": 6,
+          "title": "Elements",
+          "description": "`as=\"nav\"` makes a row of links a navigation landmark. `as=\"ul\"` renders a\nlist and resets its margin, padding and bullets: make each child an `li`.",
+          "code": "import { Inline, Stack, Text } from '@korzun/design/component';\n\nexport default function Elements() {\n  return (\n    <Stack gap=\"lg\">\n      <Stack gap=\"xs\">\n        <Text size=\"sm\" tone=\"muted\">\n          as=\"nav\"\n        </Text>\n        <Inline as=\"nav\" gap=\"xl\">\n          <a href=\"/books\">Books</a>\n          <a href=\"/authors\">Authors</a>\n        </Inline>\n      </Stack>\n      <Stack gap=\"xs\">\n        <Text size=\"sm\" tone=\"muted\">\n          as=\"ul\"\n        </Text>\n        <Inline as=\"ul\" gap=\"xl\">\n          <li>Middlemarch</li>\n          <li>Bleak House</li>\n          <li>Persuasion</li>\n        </Inline>\n      </Stack>\n    </Stack>\n  );\n}\n"
+        }
+      ],
+      "tables": [
+        {
+          "name": "InlineProps",
+          "kind": "props",
+          "rows": [
+            {
+              "name": "children",
+              "type": "ReactNode",
+              "required": false,
+              "description": "The children, laid out left to right."
+            },
+            {
+              "name": "align",
+              "type": "'center' | 'start' | 'end' | 'baseline' | 'stretch'",
+              "required": false,
+              "description": "Cross-axis (vertical) alignment of children; `start`/`end` map to `flex-start`/`flex-end`.",
+              "default": "'center'"
+            },
+            {
+              "name": "as",
+              "type": "'div' | 'span' | 'ul' | 'ol' | 'li' | 'nav'",
+              "required": false,
+              "description": "The element to render. `ul`/`ol` also reset list margin, padding and bullets.",
+              "default": "'div'"
+            },
+            {
+              "name": "className",
+              "type": "string",
+              "required": false,
+              "description": "Extra class, added last on the root. Override with `'&&'` specificity, never `!important`."
+            },
+            {
+              "name": "gap",
+              "type": "'xxxs' | 'xxs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl' | 'xxxxl' | 'xxxxxl' | 'none'",
+              "required": false,
+              "description": "Space between children, from the theme's `space` tokens, or `'none'`.",
+              "default": "'sm'"
+            },
+            {
+              "name": "justify",
+              "type": "'start' | 'center' | 'end' | 'between'",
+              "required": false,
+              "description": "Main-axis (horizontal) distribution of children. `'between'` is `space-between`: it pushes the first and last child to opposite edges.",
+              "default": "'start'"
+            },
+            {
+              "name": "ref",
+              "type": "Ref<HTMLElement>",
+              "required": false,
+              "description": "Ref to the root element."
+            },
+            {
+              "name": "wrap",
+              "type": "boolean",
+              "required": false,
+              "description": "Lets children wrap onto further lines. Without it they stay on one line and may overflow or shrink.",
+              "default": "false"
+            }
+          ],
+          "extends": [
+            "HTMLAttributes"
+          ]
+        }
+      ],
+      "tokens": [
+        {
+          "path": "space.lg",
+          "kind": "value",
+          "light": "0.625rem",
+          "dark": "0.625rem"
+        },
+        {
+          "path": "space.md",
+          "kind": "value",
+          "light": "0.5rem",
+          "dark": "0.5rem"
+        },
+        {
+          "path": "space.sm",
+          "kind": "value",
+          "light": "0.375rem",
+          "dark": "0.375rem"
+        },
+        {
+          "path": "space.xl",
+          "kind": "value",
+          "light": "0.75rem",
+          "dark": "0.75rem"
+        },
+        {
+          "path": "space.xs",
+          "kind": "value",
+          "light": "0.25rem",
+          "dark": "0.25rem"
+        },
+        {
+          "path": "space.xxl",
+          "kind": "value",
+          "light": "1rem",
+          "dark": "1rem"
+        },
+        {
+          "path": "space.xxs",
+          "kind": "value",
+          "light": "0.125rem",
+          "dark": "0.125rem"
+        },
+        {
+          "path": "space.xxxl",
+          "kind": "value",
+          "light": "1.25rem",
+          "dark": "1.25rem"
+        },
+        {
+          "path": "space.xxxs",
+          "kind": "value",
+          "light": "0.1rem",
+          "dark": "0.1rem"
+        },
+        {
+          "path": "space.xxxxl",
+          "kind": "value",
+          "light": "1.5rem",
+          "dark": "1.5rem"
+        },
+        {
+          "path": "space.xxxxxl",
+          "kind": "value",
+          "light": "2rem",
+          "dark": "2rem"
+        }
+      ],
+      "changelog": [
+        {
+          "version": "0.2.0",
+          "date": "2026-11-21",
+          "tags": [
+            "Stack",
+            "Inline",
+            "Text",
+            "Heading"
+          ],
+          "text": "New `Stack` (vertical flex column; `gap`, default `md`), `Inline` (horizontal row; `gap` default `sm`, `justify` including `between`), `Text` (`size`, `tone`, `weight`; unset props inherit), and `Heading` (`level` 1–4), so layout and text are set with props instead of style files."
+        },
+        {
+          "version": "0.2.0",
+          "date": "2026-11-21",
+          "tags": [
+            "Text",
+            "Heading",
+            "Stack",
+            "Inline"
+          ],
+          "text": "`truncate` on `Text` and `Heading` clips inside `Stack` (any `align`), `Inline`, and a `Stack` nested in an `Inline`; `Stack` and `Inline` roots have `min-width: 0`."
+        }
+      ]
+    },
+    {
       "id": "component/stack",
       "slug": "stack",
       "entry": "@korzun/design/component",

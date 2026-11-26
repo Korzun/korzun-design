@@ -6,17 +6,17 @@ import type { Gap } from '../stack/gap.js';
 import { useStyle } from './style.js';
 
 export interface InlineProps extends Omit<HTMLAttributes<HTMLElement>, 'style'> {
-  /** The element to render. `ul`/`ol` also reset list margin, padding and bullets. Default `'div'`. */
+  /** The element to render. `ul`/`ol` also reset list margin, padding and bullets. */
   as?: 'div' | 'span' | 'ul' | 'ol' | 'li' | 'nav';
-  /** Space between children, from the theme's `space` tokens, or `'none'`. Default `'sm'`. */
+  /** Space between children, from the theme's `space` tokens, or `'none'`. */
   gap?: Gap;
-  /** Cross-axis (vertical) alignment of children. Default `'center'`. */
+  /** Cross-axis (vertical) alignment of children; `start`/`end` map to `flex-start`/`flex-end`. */
   align?: 'center' | 'start' | 'end' | 'baseline' | 'stretch';
-  /** Main-axis (horizontal) distribution. `'between'` pushes the first and last child to opposite edges. Default `'start'`. */
+  /** Main-axis (horizontal) distribution of children. `'between'` is `space-between`: it pushes the first and last child to opposite edges. */
   justify?: 'start' | 'center' | 'end' | 'between';
-  /** Let children wrap onto further lines instead of overflowing. Default `false`. */
+  /** Lets children wrap onto further lines. Without it they stay on one line and may overflow or shrink. */
   wrap?: boolean;
-  /** Extra class on the root. Override with `'&&'` specificity, never `!important`. */
+  /** Extra class, added last on the root. Override with `'&&'` specificity, never `!important`. */
   className?: string;
   /** The children, laid out left to right. */
   children?: ReactNode;
