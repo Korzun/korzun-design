@@ -2,8 +2,7 @@
  * A `number` column renders a `NumberInput` and reports a `number`, or
  * `undefined` when the field is emptied; a `text` column reports a string.
  * `validate` receives the raw text: while it fails, `onChange` is not called
- * and `onValidChange` reports `${rowKey}.${columnKey}` once, when validity
- * flips.
+ * and `onValidChange` reports that field once, when validity flips.
  */
 import { Card, Stack, Text } from '@korzun/design/component';
 import { FieldList, type FieldRow } from '@korzun/design/control';
@@ -42,7 +41,9 @@ export default function NumberAndValidation() {
           Stored: {rows.map((row) => `${row.name ?? '–'} × ${row.qty ?? '–'}`).join(', ') || 'none'}
         </Text>
         <Text tone={invalid.length > 0 ? 'danger' : 'muted'}>
-          {invalid.length > 0 ? `Invalid: ${invalid.length} field` : 'All fields valid'}
+          {invalid.length > 0
+            ? `Invalid: ${invalid.map((name) => name.split('.')[1]).join(', ')}`
+            : 'All fields valid'}
         </Text>
       </Stack>
     </Card>

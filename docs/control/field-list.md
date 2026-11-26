@@ -29,8 +29,6 @@ set of fields (`TextInput` / `NumberInput` directly).
 
 ### Columns
 
-`ColumnDescriptor` is
-`{ type: 'text' | 'number'; key: string; placeholder?: string; validate?: (text: string) => boolean }`.
 A text column renders a `TextInput`, a number column a `NumberInput` (see
 those docs for the controlled-ish behaviour). A number column shows a row value
 only if it is a `number`; a numeric string displays as empty.
@@ -102,8 +100,7 @@ export default function Basic() {
 A `number` column renders a `NumberInput` and reports a `number`, or
 `undefined` when the field is emptied; a `text` column reports a string.
 `validate` receives the raw text: while it fails, `onChange` is not called
-and `onValidChange` reports `${rowKey}.${columnKey}` once, when validity
-flips.
+and `onValidChange` reports that field once, when validity flips.
 
 ```tsx
 import { Card, Stack, Text } from '@korzun/design/component';
@@ -143,7 +140,9 @@ export default function NumberAndValidation() {
           Stored: {rows.map((row) => `${row.name ?? '–'} × ${row.qty ?? '–'}`).join(', ') || 'none'}
         </Text>
         <Text tone={invalid.length > 0 ? 'danger' : 'muted'}>
-          {invalid.length > 0 ? `Invalid: ${invalid.length} field` : 'All fields valid'}
+          {invalid.length > 0
+            ? `Invalid: ${invalid.map((name) => name.split('.')[1]).join(', ')}`
+            : 'All fields valid'}
         </Text>
       </Stack>
     </Card>
