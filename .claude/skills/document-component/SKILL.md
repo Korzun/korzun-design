@@ -165,23 +165,29 @@ CLAUDE.md).
 2. Read every generated table in the doc against the old doc, row by row: each old note is present; types and descriptions are right for each row. A wrong row (a merged union with the wrong type or description, an unlinked supporting type, a missing default) is a generator problem: write it in your report with the file and line. Fix JSDoc when the JSDoc is wrong; the generated text is regenerated, never edited.
 3. `npm run lint`.
 4. `npm test` once (build, vitest, script tests, docs:check). Fix and rerun until green.
-5. Screenshots. Pick a free port and start the gallery in its own process group, recording its id (`<scratch>` is your scratch directory):
+5. Screenshots. Each block below is one Bash call; shell variables do not survive between calls, so the port and process id live in files and every call starts by setting `S` to your scratch directory (the same absolute path each time).
+   Start the gallery on a free port, in its own process group:
    ```
-   PORT=$(node -e "const s=require('net').createServer().listen(0,()=>{console.log(s.address().port);s.close()})")
-   setsid npm run gallery -- --port $PORT --strictPort > <scratch>/gallery.log 2>&1 & echo $! > <scratch>/gallery.pid
+   S=<scratch>; node -e "const s=require('net').createServer().listen(0,()=>{console.log(s.address().port);s.close()})" > $S/gallery.port
+   PORT=$(cat $S/gallery.port); setsid npm run gallery -- --port $PORT --strictPort > $S/gallery.log 2>&1 & echo $! > $S/gallery.pid
    ```
-   Wait until `curl -s -o /dev/null http://localhost:$PORT/` succeeds, then shoot the whole page in both schemes:
+   Wait for it:
    ```
-   playwright screenshot --full-page --viewport-size 1280,2400 --wait-for-timeout 15000 "http://localhost:$PORT/#/components/<slug>" <scratch>/<slug>-light.png
-   playwright screenshot --full-page --color-scheme dark --viewport-size 1280,2400 --wait-for-timeout 15000 "http://localhost:$PORT/#/components/<slug>" <scratch>/<slug>-dark.png
+   S=<scratch>; PORT=$(cat $S/gallery.port); for i in $(seq 1 60); do curl -s -o /dev/null http://localhost:$PORT/ && break; sleep 1; done; echo "gallery on $PORT"
+   ```
+   Shoot the whole page in both schemes:
+   ```
+   S=<scratch>; PORT=$(cat $S/gallery.port)
+   playwright screenshot --full-page --viewport-size 1280,2400 --wait-for-timeout 15000 "http://localhost:$PORT/#/components/<slug>" $S/<slug>-light.png
+   playwright screenshot --full-page --color-scheme dark --viewport-size 1280,2400 --wait-for-timeout 15000 "http://localhost:$PORT/#/components/<slug>" $S/<slug>-dark.png
    ```
    For each example whose demo opens an overlay (menu, popover, select list, dialog) from a button, open it inside its demo frame:
    ```
-   node .claude/skills/document-component/open-overlay.mjs http://localhost:$PORT <slug> <example-slug> "<trigger button name>" <scratch>/<slug>-<example-slug>-open.png
+   S=<scratch>; PORT=$(cat $S/gallery.port); node .claude/skills/document-component/open-overlay.mjs http://localhost:$PORT <slug> <example-slug> "<trigger button name>" $S/<slug>-<example-slug>-open.png
    ```
    `<example-slug>` is the example file name without `NN-` and `.tsx`. An overlay opened by typing or focus rather than a button click gets a sentence in your report saying how it opens and what you checked, in place of an overlay shot.
    View every PNG. Each example renders, is not empty, is legible in dark, and each opened overlay is fully visible in its open-overlay shot. An example that renders wrong because of its own content (a `side="top"` trigger with no room above, so it flips) is fixed in the example; anything else is reported with its screenshot path.
-   Stop the server by its process group: `kill -- -$(cat <scratch>/gallery.pid)`.
+   Stop the server by its process group: `S=<scratch>; kill -- -$(cat $S/gallery.pid)`.
 
 ## 7. Commit
 
