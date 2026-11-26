@@ -18,6 +18,9 @@ entry-point module (`theme`, `toast`, `icon`) the doc is `docs/<area>.md`, the
 source `src/<area>/`, the slug `<area>`, and stories are
 `src/<area>/*.stories.tsx` (e.g. `src/toast/toast.stories.tsx`).
 
+Before you start, read [red-flags.md](red-flags.md): the thoughts that made
+earlier runs fail review, and what to do instead.
+
 ## 0. Branch check
 
 Run `ls scripts/docs-gen/cli.mjs`.
@@ -27,10 +30,12 @@ Run `ls scripts/docs-gen/cli.mjs`.
 
 ## 1. Read
 
-1. `git show HEAD:docs/<area>/<slug>.md`: the old doc, before you edit anything. Keep it open; steps 2 and 5 check against it.
+1. `git show HEAD:docs/<area>/<slug>.md`: the old doc, before you edit anything. Keep it open; steps 2, 3 and 6 check against it.
 2. `src/<area>/<module>/`: `index.tsx` (or `types.ts`), `style.ts`, `index.test.tsx`.
-3. `AGENTS.md` (the styling rules examples must follow).
-4. One pilot doc and its `examples/` as the shape reference: Button for a control, Alert or Stack for a component.
+3. The module's changelog lines: `grep -n "\[<Name>\]" CHANGELOG.md`. They say what changed since the old prose was written.
+4. The doc of every module it builds on: each `../<other>/` import in its source has a doc at `docs/<area>/<other>.md` (Select and Menu build on Popover: read `docs/control/popover.md`).
+5. `AGENTS.md` (the styling rules examples must follow).
+6. One pilot doc and its `examples/` as the shape reference: Button for a control, Alert or Stack for a component.
 
 ## 2. JSDoc audit (REQUIRED, every prop)
 
@@ -43,10 +48,13 @@ final report:
 |---|---|---|---|
 
 A finished JSDoc line is:
-- **On the prop itself.** Interface- and type-level comments are not rendered; a note there is lost. Each clause of the old note (every behaviour, every "needs X", every "type error when Y") appears on that prop's own `/** */`.
-- **Behaviour the Type column cannot show**: what it does, when it is ignored, what it flips to, what TypeScript rejects. The Type column already lists union values; the description explains only values that carry extra meaning (Alert `tone`: which ones are announced).
-- **Default-free prose.** The Default column carries defaults. It is filled from literal defaults in the component's destructuring (`side = 'bottom'`). If after `docs:gen` the column is empty for a prop that has a default (an enum constant, a `??` fallback, a value set by a child component), add `@default <value>` to that prop. Wording like "(default)", "`'solid'` (default)" or "defaults to" does not appear in descriptions.
-- **Links as markdown relative to the doc**: `[corners](../corners.md)`.
+- **On the prop itself.** Each clause of the old note (every behaviour, every "needs X", every "type error when Y", every "so Z works") appears on that prop's own `/** */`. The comment on an interface or type alias renders as a paragraph under that type's table heading; it carries only what is true of the type as a whole ("An item that navigates."). A note about one prop that sits in a type comment moves onto the prop: that is a comment-only change and allowed.
+- **Behaviour only, at most three sentences.** What it does, when it is ignored, what it flips to, what TypeScript rejects. No history ("as it has always looked", "since 0.3"), no naming rationale, no restated union values (the Type column lists them; describe only values that carry extra meaning, as Alert `tone` does for which ones are announced). A longer explanation lives in a Usage subsection and the JSDoc links to it.
+- **Default-free prose.** The Default column carries defaults: no "(default)", "(the default)", "`'solid'` (default)" or "defaults to". The generator fills the column from the component's destructuring as written: literals (`side = 'bottom'`), functions (`onChange = () => {}` shows `() => {}`) and other expressions. Two cases need you:
+  - The column shows a name a reader cannot use (an enum constant: `ButtonType.Default`) or is empty for a prop that has a default (a `??` fallback, a value set by a child component): add `@default <value>` (`@default 'default'`).
+  - The prop's unset value is computed from where the component sits (it follows surface depth): no `@default`, and the description starts "Unset, it follows …" (Button `radius`).
+- **Links as markdown, never a bare "see X".** Another doc: `[corners](../corners.md)`, `[Popover](../control/popover.md)`. A section of this doc: `[Forms](#forms)`.
+- **Characters as written.** Typed Unicode stays (… – “ ” ✕); never replace it with ASCII (`...`, `-`, `"`).
 
 Rewrite example (the Default column then shows `'medium'`):
 
@@ -70,14 +78,14 @@ category: <one of scripts/docs-gen/categories.mjs, verbatim>
 <!-- generated:import -->
 <!-- /generated:import -->
 
-<Intro: what it is and renders, 2-5 lines. Starts with the description sentence.>
+<Intro: what it is and renders, 2–5 lines. Starts with the description sentence.>
 
 Use something else for: <job> (`OtherComponent`), <job> (`Other`).
 
 ## Usage
 
 <The old doc's prose, kept: choosing a variant, behaviour, keyboard tables,
-"Behaviour to know", each as a `###` subsection. Edit only what is now wrong.>
+"Behaviour to know", each as a `###` subsection.>
 
 ## Do / don't
 
@@ -96,11 +104,10 @@ Use something else for: <job> (`OtherComponent`), <job> (`Other`).
 <!-- /generated:changelog -->
 ````
 
-The old hand-written `## Props`, `## Items` and type tables, and the old
-`## Example` code block, are removed once step 2 has moved their notes into
-JSDoc and step 4 has turned the example into `examples/`. Short code
-fragments in Usage and "don't" snippets stay as prose. Generated regions are
-written by `docs:gen` only; you leave the markers empty.
+- Usage and Do / don't: check every sentence against the code, the changelog lines and the docs of the modules it builds on (step 1). Rewrite each sentence that is now false; keep every other sentence word for word, characters included. List each rewritten sentence, old and new, in your report.
+- Short facts from the old Props section ("No `className`.", "Pass `value` and `onChange` together.") go in Usage, as a sentence in the `###` subsection whose subject they share, or a new subsection named for it (`### Styling`). A fact the generated import region already states ("props type exported as `MenuProps`") is dropped.
+- The old hand-written `## Props`, `## Items` and type tables, and the old `## Example` code block, are removed once step 2 has moved their notes into JSDoc and step 4 has turned the example into `examples/`. Short code fragments in Usage and "don't" snippets stay. A Usage code block that a runnable example now repeats line for line becomes one sentence naming that example.
+- Generated regions are written by `docs:gen` only; you leave the markers empty.
 
 ## 4. Examples
 
@@ -132,23 +139,27 @@ export default function Basic() {
 The first comment line is the title; the rest is the description shown above the demo.
 
 - Imports: entry points only (`@korzun/design/<entry>`), all `@korzun/design/*` first then `react`, one block.
-- Default export, no props. Layout with `Stack`/`Inline`, text with `Text`/`Heading`, plain characters (no HTML entities), no inline styles or literals.
-- A handler shows its effect (a `Text` readout via `useState`, a toast) wherever that takes a line or two.
-- Examples follow the doc's own advice (if Usage says "separator before danger items", every danger item has one).
+- Default export, no props. Layout with `Stack`/`Inline`, text with `Text`/`Heading`, no inline styles or literals.
+- Text is typed Unicode (`Loading…`, `2–5`), never HTML entities and never ASCII stand-ins; strings match the component's own (`Loading…`, not `Loading...`).
+- Every interactive control is wired to state, so using it visibly changes the demo: a controlled value with its setter, plus a `Text` readout where the control does not display its own value ("Chosen: Edit"). No `() => {}` anywhere: `grep -rn '() => {}' src/<area>/<module>/examples/` prints nothing. A shared `items` constant becomes a function of the setter, or moves inside the component.
+- Titles and descriptions name no defaults: no "(the default)", no "`solid` by default".
+- Each description sentence is shown by the demo. "Set `ariaLabel` when the trigger is an icon" means the demo's trigger is an icon `Button` with `ariaLabel`.
+- Examples follow the Usage and Do / don't of this doc and of every component they use (read `docs/component/surface.md` before using `Surface`). An example never demonstrates a use those docs advise against (a `Surface` with no drawn box around it).
 - `01` is the canonical compact usage: it is the overview thumbnail.
+- An example with an overlay places its trigger so the overlay opens on the side the example is about (a `side="top"` trigger sits below other content). The frame adds room for an overlay that opens above its trigger; it does not stop one flipping.
 - Link items and `to` props stay real links. Clicking one in a demo shows the frame's "The example navigated to…" page; that is expected.
 
-Coverage checklist (REQUIRED; fill it in, it goes in your report). List every row
-below for this module, and give each an example file:
+Coverage checklist (REQUIRED; fill in every row, it goes in your report). Each row names its example file:
 
 | What | Value | Example file |
 |---|---|---|
-| each union-typed prop (`type`, `tone`, `size`, `variant`, `side`, `align`, `surface`, `gap`, …) | every value, each visible on its own | |
+| each union-typed prop (`type`, `tone`, `size`, `variant`, `side`, `align`, `surface`, `gap`, …) | every value, each visible on its own and labelled | |
 | each state the module has (`disabled`, `loading`, error, empty, read-only) | each | |
-| the old doc's main `## Example` composition | reproduced | |
+| the old doc's main `## Example` | list every prop and item kind it uses (Menu: `align="end"`, link item, action item, `Icon`, `danger`, `separatorBefore`); one example contains all of them | |
 | the common composition with its usual neighbours (in a `Card`, `Dialog`, form, row) | one | |
-| examples follow the doc's own advice (Usage and Do / don't) | checked in every example | all |
-| handlers show a visible effect where it takes a line or two | checked in every example | all |
+| every interactive control wired to state with a visible effect | the grep above prints nothing; each control's effect named | all |
+| each description sentence shown by its demo | checked, sentence by sentence | all |
+| examples follow this doc's and the used components' Usage and Do / don't | checked | all |
 
 A union with many values (a `gap` scale, every `tone`) can be one example
 showing all values side by side, each labelled with its value.
@@ -162,10 +173,12 @@ CLAUDE.md).
 ## 6. Verify (REQUIRED, in order)
 
 1. `npx oxfmt src/<area>/<module>` then `npm run docs:gen`.
-2. Read every generated table in the doc against the old doc, row by row: each old note is present; types and descriptions are right for each row. A wrong row (a merged union with the wrong type or description, an unlinked supporting type, a missing default) is a generator problem: write it in your report with the file and line. Fix JSDoc when the JSDoc is wrong; the generated text is regenerated, never edited.
+2. Notes check, row by row. For each row of your audit table, find every clause of its Old note column in **that prop's own row** of the generated table (or in its type's description paragraph when the clause is about the type as a whole). A clause found only in an example, in Usage, or in another prop's row is lost: put it on the prop's JSDoc and regenerate. Then read every generated row: type, default and description right. A wrong row that right JSDoc cannot fix (a merged union with the wrong type, an unlinked supporting type) is a generator problem: write it in your report with the file and line. The generated text is regenerated, never edited.
 3. `npm run lint`.
 4. `npm test` once (build, vitest, script tests, docs:check). Fix and rerun until green.
-5. Screenshots. Each block below is one Bash call; shell variables do not survive between calls, so the port and process id live in files and every call starts by setting `S` to your scratch directory (the same absolute path each time).
+5. Screenshots: the last step before the commit. Any edit after a screenshot (an example, JSDoc, the doc) means you redo 6.1 to 6.5 and reshoot what the edit can change.
+
+   Each block below is one Bash call; shell variables do not survive between calls, so the port and process id live in files and every call starts by setting `S` to your scratch directory (the same absolute path each time).
    Start the gallery on a free port, in its own process group:
    ```
    S=<scratch>; node -e "const s=require('net').createServer().listen(0,()=>{console.log(s.address().port);s.close()})" > $S/gallery.port
@@ -175,16 +188,27 @@ CLAUDE.md).
    ```
    S=<scratch>; PORT=$(cat $S/gallery.port); for i in $(seq 1 60); do curl -s -o /dev/null http://localhost:$PORT/ && break; sleep 1; done; echo "gallery on $PORT"
    ```
-   Shoot the whole page, light and dark; it waits until every demo frame has loaded and sized itself:
+   Shoot the whole page, light and dark (writes `<slug>-light.png` and `<slug>-dark.png`; it waits until every demo frame has loaded and sized itself):
    ```
    S=<scratch>; PORT=$(cat $S/gallery.port); node .claude/skills/document-component/shoot-page.mjs http://localhost:$PORT <slug> $S/<slug>.png
    ```
-   For each example whose demo opens an overlay, open it inside its demo frame, light and dark, with one step per action a reader takes:
+   Overlay shots (REQUIRED): one for **every** example that contains an overlay control (Menu, Select, Popover, Dialog, ChipsInput, anything that opens a list or layer), each opened the way a reader opens it, light and dark:
    ```
-   S=<scratch>; PORT=$(cat $S/gallery.port); node .claude/skills/document-component/open-overlay.mjs http://localhost:$PORT <slug> <example-slug> $S/<slug>-<example-slug>-open.png --click "<trigger name>"
+   S=<scratch>; PORT=$(cat $S/gallery.port); node .claude/skills/document-component/open-overlay.mjs http://localhost:$PORT <slug> <example-slug> $S/<slug>-<example-slug>-open.png --click "<role>:<name>"
    ```
-   `<example-slug>` is the example file name without `NN-` and `.tsx`. Steps: `--click "role:name"` (role defaults to `button`; `--click "Open dialog" --click "Actions"` opens a menu inside a dialog), `--type "combobox:Fan"` types into the first element with that role, `--press Escape`.
-   View every PNG. Each example renders, is not empty, is legible in dark, and each opened overlay is fully visible in its open-overlay shot. An example that renders wrong because of its own content (a `side="top"` trigger with no room above, so it flips) is fixed in the example; anything else is reported with its screenshot path.
+   `<example-slug>` is the example file name without `NN-` and `.tsx`. Steps run in order, one per reader action:
+   - `--click "<role>:<name>"`: the element with that ARIA role and exact accessible name; a bare name means role `button`. A Select's trigger is `button:<its shown value or placeholder>`.
+   - `--click "Open dialog" --click "Actions"`: a menu inside a dialog.
+   - `--type "<role>:<text>"`: types into the first element with that role (`--type "textbox:Fi"` after opening a searchable Select; `--type "combobox:Fan"`).
+   - `--press <key>`: `ArrowDown`, `Enter`, `Escape`.
+   An example with several overlays gets one shot per overlay.
+
+   Fill in this table; it goes in your report:
+
+   | Example | Overlay | Steps | Shot paths (light, dark) | Fully visible? |
+   |---|---|---|---|---|
+
+   View every PNG. Each example renders, is not empty, and is legible in dark. Each overlay is fully visible inside its frame. An overlay cut at the frame edge is a defect: fix the example (move the trigger, give the list room), or, when the example is right, report it under generator problems as a gallery defect with the shot path.
    Stop the server by its process group: `S=<scratch>; kill -- -$(cat $S/gallery.pid)`.
 
 ## 7. Commit
@@ -198,6 +222,7 @@ CLAUDE.md).
 Your report contains, in order:
 1. The JSDoc audit table from step 2 (every old note and where it lives now).
 2. The coverage checklist from step 4.
-3. Each check from step 6 with its result (`docs:check: ok`, test counts, lint clean).
-4. Every screenshot path, and what you fixed or found in them.
-5. Generator problems and anything left undone.
+3. Every Usage and Do / don't sentence you rewrote (old, new, why), and any you doubt but kept.
+4. Each check from step 6 with its result (`docs:check: ok`, test counts, lint clean).
+5. The full-page shot paths and the overlay table from step 6.5, with what you fixed or found in them.
+6. Generator and gallery problems (file, line, shot path), and anything left undone.
