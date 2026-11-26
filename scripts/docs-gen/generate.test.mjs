@@ -475,6 +475,10 @@ test('real repo: generate runs and AGENTS.md index is unchanged', () => {
   assert.equal(files.get('AGENTS.md'), readFileSync(join(realRepo, 'AGENTS.md'), 'utf8'));
 });
 
+test('strict mode on the real repo throws for none', () => {
+  assert.doesNotThrow(() => generate(realRepo, { strict: true, warn: () => {} }));
+});
+
 test('--check exits 0 when current, 1 after a JSDoc edit', () => {
   const root = mkdtempSync(join(tmpdir(), 'docs-gen-cli-'));
   roots.push(root);
@@ -484,10 +488,29 @@ test('--check exits 0 when current, 1 after a JSDoc edit', () => {
   for (const p of ['package.json', 'src', 'dist', 'docs', 'AGENTS.md', 'CHANGELOG.md']) {
     cpSync(join(fx, p), join(root, p), { recursive: true });
   }
+  // The CLI is strict: every module, entry points included, needs front matter and an example.
+  for (const [area, category] of [
+    ['theme', 'Theme'],
+    ['toast', 'Feedback'],
+    ['icon', 'Data display'],
+  ]) {
+    put(
+      root,
+      `docs/${area}.md`,
+      DOC.replace('Widget', area).replace('Actions', category).replace('# Widget', `# ${area}`)
+    );
+    put(
+      root,
+      `src/${area}/examples/01-basic.tsx`,
+      '/**\n * Basic\n *\n * Plain use.\n */\nexport default () => null;\n'
+    );
+    put(root, `dist/${area}/index.d.ts`, 'export {};\n');
+  }
   symlinkNodeModules(root);
   const cli = join(root, 'scripts/docs-gen/cli.mjs');
   const run = (...args) => spawnSync('node', [cli, ...args], { encoding: 'utf8' });
-  assert.equal(run().status, 0);
+  const first = run();
+  assert.equal(first.status, 0, first.stderr);
   const ok = run('--check');
   assert.equal(ok.status, 0, ok.stderr);
   assert.match(ok.stdout, /docs:check: ok/);

@@ -12,5 +12,5 @@
     "rootDir": "src"
   },
   "include": ["src"],
-  "exclude": ["src/**/*.test.*", "src/**/*.stories.*", "src/**/examples/**", "src/test-utils.tsx", "src/setup.ts"]
+  "exclude": ["src/**/*.test.*", "src/**/examples/**", "src/test-utils.tsx", "src/setup.ts"]
 }

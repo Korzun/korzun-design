@@ -1,11 +1,11 @@
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vitest/config';
 
-import { designAlias, galleryAlias } from './gallery/alias';
+import { designAlias } from './gallery/alias';
 
 export default defineConfig({
   plugins: [react()],
-  resolve: { alias: [...designAlias, ...galleryAlias] },
+  resolve: { alias: designAlias },
   test: {
     environment: 'jsdom',
     globals: true,

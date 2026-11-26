@@ -1,7 +1,7 @@
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 
-import { designAlias, galleryAlias } from './alias.js';
+import { designAlias } from './alias.js';
 import { llmsPlugin } from './llms-plugin.js';
 
 const here = decodeURIComponent(new URL('.', import.meta.url).pathname);
@@ -13,7 +13,7 @@ export default defineConfig(({ mode }) => ({
     react(),
     llmsPlugin({ siteUrl: mode === 'pages' ? 'https://korzun.github.io/korzun-design/' : '/' }),
   ],
-  resolve: { alias: [...designAlias, ...galleryAlias] },
+  resolve: { alias: designAlias },
   server: { host: true },
   build: { outDir: `${here}../gallery-dist`, emptyOutDir: true },
 }));

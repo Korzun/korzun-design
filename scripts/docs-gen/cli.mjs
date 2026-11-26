@@ -9,7 +9,7 @@ const check = process.argv.includes('--check');
 
 let files;
 try {
-  files = generate(repo);
+  files = generate(repo, { strict: true });
 } catch (err) {
   console.error(err.message);
   process.exit(1);
