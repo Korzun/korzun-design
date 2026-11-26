@@ -21,9 +21,6 @@ test('barrelExports separates values and types', () => {
 // IconProps), so each component's props type, read from its built .d.ts,
 // must be one the entry exports.
 const ENTRIES = ['theme', 'toast', 'icon'];
-// Gaps fixed on a rollout branch not merged yet; the test fails once one is
-// fixed here, so the entry is removed with the merge.
-const KNOWN_GAPS = new Map([['ToastProvider', 'ToastProviderProps: the wave-5 toast branch']]);
 const built = existsSync(join(repo, 'dist'));
 
 for (const area of ENTRIES) {
@@ -41,10 +38,6 @@ for (const area of ENTRIES) {
       () => {
         const type = taken.get(name);
         if (!type) return; // no parameter (GlobalStyles) or an inline type
-        if (KNOWN_GAPS.has(name)) {
-          assert.ok(!types.has(type), `${name}: ${type} is exported now; drop it from KNOWN_GAPS`);
-          return;
-        }
         assert.ok(types.has(type), `src/${area}/index.ts exports ${name} but not ${type}`);
       }
     );
