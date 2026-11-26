@@ -8,7 +8,9 @@ import { anchor } from '../../scripts/docs-gen/slug.mjs';
 import type { ExampleInfo } from '../../scripts/docs-gen/types.js';
 import type { ExampleOwner } from '../data.js';
 import { frameSrc, MOBILE_WIDTH, SCREEN_HEIGHT, useFrameTheme } from '../frame-url.js';
-import { codeBlock, PROSE_WIDTH } from '../layout/type.js';
+import { useScrollHint } from '../layout/scroll-hint.js';
+import { tapTarget } from '../layout/tap-target.js';
+import { codeBlock, PROSE_WIDTH, scrollHint } from '../layout/type.js';
 import { isHeightMessage } from '../messages.js';
 import { CopyButton } from './copy-button.js';
 import { highlight, useHighlightStyle } from './highlight.js';
@@ -48,7 +50,10 @@ const useStyle = createUseStyles((theme: Theme) => ({
     borderTop: `1px solid ${theme.color.border.light}`,
     backgroundColor: theme.color.bg.cardHeader,
     ...codeBlock(theme),
+    ...scrollHint,
   },
+  // "Show code" is a text-height link: on a phone its hit area grows to 44px.
+  toggle: tapTarget(theme),
 }));
 
 export type ExampleBlockProps = {
@@ -71,6 +76,8 @@ export const ExampleBlock = ({ owner, example, headingId }: ExampleBlockProps) =
   const [loaded, setLoaded] = useState(false);
   const [showCode, setShowCode] = useState(false);
   const frameRef = useRef<HTMLIFrameElement>(null);
+  const codeRef = useRef<HTMLPreElement>(null);
+  useScrollHint(codeRef, showCode);
   // The id the doc's `### <title>` heading has, so `#expanded-side` links land here too.
   const titleId = headingId ?? anchor(example.title);
   const codeId = useId();
@@ -132,6 +139,7 @@ export const ExampleBlock = ({ owner, example, headingId }: ExampleBlockProps) =
           <Inline gap="md" wrap>
             <Button
               type="link"
+              className={styles.toggle}
               ariaExpanded={showCode}
               ariaControls={codeId}
               onClick={() => setShowCode((s) => !s)}
@@ -143,7 +151,7 @@ export const ExampleBlock = ({ owner, example, headingId }: ExampleBlockProps) =
         </Stack>
       </Surface>
       {showCode && (
-        <pre className={cx(styles.code, tokens.tokens)} id={codeId}>
+        <pre className={cx(styles.code, tokens.tokens)} id={codeId} ref={codeRef}>
           {/* highlight.js escapes the source; the spans are its own. */}
           <code dangerouslySetInnerHTML={{ __html: highlight(example.code) }} />
         </pre>

@@ -8,6 +8,9 @@ import { DESKTOP_WIDTH, frameSrc, MOBILE_WIDTH, useFrameTheme } from '../frame-u
 // The frame lays out larger than the box and is scaled down to fit, so the
 // example renders at a realistic width and reads as a miniature.
 const SCALE = 0.6;
+// A compact thumbnail (a list row on a phone) is a small box: a smaller scale
+// lets the frame lay out wide enough for the preview to read as a miniature.
+const COMPACT_SCALE = 0.4;
 
 const useStyle = createUseStyles((theme: Theme) => ({
   box: {
@@ -47,15 +50,31 @@ const useStyle = createUseStyles((theme: Theme) => ({
   // block uses: Chrome loads a hidden lazy iframe at once, which would fetch
   // every thumbnail on the overview up front.
   pending: { opacity: 0 },
+  // `compact`: on a phone, a 6rem 4:3 box beside the text, scaled further down.
+  compact: {
+    [theme.breakpoint.mobile]: {
+      flex: 'none',
+      width: '6rem',
+      aspectRatio: '4 / 3',
+      '& $frame': {
+        width: `${100 / COMPACT_SCALE}%`,
+        height: `${100 / COMPACT_SCALE}%`,
+        transform: `scale(${COMPACT_SCALE})`,
+      },
+      '& $mobile': { transform: `translateX(-50%) scale(${COMPACT_SCALE})` },
+    },
+  },
 }));
 
 export type ThumbnailProps = {
   /** The module or recipe whose preview (`examples/preview.tsx`, else its first example) the thumbnail shows. */
   owner: ExampleOwner;
+  /** On a phone, a small box for a list row instead of the full-width 16:9 one. */
+  compact?: boolean;
 };
 
 /** A lazy, non-interactive, scaled-down live render of a module's preview or a recipe's first example. */
-export const Thumbnail = ({ owner }: ThumbnailProps) => {
+export const Thumbnail = ({ owner, compact = false }: ThumbnailProps) => {
   const styles = useStyle();
   const [theme, onLoad] = useFrameTheme();
   const [loaded, setLoaded] = useState(false);
@@ -73,10 +92,11 @@ export const Thumbnail = ({ owner }: ThumbnailProps) => {
     observer.observe(box);
     return () => observer.disconnect();
   }, [desktop]);
-  if (!first) return <div className={styles.box} />;
+  const box = cx(styles.box, compact && styles.compact);
+  if (!first) return <div className={box} />;
 
   return (
-    <div className={styles.box} ref={boxRef}>
+    <div className={box} ref={boxRef}>
       <iframe
         className={cx(
           styles.frame,

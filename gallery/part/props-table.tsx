@@ -336,7 +336,7 @@ export const PropsTable = ({ table, tables, typePages = NO_PAGES, from }: PropsT
                   ) : row.default ? (
                     <code className={styles.code}>{row.default}</code>
                   ) : (
-                    <Text tone="faint">–</Text>
+                    <Text tone="muted">–</Text>
                   )}
                 </td>
                 <td className={styles.wide}>

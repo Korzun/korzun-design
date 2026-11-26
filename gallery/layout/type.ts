@@ -35,3 +35,25 @@ export const inlineCode = (theme: Theme) => ({
   backgroundColor: theme.color.bg.cardHeader,
   overflowWrap: 'break-word' as const,
 });
+
+/**
+ * The edge of a code box on the page. In dark, `bg.cardHeader` is 1.01:1 on
+ * `bg.page`, so the box draws a `border.default` hairline; inset, so the box
+ * keeps light mode's size, where the fill alone is a visible step.
+ */
+export const pageCodeEdge = (theme: Theme) =>
+  theme.colorScheme === 'dark'
+    ? { boxShadow: `inset 0 0 0 1px ${theme.color.border.default}` }
+    : {};
+
+/**
+ * A code block that scrolls sideways fades out at its right edge while more
+ * of it is hidden there (`useScrollHint` sets `data-scroll-more`): phones
+ * hide scrollbars, and a cut-off line otherwise reads as truncated.
+ */
+export const scrollHint = {
+  '&[data-scroll-more]': {
+    maskImage: 'linear-gradient(to left, transparent, #000 3rem)',
+    WebkitMaskImage: 'linear-gradient(to left, transparent, #000 3rem)',
+  },
+};

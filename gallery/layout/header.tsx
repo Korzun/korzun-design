@@ -8,21 +8,100 @@ import { Link, useLocation } from 'react-router';
 import { siteData } from '../data.js';
 import { postToWindow } from '../messages.js';
 import { siteColumn } from './column.js';
+import { TAP_TARGET } from './tap-target.js';
+
+/**
+ * The header's height on a phone, where it sticks: a 44px row for the name and
+ * theme, a 44px row for the links, and the rule under them. Anchor targets
+ * stop this far down so the header does not cover them.
+ */
+export const MOBILE_HEADER_HEIGHT = `calc(2 * ${TAP_TARGET} + 1px)`;
 
 const useStyle = createUseStyles((theme: Theme) => ({
   root: {
     padding: `${theme.space.lg} 0`,
     borderBottom: `1px solid ${theme.color.border.default}`,
     backgroundColor: theme.color.bg.card,
+    // On a phone pages run to thousands of pixels: the header stays in reach.
+    [theme.breakpoint.mobile]: {
+      position: 'sticky',
+      top: 0,
+      zIndex: theme.zIndex.header,
+      padding: 0,
+    },
   },
-  inner: siteColumn(theme),
+  // One row on a desktop, wrapping when narrow: name and links on the left,
+  // the theme on the right. On a phone, the name and theme share the first
+  // row and the links take a second that scrolls sideways.
+  inner: {
+    ...siteColumn(theme),
+    display: 'flex',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    gap: theme.space.xl,
+    [theme.breakpoint.mobile]: {
+      display: 'grid',
+      gridTemplateColumns: 'minmax(0, 1fr) auto',
+      gridTemplateAreas: '"brand theme" "nav nav"',
+      gap: `0 ${theme.space.md}`,
+    },
+  },
+  nav: {
+    marginRight: 'auto',
+    [theme.breakpoint.mobile]: {
+      gridArea: 'nav',
+      // Edge to edge, so the row scrolls under the column's gutters; the first
+      // label still lines up with the name above it.
+      margin: `0 -${theme.space.xxl}`,
+      padding: `0 calc(${theme.space.xxl} - ${theme.space.xs})`,
+      overflowX: 'auto',
+      scrollbarWidth: 'none',
+      // The links' own padding spaces them, so their hit areas touch.
+      '& > *': { flexWrap: 'nowrap', gap: 0 },
+    },
+  },
   link: {
     color: theme.color.text.secondary,
     textDecoration: 'none',
+    whiteSpace: 'nowrap',
     '&:hover': { color: theme.color.text.primary },
     '&.active': { color: theme.color.brand.default },
+    [theme.breakpoint.mobile]: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      minHeight: TAP_TARGET,
+      minWidth: TAP_TARGET,
+      padding: `0 ${theme.space.xs}`,
+    },
   },
-  brand: { color: theme.color.text.primary, textDecoration: 'none' },
+  brand: {
+    color: theme.color.text.primary,
+    textDecoration: 'none',
+    [theme.breakpoint.mobile]: {
+      gridArea: 'brand',
+      justifySelf: 'start',
+      display: 'flex',
+      alignItems: 'center',
+      minHeight: TAP_TARGET,
+    },
+  },
+  // The control keeps the library's `controlHeight`; on a phone each segment's
+  // hit area reaches 44px tall with an invisible `::after`.
+  theme: {
+    [theme.breakpoint.mobile]: {
+      gridArea: 'theme',
+      '& [role="radio"]::after': {
+        content: '""',
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        top: '50%',
+        height: TAP_TARGET,
+        transform: 'translateY(-50%)',
+      },
+    },
+  },
 }));
 
 const under = (pathname: string, base: string) =>
@@ -64,17 +143,17 @@ export const Header = () => {
 
   return (
     <header className={styles.root}>
-      <Inline justify="between" gap="xl" wrap className={styles.inner}>
-        <Inline gap="xl" wrap>
-          <Link to="/" className={styles.brand}>
-            <Inline gap="sm" align="baseline">
-              <Text weight="semibold">@korzun/design</Text>
-              <Text size="xs" tone="muted">
-                {siteData.version}
-              </Text>
-            </Inline>
-          </Link>
-          <Inline as="nav" gap="lg" wrap aria-label="Site">
+      <div className={styles.inner}>
+        <Link to="/" className={styles.brand}>
+          <Inline gap="sm" align="baseline">
+            <Text weight="semibold">@korzun/design</Text>
+            <Text size="xs" tone="muted">
+              {siteData.version}
+            </Text>
+          </Inline>
+        </Link>
+        <nav aria-label="Site" className={styles.nav}>
+          <Inline gap="lg" wrap>
             {NAV_LINKS.map(({ to, label, active }) => {
               const current = active(pathname);
               return (
@@ -90,9 +169,11 @@ export const Header = () => {
               );
             })}
           </Inline>
-        </Inline>
-        <SegmentedControl label="Theme" value={setting} options={THEMES} onChange={setSetting} />
-      </Inline>
+        </nav>
+        <div className={styles.theme}>
+          <SegmentedControl label="Theme" value={setting} options={THEMES} onChange={setSetting} />
+        </div>
+      </div>
     </header>
   );
 };

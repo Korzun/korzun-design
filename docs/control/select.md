@@ -470,7 +470,7 @@ type SelectOption = string | {
 | `theme.color.bg.selected` | `#dbeafe` | `rgba(23, 119, 255, 0.24)` |
 | `theme.color.border.default` | `#D9D9D9` | `#3A3B40` |
 | `theme.color.border.focus` | `#0758d9` | `#3696fe` |
-| `theme.color.border.light` | `#e5e7eb` | `#2B2C30` |
+| `theme.color.border.light` | `#e5e7eb` | `#333439` |
 | `theme.color.border.strong` | `#DDDDDD` | `#48494F` |
 | `theme.color.brand.default` | `#1777FF` | `#3696fe` |
 | `theme.color.brand.light` | `#EFF6FF` | `rgba(23, 119, 255, 0.2)` |
@@ -503,6 +503,7 @@ type SelectOption = string | {
 ## Changelog
 
 - **0.7.0** (2026-11-26): The option list matches `Menu`: a 4px inset pad, 4px-rounded options with a 2px gap, 14px text (was 12.8px), the flat `cardStack` shadow (was `hoverLift`) and `bg.hover` on hover (was `bg.cardHeader`). The keyboard highlight is unchanged.
+- **0.7.0** (2026-11-26): Dark `color.border.light` is `#333439` (was `#2B2C30`, 1.10:1 on `bg.page` and 1.23:1 on `bg.card`, so hairline rules all but vanished); it is now 1.24:1 and 1.39:1, at or above light mode's step. A loading `Select`'s border in dark is a shade lighter. Light is unchanged.
 - **0.5.0** (2026-11-24): Surface depth: corners are concentric site-wide with no radius props. `Page` provides depth 0, `Dialog` 1, and `Card`, `CardRow` and `Alert` each provide one level deeper than where they sit; `Popover` (so `Menu` and the `Select` list) provides a fixed 2. Depth 0 is `radius.lg`, 1 is `md`, 2 and deeper is `sm`. `Button`, `Select`, `Card`, `CardRow` and `Alert` follow it; an explicit `Button radius` or `Select surface` still wins. With no `Page`, `Dialog`, `Card`, `CardRow`, `Alert` or `Surface` above it, a component keeps its 0.4.0 look; a bare `Card` (no `Page`) still counts as depth 0 and gives its contents depth 1, so its Buttons and nested Cards change as below.
 - **0.5.0** (2026-11-24): **Visible changes:**
   - Buttons in a Card default to 8px (they were 16px unless `radius="card"` was set), and Buttons in a Dialog body are 8px.

@@ -132,11 +132,12 @@ describe('new semantic tokens — dark values exist and differ from light', () =
     expect(darkTheme.color.chip.neutral.bg).not.toBe(lightTheme.color.chip.neutral.bg);
     expect(darkTheme.color.chip.neutral.border).not.toBe(lightTheme.color.chip.neutral.border);
   });
-  it('chip.neutral is built from each mode’s muted text colour', () => {
-    expect(lightTheme.color.chip.neutral.text).toBe(lightTheme.color.text.muted);
+  it('chip.neutral is a tint of each mode’s muted text colour, with stronger text', () => {
     expect(lightTheme.color.chip.neutral.bg).toBe('rgba(110, 110, 110, 0.08)');
     expect(lightTheme.color.chip.neutral.border).toBe('rgba(110, 110, 110, 0.22)');
-    expect(darkTheme.color.chip.neutral.text).toBe(darkTheme.color.text.muted);
+    expect(lightTheme.color.chip.neutral.text).toBe('#5E5E5E');
+    expect(darkTheme.color.chip.neutral.bg).toBe('rgba(156, 161, 171, 0.16)');
+    expect(darkTheme.color.chip.neutral.text).toBe(darkTheme.color.text.description);
   });
   it('chip.user dark differs from light', () => {
     expect(darkTheme.color.chip.user.text).not.toBe(lightTheme.color.chip.user.text);
@@ -259,6 +260,47 @@ const contrast = (a: string, b: string) => {
   const [x, y] = [relativeLuminance(a), relativeLuminance(b)].sort((p, q) => q - p);
   return (x + 0.05) / (y + 0.05);
 };
+
+// An `rgba(r, g, b, a)` or hex colour laid over an opaque hex surface, as hex.
+const over = (color: string, surface: string) => {
+  const [r, g, b, a = 1] = color.startsWith('#')
+    ? [1, 3, 5].map((i) => parseInt(color.slice(i, i + 2), 16))
+    : color.match(/[\d.]+/g)!.map(Number);
+  return `#${[r, g, b]
+    .map((c, i) => {
+      const under = parseInt(surface.slice(1 + i * 2, 3 + i * 2), 16);
+      return Math.round(c! * a + under * (1 - a))
+        .toString(16)
+        .padStart(2, '0');
+    })
+    .join('')}`;
+};
+
+describe('chip.neutral text (4.5:1) on its own tint over every surface', () => {
+  it.each([
+    ['light', lightTheme],
+    ['dark', darkTheme],
+  ] as const)('%s mode', (_mode, theme) => {
+    const chip = theme.color.chip.neutral;
+    for (const surface of ['page', 'card', 'cardHeader'] as const) {
+      const fill = over(chip.bg, theme.color.bg[surface]);
+      expect(contrast(chip.text, fill), surface).toBeGreaterThanOrEqual(4.5);
+    }
+  });
+});
+
+describe('border.light, the hairline divider', () => {
+  it('in dark mode is a visible step on page and card, at least light mode’s', () => {
+    const step = (theme: typeof lightTheme, surface: 'page' | 'card') =>
+      contrast(theme.color.border.light, theme.color.bg[surface]);
+    expect(darkTheme.color.border.light).toBe('#333439');
+    expect(step(darkTheme, 'page')).toBeGreaterThanOrEqual(step(lightTheme, 'page'));
+    expect(step(darkTheme, 'card')).toBeGreaterThanOrEqual(step(lightTheme, 'card'));
+    expect(step(darkTheme, 'page')).toBeLessThan(
+      contrast(darkTheme.color.border.default, darkTheme.color.bg.page)
+    );
+  });
+});
 
 describe('non-text contrast (3:1) on every surface', () => {
   const surfaces = ['page', 'card', 'cardHeader'] as const;

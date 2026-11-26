@@ -4,7 +4,7 @@ import { useState, type ReactElement } from 'react';
 import { HashRouter, Outlet, Route, Routes, useLocation } from 'react-router';
 
 import { Frame, FrameNavigatedAway } from './frame.js';
-import { Header } from './layout/header.js';
+import { Header, MOBILE_HEADER_HEIGHT } from './layout/header.js';
 import { useScrollToTopOnPageChange } from './layout/scroll.js';
 import { NotFound } from './not-found.js';
 import { ChangelogPage } from './page/changelog.js';
@@ -23,6 +23,10 @@ const useStyle = createUseStyles((theme: Theme) => ({
     fontFamily: theme.fontFamily.body,
     color: theme.color.text.primary,
     backgroundColor: theme.color.bg.page,
+    // The header sticks on a phone: a heading or table scrolled to stops below it.
+    [theme.breakpoint.mobile]: {
+      '& [id]': { scrollMarginTop: `calc(${MOBILE_HEADER_HEIGHT} + ${theme.space.md})` },
+    },
   },
 }));
 
