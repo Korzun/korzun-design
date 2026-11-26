@@ -226,7 +226,7 @@ export default function ConfirmDisabled() {
 | `confirmDisabled` | `boolean` | `false` | Disables only the Confirm button (e.g. until a checkbox is ticked). |
 | `confirmText` | `string` | `'Confirm'` | Confirm button label. |
 | `danger` | `boolean` | `false` | Red Confirm button; also tints `icon` red. |
-| `icon` | `React.ComponentType<IconProps>` |  | Icon component shown before the title (`icon={AlertOctagonIcon}`), not an element. |
+| `icon` | `ComponentType<IconProps>` |  | Icon component shown before the title (`icon={AlertOctagonIcon}`), not an element. |
 | `isOpen` | `boolean` | `false` | Controls visibility. Keep the modal mounted and toggle this. |
 | `loading` | `boolean` | `false` | Spinner on Confirm; disables both buttons and blocks Escape and backdrop dismissal. |
 | `onCancel` | `() => void` | `() => {}` | Called by Cancel, Escape, and a backdrop click; receives no event. Close the modal here. |
