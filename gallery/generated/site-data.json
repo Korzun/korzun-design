@@ -105,7 +105,7 @@
         "ButtonTypeValue"
       ],
       "importLine": "import { Button, type ButtonProps, type ButtonRadiusValue, type ButtonTypeValue } from '@korzun/design/control'",
-      "body": "A clickable action with a visual variant, optional icons, and a loading state.\nRenders a `<div role=\"button\">` (keyboard: Enter and Space, which it\npreventDefaults, so Space does not scroll the page) unless `submit` is\nset, in which case it renders a native `<button type=\"submit\">`.\n\nUse something else for: navigating back (`BackButton`), page-level actions in\nthe header (`PageActionsBar`, `PageActionsMenu`), sticky footer actions\n(`PageFooterActions`), picking one of several options (`SegmentedControl`).\n\n## Usage\n\n### Choosing a variant\n\n- `primary`: the one main action of a card, modal, or page (Save, Confirm).\n- `default`: secondary actions; bordered.\n- `text`: Cancel in a modal footer.\n- `link`: inline row actions (Remove, Load more). It has no padding, so `radius`\n  doesn't matter for it.\n- `dashed`: an \"add a row\" affordance (as in `FieldList`).\n- Add `danger` for destructive actions (Delete, Log out), on `primary` in a\n  confirm or on `default` otherwise.\n\n### Corners\n\nThe radius follows where the button sits (16px on a page, 8px in a `Card` or\n`Dialog`, 4px in a `Popover` or nested Card), so pass no `radius`; see\n[corners](../corners.md). Pass it only to override.\n\n### Submitting a form\n\n`submit` renders a native submit button and `onClick` is then ignored: handle\nthe form's `action` or `onSubmit`. For a button outside its form (a `Card`\nfooter), pass the form's id as `form`. While the form action is pending the\nbutton shows its spinner by itself.\n\n## Do / don't\n\n- Don't set `radius` to match the surface; it follows depth. Pass it only to\n  override.\n- Do give repeated row actions a distinguishing `ariaLabel` (\"Remove Kindle\").\n- Don't pass `type=\"submit\"`: it is not a valid variant. Use `submit`.\n- Don't pass `onClick` to a submit button and expect it to run.\n- Don't pass an element to `prefix`/`suffix` (`prefix={<SearchIcon />}`); pass\n  the component.\n- Don't wrap Button in a `<button>` or `<a>`: it is already interactive.",
+      "body": "A clickable action with a visual variant, optional icons, and a loading state.\nRenders a `<div role=\"button\">` (keyboard: Enter and Space, which it\npreventDefaults, so Space does not scroll the page) unless `submit` is\nset, in which case it renders a native `<button type=\"submit\">`.\n\nUse something else for: navigating back (`BackButton`), page-level actions in\nthe header (`PageActionsBar`, `PageActionsMenu`), sticky footer actions\n(`PageFooterActions`), picking one of several options (`SegmentedControl`).\n\nEvery button but `link` is 32px tall: it pins its own line-height, so a\nparent's (a Dialog's 1.3) does not stretch it, and an icon-only button matches\na text one. Keyboard focus (`:focus-visible`) on `text` and `link` draws a solid\n`border.focus` ring, since they have no border or fill of their own.\n\n## Usage\n\n### Choosing a variant\n\n- `primary`: the one main action of a card, modal, or page (Save, Confirm).\n- `default`: secondary actions; bordered.\n- `text`: Cancel in a modal footer.\n- `link`: inline row actions (Remove, Load more). It has no padding, so `radius`\n  doesn't matter for it.\n- `dashed`: an \"add a row\" affordance (as in `FieldList`).\n- Add `danger` for destructive actions (Delete, Log out), on `primary` in a\n  confirm or on `default` otherwise.\n\n### Corners\n\nThe radius follows where the button sits (16px on a page, 8px in a `Card` or\n`Dialog`, 4px in a `Popover` or nested Card), so pass no `radius`; see\n[corners](../corners.md). Pass it only to override.\n\n### Submitting a form\n\n`submit` renders a native submit button and `onClick` is then ignored: handle\nthe form's `action` or `onSubmit`. For a button outside its form (a `Card`\nfooter), pass the form's id as `form`. While the form action is pending the\nbutton shows its spinner by itself.\n\n## Do / don't\n\n- Don't set `radius` to match the surface; it follows depth. Pass it only to\n  override.\n- Do give repeated row actions a distinguishing `ariaLabel` (\"Remove Kindle\").\n- Don't pass `type=\"submit\"`: it is not a valid variant. Use `submit`.\n- Don't pass `onClick` to a submit button and expect it to run.\n- Don't pass an element to `prefix`/`suffix` (`prefix={<SearchIcon />}`); pass\n  the component.\n- Don't wrap Button in a `<button>` or `<a>`: it is already interactive.",
       "examples": [
         {
           "file": "src/control/button/examples/01-basic.tsx",
@@ -346,6 +346,12 @@
           "dark": "#3A3B40"
         },
         {
+          "path": "color.border.focus",
+          "kind": "color",
+          "light": "#0758d9",
+          "dark": "#3696fe"
+        },
+        {
           "path": "color.border.loading",
           "kind": "color",
           "light": "#e6e6e6",
@@ -545,6 +551,22 @@
         }
       ],
       "changelog": [
+        {
+          "version": "0.6.0",
+          "date": "2026-11-26",
+          "tags": [
+            "Button"
+          ],
+          "text": "`text` and `link` buttons show a solid 2px `border.focus` ring on keyboard focus (`:focus-visible`); before they showed nothing. Mouse clicks still leave no ring."
+        },
+        {
+          "version": "0.6.0",
+          "date": "2026-11-26",
+          "tags": [
+            "Button"
+          ],
+          "text": "Height no longer follows an inherited line-height: Buttons in a Dialog footer are 32px, not 35px, and an icon-only Button is 32px (was 31px, sitting 1px low) beside text Buttons. The label's line-height is pinned to 14px; `link` stays text-sized."
+        },
         {
           "version": "0.5.0",
           "date": "2026-11-24",
@@ -3592,7 +3614,7 @@
         "SelectProps"
       ],
       "importLine": "import { Select, type SelectOption, type SelectProps } from '@korzun/design/control'",
-      "body": "A single-value dropdown with type-to-search (on by default), an optional \"Add:\n…\" entry for new values, a clear button, and a loading state. The dropdown is a\n`Popover`, so it escapes clipping cards.\n\nUse something else for: 2–5 options that fit in one row (`SegmentedControl`),\nseveral values (`ChipsInput`), on/off (`Switch`).\n\n## Usage\n\n### Choosing a surface\n\nFollow [corners](../corners.md):\n\n- Usually omit it: the default follows where the select sits. Directly on a\n  `Page` it is `'page'`; in a card or dialog (and outside any surface) it is\n  `'card'`; two or more surfaces deep it is `'inset'`.\n- `'card'`: `radius.md`, no shadow.\n- `'page'`: `radius.lg` + `shadow.cardStack`, like a card.\n- `'inset'`: `radius.sm`, no shadow, for a select nested inside an inset box.\n- Pass `surface` only to override the depth.\n\n### Forms\n\nThere is no hidden input carrying `value`: native `FormData` will not contain\nthe selection (only the search text while open). Keep `value` in state and\nsubmit that. The `<label>` targets the search box, so it is not the closed\ntrigger's accessible name; the trigger announces the selected label or\nplaceholder.\n\n### Keyboard\n\nClosed: Enter, Space or ArrowDown open it. Open: ArrowUp/ArrowDown move (and\nwrap), Enter selects, Escape or Tab close. The highlight starts on the first\noption, not the current value.\n\n### Inside a dialog\n\nIt works inside a `Dialog` or a modal `<dialog>`: the list opens inside the\nopen dialog (see [popover](popover.md)).\n\n### Styling\n\nNo `className`.\n\n## Do / don't\n\n- Do pass `clearable={false}` when an empty value is invalid.\n- Don't pass `surface=\"page\"` inside a card; let the depth decide.",
+      "body": "A single-value dropdown with type-to-search (on by default), an optional \"Add:\n…\" entry for new values, a clear button, and a loading state. The dropdown is a\n`Popover`, so it escapes clipping cards. Its list is drawn like a `Menu`: a\n4px inset pad, `sm`-rounded 14px options, the `cardStack` shadow, `bg.hover` on\nhover and `brand.light` on the keyboard-highlighted option.\n\nUse something else for: 2–5 options that fit in one row (`SegmentedControl`),\nseveral values (`ChipsInput`), on/off (`Switch`).\n\n## Usage\n\n### Choosing a surface\n\nFollow [corners](../corners.md):\n\n- Usually omit it: the default follows where the select sits. Directly on a\n  `Page` it is `'page'`; in a card or dialog (and outside any surface) it is\n  `'card'`; two or more surfaces deep it is `'inset'`.\n- `'card'`: `radius.md`, no shadow.\n- `'page'`: `radius.lg` + `shadow.cardStack`, like a card.\n- `'inset'`: `radius.sm`, no shadow, for a select nested inside an inset box.\n- Pass `surface` only to override the depth.\n\n### Forms\n\nThere is no hidden input carrying `value`: native `FormData` will not contain\nthe selection (only the search text while open). Keep `value` in state and\nsubmit that. The `<label>` targets the search box, so it is not the closed\ntrigger's accessible name; the trigger announces the selected label or\nplaceholder.\n\n### Keyboard\n\nClosed: Enter, Space or ArrowDown open it. Open: ArrowUp/ArrowDown move (and\nwrap), Enter selects, Escape or Tab close. The highlight starts on the first\noption, not the current value.\n\n### Inside a dialog\n\nIt works inside a `Dialog` or a modal `<dialog>`: the list opens inside the\nopen dialog (see [popover](popover.md)).\n\n### Styling\n\nNo `className`.\n\n## Do / don't\n\n- Do pass `clearable={false}` when an empty value is invalid.\n- Don't pass `surface=\"page\"` inside a card; let the depth decide.",
       "examples": [
         {
           "file": "src/control/select/examples/01-basic.tsx",
@@ -3796,6 +3818,12 @@
           "dark": "#232427"
         },
         {
+          "path": "color.bg.hover",
+          "kind": "color",
+          "light": "rgba(0, 0, 0, 0.07)",
+          "dark": "rgba(255, 255, 255, 0.12)"
+        },
+        {
           "path": "color.bg.selected",
           "kind": "color",
           "light": "#dbeafe",
@@ -3862,6 +3890,12 @@
           "dark": "system-ui, sans-serif"
         },
         {
+          "path": "fontSize.md",
+          "kind": "value",
+          "light": "0.875rem",
+          "dark": "0.875rem"
+        },
+        {
           "path": "fontSize.sm",
           "kind": "value",
           "light": "0.75rem",
@@ -3922,10 +3956,10 @@
           "dark": "0px 2px 0px rgba(0, 0, 0, 0.4)"
         },
         {
-          "path": "shadow.hoverLift",
+          "path": "space.lg",
           "kind": "value",
-          "light": "0 2px 8px rgba(0,0,0,0.15)",
-          "dark": "0 2px 8px rgba(0,0,0,0.6)"
+          "light": "0.625rem",
+          "dark": "0.625rem"
         },
         {
           "path": "space.md",
@@ -3946,12 +3980,6 @@
           "dark": "0.25rem"
         },
         {
-          "path": "space.xxl",
-          "kind": "value",
-          "light": "1rem",
-          "dark": "1rem"
-        },
-        {
           "path": "space.xxs",
           "kind": "value",
           "light": "0.125rem",
@@ -3965,6 +3993,14 @@
         }
       ],
       "changelog": [
+        {
+          "version": "0.6.0",
+          "date": "2026-11-26",
+          "tags": [
+            "Select"
+          ],
+          "text": "The option list matches `Menu`: a 4px inset pad, 4px-rounded options with a 2px gap, 14px text (was 12.8px), the flat `cardStack` shadow (was `hoverLift`) and `bg.hover` on hover (was `bg.cardHeader`). The keyboard highlight is unchanged."
+        },
         {
           "version": "0.5.0",
           "date": "2026-11-24",
@@ -4323,6 +4359,14 @@
             "Switch"
           ],
           "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.5.2 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px."
+        },
+        {
+          "version": "0.6.0",
+          "date": "2026-11-26",
+          "tags": [
+            "SegmentedControl"
+          ],
+          "text": "Segments set their own font size (`fontSize.md`, the 14px of their labels) instead of the browser's 13.33px button default. Labels look the same; the segment's own text metrics no longer depend on the browser or page."
         }
       ]
     },
@@ -4342,7 +4386,7 @@
         "SwitchRadiusValue"
       ],
       "importLine": "import { Switch, type SwitchProps, type SwitchRadiusValue } from '@korzun/design/control'",
-      "body": "An on/off toggle (`role=\"switch\"`) with an optional label and description, a\nfull-row `horizontal` layout for forms, and a `loading` state for saves in\nflight. Controlled: you own `checked`.\n\nUse something else for: one of several options (`SegmentedControl`, `Select`),\nan action that happens on click (`Button`).\n\n## Usage\n\n### Behaviour\n\nNo `className`. Keyboard: Enter and Space toggle. Clicks and those keys stop\npropagation, so a switch inside a clickable card row won't trigger the row.\n\n### Choosing a radius\n\nSee [corners](../corners.md).\n\n- In a shaded row (`layout=\"horizontal\"`, or inside any field row): omit it\n  (`inset`, a track one radius step squarer than the row: 4px in a Card's 8px\n  row, 8px in a Page's 16px row).\n- In a `Card` header (`headerAction`), or anywhere with no nearby corner to\n  echo: `radius=\"pill\"`.\n\n## Do / don't\n\n- Do pass `loading` while the save runs instead of `disabled`; `disabled` means\n  \"you may not change this\".\n- Do give a label-less switch an `ariaLabel`; `name` is a machine key.\n- Don't expect a switch to submit with a `<form>`; send `checked` from state.\n- Don't put an interactive element in `description` of a `horizontal` switch:\n  clicking it toggles the switch.",
+      "body": "An on/off toggle (`role=\"switch\"`) with an optional label and description, a\nfull-row `horizontal` layout for forms, and a `loading` state for saves in\nflight. Controlled: you own `checked`. The unchecked track is `bg.switchOff`, a\nmid-grey that holds 3:1 on the page, a card and a shaded row in both themes.\n\nUse something else for: one of several options (`SegmentedControl`, `Select`),\nan action that happens on click (`Button`).\n\n## Usage\n\n### Behaviour\n\nNo `className`. Keyboard: Enter and Space toggle. Clicks and those keys stop\npropagation, so a switch inside a clickable card row won't trigger the row.\n\n### Choosing a radius\n\nSee [corners](../corners.md).\n\n- In a shaded row (`layout=\"horizontal\"`, or inside any field row): omit it\n  (`inset`, a track one radius step squarer than the row: 4px in a Card's 8px\n  row, 8px in a Page's 16px row).\n- In a `Card` header (`headerAction`), or anywhere with no nearby corner to\n  echo: `radius=\"pill\"`.\n\n## Do / don't\n\n- Do pass `loading` while the save runs instead of `disabled`; `disabled` means\n  \"you may not change this\".\n- Do give a label-less switch an `ariaLabel`; `name` is a machine key.\n- Don't expect a switch to submit with a `<form>`; send `checked` from state.\n- Don't put an interactive element in `description` of a `horizontal` switch:\n  clicking it toggles the switch.",
       "examples": [
         {
           "file": "src/control/switch/examples/01-basic.tsx",
@@ -4480,10 +4524,10 @@
           "dark": "#1A1B1E"
         },
         {
-          "path": "color.border.default",
+          "path": "color.bg.switchOff",
           "kind": "color",
-          "light": "#D9D9D9",
-          "dark": "#3A3B40"
+          "light": "#868686",
+          "dark": "#6E7480"
         },
         {
           "path": "color.brand.default",
@@ -4502,12 +4546,6 @@
           "kind": "color",
           "light": "#585863",
           "dark": "#A8ADB6"
-        },
-        {
-          "path": "color.text.muted",
-          "kind": "color",
-          "light": "#6E6E6E",
-          "dark": "#9CA1AB"
         },
         {
           "path": "fontSize.sm",
@@ -4597,6 +4635,16 @@
             "Switch"
           ],
           "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.5.2 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px."
+        },
+        {
+          "version": "0.6.0",
+          "date": "2026-11-26",
+          "tags": [
+            "Switch",
+            "lightTheme",
+            "darkTheme"
+          ],
+          "text": "The unchecked track is the new `color.bg.switchOff` token (`#868686` light, `#6E7480` dark), about 3:1 on `bg.page`, `bg.card` and `bg.cardHeader`; it was `border.default` (1.16:1 on a shaded row). The loading spinner on an unchecked track is now the thumb colour."
         },
         {
           "version": "0.0.6",
@@ -9535,7 +9583,7 @@
         "ThemeSetting"
       ],
       "importLine": "import { GlobalStyles, ThemeProvider, createUseStyles, darkTheme, lightTheme, useTheme, useThemeGlobalStyles, useThemeSetting, type SpaceValue, type Theme, type ThemeMode, type ThemeProviderProps, type ThemeSetting } from '@korzun/design/theme'",
-      "body": "Every visual value comes from the theme. App styles use `createUseStyles` (the\nsame function react-jss exports, re-exported here) with a typed `theme`\nargument. Don't add another CSS-in-JS library, and don't write literal colours,\nspacing, font sizes, or radii.\n\nUse something else for: a ready-made light/dark/auto picker (`ThemeSetting`),\nthe full list of token keys ([tokens](tokens.md)).\n\n## Usage\n\n### Setup\n\n```tsx\n<ThemeProvider identity={userId /* or null when signed out */}>\n  <ToastProvider>{app}</ToastProvider>\n</ThemeProvider>\n```\n\n- `ThemeProvider` renders `GlobalStyles`: a reset (every element\n  `box-sizing: border-box` with no default margin or padding; components are\n  sized against it), the page background, the body font,\n  a 16px input floor on iOS, scroll lock while a `<dialog>` is open, and the\n  `theme-rotation` and `theme-slide-*` keyframes. Don't render\n  `GlobalStyles` yourself, or `useThemeGlobalStyles()`, the hook it calls.\n- `lightTheme` / `darkTheme` are the two concrete themes (for tests).\n\n### `useThemeSetting()`\n\n```ts\nuseThemeSetting(): [ThemeSetting, (setting: ThemeSetting) => void]\n```\n\nReturns `[setting, setSetting]`, where `ThemeSetting` is `'light' | 'dark' |\n'auto'`. `'auto'` follows the OS `prefers-color-scheme` live. The\n`ThemeSetting` component is a ready-made picker for it. Without a\n`ThemeProvider` above it, the setter does nothing.\n\n### `useTheme()`\n\n```ts\nuseTheme(): Theme\n```\n\nReturns the current `Theme` object, for values needed outside a stylesheet.\n`theme.colorScheme` is the mode it resolved to, `'light'` or `'dark'`.\n\n### Writing styles\n\n```ts\n// style.ts, next to the component\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\nimport { applyTransparency } from '@korzun/design';\n\nexport const useStyle = createUseStyles((theme: Theme) => ({\n  root: {\n    padding: theme.space.md,\n    backgroundColor: theme.color.bg.card,\n  },\n  highlight: { backgroundColor: applyTransparency(theme.color.brand.default, 0.12) },\n  [theme.breakpoint.mobile]: { root: { padding: theme.space.sm } },\n}));\n```\n\n- Style files are for padding, borders, backgrounds, and one-offs (borders come from the border tokens). Lay out with\n  `Stack`/`Inline` and set text with `Text`/`Heading`.\n- `applyTransparency(color, alpha)` turns a hex or rgb token into an `rgba()`\n  string. Use it for tints instead of writing an rgba literal.\n- Media queries: use the `theme.breakpoint.mobile` / `.normal` strings as keys.\n\n### Tokens\n\nThe token groups (`color`, `space`, `radius`, `fontSize`, `shadow`, `zIndex`,\n`breakpoint` and the rest) are listed key by key in [tokens](tokens.md). Use the\nsemantic tokens, never the primitive `gray`, `blue` and `red` scales. Radii are\nchosen by nesting depth; see [corners](corners.md).\n\n| Group | Keys | Notes |\n|---|---|---|\n| `color.text` | `primary`, `secondary`, `muted`, `faint`, `description`, `onPrimary`, `onDanger` | `muted` for labels and meta, `faint` for placeholders |\n| `color.bg` | `page`, `card`, `cardHeader`, `track`, `input`, `footer`, `glass`, `glassFallback`, `glassActive`, `selected`, `hover`, `success`, `placeholder` | `cardHeader` is also the shaded-row and inset-box fill; `hover` is a translucent scrim |\n| `color.border` | `default`, `strong`, `light`, `focus`, `hover`, `danger`, `glass`, `glassActive`, `faint`, `loading`, `success`, `section` | Cards and dividers use `strong`; inputs use `default` |\n| `color.brand` | `default`, `hover`, `active`, `light`, `outline`, `loading*`, `linkHover` | The primary action colour |\n| `color.danger` | `default`, `hover`, `active`, `light`, `outline`, `loading*` | Destructive actions and errors |\n| `color.success` | (a string) | Solid green |\n| `color.warning` | (a string) | Solid amber |\n| `color.info` | (a string) | Solid blue, the mode's `brand.default` |\n| `color.chip.<tone>` | `{ text, bg, border }` for 13 tones. Status tones: `success`, `warning`, `danger`, `info`, `neutral`. Label tones: `status`, `author`, `series`, `subject`, `book`, `entryType`, `user`, `rating` | Used by `Tag` |\n| `color.overlay` | `backdrop` | Modal backdrop |\n| `color.gray` / `blue` / `red` | primitive scales | Don't use these in app code; use the semantic tokens above |\n| `space` | `xxxs` 0.1rem, `xxs` 0.125, `xs` 0.25, `sm` 0.375, `md` 0.5, `lg` 0.625, `xl` 0.75, `xxl` 1, `xxxl` 1.25, `xxxxl` 1.5, `xxxxxl` 2rem | `md` is the default gap between stacked fields |\n| `radius` | `sm` 4px, `md` 8px, `lg` 16px, `circle`, `pill` | Chosen by nesting depth; see [corners](corners.md) |\n| `fontSize` | `xxs` 0.6rem, `xs` 0.7, `sm` 0.75, `md` 0.875, `lg` 1, `xl` 1.25, `xxl` 1.75rem | Control text is `'0.80rem'`, the one sanctioned literal (already applied by `recipe.input` and Button) |\n| `fontWeight` | `regular` 400, `medium` 500, `semibold` 600, `bold` 700, `extrabold` 800 | |\n| `lineHeight` | `tight` 1, `body` 1.3 | |\n| `fontFamily` | `body`, `mono` | |\n| `shadow` | `card`, `cardStack`, `hoverLift`, `dangerStack`, `brandStack`, `glass`, `glassActive` | Floating layers use `hoverLift` |\n| `transition` | `fast`, `medium`, `slide`, `slow`, `spring` | Values like `'0.2s ease-in'` |\n| `zIndex` | `behind`, `base`, `stack.{lo,md,hi}`, `header`, `sticky`, `toast` | |\n| `breakpoint` | `mobile` (≤640px), `normal` | Media query strings |\n| `layout` | `navHeightMobile`, `modalWidth`, `controlHeight`, `floatingControlTopBase` | Measured chrome sizes to lay out around |\n| `size` | `metadataValue` | |\n\n### Recipes\n\nRecipes are style fragments that you spread into a rule: `{ ...theme.recipe.input }`.\n\n| Recipe | Gives you |\n|---|---|\n| `recipe.input` | Text-input chrome: font, `md` radius, border, hover and focus colours, iOS 16px floor; `&$danger` turns the border red if your sheet declares a `danger: {}` class |\n| `recipe.label` | Field label: semibold, `md`, muted; `&$danger` |\n| `recipe.focusRing` | Transparent 2px outline; set `outlineColor: theme.color.brand.outline` on `'&:focus'` |\n| `recipe.spinner` | 1em rotating box. `Spinner` is the normal way to show a spinner; use the recipe only for a custom rotating element |\n| `recipe.glass` / `glassHighlight` | Frosted translucent surface (floating chrome) and its active state |\n| `recipe.row` | The shaded field row a control sits in inside a card: `bg.cardHeader`, `md` corners, padding `md lg md sm`. Use it for custom rows next to form fields |\n| `recipe.card.shell` / `header` / `footer` | The Card surface (`lg`), its header bar, and its footer bar |\n| `recipe.modal.dialog` / `header` / `footer` | A `<dialog>` surface (`lg`, shared width, backdrop), its title, and its button bar |\n\nRecipes that use `$name` references need an empty class with that name in the\nsame sheet (`danger: {}`).\n\n## Do / don't\n\n- Do style with `theme.*` tokens and `createUseStyles`.\n- Do use `applyTransparency` for a tint instead of an rgba literal.\n- Don't render `GlobalStyles` yourself; `ThemeProvider` does.\n- Don't use the primitive `gray`, `blue` and `red` scales in app code.",
+      "body": "Every visual value comes from the theme. App styles use `createUseStyles` (the\nsame function react-jss exports, re-exported here) with a typed `theme`\nargument. Don't add another CSS-in-JS library, and don't write literal colours,\nspacing, font sizes, or radii.\n\nUse something else for: a ready-made light/dark/auto picker (`ThemeSetting`),\nthe full list of token keys ([tokens](tokens.md)).\n\n## Usage\n\n### Setup\n\n```tsx\n<ThemeProvider identity={userId /* or null when signed out */}>\n  <ToastProvider>{app}</ToastProvider>\n</ThemeProvider>\n```\n\n- `ThemeProvider` renders `GlobalStyles`: a reset (every element\n  `box-sizing: border-box` with no default margin or padding; components are\n  sized against it), the page background, the body font,\n  a 16px input floor on iOS, scroll lock while a `<dialog>` is open, and the\n  `theme-rotation` and `theme-slide-*` keyframes. Don't render\n  `GlobalStyles` yourself, or `useThemeGlobalStyles()`, the hook it calls.\n- `lightTheme` / `darkTheme` are the two concrete themes (for tests).\n\n### `useThemeSetting()`\n\n```ts\nuseThemeSetting(): [ThemeSetting, (setting: ThemeSetting) => void]\n```\n\nReturns `[setting, setSetting]`, where `ThemeSetting` is `'light' | 'dark' |\n'auto'`. `'auto'` follows the OS `prefers-color-scheme` live. The\n`ThemeSetting` component is a ready-made picker for it. Without a\n`ThemeProvider` above it, the setter does nothing.\n\n### `useTheme()`\n\n```ts\nuseTheme(): Theme\n```\n\nReturns the current `Theme` object, for values needed outside a stylesheet.\n`theme.colorScheme` is the mode it resolved to, `'light'` or `'dark'`.\n\n### Writing styles\n\n```ts\n// style.ts, next to the component\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\nimport { applyTransparency } from '@korzun/design';\n\nexport const useStyle = createUseStyles((theme: Theme) => ({\n  root: {\n    padding: theme.space.md,\n    backgroundColor: theme.color.bg.card,\n  },\n  highlight: { backgroundColor: applyTransparency(theme.color.brand.default, 0.12) },\n  [theme.breakpoint.mobile]: { root: { padding: theme.space.sm } },\n}));\n```\n\n- Style files are for padding, borders, backgrounds, and one-offs (borders come from the border tokens). Lay out with\n  `Stack`/`Inline` and set text with `Text`/`Heading`.\n- `applyTransparency(color, alpha)` turns a hex or rgb token into an `rgba()`\n  string. Use it for tints instead of writing an rgba literal.\n- Media queries: use the `theme.breakpoint.mobile` / `.normal` strings as keys.\n\n### Tokens\n\nThe token groups (`color`, `space`, `radius`, `fontSize`, `shadow`, `zIndex`,\n`breakpoint` and the rest) are listed key by key in [tokens](tokens.md). Use the\nsemantic tokens, never the primitive `gray`, `blue` and `red` scales. Radii are\nchosen by nesting depth; see [corners](corners.md).\n\n| Group | Keys | Notes |\n|---|---|---|\n| `color.text` | `primary`, `secondary`, `muted`, `faint`, `description`, `onPrimary`, `onDanger` | `muted` for labels and meta, `faint` for placeholders |\n| `color.bg` | `page`, `card`, `cardHeader`, `track`, `switchOff`, `input`, `footer`, `glass`, `glassFallback`, `glassActive`, `selected`, `hover`, `success`, `placeholder` | `cardHeader` is also the shaded-row and inset-box fill; `hover` is a translucent scrim |\n| `color.border` | `default`, `strong`, `light`, `focus`, `hover`, `danger`, `glass`, `glassActive`, `faint`, `loading`, `success`, `section` | Cards and dividers use `strong`; inputs use `default` |\n| `color.brand` | `default`, `hover`, `active`, `light`, `outline`, `loading*`, `linkHover` | The primary action colour |\n| `color.danger` | `default`, `hover`, `active`, `light`, `outline`, `loading*` | Destructive actions and errors |\n| `color.success` | (a string) | Solid green |\n| `color.warning` | (a string) | Solid amber |\n| `color.info` | (a string) | Solid blue, the mode's `brand.default` |\n| `color.chip.<tone>` | `{ text, bg, border }` for 13 tones. Status tones: `success`, `warning`, `danger`, `info`, `neutral`. Label tones: `status`, `author`, `series`, `subject`, `book`, `entryType`, `user`, `rating` | Used by `Tag` |\n| `color.overlay` | `backdrop` | Modal backdrop |\n| `color.gray` / `blue` / `red` | primitive scales | Don't use these in app code; use the semantic tokens above |\n| `space` | `xxxs` 0.1rem, `xxs` 0.125, `xs` 0.25, `sm` 0.375, `md` 0.5, `lg` 0.625, `xl` 0.75, `xxl` 1, `xxxl` 1.25, `xxxxl` 1.5, `xxxxxl` 2rem | `md` is the default gap between stacked fields |\n| `radius` | `sm` 4px, `md` 8px, `lg` 16px, `circle`, `pill` | Chosen by nesting depth; see [corners](corners.md) |\n| `fontSize` | `xxs` 0.6rem, `xs` 0.7, `sm` 0.75, `md` 0.875, `lg` 1, `xl` 1.25, `xxl` 1.75rem | Control text is `'0.80rem'`, the one sanctioned literal (already applied by `recipe.input` and Button) |\n| `fontWeight` | `regular` 400, `medium` 500, `semibold` 600, `bold` 700, `extrabold` 800 | |\n| `lineHeight` | `tight` 1, `body` 1.3 | |\n| `fontFamily` | `body`, `mono` | |\n| `shadow` | `card`, `cardStack`, `hoverLift`, `dangerStack`, `brandStack`, `glass`, `glassActive` | Floating layers use `hoverLift` |\n| `transition` | `fast`, `medium`, `slide`, `slow`, `spring` | Values like `'0.2s ease-in'` |\n| `zIndex` | `behind`, `base`, `stack.{lo,md,hi}`, `header`, `sticky`, `toast` | |\n| `breakpoint` | `mobile` (≤640px), `normal` | Media query strings |\n| `layout` | `navHeightMobile`, `modalWidth`, `controlHeight`, `floatingControlTopBase` | Measured chrome sizes to lay out around |\n| `size` | `metadataValue` | |\n\n### Recipes\n\nRecipes are style fragments that you spread into a rule: `{ ...theme.recipe.input }`.\n\n| Recipe | Gives you |\n|---|---|\n| `recipe.input` | Text-input chrome: font, `md` radius, border, hover and focus colours, iOS 16px floor; `&$danger` turns the border red if your sheet declares a `danger: {}` class |\n| `recipe.label` | Field label: semibold, `md`, muted; `&$danger` |\n| `recipe.focusRing` | Transparent 2px outline; set `outlineColor: theme.color.brand.outline` on `'&:focus'` |\n| `recipe.spinner` | 1em rotating box. `Spinner` is the normal way to show a spinner; use the recipe only for a custom rotating element |\n| `recipe.glass` / `glassHighlight` | Frosted translucent surface (floating chrome) and its active state |\n| `recipe.row` | The shaded field row a control sits in inside a card: `bg.cardHeader`, `md` corners, padding `md lg md sm`. Use it for custom rows next to form fields |\n| `recipe.card.shell` / `header` / `footer` | The Card surface (`lg`), its header bar, and its footer bar |\n| `recipe.modal.dialog` / `header` / `footer` | A `<dialog>` surface (`lg`, shared width, backdrop), its title, and its button bar |\n\nRecipes that use `$name` references need an empty class with that name in the\nsame sheet (`danger: {}`).\n\n## Do / don't\n\n- Do style with `theme.*` tokens and `createUseStyles`.\n- Do use `applyTransparency` for a tint instead of an rgba literal.\n- Don't render `GlobalStyles` yourself; `ThemeProvider` does.\n- Don't use the primitive `gray`, `blue` and `red` scales in app code.",
       "examples": [
         {
           "file": "src/theme/examples/01-styles.tsx",
@@ -9718,6 +9766,16 @@
             "GlobalStyles"
           ],
           "text": "`GlobalStyles` (rendered by `ThemeProvider`) ships the reset the components are drawn against: every element is `box-sizing: border-box` with no default margin or padding, as in Bookplate's and Scribe's `index.html`. Without it a text field was 51px tall instead of `layout.controlHeight` (33px). An app that already carries this reset sees no change; one that relied on browser default margins (`p`, `h1`, `ul`) loses them."
+        },
+        {
+          "version": "0.6.0",
+          "date": "2026-11-26",
+          "tags": [
+            "Switch",
+            "lightTheme",
+            "darkTheme"
+          ],
+          "text": "The unchecked track is the new `color.bg.switchOff` token (`#868686` light, `#6E7480` dark), about 3:1 on `bg.page`, `bg.card` and `bg.cardHeader`; it was `border.default` (1.16:1 on a shaded row). The loading spinner on an unchecked track is now the thumb colour."
         },
         {
           "version": "0.2.0",
@@ -10165,7 +10223,7 @@
       "docPath": "docs/tokens.md",
       "title": "Tokens",
       "description": "Every theme token key in detail, group by group.",
-      "body": "Every token lives in `src/theme/theme.ts`. The `Theme` interface declares the groups; `lightTheme` and `darkTheme` are both built by `buildTheme(mode)` and share every key, differing only in values. Consumers read tokens with `useTheme()` or inside `createUseStyles((theme: Theme) => ...)`. The groups below follow the order of the `Theme` type; the key lists are taken from it.\n\nThe top-level `colorScheme` key holds the mode, `'light'` or `'dark'` (type `ThemeMode`), and is also the only non-group key of the type.\n\n## color\n\nSurfaces, text, borders and state colours, mode-aware. Keys are grouped as follows.\n\n- `color.gray`: primitive palette, steps `50 100 150 200 300 400 500 600 700 900`. Identical in both modes.\n- `color.blue`: primitive palette, steps `50 100 200 300 400 500 600 700 800`. Identical in both modes.\n- `color.red`: primitive palette, steps `50 100 300 400 500 600 700`. Identical in both modes.\n- `color.text`: `primary secondary muted faint onPrimary onDanger description`\n- `color.bg`: `page card cardHeader track input footer glass glassFallback glassActive selected hover success placeholder`. `track` must read against both `page` and `card`; `hover` is a translucent scrim; `glass*` feed `recipe.glass`.\n- `color.border`: `default strong light focus hover danger glass glassActive faint loading success section`\n- `color.success`, `color.warning`, `color.info`: a single value each.\n- `color.brand`: `default hover active light outline loading loadingHover loadingActive linkHover`\n- `color.danger`: `default hover active light outline loading loadingHover loadingActive`\n- `color.overlay`: `backdrop`\n- `color.chip`: thirteen tinted colourways, each `{ text, bg, border }`. Status tones: `success warning danger info neutral`. Label tones: `status author series subject book entryType user rating` (the `status` label tone is not a status tone). See Slated for curation.\n\n## space\n\nThe spacing scale, in `rem`: `xxxs xxs xs sm md lg xl xxl xxxl xxxxl xxxxxl` (`0.1rem` up to `2rem`).\n\n## radius\n\nCorner radii: `sm md lg circle pill` (`4px`, `8px`, `16px`, `50%`, `999px`).\n\n## size\n\nFixed component sizes that are not part of the spacing scale. One key: `metadataValue`. See Slated for curation.\n\n## layout\n\nIntrinsic sizes of chrome that other elements must lay out around. They are measured, not derived, so they are tuned on a device and kept in one place. Keys: `navHeightMobile` (the floating mobile nav, `96px`), `modalWidth` (the one width for every dialog, `500px`), `controlHeight` (the shared single-line control height, `2.0625rem`), and `floatingControlTopBase`, a position rather than a size: the `top` at which the mobile back button and actions menu pin, `max(space.xxxl, env(safe-area-inset-top) + space.xxxxl)`.\n\n## fontSize\n\nThe type scale: `xxs xs sm md lg xl xxl` (`0.6rem` up to `1.75rem`).\n\n## fontFamily\n\nTwo stacks: `body` (`system-ui, sans-serif`) and `mono`.\n\n## fontWeight\n\nNumeric weights: `regular medium semibold bold extrabold` (400, 500, 600, 700, 800).\n\n## lineHeight\n\nTwo values: `tight` (1) and `body` (1.3).\n\n## shadow\n\nMode-aware elevation. `card` is a soft one-pixel shadow (defined, with no consumer outside the theme); `cardStack`, `dangerStack` and `brandStack` are the hard `0px 2px 0px` offset shadows for cards and buttons; `hoverLift` is the elevation of floating surfaces (the toast and the select and chips-input dropdowns); `glass` and `glassActive` belong to `recipe.glass` and `recipe.glassHighlight`. Keys: `card cardStack hoverLift dangerStack brandStack glass glassActive`.\n\n## transition\n\nShorthand durations and easings: `fast medium slide slow spring`.\n\n## zIndex\n\nStacking layers: `behind base stack header sticky toast`, where `stack` is a nested `{ lo, md, hi }` (1, 2, 3). Values run from `-1` (`behind`) to `9999` (`toast`).\n\n## breakpoint\n\nMedia-query strings, ready to use as JSS keys: `mobile` (`@media (max-width: 640px)`) and `normal` (`@media (min-width: 641px)`).\n\n## recipe\n\nJSS-spreadable style fragments (`...theme.recipe.x`), not components.\n\n- `recipe.input`: the base text-field look (border, radius, hover and focus colours, 16px font on mobile).\n- `recipe.focusRing`: a transparent 2px outline that controls recolour on focus.\n- `recipe.label`: form label text, with a `$danger` variant.\n- `recipe.spinner`: a 1em rotating indicator using the `theme-rotation` keyframes.\n- `recipe.glass`: frosted, blurred chrome with a solid fallback where backdrop blur is unsupported.\n- `recipe.glassHighlight`: the active or pressed fill that sits on top of glass.\n- `recipe.row`: the shaded field row (`bg.cardHeader` fill, `radius.md`, padding `space.md space.lg space.md space.sm`) that `Switch`'s horizontal layout uses; spread it for any custom row that sits beside form fields in a card.\n- `recipe.modal.dialog`: the shared dialog shell (one width, backdrop, mobile margins and safe-area insets).\n- `recipe.modal.header`: dialog title row.\n- `recipe.modal.footer`: dialog action row.\n- `recipe.card.shell`: card container with border, radius and `shadow.cardStack`.\n- `recipe.card.header`: card title bar.\n- `recipe.card.footer`: card action row.\n\n## Slated for curation\n\nBoth groups below move into the package byte-for-byte in 0.0.1 and are due for a decision before the API settles.\n\n- `color.chip.*`: the eight label colourways (`status author series subject book entryType user rating`) are named after Bookplate's metadata chips, not after a general role.\n- `size.metadataValue`: `15rem`, a width named after Bookplate's metadata display.\n\nNo other token name or comment in `src/theme/theme.ts` is clearly Bookplate-specific. Two comments mention app internals (`floatingControlTopBase` refers to the admin picker and `router/nav-layout-style`), but the tokens themselves are generic."
+      "body": "Every token lives in `src/theme/theme.ts`. The `Theme` interface declares the groups; `lightTheme` and `darkTheme` are both built by `buildTheme(mode)` and share every key, differing only in values. Consumers read tokens with `useTheme()` or inside `createUseStyles((theme: Theme) => ...)`. The groups below follow the order of the `Theme` type; the key lists are taken from it.\n\nThe top-level `colorScheme` key holds the mode, `'light'` or `'dark'` (type `ThemeMode`), and is also the only non-group key of the type.\n\n## color\n\nSurfaces, text, borders and state colours, mode-aware. Keys are grouped as follows.\n\n- `color.gray`: primitive palette, steps `50 100 150 200 300 400 500 600 700 900`. Identical in both modes.\n- `color.blue`: primitive palette, steps `50 100 200 300 400 500 600 700 800`. Identical in both modes.\n- `color.red`: primitive palette, steps `50 100 300 400 500 600 700`. Identical in both modes.\n- `color.text`: `primary secondary muted faint onPrimary onDanger description`\n- `color.bg`: `page card cardHeader track switchOff input footer glass glassFallback glassActive selected hover success placeholder`. `track` must read against both `page` and `card`; `switchOff` is an unchecked Switch track, 3:1 on `page`, `card` and `cardHeader`; `hover` is a translucent scrim; `glass*` feed `recipe.glass`.\n- `color.border`: `default strong light focus hover danger glass glassActive faint loading success section`\n- `color.success`, `color.warning`, `color.info`: a single value each.\n- `color.brand`: `default hover active light outline loading loadingHover loadingActive linkHover`\n- `color.danger`: `default hover active light outline loading loadingHover loadingActive`\n- `color.overlay`: `backdrop`\n- `color.chip`: thirteen tinted colourways, each `{ text, bg, border }`. Status tones: `success warning danger info neutral`. Label tones: `status author series subject book entryType user rating` (the `status` label tone is not a status tone). See Slated for curation.\n\n## space\n\nThe spacing scale, in `rem`: `xxxs xxs xs sm md lg xl xxl xxxl xxxxl xxxxxl` (`0.1rem` up to `2rem`).\n\n## radius\n\nCorner radii: `sm md lg circle pill` (`4px`, `8px`, `16px`, `50%`, `999px`).\n\n## size\n\nFixed component sizes that are not part of the spacing scale. One key: `metadataValue`. See Slated for curation.\n\n## layout\n\nIntrinsic sizes of chrome that other elements must lay out around. They are measured, not derived, so they are tuned on a device and kept in one place. Keys: `navHeightMobile` (the floating mobile nav, `96px`), `modalWidth` (the one width for every dialog, `500px`), `controlHeight` (the shared single-line control height, `2.0625rem`), and `floatingControlTopBase`, a position rather than a size: the `top` at which the mobile back button and actions menu pin, `max(space.xxxl, env(safe-area-inset-top) + space.xxxxl)`.\n\n## fontSize\n\nThe type scale: `xxs xs sm md lg xl xxl` (`0.6rem` up to `1.75rem`).\n\n## fontFamily\n\nTwo stacks: `body` (`system-ui, sans-serif`) and `mono`.\n\n## fontWeight\n\nNumeric weights: `regular medium semibold bold extrabold` (400, 500, 600, 700, 800).\n\n## lineHeight\n\nTwo values: `tight` (1) and `body` (1.3).\n\n## shadow\n\nMode-aware elevation. `card` is a soft one-pixel shadow (defined, with no consumer outside the theme); `cardStack`, `dangerStack` and `brandStack` are the hard `0px 2px 0px` offset shadows for cards and buttons; `hoverLift` is the elevation of floating surfaces (the toast and the select and chips-input dropdowns); `glass` and `glassActive` belong to `recipe.glass` and `recipe.glassHighlight`. Keys: `card cardStack hoverLift dangerStack brandStack glass glassActive`.\n\n## transition\n\nShorthand durations and easings: `fast medium slide slow spring`.\n\n## zIndex\n\nStacking layers: `behind base stack header sticky toast`, where `stack` is a nested `{ lo, md, hi }` (1, 2, 3). Values run from `-1` (`behind`) to `9999` (`toast`).\n\n## breakpoint\n\nMedia-query strings, ready to use as JSS keys: `mobile` (`@media (max-width: 640px)`) and `normal` (`@media (min-width: 641px)`).\n\n## recipe\n\nJSS-spreadable style fragments (`...theme.recipe.x`), not components.\n\n- `recipe.input`: the base text-field look (border, radius, hover and focus colours, 16px font on mobile).\n- `recipe.focusRing`: a transparent 2px outline that controls recolour on focus.\n- `recipe.label`: form label text, with a `$danger` variant.\n- `recipe.spinner`: a 1em rotating indicator using the `theme-rotation` keyframes.\n- `recipe.glass`: frosted, blurred chrome with a solid fallback where backdrop blur is unsupported.\n- `recipe.glassHighlight`: the active or pressed fill that sits on top of glass.\n- `recipe.row`: the shaded field row (`bg.cardHeader` fill, `radius.md`, padding `space.md space.lg space.md space.sm`) that `Switch`'s horizontal layout uses; spread it for any custom row that sits beside form fields in a card.\n- `recipe.modal.dialog`: the shared dialog shell (one width, backdrop, mobile margins and safe-area insets).\n- `recipe.modal.header`: dialog title row.\n- `recipe.modal.footer`: dialog action row.\n- `recipe.card.shell`: card container with border, radius and `shadow.cardStack`.\n- `recipe.card.header`: card title bar.\n- `recipe.card.footer`: card action row.\n\n## Slated for curation\n\nBoth groups below move into the package byte-for-byte in 0.0.1 and are due for a decision before the API settles.\n\n- `color.chip.*`: the eight label colourways (`status author series subject book entryType user rating`) are named after Bookplate's metadata chips, not after a general role.\n- `size.metadataValue`: `15rem`, a width named after Bookplate's metadata display.\n\nNo other token name or comment in `src/theme/theme.ts` is clearly Bookplate-specific. Two comments mention app internals (`floatingControlTopBase` refers to the admin picker and `router/nav-layout-style`), but the tokens themselves are generic."
     }
   ],
   "changelog": [
@@ -10196,6 +10254,48 @@
             "Switch"
           ],
           "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.5.2 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px."
+        },
+        {
+          "version": "0.6.0",
+          "date": "2026-11-26",
+          "tags": [
+            "SegmentedControl"
+          ],
+          "text": "Segments set their own font size (`fontSize.md`, the 14px of their labels) instead of the browser's 13.33px button default. Labels look the same; the segment's own text metrics no longer depend on the browser or page."
+        },
+        {
+          "version": "0.6.0",
+          "date": "2026-11-26",
+          "tags": [
+            "Button"
+          ],
+          "text": "`text` and `link` buttons show a solid 2px `border.focus` ring on keyboard focus (`:focus-visible`); before they showed nothing. Mouse clicks still leave no ring."
+        },
+        {
+          "version": "0.6.0",
+          "date": "2026-11-26",
+          "tags": [
+            "Button"
+          ],
+          "text": "Height no longer follows an inherited line-height: Buttons in a Dialog footer are 32px, not 35px, and an icon-only Button is 32px (was 31px, sitting 1px low) beside text Buttons. The label's line-height is pinned to 14px; `link` stays text-sized."
+        },
+        {
+          "version": "0.6.0",
+          "date": "2026-11-26",
+          "tags": [
+            "Switch",
+            "lightTheme",
+            "darkTheme"
+          ],
+          "text": "The unchecked track is the new `color.bg.switchOff` token (`#868686` light, `#6E7480` dark), about 3:1 on `bg.page`, `bg.card` and `bg.cardHeader`; it was `border.default` (1.16:1 on a shaded row). The loading spinner on an unchecked track is now the thumb colour."
+        },
+        {
+          "version": "0.6.0",
+          "date": "2026-11-26",
+          "tags": [
+            "Select"
+          ],
+          "text": "The option list matches `Menu`: a 4px inset pad, 4px-rounded options with a 2px gap, 14px text (was 12.8px), the flat `cardStack` shadow (was `hoverLift`) and `bg.hover` on hover (was `bg.cardHeader`). The keyboard highlight is unchanged."
         },
         {
           "version": "0.6.0",

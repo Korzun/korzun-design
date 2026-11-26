@@ -13,7 +13,8 @@ category: Inputs
 
 An on/off toggle (`role="switch"`) with an optional label and description, a
 full-row `horizontal` layout for forms, and a `loading` state for saves in
-flight. Controlled: you own `checked`.
+flight. Controlled: you own `checked`. The unchecked track is `bg.switchOff`, a
+mid-grey that holds 3:1 on the page, a card and a shaded row in both themes.
 
 Use something else for: one of several options (`SegmentedControl`, `Select`),
 an action that happens on click (`Button`).
@@ -265,11 +266,10 @@ type SwitchRadiusValue = 'inset' | 'pill';
 | Token | Light | Dark |
 | --- | --- | --- |
 | `theme.color.bg.input` | `#FFFFFF` | `#1A1B1E` |
-| `theme.color.border.default` | `#D9D9D9` | `#3A3B40` |
+| `theme.color.bg.switchOff` | `#868686` | `#6E7480` |
 | `theme.color.brand.default` | `#1777FF` | `#3696fe` |
 | `theme.color.brand.outline` | `#91CAFF` | `rgba(54, 150, 254, 0.45)` |
 | `theme.color.text.description` | `#585863` | `#A8ADB6` |
-| `theme.color.text.muted` | `#6E6E6E` | `#9CA1AB` |
 | `theme.fontSize.sm` | `0.75rem` | `0.75rem` |
 | `theme.radius.circle` | `50%` | `50%` |
 | `theme.radius.lg` | `16px` | `16px` |
@@ -290,6 +290,7 @@ type SwitchRadiusValue = 'inset' | 'pill';
 ## Changelog
 
 - **0.6.0** (2026-11-26): Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.5.2 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px.
+- **0.6.0** (2026-11-26): The unchecked track is the new `color.bg.switchOff` token (`#868686` light, `#6E7480` dark), about 3:1 on `bg.page`, `bg.card` and `bg.cardHeader`; it was `border.default` (1.16:1 on a shaded row). The loading spinner on an unchecked track is now the thumb colour.
 - **0.0.6** (2026-11-21): New `theme.recipe.row`: the shaded field row (`bg.cardHeader`, `radius.md`, padding `md lg md sm`), for custom rows beside form fields. `Switch`'s horizontal layout now uses it and looks the same.
 
 <!-- /generated:changelog -->

@@ -27,6 +27,11 @@ Use something else for: navigating back (`BackButton`), page-level actions in
 the header (`PageActionsBar`, `PageActionsMenu`), sticky footer actions
 (`PageFooterActions`), picking one of several options (`SegmentedControl`).
 
+Every button but `link` is 32px tall: it pins its own line-height, so a
+parent's (a Dialog's 1.3) does not stretch it, and an icon-only button matches
+a text one. Keyboard focus (`:focus-visible`) on `text` and `link` draws a solid
+`border.focus` ring, since they have no border or fill of their own.
+
 ## Usage
 
 ### Choosing a variant
@@ -350,6 +355,7 @@ type ButtonTypeValue = 'default' | 'primary' | 'text' | 'link' | 'dashed';
 | `theme.color.bg.input` | `#FFFFFF` | `#1A1B1E` |
 | `theme.color.bg.success` | `#f0fdf4` | `rgba(34, 197, 94, 0.14)` |
 | `theme.color.border.default` | `#D9D9D9` | `#3A3B40` |
+| `theme.color.border.focus` | `#0758d9` | `#3696fe` |
 | `theme.color.border.loading` | `#e6e6e6` | `#34353A` |
 | `theme.color.border.success` | `#bbf7d0` | `rgba(34, 197, 94, 0.4)` |
 | `theme.color.brand.active` | `#0758d9` | `#91CAFF` |
@@ -390,6 +396,8 @@ type ButtonTypeValue = 'default' | 'primary' | 'text' | 'link' | 'dashed';
 
 ## Changelog
 
+- **0.6.0** (2026-11-26): `text` and `link` buttons show a solid 2px `border.focus` ring on keyboard focus (`:focus-visible`); before they showed nothing. Mouse clicks still leave no ring.
+- **0.6.0** (2026-11-26): Height no longer follows an inherited line-height: Buttons in a Dialog footer are 32px, not 35px, and an icon-only Button is 32px (was 31px, sitting 1px low) beside text Buttons. The label's line-height is pinned to 14px; `link` stays text-sized.
 - **0.5.0** (2026-11-24): Surface depth: corners are concentric site-wide with no radius props. `Page` provides depth 0, `Dialog` 1, and `Card`, `CardRow` and `Alert` each provide one level deeper than where they sit; `Popover` (so `Menu` and the `Select` list) provides a fixed 2. Depth 0 is `radius.lg`, 1 is `md`, 2 and deeper is `sm`. `Button`, `Select`, `Card`, `CardRow` and `Alert` follow it; an explicit `Button radius` or `Select surface` still wins. With no `Page`, `Dialog`, `Card`, `CardRow`, `Alert` or `Surface` above it, a component keeps its 0.4.0 look; a bare `Card` (no `Page`) still counts as depth 0 and gives its contents depth 1, so its Buttons and nested Cards change as below.
 - **0.5.0** (2026-11-24): **Visible changes:**
   - Buttons in a Card default to 8px (they were 16px unless `radius="card"` was set), and Buttons in a Dialog body are 8px.

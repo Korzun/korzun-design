@@ -5,7 +5,11 @@ import { act } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
 import { renderWithProviders } from '../../test-utils.js';
+import { lightTheme } from '../../theme/theme.js';
 import { Switch } from './index.js';
+
+const rgb = (hex: string) =>
+  `rgb(${[1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16)).join(', ')})`;
 
 describe('Switch', () => {
   it('renders with role="switch" and correct aria-checked', () => {
@@ -214,5 +218,27 @@ describe('Switch', () => {
     );
     await user.click(screen.getByText('Helper text explaining the toggle'));
     expect(onChange).toHaveBeenCalledWith(true);
+  });
+});
+
+describe('unchecked track', () => {
+  // The track is the thumb's parent; the thumb is the one childless div.
+  const track = () => {
+    const divs = [...document.querySelectorAll('[role="switch"] div')];
+    const thumb = divs.find((div) => div.children.length === 0);
+    if (thumb?.parentElement == null) throw new Error('no track rendered');
+    return thumb.parentElement;
+  };
+
+  it('is painted bg.switchOff, which holds 3:1 on a shaded row', () => {
+    renderWithProviders(
+      <Switch name="n" checked={false} label="N" layout="horizontal" onChange={vi.fn()} />
+    );
+    expect(getComputedStyle(track()).backgroundColor).toBe(rgb(lightTheme.color.bg.switchOff));
+  });
+
+  it('turns brand when checked', () => {
+    renderWithProviders(<Switch name="n" checked label="N" onChange={vi.fn()} />);
+    expect(getComputedStyle(track()).backgroundColor).toBe(rgb(lightTheme.color.brand.default));
   });
 });

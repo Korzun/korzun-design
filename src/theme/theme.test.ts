@@ -245,6 +245,43 @@ describe('bg.track separates the segmented-control track from what it sits on', 
   });
 });
 
+// WCAG 2 relative luminance (gamma-decoded, unlike `luminance` above).
+const relativeLuminance = (hex: string) => {
+  const [r, g, b] = [1, 3, 5].map((i) => {
+    const c = parseInt(hex.slice(i, i + 2), 16) / 255;
+    return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+  });
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+};
+
+// WCAG 2 contrast ratio of two opaque hex colours.
+const contrast = (a: string, b: string) => {
+  const [x, y] = [relativeLuminance(a), relativeLuminance(b)].sort((p, q) => q - p);
+  return (x + 0.05) / (y + 0.05);
+};
+
+describe('non-text contrast (3:1) on every surface', () => {
+  const surfaces = ['page', 'card', 'cardHeader'] as const;
+
+  it.each([
+    ['light', lightTheme],
+    ['dark', darkTheme],
+  ] as const)('bg.switchOff, the unchecked Switch track, in %s mode', (_mode, theme) => {
+    for (const surface of surfaces) {
+      expect(contrast(theme.color.bg.switchOff, theme.color.bg[surface])).toBeGreaterThanOrEqual(3);
+    }
+  });
+
+  it.each([
+    ['light', lightTheme],
+    ['dark', darkTheme],
+  ] as const)('border.focus, the text/link Button focus ring, in %s mode', (_mode, theme) => {
+    for (const surface of [...surfaces, 'footer', 'input'] as const) {
+      expect(contrast(theme.color.border.focus, theme.color.bg[surface])).toBeGreaterThanOrEqual(3);
+    }
+  });
+});
+
 describe('recipe.row', () => {
   it('is the shaded field row: cardHeader fill, md corners, md/lg/md/sm padding', () => {
     for (const theme of [lightTheme, darkTheme]) {

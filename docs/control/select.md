@@ -13,7 +13,9 @@ category: Inputs
 
 A single-value dropdown with type-to-search (on by default), an optional "Add:
 …" entry for new values, a clear button, and a loading state. The dropdown is a
-`Popover`, so it escapes clipping cards.
+`Popover`, so it escapes clipping cards. Its list is drawn like a `Menu`: a
+4px inset pad, `sm`-rounded 14px options, the `cardStack` shadow, `bg.hover` on
+hover and `brand.light` on the keyboard-highlighted option.
 
 Use something else for: 2–5 options that fit in one row (`SegmentedControl`),
 several values (`ChipsInput`), on/off (`Switch`).
@@ -464,6 +466,7 @@ type SelectOption = string | {
 | `theme.breakpoint.mobile` | `@media (max-width: 640px)` | `@media (max-width: 640px)` |
 | `theme.color.bg.card` | `#FCFCFC` | `#1A1B1E` |
 | `theme.color.bg.cardHeader` | `#EEEEEE` | `#232427` |
+| `theme.color.bg.hover` | `rgba(0, 0, 0, 0.07)` | `rgba(255, 255, 255, 0.12)` |
 | `theme.color.bg.selected` | `#dbeafe` | `rgba(23, 119, 255, 0.24)` |
 | `theme.color.border.default` | `#D9D9D9` | `#3A3B40` |
 | `theme.color.border.focus` | `#0758d9` | `#3696fe` |
@@ -475,6 +478,7 @@ type SelectOption = string | {
 | `theme.color.text.muted` | `#6E6E6E` | `#9CA1AB` |
 | `theme.color.text.primary` | `#111` | `#F5F5F7` |
 | `theme.fontFamily.body` | `system-ui, sans-serif` | `system-ui, sans-serif` |
+| `theme.fontSize.md` | `0.875rem` | `0.875rem` |
 | `theme.fontSize.sm` | `0.75rem` | `0.75rem` |
 | `theme.fontWeight.semibold` | `600` | `600` |
 | `theme.layout.controlHeight` | `2.0625rem` | `2.0625rem` |
@@ -485,11 +489,10 @@ type SelectOption = string | {
 | `theme.recipe.label` | [recipe](../tokens.md#recipe) | [recipe](../tokens.md#recipe) |
 | `theme.recipe.spinner` | [recipe](../tokens.md#recipe) | [recipe](../tokens.md#recipe) |
 | `theme.shadow.cardStack` | `0px 2px 0px rgba(217, 217, 217, 0.2)` | `0px 2px 0px rgba(0, 0, 0, 0.4)` |
-| `theme.shadow.hoverLift` | `0 2px 8px rgba(0,0,0,0.15)` | `0 2px 8px rgba(0,0,0,0.6)` |
+| `theme.space.lg` | `0.625rem` | `0.625rem` |
 | `theme.space.md` | `0.5rem` | `0.5rem` |
 | `theme.space.sm` | `0.375rem` | `0.375rem` |
 | `theme.space.xs` | `0.25rem` | `0.25rem` |
-| `theme.space.xxl` | `1rem` | `1rem` |
 | `theme.space.xxs` | `0.125rem` | `0.125rem` |
 | `theme.transition.fast` | `0.1s ease-in` | `0.1s ease-in` |
 
@@ -499,6 +502,7 @@ type SelectOption = string | {
 
 ## Changelog
 
+- **0.6.0** (2026-11-26): The option list matches `Menu`: a 4px inset pad, 4px-rounded options with a 2px gap, 14px text (was 12.8px), the flat `cardStack` shadow (was `hoverLift`) and `bg.hover` on hover (was `bg.cardHeader`). The keyboard highlight is unchanged.
 - **0.5.0** (2026-11-24): Surface depth: corners are concentric site-wide with no radius props. `Page` provides depth 0, `Dialog` 1, and `Card`, `CardRow` and `Alert` each provide one level deeper than where they sit; `Popover` (so `Menu` and the `Select` list) provides a fixed 2. Depth 0 is `radius.lg`, 1 is `md`, 2 and deeper is `sm`. `Button`, `Select`, `Card`, `CardRow` and `Alert` follow it; an explicit `Button radius` or `Select surface` still wins. With no `Page`, `Dialog`, `Card`, `CardRow`, `Alert` or `Surface` above it, a component keeps its 0.4.0 look; a bare `Card` (no `Page`) still counts as depth 0 and gives its contents depth 1, so its Buttons and nested Cards change as below.
 - **0.5.0** (2026-11-24): **Visible changes:**
   - Buttons in a Card default to 8px (they were 16px unless `radius="card"` was set), and Buttons in a Dialog body are 8px.
