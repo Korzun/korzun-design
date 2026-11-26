@@ -216,11 +216,41 @@ function createFlattener(loader) {
     return rows;
   }
 
-  // Each prop listed once. A branch that only forbids the prop (`never`, or
-  // `false | undefined`) does not define it: the row takes its type (minus `never`)
-  // and first documented description from the defining branches, and is required
-  // only when every branch defines it as required.
-  const FORBIDS = new Set(['never', 'false', 'undefined']);
+  // Top-level members of a union type text: `(a: X | Y) => void | Z` is two.
+  const splitTop = (text) => {
+    const parts = [];
+    let depth = 0;
+    let start = 0;
+    for (let i = 0; i < text.length; i++) {
+      const c = text[i];
+      if ('([{<'.includes(c)) depth++;
+      else if (')]}'.includes(c) || (c === '>' && text[i - 1] !== '=')) depth--;
+      else if (c === '|' && depth === 0) {
+        parts.push(text.slice(start, i).trim());
+        start = i + 1;
+      }
+    }
+    parts.push(text.slice(start).trim());
+    return parts.filter(Boolean);
+  };
+  const FORBIDS = new Set(['never', 'undefined']);
+  const joinTypes = (parts) => {
+    const set = new Set(parts);
+    const bool = set.has('boolean') || (set.has('true') && set.has('false'));
+    const named = parts.map((t) => (bool && (t === 'true' || t === 'false') ? 'boolean' : t));
+    const unique = [...new Set(named)];
+    // A function type joined with others needs parentheses to read as one member.
+    return unique.length > 1
+      ? unique.map((t) => (t.includes('=>') && !/^\(.*\)$/.test(t) ? `(${t})` : t)).join(' | ')
+      : unique[0];
+  };
+  // Each prop listed once. A branch typing the prop only `never`/`undefined`
+  // forbids it and does not define it. The row's type joins the defining
+  // branches' types without `never`/`undefined`, reading `true`/`false` as
+  // `boolean` when it has both or `boolean` already (so a `false` discriminant
+  // or a `false | undefined` mutual exclusion reads `boolean`). Its description
+  // joins the defining branches' distinct texts, and it is required only when
+  // every branch defines it as required.
   function unionRows(node, file, depth) {
     const branches = [];
     for (const part of node.types) {
@@ -232,17 +262,13 @@ function createFlattener(loader) {
     const rows = new Map();
     for (const name of names) {
       const present = branches.map((b) => b.get(name)).filter(Boolean);
-      const partsOf = (row) => row.type.split('|').map((t) => t.trim());
-      const defining = present.filter((row) => !partsOf(row).every((t) => FORBIDS.has(t)));
-      const types = [];
-      for (const row of defining) {
-        for (const t of partsOf(row)) if (t !== 'never' && !types.includes(t)) types.push(t);
-      }
-      const documented =
-        defining.find((r) => r.description) ?? present.find((r) => r.description) ?? present[0];
+      const defining = present.filter((row) => !splitTop(row.type).every((t) => FORBIDS.has(t)));
+      const types = defining.flatMap((r) => splitTop(r.type)).filter((t) => !FORBIDS.has(t));
+      const texts = [...new Set(defining.map((r) => r.description).filter(Boolean))];
       const merged = {
-        ...documented,
-        type: types.length ? types.join(' | ') : present[0].type,
+        ...(defining.find((r) => r.description) ?? defining[0] ?? present[0]),
+        type: types.length ? joinTypes(types) : present[0].type,
+        description: texts.join(' '),
         required: defining.length === branches.length && defining.every((r) => r.required),
       };
       rows.set(name, merged);
@@ -299,13 +325,14 @@ function createFlattener(loader) {
       if (!keys || !inner) return null;
       return new Map([...inner].filter(([k]) => (name === 'Omit') !== keys.includes(k)));
     }
-    if (tn.type !== 'Identifier' || args.length) return null;
+    // A generic of this package (`BaseProps<V>`) flattens with its type
+    // parameters left by name; library generics do not resolve and stay out.
+    if (tn.type !== 'Identifier') return null;
     const found = loader.resolveName(file, tn.name);
     return found ? flattenDecl(found.decl, found.file, depth + 1) : null;
   }
 
   function flattenDecl(decl, file, depth) {
-    if (decl.typeParameters?.params?.length) return null;
     if (decl.type === 'TSTypeAliasDeclaration') {
       return flattenNode(decl.typeAnnotation, file, depth);
     }

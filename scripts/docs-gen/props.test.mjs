@@ -287,3 +287,99 @@ test('union: a never part is dropped from a defining branch type', () => {
   const t = table(`export type X = { a?: string | never } | { a?: number };`, 'X');
   assert.equal(row(t, 'a').type, 'string | number');
 });
+
+test('union: a false discriminant is a value, not a forbid; true | false reads boolean; both texts kept', () => {
+  const t = table(
+    `export type XProps = { label: string } & ({
+  /** Clicking the checked segment clears the value. */
+  clearable: true;
+  /** Absent means read-only. */
+  onChange?: (value: string | null) => void;
+} | {
+  /** Off: there is no way to clear. */
+  clearable?: false;
+  /** Absent means read-only. */
+  onChange?: (value: string) => void;
+});`,
+    'XProps'
+  );
+  assert.equal(row(t, 'clearable').type, 'boolean');
+  assert.equal(row(t, 'clearable').required, false);
+  assert.equal(
+    row(t, 'clearable').description,
+    'Clicking the checked segment clears the value. Off: there is no way to clear.'
+  );
+  assert.equal(row(t, 'onChange').description, 'Absent means read-only.');
+});
+
+test('union: a prop no defining branch documents gets no text from a forbidding branch', () => {
+  const t = table(
+    `export type X = { a: string; /** Not allowed here. */ b?: never } | { b: number };`,
+    'X'
+  );
+  assert.equal(row(t, 'b').type, 'number');
+  assert.equal(row(t, 'b').description, '');
+});
+
+test('generic props type flattens, its type parameter left by name', () => {
+  const t = table(
+    `type BaseProps<V extends string> = {
+  /** The checked option. */
+  value: V | null;
+};
+export type PickerProps<V extends string> = BaseProps<V> & {
+  /** Called with the picked value. */
+  onChange?: (value: V) => void;
+};`,
+    'PickerProps'
+  );
+  assert.equal(t.kind, 'props');
+  assert.equal(row(t, 'value').type, 'V | null');
+  assert.equal(row(t, 'value').required, true);
+  assert.equal(row(t, 'onChange').type, '(value: V) => void');
+});
+
+test(
+  'real d.ts: Button danger/success stay boolean; SegmentedControl flattens with clearable',
+  {
+    skip: !existsSync('dist/control/index.d.ts') && 'run npm run build first',
+  },
+  () => {
+    const [button, segmented] = extractTypeTables('dist/control/index.d.ts', [
+      'ButtonProps',
+      'SegmentedControlProps',
+    ]);
+    assert.equal(row(button, 'danger').type, 'boolean');
+    assert.match(row(button, 'danger').description, /^Red treatment/);
+    assert.equal(row(button, 'success').type, 'boolean');
+    assert.match(row(button, 'success').description, /^Green treatment/);
+    assert.equal(segmented.kind, 'props');
+    assert.equal(row(segmented, 'clearable').type, 'boolean');
+    assert.equal(row(segmented, 'clearable').required, false);
+    assert.match(row(segmented, 'clearable').description, /clear the value\. Off by default/);
+    assert.equal(row(segmented, 'value').type, 'V | null');
+    assert.equal(row(segmented, 'label').required, true);
+  }
+);
+
+test(
+  'real d.ts: Menu items merge without never or the forbidding text',
+  {
+    skip: !existsSync('dist/control/index.d.ts') && 'run npm run build first',
+  },
+  () => {
+    const [item] = extractTypeTables('dist/control/index.d.ts', ['MenuItem']);
+    assert.equal(row(item, 'to').type, 'string');
+    assert.match(row(item, 'to').description, /^Router path/);
+    assert.equal(row(item, 'onClick').type, '() => void');
+    assert.match(row(item, 'onClick').description, /^Receives no event/);
+  }
+);
+
+test('union: function types from different branches stay whole and parenthesised', () => {
+  const t = table(
+    `export type X = { f?: (v: string | null) => void } | { f?: (v: string) => void };`,
+    'X'
+  );
+  assert.equal(row(t, 'f').type, '((v: string | null) => void) | ((v: string) => void)');
+});
