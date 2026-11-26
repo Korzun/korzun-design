@@ -92,7 +92,7 @@ export default function Gaps() {
       {gaps.map((gap) => (
         <Stack key={gap} gap="xs" align="start">
           <Text size="sm" tone="muted">
-            gap=&quot;{gap}&quot;
+            {`gap="${gap}"`}
           </Text>
           <Stack gap={gap} align="start">
             <Tag>One</Tag>
@@ -123,7 +123,7 @@ export default function Align() {
       {aligns.map((align) => (
         <Stack key={align} gap="xs" align={align}>
           <Text size="sm" tone="muted">
-            align=&quot;{align}&quot;
+            {`align="${align}"`}
           </Text>
           <Button>Add a book</Button>
         </Stack>
@@ -204,10 +204,10 @@ export default function NestedWithInline() {
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `children` | `ReactNode` |  | The children, laid out top to bottom. |
-| `align` | `'stretch' \| 'start' \| 'center' \| 'end'` | `'stretch'` | Cross-axis (horizontal) alignment of children; `start`/`end` map to `flex-start`/`flex-end`. Default `'stretch'`. |
-| `as` | `'div' \| 'section' \| 'ul' \| 'ol' \| 'li'` | `'div'` | The element to render. `ul`/`ol` also reset list margin, padding and bullets. Default `'div'`. |
+| `align` | `'stretch' \| 'start' \| 'center' \| 'end'` | `'stretch'` | Cross-axis (horizontal) alignment of children; `start`/`end` map to `flex-start`/`flex-end`. |
+| `as` | `'div' \| 'section' \| 'ul' \| 'ol' \| 'li'` | `'div'` | The element to render. `ul`/`ol` also reset list margin, padding and bullets. |
 | `className` | `string` |  | Extra class, added last on the root. Override with `'&&'` specificity, never `!important`. |
-| `gap` | `keyof Theme['space'] \| 'none'` | `'md'` | Space between children, from the theme's `space` tokens, or `'none'`. Default `'md'`. |
+| `gap` | `keyof Theme['space'] \| 'none'` | `'md'` | Space between children, from the theme's `space` tokens, or `'none'`. |
 | `ref` | `Ref<HTMLElement>` |  | Ref to the root element. |
 
 Also accepts: `HTMLAttributes`.

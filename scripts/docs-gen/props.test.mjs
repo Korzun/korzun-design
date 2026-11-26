@@ -44,6 +44,17 @@ test('PropsWithChildren adds children: ReactNode', () => {
   assert.equal(t.rows[0].name, 'children');
 });
 
+test('rows sort case-insensitively, children first', () => {
+  const t = table(
+    `export interface XProps { tone: string; Icon?: string; action?: string; children?: string; className?: string }`,
+    'XProps'
+  );
+  assert.deepEqual(
+    t.rows.map((r) => r.name),
+    ['children', 'action', 'className', 'Icon', 'tone']
+  );
+});
+
 test('intersection merges members; later wins', () => {
   const t = table(`export type XProps = { a: string; b?: number } & { a?: boolean };`, 'XProps');
   assert.equal(row(t, 'a').type, 'boolean');
@@ -167,7 +178,8 @@ test(
     for (const n of ['type', 'radius', 'danger', 'success', 'children'])
       assert.ok(names.includes(n), n);
     assert.equal(names[0], 'children');
-    assert.deepEqual(names.slice(1), [...names.slice(1)].sort());
+    const lower = names.slice(1).map((n) => n.toLowerCase());
+    assert.deepEqual(lower, [...lower].sort());
     assert.equal(row(t, 'danger').type, 'boolean');
     assert.equal(row(t, 'type').type, "'default' | 'primary' | 'text' | 'link' | 'dashed'");
   }

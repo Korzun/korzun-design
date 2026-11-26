@@ -67,6 +67,14 @@
           "title": "Submit button in a card footer",
           "description": "`submit` renders a native submit button; `form` points it at a form elsewhere\nin the card. `onClick` is ignored on a submit button, so handle the form's\n`action`. Inside a Card the corners step down by themselves: no `radius` prop.",
           "code": "import { Card, Stack, Text } from '@korzun/design/component';\nimport { Button, TextInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function SubmitInCard() {\n  const [name, setName] = useState<string | undefined>('Ada');\n  const [saved, setSaved] = useState<string | null>(null);\n  return (\n    <Card\n      title=\"Profile\"\n      footer={\n        <Button type=\"primary\" submit form=\"profile-form\">\n          Save\n        </Button>\n      }\n    >\n      <form id=\"profile-form\" action={(data) => setSaved(String(data.get('name') ?? ''))}>\n        <Stack>\n          <TextInput name=\"name\" label=\"Name\" value={name} onChange={setName} />\n          {saved !== null && <Text tone=\"success\">Saved as {saved}</Text>}\n        </Stack>\n      </form>\n    </Card>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/button/examples/07-dialog-footer.tsx",
+          "slug": "dialog-footer",
+          "order": 7,
+          "title": "Confirm dialog footer",
+          "description": "A `text` Cancel beside a `primary danger` action. `loading` shows the spinner\nand blocks a second click while the deletion runs; `canDismiss={!deleting}`\nkeeps the dialog open until it finishes. Inside a Dialog the corners step down\nby themselves: no `radius` prop.",
+          "code": "import { Button, Dialog } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function DialogFooter() {\n  const [open, setOpen] = useState(false);\n  const [deleting, setDeleting] = useState(false);\n  const close = () => {\n    setDeleting(false);\n    setOpen(false);\n  };\n  const confirm = () => {\n    setDeleting(true);\n    setTimeout(close, 1000);\n  };\n  return (\n    <>\n      <Button danger onClick={() => setOpen(true)}>\n        Delete book\n      </Button>\n      <Dialog\n        open={open}\n        onClose={close}\n        canDismiss={!deleting}\n        title=\"Delete this book?\"\n        footer={\n          <>\n            <Button type=\"text\" disabled={deleting} onClick={close}>\n              Cancel\n            </Button>\n            <Button type=\"primary\" danger loading={deleting} onClick={confirm}>\n              Delete\n            </Button>\n          </>\n        }\n      >\n        It is removed from every device. This cannot be undone.\n      </Dialog>\n    </>\n  );\n}\n"
         }
       ],
       "tables": [
@@ -154,7 +162,7 @@
               "name": "radius",
               "type": "'background' | 'card' | 'inset' | 'modal'",
               "required": false,
-              "description": "The surface the button sits on: `'background'`, `'card'`, `'inset'`, `'modal'`. Unset (the default), the radius follows surface depth: 16px on a page or outside any surface, 8px in a Card or Dialog, 4px in a Popover or nested Card. Pass it only to override; see `docs/corners.md`."
+              "description": "The surface the button sits on, which sets its corner radius. Unset (the default), the radius follows surface depth: 16px on a page or outside any surface, 8px in a Card or Dialog, 4px in a Popover or nested Card. Pass it only to override; see [corners](../corners.md)."
             },
             {
               "name": "ref",
@@ -186,8 +194,8 @@
               "name": "tabIndex",
               "type": "number",
               "required": false,
-              "description": "Div mode defaults to `0`, so the button is keyboard-focusable; an explicit value wins, except it is forced to `-1` while `disabled` or `loading`. Submit mode uses the native `<button>`, so the value is passed through.",
-              "default": "0 (div mode)"
+              "description": "In div mode the button is keyboard-focusable by default; an explicit value wins, except it is forced to `-1` while `disabled` or `loading`. Submit mode passes it through to the native `<button>`, which is focusable anyway.",
+              "default": "0"
             },
             {
               "name": "title",
@@ -199,7 +207,7 @@
               "name": "type",
               "type": "'default' | 'primary' | 'text' | 'link' | 'dashed'",
               "required": false,
-              "description": "**Visual variant** (`'default'`, `'primary'`, `'text'`, `'link'`, `'dashed'`), not the HTML `type`. Use `submit` for a submit button.",
+              "description": "**Visual variant**, not the HTML `type`. Use `submit` for a submit button.",
               "default": "'default'"
             }
           ]
@@ -573,12 +581,6 @@
               "description": "Body text."
             },
             {
-              "name": "Icon",
-              "type": "ComponentType<IconProps>",
-              "required": false,
-              "description": "Icon shown before the title, in the tone's text colour. There is no default icon per tone."
-            },
-            {
               "name": "action",
               "type": "ReactNode",
               "required": false,
@@ -589,6 +591,12 @@
               "type": "string",
               "required": false,
               "description": "Extra class, added last on the root. Override with `'&&'` specificity, never `!important`."
+            },
+            {
+              "name": "Icon",
+              "type": "ComponentType<IconProps>",
+              "required": false,
+              "description": "Icon shown before the title, in the tone's text colour. There is no default icon per tone."
             },
             {
               "name": "title",
@@ -810,7 +818,7 @@
           "order": 2,
           "title": "Gaps",
           "description": "`gap` takes a key of the theme's `space` scale: `xs` for tight groups, `md`\n(the default) for most content, `xxl` between sections. `none` is for\nchildren that bring their own spacing.",
-          "code": "import { Inline, Stack, Tag, Text } from '@korzun/design/component';\n\nconst gaps = ['none', 'xs', 'md', 'xxl'] as const;\n\nexport default function Gaps() {\n  return (\n    <Inline gap=\"xxl\" align=\"start\" wrap>\n      {gaps.map((gap) => (\n        <Stack key={gap} gap=\"xs\" align=\"start\">\n          <Text size=\"sm\" tone=\"muted\">\n            gap=&quot;{gap}&quot;\n          </Text>\n          <Stack gap={gap} align=\"start\">\n            <Tag>One</Tag>\n            <Tag>Two</Tag>\n            <Tag>Three</Tag>\n          </Stack>\n        </Stack>\n      ))}\n    </Inline>\n  );\n}\n"
+          "code": "import { Inline, Stack, Tag, Text } from '@korzun/design/component';\n\nconst gaps = ['none', 'xs', 'md', 'xxl'] as const;\n\nexport default function Gaps() {\n  return (\n    <Inline gap=\"xxl\" align=\"start\" wrap>\n      {gaps.map((gap) => (\n        <Stack key={gap} gap=\"xs\" align=\"start\">\n          <Text size=\"sm\" tone=\"muted\">\n            {`gap=\"${gap}\"`}\n          </Text>\n          <Stack gap={gap} align=\"start\">\n            <Tag>One</Tag>\n            <Tag>Two</Tag>\n            <Tag>Three</Tag>\n          </Stack>\n        </Stack>\n      ))}\n    </Inline>\n  );\n}\n"
         },
         {
           "file": "src/component/stack/examples/03-align.tsx",
@@ -818,7 +826,7 @@
           "order": 3,
           "title": "Alignment",
           "description": "`align` sets the horizontal (cross-axis) placement. The default `stretch` makes\nevery child full width; use `start` so buttons and tags keep their own width.",
-          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\n\nconst aligns = ['stretch', 'start', 'center', 'end'] as const;\n\nexport default function Align() {\n  return (\n    <Stack gap=\"lg\">\n      {aligns.map((align) => (\n        <Stack key={align} gap=\"xs\" align={align}>\n          <Text size=\"sm\" tone=\"muted\">\n            align=&quot;{align}&quot;\n          </Text>\n          <Button>Add a book</Button>\n        </Stack>\n      ))}\n    </Stack>\n  );\n}\n"
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\n\nconst aligns = ['stretch', 'start', 'center', 'end'] as const;\n\nexport default function Align() {\n  return (\n    <Stack gap=\"lg\">\n      {aligns.map((align) => (\n        <Stack key={align} gap=\"xs\" align={align}>\n          <Text size=\"sm\" tone=\"muted\">\n            {`align=\"${align}\"`}\n          </Text>\n          <Button>Add a book</Button>\n        </Stack>\n      ))}\n    </Stack>\n  );\n}\n"
         },
         {
           "file": "src/component/stack/examples/04-list.tsx",
@@ -852,14 +860,14 @@
               "name": "align",
               "type": "'stretch' | 'start' | 'center' | 'end'",
               "required": false,
-              "description": "Cross-axis (horizontal) alignment of children; `start`/`end` map to `flex-start`/`flex-end`. Default `'stretch'`.",
+              "description": "Cross-axis (horizontal) alignment of children; `start`/`end` map to `flex-start`/`flex-end`.",
               "default": "'stretch'"
             },
             {
               "name": "as",
               "type": "'div' | 'section' | 'ul' | 'ol' | 'li'",
               "required": false,
-              "description": "The element to render. `ul`/`ol` also reset list margin, padding and bullets. Default `'div'`.",
+              "description": "The element to render. `ul`/`ol` also reset list margin, padding and bullets.",
               "default": "'div'"
             },
             {
@@ -872,7 +880,7 @@
               "name": "gap",
               "type": "keyof Theme['space'] | 'none'",
               "required": false,
-              "description": "Space between children, from the theme's `space` tokens, or `'none'`. Default `'md'`.",
+              "description": "Space between children, from the theme's `space` tokens, or `'none'`.",
               "default": "'md'"
             },
             {

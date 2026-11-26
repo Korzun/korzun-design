@@ -229,6 +229,56 @@ export default function SubmitInCard() {
 }
 ```
 
+### Confirm dialog footer
+
+A `text` Cancel beside a `primary danger` action. `loading` shows the spinner
+and blocks a second click while the deletion runs; `canDismiss={!deleting}`
+keeps the dialog open until it finishes. Inside a Dialog the corners step down
+by themselves: no `radius` prop.
+
+```tsx
+import { Button, Dialog } from '@korzun/design/control';
+import { useState } from 'react';
+
+export default function DialogFooter() {
+  const [open, setOpen] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const close = () => {
+    setDeleting(false);
+    setOpen(false);
+  };
+  const confirm = () => {
+    setDeleting(true);
+    setTimeout(close, 1000);
+  };
+  return (
+    <>
+      <Button danger onClick={() => setOpen(true)}>
+        Delete book
+      </Button>
+      <Dialog
+        open={open}
+        onClose={close}
+        canDismiss={!deleting}
+        title="Delete this book?"
+        footer={
+          <>
+            <Button type="text" disabled={deleting} onClick={close}>
+              Cancel
+            </Button>
+            <Button type="primary" danger loading={deleting} onClick={confirm}>
+              Delete
+            </Button>
+          </>
+        }
+      >
+        It is removed from every device. This cannot be undone.
+      </Dialog>
+    </>
+  );
+}
+```
+
 <!-- /generated:examples -->
 
 <!-- generated:props -->
@@ -249,14 +299,14 @@ export default function SubmitInCard() {
 | `loading` | `boolean` | `false` | Shows a spinner in place of the icons and blocks clicks. |
 | `onClick` | `() => void` | `() => {}` | Click and Enter/Space handler. **Ignored when `submit` is set**; the form submits instead. Receives no event. Not called while `disabled` or `loading`. |
 | `prefix` | `ComponentType<IconProps>` |  | Icon component shown before the label (`prefix={SearchIcon}`), not an element. |
-| `radius` | `'background' \| 'card' \| 'inset' \| 'modal'` |  | The surface the button sits on: `'background'`, `'card'`, `'inset'`, `'modal'`. Unset (the default), the radius follows surface depth: 16px on a page or outside any surface, 8px in a Card or Dialog, 4px in a Popover or nested Card. Pass it only to override; see `docs/corners.md`. |
+| `radius` | `'background' \| 'card' \| 'inset' \| 'modal'` |  | The surface the button sits on, which sets its corner radius. Unset (the default), the radius follows surface depth: 16px on a page or outside any surface, 8px in a Card or Dialog, 4px in a Popover or nested Card. Pass it only to override; see [corners](../corners.md). |
 | `ref` | `Ref<HTMLElement>` |  | Ref to the root element (the `<div role="button">`, or the `<button>` in submit mode), e.g. to `.focus()` it. A plain prop; no `forwardRef`. |
 | `submit` | `boolean` | `false` | Render a native `<button type="submit">`. Also shows the spinner while the enclosing form action is pending (`useFormStatus`). `onClick` is then ignored. |
 | `success` | `boolean` | `false` | Green treatment. Mutually exclusive with `danger` (setting both is a type error). |
 | `suffix` | `ComponentType<IconProps>` |  | Icon component shown after the label (`suffix={ChevronIcon}`), not an element. |
-| `tabIndex` | `number` | `0 (div mode)` | Div mode defaults to `0`, so the button is keyboard-focusable; an explicit value wins, except it is forced to `-1` while `disabled` or `loading`. Submit mode uses the native `<button>`, so the value is passed through. |
+| `tabIndex` | `number` | `0` | In div mode the button is keyboard-focusable by default; an explicit value wins, except it is forced to `-1` while `disabled` or `loading`. Submit mode passes it through to the native `<button>`, which is focusable anyway. |
 | `title` | `string` |  | Native tooltip; passed through. |
-| `type` | `'default' \| 'primary' \| 'text' \| 'link' \| 'dashed'` | `'default'` | **Visual variant** (`'default'`, `'primary'`, `'text'`, `'link'`, `'dashed'`), not the HTML `type`. Use `submit` for a submit button. |
+| `type` | `'default' \| 'primary' \| 'text' \| 'link' \| 'dashed'` | `'default'` | **Visual variant**, not the HTML `type`. Use `submit` for a submit button. |
 
 ### Types
 

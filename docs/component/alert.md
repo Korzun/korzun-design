@@ -158,9 +158,9 @@ export default function WithAction() {
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `children` | `ReactNode` |  | Body text. |
-| `Icon` | `ComponentType<IconProps>` |  | Icon shown before the title, in the tone's text colour. There is no default icon per tone. |
 | `action` | `ReactNode` |  | Content on the right, usually a Button; wraps under the text when narrow. |
 | `className` | `string` |  | Extra class, added last on the root. Override with `'&&'` specificity, never `!important`. |
+| `Icon` | `ComponentType<IconProps>` |  | Icon shown before the title, in the tone's text colour. There is no default icon per tone. |
 | `title` | `ReactNode` |  | Short semibold heading above the body. |
 | `tone` (required) | `'warning' \| 'danger' \| 'success' \| 'info'` |  | Colour family. `warning` and `danger` are announced (`role="alert"`); `success` and `info` are polite (`role="status"`). |
 

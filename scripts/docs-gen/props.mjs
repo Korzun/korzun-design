@@ -332,10 +332,13 @@ function createFlattener(loader) {
   };
 }
 
+const cmp = (x, y) => (x < y ? -1 : x > y ? 1 : 0);
+
+/** `children` first, then case-insensitive alphabetical (ties by exact name). */
 const byName = (a, b) => {
   if (a.name === 'children') return -1;
   if (b.name === 'children') return 1;
-  return a.name < b.name ? -1 : a.name > b.name ? 1 : 0;
+  return cmp(a.name.toLowerCase(), b.name.toLowerCase()) || cmp(a.name, b.name);
 };
 
 /**

@@ -192,7 +192,7 @@ test('tokens do not follow imports into src/theme (the provider and global style
 });
 
 test(
-  'real repo: stack tokens include a space path',
+  'real repo: stack tokens are exactly space paths',
   { skip: !existsSync(join(realRepo, 'dist')) && 'dist missing; run npm run build' },
   () => {
     const root = mkdtempSync(join(tmpdir(), 'docs-gen-real-'));
@@ -200,19 +200,10 @@ test(
     for (const p of ['package.json', 'src', 'dist', 'docs', 'AGENTS.md', 'CHANGELOG.md']) {
       cpSync(join(realRepo, p), join(root, p), { recursive: true });
     }
-    const doc = readFileSync(join(realRepo, 'docs/component/stack.md'), 'utf8');
-    const marked = doc.replace(/^---[\s\S]*?---\n/, '');
-    const regions = ['import', 'examples', 'props', 'tokens', 'changelog']
-      .map((r) => `<!-- generated:${r} -->\n<!-- /generated:${r} -->`)
-      .join('\n\n');
-    put(
-      root,
-      'docs/component/stack.md',
-      `---\ntitle: Stack\ndescription: d\ncategory: Layout\n---\n\n${marked}\n\n${regions}\n`
-    );
     const site = JSON.parse(generate(root).get('gallery/generated/site-data.json'));
     const stack = site.modules.find((m) => m.id === 'component/stack');
-    assert.ok(stack.tokens.some((t) => t.path.startsWith('space.')));
+    assert.ok(stack.tokens.length > 0);
+    assert.ok(stack.tokens.every((t) => t.path.startsWith('space.')));
   }
 );
 

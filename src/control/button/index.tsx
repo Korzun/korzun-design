@@ -51,10 +51,10 @@ export type ButtonProps = React.PropsWithChildren<
     /** Icon component shown before the label (`prefix={SearchIcon}`), not an element. */
     prefix?: ComponentType<IconProps>;
     /**
-     * The surface the button sits on: `'background'`, `'card'`, `'inset'`, `'modal'`.
-     * Unset (the default), the radius follows surface depth: 16px on a page or
-     * outside any surface, 8px in a Card or Dialog, 4px in a Popover or nested
-     * Card. Pass it only to override; see `docs/corners.md`.
+     * The surface the button sits on, which sets its corner radius. Unset (the
+     * default), the radius follows surface depth: 16px on a page or outside any
+     * surface, 8px in a Card or Dialog, 4px in a Popover or nested Card. Pass it
+     * only to override; see [corners](../corners.md).
      */
     radius?: ButtonRadiusValue;
     /** Ref to the root element (the `<div role="button">`, or the `<button>` in submit mode), e.g. to `.focus()` it. A plain prop; no `forwardRef`. */
@@ -67,17 +67,16 @@ export type ButtonProps = React.PropsWithChildren<
     /** Icon component shown after the label (`suffix={ChevronIcon}`), not an element. */
     suffix?: ComponentType<IconProps>;
     /**
-     * Div mode defaults to `0`, so the button is keyboard-focusable; an explicit
-     * value wins, except it is forced to `-1` while `disabled` or `loading`.
-     * Submit mode uses the native `<button>`, so the value is passed through.
-     * @default 0 (div mode)
+     * In div mode the button is keyboard-focusable by default; an explicit value
+     * wins, except it is forced to `-1` while `disabled` or `loading`. Submit
+     * mode passes it through to the native `<button>`, which is focusable anyway.
+     * @default 0
      */
     tabIndex?: number;
     /** Native tooltip; passed through. */
     title?: string;
     /**
-     * **Visual variant** (`'default'`, `'primary'`, `'text'`, `'link'`, `'dashed'`),
-     * not the HTML `type`. Use `submit` for a submit button.
+     * **Visual variant**, not the HTML `type`. Use `submit` for a submit button.
      * @default 'default'
      */
     type?: ButtonTypeValue;

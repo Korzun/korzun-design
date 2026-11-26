@@ -13,7 +13,7 @@ export default function Align() {
       {aligns.map((align) => (
         <Stack key={align} gap="xs" align={align}>
           <Text size="sm" tone="muted">
-            align=&quot;{align}&quot;
+            {`align="${align}"`}
           </Text>
           <Button>Add a book</Button>
         </Stack>

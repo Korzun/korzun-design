@@ -13,7 +13,7 @@ export default function Gaps() {
       {gaps.map((gap) => (
         <Stack key={gap} gap="xs" align="start">
           <Text size="sm" tone="muted">
-            gap=&quot;{gap}&quot;
+            {`gap="${gap}"`}
           </Text>
           <Stack gap={gap} align="start">
             <Tag>One</Tag>

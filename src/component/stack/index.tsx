@@ -6,11 +6,11 @@ import type { Gap } from './gap.js';
 import { useStyle } from './style.js';
 
 export interface StackProps extends Omit<HTMLAttributes<HTMLElement>, 'style'> {
-  /** The element to render. `ul`/`ol` also reset list margin, padding and bullets. Default `'div'`. */
+  /** The element to render. `ul`/`ol` also reset list margin, padding and bullets. */
   as?: 'div' | 'section' | 'ul' | 'ol' | 'li';
-  /** Space between children, from the theme's `space` tokens, or `'none'`. Default `'md'`. */
+  /** Space between children, from the theme's `space` tokens, or `'none'`. */
   gap?: Gap;
-  /** Cross-axis (horizontal) alignment of children; `start`/`end` map to `flex-start`/`flex-end`. Default `'stretch'`. */
+  /** Cross-axis (horizontal) alignment of children; `start`/`end` map to `flex-start`/`flex-end`. */
   align?: 'stretch' | 'start' | 'center' | 'end';
   /** Extra class, added last on the root. Override with `'&&'` specificity, never `!important`. */
   className?: string;
