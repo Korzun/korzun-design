@@ -24,8 +24,9 @@ Use something else for: one of a few fixed numbers (`SegmentedControl` or
 
 - It is a plain `<input>` (no `type="number"`, no `inputMode`), so phones show
   the full text keyboard and there are no spinner arrows.
-- The default check accepts anything JavaScript reads as a number: `1.5`, `-3`,
-  `1e3` (reported as `1000`).
+- The default check accepts text that both `Number()` and `parseFloat` read as a
+  number: `1.5`, `-3`, `1e3` (reported as `1000`). `onChange` sends `parseFloat`
+  of the text, so `0x10` passes but is reported as `0`.
 - Invalid text stays visible with a red label and border; your state keeps the
   last valid number.
 
@@ -109,8 +110,10 @@ export default function Layouts() {
 
 ### Default check
 
-Without `validate` the field accepts empty text or anything JavaScript reads
-as a number: try `1.5`, `-3` or `1e3` (reported as 1000). Other text turns the
+Without `validate` the field accepts empty text or text that both `Number()` and
+`parseFloat` read as a number: try `1.5`, `-3` or `1e3` (reported as 1000).
+`onChange` sends `parseFloat` of the text, so `0x10` passes but is reported
+as 0. Other text turns the
 label and border red, `onValidChange` fires once, and `onChange` is not called,
 so the saved number stays at the last valid one. Type `abc` to see it.
 

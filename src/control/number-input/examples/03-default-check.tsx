@@ -1,6 +1,8 @@
 /** Default check
- * Without `validate` the field accepts empty text or anything JavaScript reads
- * as a number: try `1.5`, `-3` or `1e3` (reported as 1000). Other text turns the
+ * Without `validate` the field accepts empty text or text that both `Number()` and
+ * `parseFloat` read as a number: try `1.5`, `-3` or `1e3` (reported as 1000).
+ * `onChange` sends `parseFloat` of the text, so `0x10` passes but is reported
+ * as 0. Other text turns the
  * label and border red, `onValidChange` fires once, and `onChange` is not called,
  * so the saved number stays at the last valid one. Type `abc` to see it.
  */
