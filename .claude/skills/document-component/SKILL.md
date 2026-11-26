@@ -117,6 +117,7 @@ Use something else for: <job> (`OtherComponent`), <job> (`Other`).
 - Short facts from the old Props section ("No `className`.", "Pass `value` and `onChange` together.") go in Usage, as a sentence in the `###` subsection whose subject they share, or a new subsection named for it (`### Styling`). A fact the generated import region already states ("props type exported as `MenuProps`") is dropped.
 - The old hand-written `## Props`, `## Items` and type tables, and the old `## Example` code block, are removed once step 2 has moved their notes into JSDoc and step 4 has turned the example into `examples/`. Short code fragments in Usage and "don't" snippets stay. A Usage code block that a runnable example now repeats line for line becomes one sentence naming that example.
 - An old `## Example` that cannot run in a frame (a router layout with `useLocation` and `<Outlet/>`, an app-root `ThemeProvider`, a native `<input>` wired by ARIA to a control the library lacks): keep the old block verbatim as a Usage code fragment, under a sentence saying why it is not a demo ("It needs the app's router, so it is shown as code."). Keep every name it defines (its `main`, `settingsItems` arrays); never trim it so it uses a variable it no longer defines. Then put every part that can run (the props, item kinds and neighbours it uses) into one example. List the fragment in your report.
+- Replace a guidance table (a hand-written list of tokens, keys or values with notes) with a link to another doc only when that doc already carries every note in it, checked row by row. Otherwise keep the table. A link that drops a note loses it without notice.
 - Generated regions are written by `docs:gen` only; you leave the markers empty.
 
 ## 4. Examples
@@ -239,7 +240,7 @@ CLAUDE.md's stories rule is obsolete.
    ```
    find src/<area>/<module> docs/<area>/<slug>.md -newer <oldest>
    ```
-   (entry-point module: `find src/<area> docs/<area>.md -newer <oldest>`). It prints nothing. Anything it prints means reshoot that example's shots and the full page, then run it again.
+   (entry-point module: `find src/<area> docs/<area>.md -newer <oldest>`). It prints nothing. Anything it prints means reshoot that example's shots and the full page, then run it again. Run it again after every follow-up commit too (a review fix, a JSDoc tweak), right before you report, and quote its empty output in the report; a commit made after the last shots means reshooting first.
    Stop the server by its process group: `S=<scratch>; kill -- -$(cat $S/gallery.pid)`.
 
 ## 7. Commit
@@ -254,6 +255,6 @@ Your report contains, in order:
 1. The JSDoc audit table from step 2 (every old note and where it lives now).
 2. The coverage checklist from step 4.
 3. Every Usage and Do / don't sentence you rewrote (old, new, why), and any you doubt but kept.
-4. Each check from step 6 with its result (`docs:check: ok`, test counts, lint clean). For `npm test`, give the path of `$S/<slug>/test.log` and quote its last lines (the vitest `Tests` count, the script `pass`/`fail` counts and `docs:check: ok`).
+4. Each check from step 6 with its result (`docs:check: ok`, test counts, lint clean). For `npm test`, give the path of `$S/<slug>/test.log` and quote its last lines (the vitest `Tests` count, the script `pass`/`fail` counts and `docs:check: ok`). Quote the final reshoot `find` (empty), run after your last commit. If `docs:gen` stops with "`<Name>` takes `<Type>`, which … does not export", the props type is missing from the entry: that is a type export with its own CHANGELOG line, made outside this skill (step 7), not a doc to write as "takes no props".
 5. The full-page shot paths and the overlay table from step 6.5, with what you fixed or found in them.
 6. Generator and gallery problems (file, line, shot path), and anything left undone.
