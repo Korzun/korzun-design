@@ -1,5 +1,5 @@
 {
-  "version": "0.5.1",
+  "version": "0.6.0",
   "modules": [
     {
       "id": "control/back-button",
@@ -2447,7 +2447,7 @@
         "NumberInputProps"
       ],
       "importLine": "import { NumberInput, type NumberInputProps } from '@korzun/design/control'",
-      "body": "A single-line field for a number, with an optional label and validation. It\nparses with `parseFloat` and reports `number | undefined`. Same label/layout\nsystem as `TextInput`.\n\nUse something else for: one of a few fixed numbers (`SegmentedControl` or\n`Select`), free text (`TextInput`).\n\n## Usage\n\n### Behaviour to know\n\n- It is a plain `<input>` (no `type=\"number\"`, no `inputMode`), so phones show\n  the full text keyboard and there are no spinner arrows.\n- The default check accepts text that both `Number()` and `parseFloat` read as a\n  number: `1.5`, `-3`, `1e3` (reported as `1000`). `onChange` sends `parseFloat`\n  of the text, so `0x10` passes but is reported as `0`.\n- Invalid text stays visible with a red label and border; your state keeps the\n  last valid number.\n\n### What it has no prop for\n\nNo `className`, no `disabled`, no `min` / `max` / `step`.\n\n## Do / don't\n\n- Do pass `label={undefined}` explicitly when there is no visible label.\n- Do report `onValidChange` into the form and disable submit while any field is invalid.\n- Don't expect integer-only input unless your `validate` enforces it.",
+      "body": "A single-line field for a number, with an optional label and validation. It\nparses with `parseFloat` and reports `number | undefined`. Same label/layout\nsystem as `TextInput`.\n\nUse something else for: one of a few fixed numbers (`SegmentedControl` or\n`Select`), free text (`TextInput`).\n\n## Usage\n\n### Behaviour to know\n\n- It is a plain `<input>` (no `type=\"number\"`, no `inputMode`), so phones show\n  the full text keyboard and there are no spinner arrows.\n- The default check accepts text that both `Number()` and `parseFloat` read as a\n  number: `1.5`, `-3`, `1e3` (reported as `1000`). `onChange` sends `parseFloat`\n  of the text, so `0x10` passes but is reported as `0`.\n- Invalid text stays visible with a red label and border; your state keeps the\n  last valid number.\n\n### What it has no prop for\n\nNo `className`, no `disabled`, no `min` / `max` / `step`.\n\n## Do / don't\n\n- Do pass `label={undefined}` explicitly when there is no visible label, and name the field with `ariaLabel`.\n- Do report `onValidChange` into the form and disable submit while any field is invalid.\n- Don't expect integer-only input unless your `validate` enforces it.",
       "examples": [
         {
           "file": "src/control/number-input/examples/01-basic.tsx",
@@ -2486,8 +2486,8 @@
           "slug": "without-label",
           "order": 5,
           "title": "Without a label",
-          "description": "`label` is a required key: pass `label={undefined}` when there is no visible\nlabel, and describe the field with a `placeholder`.",
-          "code": "import { Inline, Text } from '@korzun/design/component';\nimport { NumberInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function WithoutLabel() {\n  const [quantity, setQuantity] = useState<number | undefined>(undefined);\n  return (\n    <Inline>\n      <NumberInput\n        name=\"quantity\"\n        layout=\"inline\"\n        label={undefined}\n        placeholder=\"Quantity\"\n        value={quantity}\n        onChange={setQuantity}\n      />\n      <Text tone=\"muted\">Quantity: {quantity === undefined ? 'none' : quantity}</Text>\n    </Inline>\n  );\n}\n"
+          "description": "`label` is a required key: pass `label={undefined}` when there is no visible\nlabel, name the field with `ariaLabel`, and describe it with a `placeholder`.",
+          "code": "import { Inline, Text } from '@korzun/design/component';\nimport { NumberInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function WithoutLabel() {\n  const [quantity, setQuantity] = useState<number | undefined>(undefined);\n  return (\n    <Inline>\n      <NumberInput\n        name=\"quantity\"\n        layout=\"inline\"\n        label={undefined}\n        ariaLabel=\"Quantity\"\n        placeholder=\"Quantity\"\n        value={quantity}\n        onChange={setQuantity}\n      />\n      <Text tone=\"muted\">Quantity: {quantity === undefined ? 'none' : quantity}</Text>\n    </Inline>\n  );\n}\n"
         }
       ],
       "tables": [
@@ -2496,10 +2496,16 @@
           "kind": "props",
           "rows": [
             {
+              "name": "ariaLabel",
+              "type": "string",
+              "required": false,
+              "description": "Accessible name of the input when `label` is `undefined`. With a `label`, the label names it and this is ignored."
+            },
+            {
               "name": "label",
               "type": "string | undefined",
               "required": true,
-              "description": "Required key: pass `label={undefined}` for none. Not linked to the input (no `htmlFor`)."
+              "description": "Required key: pass `label={undefined}` for none. Linked to the input so it names it."
             },
             {
               "name": "layout",
@@ -2601,7 +2607,18 @@
           "dark": "0.25rem"
         }
       ],
-      "changelog": []
+      "changelog": [
+        {
+          "version": "0.6.0",
+          "date": "2026-11-26",
+          "tags": [
+            "TextInput",
+            "TextArea",
+            "NumberInput"
+          ],
+          "text": "The visible `label` is linked to its field (`htmlFor` and a generated `id`), so it names the field and clicking it focuses the field. A new `ariaLabel` prop names a field that has no visible `label`; with a `label` it is ignored."
+        }
+      ]
     },
     {
       "id": "control/page-actions-bar",
@@ -4346,7 +4363,7 @@
         "TextAreaProps"
       ],
       "importLine": "import { TextArea, type TextAreaProps } from '@korzun/design/control'",
-      "body": "A multi-line text field with an optional label, validation, an optional\nauto-grow mode, and a character counter near `maxLength`. Same label/layout\nsystem as `TextInput`.\n\nUse something else for: single-line text (`TextInput`), tags (`ChipsInput`).\n\n## Usage\n\n### Styling\n\nNo `className`, no `disabled`, no `rows`, never resizable by the user\n(`resize: none`).\n\n## Do / don't\n\n- Do use `autoResize` for long free text so the card doesn't scroll inside itself.\n- Do set `maxLength` when the server has a limit; the counter only appears near it.\n- Don't expect `onChange('')`; an empty field reports `undefined`.\n- Don't try to shrink it below 7rem / 10rem with CSS; the min height is inline.",
+      "body": "A multi-line text field with an optional label, validation, an optional\nauto-grow mode, and a character counter near `maxLength`. Same label/layout\nsystem as `TextInput`.\n\nUse something else for: single-line text (`TextInput`), tags (`ChipsInput`).\n\n## Usage\n\n### Styling\n\nNo `className`, no `disabled`, no `rows`, never resizable by the user\n(`resize: none`).\n\n## Do / don't\n\n- Do use `autoResize` for long free text so the card doesn't scroll inside itself.\n- Do set `maxLength` when the server has a limit; the counter only appears near it.\n- Do set `ariaLabel` on a textarea with no visible `label`.\n- Don't expect `onChange('')`; an empty field reports `undefined`.\n- Don't try to shrink it below 7rem / 10rem with CSS; the min height is inline.",
       "examples": [
         {
           "file": "src/control/text-area/examples/01-basic.tsx",
@@ -4403,6 +4420,14 @@
           "title": "Form in a card",
           "description": "A short note in the `horizontal` layout, and a long description that\ngrows as the user types, with its label above and a `maxLength` the server\nenforces.",
           "code": "import { Card, Stack, Text } from '@korzun/design/component';\nimport { Button, TextArea } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function FormInCard() {\n  const [note, setNote] = useState<string | undefined>('Signed copy.');\n  const [description, setDescription] = useState<string | undefined>(\n    'A retired lighthouse keeper starts receiving letters from the sea.'\n  );\n  const [saved, setSaved] = useState(0);\n  return (\n    <Card\n      title=\"Book details\"\n      footer={\n        <Button type=\"primary\" onClick={() => setSaved((n) => n + 1)}>\n          Save\n        </Button>\n      }\n    >\n      <Stack>\n        <TextArea name=\"note\" label=\"Note\" value={note} onChange={setNote} />\n        <TextArea\n          name=\"description\"\n          layout=\"vertical\"\n          label=\"Description\"\n          autoResize\n          maxLength={3000}\n          value={description}\n          onChange={setDescription}\n        />\n        <Text tone=\"muted\">Saved {saved} times</Text>\n      </Stack>\n    </Card>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/text-area/examples/08-without-label.tsx",
+          "slug": "without-label",
+          "order": 8,
+          "title": "Without a label",
+          "description": "A textarea with no visible `label` takes `ariaLabel`, so assistive tech can\nstill name it.",
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { TextArea } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function WithoutLabel() {\n  const [notes, setNotes] = useState<string | undefined>(undefined);\n  return (\n    <Stack>\n      <TextArea\n        name=\"notes\"\n        layout=\"inline\"\n        ariaLabel=\"Reading notes\"\n        placeholder=\"Reading notes\"\n        value={notes}\n        onChange={setNotes}\n      />\n      <Text tone=\"muted\">Characters: {notes?.length ?? 0}</Text>\n    </Stack>\n  );\n}\n"
         }
       ],
       "tables": [
@@ -4410,6 +4435,12 @@
           "name": "TextAreaProps",
           "kind": "props",
           "rows": [
+            {
+              "name": "ariaLabel",
+              "type": "string",
+              "required": false,
+              "description": "Accessible name of the textarea when there is no visible `label`. With a `label`, the label names it and this is ignored."
+            },
             {
               "name": "autoResize",
               "type": "boolean",
@@ -4421,7 +4452,7 @@
               "name": "label",
               "type": "string",
               "required": false,
-              "description": "Visible label. Not linked to the textarea (no `htmlFor`)."
+              "description": "Visible label, linked to the textarea so it names it."
             },
             {
               "name": "layout",
@@ -4572,7 +4603,18 @@
           "dark": "0.125rem"
         }
       ],
-      "changelog": []
+      "changelog": [
+        {
+          "version": "0.6.0",
+          "date": "2026-11-26",
+          "tags": [
+            "TextInput",
+            "TextArea",
+            "NumberInput"
+          ],
+          "text": "The visible `label` is linked to its field (`htmlFor` and a generated `id`), so it names the field and clicking it focuses the field. A new `ariaLabel` prop names a field that has no visible `label`; with a `label` it is ignored."
+        }
+      ]
     },
     {
       "id": "control/text-input",
@@ -4590,7 +4632,7 @@
         "TextInputProps"
       ],
       "importLine": "import { TextInput, type TextInputAction, type TextInputProps } from '@korzun/design/control'",
-      "body": "A single-line text (or password) field with an optional label, optional\nvalidation, and a character counter that appears near `maxLength`. The default\n`horizontal` layout puts the label and field on one shaded row, which is how\nform fields look inside a `Card`.\n\nUse something else for: multi-line text (`TextArea`), numbers (`NumberInput`),\npicking from a list (`Select`), a list of tags (`ChipsInput`), dates\n(`DateTimeInput`).\n\n## Usage\n\n### Controlled-ish\n\nThe field keeps its own text. It re-syncs from `value` only when the `value`\nprop changes. While `validate` fails, the field shows the invalid text but\n`onChange` is not called, so your state keeps the last valid value. Track\n`onValidChange` to block submit.\n\n### What it has no prop for\n\nNo `className`, no `disabled`, no `id`.\n\n## Do / don't\n\n- Do keep the default `horizontal` layout for fields in a `Card` body; use\n  `vertical` when the label is long or the field is wide.\n- Do coalesce `undefined` (`v ?? ''`) if your state is a plain string.\n- Don't pass an `action`; render a separate `Button` beside the field instead.\n- Don't rely on clicking the label to focus the field; it isn't associated.",
+      "body": "A single-line text (or password) field with an optional label, optional\nvalidation, and a character counter that appears near `maxLength`. The default\n`horizontal` layout puts the label and field on one shaded row, which is how\nform fields look inside a `Card`.\n\nUse something else for: multi-line text (`TextArea`), numbers (`NumberInput`),\npicking from a list (`Select`), a list of tags (`ChipsInput`), dates\n(`DateTimeInput`).\n\n## Usage\n\n### Controlled-ish\n\nThe field keeps its own text. It re-syncs from `value` only when the `value`\nprop changes. While `validate` fails, the field shows the invalid text but\n`onChange` is not called, so your state keeps the last valid value. Track\n`onValidChange` to block submit.\n\n### What it has no prop for\n\nNo `className`, no `disabled`, no `id`.\n\n## Do / don't\n\n- Do keep the default `horizontal` layout for fields in a `Card` body; use\n  `vertical` when the label is long or the field is wide.\n- Do coalesce `undefined` (`v ?? ''`) if your state is a plain string.\n- Do give an `action` an `ariaLabel`; the icon alone has no name.\n- Do set `ariaLabel` on a field with no visible `label`.",
       "examples": [
         {
           "file": "src/control/text-input/examples/01-basic.tsx",
@@ -4647,6 +4689,22 @@
           "title": "Form in a card",
           "description": "The `horizontal` layout is made for a `Card` body. Fields report their\nvalidity through `onValidChange`, so Save stays disabled while any is\ninvalid.",
           "code": "import { Card, Stack, Text } from '@korzun/design/component';\nimport { Button, TextInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function FormInCard() {\n  const [name, setName] = useState<string | undefined>('Ada Lovelace');\n  const [password, setPassword] = useState('');\n  const [valid, setValid] = useState<Record<string, boolean>>({});\n  const [saved, setSaved] = useState<string | null>(null);\n  const invalid = Object.values(valid).some((ok) => !ok);\n  return (\n    <Card\n      title=\"Account\"\n      footer={\n        <Button type=\"primary\" disabled={invalid} onClick={() => setSaved(name ?? '')}>\n          Save\n        </Button>\n      }\n    >\n      <Stack>\n        <TextInput\n          name=\"name\"\n          label=\"Name\"\n          maxLength={64}\n          validate={(v) => v.length <= 64 && v.trim().length > 0}\n          onValidChange={(field, ok) => setValid((s) => ({ ...s, [field]: ok }))}\n          value={name}\n          onChange={setName}\n        />\n        <TextInput\n          name=\"new-password\"\n          label=\"New\"\n          password\n          autoComplete=\"new-password\"\n          value={password}\n          onChange={(v) => setPassword(v ?? '')}\n        />\n        {saved !== null && <Text tone=\"success\">Saved: {saved}</Text>}\n      </Stack>\n    </Card>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/text-input/examples/08-action.tsx",
+          "slug": "action",
+          "order": 8,
+          "title": "Action",
+          "description": "`action` puts an icon button inside the field's right end. Give it an\n`ariaLabel`, since the icon alone has no name. Here it clears the search.",
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { TextInput } from '@korzun/design/control';\nimport { CircleXIcon } from '@korzun/design/icon';\nimport { useState } from 'react';\n\nexport default function Action() {\n  const [query, setQuery] = useState<string | undefined>('Earthsea');\n  return (\n    <Stack>\n      <TextInput\n        name=\"query\"\n        label=\"Search\"\n        value={query}\n        onChange={setQuery}\n        action={{ icon: CircleXIcon, ariaLabel: 'Clear search', action: () => setQuery(undefined) }}\n      />\n      <Text tone=\"muted\">Query: {query === undefined ? 'none' : `“${query}”`}</Text>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/text-input/examples/09-without-label.tsx",
+          "slug": "without-label",
+          "order": 9,
+          "title": "Without a label",
+          "description": "A field with no visible `label` takes `ariaLabel`, so assistive tech can\nstill name it. With a `label`, the label names the field instead.",
+          "code": "import { Inline, Text } from '@korzun/design/component';\nimport { TextInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function WithoutLabel() {\n  const [filter, setFilter] = useState<string | undefined>(undefined);\n  return (\n    <Inline>\n      <TextInput\n        name=\"filter\"\n        layout=\"inline\"\n        ariaLabel=\"Filter books\"\n        placeholder=\"Filter books\"\n        value={filter}\n        onChange={setFilter}\n      />\n      <Text tone=\"muted\">Filter: {filter === undefined ? 'none' : `“${filter}”`}</Text>\n    </Inline>\n  );\n}\n"
         }
       ],
       "tables": [
@@ -4658,7 +4716,13 @@
               "name": "action",
               "type": "TextInputAction",
               "required": false,
-              "description": "Broken, do not use: the icon button is drawn but its `action` callback is never wired up."
+              "description": "An icon button inside the field's right end, such as clear or reveal."
+            },
+            {
+              "name": "ariaLabel",
+              "type": "string",
+              "required": false,
+              "description": "Accessible name of the input when there is no visible `label`. With a `label`, the label names it and this is ignored."
             },
             {
               "name": "autoCapitalize",
@@ -4676,7 +4740,7 @@
               "name": "label",
               "type": "string",
               "required": false,
-              "description": "Visible label. Not linked to the input (no `htmlFor`)."
+              "description": "Visible label, linked to the input so it names it."
             },
             {
               "name": "layout",
@@ -4754,7 +4818,13 @@
               "name": "action",
               "type": "() => void",
               "required": true,
-              "description": "Never wired up: clicking the icon does nothing."
+              "description": "Called when the icon button is clicked."
+            },
+            {
+              "name": "ariaLabel",
+              "type": "string",
+              "required": false,
+              "description": "Accessible name of the icon button (`Clear search`); an icon alone has none."
             },
             {
               "name": "danger",
@@ -4769,7 +4839,7 @@
               "description": "Icon component, not an element."
             }
           ],
-          "description": "Trailing icon button of a `TextInput`. Broken: `action` is never called."
+          "description": "Trailing icon button of a `TextInput`."
         }
       ],
       "tokens": [
@@ -4858,7 +4928,26 @@
           "dark": "1"
         }
       ],
-      "changelog": []
+      "changelog": [
+        {
+          "version": "0.6.0",
+          "date": "2026-11-26",
+          "tags": [
+            "TextInput",
+            "TextArea",
+            "NumberInput"
+          ],
+          "text": "The visible `label` is linked to its field (`htmlFor` and a generated `id`), so it names the field and clicking it focuses the field. A new `ariaLabel` prop names a field that has no visible `label`; with a `label` it is ignored."
+        },
+        {
+          "version": "0.6.0",
+          "date": "2026-11-26",
+          "tags": [
+            "TextInput"
+          ],
+          "text": "`action` works: clicking its icon button calls `action.action`. `TextInputAction` gains an optional `ariaLabel` naming that button."
+        }
+      ]
     },
     {
       "id": "control/use-modal-dialog",
@@ -5755,7 +5844,7 @@
         "CollapsibleSectionProps"
       ],
       "importLine": "import { CollapsibleSection, type CollapsibleSectionProps } from '@korzun/design/component'",
-      "body": "A disclosure section with no card chrome: an uppercase, muted header row with a\ntext chevron (▶ / ▼), an optional count-style subtitle, optional trailing\nactions, and children shown only while open. The header is a\n`role=\"button\"` (`tabIndex=0`, Enter/Space).\n\nUse something else for: a collapsible feature on a screen (`Card` with\n`isCollapsible`, which also hides its footer while collapsed).\n\n## Usage\n\n### Controlled and uncontrolled\n\nOmit `open` and the section keeps its own state, always starting closed; there\nis no `defaultOpen`. Pass `open` and flip your own state in `onOpenToggle`,\nwhich receives no value.\n\nWhen controlled, `open` wins but the internal state still flips on every\nclick; if you later stop passing `open`, the section shows that stale internal\nstate.\n\n### Actions\n\n- Actions are rendered inside the header button. An action that does not stop\n  propagation (a native `<button>`, a link, a `Tag` with `onClick`) toggles the\n  section on click, and Enter or Space on it reaches the header's key handler,\n  which toggles the section and cancels the action's own activation. Stop\n  `click` and `keydown` propagation in such an action.\n- A library `Button` already stops both, so it neither toggles the section nor\n  loses its key press.\n- Actions in the array need their own `key`s (they are rendered as a bare\n  array).\n\n### Accessibility\n\nThe header has no `aria-expanded`.\n\n### Styling\n\nNo `className`.\n\n## Do / don't\n\n- Do pass `actions` as an array of keyed elements.\n- Do stop click and keydown propagation inside actions that are not a `Button` and must not toggle the section.\n- Don't use it as a screen's top-level feature container; that is `Card`.",
+      "body": "A disclosure section with no card chrome: an uppercase, muted header row with a\ntext chevron (▶ / ▼), an optional count-style subtitle, optional trailing\nactions, and children shown only while open. The header is a\n`role=\"button\"` (`tabIndex=0`, Enter/Space).\n\nUse something else for: a collapsible feature on a screen (`Card` with\n`isCollapsible`, which also hides its footer while collapsed).\n\n## Usage\n\n### Controlled and uncontrolled\n\nOmit `open` and the section keeps its own state, always starting closed; there\nis no `defaultOpen`. Pass `open` and flip your own state in `onOpenToggle`,\nwhich receives no value.\n\nWhen controlled, `open` wins but the internal state still flips on every\nclick; if you later stop passing `open`, the section shows that stale internal\nstate.\n\n### Actions\n\n- Actions are rendered inside the header button, but clicks and key presses\n  inside an action stay with it: any action (a `Button`, a native `<button>`, a\n  link, a `Tag` with `onClick`) works without toggling the section, and Enter or\n  Space on it activates the action, not the header.\n- Actions in the array need their own `key`s (they are rendered as a bare\n  array).\n\n### Accessibility\n\nThe header has no `aria-expanded`.\n\n### Styling\n\nNo `className`.\n\n## Do / don't\n\n- Do pass `actions` as an array of keyed elements.\n- Don't use it as a screen's top-level feature container; that is `Card`.",
       "examples": [
         {
           "file": "src/component/collapsible-section/examples/01-basic.tsx",
@@ -5778,7 +5867,7 @@
           "slug": "actions",
           "order": 3,
           "title": "Actions",
-          "description": "`actions` is an array of keyed elements shown at the header's right end. A\n`Button` stops its click and key press from reaching the header, so Add does\nnot toggle the section.",
+          "description": "`actions` is an array of keyed elements shown at the header's right end. Clicks\nand key presses inside an action stay with it, so Add does not toggle the\nsection.",
           "code": "import { CollapsibleSection, Stack, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Actions() {\n  const [open, setOpen] = useState(true);\n  const [count, setCount] = useState(2);\n  return (\n    <CollapsibleSection\n      title=\"Reading list\"\n      subTitle={`${count} books`}\n      open={open}\n      onOpenToggle={() => setOpen((o) => !o)}\n      actions={[\n        <Button key=\"add\" type=\"text\" onClick={() => setCount((n) => n + 1)}>\n          Add\n        </Button>,\n      ]}\n    >\n      <Stack gap=\"xs\">\n        {Array.from({ length: count }, (_, i) => (\n          <Text key={i}>Book {i + 1}</Text>\n        ))}\n      </Stack>\n    </CollapsibleSection>\n  );\n}\n"
         }
       ],
@@ -5797,7 +5886,7 @@
               "name": "actions",
               "type": "ReactNode[]",
               "required": false,
-              "description": "Rendered at the header's right end. An array of keyed elements; one that does not stop click propagation (anything but a library `Button`) also toggles the section.",
+              "description": "Rendered at the header's right end, as an array of keyed elements. Clicks and keys inside an action never reach the header, so an action never toggles the section.",
               "default": "[]"
             },
             {
@@ -5878,7 +5967,16 @@
           "dark": "0.25rem"
         }
       ],
-      "changelog": []
+      "changelog": [
+        {
+          "version": "0.6.0",
+          "date": "2026-11-26",
+          "tags": [
+            "CollapsibleSection"
+          ],
+          "text": "Clicks and Enter/Space inside an action no longer reach the header, so no action toggles the section and a native button or link keeps its key press. Actions sit in a `display: contents` wrapper, so the layout is unchanged."
+        }
+      ]
     },
     {
       "id": "component/empty-state",
@@ -7460,7 +7558,7 @@
         "ProgressIndicatorProps"
       ],
       "importLine": "import { ProgressIndicator, type ProgressIndicatorProps } from '@korzun/design/component'",
-      "body": "A small pie-style progress mark (a brand-coloured sector inside a ring) followed\nby a text label: \"Not started\" at 0, \"N%\" in between, \"Completed\" at 100%. The\nSVG is a `role=\"progressbar\"` with `aria-valuenow` 0–100.\n\nUse something else for: an indeterminate wait (`Spinner`, or `loading` on\na `Button`), a pull-to-refresh indicator (`usePullToRefresh`).\n\n## Usage\n\n### Surprising behaviour\n\n- **No SVG at exactly 0 or 1**: only the text label renders, so there is then\n  no `role=\"progressbar\"` and `ariaLabel` is not used. The visible text\n  (\"Not started\" / \"Completed\") carries the meaning.\n- The label is `Math.round`ed, so values just inside the range show \"0%\" or\n  \"100%\" next to a sliver or near-full pie (e.g. `0.996` shows \"100%\", not\n  \"Completed\").\n- Passing a percentage (`42`) clamps to 1 and shows \"Completed\".\n\n### Styling\n\nNo `className`.\n\n## Do / don't\n\n- Do pass a 0–1 fraction.\n- Do write an `ariaLabel` that names the thing in progress.\n- Don't render your own \"42%\" next to it; it already prints the label.\n- Don't use it for indeterminate loading.",
+      "body": "A small pie-style progress mark (a brand-coloured sector inside a ring) followed\nby a text label: \"Not started\" at 0, \"N%\" in between, \"Completed\" at 100%. The\nSVG is a `role=\"progressbar\"` with `aria-valuenow` 0–100.\n\nUse something else for: an indeterminate wait (`Spinner`, or `loading` on\na `Button`), a pull-to-refresh indicator (`usePullToRefresh`).\n\n## Usage\n\n### Surprising behaviour\n\n- **No SVG at exactly 0 or 1**: only the text label renders, so there is then\n  no `role=\"progressbar\"` and `ariaLabel` is not used. The visible text\n  (\"Not started\" / \"Completed\") carries the meaning.\n- The label is `Math.round`ed, so values just inside the range show \"0%\" or\n  \"100%\" next to a sliver or near-full pie (e.g. `0.996` shows \"100%\", not\n  \"Completed\").\n- Passing a percentage (`42`) clamps to 1 and shows \"Completed\".\n- A value that is not a finite number (`NaN`, or `undefined` from a cleared\n  field) shows \"Not started\".\n\n### Styling\n\nNo `className`.\n\n## Do / don't\n\n- Do pass a 0–1 fraction.\n- Do write an `ariaLabel` that names the thing in progress.\n- Don't render your own \"42%\" next to it; it already prints the label.\n- Don't use it for indeterminate loading.",
       "examples": [
         {
           "file": "src/component/progress-indicator/examples/01-basic.tsx",
@@ -7525,7 +7623,7 @@
               "name": "value",
               "type": "number",
               "required": true,
-              "description": "A **fraction from 0 to 1**, not a percentage (`0.42` shows \"42%\"). Clamped to 0–1, so `42` shows \"Completed\"."
+              "description": "A **fraction from 0 to 1**, not a percentage (`0.42` shows \"42%\"). Clamped to 0–1, so `42` shows \"Completed\"; a value that is not a finite number (`NaN`, `undefined`, `Infinity`) shows \"Not started\"."
             }
           ]
         }
@@ -7556,7 +7654,16 @@
           "dark": "0.25rem"
         }
       ],
-      "changelog": []
+      "changelog": [
+        {
+          "version": "0.6.0",
+          "date": "2026-11-26",
+          "tags": [
+            "ProgressIndicator"
+          ],
+          "text": "A `value` that is not a finite number (`NaN`, `undefined`, `Infinity`) shows \"Not started\" instead of \"NaN%\"."
+        }
+      ]
     },
     {
       "id": "component/spinner",
@@ -9483,6 +9590,46 @@
     }
   ],
   "changelog": [
+    {
+      "version": "0.6.0",
+      "date": "2026-11-26",
+      "entries": [
+        {
+          "version": "0.6.0",
+          "date": "2026-11-26",
+          "tags": [
+            "TextInput",
+            "TextArea",
+            "NumberInput"
+          ],
+          "text": "The visible `label` is linked to its field (`htmlFor` and a generated `id`), so it names the field and clicking it focuses the field. A new `ariaLabel` prop names a field that has no visible `label`; with a `label` it is ignored."
+        },
+        {
+          "version": "0.6.0",
+          "date": "2026-11-26",
+          "tags": [
+            "TextInput"
+          ],
+          "text": "`action` works: clicking its icon button calls `action.action`. `TextInputAction` gains an optional `ariaLabel` naming that button."
+        },
+        {
+          "version": "0.6.0",
+          "date": "2026-11-26",
+          "tags": [
+            "CollapsibleSection"
+          ],
+          "text": "Clicks and Enter/Space inside an action no longer reach the header, so no action toggles the section and a native button or link keeps its key press. Actions sit in a `display: contents` wrapper, so the layout is unchanged."
+        },
+        {
+          "version": "0.6.0",
+          "date": "2026-11-26",
+          "tags": [
+            "ProgressIndicator"
+          ],
+          "text": "A `value` that is not a finite number (`NaN`, `undefined`, `Infinity`) shows \"Not started\" instead of \"NaN%\"."
+        }
+      ]
+    },
     {
       "version": "0.5.1",
       "date": "2026-11-26",

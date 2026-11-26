@@ -36,7 +36,7 @@ No `className`, no `disabled`, no `min` / `max` / `step`.
 
 ## Do / don't
 
-- Do pass `label={undefined}` explicitly when there is no visible label.
+- Do pass `label={undefined}` explicitly when there is no visible label, and name the field with `ariaLabel`.
 - Do report `onValidChange` into the form and disable submit while any field is invalid.
 - Don't expect integer-only input unless your `validate` enforces it.
 
@@ -200,7 +200,7 @@ export default function FormInCard() {
 ### Without a label
 
 `label` is a required key: pass `label={undefined}` when there is no visible
-label, and describe the field with a `placeholder`.
+label, name the field with `ariaLabel`, and describe it with a `placeholder`.
 
 ```tsx
 import { Inline, Text } from '@korzun/design/component';
@@ -215,6 +215,7 @@ export default function WithoutLabel() {
         name="quantity"
         layout="inline"
         label={undefined}
+        ariaLabel="Quantity"
         placeholder="Quantity"
         value={quantity}
         onChange={setQuantity}
@@ -233,7 +234,8 @@ export default function WithoutLabel() {
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` (required) | `string \| undefined` |  | Required key: pass `label={undefined}` for none. Not linked to the input (no `htmlFor`). |
+| `ariaLabel` | `string` |  | Accessible name of the input when `label` is `undefined`. With a `label`, the label names it and this is ignored. |
+| `label` (required) | `string \| undefined` |  | Required key: pass `label={undefined}` for none. Linked to the input so it names it. |
 | `layout` | `'horizontal' \| 'vertical' \| 'inline'` | `'horizontal'` | `horizontal` and `vertical` paint a shaded card-header row with `md` corners; `inline` paints nothing. |
 | `name` (required) | `string` |  | The input's `name` and the key passed to `onValidChange`. |
 | `onChange` | `(newValue: number \| undefined) => void` | `() => {}` | Receives `parseFloat(text)`, or `undefined` when emptied; not called while `validate` fails. |
@@ -265,6 +267,6 @@ export default function WithoutLabel() {
 
 ## Changelog
 
-No changes yet.
+- **0.6.0** (2026-11-26): The visible `label` is linked to its field (`htmlFor` and a generated `id`), so it names the field and clicking it focuses the field. A new `ariaLabel` prop names a field that has no visible `label`; with a `label` it is ignored.
 
 <!-- /generated:changelog -->

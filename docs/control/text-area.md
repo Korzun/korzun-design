@@ -28,6 +28,7 @@ No `className`, no `disabled`, no `rows`, never resizable by the user
 
 - Do use `autoResize` for long free text so the card doesn't scroll inside itself.
 - Do set `maxLength` when the server has a limit; the counter only appears near it.
+- Do set `ariaLabel` on a textarea with no visible `label`.
 - Don't expect `onChange('')`; an empty field reports `undefined`.
 - Don't try to shrink it below 7rem / 10rem with CSS; the min height is inline.
 
@@ -286,6 +287,34 @@ export default function FormInCard() {
 }
 ```
 
+### Without a label
+
+A textarea with no visible `label` takes `ariaLabel`, so assistive tech can
+still name it.
+
+```tsx
+import { Stack, Text } from '@korzun/design/component';
+import { TextArea } from '@korzun/design/control';
+import { useState } from 'react';
+
+export default function WithoutLabel() {
+  const [notes, setNotes] = useState<string | undefined>(undefined);
+  return (
+    <Stack>
+      <TextArea
+        name="notes"
+        layout="inline"
+        ariaLabel="Reading notes"
+        placeholder="Reading notes"
+        value={notes}
+        onChange={setNotes}
+      />
+      <Text tone="muted">Characters: {notes?.length ?? 0}</Text>
+    </Stack>
+  );
+}
+```
+
 <!-- /generated:examples -->
 
 <!-- generated:props -->
@@ -294,8 +323,9 @@ export default function FormInCard() {
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
+| `ariaLabel` | `string` |  | Accessible name of the textarea when there is no visible `label`. With a `label`, the label names it and this is ignored. |
 | `autoResize` | `boolean` | `false` | Grows to fit content, so it never scrolls. The minimum height is 7rem with it and 10rem without, set inline so a class can't lower it. |
-| `label` | `string` |  | Visible label. Not linked to the textarea (no `htmlFor`). |
+| `label` | `string` |  | Visible label, linked to the textarea so it names it. |
 | `layout` | `'horizontal' \| 'vertical' \| 'inline'` | `'horizontal'` | `horizontal` and `vertical` paint a shaded card-header row with `md` corners; `inline` paints nothing. |
 | `maxLength` | `number` |  | Native limit, plus an `n/max` counter once within `max(10% of max, 50)` characters; the counter turns red at the limit. |
 | `name` (required) | `string` |  | The textarea's `name` and the key passed to `onValidChange`. |
@@ -335,6 +365,6 @@ export default function FormInCard() {
 
 ## Changelog
 
-No changes yet.
+- **0.6.0** (2026-11-26): The visible `label` is linked to its field (`htmlFor` and a generated `id`), so it names the field and clicking it focuses the field. A new `ariaLabel` prop names a field that has no visible `label`; with a `label` it is ignored.
 
 <!-- /generated:changelog -->

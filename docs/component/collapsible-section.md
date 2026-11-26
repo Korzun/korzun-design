@@ -33,13 +33,10 @@ state.
 
 ### Actions
 
-- Actions are rendered inside the header button. An action that does not stop
-  propagation (a native `<button>`, a link, a `Tag` with `onClick`) toggles the
-  section on click, and Enter or Space on it reaches the header's key handler,
-  which toggles the section and cancels the action's own activation. Stop
-  `click` and `keydown` propagation in such an action.
-- A library `Button` already stops both, so it neither toggles the section nor
-  loses its key press.
+- Actions are rendered inside the header button, but clicks and key presses
+  inside an action stay with it: any action (a `Button`, a native `<button>`, a
+  link, a `Tag` with `onClick`) works without toggling the section, and Enter or
+  Space on it activates the action, not the header.
 - Actions in the array need their own `key`s (they are rendered as a bare
   array).
 
@@ -54,7 +51,6 @@ No `className`.
 ## Do / don't
 
 - Do pass `actions` as an array of keyed elements.
-- Do stop click and keydown propagation inside actions that are not a `Button` and must not toggle the section.
 - Don't use it as a screen's top-level feature container; that is `Card`.
 
 <!-- generated:examples -->
@@ -113,9 +109,9 @@ export default function Controlled() {
 
 ### Actions
 
-`actions` is an array of keyed elements shown at the header's right end. A
-`Button` stops its click and key press from reaching the header, so Add does
-not toggle the section.
+`actions` is an array of keyed elements shown at the header's right end. Clicks
+and key presses inside an action stay with it, so Add does not toggle the
+section.
 
 ```tsx
 import { CollapsibleSection, Stack, Text } from '@korzun/design/component';
@@ -156,7 +152,7 @@ export default function Actions() {
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `children` | `ReactNode` |  | Shown only while open; unmounted when closed. |
-| `actions` | `ReactNode[]` | `[]` | Rendered at the header's right end. An array of keyed elements; one that does not stop click propagation (anything but a library `Button`) also toggles the section. |
+| `actions` | `ReactNode[]` | `[]` | Rendered at the header's right end, as an array of keyed elements. Clicks and keys inside an action never reach the header, so an action never toggles the section. |
 | `onOpenToggle` | `() => void` | `() => {}` | Called on every header click/Enter/Space. Receives no value: flip your own state. |
 | `open` | `boolean` |  | Controlled open state. Omit for uncontrolled, which starts closed (there is no `defaultOpen`). |
 | `subTitle` | `string` |  | Faint text after the title, e.g. a count ("3 items"). |
@@ -185,6 +181,6 @@ export default function Actions() {
 
 ## Changelog
 
-No changes yet.
+- **0.6.0** (2026-11-26): Clicks and Enter/Space inside an action no longer reach the header, so no action toggles the section and a native button or link keeps its key press. Actions sit in a `display: contents` wrapper, so the layout is unchanged.
 
 <!-- /generated:changelog -->

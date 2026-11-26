@@ -38,8 +38,8 @@ No `className`, no `disabled`, no `id`.
 - Do keep the default `horizontal` layout for fields in a `Card` body; use
   `vertical` when the label is long or the field is wide.
 - Do coalesce `undefined` (`v ?? ''`) if your state is a plain string.
-- Don't pass an `action`; render a separate `Button` beside the field instead.
-- Don't rely on clicking the label to focus the field; it isn't associated.
+- Do give an `action` an `ariaLabel`; the icon alone has no name.
+- Do set `ariaLabel` on a field with no visible `label`.
 
 <!-- generated:examples -->
 
@@ -287,6 +287,62 @@ export default function FormInCard() {
 }
 ```
 
+### Action
+
+`action` puts an icon button inside the field's right end. Give it an
+`ariaLabel`, since the icon alone has no name. Here it clears the search.
+
+```tsx
+import { Stack, Text } from '@korzun/design/component';
+import { TextInput } from '@korzun/design/control';
+import { CircleXIcon } from '@korzun/design/icon';
+import { useState } from 'react';
+
+export default function Action() {
+  const [query, setQuery] = useState<string | undefined>('Earthsea');
+  return (
+    <Stack>
+      <TextInput
+        name="query"
+        label="Search"
+        value={query}
+        onChange={setQuery}
+        action={{ icon: CircleXIcon, ariaLabel: 'Clear search', action: () => setQuery(undefined) }}
+      />
+      <Text tone="muted">Query: {query === undefined ? 'none' : `“${query}”`}</Text>
+    </Stack>
+  );
+}
+```
+
+### Without a label
+
+A field with no visible `label` takes `ariaLabel`, so assistive tech can
+still name it. With a `label`, the label names the field instead.
+
+```tsx
+import { Inline, Text } from '@korzun/design/component';
+import { TextInput } from '@korzun/design/control';
+import { useState } from 'react';
+
+export default function WithoutLabel() {
+  const [filter, setFilter] = useState<string | undefined>(undefined);
+  return (
+    <Inline>
+      <TextInput
+        name="filter"
+        layout="inline"
+        ariaLabel="Filter books"
+        placeholder="Filter books"
+        value={filter}
+        onChange={setFilter}
+      />
+      <Text tone="muted">Filter: {filter === undefined ? 'none' : `“${filter}”`}</Text>
+    </Inline>
+  );
+}
+```
+
 <!-- /generated:examples -->
 
 <!-- generated:props -->
@@ -295,10 +351,11 @@ export default function FormInCard() {
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `action` | [TextInputAction](#textinputaction) |  | Broken, do not use: the icon button is drawn but its `action` callback is never wired up. |
+| `action` | [TextInputAction](#textinputaction) |  | An icon button inside the field's right end, such as clear or reveal. |
+| `ariaLabel` | `string` |  | Accessible name of the input when there is no visible `label`. With a `label`, the label names it and this is ignored. |
 | `autoCapitalize` | `'none' \| 'sentences' \| 'words' \| 'characters'` |  | Passed through to the input. |
 | `autoComplete` | `HTMLInputAutoCompleteAttribute \| undefined` |  | Passed through to the input. |
-| `label` | `string` |  | Visible label. Not linked to the input (no `htmlFor`). |
+| `label` | `string` |  | Visible label, linked to the input so it names it. |
 | `layout` | `'horizontal' \| 'vertical' \| 'inline'` | `'horizontal'` | `horizontal` and `vertical` paint a shaded card-header row with `md` corners; `inline` paints nothing. |
 | `maxLength` | `number` |  | Native limit, plus an `n/max` counter once within `max(10% of max, 10)` characters; the counter turns red at the limit. |
 | `name` (required) | `string` |  | The input's `name` (form data) and the key passed to `onValidChange`. |
@@ -312,11 +369,12 @@ export default function FormInCard() {
 
 ### TextInputAction
 
-Trailing icon button of a `TextInput`. Broken: `action` is never called.
+Trailing icon button of a `TextInput`.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `action` (required) | `() => void` |  | Never wired up: clicking the icon does nothing. |
+| `action` (required) | `() => void` |  | Called when the icon button is clicked. |
+| `ariaLabel` | `string` |  | Accessible name of the icon button (`Clear search`); an icon alone has none. |
 | `danger` | `boolean` |  | Red icon. |
 | `icon` (required) | `ComponentType<IconProps>` |  | Icon component, not an element. |
 
@@ -349,6 +407,7 @@ Trailing icon button of a `TextInput`. Broken: `action` is never called.
 
 ## Changelog
 
-No changes yet.
+- **0.6.0** (2026-11-26): The visible `label` is linked to its field (`htmlFor` and a generated `id`), so it names the field and clicking it focuses the field. A new `ariaLabel` prop names a field that has no visible `label`; with a `label` it is ignored.
+- **0.6.0** (2026-11-26): `action` works: clicking its icon button calls `action.action`. `TextInputAction` gains an optional `ariaLabel` naming that button.
 
 <!-- /generated:changelog -->
