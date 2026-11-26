@@ -2878,13 +2878,13 @@
               "name": "Icon",
               "type": "ComponentType<IconProps>",
               "required": false,
-              "description": "Leading icon component (`HomeIcon`), not an element. Drawn at the text size, hidden from assistive tech."
+              "description": "Leading icon component (`HomeIcon`), not an element. Drawn at the text size, hidden from assistive tech. Shown in the menus; `PageActionsBar`'s primary Buttons ignore it."
             },
             {
               "name": "intentProps",
-              "type": "MenuIntentProps",
+              "type": "PageActionIntentProps",
               "required": false,
-              "description": "Handlers spread onto the item element, e.g. to prefetch."
+              "description": "Handlers spread onto the item element, e.g. to prefetch. Applied to menu items; `PageActionsBar`'s primary Buttons ignore it."
             },
             {
               "name": "label",
@@ -2902,7 +2902,7 @@
               "name": "primary",
               "type": "boolean",
               "required": false,
-              "description": "`PageActionsBar` only: render as an inline Button instead of in the overflow menu; `PageActionsMenu` ignores it. The Button ignores `Icon` and `intentProps`."
+              "description": "`PageActionsBar` only: render as an inline Button instead of in the overflow menu; `PageActionsMenu` ignores it."
             },
             {
               "name": "separatorBefore",
@@ -3186,7 +3186,8 @@
           "date": "2026-11-23",
           "tags": [
             "Popover",
-            "Dialog"
+            "Dialog",
+            "useModalDialog"
           ],
           "text": "Layer stack: popovers and dialogs now close innermost-first. Escape and an outside press only affect the topmost layer, so a popover inside a popover closes one level at a time. **Behaviour change:** a popover beneath an open dialog no longer takes its Escape or closes on a press inside the dialog."
         },
@@ -3205,7 +3206,8 @@
             "Popover",
             "Select",
             "ChipsInput",
-            "Dialog"
+            "Dialog",
+            "useModalDialog"
           ],
           "text": "`Popover` renders inside an open `<dialog>` that contains its anchor, so `Select` and `ChipsInput` work in modals."
         },

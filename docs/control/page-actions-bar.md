@@ -219,7 +219,7 @@ export default function InPage() {
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `actionsLabel` | `string` | `'More…'` | Visible label of the overflow trigger, and its accessible name; unset, the accessible name is "More actions". Pass `'Actions'` when every item is in the menu. |
-| `items` (required) | `PageActionItem[]` |  | `primary` items render as inline Buttons (`align: 'leading'` on the left), the rest in the overflow menu; with no overflow items there is no trigger. Labels must be unique: they are the React keys. |
+| `items` (required) | [PageActionItem](../control/page-actions-menu.md#pageactionitem)`[]` |  | `primary` items render as inline Buttons (`align: 'leading'` on the left), the rest in the overflow menu; with no overflow items there is no trigger. Labels must be unique: they are the React keys. |
 
 <!-- /generated:props -->
 
