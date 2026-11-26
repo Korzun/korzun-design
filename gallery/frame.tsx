@@ -5,6 +5,7 @@ import { Link, useLocation, useParams, useSearchParams } from 'react-router';
 
 import { useThemeSetting } from '../src/theme/use-theme-setting.js';
 import { exampleFor, moduleBySlug } from './data.js';
+import { contentHeight } from './frame-height.js';
 import { isThemeMessage, isThemeValue, postToWindow, type ThemeValue } from './messages.js';
 
 const ThemeSync = ({ theme }: { theme: ThemeValue }) => {
@@ -41,22 +42,39 @@ const Centered = ({ children }: { children: ReactNode }) => (
 
 // A docs demo in the normal flow. It tells the page its height whenever it
 // changes, so the page sizes the iframe to fit with no inner scrollbar. The
-// body is at least the viewport tall, so the wrapper is what gets measured.
+// body is at least the viewport tall, so the wrapper is what gets measured,
+// plus any open menu, popover or dialog (see contentHeight), which would
+// otherwise be clipped at the frame's edge.
 const Flow = ({ children }: { children: ReactNode }) => {
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const post = () =>
-      postToWindow(window.parent, {
-        type: 'gallery:height',
-        height: Math.ceil(el.getBoundingClientRect().height),
-      });
+    let last = -1;
+    const post = () => {
+      const height = contentHeight(el);
+      if (height === last) return;
+      last = height;
+      postToWindow(window.parent, { type: 'gallery:height', height });
+    };
     post();
-    if (typeof ResizeObserver === 'undefined') return;
-    const observer = new ResizeObserver(post);
-    observer.observe(el);
-    return () => observer.disconnect();
+    // Overlays open, move and close through DOM changes (a portal added, a
+    // dialog's `open`, a popover's position style) and on frame resize.
+    const mutations = new MutationObserver(post);
+    mutations.observe(document.body, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['open', 'style'],
+    });
+    window.addEventListener('resize', post);
+    const resize = typeof ResizeObserver === 'undefined' ? undefined : new ResizeObserver(post);
+    resize?.observe(el);
+    return () => {
+      mutations.disconnect();
+      window.removeEventListener('resize', post);
+      resize?.disconnect();
+    };
   }, []);
   return (
     <div ref={ref} className={useStyle().flow}>

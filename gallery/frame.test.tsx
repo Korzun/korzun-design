@@ -60,6 +60,24 @@ describe('Frame', () => {
     post.mockRestore();
   });
 
+  it('posts a taller height when an overlay opens outside the flow, and again when it closes', async () => {
+    const post = vi.spyOn(window, 'postMessage');
+    const heights = () =>
+      post.mock.calls
+        .map((call) => call[0] as { type?: string; height?: number })
+        .filter((m) => m.type === 'gallery:height')
+        .map((m) => m.height);
+    mount('/frame/button/basic');
+    const [base] = heights();
+    const portal = document.createElement('div');
+    portal.getBoundingClientRect = () => ({ bottom: 900 }) as DOMRect;
+    await act(async () => document.body.append(portal));
+    expect(heights().at(-1)).toBeGreaterThanOrEqual(900);
+    await act(async () => portal.remove());
+    expect(heights().at(-1)).toBe(base);
+    post.mockRestore();
+  });
+
   it('centres the example only when the URL asks for fit=center', () => {
     const { unmount } = mount('/frame/button/basic?fit=center');
     expect(
