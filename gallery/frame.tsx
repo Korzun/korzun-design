@@ -44,9 +44,10 @@ const Centered = ({ children }: { children: ReactNode }) => (
 // changes, so the page sizes the iframe to fit with no inner scrollbar. The
 // body is at least the viewport tall, so the wrapper is what gets measured,
 // plus any open menu, popover or dialog (see contentHeight), which would
-// otherwise be clipped at the frame's edge. An overlay that opens above its
-// trigger (a list flipped upward, a `side="top"` menu) gets top padding while
-// it is open (see nextHeadroom), and the popover is told to re-measure.
+// otherwise be clipped at the frame's edge. A list that flipped above its
+// trigger for lack of room gets room below, so it flips back down (see
+// contentHeight). A `side="top"` menu that sticks out above gets top padding
+// while it is open (see nextHeadroom), and the popover is told to re-measure.
 const Flow = ({ children }: { children: ReactNode }) => {
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {

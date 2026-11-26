@@ -36,6 +36,13 @@ const overlays = (wrapper: HTMLElement): Element[] => {
 };
 
 /**
+ * An overlay that wanted the bottom side and flipped above its trigger
+ * because the frame had no room below (`data-preferred-side` from Popover).
+ */
+const flippedUp = (el: Element) =>
+  el instanceof HTMLElement && el.dataset.side === 'top' && el.dataset.preferredSide === 'bottom';
+
+/**
  * The height an example frame needs so nothing it shows is clipped: its flow
  * wrapper, plus whatever is open outside the flow. A popover portalled to the
  * body (or fixed inside an open dialog) counts to its bottom edge; an open
@@ -45,6 +52,9 @@ const overlays = (wrapper: HTMLElement): Element[] => {
  * Overlays get the wrapper's bottom padding as breathing room. Growing the
  * frame to fit converges: a top-anchored dialog or a popover below its trigger
  * does not move as the frame grows, and a centred one moves half as far.
+ * A list that flipped above its trigger for lack of room gets room below
+ * instead: the frame grows by the list's height under the flow (or under the
+ * open dialog holding it), and the list flips back down when it re-measures.
  */
 export const contentHeight = (wrapper: HTMLElement): number => {
   const doc = wrapper.ownerDocument;
@@ -53,7 +63,11 @@ export const contentHeight = (wrapper: HTMLElement): number => {
   const bottom = (el: Element) => el.getBoundingClientRect().bottom + view.scrollY + pad;
   let height = wrapper.getBoundingClientRect().height;
   for (const el of overlays(wrapper)) {
-    if (!bottomAnchored(el)) height = Math.max(height, bottom(el));
+    if (flippedUp(el)) {
+      const host = el.closest('dialog[open]') ?? wrapper;
+      const room = host.getBoundingClientRect().bottom + el.getBoundingClientRect().height;
+      height = Math.max(height, room + view.scrollY + pad);
+    } else if (!bottomAnchored(el)) height = Math.max(height, bottom(el));
   }
   for (const dialog of doc.querySelectorAll<HTMLElement>('dialog[open]')) {
     const full = dialogHeight(dialog);
@@ -75,11 +89,15 @@ const bottomAnchored = (el: Element) =>
 /**
  * The highest top edge (document coordinates) of any overlay open outside the
  * flow, or null when none is. Negative when an overlay sticks out above the
- * frame: a list that flipped upward, or a `side="top"` menu near the top.
+ * frame: a `side="top"` menu near the top. A list that flipped upward for
+ * lack of room below does not count.
  */
 export const overlayTop = (wrapper: HTMLElement): number | null => {
   const view = wrapper.ownerDocument.defaultView ?? window;
-  const tops = overlays(wrapper).map((el) => el.getBoundingClientRect().top + view.scrollY);
+  // A flipped list is given room below instead (see contentHeight).
+  const tops = overlays(wrapper)
+    .filter((el) => !flippedUp(el))
+    .map((el) => el.getBoundingClientRect().top + view.scrollY);
   return tops.length ? Math.min(...tops) : null;
 };
 

@@ -153,7 +153,7 @@ The first comment line is the title; the rest is the description shown above the
 - Each description sentence is shown by the demo. "Set `ariaLabel` when the trigger is an icon" means the demo's trigger is an icon `Button` with `ariaLabel`.
 - Examples follow the Usage and Do / don't of this doc and of every component they use (read `docs/component/surface.md` before using `Surface`). An example never demonstrates a use those docs advise against (a `Surface` with no drawn box around it).
 - `01` is the canonical compact usage: it is the overview thumbnail.
-- An example with an overlay places its trigger so the overlay opens on the side the example is about (a `side="top"` trigger sits below other content). The frame adds room for an overlay that opens above its trigger; it does not stop one flipping.
+- An example with an overlay places its trigger so the overlay opens on the side the example is about (a `side="top"` trigger sits below other content). The frame adds room above for a `side="top"` overlay, and room below for a list that flipped upward for lack of room, so it opens downward as it would on a page.
 - A description talks about the component, never the demo frame (no "to stay inside the demo"). No prop (`side`, a large `gap`) is set only to fit the frame. When the frame clips an overlay and the example is as it should be, report a gallery defect.
 - Link items and `to` props stay real links. Clicking one in a demo shows the frame's "The example navigated to…" page; that is expected.
 

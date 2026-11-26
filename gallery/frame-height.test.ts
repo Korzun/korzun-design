@@ -177,3 +177,49 @@ describe('nextHeadroom', () => {
     });
   });
 });
+
+// A list that wanted the bottom side and flipped above its trigger for lack of room.
+const flipped = (top: number, height: number) => {
+  const el = place(document.createElement('div'), top, height);
+  el.dataset.side = 'top';
+  el.dataset.preferredSide = 'bottom';
+  el.style.bottom = '300px';
+  return el;
+};
+
+describe('room below a flipped overlay', () => {
+  let wrapper: HTMLDivElement;
+  beforeEach(() => {
+    document.body.innerHTML = '<div id="root"><div id="flow"></div></div>';
+    wrapper = place(document.getElementById('flow') as HTMLDivElement, 0, 100);
+    wrapper.style.paddingBottom = '16px';
+  });
+
+  it('grows the frame by the list height below the flow, so it can flip back down', () => {
+    document.body.append(flipped(-150, 200));
+    expect(contentHeight(wrapper)).toBe(100 + 200 + 16);
+  });
+
+  it('grows it below the open dialog that holds the list', () => {
+    const dialog = place(document.createElement('dialog'), 20, 130);
+    dialog.setAttribute('open', '');
+    const list = flipped(-50, 120);
+    list.style.position = 'fixed';
+    dialog.append(list);
+    wrapper.append(dialog);
+    expect(contentHeight(wrapper)).toBe(150 + 120 + 16);
+  });
+
+  it('gets no headroom: room below makes it flip back instead', () => {
+    document.body.append(flipped(-150, 200));
+    expect(overlayTop(wrapper)).toBeNull();
+  });
+
+  it('leaves a list that chose the top side to the headroom', () => {
+    const chosen = flipped(-150, 200);
+    chosen.dataset.preferredSide = 'top';
+    document.body.append(chosen);
+    expect(overlayTop(wrapper)).toBe(-150);
+    expect(contentHeight(wrapper)).toBe(100);
+  });
+});

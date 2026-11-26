@@ -65,7 +65,8 @@ const resolveGap = (gap: PopoverGap): number => {
  *
  * Opens on `side` (default below) and flips when that side has no room; aligns
  * per `align` and clamps horizontally to the viewport (only without
- * `matchWidth`). The wrapper carries `data-side` with the side actually used.
+ * `matchWidth`). The wrapper carries `data-side` with the side actually used,
+ * and `data-preferred-side` with `side`, so a flip can be told from a choice.
  * On the top side it is anchored by CSS `bottom`, so it stays attached as its
  * content changes height. The first render is transparent (`opacity: 0`, still
  * focusable) until measured, then it re-measures on scroll (capture phase),
@@ -156,6 +157,7 @@ export const Popover = ({
       ref={contentRef}
       className={cx(style.popover, className)}
       data-side={placement?.side}
+      data-preferred-side={side}
       style={
         placement
           ? {
