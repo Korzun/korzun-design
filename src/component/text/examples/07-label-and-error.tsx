@@ -1,5 +1,5 @@
 /** Label and error
- * `as="label"` with `htmlFor` names a control. While the field is empty an
+ * `as="label"` with `htmlFor` names a native or third-party control. While the field is empty an
  * inline error shows: `as="div"` with `tone="danger"` and `aria-live="polite"`.
  */
 import { Stack, Text } from '@korzun/design/component';

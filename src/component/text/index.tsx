@@ -11,7 +11,7 @@ export interface TextProps extends Omit<HTMLAttributes<HTMLElement>, 'style'> {
   as?: 'span' | 'p' | 'div' | 'label' | 'strong' | 'em';
   /** Font size, from the theme's `fontSize` tokens. Unset, it inherits from the parent. */
   size?: TextSize;
-  /** Text colour. `primary` to `description` use the theme's `color.text` tokens; `danger` and `success` use the chip text colours, for inline error and confirmation text. Unset, it inherits from the parent. Not `Tag`'s `TagTone`. */
+  /** Text colour. `primary` to `description` use the theme's `color.text` tokens; `danger` and `success` use the chip text colours, for inline error and confirmation text. Unset, it inherits from the parent. */
   tone?: TextTone;
   /** Font weight, from the theme's `fontWeight` tokens. Unset, it inherits from the parent. */
   weight?: TextWeight;

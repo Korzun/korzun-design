@@ -197,7 +197,7 @@ export default function Elements() {
 
 ### Label and error
 
-`as="label"` with `htmlFor` names a control. While the field is empty an
+`as="label"` with `htmlFor` names a native or third-party control. While the field is empty an
 inline error shows: `as="div"` with `tone="danger"` and `aria-live="polite"`.
 
 ```tsx
@@ -283,7 +283,7 @@ export default function Truncate() {
 | `htmlFor` | `string` |  | The id of the control this label describes. Only for `as="label"`. |
 | `ref` | `Ref<HTMLElement>` |  | Ref to the root element. |
 | `size` | `'xxs' \| 'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl' \| 'xxl'` |  | Font size, from the theme's `fontSize` tokens. Unset, it inherits from the parent. |
-| `tone` | `'primary' \| 'secondary' \| 'muted' \| 'faint' \| 'description' \| 'danger' \| 'success'` |  | Text colour. `primary` to `description` use the theme's `color.text` tokens; `danger` and `success` use the chip text colours, for inline error and confirmation text. Unset, it inherits from the parent. Not `Tag`'s `TagTone`. |
+| `tone` | `'primary' \| 'secondary' \| 'muted' \| 'faint' \| 'description' \| 'danger' \| 'success'` |  | Text colour. `primary` to `description` use the theme's `color.text` tokens; `danger` and `success` use the chip text colours, for inline error and confirmation text. Unset, it inherits from the parent. |
 | `truncate` | `boolean` | `false` | Clips to one line with an ellipsis. Also sets `min-width: 0` and `max-width: 100%`, so it clips inside an `Inline` or `Stack` with any `align`. On `span`, `strong`, `em` and `label` it also makes the element `inline-block`, because inline elements ignore overflow. |
 | `weight` | `'regular' \| 'medium' \| 'semibold' \| 'bold' \| 'extrabold'` |  | Font weight, from the theme's `fontWeight` tokens. Unset, it inherits from the parent. |
 
