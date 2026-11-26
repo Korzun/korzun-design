@@ -5733,6 +5733,523 @@
       ]
     },
     {
+      "id": "component/heading",
+      "slug": "heading",
+      "entry": "@korzun/design/component",
+      "docPath": "docs/component/heading.md",
+      "title": "Heading",
+      "description": "A heading whose level sets the element and a default look, with size, tone and weight to override it.",
+      "category": "Typography",
+      "values": [
+        "Heading"
+      ],
+      "types": [
+        "HeadingProps"
+      ],
+      "importLine": "import { Heading, type HeadingProps } from '@korzun/design/component'",
+      "body": "A heading. `level` is the semantics (which `h1` to `h4` element renders) and\nalso picks a default look; `size`, `tone` and `weight` are the look and\noverride those defaults. Use it for a page title, a section title, a card\ntitle.\n\nUse something else for: body or meta text (`Text`), a collapsible section\nheader (`CollapsibleSection`), an empty-state title (`EmptyState`).\n\n## Usage\n\n### Level defaults\n\n| `level` | Element | `size` | `weight`   |\n| ------- | ------- | ------ | ---------- |\n| 1       | `h1`    | `xxl`  | `bold`     |\n| 2       | `h2`    | `xl`   | `bold`     |\n| 3       | `h3`    | `lg`   | `semibold` |\n| 4       | `h4`    | `md`   | `semibold` |\n\nTone is `primary` at every level. A `size` or `weight` you set wins over the\nlevel default.\n\n### Behaviour\n\n- **Level is the semantics, props are the look.** Pick `level` for the document\n  outline (one `h1` per page, no skipped levels), then use `size`, `weight` and\n  `tone` to change how it looks. Never pick a level for its size.\n- The margin is reset to 0 and the line height is the theme's `tight` value;\n  space headings with `Stack` `gap`.\n- `truncate` adds `overflow: hidden`, an ellipsis, `white-space: nowrap` and\n  `min-width: 0` and `max-width: 100%`, so a truncated Heading clips inside an\n  `Inline` or `Stack` with any `align`.\n- Every other HTML attribute (`id`, `aria-*`, `data-*`, event handlers) passes\n  through. There is no `style` prop and no `as` prop.\n- Override with `className` at `'&&'` specificity, never `!important`.\n\n## Do / don't\n\n- Do keep the outline in order: `h1`, then `h2`, then `h3`.\n- Do override `size` and `weight` for a different look at the same level.\n- Do put `truncate` on the Heading itself, not on a wrapper.\n- Don't pick a level to get a size; set `size`.\n- Don't use `Heading` for body text; use `Text`.\n- Don't add margins to space headings; use `Stack`.",
+      "examples": [
+        {
+          "file": "src/component/heading/examples/01-basic.tsx",
+          "slug": "basic",
+          "order": 1,
+          "title": "Basic",
+          "description": "A section title with its action on the right. `level` is the outline\nposition; `Inline` with `justify=\"between\"` spreads the row.",
+          "code": "import { Heading, Inline, Stack, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Basic() {\n  const [books, setBooks] = useState(3);\n  return (\n    <Stack gap=\"md\">\n      <Inline justify=\"between\">\n        <Heading level={2}>Library</Heading>\n        <Button type=\"primary\" onClick={() => setBooks((n) => n + 1)}>\n          Add book\n        </Button>\n      </Inline>\n      <Text as=\"p\" size=\"sm\" tone=\"muted\">\n        {books} books, updated yesterday\n      </Text>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/heading/examples/02-levels.tsx",
+          "slug": "levels",
+          "order": 2,
+          "title": "Levels",
+          "description": "`level` picks the element, `h1` to `h4`, and a default size and weight.\nKeep the outline in order: one `h1` per page, no skipped levels.",
+          "code": "import { Heading, Stack } from '@korzun/design/component';\n\nexport default function Levels() {\n  return (\n    <Stack gap=\"sm\">\n      <Heading level={1}>Level 1: h1</Heading>\n      <Heading level={2}>Level 2: h2</Heading>\n      <Heading level={3}>Level 3: h3</Heading>\n      <Heading level={4}>Level 4: h4</Heading>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/heading/examples/03-sizes.tsx",
+          "slug": "sizes",
+          "order": 3,
+          "title": "Sizes",
+          "description": "`size` changes the look without changing the level: every heading here is\nan `h2`.",
+          "code": "import { Heading, Stack } from '@korzun/design/component';\n\nconst sizes = ['xxs', 'xs', 'sm', 'md', 'lg', 'xl', 'xxl'] as const;\n\nexport default function Sizes() {\n  return (\n    <Stack gap=\"sm\">\n      {sizes.map((size) => (\n        <Heading key={size} level={2} size={size}>\n          {`size=\"${size}\"`}\n        </Heading>\n      ))}\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/heading/examples/04-tones.tsx",
+          "slug": "tones",
+          "order": 4,
+          "title": "Tones",
+          "description": "`tone` sets the text colour. `danger` and `success` are for inline error\nand confirmation text.",
+          "code": "import { Heading, Stack } from '@korzun/design/component';\n\nconst tones = [\n  'primary',\n  'secondary',\n  'muted',\n  'faint',\n  'description',\n  'danger',\n  'success',\n] as const;\n\nexport default function Tones() {\n  return (\n    <Stack gap=\"sm\">\n      {tones.map((tone) => (\n        <Heading key={tone} level={3} tone={tone}>\n          {`tone=\"${tone}\"`}\n        </Heading>\n      ))}\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/heading/examples/05-weights.tsx",
+          "slug": "weights",
+          "order": 5,
+          "title": "Weights",
+          "description": "`weight` sets the font weight, whatever the level.",
+          "code": "import { Heading, Stack } from '@korzun/design/component';\n\nconst weights = ['regular', 'medium', 'semibold', 'bold', 'extrabold'] as const;\n\nexport default function Weights() {\n  return (\n    <Stack gap=\"sm\">\n      {weights.map((weight) => (\n        <Heading key={weight} level={3} weight={weight}>\n          {`weight=\"${weight}\"`}\n        </Heading>\n      ))}\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/heading/examples/06-in-a-card.tsx",
+          "slug": "in-a-card",
+          "order": 6,
+          "title": "In a card",
+          "description": "A small, muted `h2` inside a `Card`: the level stays 2 for the outline,\n`size`, `weight` and `tone` shrink the look.",
+          "code": "import { Card, Heading, Stack, Text } from '@korzun/design/component';\n\nexport default function InACard() {\n  return (\n    <Card>\n      <Stack gap=\"xs\">\n        <Heading level={2} size=\"sm\" weight=\"medium\" tone=\"muted\">\n          Details\n        </Heading>\n        <Text>Middlemarch, George Eliot, 1871.</Text>\n      </Stack>\n    </Card>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/heading/examples/07-truncate.tsx",
+          "slug": "truncate",
+          "order": 7,
+          "title": "Truncate",
+          "description": "`truncate` clips a long title to one line with an ellipsis. Beside an\naction in an `Inline`, the title shrinks and the button keeps its width.",
+          "code": "import { Heading, Inline, Stack, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { useState } from 'react';\n\nconst title =\n  'Middlemarch: A Study of Provincial Life, in Eight Books, with a Prelude and a Finale, Followed by an Extended Note on the Text, a Chronology, a Map of the Midlands, and a Glossary of Provincial Terms';\n\nexport default function Truncate() {\n  const [opened, setOpened] = useState(0);\n  return (\n    <Stack gap=\"xl\">\n      <Stack gap=\"xs\">\n        <Text size=\"sm\" tone=\"muted\">\n          Without truncate\n        </Text>\n        <Heading level={3}>{title}</Heading>\n      </Stack>\n      <Stack gap=\"xs\">\n        <Text size=\"sm\" tone=\"muted\">\n          With truncate, beside an action\n        </Text>\n        <Inline justify=\"between\">\n          <Heading level={3} truncate>\n            {title}\n          </Heading>\n          <Button type=\"primary\" onClick={() => setOpened((n) => n + 1)}>\n            Open\n          </Button>\n        </Inline>\n        <Text size=\"sm\" tone=\"muted\">\n          Opened: {opened}\n        </Text>\n      </Stack>\n    </Stack>\n  );\n}\n"
+        }
+      ],
+      "tables": [
+        {
+          "name": "HeadingProps",
+          "kind": "props",
+          "rows": [
+            {
+              "name": "children",
+              "type": "ReactNode",
+              "required": false,
+              "description": "The heading text."
+            },
+            {
+              "name": "className",
+              "type": "string",
+              "required": false,
+              "description": "Extra class on the root. Override with `'&&'` specificity, never `!important`."
+            },
+            {
+              "name": "level",
+              "type": "1 | 2 | 3 | 4",
+              "required": true,
+              "description": "The heading level, rendered as `h1` to `h4`. Also sets the default size and weight, see [Level defaults](#level-defaults)."
+            },
+            {
+              "name": "ref",
+              "type": "Ref<HTMLHeadingElement>",
+              "required": false,
+              "description": "Ref to the root element."
+            },
+            {
+              "name": "size",
+              "type": "'xxs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl'",
+              "required": false,
+              "description": "Font size, from the theme's `fontSize` tokens. Unset, it follows `level`: 1 `xxl`, 2 `xl`, 3 `lg`, 4 `md`. A size you set wins over the level default."
+            },
+            {
+              "name": "tone",
+              "type": "'primary' | 'secondary' | 'muted' | 'faint' | 'description' | 'danger' | 'success'",
+              "required": false,
+              "description": "Text colour. `danger` and `success` are for inline error and confirmation text.",
+              "default": "'primary'"
+            },
+            {
+              "name": "truncate",
+              "type": "boolean",
+              "required": false,
+              "description": "Clips to one line with an ellipsis. Also sets `min-width: 0` and `max-width: 100%`, so it clips inside an `Inline` or `Stack` with any `align`.",
+              "default": "false"
+            },
+            {
+              "name": "weight",
+              "type": "'regular' | 'medium' | 'semibold' | 'bold' | 'extrabold'",
+              "required": false,
+              "description": "Font weight, from the theme's `fontWeight` tokens. Unset, it follows `level`: 1 and 2 `bold`, 3 and 4 `semibold`. A weight you set wins over the level default."
+            }
+          ],
+          "extends": [
+            "HTMLAttributes"
+          ]
+        }
+      ],
+      "tokens": [
+        {
+          "path": "color.chip.danger.text",
+          "kind": "color",
+          "light": "#D9373e",
+          "dark": "#FF8E8E"
+        },
+        {
+          "path": "color.chip.success.text",
+          "kind": "color",
+          "light": "#15803d",
+          "dark": "#86EFAC"
+        },
+        {
+          "path": "color.text.description",
+          "kind": "color",
+          "light": "#585863",
+          "dark": "#A8ADB6"
+        },
+        {
+          "path": "color.text.faint",
+          "kind": "color",
+          "light": "#9ca3af",
+          "dark": "#6E7480"
+        },
+        {
+          "path": "color.text.muted",
+          "kind": "color",
+          "light": "#6E6E6E",
+          "dark": "#9CA1AB"
+        },
+        {
+          "path": "color.text.onDanger",
+          "kind": "color",
+          "light": "#FFFFFF",
+          "dark": "#FFFFFF"
+        },
+        {
+          "path": "color.text.onPrimary",
+          "kind": "color",
+          "light": "#FFFFFF",
+          "dark": "#FFFFFF"
+        },
+        {
+          "path": "color.text.primary",
+          "kind": "color",
+          "light": "#111",
+          "dark": "#F5F5F7"
+        },
+        {
+          "path": "color.text.secondary",
+          "kind": "color",
+          "light": "#5A6375",
+          "dark": "#C8CBD2"
+        },
+        {
+          "path": "fontSize.lg",
+          "kind": "value",
+          "light": "1rem",
+          "dark": "1rem"
+        },
+        {
+          "path": "fontSize.md",
+          "kind": "value",
+          "light": "0.875rem",
+          "dark": "0.875rem"
+        },
+        {
+          "path": "fontSize.sm",
+          "kind": "value",
+          "light": "0.75rem",
+          "dark": "0.75rem"
+        },
+        {
+          "path": "fontSize.xl",
+          "kind": "value",
+          "light": "1.25rem",
+          "dark": "1.25rem"
+        },
+        {
+          "path": "fontSize.xs",
+          "kind": "value",
+          "light": "0.7rem",
+          "dark": "0.7rem"
+        },
+        {
+          "path": "fontSize.xxl",
+          "kind": "value",
+          "light": "1.75rem",
+          "dark": "1.75rem"
+        },
+        {
+          "path": "fontSize.xxs",
+          "kind": "value",
+          "light": "0.6rem",
+          "dark": "0.6rem"
+        },
+        {
+          "path": "fontWeight.bold",
+          "kind": "value",
+          "light": "700",
+          "dark": "700"
+        },
+        {
+          "path": "fontWeight.extrabold",
+          "kind": "value",
+          "light": "800",
+          "dark": "800"
+        },
+        {
+          "path": "fontWeight.medium",
+          "kind": "value",
+          "light": "500",
+          "dark": "500"
+        },
+        {
+          "path": "fontWeight.regular",
+          "kind": "value",
+          "light": "400",
+          "dark": "400"
+        },
+        {
+          "path": "fontWeight.semibold",
+          "kind": "value",
+          "light": "600",
+          "dark": "600"
+        },
+        {
+          "path": "lineHeight.tight",
+          "kind": "value",
+          "light": "1",
+          "dark": "1"
+        }
+      ],
+      "changelog": [
+        {
+          "version": "0.2.0",
+          "date": "2026-11-21",
+          "tags": [
+            "Stack",
+            "Inline",
+            "Text",
+            "Heading"
+          ],
+          "text": "New `Stack` (vertical flex column; `gap`, default `md`), `Inline` (horizontal row; `gap` default `sm`, `justify` including `between`), `Text` (`size`, `tone`, `weight`; unset props inherit), and `Heading` (`level` 1–4), so layout and text are set with props instead of style files."
+        },
+        {
+          "version": "0.2.0",
+          "date": "2026-11-21",
+          "tags": [
+            "Text",
+            "Heading",
+            "Stack",
+            "Inline"
+          ],
+          "text": "`truncate` on `Text` and `Heading` clips inside `Stack` (any `align`), `Inline`, and a `Stack` nested in an `Inline`; `Stack` and `Inline` roots have `min-width: 0`."
+        }
+      ]
+    },
+    {
+      "id": "component/inline",
+      "slug": "inline",
+      "entry": "@korzun/design/component",
+      "docPath": "docs/component/inline.md",
+      "title": "Inline",
+      "description": "A horizontal row with a themed gap between children, vertically centred by default.",
+      "category": "Layout",
+      "values": [
+        "Inline"
+      ],
+      "types": [
+        "InlineProps"
+      ],
+      "importLine": "import { Inline, type InlineProps } from '@korzun/design/component'",
+      "body": "A horizontal flex row with a themed gap between children, vertically centred\nby default. Use it for a button group, a header with an action on the right,\nor a row of chips that wraps.\n\nUse something else for: a vertical column (`Stack`), a single chip\n(`Tag`), a line of small metadata (`MetaLine`).\n\n## Usage\n\n### Choosing a gap\n\nPick `gap` from the theme's `space` scale so spacing is the same everywhere:\n`xs` for tight groups such as chips, `sm` for most rows, `xl` between links.\n`gap=\"none\"` emits `gap: 0`, for children that supply their own spacing.\n\n### Behaviour\n\n- `as=\"ul\"` and `as=\"ol\"` also reset the list's margin, padding and bullets.\n  Children should be `li`.\n- Without `wrap`, children stay on one line and may overflow or shrink.\n- Every other HTML attribute (`id`, `aria-*`, `data-*`, event handlers) passes\n  through. There is no `style` prop: spacing comes from tokens only.\n- Override with `className` at `'&&'` specificity, never `!important`.\n\n## Do / don't\n\n- Do use `justify=\"between\"` for a title-and-action row.\n- Do add `wrap` for rows of chips or buttons that may not fit on a phone.\n- Do use `align=\"baseline\"` to line up text of different sizes.\n- Don't add margins to children to space them; use `gap`.\n- Don't use an Inline for a column; use `Stack`.\n- Don't nest `Inline` just to push one child right; use `justify=\"between\"`.",
+      "examples": [
+        {
+          "file": "src/component/inline/examples/01-basic.tsx",
+          "slug": "basic",
+          "order": 1,
+          "title": "Basic",
+          "description": "The spread row: a title on the left and its action on the right, with\n`justify=\"between\"`. Children are vertically centred.",
+          "code": "import { Heading, Inline, Stack, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Basic() {\n  const [books, setBooks] = useState(3);\n  return (\n    <Stack gap=\"xs\">\n      <Inline justify=\"between\">\n        <Heading level={2}>Library</Heading>\n        <Button type=\"primary\" onClick={() => setBooks((n) => n + 1)}>\n          Add book\n        </Button>\n      </Inline>\n      <Text size=\"sm\" tone=\"muted\">\n        Books: {books}\n      </Text>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/inline/examples/02-gaps.tsx",
+          "slug": "gaps",
+          "order": 2,
+          "title": "Gaps",
+          "description": "`gap` takes a key of the theme's `space` scale, or `none` for children\nthat bring their own spacing.",
+          "code": "import { Inline, Stack, Tag, Text } from '@korzun/design/component';\n\nconst gaps = [\n  'none',\n  'xxxs',\n  'xxs',\n  'xs',\n  'sm',\n  'md',\n  'lg',\n  'xl',\n  'xxl',\n  'xxxl',\n  'xxxxl',\n  'xxxxxl',\n] as const;\n\nexport default function Gaps() {\n  return (\n    <Stack gap=\"sm\">\n      {gaps.map((gap) => (\n        <Inline key={gap} gap=\"xl\">\n          <Text size=\"sm\" tone=\"muted\">\n            {`gap=\"${gap}\"`}\n          </Text>\n          <Inline gap={gap}>\n            <Tag>One</Tag>\n            <Tag>Two</Tag>\n            <Tag>Three</Tag>\n          </Inline>\n        </Inline>\n      ))}\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/inline/examples/03-align.tsx",
+          "slug": "align",
+          "order": 3,
+          "title": "Align",
+          "description": "`align` sets the vertical placement of children of different heights.\n`center` is the usual choice; `baseline` lines up text of different sizes.",
+          "code": "import { Inline, Stack, Tag, Text } from '@korzun/design/component';\n\nconst aligns = ['center', 'start', 'end', 'baseline', 'stretch'] as const;\n\nexport default function Align() {\n  return (\n    <Stack gap=\"lg\">\n      {aligns.map((align) => (\n        <Stack key={align} gap=\"xs\">\n          <Text size=\"sm\" tone=\"muted\">\n            {`align=\"${align}\"`}\n          </Text>\n          <Inline align={align}>\n            <Text size=\"sm\">Small</Text>\n            <Text size=\"xxl\">Large</Text>\n            <Tag>Chip</Tag>\n          </Inline>\n        </Stack>\n      ))}\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/inline/examples/04-justify.tsx",
+          "slug": "justify",
+          "order": 4,
+          "title": "Justify",
+          "description": "`justify` distributes children along the row. `between` pushes the first\nand last child to opposite edges.",
+          "code": "import { Inline, Stack, Tag, Text } from '@korzun/design/component';\n\nconst justifies = ['start', 'center', 'end', 'between'] as const;\n\nexport default function Justify() {\n  return (\n    <Stack gap=\"lg\">\n      {justifies.map((justify) => (\n        <Stack key={justify} gap=\"xs\">\n          <Text size=\"sm\" tone=\"muted\">\n            {`justify=\"${justify}\"`}\n          </Text>\n          <Inline justify={justify}>\n            <Tag>One</Tag>\n            <Tag>Two</Tag>\n            <Tag>Three</Tag>\n          </Inline>\n        </Stack>\n      ))}\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/inline/examples/05-wrap.tsx",
+          "slug": "wrap",
+          "order": 5,
+          "title": "Wrap",
+          "description": "A row of chips too long for its container gets `wrap`: children move onto\nfurther lines. Without it they stay on one line and shrink or overflow.",
+          "code": "import { Inline, Stack, Tag, Text } from '@korzun/design/component';\n\nconst subjects = [\n  'Fiction',\n  'Victorian',\n  'Provincial life',\n  'Politics',\n  'Marriage',\n  'Reform',\n  'Medicine',\n  'Class',\n  'Ambition',\n  'Money',\n  'Idealism',\n  'Society',\n  'Education',\n  'Religion',\n  'Inheritance',\n  'Friendship',\n  'Scandal',\n  'Science',\n  'Duty',\n  'Gossip',\n  'Land',\n  'Vocation',\n  'Reputation',\n  'Charity',\n];\n\nexport default function Wrap() {\n  return (\n    <Stack gap=\"lg\">\n      <Stack gap=\"xs\">\n        <Text size=\"sm\" tone=\"muted\">\n          wrap\n        </Text>\n        <Inline wrap gap=\"xs\">\n          {subjects.map((subject) => (\n            <Tag key={subject}>{subject}</Tag>\n          ))}\n        </Inline>\n      </Stack>\n      <Stack gap=\"xs\">\n        <Text size=\"sm\" tone=\"muted\">\n          no wrap\n        </Text>\n        <Inline gap=\"xs\">\n          {subjects.map((subject) => (\n            <Tag key={subject}>{subject}</Tag>\n          ))}\n        </Inline>\n      </Stack>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/inline/examples/06-elements.tsx",
+          "slug": "elements",
+          "order": 6,
+          "title": "Elements",
+          "description": "`as=\"nav\"` makes a row of links a navigation landmark. `as=\"ul\"` renders a\nlist and resets its margin, padding and bullets: make each child an `li`.",
+          "code": "import { Inline, Stack, Text } from '@korzun/design/component';\n\nexport default function Elements() {\n  return (\n    <Stack gap=\"lg\">\n      <Stack gap=\"xs\">\n        <Text size=\"sm\" tone=\"muted\">\n          as=\"nav\"\n        </Text>\n        <Inline as=\"nav\" gap=\"xl\">\n          <a href=\"/books\">Books</a>\n          <a href=\"/authors\">Authors</a>\n        </Inline>\n      </Stack>\n      <Stack gap=\"xs\">\n        <Text size=\"sm\" tone=\"muted\">\n          as=\"ul\"\n        </Text>\n        <Inline as=\"ul\" gap=\"xl\">\n          <li>\n            <Text>Middlemarch</Text>\n          </li>\n          <li>\n            <Text>Bleak House</Text>\n          </li>\n          <li>\n            <Text>Persuasion</Text>\n          </li>\n        </Inline>\n      </Stack>\n    </Stack>\n  );\n}\n"
+        }
+      ],
+      "tables": [
+        {
+          "name": "InlineProps",
+          "kind": "props",
+          "rows": [
+            {
+              "name": "children",
+              "type": "ReactNode",
+              "required": false,
+              "description": "The children, laid out left to right."
+            },
+            {
+              "name": "align",
+              "type": "'center' | 'start' | 'end' | 'baseline' | 'stretch'",
+              "required": false,
+              "description": "Cross-axis (vertical) alignment of children; `start`/`end` map to `flex-start`/`flex-end`.",
+              "default": "'center'"
+            },
+            {
+              "name": "as",
+              "type": "'div' | 'span' | 'ul' | 'ol' | 'li' | 'nav'",
+              "required": false,
+              "description": "The element to render. `ul`/`ol` also reset list margin, padding and bullets.",
+              "default": "'div'"
+            },
+            {
+              "name": "className",
+              "type": "string",
+              "required": false,
+              "description": "Extra class, added last on the root. Override with `'&&'` specificity, never `!important`."
+            },
+            {
+              "name": "gap",
+              "type": "'xxxs' | 'xxs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl' | 'xxxxl' | 'xxxxxl' | 'none'",
+              "required": false,
+              "description": "Space between children, from the theme's `space` tokens, or `'none'`.",
+              "default": "'sm'"
+            },
+            {
+              "name": "justify",
+              "type": "'start' | 'center' | 'end' | 'between'",
+              "required": false,
+              "description": "Main-axis (horizontal) distribution of children. `'between'` is `space-between`: it pushes the first and last child to opposite edges.",
+              "default": "'start'"
+            },
+            {
+              "name": "ref",
+              "type": "Ref<HTMLElement>",
+              "required": false,
+              "description": "Ref to the root element."
+            },
+            {
+              "name": "wrap",
+              "type": "boolean",
+              "required": false,
+              "description": "Lets children wrap onto further lines. Without it they stay on one line and may overflow or shrink.",
+              "default": "false"
+            }
+          ],
+          "extends": [
+            "HTMLAttributes"
+          ]
+        }
+      ],
+      "tokens": [
+        {
+          "path": "space.lg",
+          "kind": "value",
+          "light": "0.625rem",
+          "dark": "0.625rem"
+        },
+        {
+          "path": "space.md",
+          "kind": "value",
+          "light": "0.5rem",
+          "dark": "0.5rem"
+        },
+        {
+          "path": "space.sm",
+          "kind": "value",
+          "light": "0.375rem",
+          "dark": "0.375rem"
+        },
+        {
+          "path": "space.xl",
+          "kind": "value",
+          "light": "0.75rem",
+          "dark": "0.75rem"
+        },
+        {
+          "path": "space.xs",
+          "kind": "value",
+          "light": "0.25rem",
+          "dark": "0.25rem"
+        },
+        {
+          "path": "space.xxl",
+          "kind": "value",
+          "light": "1rem",
+          "dark": "1rem"
+        },
+        {
+          "path": "space.xxs",
+          "kind": "value",
+          "light": "0.125rem",
+          "dark": "0.125rem"
+        },
+        {
+          "path": "space.xxxl",
+          "kind": "value",
+          "light": "1.25rem",
+          "dark": "1.25rem"
+        },
+        {
+          "path": "space.xxxs",
+          "kind": "value",
+          "light": "0.1rem",
+          "dark": "0.1rem"
+        },
+        {
+          "path": "space.xxxxl",
+          "kind": "value",
+          "light": "1.5rem",
+          "dark": "1.5rem"
+        },
+        {
+          "path": "space.xxxxxl",
+          "kind": "value",
+          "light": "2rem",
+          "dark": "2rem"
+        }
+      ],
+      "changelog": [
+        {
+          "version": "0.2.0",
+          "date": "2026-11-21",
+          "tags": [
+            "Stack",
+            "Inline",
+            "Text",
+            "Heading"
+          ],
+          "text": "New `Stack` (vertical flex column; `gap`, default `md`), `Inline` (horizontal row; `gap` default `sm`, `justify` including `between`), `Text` (`size`, `tone`, `weight`; unset props inherit), and `Heading` (`level` 1–4), so layout and text are set with props instead of style files."
+        },
+        {
+          "version": "0.2.0",
+          "date": "2026-11-21",
+          "tags": [
+            "Text",
+            "Heading",
+            "Stack",
+            "Inline"
+          ],
+          "text": "`truncate` on `Text` and `Heading` clips inside `Stack` (any `align`), `Inline`, and a `Stack` nested in an `Inline`; `Stack` and `Inline` roots have `min-width: 0`."
+        }
+      ]
+    },
+    {
       "id": "component/page",
       "slug": "page",
       "entry": "@korzun/design/component",
@@ -5992,229 +6509,6 @@
       ]
     },
     {
-      "id": "component/inline",
-      "slug": "inline",
-      "entry": "@korzun/design/component",
-      "docPath": "docs/component/inline.md",
-      "title": "Inline",
-      "description": "A horizontal row with a themed gap between children, vertically centred by default.",
-      "category": "Layout",
-      "values": [
-        "Inline"
-      ],
-      "types": [
-        "InlineProps"
-      ],
-      "importLine": "import { Inline, type InlineProps } from '@korzun/design/component'",
-      "body": "A horizontal flex row with a themed gap between children, vertically centred\nby default. Use it for a button group, a header with an action on the right,\nor a row of chips that wraps.\n\nUse something else for: a vertical column (`Stack`), a single chip\n(`Tag`), a line of small metadata (`MetaLine`).\n\n## Usage\n\n### Choosing a gap\n\nPick `gap` from the theme's `space` scale so spacing is the same everywhere:\n`xs` for tight groups such as chips, `sm` for most rows, `xl` between links.\n`gap=\"none\"` emits `gap: 0`, for children that supply their own spacing.\n\n### Behaviour\n\n- `as=\"ul\"` and `as=\"ol\"` also reset the list's margin, padding and bullets.\n  Children should be `li`.\n- Without `wrap`, children stay on one line and may overflow or shrink.\n- Every other HTML attribute (`id`, `aria-*`, `data-*`, event handlers) passes\n  through. There is no `style` prop: spacing comes from tokens only.\n- Override with `className` at `'&&'` specificity, never `!important`.\n\n## Do / don't\n\n- Do use `justify=\"between\"` for a title-and-action row.\n- Do add `wrap` for rows of chips or buttons that may not fit on a phone.\n- Do use `align=\"baseline\"` to line up text of different sizes.\n- Don't add margins to children to space them; use `gap`.\n- Don't use an Inline for a column; use `Stack`.\n- Don't nest `Inline` just to push one child right; use `justify=\"between\"`.",
-      "examples": [
-        {
-          "file": "src/component/inline/examples/01-basic.tsx",
-          "slug": "basic",
-          "order": 1,
-          "title": "Basic",
-          "description": "The spread row: a title on the left and its action on the right, with\n`justify=\"between\"`. Children are vertically centred.",
-          "code": "import { Heading, Inline, Stack, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Basic() {\n  const [books, setBooks] = useState(3);\n  return (\n    <Stack gap=\"xs\">\n      <Inline justify=\"between\">\n        <Heading level={2}>Library</Heading>\n        <Button type=\"primary\" onClick={() => setBooks((n) => n + 1)}>\n          Add book\n        </Button>\n      </Inline>\n      <Text size=\"sm\" tone=\"muted\">\n        Books: {books}\n      </Text>\n    </Stack>\n  );\n}\n"
-        },
-        {
-          "file": "src/component/inline/examples/02-gaps.tsx",
-          "slug": "gaps",
-          "order": 2,
-          "title": "Gaps",
-          "description": "`gap` takes a key of the theme's `space` scale, or `none` for children\nthat bring their own spacing.",
-          "code": "import { Inline, Stack, Tag, Text } from '@korzun/design/component';\n\nconst gaps = [\n  'none',\n  'xxxs',\n  'xxs',\n  'xs',\n  'sm',\n  'md',\n  'lg',\n  'xl',\n  'xxl',\n  'xxxl',\n  'xxxxl',\n  'xxxxxl',\n] as const;\n\nexport default function Gaps() {\n  return (\n    <Stack gap=\"sm\">\n      {gaps.map((gap) => (\n        <Inline key={gap} gap=\"xl\">\n          <Text size=\"sm\" tone=\"muted\">\n            {`gap=\"${gap}\"`}\n          </Text>\n          <Inline gap={gap}>\n            <Tag>One</Tag>\n            <Tag>Two</Tag>\n            <Tag>Three</Tag>\n          </Inline>\n        </Inline>\n      ))}\n    </Stack>\n  );\n}\n"
-        },
-        {
-          "file": "src/component/inline/examples/03-align.tsx",
-          "slug": "align",
-          "order": 3,
-          "title": "Align",
-          "description": "`align` sets the vertical placement of children of different heights.\n`center` is the usual choice; `baseline` lines up text of different sizes.",
-          "code": "import { Heading, Inline, Stack, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\n\nconst aligns = ['center', 'start', 'end', 'baseline', 'stretch'] as const;\n\nexport default function Align() {\n  return (\n    <Stack gap=\"lg\">\n      {aligns.map((align) => (\n        <Stack key={align} gap=\"xs\">\n          <Text size=\"sm\" tone=\"muted\">\n            {`align=\"${align}\"`}\n          </Text>\n          <Inline align={align}>\n            <Text size=\"sm\">Small</Text>\n            <Heading level={1}>Large</Heading>\n            <Button>Action</Button>\n          </Inline>\n        </Stack>\n      ))}\n    </Stack>\n  );\n}\n"
-        },
-        {
-          "file": "src/component/inline/examples/04-justify.tsx",
-          "slug": "justify",
-          "order": 4,
-          "title": "Justify",
-          "description": "`justify` distributes children along the row. `between` pushes the first\nand last child to opposite edges.",
-          "code": "import { Inline, Stack, Tag, Text } from '@korzun/design/component';\n\nconst justifies = ['start', 'center', 'end', 'between'] as const;\n\nexport default function Justify() {\n  return (\n    <Stack gap=\"lg\">\n      {justifies.map((justify) => (\n        <Stack key={justify} gap=\"xs\">\n          <Text size=\"sm\" tone=\"muted\">\n            {`justify=\"${justify}\"`}\n          </Text>\n          <Inline justify={justify}>\n            <Tag>One</Tag>\n            <Tag>Two</Tag>\n            <Tag>Three</Tag>\n          </Inline>\n        </Stack>\n      ))}\n    </Stack>\n  );\n}\n"
-        },
-        {
-          "file": "src/component/inline/examples/05-wrap.tsx",
-          "slug": "wrap",
-          "order": 5,
-          "title": "Wrap",
-          "description": "A row of chips too long for its container gets `wrap`: children move onto\nfurther lines. Without it they stay on one line and shrink or overflow.",
-          "code": "import { Inline, Stack, Tag, Text } from '@korzun/design/component';\n\nconst subjects = [\n  'Fiction',\n  'Victorian',\n  'Provincial life',\n  'Politics',\n  'Marriage',\n  'Reform',\n  'Medicine',\n  'Class',\n  'Ambition',\n  'Money',\n  'Idealism',\n  'Society',\n  'Education',\n  'Religion',\n  'Inheritance',\n  'Friendship',\n  'Scandal',\n  'Science',\n  'Duty',\n  'Gossip',\n  'Land',\n  'Vocation',\n  'Reputation',\n  'Charity',\n];\n\nexport default function Wrap() {\n  return (\n    <Stack gap=\"lg\">\n      <Stack gap=\"xs\">\n        <Text size=\"sm\" tone=\"muted\">\n          wrap\n        </Text>\n        <Inline wrap gap=\"xs\">\n          {subjects.map((subject) => (\n            <Tag key={subject}>{subject}</Tag>\n          ))}\n        </Inline>\n      </Stack>\n      <Stack gap=\"xs\">\n        <Text size=\"sm\" tone=\"muted\">\n          no wrap\n        </Text>\n        <Inline gap=\"xs\">\n          {subjects.map((subject) => (\n            <Tag key={subject}>{subject}</Tag>\n          ))}\n        </Inline>\n      </Stack>\n    </Stack>\n  );\n}\n"
-        },
-        {
-          "file": "src/component/inline/examples/06-elements.tsx",
-          "slug": "elements",
-          "order": 6,
-          "title": "Elements",
-          "description": "`as=\"nav\"` makes a row of links a navigation landmark. `as=\"ul\"` renders a\nlist and resets its margin, padding and bullets: make each child an `li`.",
-          "code": "import { Inline, Stack, Text } from '@korzun/design/component';\n\nexport default function Elements() {\n  return (\n    <Stack gap=\"lg\">\n      <Stack gap=\"xs\">\n        <Text size=\"sm\" tone=\"muted\">\n          as=\"nav\"\n        </Text>\n        <Inline as=\"nav\" gap=\"xl\">\n          <a href=\"/books\">Books</a>\n          <a href=\"/authors\">Authors</a>\n        </Inline>\n      </Stack>\n      <Stack gap=\"xs\">\n        <Text size=\"sm\" tone=\"muted\">\n          as=\"ul\"\n        </Text>\n        <Inline as=\"ul\" gap=\"xl\">\n          <li>Middlemarch</li>\n          <li>Bleak House</li>\n          <li>Persuasion</li>\n        </Inline>\n      </Stack>\n    </Stack>\n  );\n}\n"
-        }
-      ],
-      "tables": [
-        {
-          "name": "InlineProps",
-          "kind": "props",
-          "rows": [
-            {
-              "name": "children",
-              "type": "ReactNode",
-              "required": false,
-              "description": "The children, laid out left to right."
-            },
-            {
-              "name": "align",
-              "type": "'center' | 'start' | 'end' | 'baseline' | 'stretch'",
-              "required": false,
-              "description": "Cross-axis (vertical) alignment of children; `start`/`end` map to `flex-start`/`flex-end`.",
-              "default": "'center'"
-            },
-            {
-              "name": "as",
-              "type": "'div' | 'span' | 'ul' | 'ol' | 'li' | 'nav'",
-              "required": false,
-              "description": "The element to render. `ul`/`ol` also reset list margin, padding and bullets.",
-              "default": "'div'"
-            },
-            {
-              "name": "className",
-              "type": "string",
-              "required": false,
-              "description": "Extra class, added last on the root. Override with `'&&'` specificity, never `!important`."
-            },
-            {
-              "name": "gap",
-              "type": "'xxxs' | 'xxs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl' | 'xxxxl' | 'xxxxxl' | 'none'",
-              "required": false,
-              "description": "Space between children, from the theme's `space` tokens, or `'none'`.",
-              "default": "'sm'"
-            },
-            {
-              "name": "justify",
-              "type": "'start' | 'center' | 'end' | 'between'",
-              "required": false,
-              "description": "Main-axis (horizontal) distribution of children. `'between'` is `space-between`: it pushes the first and last child to opposite edges.",
-              "default": "'start'"
-            },
-            {
-              "name": "ref",
-              "type": "Ref<HTMLElement>",
-              "required": false,
-              "description": "Ref to the root element."
-            },
-            {
-              "name": "wrap",
-              "type": "boolean",
-              "required": false,
-              "description": "Lets children wrap onto further lines. Without it they stay on one line and may overflow or shrink.",
-              "default": "false"
-            }
-          ],
-          "extends": [
-            "HTMLAttributes"
-          ]
-        }
-      ],
-      "tokens": [
-        {
-          "path": "space.lg",
-          "kind": "value",
-          "light": "0.625rem",
-          "dark": "0.625rem"
-        },
-        {
-          "path": "space.md",
-          "kind": "value",
-          "light": "0.5rem",
-          "dark": "0.5rem"
-        },
-        {
-          "path": "space.sm",
-          "kind": "value",
-          "light": "0.375rem",
-          "dark": "0.375rem"
-        },
-        {
-          "path": "space.xl",
-          "kind": "value",
-          "light": "0.75rem",
-          "dark": "0.75rem"
-        },
-        {
-          "path": "space.xs",
-          "kind": "value",
-          "light": "0.25rem",
-          "dark": "0.25rem"
-        },
-        {
-          "path": "space.xxl",
-          "kind": "value",
-          "light": "1rem",
-          "dark": "1rem"
-        },
-        {
-          "path": "space.xxs",
-          "kind": "value",
-          "light": "0.125rem",
-          "dark": "0.125rem"
-        },
-        {
-          "path": "space.xxxl",
-          "kind": "value",
-          "light": "1.25rem",
-          "dark": "1.25rem"
-        },
-        {
-          "path": "space.xxxs",
-          "kind": "value",
-          "light": "0.1rem",
-          "dark": "0.1rem"
-        },
-        {
-          "path": "space.xxxxl",
-          "kind": "value",
-          "light": "1.5rem",
-          "dark": "1.5rem"
-        },
-        {
-          "path": "space.xxxxxl",
-          "kind": "value",
-          "light": "2rem",
-          "dark": "2rem"
-        }
-      ],
-      "changelog": [
-        {
-          "version": "0.2.0",
-          "date": "2026-11-21",
-          "tags": [
-            "Stack",
-            "Inline",
-            "Text",
-            "Heading"
-          ],
-          "text": "New `Stack` (vertical flex column; `gap`, default `md`), `Inline` (horizontal row; `gap` default `sm`, `justify` including `between`), `Text` (`size`, `tone`, `weight`; unset props inherit), and `Heading` (`level` 1–4), so layout and text are set with props instead of style files."
-        },
-        {
-          "version": "0.2.0",
-          "date": "2026-11-21",
-          "tags": [
-            "Text",
-            "Heading",
-            "Stack",
-            "Inline"
-          ],
-          "text": "`truncate` on `Text` and `Heading` clips inside `Stack` (any `align`), `Inline`, and a `Stack` nested in an `Inline`; `Stack` and `Inline` roots have `min-width: 0`."
-        }
-      ]
-    },
-    {
       "id": "component/stack",
       "slug": "stack",
       "entry": "@korzun/design/component",
@@ -6388,6 +6682,308 @@
           "kind": "value",
           "light": "2rem",
           "dark": "2rem"
+        }
+      ],
+      "changelog": [
+        {
+          "version": "0.2.0",
+          "date": "2026-11-21",
+          "tags": [
+            "Stack",
+            "Inline",
+            "Text",
+            "Heading"
+          ],
+          "text": "New `Stack` (vertical flex column; `gap`, default `md`), `Inline` (horizontal row; `gap` default `sm`, `justify` including `between`), `Text` (`size`, `tone`, `weight`; unset props inherit), and `Heading` (`level` 1–4), so layout and text are set with props instead of style files."
+        },
+        {
+          "version": "0.2.0",
+          "date": "2026-11-21",
+          "tags": [
+            "Text",
+            "Heading",
+            "Stack",
+            "Inline"
+          ],
+          "text": "`truncate` on `Text` and `Heading` clips inside `Stack` (any `align`), `Inline`, and a `Stack` nested in an `Inline`; `Stack` and `Inline` roots have `min-width: 0`."
+        }
+      ]
+    },
+    {
+      "id": "component/text",
+      "slug": "text",
+      "entry": "@korzun/design/component",
+      "docPath": "docs/component/text.md",
+      "title": "Text",
+      "description": "A run of text with themed size, tone and weight; unset props inherit from the surrounding text.",
+      "category": "Typography",
+      "values": [
+        "Text"
+      ],
+      "types": [
+        "TextProps"
+      ],
+      "importLine": "import { Text, type TextProps } from '@korzun/design/component'",
+      "body": "A run of text with themed size, tone and weight. Use it to set text style by\nprop instead of a style file: a body line, a meta line, a caption, an inline\nerror.\n\n**Unset props inherit.** A bare `<Text>` adds no size, tone or weight, so it\nlooks exactly like the text around it. This keeps the look inside a `Tag`, a\n`Button` or an error block: set only what you want to change.\n\nUse something else for: a heading (`Heading`), a single chip (`Tag`), a line\nof small metadata (`MetaLine`), a boxed alert (`Alert`).\n\n## Usage\n\n### Behaviour\n\n- `tone` is not `Tag`'s `TagTone` union. `primary` to `description` map to the\n  theme's `color.text.*`; `danger` and `success` use the chip text colours.\n- `danger` and `success` are for inline error and confirmation text. For a\n  boxed message use `Alert`.\n- `truncate` adds `overflow: hidden`, an ellipsis, `white-space: nowrap`,\n  `min-width: 0` and `max-width: 100%`, so a truncated Text clips inside an\n  `Inline` or `Stack` with any `align`, and a `Stack` or `Inline` nested in a\n  row shrinks too (both roots have `min-width: 0`).\n- On `span`, `strong`, `em` and `label`, `truncate` also makes the element\n  `inline-block`, because inline elements ignore overflow. `p` and `div` keep their block display.\n- `as=\"p\"` has its margin reset to 0; space paragraphs with `Stack` `gap`.\n- Every other HTML attribute (`id`, `aria-*`, `data-*`, event handlers) passes\n  through. There is no `style` prop.\n- Override with `className` at `'&&'` specificity, never `!important`.\n\n## Do / don't\n\n- Do set only the props you need; leave the rest to inherit.\n- Do use the recipes: body `<Text>`, meta `size=\"sm\" tone=\"muted\"`, caption\n  `size=\"xs\" tone=\"faint\"`.\n- Do put `truncate` on the Text itself, not on a wrapper.\n- Don't use `Text` for headings; use `Heading`.\n- Don't set `tone=\"danger\"` to build a box; it only colours text.\n- Don't add margins to space text; use `Stack`.",
+      "examples": [
+        {
+          "file": "src/component/text/examples/01-basic.tsx",
+          "slug": "basic",
+          "order": 1,
+          "title": "Basic",
+          "description": "Body text sets nothing and inherits; a meta line is `size=\"sm\"` with\n`tone=\"muted\"`; a caption is `size=\"xs\"` with `tone=\"faint\"`.",
+          "code": "import { Stack, Text } from '@korzun/design/component';\n\nexport default function Basic() {\n  return (\n    <Stack gap=\"sm\">\n      <Text as=\"p\">Welcome back.</Text>\n      <Text as=\"p\" size=\"sm\" tone=\"muted\">\n        3 books, updated yesterday\n      </Text>\n      <Text as=\"p\" size=\"xs\" tone=\"faint\">\n        Cover art by the publisher\n      </Text>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/text/examples/02-sizes.tsx",
+          "slug": "sizes",
+          "order": 2,
+          "title": "Sizes",
+          "description": "`size` takes a key of the theme's `fontSize` scale.",
+          "code": "import { Stack, Text } from '@korzun/design/component';\n\nconst sizes = ['xxs', 'xs', 'sm', 'md', 'lg', 'xl', 'xxl'] as const;\n\nexport default function Sizes() {\n  return (\n    <Stack gap=\"xs\">\n      {sizes.map((size) => (\n        <Text key={size} as=\"div\" size={size}>\n          {`size=\"${size}\"`}\n        </Text>\n      ))}\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/text/examples/03-tones.tsx",
+          "slug": "tones",
+          "order": 3,
+          "title": "Tones",
+          "description": "`primary` to `description` step down in emphasis. `danger` and `success`\ncolour inline error and confirmation text.",
+          "code": "import { Stack, Text } from '@korzun/design/component';\n\nconst tones = [\n  'primary',\n  'secondary',\n  'muted',\n  'faint',\n  'description',\n  'danger',\n  'success',\n] as const;\n\nexport default function Tones() {\n  return (\n    <Stack gap=\"xs\">\n      {tones.map((tone) => (\n        <Text key={tone} as=\"div\" tone={tone}>\n          {`tone=\"${tone}\"`}\n        </Text>\n      ))}\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/text/examples/04-weights.tsx",
+          "slug": "weights",
+          "order": 4,
+          "title": "Weights",
+          "description": "`weight` takes a key of the theme's `fontWeight` scale.",
+          "code": "import { Stack, Text } from '@korzun/design/component';\n\nconst weights = ['regular', 'medium', 'semibold', 'bold', 'extrabold'] as const;\n\nexport default function Weights() {\n  return (\n    <Stack gap=\"xs\">\n      {weights.map((weight) => (\n        <Text key={weight} as=\"div\" weight={weight}>\n          {`weight=\"${weight}\"`}\n        </Text>\n      ))}\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/text/examples/05-inherit.tsx",
+          "slug": "inherit",
+          "order": 5,
+          "title": "Inherit",
+          "description": "A bare `Text` adds no size, tone or weight, so it looks like the text\naround it. Set only what should change: the first inner `Text` matches the\nlarge, muted `Text` that holds it, and the second overrides only `weight`.",
+          "code": "import { Text } from '@korzun/design/component';\n\nexport default function Inherit() {\n  return (\n    <Text as=\"p\" size=\"lg\" tone=\"muted\">\n      Outer text, large and muted. <Text>A bare Text inherits both.</Text>{' '}\n      <Text weight=\"bold\">This one only adds weight.</Text>\n    </Text>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/text/examples/06-elements.tsx",
+          "slug": "elements",
+          "order": 6,
+          "title": "Elements",
+          "description": "`as` picks the element: `span` for a run inside a line, `p` and `div` for\nblocks, `strong` and `em` for emphasis, `label` for a control.",
+          "code": "import { Stack, Text } from '@korzun/design/component';\n\nconst elements = ['span', 'p', 'div', 'strong', 'em', 'label'] as const;\n\nexport default function Elements() {\n  return (\n    <Stack gap=\"xs\">\n      {elements.map((as) => (\n        <Text key={as} as={as}>\n          {`as=\"${as}\"`}\n        </Text>\n      ))}\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/text/examples/07-label-and-error.tsx",
+          "slug": "label-and-error",
+          "order": 7,
+          "title": "Label and error",
+          "description": "`as=\"label\"` with `htmlFor` names a native or third-party control. While the field is empty an\ninline error shows: `as=\"div\"` with `tone=\"danger\"` and `aria-live=\"polite\"`.",
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { useState } from 'react';\n\nexport default function LabelAndError() {\n  const [title, setTitle] = useState('');\n  return (\n    <Stack gap=\"xs\">\n      <Text as=\"label\" htmlFor=\"book-title\" size=\"sm\" weight=\"medium\">\n        Title\n      </Text>\n      <input\n        id=\"book-title\"\n        name=\"title\"\n        value={title}\n        onChange={(event) => setTitle(event.target.value)}\n      />\n      <Text as=\"div\" size=\"sm\" tone=\"danger\" aria-live=\"polite\">\n        {title === '' ? 'Title is required.' : null}\n      </Text>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/text/examples/08-truncate.tsx",
+          "slug": "truncate",
+          "order": 8,
+          "title": "Truncate",
+          "description": "`truncate` clips to one line with an ellipsis. Beside an action in an\n`Inline`, the title shrinks and the button keeps its width; a title above\na meta line in a `Stack` shrinks with the row.",
+          "code": "import { Inline, Stack, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { useState } from 'react';\n\nconst title =\n  'Middlemarch: A Study of Provincial Life, in Eight Books, with a Prelude and a Finale, Followed by an Extended Note on the Text, a Chronology, a Map of the Midlands, and a Glossary of Provincial Terms';\n\nexport default function Truncate() {\n  const [opened, setOpened] = useState(0);\n  return (\n    <Stack gap=\"xl\">\n      <Inline justify=\"between\">\n        <Text truncate weight=\"semibold\">\n          {title}\n        </Text>\n        <Button type=\"primary\" onClick={() => setOpened((n) => n + 1)}>\n          Open\n        </Button>\n      </Inline>\n      <Inline justify=\"between\">\n        <Stack gap=\"none\">\n          <Text truncate weight=\"semibold\">\n            {title}\n          </Text>\n          <Text size=\"sm\" tone=\"muted\">\n            George Eliot. Opened: {opened}\n          </Text>\n        </Stack>\n        <Button type=\"primary\" onClick={() => setOpened((n) => n + 1)}>\n          Open\n        </Button>\n      </Inline>\n    </Stack>\n  );\n}\n"
+        }
+      ],
+      "tables": [
+        {
+          "name": "TextProps",
+          "kind": "props",
+          "rows": [
+            {
+              "name": "children",
+              "type": "ReactNode",
+              "required": false,
+              "description": "The text."
+            },
+            {
+              "name": "as",
+              "type": "'span' | 'p' | 'div' | 'label' | 'strong' | 'em'",
+              "required": false,
+              "description": "The element to render. `p` has its margin reset to 0; space paragraphs with `Stack` `gap`.",
+              "default": "'span'"
+            },
+            {
+              "name": "className",
+              "type": "string",
+              "required": false,
+              "description": "Extra class on the root. Override with `'&&'` specificity, never `!important`."
+            },
+            {
+              "name": "htmlFor",
+              "type": "string",
+              "required": false,
+              "description": "The id of the control this label describes. Only for `as=\"label\"`."
+            },
+            {
+              "name": "ref",
+              "type": "Ref<HTMLElement>",
+              "required": false,
+              "description": "Ref to the root element."
+            },
+            {
+              "name": "size",
+              "type": "'xxs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl'",
+              "required": false,
+              "description": "Font size, from the theme's `fontSize` tokens. Unset, it inherits from the parent."
+            },
+            {
+              "name": "tone",
+              "type": "'primary' | 'secondary' | 'muted' | 'faint' | 'description' | 'danger' | 'success'",
+              "required": false,
+              "description": "Text colour. `primary` to `description` use the theme's `color.text` tokens; `danger` and `success` use the chip text colours, for inline error and confirmation text. Unset, it inherits from the parent."
+            },
+            {
+              "name": "truncate",
+              "type": "boolean",
+              "required": false,
+              "description": "Clips to one line with an ellipsis. Also sets `min-width: 0` and `max-width: 100%`, so it clips inside an `Inline` or `Stack` with any `align`. On `span`, `strong`, `em` and `label` it also makes the element `inline-block`, because inline elements ignore overflow.",
+              "default": "false"
+            },
+            {
+              "name": "weight",
+              "type": "'regular' | 'medium' | 'semibold' | 'bold' | 'extrabold'",
+              "required": false,
+              "description": "Font weight, from the theme's `fontWeight` tokens. Unset, it inherits from the parent."
+            }
+          ],
+          "extends": [
+            "HTMLAttributes"
+          ]
+        }
+      ],
+      "tokens": [
+        {
+          "path": "color.chip.danger.text",
+          "kind": "color",
+          "light": "#D9373e",
+          "dark": "#FF8E8E"
+        },
+        {
+          "path": "color.chip.success.text",
+          "kind": "color",
+          "light": "#15803d",
+          "dark": "#86EFAC"
+        },
+        {
+          "path": "color.text.description",
+          "kind": "color",
+          "light": "#585863",
+          "dark": "#A8ADB6"
+        },
+        {
+          "path": "color.text.faint",
+          "kind": "color",
+          "light": "#9ca3af",
+          "dark": "#6E7480"
+        },
+        {
+          "path": "color.text.muted",
+          "kind": "color",
+          "light": "#6E6E6E",
+          "dark": "#9CA1AB"
+        },
+        {
+          "path": "color.text.onDanger",
+          "kind": "color",
+          "light": "#FFFFFF",
+          "dark": "#FFFFFF"
+        },
+        {
+          "path": "color.text.onPrimary",
+          "kind": "color",
+          "light": "#FFFFFF",
+          "dark": "#FFFFFF"
+        },
+        {
+          "path": "color.text.primary",
+          "kind": "color",
+          "light": "#111",
+          "dark": "#F5F5F7"
+        },
+        {
+          "path": "color.text.secondary",
+          "kind": "color",
+          "light": "#5A6375",
+          "dark": "#C8CBD2"
+        },
+        {
+          "path": "fontSize.lg",
+          "kind": "value",
+          "light": "1rem",
+          "dark": "1rem"
+        },
+        {
+          "path": "fontSize.md",
+          "kind": "value",
+          "light": "0.875rem",
+          "dark": "0.875rem"
+        },
+        {
+          "path": "fontSize.sm",
+          "kind": "value",
+          "light": "0.75rem",
+          "dark": "0.75rem"
+        },
+        {
+          "path": "fontSize.xl",
+          "kind": "value",
+          "light": "1.25rem",
+          "dark": "1.25rem"
+        },
+        {
+          "path": "fontSize.xs",
+          "kind": "value",
+          "light": "0.7rem",
+          "dark": "0.7rem"
+        },
+        {
+          "path": "fontSize.xxl",
+          "kind": "value",
+          "light": "1.75rem",
+          "dark": "1.75rem"
+        },
+        {
+          "path": "fontSize.xxs",
+          "kind": "value",
+          "light": "0.6rem",
+          "dark": "0.6rem"
+        },
+        {
+          "path": "fontWeight.bold",
+          "kind": "value",
+          "light": "700",
+          "dark": "700"
+        },
+        {
+          "path": "fontWeight.extrabold",
+          "kind": "value",
+          "light": "800",
+          "dark": "800"
+        },
+        {
+          "path": "fontWeight.medium",
+          "kind": "value",
+          "light": "500",
+          "dark": "500"
+        },
+        {
+          "path": "fontWeight.regular",
+          "kind": "value",
+          "light": "400",
+          "dark": "400"
+        },
+        {
+          "path": "fontWeight.semibold",
+          "kind": "value",
+          "light": "600",
+          "dark": "600"
         }
       ],
       "changelog": [
