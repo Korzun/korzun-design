@@ -24,8 +24,15 @@ editable fields (controls in `@korzun/design/control`).
 ### Titles and keys
 
 Titles are CSS `text-transform: capitalize`: "cover fit" displays as
-"Cover Fit". Write titles in the case you want only if that agrees. Each entry
-is keyed by `title + value`; keep titles unique within one list.
+"Cover Fit". Write titles in the case you want only if that agrees.
+
+**Keys are `title + value`.** With an element as `value` the key becomes
+`"Title[object Object]"`, so two entries with the same title and element
+values collide (React key warning, possible wrong reconciliation). Keep
+titles unique.
+
+Its building block (`Metadata` component) is internal; only the `Metadata`
+**type** is exported.
 
 ### Values
 
