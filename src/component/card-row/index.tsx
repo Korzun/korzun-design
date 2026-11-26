@@ -1,16 +1,19 @@
 import cx from 'classnames';
-import { PropsWithChildren, useCallback } from 'react';
+import { ReactNode, useCallback } from 'react';
 
 import { depthClass, SurfaceDepthProvider, useSurfaceDepth } from '../surface/index.js';
 import { useStyle } from './style.js';
 
-export type CardRowProps = PropsWithChildren<{
+export type CardRowProps = {
+  /** Row content. It sits one surface level deeper than the row. */
+  children?: ReactNode;
   /**
-   * Adds a pointer cursor; fires on click and Enter/Space. The row is not focusable, so keys only
-   * reach it from a focused child.
+   * Adds a pointer cursor; fires on click and Enter/Space. The row has no `role` or `tabIndex`, so
+   * keys only reach it from a focused child, and Space still scrolls the page. For a
+   * keyboard-reachable action, put a real control such as a link `Button` inside.
    */
   onClick?: () => void;
-}>;
+};
 
 /** A compact bordered row; its corners follow where it sits. */
 export const CardRow = ({ children, onClick }: CardRowProps) => {
