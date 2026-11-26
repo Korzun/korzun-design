@@ -192,7 +192,7 @@ export default function Standalone() {
 | `theme.fontSize.xs` | `0.7rem` | `0.7rem` |
 | `theme.fontSize.xxl` | `1.75rem` | `1.75rem` |
 | `theme.fontSize.xxs` | `0.6rem` | `0.6rem` |
-| `theme.recipe.spinner` | `recipe` | `recipe` |
+| `theme.recipe.spinner` | [recipe](../tokens.md#recipe) | [recipe](../tokens.md#recipe) |
 
 <!-- /generated:tokens -->
 

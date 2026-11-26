@@ -131,7 +131,7 @@ export default function Depth() {
 | `theme.color.bg.card` | `#FCFCFC` | `#1A1B1E` |
 | `theme.radius.md` | `8px` | `8px` |
 | `theme.radius.sm` | `4px` | `4px` |
-| `theme.recipe.card.shell` | `recipe` | `recipe` |
+| `theme.recipe.card.shell` | [recipe](../tokens.md#recipe) | [recipe](../tokens.md#recipe) |
 
 <!-- /generated:tokens -->
 

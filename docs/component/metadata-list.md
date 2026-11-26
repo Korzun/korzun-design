@@ -171,8 +171,13 @@ One labelled value in a `MetadataList`.
 
 | Token | Light | Dark |
 | --- | --- | --- |
+| `theme.color.text.faint` | `#9ca3af` | `#6E7480` |
+| `theme.color.text.primary` | `#111` | `#F5F5F7` |
+| `theme.fontSize.sm` | `0.75rem` | `0.75rem` |
+| `theme.size.metadataValue` | `15rem` | `15rem` |
 | `theme.space.lg` | `0.625rem` | `0.625rem` |
 | `theme.space.sm` | `0.375rem` | `0.375rem` |
+| `theme.space.xs` | `0.25rem` | `0.25rem` |
 
 <!-- /generated:tokens -->
 

@@ -177,7 +177,11 @@ export default function Nesting() {
 
 ## Tokens
 
-This module has no styles of its own.
+| Token | Light | Dark |
+| --- | --- | --- |
+| `theme.radius.lg` | `16px` | `16px` |
+| `theme.radius.md` | `8px` | `8px` |
+| `theme.radius.sm` | `4px` | `4px` |
 
 <!-- /generated:tokens -->
 

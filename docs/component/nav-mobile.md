@@ -265,8 +265,8 @@ One side of the bar. Both its shapes, the capsule of `items` and the circle for 
 | `theme.color.danger.default` | `#FF4D4F` | `#FF4D4F` |
 | `theme.color.text.primary` | `#111` | `#F5F5F7` |
 | `theme.radius.pill` | `999px` | `999px` |
-| `theme.recipe.glass` | `recipe` | `recipe` |
-| `theme.recipe.glassHighlight` | `recipe` | `recipe` |
+| `theme.recipe.glass` | [recipe](../tokens.md#recipe) | [recipe](../tokens.md#recipe) |
+| `theme.recipe.glassHighlight` | [recipe](../tokens.md#recipe) | [recipe](../tokens.md#recipe) |
 | `theme.space.lg` | `0.625rem` | `0.625rem` |
 | `theme.space.sm` | `0.375rem` | `0.375rem` |
 | `theme.space.xl` | `0.75rem` | `0.75rem` |

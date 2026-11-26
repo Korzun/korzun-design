@@ -302,7 +302,7 @@ The token object that `useTheme` returns and `createUseStyles` passes to a style
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `breakpoint` (required) | `{ mobile: string; normal: string; }` |  |  |
-| `color` (required) | ``{ gray: typeof gray; blue: typeof blue; red: typeof red; text: { primary: string; secondary: string; muted: string; faint: string; onPrimary: string; onDanger: string; description: string; }; bg: { page: string; card: string; cardHeader: string; /** * The rail behind a segmented control's sliding lens. Its own token, not * `cardHeader`, because it must read against BOTH `page` and `card` — and * in dark mode those sit on either side of `cardHeader`, which left the * rail invisible on the page. */ track: string; input: string; footer: string; glass: string; glassFallback: string; glassActive: string; selected: string; hover: string; success: string; placeholder: string; }; border: { default: string; strong: string; light: string; focus: string; hover: string; danger: string; glass: string; glassActive: string; faint: string; loading: string; success: string; section: string; }; success: string; /** Solid warning colour for icons and accents. */ warning: string; /** Solid info colour for icons and accents. */ info: string; brand: { default: string; hover: string; active: string; light: string; outline: string; loading: string; loadingHover: string; loadingActive: string; linkHover: string; }; danger: { default: string; hover: string; active: string; light: string; outline: string; loading: string; loadingHover: string; loadingActive: string; }; overlay: { backdrop: string; }; chip: { status: { text: string; bg: string; border: string; }; author: { text: string; bg: string; border: string; }; series: { text: string; bg: string; border: string; }; subject: { text: string; bg: string; border: string; }; book: { text: string; bg: string; border: string; }; entryType: { text: string; bg: string; border: string; }; user: { text: string; bg: string; border: string; }; rating: { text: string; bg: string; border: string; }; neutral: { text: string; bg: string; border: string; }; success: { text: string; bg: string; border: string; }; warning: { text: string; bg: string; border: string; }; danger: { text: string; bg: string; border: string; }; info: { text: string; bg: string; border: string; }; }; }`` |  |  |
+| `color` (required) | `{ gray, blue, red, text, bg, border, success, warning, info, brand, danger, overlay, chip }` |  |  |
 | `colorScheme` (required) | `'light' \| 'dark'` |  |  |
 | `fontFamily` (required) | `{ body: string; mono: string; }` |  |  |
 | `fontSize` (required) | `{ xxs: string; xs: string; sm: string; md: string; lg: string; xl: string; xxl: string; }` |  |  |
@@ -310,12 +310,12 @@ The token object that `useTheme` returns and `createUseStyles` passes to a style
 | `layout` (required) | `{ navHeightMobile: string; modalWidth: string; controlHeight: string; floatingControlTopBase: string; }` |  |  |
 | `lineHeight` (required) | `{ tight: number; body: number; }` |  |  |
 | `radius` (required) | `{ sm: string; md: string; lg: string; circle: string; pill: string; }` |  |  |
-| `recipe` (required) | ``{ input: Recipe; focusRing: Recipe; label: Recipe; spinner: Recipe; glass: Recipe; glassHighlight: Recipe; /** The shaded field row (`bg.cardHeader`, `md` corners) a control sits in inside a card. */ row: Recipe; modal: { dialog: Recipe; header: Recipe; footer: Recipe; }; card: { shell: Recipe; header: Recipe; footer: Recipe; }; }`` |  |  |
-| `shadow` (required) | `{ card: string; cardStack: string; hoverLift: string; dangerStack: string; brandStack: string; glass: string; glassActive: string; }` |  |  |
+| `recipe` (required) | `{ input, focusRing, label, spinner, glass, glassHighlight, row, modal, card }` |  |  |
+| `shadow` (required) | `{ card, cardStack, hoverLift, dangerStack, brandStack, glass, glassActive }` |  |  |
 | `size` (required) | `{ metadataValue: string; }` |  |  |
-| `space` (required) | `{ xxxs:` [SpaceValue](#types)`; xxs:` [SpaceValue](#types)`; xs:` [SpaceValue](#types)`; sm:` [SpaceValue](#types)`; md:` [SpaceValue](#types)`; lg:` [SpaceValue](#types)`; xl:` [SpaceValue](#types)`; xxl:` [SpaceValue](#types)`; xxxl:` [SpaceValue](#types)`; xxxxl:` [SpaceValue](#types)`; xxxxxl:` [SpaceValue](#types)`; }` |  |  |
+| `space` (required) | `{ xxxs, xxs, xs, sm, md, lg, xl, xxl, xxxl, xxxxl, xxxxxl }` |  |  |
 | `transition` (required) | `{ fast: string; medium: string; slide: string; slow: string; spring: string; }` |  |  |
-| `zIndex` (required) | `{ behind: number; base: number; stack: { lo: number; md: number; hi: number; }; header: number; sticky: number; toast: number; }` |  |  |
+| `zIndex` (required) | `{ behind: number; base: number; stack: { … }; header: number; sticky: number; toast: number; }` |  |  |
 
 ### Types
 

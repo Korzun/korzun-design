@@ -274,9 +274,9 @@ export default function Nested() {
 | `theme.fontWeight.semibold` | `600` | `600` |
 | `theme.radius.md` | `8px` | `8px` |
 | `theme.radius.sm` | `4px` | `4px` |
-| `theme.recipe.card.footer` | `recipe` | `recipe` |
-| `theme.recipe.card.header` | `recipe` | `recipe` |
-| `theme.recipe.card.shell` | `recipe` | `recipe` |
+| `theme.recipe.card.footer` | [recipe](../tokens.md#recipe) | [recipe](../tokens.md#recipe) |
+| `theme.recipe.card.header` | [recipe](../tokens.md#recipe) | [recipe](../tokens.md#recipe) |
+| `theme.recipe.card.shell` | [recipe](../tokens.md#recipe) | [recipe](../tokens.md#recipe) |
 | `theme.space.sm` | `0.375rem` | `0.375rem` |
 | `theme.space.xl` | `0.75rem` | `0.75rem` |
 | `theme.space.xs` | `0.25rem` | `0.25rem` |
