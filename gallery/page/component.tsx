@@ -8,11 +8,13 @@ import type { ChangelogEntry, ModuleInfo } from '../../scripts/docs-gen/types.js
 import { moduleBySlug, moduleOwner, typePages } from '../data.js';
 import { siteColumn } from '../layout/column.js';
 import { useScrollToHash } from '../layout/scroll.js';
+import { codeBlock, PROSE_WIDTH } from '../layout/type.js';
 import { NotFound } from '../not-found.js';
 import { CopyButton } from '../part/copy-button.js';
 import { ExampleBlock } from '../part/example-block.js';
 import { highlight, useHighlightStyle } from '../part/highlight.js';
 import { IconGrid } from '../part/icon-grid.js';
+import { Lead } from '../part/lead.js';
 import { createSlugger, headingTexts, Markdown } from '../part/markdown.js';
 import { PropsTable } from '../part/props-table.js';
 import { TokensTable } from '../part/tokens-table.js';
@@ -33,9 +35,8 @@ const useStyle = createUseStyles((theme: Theme) => ({
   importCode: {
     flex: '1 1 0',
     minWidth: 0,
-    fontFamily: theme.fontFamily.mono,
-    fontSize: theme.fontSize.sm,
-    overflowWrap: 'anywhere',
+    ...codeBlock(theme),
+    overflowWrap: 'break-word',
   },
   link: {
     color: theme.color.brand.default,
@@ -48,7 +49,7 @@ const useStyle = createUseStyles((theme: Theme) => ({
     // One column: examples are tall and wide enough that two would squeeze them.
     gridTemplateColumns: 'minmax(0, 1fr)',
   },
-  changes: { margin: 0, paddingLeft: theme.space.xxxl },
+  changes: { margin: 0, paddingLeft: theme.space.xxxl, maxWidth: PROSE_WIDTH },
   change: { '& + &': { marginTop: theme.space.md } },
 }));
 
@@ -110,9 +111,7 @@ export const ComponentPage = () => {
           <Stack gap="xl">
             <Stack gap="sm">
               <Heading level={1}>{mod.title}</Heading>
-              <Text as="p" size="lg" tone="description">
-                {mod.description}
-              </Text>
+              <Lead>{mod.description}</Lead>
             </Stack>
             <Inline gap="md" align="center" className={styles.importBox}>
               <code
@@ -181,13 +180,11 @@ export const ComponentPage = () => {
 
           {mod.changelog.length > 0 && (
             <Section title="Changelog" id={ids.changelog}>
-              <Stack gap="xxl">
+              <Stack gap="xxxl">
                 {byVersion(mod.changelog).map((group) => (
                   <Stack gap="md" key={group.version}>
                     <Inline gap="md" align="baseline">
-                      <Heading level={3} size="md">
-                        {group.version}
-                      </Heading>
+                      <Heading level={3}>{group.version}</Heading>
                       <Text size="sm" tone="muted">
                         {group.date}
                       </Text>

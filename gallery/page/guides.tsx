@@ -4,6 +4,7 @@ import { Link } from 'react-router';
 
 import { siteData } from '../data.js';
 import { siteColumn } from '../layout/column.js';
+import { Lead } from '../part/lead.js';
 import { Markdown } from '../part/markdown.js';
 
 const useStyle = createUseStyles((theme: Theme) => ({
@@ -42,10 +43,10 @@ export const GuidesPage = () => {
         <Stack gap="xxxl">
           <Stack gap="sm">
             <Heading level={1}>Guides</Heading>
-            <Text as="p" size="lg" tone="description">
+            <Lead>
               How the library is meant to be used: the rules behind the components, and the patterns
               screens are built from.
-            </Text>
+            </Lead>
           </Stack>
           <div className={styles.grid}>
             {siteData.guides.map((guide) => (

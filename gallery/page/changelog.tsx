@@ -5,6 +5,7 @@ import { Link } from 'react-router';
 
 import { siteData } from '../data.js';
 import { siteColumn } from '../layout/column.js';
+import { PROSE_WIDTH } from '../layout/type.js';
 import { Markdown } from '../part/markdown.js';
 
 const useStyle = createUseStyles((theme: Theme) => ({
@@ -13,7 +14,8 @@ const useStyle = createUseStyles((theme: Theme) => ({
     paddingTop: theme.space.xxxxxl,
     paddingBottom: theme.space.xxxxxl,
   },
-  entries: { margin: 0, paddingLeft: theme.space.xxxl },
+  // Lines of prose stop at a readable length, not the 1200px column.
+  entries: { margin: 0, paddingLeft: theme.space.xxxl, maxWidth: PROSE_WIDTH },
   entry: { '& + &': { marginTop: theme.space.xl } },
   // inline-flex, so a linked chip sits on the same line as a plain one.
   chipLink: {
@@ -59,7 +61,7 @@ export const ChangelogPage = () => {
         <Stack gap="xxxxl">
           <Heading level={1}>Changelog</Heading>
           {siteData.changelog.map((release) => (
-            <Stack as="section" gap="lg" key={release.version} aria-label={release.version}>
+            <Stack as="section" gap="xl" key={release.version} aria-label={release.version}>
               <Inline gap="md" align="baseline">
                 <Heading level={2}>{release.version}</Heading>
                 <Text size="sm" tone="muted">
