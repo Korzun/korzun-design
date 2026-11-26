@@ -5,12 +5,12 @@ import type { NavItem } from '../nav-types.js';
 import { useStyle } from './style.js';
 
 export interface NavDesktopProps {
-  /** Destinations, rendered in order and keyed by `to`. Each item's `active` is yours to compute. */
+  /** Destinations, rendered in order and keyed by `to`, so each `to` must be unique. */
   items: NavItem[];
 }
 
 /**
- * Wide navigation bar pinned to the top of the viewport (desktop only). The active
+ * Wide navigation bar at the top of the page, in normal flow (desktop only). The active
  * link is marked with a gray underline. Hidden below the mobile breakpoint.
  * Must render inside a react-router router.
  */
