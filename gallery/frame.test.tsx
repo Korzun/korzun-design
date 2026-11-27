@@ -1,7 +1,8 @@
+import { lightTheme } from '@korzun/design/theme';
 import { act, render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router';
 
-import { Frame, FrameNavigatedAway } from './frame.js';
+import { desktopBreakpoints, Frame, FrameNavigatedAway } from './frame.js';
 
 describe('Frame', () => {
   beforeEach(() => localStorage.clear());
@@ -147,5 +148,15 @@ describe('FrameNavigatedAway', () => {
       'href',
       '/frame/button/basic'
     );
+  });
+});
+
+describe('desktopBreakpoints', () => {
+  it('drops the mobile query everywhere, recipes included', () => {
+    const desktop = desktopBreakpoints(lightTheme);
+    const text = JSON.stringify(desktop);
+    expect(text).not.toContain(lightTheme.breakpoint.mobile);
+    expect(desktop.breakpoint.mobile).toBe('@media (max-width: 0px)');
+    expect(desktop.recipe.input.fontFamily).toBe(lightTheme.recipe.input.fontFamily);
   });
 });

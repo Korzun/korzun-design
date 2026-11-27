@@ -43,8 +43,8 @@ export type ExampleInfo = {
   code: string;
   /**
    * `mobile`: the demo and its overview thumbnail render at phone width (`@viewport mobile`).
-   * `screen`: a full-height screen; the demo frame has a fixed height instead of sizing to fit (`@viewport screen`).
-   * `desktop`: the overview thumbnail lays out at a desktop width and is scaled to fit, for a module hidden on phones (`@viewport desktop`).
+   * `screen`: a full-height screen; the demo frame has a fixed height instead of sizing to fit, and takes a full row of the two-column examples (`@viewport screen`).
+   * `desktop`: the overview thumbnail lays out at a desktop width and is scaled to fit, for a module hidden on phones; a desktop demo takes a full row of the two-column examples (`@viewport desktop`).
    */
   viewport?: 'mobile' | 'screen' | 'desktop';
 };

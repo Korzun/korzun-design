@@ -4,7 +4,7 @@ import cx from 'classnames';
 import { Fragment, type ReactNode } from 'react';
 import { Link, useParams } from 'react-router';
 
-import type { ChangelogEntry, ModuleInfo } from '../../scripts/docs-gen/types.js';
+import type { ChangelogEntry, ExampleInfo, ModuleInfo } from '../../scripts/docs-gen/types.js';
 import { childrenOf, moduleBySlug, moduleOwner, typePages } from '../data.js';
 import { siteColumn } from '../layout/column.js';
 import { useScrollToHash } from '../layout/scroll.js';
@@ -43,11 +43,29 @@ const useStyle = createUseStyles((theme: Theme) => ({
     textDecoration: 'none',
     '&:hover': { textDecoration: 'underline' },
   },
+  // Two columns, as Ant does: most components look stretched across the whole
+  // column. Each run of examples fills the columns alternately (first left,
+  // second right), and each column stacks on its own, so a tall example does
+  // not leave a hole beside it. A `screen` or `desktop` example takes a row.
   examples: {
     display: 'grid',
     gap: theme.space.xxxl,
-    // One column: examples are tall and wide enough that two would squeeze them.
     gridTemplateColumns: 'minmax(0, 1fr)',
+  },
+  pair: {
+    display: 'grid',
+    gap: theme.space.xxxl,
+    gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+    alignItems: 'start',
+    // On a phone, one column in the authored order: the column boxes drop out
+    // and each example is ordered by its index in the examples grid.
+    [theme.breakpoint.mobile]: { display: 'contents' },
+  },
+  half: {
+    display: 'grid',
+    gap: theme.space.xxxl,
+    gridTemplateColumns: 'minmax(0, 1fr)',
+    [theme.breakpoint.mobile]: { display: 'contents' },
   },
   changes: { margin: 0, paddingLeft: theme.space.xxxl, maxWidth: PROSE_WIDTH },
   change: { '& + &': { marginTop: theme.space.md } },
@@ -103,6 +121,47 @@ const Family = ({ mod }: { mod: ModuleInfo }) => {
     </Text>
   );
 };
+
+type Placed = { example: ExampleInfo; index: number };
+type Row = ({ wide: true } & Placed) | { wide: false; left: Placed[]; right: Placed[] };
+
+/**
+ * The examples as rows: a `screen` or `desktop` example alone, full width; a run
+ * of the others split into two columns, alternately, the first on the left.
+ */
+export const exampleRows = (examples: ExampleInfo[]): Row[] => {
+  const rows: Row[] = [];
+  let run: Placed[] = [];
+  const flush = () => {
+    if (run.length > 0) {
+      rows.push({
+        wide: false,
+        left: run.filter((_, i) => i % 2 === 0),
+        right: run.filter((_, i) => i % 2 === 1),
+      });
+    }
+    run = [];
+  };
+  examples.forEach((example, index) => {
+    if (example.viewport === 'screen' || example.viewport === 'desktop') {
+      flush();
+      rows.push({ wide: true, example, index });
+    } else run.push({ example, index });
+  });
+  flush();
+  return rows;
+};
+
+/** One example, ordered by its index so a phone's single column keeps the authored order. */
+const Example = ({ mod, at, ids }: { mod: ModuleInfo; at: Placed; ids: Map<string, string> }) => (
+  <div style={{ order: at.index, minWidth: 0 }}>
+    <ExampleBlock
+      owner={moduleOwner(mod)}
+      example={at.example}
+      headingId={ids.get(at.example.slug)}
+    />
+  </div>
+);
 
 const Section = ({ title, id, children }: { title: string; id: string; children: ReactNode }) => (
   <Stack as="section" gap="xl" aria-label={title}>
@@ -173,14 +232,29 @@ export const ComponentPage = () => {
           {mod.examples.length > 0 && (
             <Section title="Examples" id={ids.examples}>
               <div className={styles.examples}>
-                {mod.examples.map((example) => (
-                  <ExampleBlock
-                    key={example.slug}
-                    owner={moduleOwner(mod)}
-                    example={example}
-                    headingId={ids.example.get(example.slug)}
-                  />
-                ))}
+                {exampleRows(mod.examples).map((row) =>
+                  row.wide ? (
+                    <Example key={row.example.slug} mod={mod} at={row} ids={ids.example} />
+                  ) : (
+                    <div className={styles.pair} key={row.left[0]!.example.slug}>
+                      {[row.left, row.right].map(
+                        (half, i) =>
+                          half.length > 0 && (
+                            <div className={styles.half} key={i}>
+                              {half.map((at) => (
+                                <Example
+                                  key={at.example.slug}
+                                  mod={mod}
+                                  at={at}
+                                  ids={ids.example}
+                                />
+                              ))}
+                            </div>
+                          )
+                      )}
+                    </div>
+                  )
+                )}
               </div>
             </Section>
           )}
