@@ -3696,6 +3696,14 @@
           "tags": [
             "Button"
           ],
+          "text": "A `link` button's spinner and `prefix`/`suffix` icons sit 0.5em from the label and centred on the text, like the other types; before they touched the label and sat high on the baseline. An icon-only link gets no extra space."
+        },
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "Button"
+          ],
           "text": "`text` and `link` buttons show a solid 2px `border.focus` ring on keyboard focus (`:focus-visible`); before they showed nothing. Mouse clicks still leave no ring."
         },
         {
@@ -10564,6 +10572,14 @@
             "Button"
           ],
           "text": "**Breaking:** the `success` prop is removed. It only tinted a `default` button green (a `primary` one stayed blue), which read as a fourth kind of button. For a done state such as Copy turning into Copied!, change the label and add a `CheckIcon` prefix. The `color.bg.success` and `color.border.success` tokens stay. The Button examples now show every type, and `danger` on both `default` and `primary`."
+        },
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "Button"
+          ],
+          "text": "A `link` button's spinner and `prefix`/`suffix` icons sit 0.5em from the label and centred on the text, like the other types; before they touched the label and sat high on the baseline. An icon-only link gets no extra space."
         },
         {
           "version": "0.7.0",

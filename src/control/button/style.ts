@@ -356,6 +356,12 @@ export const useStyle = createUseStyles((theme: Theme) => ({
     },
     '&:hover': { color: theme.color.brand.hover },
     '&:active': { color: theme.color.brand.active },
+    // Inline, so the root's flex gap does not apply and an icon would sit on
+    // the text baseline, high and touching the label. Centre it on the text
+    // and space it with a margin of the same 0.5em instead.
+    '& $buttonIcon, & $spinner': { verticalAlign: '-0.225em' },
+    '& $lead': { marginRight: '0.5em' },
+    '& $trail': { marginLeft: '0.5em' },
     '&$disabled': {
       cursor: 'default',
       color: theme.color.text.muted,
@@ -390,4 +396,6 @@ export const useStyle = createUseStyles((theme: Theme) => ({
   spinner: {
     ...theme.recipe.spinner,
   },
+  lead: {},
+  trail: {},
 }));
