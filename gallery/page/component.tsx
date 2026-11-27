@@ -16,6 +16,7 @@ import { highlight, useHighlightStyle } from '../part/highlight.js';
 import { IconGrid } from '../part/icon-grid.js';
 import { Lead } from '../part/lead.js';
 import { createSlugger, headingTexts, Markdown } from '../part/markdown.js';
+import { ModuleGrid } from '../part/module-card.js';
 import { PropsTable } from '../part/props-table.js';
 import { TokensTable } from '../part/tokens-table.js';
 
@@ -187,7 +188,9 @@ export const ComponentPage = () => {
   // Usage `### Actions` keeps `actions`, the example after it gets `actions-1`.
   const slug = createSlugger();
   for (const text of headingTexts(usage)) slug(text);
+  const parts = childrenOf(mod);
   const ids = {
+    parts: slug('Parts'),
     examples: slug('Examples'),
     example: new Map(mod.examples.map((e) => [e.slug, slug(e.title)])),
     icons: slug('All icons'),
@@ -228,6 +231,14 @@ export const ComponentPage = () => {
           </Stack>
 
           {usage && <Markdown source={usage} from={mod.docPath} />}
+
+          {/* The modules nested under this one in categories.mjs: the overview
+              leaves them out, since they are only used inside this one. */}
+          {parts.length > 0 && (
+            <Section title="Parts" id={ids.parts}>
+              <ModuleGrid mods={parts} showParent={false} />
+            </Section>
+          )}
 
           {mod.examples.length > 0 && (
             <Section title="Examples" id={ids.examples}>

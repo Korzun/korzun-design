@@ -32,19 +32,23 @@ describe('OverviewPage', () => {
     expect(headings.length).toBeGreaterThan(1);
   });
 
-  it('lists Hooks last and a nested module right after its parent, naming it', () => {
+  it('lists Hooks last and leaves nested modules to the parent page', () => {
     mount();
     const headings = screen.getAllByRole('heading', { level: 2 }).map((h) => h.textContent);
     expect(headings.at(-1)).toBe('Hooks');
     const cards = screen.getAllByRole('heading', { level: 3 }).map((h) => h.textContent);
-    const page = cards.indexOf('Page');
-    expect(cards.slice(page, page + 4)).toEqual([
-      'Page',
-      'PageActionsBar',
-      'PageActionsMenu',
-      'PageFooterActions',
-    ]);
-    expect(screen.getAllByText('Page /')).toHaveLength(3);
+    expect(cards).toContain('Page');
+    expect(cards).not.toContain('PageActionsBar');
+    expect(cards).not.toContain('CardRow');
+    expect(screen.queryByText('Page /')).toBeNull();
+  });
+
+  it('still finds a nested module by search, naming its parent', async () => {
+    mount();
+    await userEvent.type(screen.getByRole('textbox', { name: 'Search components' }), 'PageActions');
+    const cards = screen.getAllByRole('heading', { level: 3 }).map((h) => h.textContent);
+    expect(cards).toEqual(['PageActionsBar', 'PageActionsMenu']);
+    expect(screen.getAllByText('Page /')).toHaveLength(2);
   });
 
   it('gives each card a lazy, inert thumbnail of its preview', () => {
