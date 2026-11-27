@@ -4,7 +4,7 @@
  * are disabled or loading to match, so every way out is gated the same.
  */
 import { Stack } from '@korzun/design/component';
-import { Button, Dialog, Switch } from '@korzun/design/control';
+import { Button, Modal, Switch } from '@korzun/design/control';
 import { useState } from 'react';
 
 export default function NotDismissable() {
@@ -13,7 +13,7 @@ export default function NotDismissable() {
   return (
     <Stack align="start">
       <Button onClick={() => setOpen(true)}>Open busy dialog</Button>
-      <Dialog
+      <Modal
         open={open}
         onClose={() => setOpen(false)}
         canDismiss={!saving}
@@ -33,7 +33,7 @@ export default function NotDismissable() {
           Escape and the backdrop are ignored while the request is in flight.
           <Switch name="saving" label="Request in flight" checked={saving} onChange={setSaving} />
         </Stack>
-      </Dialog>
+      </Modal>
     </Stack>
   );
 }

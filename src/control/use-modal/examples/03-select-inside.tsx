@@ -4,7 +4,7 @@
  * `Select` gets card corners.
  */
 import { Stack, Surface, Text } from '@korzun/design/component';
-import { Button, Select, useModalDialog } from '@korzun/design/control';
+import { Button, Select, useModal } from '@korzun/design/control';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { useState } from 'react';
 
@@ -24,7 +24,7 @@ export default function SelectInside() {
   const [isOpen, setIsOpen] = useState(false);
   const [shelf, setShelf] = useState<string | undefined>('Reading');
   const close = () => setIsOpen(false);
-  const ref = useModalDialog(isOpen, close);
+  const ref = useModal(isOpen, close);
   return (
     <Stack align="start">
       <Button onClick={() => setIsOpen(true)}>Move book</Button>

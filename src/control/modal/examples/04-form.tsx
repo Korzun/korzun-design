@@ -4,7 +4,7 @@
  * `loading` Save keep it open until the request finishes.
  */
 import { Stack, Text } from '@korzun/design/component';
-import { Button, Dialog, Select, TextInput } from '@korzun/design/control';
+import { Button, Modal, Select, TextInput } from '@korzun/design/control';
 import { useState } from 'react';
 
 const SHELVES = ['Reading', 'To read', 'Finished', 'Abandoned'];
@@ -27,7 +27,7 @@ export default function Form() {
     <Stack align="start">
       <Button onClick={() => setOpen(true)}>Edit book</Button>
       <Text tone="muted">Saved: {saved}</Text>
-      <Dialog
+      <Modal
         open={open}
         onClose={() => setOpen(false)}
         canDismiss={!saving}
@@ -54,7 +54,7 @@ export default function Form() {
             onChange={setShelf}
           />
         </Stack>
-      </Dialog>
+      </Modal>
     </Stack>
   );
 }

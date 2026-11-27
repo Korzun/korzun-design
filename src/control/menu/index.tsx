@@ -68,7 +68,7 @@ const tabbableBeside = (
  * Escape, or activating an item, closes and returns focus to the trigger. Tab
  * closes and moves focus on from the trigger. An outside pointer-down closes
  * without moving focus. Escape and outside presses go to the innermost open
- * layer first (a Select opened over the menu, a Dialog around it).
+ * layer first (a Select opened over the menu, a Modal around it).
  */
 export function Menu({
   trigger,

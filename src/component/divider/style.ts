@@ -5,7 +5,7 @@ type StyleProps = { bleed: string | null };
 
 export const useStyle = createUseStyles((theme: Theme) => ({
   root: {
-    // Bleed: cancel the Card or Dialog body padding so the rule meets the box edges.
+    // Bleed: cancel the Card or Modal body padding so the rule meets the box edges.
     marginLeft: ({ bleed }: StyleProps) => (bleed ? `-${bleed}` : 0),
     marginRight: ({ bleed }: StyleProps) => (bleed ? `-${bleed}` : 0),
     display: 'flex',

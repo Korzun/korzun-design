@@ -40,7 +40,7 @@ No `className`. The label is linked to the input with a generated id.
 - Do set `layout="horizontal"` and `dense` when it sits among other form fields
   in a `Card`; otherwise the label silently disappears.
 - Do pick a `chipColor` that matches how the same values are tagged elsewhere.
-- Do use it inside a `Dialog`: the dropdown opens inside the open dialog, so it
+- Do use it inside a `Modal`: the dropdown opens inside the open dialog, so it
   is not hidden behind it (see [popover](popover.md)).
 - Don't rely on `name` for form submission.
 
@@ -328,12 +328,12 @@ export default function FormRow() {
 
 ### In a dialog
 
-The suggestion list opens inside an open `Dialog` that contains the field,
+The suggestion list opens inside an open `Modal` that contains the field,
 so it works in a modal.
 
 ```tsx
 import { Stack, Text } from '@korzun/design/component';
-import { Button, ChipsInput, Dialog } from '@korzun/design/control';
+import { Button, ChipsInput, Modal } from '@korzun/design/control';
 import { useState } from 'react';
 
 const SUBJECTS = ['Astronomy', 'Biology', 'Cooking', 'History', 'Poetry', 'Travel'];
@@ -345,7 +345,7 @@ export default function InDialog() {
     <Stack align="start">
       <Button onClick={() => setOpen(true)}>Edit subjects</Button>
       <Text tone="muted">Subjects: {subjects.join(', ') || 'none'}</Text>
-      <Dialog
+      <Modal
         open={open}
         onClose={() => setOpen(false)}
         title="Edit subjects"
@@ -361,7 +361,7 @@ export default function InDialog() {
           onChange={setSubjects}
           placeholder="Add subject…"
         />
-      </Dialog>
+      </Modal>
     </Stack>
   );
 }

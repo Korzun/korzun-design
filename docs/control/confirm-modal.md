@@ -11,19 +11,19 @@ category: Overlays
 
 <!-- /generated:import -->
 
-A ready-made yes/no modal built on [`Dialog`](dialog.md): a title, a body
+A ready-made yes/no modal built on [`Modal`](modal.md): a title, a body
 (`children`), and a footer with a text Cancel and a primary Confirm button. It
 is always mounted and fully controlled by `isOpen`.
 
 Use something else for: a modal with its own form or more than two actions
-(use [`Dialog`](dialog.md) for anything that is not yes/no), or a non-blocking
+(use [`Modal`](modal.md) for anything that is not yes/no), or a non-blocking
 notice (toast).
 
 ## Usage
 
 ### Behaviour to know
 
-- Footer buttons already get `md` corners from `Dialog`'s depth; the dialog uses
+- Footer buttons already get `md` corners from `Modal`'s depth; the dialog uses
   `recipe.modal.dialog` (`radius.lg`, it sits on the page). See
   [corners](../corners.md).
 - `onCancel` is the single dismissal path, so whatever you do there runs for

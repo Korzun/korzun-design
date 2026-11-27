@@ -26,7 +26,7 @@ Find where the element sits, then read its radius from this table:
 | Where the element sits | Radius | Examples |
 |---|---|---|
 | On the page background | `lg` | `Card`, modal dialog (`recipe.modal.dialog`), and any control directly on a `Page`: `Button`, `Select`, `CardRow`, text fields, `Tag` (automatic) |
-| Inside a card or modal | `md` | inputs and their shaded rows, Buttons, Selects, Tags and SegmentedControls in a Card or Dialog (automatic), shaded rows (`recipe.row`), inset boxes |
+| Inside a card or modal | `md` | inputs and their shaded rows, Buttons, Selects, Tags and SegmentedControls in a Card or Modal (automatic), shaded rows (`recipe.row`), inset boxes |
 | Inside one of those | `sm` | a chip inside an input, controls in a nested Card, CardRow, inset box (`Surface`) or Popover (automatic), a menu item, a Switch track in a shaded row |
 | Flush with its parent (zero inset, edges touch) | the parent's radius | an unlabelled Select's trigger, an input filling its row |
 | Inset 4px or less from its parent | `calc(parent − inset)` | a Switch thumb 2px inside a 4px track is 2px |
@@ -45,14 +45,14 @@ pass no radius prop:
 | Depth | Radius | Where |
 |---|---|---|
 | 0 | `lg` (16px) | On the page background, inside a `Page` |
-| 1 | `md` (8px) | Inside a `Card`, `CardRow`, `Alert` or `Dialog` on the page |
+| 1 | `md` (8px) | Inside a `Card`, `CardRow`, `Alert` or `Modal` on the page |
 | 2+ | `sm` (4px) | One more level in; deeper levels stay `sm` |
-| none | each component's old default | No `Page`, `Dialog`, `Card`, `CardRow`, `Alert` or `Surface` above it (tests, a component rendered on its own) |
+| none | each component's old default | No `Page`, `Modal`, `Card`, `CardRow`, `Alert` or `Surface` above it (tests, a component rendered on its own) |
 
 Who provides depth:
 
 - `Page` provides 0, to its header, content and footer actions.
-- `Dialog` provides 1 to its header, body and footer.
+- `Modal` provides 1 to its header, body and footer.
 - `Card`, `CardRow` and `Alert` each provide one level deeper than where
   they sit, so a Card in a Card steps down.
 - `Popover` (and so `Menu` and the `Select` list) provides a fixed 2: a
@@ -67,7 +67,7 @@ radius. For a hand-made box that holds Buttons or Selects, wrap its contents
 in `<Surface>` and read its own radius with `useSurfaceRadius()`; see
 [surface](component/surface.md).
 
-Hand-drawn boxes (your own `recipe.card.shell` or `recipe.row` styles, a `useModalDialog` modal) are invisible to depth: wrap their contents in `Surface`.
+Hand-drawn boxes (your own `recipe.card.shell` or `recipe.row` styles, a `useModal` modal) are invisible to depth: wrap their contents in `Surface`.
 
 An explicit prop (`Button radius`, `Select surface`) is an **override** and
 always wins over depth. It pins that radius even where depth would step down,

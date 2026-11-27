@@ -36,12 +36,12 @@ only if it is a `number`; a numeric string displays as empty.
 ### Corners
 
 The add button follows surface depth: 16px directly on a Page, 8px in a Card
-or Dialog, 4px deeper (8px with no Page, Dialog, Card, CardRow, Alert or Surface above it).
+or Modal, 4px deeper (8px with no Page, Modal, Card, CardRow, Alert or Surface above it).
 
 ### Behaviour to know
 
 - The add button is 8px outside any surface and follows surface depth inside
-  one (a Card body, a Dialog, a Popover).
+  one (a Card body, a Modal, a Popover).
 - Inputs have no labels; use `placeholder` to say what each column is.
 - Every remove button is titled "Remove row" (its accessible name); they are not
   distinguished per row.

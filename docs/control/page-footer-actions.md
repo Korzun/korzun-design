@@ -25,7 +25,7 @@ at every width). `Page` renders it after its children when you pass
 
 Use something else for: header actions (`PageActionsBar` / `PageActionsMenu`
 via `Page headerActions`), a Card's own submit (`Button` in the Card `footer`),
-modal buttons (`Dialog` footer).
+modal buttons (`Modal` footer).
 
 ## Usage
 

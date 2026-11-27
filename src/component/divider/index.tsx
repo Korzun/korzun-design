@@ -19,7 +19,7 @@ export type DividerProps = {
   actions?: ReactNode;
   /** Where the actions sit. When it equals `align`, label and actions share one group, label first. */
   actionsAlign?: DividerAlign;
-  /** Reach the edges of the Card or Dialog body the divider sits in, cancelling the body's padding. Defaults to `true` directly inside a Card or Dialog body and `false` anywhere else, where the line spans its container. `true` does nothing outside a Card or Dialog. */
+  /** Reach the edges of the Card or Modal body the divider sits in, cancelling the body's padding. Defaults to `true` directly inside a Card or Modal body and `false` anywhere else, where the line spans its container. `true` does nothing outside a Card or Modal. */
   bleed?: boolean;
 };
 
@@ -32,7 +32,7 @@ type Body = { padding: string; depth: number | undefined };
 const BodyContext = createContext<Body | null>(null);
 
 /**
- * Internal. Marks a padded body (Card, Dialog) so a Divider directly inside it
+ * Internal. Marks a padded body (Card, Modal) so a Divider directly inside it
  * cancels `padding` and meets the box's edges. It applies only at `depth`, the
  * depth inside that body: a CardRow, Alert, Surface or nested Card in between
  * changes the depth, so a divider in there spans its own box instead.
@@ -46,7 +46,7 @@ const isPresent = (node: ReactNode): boolean =>
 
 /**
  * A horizontal rule splitting content into sections, optionally labelled. Directly inside a Card
- * or Dialog body it reaches the box's edges.
+ * or Modal body it reaches the box's edges.
  */
 export const Divider = ({
   children,

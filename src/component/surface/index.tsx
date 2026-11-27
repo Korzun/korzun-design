@@ -5,7 +5,7 @@ import type { Theme } from '../../theme/theme.js';
 
 const SurfaceDepthContext = createContext<number | undefined>(undefined);
 
-/** The surface depth above this point: 0 on the page, 1 in a Card or Dialog, and so on. `undefined` with no Page, Dialog, Card, CardRow, Alert or Surface above it. */
+/** The surface depth above this point: 0 on the page, 1 in a Card or Modal, and so on. `undefined` with no Page, Modal, Card, CardRow, Alert or Surface above it. */
 export const useSurfaceDepth = (): number | undefined => useContext(SurfaceDepthContext);
 
 /** Internal. Marks everything inside as sitting at `depth`. */

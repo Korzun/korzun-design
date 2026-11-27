@@ -1,6 +1,6 @@
 ---
 title: Divider
-description: A horizontal rule that splits content into sections, optionally labelled and with actions; in a Card or Dialog body it reaches the edges.
+description: A horizontal rule that splits content into sections, optionally labelled and with actions; in a Card or Modal body it reaches the edges.
 category: Layout
 ---
 # Divider
@@ -22,7 +22,7 @@ import {
 
 A horizontal rule that splits content into sections, optionally with a label
 ("Devices", "Validation") and/or actions sitting on the line. Directly inside a
-`Card` or `Dialog` body it cancels the body's padding, so the line meets the
+`Card` or `Modal` body it cancels the body's padding, so the line meets the
 box's edges; anywhere else it spans its container. Renders `role="separator"`.
 
 `CardDivider`, `CardDividerProps` and `CardDividerAlign` are the old names,
@@ -40,7 +40,7 @@ No `className`.
 ### Surprising behaviour
 
 - **The bleed only reaches the nearest body.** A divider bleeds when the Card
-  or Dialog body is the nearest box around it. Inside a `CardRow`, `Alert`,
+  or Modal body is the nearest box around it. Inside a `CardRow`, `Alert`,
   `Surface` or nested `Card` it spans that box instead. `bleed={false}` opts
   out in a body; `bleed` does nothing outside one.
 - **A padded wrapper defeats it.** In a Card body but inside your own padded
@@ -198,7 +198,7 @@ export default function Actions() {
 
 ### Outside a Card
 
-Anywhere but directly in a Card or Dialog body (on the page, in a CardRow, a hand-made
+Anywhere but directly in a Card or Modal body (on the page, in a CardRow, a hand-made
 `Surface` box or a Popover) the line spans its container. In a Card body it reaches the
 borders; `bleed={false}` keeps it inside the padding there.
 
@@ -253,7 +253,7 @@ export default function Anywhere() {
 | `actions` | `ReactNode` |  | Optional controls rendered on the line (e.g. a bulk-action button); keep them one text line tall. `null`, `undefined` and `false` count as absent. |
 | `actionsAlign` | `'left' \| 'center' \| 'right'` | `'right'` | Where the actions sit. When it equals `align`, label and actions share one group, label first. |
 | `align` | `'left' \| 'center' \| 'right'` | `'left'` | Where the label sits. `'left'` and `'right'` hug that edge with a short stub of line poking past; `'center'` leaves equal line on both sides. |
-| `bleed` | `boolean` |  | Reach the edges of the Card or Dialog body the divider sits in, cancelling the body's padding. Defaults to `true` directly inside a Card or Dialog body and `false` anywhere else, where the line spans its container. `true` does nothing outside a Card or Dialog. |
+| `bleed` | `boolean` |  | Reach the edges of the Card or Modal body the divider sits in, cancelling the body's padding. Defaults to `true` directly inside a Card or Modal body and `false` anywhere else, where the line spans its container. `true` does nothing outside a Card or Modal. |
 
 ### Types
 

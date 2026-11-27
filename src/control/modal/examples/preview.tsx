@@ -1,9 +1,9 @@
 /** Preview */
-import { Button, Dialog } from '@korzun/design/control';
+import { Button, Modal } from '@korzun/design/control';
 
 export default function Preview() {
   return (
-    <Dialog
+    <Modal
       open
       onClose={() => {}}
       title="Fixes waiting"
@@ -19,6 +19,6 @@ export default function Preview() {
       }
     >
       Three metadata fixes are waiting for review.
-    </Dialog>
+    </Modal>
   );
 }

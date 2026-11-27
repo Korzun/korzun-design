@@ -5,7 +5,7 @@
  * starts open; Review fixes opens it again.
  */
 import { Stack, Text } from '@korzun/design/component';
-import { Button, Dialog } from '@korzun/design/control';
+import { Button, Modal } from '@korzun/design/control';
 import { useState } from 'react';
 
 export default function Basic() {
@@ -19,7 +19,7 @@ export default function Basic() {
     <Stack align="start">
       <Button onClick={() => setOpen(true)}>Review fixes</Button>
       <Text tone="muted">Saved: {saves}</Text>
-      <Dialog
+      <Modal
         open={open}
         onClose={() => setOpen(false)}
         title="Fixes waiting"
@@ -35,7 +35,7 @@ export default function Basic() {
         }
       >
         Three metadata fixes are waiting for review.
-      </Dialog>
+      </Modal>
     </Stack>
   );
 }

@@ -103,7 +103,7 @@ a separator.
 
 ## A custom modal
 
-Use `Dialog` for anything that is not a yes/no question: a title, a body, and
+Use `Modal` for anything that is not a yes/no question: a title, a body, and
 an optional footer. Put form errors in the form's `Stack` with `ErrorMessage`,
 and show loading with `Spinner` (or `loading` on the Button).
 
@@ -125,7 +125,7 @@ async function save(formData: FormData) {
   }
 }
 
-<Dialog
+<Modal
   open={open}
   onClose={() => setOpen(false)}
   title="Edit progress"
@@ -143,17 +143,17 @@ async function save(formData: FormData) {
       <ErrorMessage>{error}</ErrorMessage>
     </Stack>
   </form>
-</Dialog>
+</Modal>
 ```
 
 - A panel that loads on its own shows a `Spinner`:
   `<Stack align="center"><Spinner label="Loading books" /></Stack>`.
-- Buttons in the footer get Dialog's corners from depth; don't set `radius`.
-- `Dialog` stays mounted: toggle `open`, never render it conditionally.
+- Buttons in the footer get Modal's corners from depth; don't set `radius`.
+- `Modal` stays mounted: toggle `open`, never render it conditionally.
 - Escape and backdrop clicks call `onClose`, unless `canDismiss` is false.
-- `Select` and `ChipsInput` work inside a `Dialog`.
-- Only for a custom native `<dialog>` that `Dialog` can't express, build on
-  `useModalDialog` (see [use-modal-dialog](control/use-modal-dialog.md)).
+- `Select` and `ChipsInput` work inside a `Modal`.
+- Only for a custom native `<dialog>` that `Modal` can't express, build on
+  `useModal` (see [use-modal](control/use-modal.md)).
 
 ## Notifications
 

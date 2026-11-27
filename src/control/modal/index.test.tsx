@@ -9,7 +9,8 @@ import { renderWithProviders } from '../../test-utils.js';
 import { Button } from '../button/index.js';
 import { Popover } from '../popover/index.js';
 import { Select } from '../select/index.js';
-import { Dialog } from './index.js';
+import { useModal, useModalDialog } from '../use-modal/index.js';
+import { Dialog, Modal } from './index.js';
 
 let showModal: Mock<() => void>;
 let close: Mock<() => void>;
@@ -27,28 +28,36 @@ const cancel = (container: HTMLElement) =>
 const radiusOf = (name: string) =>
   getComputedStyle(screen.getByText(name).closest('[role="button"]')!).borderRadius;
 
-describe('Dialog', () => {
+describe('Modal', () => {
+  it('Dialog is the same component', () => {
+    expect(Dialog).toBe(Modal);
+  });
+
+  it('useModalDialog is the same hook as useModal', () => {
+    expect(useModalDialog).toBe(useModal);
+  });
+
   it('calls showModal when mounted open', () => {
-    renderWithProviders(<Dialog open onClose={() => {}} title="T" />);
+    renderWithProviders(<Modal open onClose={() => {}} title="T" />);
     expect(showModal).toHaveBeenCalledOnce();
   });
 
   it('calls close when open turns false', () => {
-    const { rerender } = renderWithProviders(<Dialog open onClose={() => {}} title="T" />);
-    rerender(<Dialog open={false} onClose={() => {}} title="T" />);
+    const { rerender } = renderWithProviders(<Modal open onClose={() => {}} title="T" />);
+    rerender(<Modal open={false} onClose={() => {}} title="T" />);
     expect(close).toHaveBeenCalled();
   });
 
   it('Escape calls onClose', () => {
     const onClose = vi.fn();
-    const { container } = renderWithProviders(<Dialog open onClose={onClose} title="T" />);
+    const { container } = renderWithProviders(<Modal open onClose={onClose} title="T" />);
     cancel(container);
     expect(onClose).toHaveBeenCalledOnce();
   });
 
   it('a backdrop press and release calls onClose', () => {
     const onClose = vi.fn();
-    const { container } = renderWithProviders(<Dialog open onClose={onClose} title="T" />);
+    const { container } = renderWithProviders(<Modal open onClose={onClose} title="T" />);
     const dialog = container.querySelector('dialog')!;
     fireEvent.mouseDown(dialog);
     fireEvent.click(dialog);
@@ -58,7 +67,7 @@ describe('Dialog', () => {
   it('canDismiss={false} blocks Escape and backdrop', () => {
     const onClose = vi.fn();
     const { container } = renderWithProviders(
-      <Dialog open onClose={onClose} title="T" canDismiss={false} />
+      <Modal open onClose={onClose} title="T" canDismiss={false} />
     );
     cancel(container);
     const dialog = container.querySelector('dialog')!;
@@ -70,9 +79,9 @@ describe('Dialog', () => {
   it('blocks Escape after canDismiss flips to false while open', () => {
     const onClose = vi.fn();
     const { container, rerender } = renderWithProviders(
-      <Dialog open onClose={onClose} title="T" canDismiss />
+      <Modal open onClose={onClose} title="T" canDismiss />
     );
-    rerender(<Dialog open onClose={onClose} title="T" canDismiss={false} />);
+    rerender(<Modal open onClose={onClose} title="T" canDismiss={false} />);
     cancel(container);
     expect(onClose).not.toHaveBeenCalled();
   });
@@ -82,23 +91,23 @@ describe('Dialog', () => {
     showModal.mockImplementation(function (this: HTMLDialogElement) {
       this.setAttribute('open', '');
     });
-    renderWithProviders(<Dialog open onClose={() => {}} title="Fixes waiting" />);
+    renderWithProviders(<Modal open onClose={() => {}} title="Fixes waiting" />);
     expect(screen.getByRole('dialog', { name: 'Fixes waiting', hidden: true })).toBeInTheDocument();
   });
 
   it('draws no footer bar without footer, and one with it', () => {
     const { container, rerender } = renderWithProviders(
-      <Dialog open onClose={() => {}} title="T">
+      <Modal open onClose={() => {}} title="T">
         Body
-      </Dialog>
+      </Modal>
     );
-    expect(container.querySelector('[data-dialog-footer]')).toBeNull();
+    expect(container.querySelector('[data-modal-footer]')).toBeNull();
     rerender(
-      <Dialog open onClose={() => {}} title="T" footer={<span>Foot</span>}>
+      <Modal open onClose={() => {}} title="T" footer={<span>Foot</span>}>
         Body
-      </Dialog>
+      </Modal>
     );
-    expect(container.querySelector('[data-dialog-footer]')).toHaveTextContent('Foot');
+    expect(container.querySelector('[data-modal-footer]')).toHaveTextContent('Foot');
   });
 
   it('footer Buttons are 8px and an explicit radius wins', () => {
@@ -107,7 +116,7 @@ describe('Dialog', () => {
         <Button radius="modal">Standalone modal</Button>
         <Button radius="inset">Standalone inset</Button>
         <Button>Standalone default</Button>
-        <Dialog
+        <Modal
           open
           onClose={() => {}}
           title="T"
@@ -119,7 +128,7 @@ describe('Dialog', () => {
           }
         >
           <Button>Body default</Button>
-        </Dialog>
+        </Modal>
       </>
     );
     expect(radiusOf('Foot default')).toBe(radiusOf('Standalone modal'));
@@ -131,19 +140,19 @@ describe('Dialog', () => {
 
   it('body Buttons are 8px', () => {
     renderWithProviders(
-      <Dialog open onClose={() => {}} title="T">
+      <Modal open onClose={() => {}} title="T">
         <Button>Body one</Button>
-      </Dialog>
+      </Modal>
     );
     expect(radiusOf('Body one')).toBe('8px');
   });
 
-  it('a Dialog inside a Card resets its contents to depth 1', () => {
+  it('a Modal inside a Card resets its contents to depth 1', () => {
     renderWithProviders(
       <Card title="Card">
-        <Dialog open onClose={() => {}} title="T">
+        <Modal open onClose={() => {}} title="T">
           <Button>In dialog</Button>
-        </Dialog>
+        </Modal>
       </Card>
     );
     expect(radiusOf('In dialog')).toBe('8px');
@@ -153,7 +162,7 @@ describe('Dialog', () => {
     renderWithProviders(
       <>
         <Button radius="modal">Standalone modal</Button>
-        <Dialog
+        <Modal
           open
           onClose={() => {}}
           title="T"
@@ -170,23 +179,23 @@ describe('Dialog', () => {
 
   it.each([false, '', null])('renders no footer bar for footer=%j', (footer) => {
     const { container } = renderWithProviders(
-      <Dialog open onClose={() => {}} title="T" footer={footer as React.ReactNode} />
+      <Modal open onClose={() => {}} title="T" footer={footer as React.ReactNode} />
     );
-    expect(container.querySelector('[data-dialog-footer]')).toBeNull();
+    expect(container.querySelector('[data-modal-footer]')).toBeNull();
   });
 
-  it('a Dialog nested in a footer keeps its body Buttons at 8px', () => {
+  it('a Modal nested in a footer keeps its body Buttons at 8px', () => {
     renderWithProviders(
       <>
         <Button>Standalone default</Button>
-        <Dialog
+        <Modal
           open
           onClose={() => {}}
           title="Outer"
           footer={
-            <Dialog open onClose={() => {}} title="Inner">
+            <Modal open onClose={() => {}} title="Inner">
               <Button>Inner body</Button>
-            </Dialog>
+            </Modal>
           }
         />
       </>
@@ -199,9 +208,9 @@ describe('Dialog', () => {
     const spy = vi.fn();
     renderWithProviders(
       <div onClick={spy}>
-        <Dialog open onClose={() => {}} title="T">
+        <Modal open onClose={() => {}} title="T">
           <p>Inside</p>
-        </Dialog>
+        </Modal>
       </div>
     );
     await user.click(screen.getByText('Inside'));
@@ -210,7 +219,7 @@ describe('Dialog', () => {
 
   it('applies className to the dialog', () => {
     const { container } = renderWithProviders(
-      <Dialog open onClose={() => {}} title="T" className="custom" />
+      <Modal open onClose={() => {}} title="T" className="custom" />
     );
     expect(container.querySelector('dialog')).toHaveClass('custom');
   });
@@ -237,9 +246,9 @@ describe('Dialog', () => {
           <Popover anchorRef={anchor} open onClose={onPopoverClose}>
             <div>popover content</div>
           </Popover>
-          <Dialog open={dialogOpen} onClose={() => {}} title="T">
+          <Modal open={dialogOpen} onClose={() => {}} title="T">
             <p>Inside</p>
-          </Dialog>
+          </Modal>
         </>
       );
     };
@@ -253,7 +262,7 @@ describe('Dialog', () => {
       return onPopoverClose;
     };
 
-    it('a Dialog opened over an open Popover: Escape does not close the popover', () => {
+    it('a Modal opened over an open Popover: Escape does not close the popover', () => {
       const onPopoverClose = setup();
       const event = new KeyboardEvent('keydown', {
         key: 'Escape',
@@ -264,28 +273,28 @@ describe('Dialog', () => {
         screen.getByText('Inside').dispatchEvent(event);
       });
       expect(onPopoverClose).not.toHaveBeenCalled();
-      // Not prevented, so a real browser's native cancel closes the Dialog.
+      // Not prevented, so a real browser's native cancel closes the Modal.
       expect(event.defaultPrevented).toBe(false);
     });
 
-    it('a mousedown inside an open Dialog does not close a popover beneath it', () => {
+    it('a mousedown inside an open Modal does not close a popover beneath it', () => {
       const onPopoverClose = setup();
       fireEvent.mouseDown(screen.getByText('Inside'));
       expect(onPopoverClose).not.toHaveBeenCalled();
     });
 
-    it('a Select list inside a Dialog: first Escape closes the list, Dialog onClose not called', async () => {
+    it('a Select list inside a Modal: first Escape closes the list, Modal onClose not called', async () => {
       const user = userEvent.setup();
       const onClose = vi.fn();
       renderWithProviders(
-        <Dialog open onClose={onClose} title="T">
+        <Modal open onClose={onClose} title="T">
           <Select
             name="genre"
             options={['Fantasy', 'Horror']}
             value={undefined}
             placeholder="Pick…"
           />
-        </Dialog>
+        </Modal>
       );
       screen.getByRole('button', { name: 'Pick…' }).focus();
       await user.keyboard('{ArrowDown}');

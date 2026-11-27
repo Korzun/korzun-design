@@ -30,7 +30,7 @@ The generator lives on `main`. Run `ls scripts/docs-gen/cli.mjs`.
 
 1. `git show HEAD:docs/<area>/<slug>.md`: the old doc, before you edit anything. Keep it open; steps 2, 3 and 6 check against it.
 2. `src/<area>/<module>/`: `index.tsx` (or `types.ts`), `style.ts`, `index.test.tsx`.
-3. The module's changelog entries. A tag list can name several modules (`- [Popover, Select, ChipsInput, Dialog] …`), so match the name anywhere in it:
+3. The module's changelog entries. A tag list can name several modules (`- [Popover, Select, ChipsInput, Modal] …`), so match the name anywhere in it:
    ```
    grep -nE "^\s*- \[([^]]*, )?<Name>(, [^]]*)?\]" CHANGELOG.md
    ```
@@ -170,10 +170,10 @@ A phone-width frame is still a browser tab: `env(safe-area-inset-*)` is 0 there,
 - Each description sentence is shown by the demo. "Set `ariaLabel` when the trigger is an icon" means the demo's trigger is an icon `Button` with `ariaLabel`.
 - Examples follow the Usage and Do / don't of this doc and of every component they use (read `docs/component/surface.md` before using `Surface`). An example never demonstrates a use those docs advise against (a `Surface` with no drawn box around it).
 - `01` is the canonical compact usage, the first demo on the component page. The overview thumbnail is the preview below, not `01`.
-- A lone trigger (a `Button` that opens a `Dialog`, a fragment root `<>`) goes in an `Inline` or a `Stack align="start"`: at the root of the frame it stretches to the full width.
+- A lone trigger (a `Button` that opens a `Modal`, a fragment root `<>`) goes in an `Inline` or a `Stack align="start"`: at the root of the frame it stretches to the full width.
 - A readout ("Chosen: …", "Saved: …") goes under the trigger or row of buttons, never beside or above it (except over a `side="top"` trigger, below): `<Stack align="start">`, the controls (several in an `Inline`), then `<Text tone="muted">`.
 - Groups that show one value each (layouts, surfaces, radii) get a caption naming it: `<Stack gap="xl">` of groups, each a `<Stack gap="xs">` with `<Text size="sm" tone="muted">` (`layout="horizontal"`) above its demo. Labels in a `horizontal` form stay short (under about 6rem, "Index", "Width") so the fields line up.
-- The first example of an overlay module (Dialog, ConfirmModal, useModalDialog, Popover, Menu, Select) starts open: `useState(true)` for a controlled `open`, or a trigger that opens once on mount (Menu 01, Select 01). The frame hands back the focus the overlay takes while it loads, so the docs page keeps its keyboard.
+- The first example of an overlay module (Modal, ConfirmModal, useModal, Popover, Menu, Select) starts open: `useState(true)` for a controlled `open`, or a trigger that opens once on mount (Menu 01, Select 01). The frame hands back the focus the overlay takes while it loads, so the docs page keeps its keyboard.
 - An example with an overlay places its trigger so the overlay opens on the side the example is about (a `side="top"` trigger sits below other content, its readout included, or the overlay flips down before the frame can make room). The frame adds room above for a `side="top"` overlay, and room below for a list that flipped upward for lack of room, so it opens downward as it would on a page.
 - A description talks about the component, never the demo frame (no "to stay inside the demo"). No prop (`side`, a large `gap`) is set only to fit the frame. When the frame clips an overlay and the example is as it should be, report a gallery defect.
 - Link items and `to` props stay real links. Clicking one in a demo shows the frame's "The example navigated to…" page; that is expected.
@@ -198,7 +198,7 @@ export default function Preview() {
 ```
 
 - Show the component and nothing else, like an Ant Design overview card: one instance or a tight row of variants. No `Text` readouts or explanations, no wrapper `Card` unless the module only exists inside one (CardRow), no buttons that drive a demo.
-- An overlay (Dialog, Menu, Popover) is shown open. A phone-only module takes `@viewport mobile` as in its `01`. The thumbnail frame is about 430px wide, under the 640px mobile breakpoint, so a module hidden on phones (PageActionsBar, NavDesktop) takes `@viewport desktop`: the thumbnail lays it out at 680px and scales it to fit. Never override a module's own breakpoint styles to show it.
+- An overlay (Modal, Menu, Popover) is shown open. A phone-only module takes `@viewport mobile` as in its `01`. The thumbnail frame is about 430px wide, under the 640px mobile breakpoint, so a module hidden on phones (PageActionsBar, NavDesktop) takes `@viewport desktop`: the thumbnail lays it out at 680px and scales it to fit. Never override a module's own breakpoint styles to show it.
 - It is not interactive, so the wiring rule above does not apply: a required handler may be `() => {}` (the grep check excludes `preview.tsx`).
 - Check it: `http://localhost:<port>/#/frame/<slug>/preview?fit=center&theme=light` at a 430×240 viewport, in both themes.
 
@@ -209,7 +209,7 @@ Coverage checklist (REQUIRED; fill in every row, it goes in your report). Each r
 | each union-typed prop (`type`, `tone`, `size`, `variant`, `side`, `align`, `surface`, `gap`, …) | every value, each visible on its own and labelled | |
 | each state the module has (`disabled`, `loading`, error, empty, read-only) | each, visible on its own and held: a state reached only briefly (a timer, an in-flight request) gets a toggle that keeps it on, and has its own shot | |
 | the old doc's main `## Example` | list every prop and item kind it uses (Menu: `align="end"`, link item, action item, `Icon`, `danger`, `separatorBefore`); one example contains all of them | |
-| the common composition with its usual neighbours (in a `Card`, `Dialog`, form, row) | one | |
+| the common composition with its usual neighbours (in a `Card`, `Modal`, form, row) | one | |
 | every interactive control wired to state with a visible effect | no do-nothing handler (grep above prints nothing, each handler read); each control's effect named | all |
 | each description sentence shown by its demo | checked, sentence by sentence | all |
 | examples follow this doc's and the used components' Usage and Do / don't | checked | all |
@@ -244,7 +244,7 @@ site). If one turns up in the module, `git rm` it; examples replace it.
    ```
    S=<scratch>; PORT=$(cat $S/gallery.port); node .claude/skills/document-component/shoot-page.mjs http://localhost:$PORT <slug> $S/<slug>.png
    ```
-   Overlay shots (REQUIRED): one for **every** example that contains an overlay control (Menu, Select, Popover, Dialog, ChipsInput, anything that opens a list or layer), each opened the way a reader opens it, light and dark:
+   Overlay shots (REQUIRED): one for **every** example that contains an overlay control (Menu, Select, Popover, Modal, ChipsInput, anything that opens a list or layer), each opened the way a reader opens it, light and dark:
    ```
    S=<scratch>; PORT=$(cat $S/gallery.port); node .claude/skills/document-component/open-overlay.mjs http://localhost:$PORT <slug> <example-slug> $S/<slug>-<example-slug>-open.png --click "<role>:<name>"
    ```

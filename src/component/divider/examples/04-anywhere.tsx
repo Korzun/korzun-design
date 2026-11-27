@@ -1,5 +1,5 @@
 /** Outside a Card
- * Anywhere but directly in a Card or Dialog body (on the page, in a CardRow, a hand-made
+ * Anywhere but directly in a Card or Modal body (on the page, in a CardRow, a hand-made
  * `Surface` box or a Popover) the line spans its container. In a Card body it reaches the
  * borders; `bleed={false}` keeps it inside the padding there.
  */

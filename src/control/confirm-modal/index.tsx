@@ -2,7 +2,7 @@ import { type ReactNode, useCallback } from 'react';
 
 import { IconProps } from '../../icon/index.js';
 import { Button } from '../button/index.js';
-import { Dialog } from '../dialog/index.js';
+import { Modal } from '../modal/index.js';
 import { useStyle } from './style.js';
 
 export type ConfirmModalProps = {
@@ -57,7 +57,7 @@ export function ConfirmModal({
   }, [onConfirm]);
 
   return (
-    <Dialog
+    <Modal
       open={isOpen}
       onClose={handleCancel}
       canDismiss={!loading}
@@ -89,6 +89,6 @@ export function ConfirmModal({
       }
     >
       {children}
-    </Dialog>
+    </Modal>
   );
 }

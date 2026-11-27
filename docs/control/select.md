@@ -50,7 +50,7 @@ option, not the current value.
 
 ### Inside a dialog
 
-It works inside a `Dialog` or a modal `<dialog>`: the list opens inside the
+It works inside a `Modal` or a modal `<dialog>`: the list opens inside the
 open dialog (see [popover](popover.md)).
 
 ### Styling
@@ -437,7 +437,7 @@ closes the list first and a second Escape closes the dialog.
 
 ```tsx
 import { Stack, Text } from '@korzun/design/component';
-import { Button, Dialog, Select } from '@korzun/design/control';
+import { Button, Modal, Select } from '@korzun/design/control';
 import { useState } from 'react';
 
 const SHELVES = ['To read', 'Reading', 'Finished'];
@@ -449,7 +449,7 @@ export default function InDialog() {
     <Stack align="start">
       <Button onClick={() => setOpen(true)}>Move book</Button>
       <Text tone="muted">Shelf: {shelf ?? 'none'}</Text>
-      <Dialog
+      <Modal
         open={open}
         onClose={() => setOpen(false)}
         title="Move to shelf"
@@ -460,7 +460,7 @@ export default function InDialog() {
         }
       >
         <Select name="shelf" label="Shelf" value={shelf} options={SHELVES} onChange={setShelf} />
-      </Dialog>
+      </Modal>
     </Stack>
   );
 }

@@ -26,7 +26,7 @@ ancestors that clip overflow (rounded cards). It paints **nothing** itself: no
 background, border, shadow, or radius. `Menu`, `Select` and `ChipsInput` build
 their dropdowns on it.
 
-Use something else for: a modal (`Dialog`), page action menus
+Use something else for: a modal (`Modal`), page action menus
 (`PageActionsMenu`, `PageActionsBar`), choosing from a list (`Select`).
 
 ## Usage
@@ -70,8 +70,8 @@ Use something else for: a modal (`Dialog`), page action menus
 
 Escape and outside pointer-down close the innermost open layer first. With
 `onClose`, an open popover joins a layer stack shared with other popovers and
-open `Dialog`s, in the order they opened. A popover registers once its portal
-target resolves, one commit after each opening, so a `Dialog` that mounts
+open `Modal`s, in the order they opened. A popover registers once its portal
+target resolves, one commit after each opening, so a `Modal` that mounts
 already open together with an already-open popover inside it still sits below
 that popover.
 
@@ -79,11 +79,11 @@ that popover.
   unless the event is already `defaultPrevented` (a control such as
   `Select` handled it first). A popover on top calls `onClose` and
   `preventDefault()`s the key, so an enclosing native `<dialog>` does not
-  also fire `cancel` and close. A `Dialog` on top keeps the key: its own
+  also fire `cancel` and close. A `Modal` on top keeps the key: its own
   `cancel` closes it, and the popover beneath stays open.
 - A mousedown closes every layer above the one it lands in (every layer,
   when it lands outside them all), top first. A press in a nested popover
-  closes neither it nor its parent; a press inside a `Dialog` opened over a
+  closes neither it nor its parent; a press inside a `Modal` opened over a
   popover does not close that popover.
 
 ### Styling the surface
@@ -535,15 +535,15 @@ export default function Nested() {
 }
 ```
 
-### In a Dialog
+### In a Modal
 
-A popover whose anchor is inside an open Dialog renders into that dialog, so
-it shows above the backdrop. Escape closes the popover first and the Dialog
+A popover whose anchor is inside an open Modal renders into that dialog, so
+it shows above the backdrop. Escape closes the popover first and the Modal
 on the next press.
 
 ```tsx
 import { Stack, Text } from '@korzun/design/component';
-import { Button, Dialog, Popover } from '@korzun/design/control';
+import { Button, Modal, Popover } from '@korzun/design/control';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { useRef, useState } from 'react';
 
@@ -570,7 +570,7 @@ export default function InDialog() {
   return (
     <Stack align="start">
       <Button onClick={() => setDialogOpen(true)}>Open dialog</Button>
-      <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} title="Edit book">
+      <Modal open={dialogOpen} onClose={() => setDialogOpen(false)} title="Edit book">
         <Stack align="start">
           <Button ref={anchor} onClick={() => setOpen((value) => !value)}>
             Status
@@ -589,7 +589,7 @@ export default function InDialog() {
           </Popover>
           <Text tone="muted">Chosen: {chosen}</Text>
         </Stack>
-      </Dialog>
+      </Modal>
     </Stack>
   );
 }

@@ -51,7 +51,7 @@ export type ButtonProps = React.PropsWithChildren<
     prefix?: ComponentType<IconProps>;
     /**
      * Unset, it follows surface depth: 16px on a page or outside any surface,
-     * 8px in a Card or Dialog, 4px in a Popover or nested Card. Set, it names the
+     * 8px in a Card or Modal, 4px in a Popover or nested Card. Set, it names the
      * surface the button sits on, which sets its corner radius. Pass it only to
      * override; see [corners](../corners.md).
      */

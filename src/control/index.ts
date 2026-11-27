@@ -8,7 +8,6 @@ export {
 export { ChipsInput, type ChipColor, type ChipsInputProps } from './chips-input/index.js';
 export { ConfirmModal, type ConfirmModalProps } from './confirm-modal/index.js';
 export { DateTimeInput, type DateTimeInputProps } from './date-time-input/index.js';
-export { Dialog, type DialogProps } from './dialog/index.js';
 export {
   FieldList,
   type ColumnDescriptor,
@@ -24,6 +23,7 @@ export {
   type MenuProps,
   type MenuTriggerProps,
 } from './menu/index.js';
+export { Dialog, Modal, type DialogProps, type ModalProps } from './modal/index.js';
 export { NumberInput, type NumberInputProps } from './number-input/index.js';
 export { PageActionsBar, type PageActionsBarProps } from './page-actions-bar/index.js';
 export {
@@ -53,4 +53,4 @@ export {
 export { Switch, type SwitchProps, type SwitchRadiusValue } from './switch/index.js';
 export { TextArea, type TextAreaProps } from './text-area/index.js';
 export { TextInput, type TextInputAction, type TextInputProps } from './text-input/index.js';
-export { useModalDialog } from './use-modal-dialog/index.js';
+export { useModal, useModalDialog } from './use-modal/index.js';
