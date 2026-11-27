@@ -7619,7 +7619,7 @@
         "ModalProps"
       ],
       "importLine": "import { Dialog, Modal, type DialogProps, type ModalProps } from '@korzun/design/control'",
-      "body": "A modal on a native `<dialog>` (via `useModal`): a title, a body\n(`children`), and an optional `footer` for actions. It is always mounted and\nfully controlled by `open`. The title names the dialog for assistive tech.\n\n`Dialog` and `DialogProps` are the old names, kept as deprecated aliases.\n\nUse something else for: a yes/no question ([`ConfirmModal`](confirm-modal.md)),\na non-blocking notice (toast).\n\n## Usage\n\n### Behaviour to know\n\n- Escape and a backdrop press-and-release both call `onClose`; it is the\n  single dismissal path. `canDismiss={false}` blocks both.\n- Escape goes to the innermost open layer first: a `Select` list or other\n  popover open inside the dialog closes before the dialog, and a dialog opened\n  over a still-open popover closes before that popover.\n- Always mounted: toggle `open`, don't render it conditionally.\n- Focus is native: `showModal()` moves focus into the dialog and restores it\n  on close.\n- Clicks inside the dialog do not bubble to clickable ancestors.\n- Content is one surface level in: Buttons in the body, header and `footer`\n  (including nested ones inside an `Inline`) default to 8px. An explicit\n  `radius` on a Button still wins.\n\n## Do / don't\n\n- Do use [`ConfirmModal`](confirm-modal.md) for yes/no questions.\n- Do pass `canDismiss={!loading}` while a request runs.\n- Don't set `radius` on Buttons inside a Modal by hand; the depth does it.\n- Don't write your own modal style files; build on `Modal`.\n- Don't render it conditionally (`{open && <Modal …/>}`); toggle `open`.",
+      "body": "A modal on a native `<dialog>` (via [`useModal`](use-modal.md)): a title, a body\n(`children`), and an optional `footer` for actions. It is always mounted and\nfully controlled by `open`. The title names the dialog for assistive tech.\n\n`Dialog` and `DialogProps` are the old names, kept as deprecated aliases.\n\nUse something else for: a yes/no question ([`ConfirmModal`](confirm-modal.md)),\na non-blocking notice (toast).\n\n## Usage\n\n### Behaviour to know\n\n- Escape and a backdrop press-and-release both call `onClose`; it is the\n  single dismissal path. `canDismiss={false}` blocks both.\n- Escape goes to the innermost open layer first: a `Select` list or other\n  popover open inside the dialog closes before the dialog, and a dialog opened\n  over a still-open popover closes before that popover.\n- Always mounted: toggle `open`, don't render it conditionally.\n- Focus is native: `showModal()` moves focus into the dialog and restores it\n  on close.\n- Clicks inside the dialog do not bubble to clickable ancestors.\n- Content is one surface level in: Buttons in the body, header and `footer`\n  (including nested ones inside an `Inline`) default to 8px. An explicit\n  `radius` on a Button still wins.\n\n## Do / don't\n\n- Do use [`ConfirmModal`](confirm-modal.md) for yes/no questions.\n- Do pass `canDismiss={!loading}` while a request runs.\n- Don't set `radius` on Buttons inside a Modal by hand; the depth does it.\n- Don't write your own modal style files; build on `Modal`.\n- Don't render it conditionally (`{open && <Modal …/>}`); toggle `open`.",
       "examples": [
         {
           "file": "src/control/modal/examples/01-basic.tsx",
@@ -7886,7 +7886,6 @@
       "title": "ConfirmModal",
       "description": "A ready-made yes/no modal with a title, a body, and Cancel and Confirm buttons.",
       "category": "Overlays",
-      "parent": "modal",
       "values": [
         "ConfirmModal"
       ],
@@ -8054,7 +8053,6 @@
       "title": "useModal",
       "description": "A hook that drives a native dialog element from an open flag and routes Escape and backdrop clicks to a dismiss callback.",
       "category": "Overlays",
-      "parent": "modal",
       "values": [
         "useModal",
         "useModalDialog"
@@ -10745,7 +10743,7 @@
           "tags": [
             "General"
           ],
-          "text": "Docs: modules are grouped into Layout, Navigation, Typography, Inputs, Overlays, Data display, Feedback, Foundations and Hooks. Actions is gone (`Button` is in Inputs, the Page action bars are in Layout under `Page`), Theme and the icons are Foundations, and the hooks have a page of their own with runnable examples (they were a guide). `PageActionsBar`, `PageActionsMenu` and `PageFooterActions` are listed under `Page`, `CardRow` under `Card`, and `ConfirmModal` and `useModal` under `Modal`; their pages link to the parent. The overview shows only top-level modules; a nested one appears under Parts on its parent's page, and the overview's search still finds it. The order lives in `scripts/docs-gen/categories.mjs`."
+          "text": "Docs: modules are grouped into Layout, Navigation, Typography, Inputs, Overlays, Data display, Feedback, Foundations and Hooks. Actions is gone (`Button` is in Inputs, the Page action bars are in Layout under `Page`), Theme and the icons are Foundations, and the hooks have a page of their own with runnable examples (they were a guide). `PageActionsBar`, `PageActionsMenu` and `PageFooterActions` are listed under `Page` and `CardRow` under `Card`; their pages link to the parent. The overview shows only top-level modules; a nested one appears under Parts on its parent's page, and the overview's search still finds it. The order lives in `scripts/docs-gen/categories.mjs`."
         }
       ]
     },

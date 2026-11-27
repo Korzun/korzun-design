@@ -128,13 +128,13 @@ describe('ComponentPage', () => {
   });
 
   it('lists the modules nested under a parent', () => {
-    mount('modal');
+    mount('card');
     const line = screen.getByText(/^Goes with/);
     expect(
       within(line)
         .getAllByRole('link')
         .map((a) => a.textContent)
-    ).toEqual(['ConfirmModal', 'useModal']);
+    ).toEqual(['CardRow']);
   });
 
   it('shows the nested modules as cards in a Parts section', () => {

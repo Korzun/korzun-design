@@ -38,7 +38,7 @@ export const SECTIONS = Object.freeze([
       'field-list',
     ],
   },
-  { name: 'Overlays', modules: ['popover', 'menu', ['modal', ['confirm-modal', 'use-modal']]] },
+  { name: 'Overlays', modules: ['popover', 'menu', 'modal', 'confirm-modal', 'use-modal'] },
   { name: 'Data display', modules: ['tag', 'meta-line', 'metadata-list'] },
   {
     name: 'Feedback',

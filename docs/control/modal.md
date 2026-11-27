@@ -11,7 +11,7 @@ category: Overlays
 
 <!-- /generated:import -->
 
-A modal on a native `<dialog>` (via `useModal`): a title, a body
+A modal on a native `<dialog>` (via [`useModal`](use-modal.md)): a title, a body
 (`children`), and an optional `footer` for actions. It is always mounted and
 fully controlled by `open`. The title names the dialog for assistive tech.
 
