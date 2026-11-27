@@ -49,7 +49,7 @@ automatically (8px in a Card on a Page). See [corners](../corners.md).
 - Do give each feature on a screen its own Card, stacked directly in `<Page>`.
 - Do put row actions that must not fire by accident in `footer` of a
   collapsible card; they are unreachable while it is collapsed.
-- Don't nest Cards just to group content; use `CardDivider`. When you do nest, corners step down automatically.
+- Don't nest Cards just to group content; use `Divider`. When you do nest, corners step down automatically.
 - Don't set `radius` on Buttons inside a Card: it follows depth, and an explicit `radius="card"` would stay 8px inside a nested Card, breaking the concentric corners.
 - Don't expect `isCollapsible` cards to start open; pass `defaultCollapsed={false}`.
 - Do use the exported `CardProps` type when wrapping Card.
@@ -204,7 +204,7 @@ export default function HeaderClick() {
 
 A Card inside a Card steps its corner down one level: `lg` on the page, `md` inside a Card,
 `sm` one level deeper. Each Card's Button follows the same depth, so pass no `radius`. Nest
-for a group that is itself a feature; to split one body into sections use `CardDivider`.
+for a group that is itself a feature; to split one body into sections use `Divider`.
 
 ```tsx
 import { Card, Stack, Text } from '@korzun/design/component';
@@ -288,6 +288,7 @@ export default function Nested() {
 
 ## Changelog
 
+- **0.7.0** (2026-11-26): `CardDivider` is now `Divider` and works anywhere: directly in a Card or Dialog body it reaches the edges as before (cancelling `space.xl` in a large Card, 1px in a small one, `space.xxl` in a Dialog, where it used to overhang everything but a large Card), and on the page, in a `CardRow`, `Alert`, `Surface` or nested Card it spans its container. The new `bleed` prop overrides that. `CardDivider`, `CardDividerProps` and `CardDividerAlign` stay as deprecated aliases of `Divider`, `DividerProps` and `DividerAlign`.
 - **0.5.0** (2026-11-24): Surface depth: corners are concentric site-wide with no radius props. `Page` provides depth 0, `Dialog` 1, and `Card`, `CardRow` and `Alert` each provide one level deeper than where they sit; `Popover` (so `Menu` and the `Select` list) provides a fixed 2. Depth 0 is `radius.lg`, 1 is `md`, 2 and deeper is `sm`. `Button`, `Select`, `Card`, `CardRow` and `Alert` follow it; an explicit `Button radius` or `Select surface` still wins. With no `Page`, `Dialog`, `Card`, `CardRow`, `Alert` or `Surface` above it, a component keeps its 0.4.0 look; a bare `Card` (no `Page`) still counts as depth 0 and gives its contents depth 1, so its Buttons and nested Cards change as below.
 - **0.5.0** (2026-11-24): **Visible changes:**
   - Buttons in a Card default to 8px (they were 16px unless `radius="card"` was set), and Buttons in a Dialog body are 8px.

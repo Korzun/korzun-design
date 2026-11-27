@@ -1,8 +1,8 @@
 /** Basic
- * A plain rule between a form's fields and its submit button. It is full-bleed: it cancels the
- * Card body's padding, so the line meets the Card's borders.
+ * A plain rule between a form's fields and its submit button. Directly in a Card body it cancels
+ * the body's padding, so the line meets the Card's borders.
  */
-import { Card, CardDivider, Inline, Stack, Text } from '@korzun/design/component';
+import { Card, Divider, Inline, Stack, Text } from '@korzun/design/component';
 import { Button, TextInput } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -20,7 +20,7 @@ export default function Basic() {
       >
         <Stack>
           <TextInput name="title" label="Title" value={title} onChange={setTitle} />
-          <CardDivider />
+          <Divider />
           <Inline>
             <Button type="primary" submit>
               Request

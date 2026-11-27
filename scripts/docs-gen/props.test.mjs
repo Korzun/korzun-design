@@ -144,6 +144,25 @@ test('@default tag fills default, @deprecated sets deprecated, description exclu
   assert.equal('deprecated' in row(t, 'b'), false);
 });
 
+test('a deprecated rename is a one-line alias, not a second table', () => {
+  const [old] = extractTypeTables(
+    '/x/a.d.ts',
+    ['OldProps', 'NewProps'],
+    files({
+      '/x/a.d.ts': `export type NewProps = { a?: string };
+/** @deprecated Renamed \`NewProps\`. */
+export type OldProps = NewProps;`,
+    })
+  );
+  assert.deepEqual(old, {
+    name: 'OldProps',
+    kind: 'alias',
+    rows: [],
+    text: 'NewProps',
+    description: 'Deprecated: use NewProps.',
+  });
+});
+
 test('unflattenable type falls back to declared text', () => {
   const t = table(`export type XProps = SomeGeneric<X>[keyof X];`, 'XProps');
   assert.equal(t.kind, 'alias');

@@ -1,20 +1,32 @@
 ---
-title: CardDivider
-description: A horizontal rule that splits a Card body into sections, optionally labelled and with actions.
+title: Divider
+description: A horizontal rule that splits content into sections, optionally labelled and with actions; in a Card or Dialog body it reaches the edges.
 category: Layout
 ---
-# CardDivider
+# Divider
 
 <!-- generated:import -->
 
-`import { CardDivider, type CardDividerAlign, type CardDividerProps } from '@korzun/design/component'`
+```ts
+import {
+  CardDivider,
+  Divider,
+  type CardDividerAlign,
+  type CardDividerProps,
+  type DividerAlign,
+  type DividerProps,
+} from '@korzun/design/component';
+```
 
 <!-- /generated:import -->
 
-A horizontal rule that splits one `Card` body into sections, optionally with a
-label ("Devices", "Validation") and/or actions sitting on the line. It is
-full-bleed: it cancels the card body's padding so the line meets the card
-borders. Renders `role="separator"`.
+A horizontal rule that splits content into sections, optionally with a label
+("Devices", "Validation") and/or actions sitting on the line. Directly inside a
+`Card` or `Dialog` body it cancels the body's padding, so the line meets the
+box's edges; anywhere else it spans its container. Renders `role="separator"`.
+
+`CardDivider`, `CardDividerProps` and `CardDividerAlign` are the old names,
+kept as deprecated aliases.
 
 Use something else for: separating whole features (use separate `Card`s),
 separating menu items (`PageActionItem.separatorBefore`).
@@ -27,17 +39,21 @@ No `className`.
 
 ### Surprising behaviour
 
-- **Assumes a `space.xl` parent padding.** The full-bleed is a fixed
-  `margin: 0 -space.xl`, which matches a `size="large"` Card body. Inside
-  `Card size="small"` (1px padding) or any other container it overhangs.
+- **The bleed only reaches the nearest body.** A divider bleeds when the Card
+  or Dialog body is the nearest box around it. Inside a `CardRow`, `Alert`,
+  `Surface` or nested `Card` it spans that box instead. `bleed={false}` opts
+  out in a body; `bleed` does nothing outside one.
+- **A padded wrapper defeats it.** In a Card body but inside your own padded
+  `div`, the divider still cancels the Card's padding, not yours. Wrap the
+  box's contents in `Surface`, or pass `bleed={false}`.
 - It always reserves one label line of height, labelled or not, so swapping a
   plain divider for a labelled one does not shift the layout.
 - The label does not wrap (`white-space: nowrap`); keep it to a word or two.
 
 ## Do / don't
 
-- Do use it directly inside a large Card body, not wrapped in a padded `div`
-  (the negative margin would then overshoot your wrapper instead).
+- Do put it straight in a Card body, or in a `Stack` there, not in a padded
+  `div`.
 - Do use `type="link"` Buttons or small `Tag`s as `actions`; the line is one
   text line tall.
 - Don't use it for the gap between Cards on a page; `Page` already spaces them.
@@ -48,11 +64,11 @@ No `className`.
 
 ### Basic
 
-A plain rule between a form's fields and its submit button. It is full-bleed: it cancels the
-Card body's padding, so the line meets the Card's borders.
+A plain rule between a form's fields and its submit button. Directly in a Card body it cancels
+the body's padding, so the line meets the Card's borders.
 
 ```tsx
-import { Card, CardDivider, Inline, Stack, Text } from '@korzun/design/component';
+import { Card, Divider, Inline, Stack, Text } from '@korzun/design/component';
 import { Button, TextInput } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -70,7 +86,7 @@ export default function Basic() {
       >
         <Stack>
           <TextInput name="title" label="Title" value={title} onChange={setTitle} />
-          <CardDivider />
+          <Divider />
           <Inline>
             <Button type="primary" submit>
               Request
@@ -90,18 +106,18 @@ A label names the section below the line. `align` places it: `left` and `right` 
 with a short stub of line past it, `center` leaves equal line on both sides.
 
 ```tsx
-import { Card, CardDivider, Stack, Text } from '@korzun/design/component';
+import { Card, Divider, Stack, Text } from '@korzun/design/component';
 
 export default function Labelled() {
   return (
     <Card title="Notifications">
       <Stack>
         <Text>Email me when a book is ready.</Text>
-        <CardDivider>Devices (left)</CardDivider>
+        <Divider>Devices (left)</Divider>
         <Text>Kitchen frame, Hallway frame</Text>
-        <CardDivider align="center">Validation (center)</CardDivider>
+        <Divider align="center">Validation (center)</Divider>
         <Text>Check files for errors on upload.</Text>
-        <CardDivider align="right">History (right)</CardDivider>
+        <Divider align="right">History (right)</Divider>
         <Text>Keep notifications for 30 days.</Text>
       </Stack>
     </Card>
@@ -116,7 +132,7 @@ export default function Labelled() {
 and the actions share one group, label first. Each divider is captioned with its props.
 
 ```tsx
-import { Card, CardDivider, Stack, Text } from '@korzun/design/component';
+import { Card, Divider, Stack, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -130,7 +146,7 @@ export default function Actions() {
           <Text size="sm" tone="muted">
             Unset: label left, actions right
           </Text>
-          <CardDivider
+          <Divider
             actions={
               <Button type="link" onClick={() => setPending([])}>
                 Clear all
@@ -138,14 +154,14 @@ export default function Actions() {
             }
           >
             Pending
-          </CardDivider>
+          </Divider>
           <Text>{pending.length > 0 ? pending.join(', ') : 'Nothing pending'}</Text>
         </Stack>
         <Stack gap="xs">
           <Text size="sm" tone="muted">
             {'align="center" actionsAlign="left"'}
           </Text>
-          <CardDivider
+          <Divider
             align="center"
             actionsAlign="left"
             actions={
@@ -155,13 +171,13 @@ export default function Actions() {
             }
           >
             Finished
-          </CardDivider>
+          </Divider>
         </Stack>
         <Stack gap="xs">
           <Text size="sm" tone="muted">
             {'align="right" actionsAlign="right": one group, label first'}
           </Text>
-          <CardDivider
+          <Divider
             align="right"
             actionsAlign="right"
             actions={
@@ -171,11 +187,56 @@ export default function Actions() {
             }
           >
             Shared
-          </CardDivider>
+          </Divider>
         </Stack>
         <Text tone="muted">Last action: {last}</Text>
       </Stack>
     </Card>
+  );
+}
+```
+
+### Outside a Card
+
+Anywhere but directly in a Card or Dialog body (on the page, in a CardRow, a hand-made
+`Surface` box or a Popover) the line spans its container. In a Card body it reaches the
+borders; `bleed={false}` keeps it inside the padding there.
+
+```tsx
+import { Card, CardRow, Divider, Stack, Text } from '@korzun/design/component';
+
+export default function Anywhere() {
+  return (
+    <Stack gap="xl">
+      <Stack gap="xs">
+        <Text size="sm" tone="muted">
+          On the page: spans the column
+        </Text>
+        <Divider>Devices</Divider>
+        <Text>Kitchen frame, Hallway frame</Text>
+      </Stack>
+      <Card title="Notifications">
+        <Stack>
+          <Text size="sm" tone="muted">
+            In the Card body: meets the borders
+          </Text>
+          <Divider />
+          <Text size="sm" tone="muted">
+            {'bleed={false}: inside the padding'}
+          </Text>
+          <Divider bleed={false} />
+          <CardRow>
+            <Stack gap="xs">
+              <Text size="sm" tone="muted">
+                In a CardRow: spans the row
+              </Text>
+              <Divider />
+              <Text>Keep notifications for 30 days.</Text>
+            </Stack>
+          </CardRow>
+        </Stack>
+      </Card>
+    </Stack>
   );
 }
 ```
@@ -192,12 +253,17 @@ export default function Actions() {
 | `actions` | `ReactNode` |  | Optional controls rendered on the line (e.g. a bulk-action button); keep them one text line tall. `null`, `undefined` and `false` count as absent. |
 | `actionsAlign` | `'left' \| 'center' \| 'right'` | `'right'` | Where the actions sit. When it equals `align`, label and actions share one group, label first. |
 | `align` | `'left' \| 'center' \| 'right'` | `'left'` | Where the label sits. `'left'` and `'right'` hug that edge with a short stub of line poking past; `'center'` leaves equal line on both sides. |
+| `bleed` | `boolean` |  | Reach the edges of the Card or Dialog body the divider sits in, cancelling the body's padding. Defaults to `true` directly inside a Card or Dialog body and `false` anywhere else, where the line spans its container. `true` does nothing outside a Card or Dialog. |
 
 ### Types
 
 ```ts
+/** Deprecated: use DividerAlign. */
+type CardDividerAlign = DividerAlign;
+/** Deprecated: use DividerProps. */
+type CardDividerProps = DividerProps;
 /** Where a divider's label or actions sit on the line. */
-type CardDividerAlign = 'left' | 'center' | 'right';
+type DividerAlign = 'left' | 'center' | 'right';
 ```
 
 <!-- /generated:props -->
@@ -213,7 +279,6 @@ type CardDividerAlign = 'left' | 'center' | 'right';
 | `theme.fontSize.md` | `0.875rem` | `0.875rem` |
 | `theme.lineHeight.body` | `1.3` | `1.3` |
 | `theme.space.md` | `0.5rem` | `0.5rem` |
-| `theme.space.xl` | `0.75rem` | `0.75rem` |
 
 <!-- /generated:tokens -->
 
@@ -221,6 +286,6 @@ type CardDividerAlign = 'left' | 'center' | 'right';
 
 ## Changelog
 
-No changes yet.
+- **0.7.0** (2026-11-26): `CardDivider` is now `Divider` and works anywhere: directly in a Card or Dialog body it reaches the edges as before (cancelling `space.xl` in a large Card, 1px in a small one, `space.xxl` in a Dialog, where it used to overhang everything but a large Card), and on the page, in a `CardRow`, `Alert`, `Surface` or nested Card it spans its container. The new `bleed` prop overrides that. `CardDivider`, `CardDividerProps` and `CardDividerAlign` stay as deprecated aliases of `Divider`, `DividerProps` and `DividerAlign`.
 
 <!-- /generated:changelog -->
