@@ -194,7 +194,7 @@ test(
   () => {
     const [t] = extractTypeTables(realDts, ['ButtonProps']);
     const names = t.rows.map((r) => r.name);
-    for (const n of ['type', 'radius', 'danger', 'success', 'children'])
+    for (const n of ['type', 'radius', 'danger', 'children'])
       assert.ok(names.includes(n), n);
     assert.equal(names[0], 'children');
     const lower = names.slice(1).map((n) => n.toLowerCase());
@@ -359,7 +359,7 @@ export type PickerProps<V extends string> = BaseProps<V> & {
 });
 
 test(
-  'real d.ts: Button danger/success stay boolean; SegmentedControl flattens with clearable',
+  'real d.ts: Button danger is boolean and has no success; SegmentedControl flattens with clearable',
   {
     skip: !existsSync('dist/control/index.d.ts') && 'run npm run build first',
   },
@@ -370,8 +370,7 @@ test(
     ]);
     assert.equal(row(button, 'danger').type, 'boolean');
     assert.match(row(button, 'danger').description, /^Red treatment/);
-    assert.equal(row(button, 'success').type, 'boolean');
-    assert.match(row(button, 'success').description, /^Green treatment/);
+    assert.equal(row(button, 'success'), undefined);
     assert.equal(segmented.kind, 'props');
     assert.equal(row(segmented, 'clearable').type, 'boolean');
     assert.equal(row(segmented, 'clearable').required, false);

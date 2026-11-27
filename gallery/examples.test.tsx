@@ -60,8 +60,8 @@ describe('pilot examples wire every button', () => {
   });
 
   it.each([
-    ['02-variants', /^(Primary|Default|Text|Link|Dashed)$/],
-    ['03-danger-and-success', /^(Log out|Delete book|Mark as read)$/],
+    ['02-variants', /^(Primary|Default|Text|Link|Dashed|Danger|Primary danger)$/],
+    ['03-danger', /^(Log out|Delete book)$/],
     ['04-icons', /^(Search|Next|Settings)$/],
   ])('Button %s: each button shows what was pressed', (file, name) => {
     clickChangesDemo(`src/control/button/examples/${file}.tsx`, name);
