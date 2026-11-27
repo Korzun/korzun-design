@@ -1,5 +1,4 @@
 import { Heading, Inline, Page, Stack, Tag, Text } from '@korzun/design/component';
-import * as hooks from '@korzun/design/hooks';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { Link } from 'react-router';
 
@@ -39,7 +38,6 @@ const useStyle = createUseStyles((theme: Theme) => ({
 const tagRoute = (tag: string): string | null => {
   const mod = siteData.modules.find((m) => m.values.includes(tag));
   if (mod) return `/components/${mod.slug}`;
-  if (tag in hooks && siteData.guides.some((g) => g.slug === 'hooks')) return '/guides/hooks';
   return null;
 };
 

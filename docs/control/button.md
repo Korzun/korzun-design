@@ -1,7 +1,7 @@
 ---
 title: Button
 description: A clickable action with a visual variant, optional icons, and a loading state.
-category: Actions
+category: Inputs
 ---
 # Button
 

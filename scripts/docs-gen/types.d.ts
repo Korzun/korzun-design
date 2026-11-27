@@ -57,6 +57,8 @@ export type ModuleInfo = {
   title: string;
   description: string;
   category: string;
+  /** Slug of the module this one is nested under in categories.mjs (`page` for `page-actions-bar`). */
+  parent?: string;
   values: string[];
   types: string[];
   importLine: string;

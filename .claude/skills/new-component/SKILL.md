@@ -115,7 +115,9 @@ no old doc:
   note column says "none"; the coverage row for the old `## Example` says
   "new module".
 - Its §3: create `docs/<area>/<slug>.md` from its template, front matter first
-  (`category` verbatim from `scripts/docs-gen/categories.mjs`). Facts like
+  (`category` is the section you add the slug to in
+  `scripts/docs-gen/categories.mjs`, nested `[parent, [slug]]` if it only works
+  inside another module; the categories test fails until it is listed). Facts like
   "takes `className`", "Space toggles", "submits as `<name>`" are Usage
   sentences under `### Styling`, `### Keyboard`, `### Forms`.
 - Its §4: `examples/01-basic.tsx` first, then one per value and state, each

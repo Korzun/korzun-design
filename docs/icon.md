@@ -1,7 +1,7 @@
 ---
 title: Icons
 description: Inline SVG icon components that take the surrounding text colour, with the shared IconProps.
-category: Data display
+category: Foundations
 ---
 # Icons
 

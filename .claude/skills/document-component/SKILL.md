@@ -79,7 +79,7 @@ Rewrite example (the Default column then shows `'medium'`):
 ---
 title: <Name>
 description: <one sentence; it becomes the AGENTS.md index note and the overview card>
-category: <one of scripts/docs-gen/categories.mjs, verbatim>
+category: <the section scripts/docs-gen/categories.mjs lists the module under, verbatim>
 ---
 # <Name>
 

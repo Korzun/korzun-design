@@ -1,8 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
 
+/** `pulling` below `PULL_THRESHOLD`, `armed` at or past it, `refreshing` while `onRefresh` runs. */
 export type PullPhase = 'idle' | 'pulling' | 'armed' | 'refreshing';
 
-export type PullState = { phase: PullPhase; offset: number };
+export type PullState = {
+  /** Where the pull is: `idle`, `pulling`, `armed` (a release refreshes) or `refreshing`. */
+  phase: PullPhase;
+  /** Pixels pulled past the top, capped at 1.5 × `PULL_THRESHOLD`; held at `PULL_THRESHOLD` while refreshing. */
+  offset: number;
+};
 
 /** How far past the top (in px of overscroll) the page has to be pulled before a release refreshes. */
 export const PULL_THRESHOLD = 70;

@@ -1,18 +1,36 @@
 ---
 title: Hooks
 description: Mobile-chrome hooks: standalone detection, minimize on scroll, pull to refresh.
-category: Guide
+category: Hooks
 ---
 # Hooks
 
-`import { isStandalone, useMinimizeOnScroll, usePullToRefresh } from '@korzun/design/hooks'`
+<!-- generated:import -->
+
+```ts
+import {
+  EXPAND_AFTER,
+  MINIMIZE_SPEED,
+  PULL_THRESHOLD,
+  isStandalone,
+  useMinimizeOnScroll,
+  usePullToRefresh,
+  type MinimizeOnScroll,
+  type PullPhase,
+  type PullState,
+} from '@korzun/design/hooks';
+```
+
+<!-- /generated:import -->
 
 Mobile-chrome behaviour shared by the layout components: detecting the
 installed app, minimizing bottom chrome on scroll, and pull-to-refresh. All
 three read the **window** scroller; they do nothing for content scrolling in an
 inner `overflow: auto` element.
 
-## `isStandalone()`
+## Usage
+
+### `isStandalone()`
 
 ```ts
 isStandalone(): boolean
@@ -27,7 +45,7 @@ during render because the status can't change within a session. It touches
 Use it to gate chrome that only makes sense when installed: `TopFade` and a
 pull-to-refresh indicator.
 
-## `useMinimizeOnScroll({ resetKey })`
+### `useMinimizeOnScroll({ resetKey })`
 
 ```ts
 useMinimizeOnScroll({ resetKey }: { resetKey: string }): MinimizeOnScroll
@@ -47,7 +65,7 @@ yourself only for other chrome.
   `useLocation().key`.
 - iOS rubber-band overscroll (top and bottom) is clamped out.
 
-## `usePullToRefresh(onRefresh, { enabled })`
+### `usePullToRefresh(onRefresh, { enabled })`
 
 ```ts
 usePullToRefresh(onRefresh: () => Promise<unknown>, options?: { enabled?: boolean }): PullState
@@ -74,7 +92,7 @@ Pull-down-to-refresh for the standalone app, which has no browser gesture. It
   throws on `.then` and leaves the phase stuck at `refreshing`. Use an `async`
   function.
 
-## Examples
+### A pull-to-refresh indicator
 
 ```tsx
 // An indicator for the installed app, mounted once in the layout.
@@ -107,3 +125,161 @@ export const PullToRefreshIndicator = () => {
 - Do return a promise from `onRefresh` that settles even on failure.
 - Don't call `useMinimizeOnScroll` for the bar `NavMobile` already manages.
 - Don't expect any of these to track a nested scroll container.
+
+<!-- generated:examples -->
+
+## Examples
+
+### isStandalone
+
+True only in the installed app (added to the home screen). Here, in a browser tab, it is
+false. Gate install-only chrome such as `TopFade` and a pull-to-refresh indicator on it.
+
+```tsx
+import { Card, Text } from '@korzun/design/component';
+import { isStandalone } from '@korzun/design/hooks';
+
+export default function IsStandalone() {
+  return (
+    <Card title="Installed app">
+      <Text>
+        <code>isStandalone()</code> is {String(isStandalone())}
+      </Text>
+    </Card>
+  );
+}
+```
+
+### useMinimizeOnScroll
+
+Scroll this frame down quickly and the bottom bar minimizes; scroll back up a little, reach
+the top or press Expand and it comes back. A slow scroll leaves it alone. `NavMobile` already
+does this; call the hook for other bottom chrome.
+
+```tsx
+import { Card, Inline, Page, Text } from '@korzun/design/component';
+import { Button } from '@korzun/design/control';
+import { useMinimizeOnScroll } from '@korzun/design/hooks';
+import { createUseStyles, type Theme } from '@korzun/design/theme';
+import cx from 'classnames';
+
+const useStyle = createUseStyles((theme: Theme) => ({
+  bar: {
+    position: 'fixed',
+    left: theme.space.xl,
+    right: theme.space.xl,
+    bottom: theme.space.xl,
+    padding: theme.space.lg,
+    borderRadius: theme.radius.lg,
+    border: `1px solid ${theme.color.border.default}`,
+    backgroundColor: theme.color.bg.card,
+    boxShadow: theme.shadow.hoverLift,
+    transition: 'padding 200ms ease',
+  },
+  minimized: { paddingTop: theme.space.xs, paddingBottom: theme.space.xs },
+}));
+
+const chapters = Array.from({ length: 12 }, (_, i) => `Chapter ${i + 1}`);
+
+export default function MinimizeOnScroll() {
+  const styles = useStyle();
+  const { minimized, expand } = useMinimizeOnScroll({ resetKey: 'reader' });
+  return (
+    <>
+      <Page>
+        {chapters.map((title) => (
+          <Card key={title} title={title}>
+            <Text>Scroll quickly to minimize the bar below.</Text>
+          </Card>
+        ))}
+      </Page>
+      <div className={cx(styles.bar, minimized && styles.minimized)}>
+        <Inline justify="between">
+          <Text tone="muted">{minimized ? 'Minimized' : 'Expanded'}</Text>
+          {minimized && (
+            <Button type="link" onClick={expand}>
+              Expand
+            </Button>
+          )}
+        </Inline>
+      </div>
+    </>
+  );
+}
+```
+
+### usePullToRefresh
+
+The hook draws nothing: it reports a phase and an offset, and you draw the indicator. It reads
+the page's rubber-band overscroll, so only a touch pull on iOS moves it; with a mouse the
+phase stays `idle`. Releasing while `armed` runs `onRefresh` until its promise settles.
+
+```tsx
+import { Card, Spinner, Stack, Text } from '@korzun/design/component';
+import { usePullToRefresh } from '@korzun/design/hooks';
+import { useState } from 'react';
+
+export default function PullToRefresh() {
+  const [refreshes, setRefreshes] = useState(0);
+  const { phase, offset } = usePullToRefresh(async () => {
+    await new Promise((resolve) => setTimeout(resolve, 800));
+    setRefreshes((n) => n + 1);
+  });
+  return (
+    <Card title="Library">
+      <Stack gap="sm">
+        {phase === 'refreshing' ? <Spinner label="Refreshing" /> : null}
+        <Text>
+          Phase: {phase}, offset: {Math.round(offset)}px
+        </Text>
+        <Text tone="muted">Refreshed {refreshes} times</Text>
+      </Stack>
+    </Card>
+  );
+}
+```
+
+<!-- /generated:examples -->
+
+<!-- generated:props -->
+
+## Props
+
+### MinimizeOnScroll
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `expand` (required) | `() => void` |  | Expand the bar now (a tap on the minimized bar), as if the page had scrolled up. |
+| `minimized` (required) | `boolean` |  | Whether the bar is currently minimized. |
+
+### PullState
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `offset` (required) | `number` |  | Pixels pulled past the top, capped at 1.5 × `PULL_THRESHOLD`; held at `PULL_THRESHOLD` while refreshing. |
+| `phase` (required) | `'idle' \| 'pulling' \| 'armed' \| 'refreshing'` |  | Where the pull is: `idle`, `pulling`, `armed` (a release refreshes) or `refreshing`. |
+
+### Types
+
+```ts
+/** `pulling` below `PULL_THRESHOLD`, `armed` at or past it, `refreshing` while `onRefresh` runs. */
+type PullPhase = 'idle' | 'pulling' | 'armed' | 'refreshing';
+```
+
+<!-- /generated:props -->
+
+<!-- generated:tokens -->
+
+## Tokens
+
+This module has no styles of its own.
+
+<!-- /generated:tokens -->
+
+<!-- generated:changelog -->
+
+## Changelog
+
+- **0.0.1** (2026-11-15): Hooks: `useMinimizeOnScroll`, `usePullToRefresh`, `isStandalone`.
+
+<!-- /generated:changelog -->

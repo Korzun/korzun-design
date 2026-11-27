@@ -1,7 +1,7 @@
 ---
 title: PageFooterActions
 description: A row of Buttons for the bottom of a page, split into leading and trailing sides.
-category: Actions
+category: Layout
 ---
 # PageFooterActions
 

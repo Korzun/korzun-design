@@ -1,7 +1,7 @@
 ---
 title: Theme
 description: ThemeProvider, the light and dark themes, and createUseStyles for writing token-based styles.
-category: Theme
+category: Foundations
 ---
 # Theme
 

@@ -32,6 +32,21 @@ describe('OverviewPage', () => {
     expect(headings.length).toBeGreaterThan(1);
   });
 
+  it('lists Hooks last and a nested module right after its parent, naming it', () => {
+    mount();
+    const headings = screen.getAllByRole('heading', { level: 2 }).map((h) => h.textContent);
+    expect(headings.at(-1)).toBe('Hooks');
+    const cards = screen.getAllByRole('heading', { level: 3 }).map((h) => h.textContent);
+    const page = cards.indexOf('Page');
+    expect(cards.slice(page, page + 4)).toEqual([
+      'Page',
+      'PageActionsBar',
+      'PageActionsMenu',
+      'PageFooterActions',
+    ]);
+    expect(screen.getAllByText('Page /')).toHaveLength(3);
+  });
+
   it('gives each card a lazy, inert thumbnail of its preview', () => {
     mount();
     const link = screen.getByRole('link', { name: /^Button\b/ });

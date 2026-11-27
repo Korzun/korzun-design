@@ -121,6 +121,22 @@ describe('ComponentPage', () => {
     expect(screen.getByText(/Also accepts:/)).toHaveTextContent('HTMLAttributes');
   });
 
+  it('links a nested module to its parent, and a parent to its nested modules', () => {
+    mount('page-actions-bar');
+    expect(screen.getByText(/^Part of/)).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Page' })).toHaveAttribute('href', '/components/page');
+  });
+
+  it('lists the modules nested under a parent', () => {
+    mount('modal');
+    const line = screen.getByText(/^Goes with/);
+    expect(
+      within(line)
+        .getAllByRole('link')
+        .map((a) => a.textContent)
+    ).toEqual(['ConfirmModal', 'useModal']);
+  });
+
   it('renders not-found for an unknown slug', () => {
     mount('nope');
     expect(screen.getByRole('heading', { level: 1, name: 'Not found' })).toBeInTheDocument();
