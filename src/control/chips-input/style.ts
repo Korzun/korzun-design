@@ -123,7 +123,10 @@ export const useStyle = createUseStyles((theme: Theme) => ({
     fontFamily: 'inherit',
     fontSize: 'inherit',
     color: theme.color.text.primary,
+    // Grow from an 8rem basis, not the input's ~20-character natural width,
+    // so it shares a line with chips whenever 8rem is free instead of wrapping.
     flexGrow: 1,
+    flexBasis: '8rem',
     minWidth: '8rem',
     // Keep font-size at the 16px floor on mobile so focusing it doesn't zoom iOS.
     [theme.breakpoint.mobile]: { fontSize: '1rem' },

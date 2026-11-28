@@ -158,3 +158,14 @@ it('label + layout="horizontal": renders a label associated with the input', () 
   );
   expect(screen.getByLabelText('Users')).toBeInTheDocument();
 });
+
+it('sizes the text field from its 8rem floor, not its ~20-character natural width', () => {
+  // An <input> is about 20 characters wide by default (~200px at the 16px
+  // phone size), so with flex-basis auto it wrapped onto its own empty line
+  // beside chips even when 8rem was free.
+  renderWithProviders(<ChipsInput value={['History']} suggestions={[]} onChange={vi.fn()} />);
+  const style = getComputedStyle(screen.getByRole('textbox'));
+  expect(style.flexBasis).toBe('8rem');
+  expect(style.minWidth).toBe('8rem');
+  expect(style.flexGrow).toBe('1');
+});
