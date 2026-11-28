@@ -8,7 +8,7 @@
 - [Switch] While loading, an `inset` (squared) switch shows a rounded-square ring with an arc travelling around it in the thumb's place, instead of the round spinner, which clashed with its square corners. A `pill` switch keeps the round spinner.
 - [ChipsInput] A `disabled` field hides its chips' remove (×) buttons instead of showing them dimmed, so the chips read as plain values.
 - [ChipsInput] The text field shares a line with the chips whenever 8rem is free. Before, it sized from an input's natural width (about 20 characters, ~200px at the 16px phone size) and dropped to its own empty line, making the box a line taller than its chips need.
-- [General] Docs site: the overview thumbnails for `Page`, `Surface`, `TopFade` and every hook are drawn with plain blocks, like `Space`, instead of sample content.
+- [General] Docs site: the overview thumbnails for `Page`, `Surface`, `TopFade`, `Modal`, `ConfirmModal` and every hook are drawn with plain blocks, like `Space`, instead of sample content.
 - [General] Docs site: each section lists its modules alphabetically by name, on the overview and in `llms.txt`.
 - [useIsStandalone] **Breaking:** `isStandalone()` is now the hook `useIsStandalone()`, built on `useSyncExternalStore`. Call it at the top of a component and branch on its value (`const standalone = useIsStandalone();` then `{standalone && <TopFade />}`), not inside a condition or callback. It re-renders when the display mode changes and returns `false` during server rendering instead of throwing on `window`.
 - [General] Docs generator: CHANGELOG tags that name a removed former name (`CardDivider`, `Dialog`, `useModalDialog`) resolve to the current name, so that history stays on the renamed module's page.
