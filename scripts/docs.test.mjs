@@ -57,7 +57,7 @@ test('parseIndex expands groups and strips notes', () => {
   ]);
 });
 
-for (const mod of [...moduleDirs('control'), ...moduleDirs('component')]) {
+for (const mod of [...moduleDirs('control'), ...moduleDirs('component'), ...moduleDirs('hooks')]) {
   if (internal.includes(mod)) continue;
   test(`${mod} has docs/${mod}.md`, () => {
     assert.ok(existsSync(join(repo, 'docs', `${mod}.md`)), `missing docs/${mod}.md`);

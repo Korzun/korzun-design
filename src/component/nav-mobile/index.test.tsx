@@ -1,7 +1,7 @@
 import { act, fireEvent, screen, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { MINIMIZE_SPEED } from '../../hooks/use-minimize-on-scroll.js';
+import { MINIMIZE_SPEED } from '../../hooks/use-minimize-on-scroll/index.js';
 import { BookIcon, SettingsIcon, UploadIcon } from '../../icon/index.js';
 import { renderWithProviders } from '../../test-utils.js';
 import type { NavItem } from '../nav-types.js';

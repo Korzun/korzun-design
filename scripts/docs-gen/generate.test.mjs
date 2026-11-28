@@ -428,7 +428,15 @@ test(
   () => {
     const root = mkdtempSync(join(tmpdir(), 'docs-gen-real-'));
     roots.push(root);
-    for (const p of ['package.json', 'src', 'dist', 'docs', 'recipes', 'AGENTS.md', 'CHANGELOG.md']) {
+    for (const p of [
+      'package.json',
+      'src',
+      'dist',
+      'docs',
+      'recipes',
+      'AGENTS.md',
+      'CHANGELOG.md',
+    ]) {
       cpSync(join(realRepo, p), join(root, p), { recursive: true });
     }
     const site = JSON.parse(generate(root).get('gallery/generated/site-data.json'));
@@ -515,7 +523,6 @@ test('--check exits 0 when current, 1 after a JSDoc edit', () => {
     ['theme', 'Foundations'],
     ['toast', 'Feedback'],
     ['icon', 'Foundations'],
-    ['hooks', 'Hooks'],
   ]) {
     put(
       root,
@@ -566,7 +573,8 @@ Why prose.
 function recipeFixture({ doc = true, folder = true } = {}) {
   const root = fixture();
   if (doc) put(root, 'docs/recipes/login.md', RECIPE_DOC);
-  if (folder) put(root, 'recipes/login/01-sign-in.tsx', '/** Sign in */\nexport default () => null;\n');
+  if (folder)
+    put(root, 'recipes/login/01-sign-in.tsx', '/** Sign in */\nexport default () => null;\n');
   return root;
 }
 
@@ -613,7 +621,10 @@ test('a recipe folder with no doc throws', () => {
 test('category Recipe outside docs/recipes throws', () => {
   const root = fixture();
   put(root, 'docs/stray.md', RECIPE_DOC);
-  assert.throws(() => generate(root), /docs\/stray\.md: category Recipe belongs in docs\/recipes\//);
+  assert.throws(
+    () => generate(root),
+    /docs\/stray\.md: category Recipe belongs in docs\/recipes\//
+  );
 });
 
 test('a doc in docs/recipes must have category Recipe', () => {

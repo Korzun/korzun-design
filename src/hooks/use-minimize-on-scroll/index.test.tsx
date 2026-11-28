@@ -1,7 +1,7 @@
 import { act, fireEvent, renderHook } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { EXPAND_AFTER, MINIMIZE_SPEED, useMinimizeOnScroll } from './use-minimize-on-scroll.js';
+import { EXPAND_AFTER, MINIMIZE_SPEED, useMinimizeOnScroll } from './index.js';
 
 // jsdom never scrolls, so the position is faked. `scrollY` is an accessor on
 // `window`, hence `defineProperty` rather than an assignment.

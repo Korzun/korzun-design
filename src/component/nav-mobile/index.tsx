@@ -2,7 +2,7 @@ import cx from 'classnames';
 import { type CSSProperties, useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router';
 
-import { useMinimizeOnScroll } from '../../hooks/use-minimize-on-scroll.js';
+import { useMinimizeOnScroll } from '../../hooks/use-minimize-on-scroll/index.js';
 import { useTheme } from '../../theme/index.js';
 import type { NavItem } from '../nav-types.js';
 import { useStyle } from './style.js';
