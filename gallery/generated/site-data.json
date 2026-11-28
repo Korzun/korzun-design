@@ -10484,7 +10484,7 @@
           "tags": [
             "General"
           ],
-          "text": "Docs site, dark and phones: code blocks and inline code on the page draw a `border.default` edge in dark, where their fill was 1.01:1 on the page; the \"–\" for an empty props or token cell is muted, not faint (3.7:1). On a phone the header is two rows (name and theme, then links that scroll sideways) and sticks to the top, with headings and tables stopping below it; header links, the theme segments, \"Show code\" and \"Copy\" have 44px hit areas, with the desktop look unchanged."
+          "text": "Docs site, dark and phones: code blocks and inline code on the page draw a `border.default` edge in dark, where their fill was 1.01:1 on the page; the \"–\" for an empty props or token cell is muted, not faint (3.7:1). On a phone the header is two rows (name and theme, then links that scroll sideways) and sticks to the top, with headings and tables stopping below it; header links, the theme segments, \"Show code\" and \"Copy\" have 44px hit areas, with the desktop look unchanged; the overview is a list with small thumbnails (5,300px tall, was 12,800px)."
         }
       ]
     },
