@@ -56,7 +56,6 @@ export const CopyCodeButton = ({ text, label }: CopyCodeButtonProps) => {
         type="text"
         ariaLabel={state === 'idle' ? label : undefined}
         prefix={state === 'done' ? CheckIcon : undefined}
-        className={styles.copy}
         onClick={copy}
       >
         {state === 'idle' ? 'Copy' : message}

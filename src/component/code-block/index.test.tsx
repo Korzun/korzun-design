@@ -136,13 +136,11 @@ describe('CodeBlock', () => {
     expect(vi.getTimerCount()).toBe(0);
   });
 
-  it('keeps the button width steady and exposes one name', async () => {
+  it('exposes one name: Copy code idle, Copied done', async () => {
     renderWithProviders(<CodeBlock code="x" copyable />);
-    const idle = screen.getByRole('button', { name: 'Copy code' });
-    expect(getComputedStyle(idle).minWidth).toBe('10em');
+    expect(screen.getByRole('button', { name: 'Copy code' })).toBeInTheDocument();
     await press('Copy code');
-    const done = screen.getByRole('button', { name: 'Copied' });
-    expect(getComputedStyle(done).minWidth).toBe('10em');
+    expect(screen.getByRole('button', { name: 'Copied' })).toBeInTheDocument();
     expect(screen.getAllByText('Copied').length).toBeGreaterThan(0);
     expect(screen.queryByRole('button', { name: /Could not copy/ })).toBeNull();
   });
