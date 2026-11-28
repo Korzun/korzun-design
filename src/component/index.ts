@@ -25,6 +25,7 @@ export { ProgressIndicator, type ProgressIndicatorProps } from './progress-indic
 export { Spinner, type SpinnerProps } from './spinner/index.js';
 export { Stack, type StackProps } from './stack/index.js';
 export { Surface, useSurfaceRadius, type SurfaceProps } from './surface/index.js';
+export { Table, type TableColumn, type TableProps } from './table/index.js';
 export { Tag, type TagProps, type TagTone } from './tag/index.js';
 export { Text, type TextProps } from './text/index.js';
 export { ThemeSetting, type ThemeSettingProps } from './theme-setting/index.js';
