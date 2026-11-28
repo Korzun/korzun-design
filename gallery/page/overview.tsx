@@ -1,7 +1,8 @@
 import { EmptyState, Heading, Page, Stack } from '@korzun/design/component';
 import { Button, TextInput } from '@korzun/design/control';
+import { CircleXIcon, SearchIcon } from '@korzun/design/icon';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 import { CATEGORIES } from '../../scripts/docs-gen/categories.mjs';
 import { siteData } from '../data.js';
@@ -26,16 +27,30 @@ const useStyle = createUseStyles((theme: Theme) => ({
 
 const SearchBox = ({ value, onChange }: { value: string; onChange: (v: string) => void }) => {
   const styles = useStyle();
+  const root = useRef<HTMLDivElement>(null);
   return (
-    <div className={styles.search}>
+    <div className={styles.search} data-search ref={root}>
       <TextInput
         name="search"
         ariaLabel="Search components"
         layout="inline"
         placeholder="Search by name, description or prop"
         autoComplete="off"
+        prefix={SearchIcon}
         value={value}
         onChange={(v) => onChange(v ?? '')}
+        action={
+          value === ''
+            ? undefined
+            : {
+                icon: CircleXIcon,
+                ariaLabel: 'Clear search',
+                action: () => {
+                  onChange('');
+                  root.current?.querySelector('input')?.focus();
+                },
+              }
+        }
       />
     </div>
   );

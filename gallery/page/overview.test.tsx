@@ -142,10 +142,32 @@ describe('OverviewPage', () => {
   it('clears an empty search from its Clear search button', async () => {
     mount();
     await userEvent.type(screen.getByRole('textbox', { name: 'Search components' }), 'zzz');
-    await userEvent.click(screen.getByRole('button', { name: 'Clear search' }));
+    await userEvent.click(screen.getAllByRole('button', { name: 'Clear search' }).at(-1)!);
     expect(screen.queryByText('No components match “zzz”.')).not.toBeInTheDocument();
     expect(screen.getAllByRole('heading', { level: 2 }).length).toBeGreaterThan(0);
     expect(screen.getByRole('textbox', { name: 'Search components' })).toHaveValue('');
+  });
+
+  it('shows a decorative search icon in the search box', () => {
+    mount();
+    const search = screen.getByRole('textbox', { name: 'Search components' });
+    const icon = search.closest('[data-search]')!.querySelector('svg')!;
+    // TextInput's `prefix` hides the icon's holder from screen readers.
+    expect(icon.closest('[aria-hidden="true"]')).not.toBeNull();
+  });
+
+  it('shows the clear button only while there is text, and it empties the search and refocuses it', async () => {
+    mount();
+    const search = screen.getByRole('textbox', { name: 'Search components' });
+    const before = screen.getAllByRole('heading', { level: 3 }).length;
+    expect(screen.queryByRole('button', { name: 'Clear search' })).toBeNull();
+    await userEvent.type(search, 'tinted');
+    expect(screen.getAllByRole('heading', { level: 3 }).length).toBeLessThan(before);
+    await userEvent.click(screen.getByRole('button', { name: 'Clear search' }));
+    expect(search).toHaveValue('');
+    expect(search).toHaveFocus();
+    expect(screen.getAllByRole('heading', { level: 3 })).toHaveLength(before);
+    expect(screen.queryByRole('button', { name: 'Clear search' })).toBeNull();
   });
 
   it('navigates to the component page when a card is clicked', async () => {
