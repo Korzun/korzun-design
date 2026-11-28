@@ -3632,7 +3632,7 @@
         "SelectProps"
       ],
       "importLine": "import { Select, type SelectOption, type SelectProps } from '@korzun/design/control'",
-      "body": "A single-value dropdown with type-to-search (on by default), an optional \"Add:\n…\" entry for new values, a clear button, and a loading state. The dropdown is a\n`Popover`, so it escapes clipping cards.\n\nUse something else for: 2–5 options that fit in one row (`SegmentedControl`),\nseveral values (`ChipsInput`), on/off (`Switch`).\n\n## Usage\n\n### Choosing a surface\n\nFollow [corners](../corners.md):\n\n- Usually omit it: the default follows where the select sits. Directly on a\n  `Page` it is `'page'`; in a card or dialog (and outside any surface) it is\n  `'card'`; two or more surfaces deep it is `'inset'`.\n- `'card'`: `radius.md`, no shadow.\n- `'page'`: `radius.lg` + `shadow.cardStack`, like a card.\n- `'inset'`: `radius.sm`, no shadow, for a select nested inside an inset box.\n- Pass `surface` only to override the depth.\n\n### Forms\n\nThere is no hidden input carrying `value`: native `FormData` will not contain\nthe selection (only the search text while open). Keep `value` in state and\nsubmit that. The `<label>` targets the search box, so it is not the closed\ntrigger's accessible name; the trigger announces the selected label or\nplaceholder.\n\n### Keyboard\n\nClosed: Enter, Space or ArrowDown open it. Open: ArrowUp/ArrowDown move (and\nwrap), Enter selects, Escape or Tab close. The highlight starts on the first\noption, not the current value.\n\n### Inside a dialog\n\nIt works inside a `Dialog` or a modal `<dialog>`: the list opens inside the\nopen dialog (see [popover](popover.md)).\n\n### Styling\n\nNo `className`.\n\n## Do / don't\n\n- Do pass `clearable={false}` when an empty value is invalid.\n- Don't pass `surface=\"page\"` inside a card; let the depth decide.",
+      "body": "A single-value dropdown with type-to-search (on by default), an optional \"Add:\n…\" entry for new values, a clear button, and a loading state. The dropdown is a\n`Popover`, so it escapes clipping cards. Its list is drawn like a `Menu`: a\n4px inset pad, `sm`-rounded 14px options, the `cardStack` shadow, `bg.hover` on\nhover and `brand.light` on the keyboard-highlighted option.\n\nUse something else for: 2–5 options that fit in one row (`SegmentedControl`),\nseveral values (`ChipsInput`), on/off (`Switch`).\n\n## Usage\n\n### Choosing a surface\n\nFollow [corners](../corners.md):\n\n- Usually omit it: the default follows where the select sits. Directly on a\n  `Page` it is `'page'`; in a card or dialog (and outside any surface) it is\n  `'card'`; two or more surfaces deep it is `'inset'`.\n- `'card'`: `radius.md`, no shadow.\n- `'page'`: `radius.lg` + `shadow.cardStack`, like a card.\n- `'inset'`: `radius.sm`, no shadow, for a select nested inside an inset box.\n- Pass `surface` only to override the depth.\n\n### Forms\n\nThere is no hidden input carrying `value`: native `FormData` will not contain\nthe selection (only the search text while open). Keep `value` in state and\nsubmit that. The `<label>` targets the search box, so it is not the closed\ntrigger's accessible name; the trigger announces the selected label or\nplaceholder.\n\n### Keyboard\n\nClosed: Enter, Space or ArrowDown open it. Open: ArrowUp/ArrowDown move (and\nwrap), Enter selects, Escape or Tab close. The highlight starts on the first\noption, not the current value.\n\n### Inside a dialog\n\nIt works inside a `Dialog` or a modal `<dialog>`: the list opens inside the\nopen dialog (see [popover](popover.md)).\n\n### Styling\n\nNo `className`.\n\n## Do / don't\n\n- Do pass `clearable={false}` when an empty value is invalid.\n- Don't pass `surface=\"page\"` inside a card; let the depth decide.",
       "examples": [
         {
           "file": "src/control/select/examples/01-basic.tsx",
@@ -3836,6 +3836,12 @@
           "dark": "#232427"
         },
         {
+          "path": "color.bg.hover",
+          "kind": "color",
+          "light": "rgba(0, 0, 0, 0.07)",
+          "dark": "rgba(255, 255, 255, 0.12)"
+        },
+        {
           "path": "color.bg.selected",
           "kind": "color",
           "light": "#dbeafe",
@@ -3902,6 +3908,12 @@
           "dark": "system-ui, sans-serif"
         },
         {
+          "path": "fontSize.md",
+          "kind": "value",
+          "light": "0.875rem",
+          "dark": "0.875rem"
+        },
+        {
           "path": "fontSize.sm",
           "kind": "value",
           "light": "0.75rem",
@@ -3962,10 +3974,10 @@
           "dark": "0px 2px 0px rgba(0, 0, 0, 0.4)"
         },
         {
-          "path": "shadow.hoverLift",
+          "path": "space.lg",
           "kind": "value",
-          "light": "0 2px 8px rgba(0,0,0,0.15)",
-          "dark": "0 2px 8px rgba(0,0,0,0.6)"
+          "light": "0.625rem",
+          "dark": "0.625rem"
         },
         {
           "path": "space.md",
@@ -3986,12 +3998,6 @@
           "dark": "0.25rem"
         },
         {
-          "path": "space.xxl",
-          "kind": "value",
-          "light": "1rem",
-          "dark": "1rem"
-        },
-        {
           "path": "space.xxs",
           "kind": "value",
           "light": "0.125rem",
@@ -4005,6 +4011,14 @@
         }
       ],
       "changelog": [
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "Select"
+          ],
+          "text": "The option list matches `Menu`: a 4px inset pad, 4px-rounded options with a 2px gap, 14px text (was 12.8px), the flat `cardStack` shadow (was `hoverLift`) and `bg.hover` on hover (was `bg.cardHeader`). The keyboard highlight is unchanged."
+        },
         {
           "version": "0.5.0",
           "date": "2026-11-24",
@@ -10365,6 +10379,14 @@
             "darkTheme"
           ],
           "text": "The unchecked track is the new `color.bg.switchOff` token (`#868686` light, `#6E7480` dark), about 3:1 on `bg.page`, `bg.card` and `bg.cardHeader`; it was `border.default` (1.16:1 on a shaded row). The loading spinner on an unchecked track is now the thumb colour."
+        },
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "Select"
+          ],
+          "text": "The option list matches `Menu`: a 4px inset pad, 4px-rounded options with a 2px gap, 14px text (was 12.8px), the flat `cardStack` shadow (was `hoverLift`) and `bg.hover` on hover (was `bg.cardHeader`). The keyboard highlight is unchanged."
         },
         {
           "version": "0.7.0",
