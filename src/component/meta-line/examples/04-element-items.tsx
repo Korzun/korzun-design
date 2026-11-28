@@ -7,6 +7,7 @@ export default function ElementItems() {
   return (
     <Text as="div" size="sm" tone="faint">
       <MetaLine
+        separator="·"
         items={[
           <time key="added" dateTime="2026-03-12">
             12 March 2026

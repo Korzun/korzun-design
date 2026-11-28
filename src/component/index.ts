@@ -9,7 +9,12 @@ export { EmptyState, type EmptyStateProps } from './empty-state/index.js';
 export { ErrorMessage, type ErrorMessageProps } from './error-message/index.js';
 export { Heading, type HeadingProps } from './heading/index.js';
 export { Inline, type InlineProps } from './inline/index.js';
-export { MetaLine, type MetaLineProps } from './meta-line/index.js';
+export {
+  MetaLine,
+  type MetaLineItem,
+  type MetaLinePair,
+  type MetaLineProps,
+} from './meta-line/index.js';
 export { MetadataList, type Metadata, type MetadataListProps } from './metadata-list/index.js';
 export { NavDesktop, type NavDesktopProps } from './nav-desktop/index.js';
 export { NavMobile, type NavMobileProps, type NavPill } from './nav-mobile/index.js';

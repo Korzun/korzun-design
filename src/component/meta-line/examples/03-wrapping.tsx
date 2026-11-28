@@ -7,6 +7,7 @@ export default function Wrapping() {
   return (
     <Text as="div" size="sm" tone="faint">
       <MetaLine
+        separator="·"
         items={[
           'Frank Herbert',
           'Dune Chronicles #3',

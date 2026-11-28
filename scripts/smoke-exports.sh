@@ -65,7 +65,7 @@ JSON
 
 cat >"$tmp/app/index.ts" <<'TS'
 import { applyTransparency } from '@korzun/design';
-import { Alert, Code, Page, Surface, Table, CodeBlock, useSurfaceRadius, type AlertProps, type AlertTone, type CardProps, type CodeBlockProps, type CodeProps, type ErrorMessageProps, type HeadingProps, type InlineProps, type SpinnerProps, type StackProps, type TableColumn, type TableProps, type TagTone, type TextProps } from '@korzun/design/component';
+import { Alert, Code, Page, Surface, Table, CodeBlock, MetaLine, useSurfaceRadius, type AlertProps, type AlertTone, type CardProps, type CodeBlockProps, type CodeProps, type ErrorMessageProps, type HeadingProps, type InlineProps, type MetaLineItem, type MetaLinePair, type SpinnerProps, type StackProps, type TableColumn, type TableProps, type TagTone, type TextProps } from '@korzun/design/component';
 import { Button, Menu, Modal, useModal, type ButtonProps, type ModalProps, type MenuItem, type MenuProps, type PopoverSide } from '@korzun/design/control';
 import { isStandalone } from '@korzun/design/hooks';
 import { CheckIcon } from '@korzun/design/icon';
@@ -76,6 +76,7 @@ export const typeProbe: [ButtonProps['radius'], CardProps['size']] = ['card', 's
 export const toneProbe: [TagTone, PopoverSide] = ['warning', 'top'];
 export const codeProbe: [CodeProps['className']] = ['x'];
 export const tableProbe: [TableColumn<{ a: string }>['align'], TableProps<{ a: string }>['minWidth']] = ['end', '40rem'];
+export const metaLineProbe: [MetaLineItem, MetaLinePair['label'], typeof MetaLine] = [{ label: 'format', value: 'EPUB' }, 'format', MetaLine];
 export const codeBlockProbe: [CodeBlockProps['copyLabel']] = ['Copy import'];
 export const layoutProbe: [StackProps['gap'], InlineProps['justify'], TextProps['tone'], HeadingProps['level']] = ['none', 'between', 'muted', 2];
 export const feedbackProbe: [ModalProps['canDismiss'], ErrorMessageProps['as'], SpinnerProps['size']] = [false, 'div', 'xl'];
