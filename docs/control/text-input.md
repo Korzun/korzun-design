@@ -29,6 +29,14 @@ prop changes. While `validate` fails, the field shows the invalid text but
 `onChange` is not called, so your state keeps the last valid value. Track
 `onValidChange` to block submit.
 
+### Icons inside the field
+
+`prefix` draws a decorative icon at the field's left end (`prefix={SearchIcon}`),
+in `text.muted`; the text moves clear of it. It is hidden from screen readers
+and lets clicks through to the field. `action` puts an icon button at the right
+end. Together they make a search box: a search icon, and a clear button shown
+only while there is text.
+
 ### What it has no prop for
 
 No `className`, no `disabled`, no `id`.
@@ -39,6 +47,8 @@ No `className`, no `disabled`, no `id`.
   `vertical` when the label is long or the field is wide.
 - Do coalesce `undefined` (`v ?? ''`) if your state is a plain string.
 - Do give an `action` an `ariaLabel`; the icon alone has no name.
+- Do name a field with a `prefix` by `label` or `ariaLabel`; the icon says nothing to a screen reader.
+- Don't use `prefix` for something clickable; use `action`.
 - Do set `ariaLabel` on a field with no visible `label`.
 
 <!-- generated:examples -->
@@ -383,6 +393,39 @@ export default function WithoutLabel() {
 }
 ```
 
+### Search field
+
+`prefix` puts a decorative icon inside the field's left end; the text moves clear of it. The icon is hidden from screen readers, so name the field with `ariaLabel`. Paired with an `action` that clears, shown only while there is text, it makes a search box.
+
+```tsx
+import { Stack, Text } from '@korzun/design/component';
+import { TextInput } from '@korzun/design/control';
+import { CircleXIcon, SearchIcon } from '@korzun/design/icon';
+import { useState } from 'react';
+
+export default function SearchField() {
+  const [query, setQuery] = useState<string | undefined>(undefined);
+  return (
+    <Stack>
+      <TextInput
+        name="search"
+        ariaLabel="Search books"
+        placeholder="Search by title or author"
+        prefix={SearchIcon}
+        value={query}
+        onChange={setQuery}
+        action={
+          query === undefined
+            ? undefined
+            : { icon: CircleXIcon, ariaLabel: 'Clear search', action: () => setQuery(undefined) }
+        }
+      />
+      <Text tone="muted">Query: {query === undefined ? 'none' : `“${query}”`}</Text>
+    </Stack>
+  );
+}
+```
+
 <!-- /generated:examples -->
 
 <!-- generated:props -->
@@ -404,6 +447,7 @@ export default function WithoutLabel() {
 | `onValidChange` | `(fieldName: string, newValid: boolean) => void` | `() => {}` | Called with `name` and the new validity; fires only when validity flips. |
 | `password` | `boolean` | `false` | Renders `type="password"`. |
 | `placeholder` | `string` |  | Placeholder text for the input. |
+| `prefix` | `ComponentType<IconProps>` |  | A decorative icon inside the field's left end (`prefix={SearchIcon}`), an icon component, not an element. It is hidden from screen readers and lets clicks through to the field, so name the field with `label` or `ariaLabel`. |
 | `validate` | `(newValue: string) => boolean` | `() => true` | Receives the raw text on each keystroke; `false` turns label and border red. |
 | `value` (required) | `string \| undefined` | `''` | Typed as required: pass it, even as `undefined` for empty. Re-syncs into the field only when the prop changes; see [Controlled-ish](#controlled-ish). |
 
@@ -429,6 +473,7 @@ Trailing icon button of a `TextInput`.
 | `theme.color.bg.cardHeader` | `#EEEEEE` | `#232427` |
 | `theme.color.danger.default` | `#FF4D4F` | `#FF4D4F` |
 | `theme.color.text.faint` | `#9ca3af` | `#6E7480` |
+| `theme.color.text.muted` | `#6E6E6E` | `#9CA1AB` |
 | `theme.fontSize.xxs` | `0.6rem` | `0.6rem` |
 | `theme.layout.controlHeight` | `2.0625rem` | `2.0625rem` |
 | `theme.lineHeight.tight` | `1` | `1` |
@@ -451,6 +496,7 @@ Trailing icon button of a `TextInput`.
 
 ## Changelog
 
+- **0.7.0** (2026-11-26): New `prefix`: a decorative icon component drawn inside the field's left end (`prefix={SearchIcon}`) in `text.muted`, with the text moved clear of it. It is hidden from screen readers and lets clicks through. With a clearing `action` it makes a search box (new Search field example).
 - **0.7.0** (2026-11-26): Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.6.0 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px. A text field, `ChipsInput` box or field label directly on a Page also moves its text 16px in from the edge (8px elsewhere), the inset `Button` keeps, so it clears the deeper corner.
 - **0.5.2** (2026-11-26): The visible `label` is linked to its field (`htmlFor` and a generated `id`), so it names the field and clicking it focuses the field. A new `ariaLabel` prop names a field that has no visible `label`; with a `label` it is ignored.
 - **0.5.2** (2026-11-26): `action` works: clicking its icon button calls `action.action`. `TextInputAction` gains an optional `ariaLabel` naming that button.

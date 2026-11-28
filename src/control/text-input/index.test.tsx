@@ -63,3 +63,51 @@ it('calls the action when its icon button is clicked', async () => {
   await userEvent.click(screen.getByRole('button', { name: 'Clear' }));
   expect(action).toHaveBeenCalledTimes(1);
 });
+
+describe('prefix', () => {
+  const Icon = (props: React.SVGProps<SVGSVGElement>) => (
+    <svg data-testid="prefix-icon" {...props} />
+  );
+
+  it('draws the icon inside the field, hidden from screen readers and clicks', () => {
+    renderWithProviders(<TextInput name="q" ariaLabel="Search" value={undefined} prefix={Icon} />);
+    const icon = screen.getByTestId('prefix-icon');
+    const holder = icon.parentElement!;
+    expect(holder).toHaveAttribute('aria-hidden', 'true');
+    expect(getComputedStyle(holder).pointerEvents).toBe('none');
+    expect(screen.getByRole('textbox', { name: 'Search' })).toBeInTheDocument();
+  });
+
+  it('moves the text clear of the icon', () => {
+    const { rerender } = renderWithProviders(
+      <TextInput name="q" ariaLabel="Search" value={undefined} />
+    );
+    const plain = getComputedStyle(screen.getByRole('textbox')).paddingLeft;
+    rerender(<TextInput name="q" ariaLabel="Search" value={undefined} prefix={Icon} />);
+    const padded = getComputedStyle(screen.getByRole('textbox')).paddingLeft;
+    expect(padded).not.toBe(plain);
+    expect(padded).toContain('20px');
+  });
+
+  it('renders no icon holder without a prefix', () => {
+    const { container } = renderWithProviders(<TextInput name="q" value={undefined} />);
+    expect(container.querySelector('[aria-hidden="true"]')).toBeNull();
+  });
+
+  it('works alongside an action', async () => {
+    const { default: userEvent } = await import('@testing-library/user-event');
+    const action = vi.fn();
+    renderWithProviders(
+      <TextInput
+        name="q"
+        ariaLabel="Search"
+        value="dune"
+        prefix={Icon}
+        action={{ icon: Icon, action, ariaLabel: 'Clear search' }}
+      />
+    );
+    await userEvent.click(screen.getByRole('button', { name: 'Clear search' }));
+    expect(action).toHaveBeenCalledTimes(1);
+    expect(screen.getAllByTestId('prefix-icon')).toHaveLength(2);
+  });
+});
