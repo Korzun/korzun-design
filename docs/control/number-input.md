@@ -160,7 +160,7 @@ export default function DefaultCheck() {
 ### Form in a card
 
 The `horizontal` layout is made for a `Card` body. Index uses the built-in check.
-Width replaces it with a rule that still checks the text is numeric, and both
+Width replaces it with a rule that allows whole numbers up to 4096, and both
 fields report validity through `onValidChange`, so Save stays disabled while
 either is invalid.
 
@@ -199,7 +199,7 @@ export default function FormInCard() {
         />
         <NumberInput
           name="coverWidth"
-          label="Width (up to 4096)"
+          label="Width"
           value={coverWidth}
           onChange={setCoverWidth}
           validate={(t) => t === '' || (/^\d+$/.test(t) && Number(t) <= 4096)}
