@@ -78,3 +78,32 @@ describe('recipe frame', () => {
     post.mockRestore();
   });
 });
+
+describe('Copy button recipe', () => {
+  const COPY = 'recipes/copy-button/01-copy-button.tsx';
+  const mount = () => {
+    const Copy = exampleComponents[COPY];
+    expect(Copy).toBeDefined();
+    return renderWithProviders(<Copy />);
+  };
+
+  it('is listed as a recipe', () => {
+    expect(recipeBySlug('copy-button')?.title).toBe('Copy button');
+  });
+
+  it('shows Copied after a successful copy and announces it', async () => {
+    const user = userEvent.setup();
+    mount();
+    await user.click(screen.getByRole('button', { name: 'Copy' }));
+    expect(await screen.findByRole('button', { name: 'Copied' })).toBeInTheDocument();
+    expect(screen.getByRole('status')).toHaveTextContent('Copied');
+  });
+
+  it('shows Could not copy when the clipboard is missing', async () => {
+    const user = userEvent.setup();
+    mount();
+    Object.defineProperty(navigator, 'clipboard', { value: undefined, configurable: true });
+    await user.click(screen.getByRole('button', { name: 'Copy' }));
+    expect(await screen.findByRole('button', { name: 'Could not copy' })).toBeInTheDocument();
+  });
+});
