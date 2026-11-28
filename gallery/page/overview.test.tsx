@@ -152,7 +152,8 @@ describe('OverviewPage', () => {
     mount();
     const search = screen.getByRole('textbox', { name: 'Search components' });
     const icon = search.closest('[data-search]')!.querySelector('svg')!;
-    expect(icon).toHaveAttribute('aria-hidden', 'true');
+    // TextInput's `prefix` hides the icon's holder from screen readers.
+    expect(icon.closest('[aria-hidden="true"]')).not.toBeNull();
   });
 
   it('shows the clear button only while there is text, and it empties the search and refocuses it', async () => {

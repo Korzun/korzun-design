@@ -20,23 +20,8 @@ const useStyle = createUseStyles((theme: Theme) => ({
   },
   // TextInput's inline layout sizes to its placeholder; stretch it across the column.
   search: {
-    position: 'relative',
     '&& > div': { display: 'flex', width: '100%' },
-    '&&& input': {
-      width: '100%',
-      paddingLeft: `calc(${theme.space.xl} + 20px + ${theme.space.md})`,
-    },
-  },
-  // TextInput has no leading-icon slot, so the icon sits over the input's left padding.
-  searchIcon: {
-    position: 'absolute',
-    left: theme.space.xl,
-    top: '50%',
-    transform: 'translateY(-50%)',
-    color: theme.color.text.muted,
-    pointerEvents: 'none',
-    zIndex: theme.zIndex.stack.lo + 1,
-    display: 'flex',
+    '&& input': { width: '100%' },
   },
 }));
 
@@ -45,15 +30,13 @@ const SearchBox = ({ value, onChange }: { value: string; onChange: (v: string) =
   const root = useRef<HTMLDivElement>(null);
   return (
     <div className={styles.search} data-search ref={root}>
-      <span className={styles.searchIcon}>
-        <SearchIcon aria-hidden="true" height={20} width={20} strokeWidth={2} />
-      </span>
       <TextInput
         name="search"
         ariaLabel="Search components"
         layout="inline"
         placeholder="Search by name, description or prop"
         autoComplete="off"
+        prefix={SearchIcon}
         value={value}
         onChange={(v) => onChange(v ?? '')}
         action={

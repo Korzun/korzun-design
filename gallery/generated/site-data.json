@@ -3883,7 +3883,7 @@
         "TextInputProps"
       ],
       "importLine": "import { TextInput, type TextInputAction, type TextInputProps } from '@korzun/design/control'",
-      "body": "A single-line text (or password) field with an optional label, optional\nvalidation, and a character counter that appears near `maxLength`. The default\n`horizontal` layout puts the label and field on one shaded row, which is how\nform fields look inside a `Card`.\n\nUse something else for: multi-line text (`TextArea`), numbers (`NumberInput`),\npicking from a list (`Select`), a list of tags (`ChipsInput`), dates\n(`DateTimeInput`).\n\n## Usage\n\n### Controlled-ish\n\nThe field keeps its own text. It re-syncs from `value` only when the `value`\nprop changes. While `validate` fails, the field shows the invalid text but\n`onChange` is not called, so your state keeps the last valid value. Track\n`onValidChange` to block submit.\n\n### What it has no prop for\n\nNo `className`, no `disabled`, no `id`.\n\n## Do / don't\n\n- Do keep the default `horizontal` layout for fields in a `Card` body; use\n  `vertical` when the label is long or the field is wide.\n- Do coalesce `undefined` (`v ?? ''`) if your state is a plain string.\n- Do give an `action` an `ariaLabel`; the icon alone has no name.\n- Do set `ariaLabel` on a field with no visible `label`.",
+      "body": "A single-line text (or password) field with an optional label, optional\nvalidation, and a character counter that appears near `maxLength`. The default\n`horizontal` layout puts the label and field on one shaded row, which is how\nform fields look inside a `Card`.\n\nUse something else for: multi-line text (`TextArea`), numbers (`NumberInput`),\npicking from a list (`Select`), a list of tags (`ChipsInput`), dates\n(`DateTimeInput`).\n\n## Usage\n\n### Controlled-ish\n\nThe field keeps its own text. It re-syncs from `value` only when the `value`\nprop changes. While `validate` fails, the field shows the invalid text but\n`onChange` is not called, so your state keeps the last valid value. Track\n`onValidChange` to block submit.\n\n### Icons inside the field\n\n`prefix` draws a decorative icon at the field's left end (`prefix={SearchIcon}`),\nin `text.muted`; the text moves clear of it. It is hidden from screen readers\nand lets clicks through to the field. `action` puts an icon button at the right\nend. Together they make a search box: a search icon, and a clear button shown\nonly while there is text.\n\n### What it has no prop for\n\nNo `className`, no `disabled`, no `id`.\n\n## Do / don't\n\n- Do keep the default `horizontal` layout for fields in a `Card` body; use\n  `vertical` when the label is long or the field is wide.\n- Do coalesce `undefined` (`v ?? ''`) if your state is a plain string.\n- Do give an `action` an `ariaLabel`; the icon alone has no name.\n- Do name a field with a `prefix` by `label` or `ariaLabel`; the icon says nothing to a screen reader.\n- Don't use `prefix` for something clickable; use `action`.\n- Do set `ariaLabel` on a field with no visible `label`.",
       "examples": [
         {
           "file": "src/control/text-input/examples/01-basic.tsx",
@@ -3956,6 +3956,14 @@
           "title": "Without a label",
           "description": "A field with no visible `label` takes `ariaLabel`, so assistive tech can\nstill name it. With a `label`, the label names the field instead.",
           "code": "import { Inline, Text } from '@korzun/design/component';\nimport { TextInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function WithoutLabel() {\n  const [filter, setFilter] = useState<string | undefined>(undefined);\n  return (\n    <Inline>\n      <TextInput\n        name=\"filter\"\n        layout=\"inline\"\n        ariaLabel=\"Filter books\"\n        placeholder=\"Filter books\"\n        value={filter}\n        onChange={setFilter}\n      />\n      <Text tone=\"muted\">Filter: {filter === undefined ? 'none' : `“${filter}”`}</Text>\n    </Inline>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/text-input/examples/10-search-field.tsx",
+          "slug": "search-field",
+          "order": 10,
+          "title": "Search field",
+          "description": "`prefix` puts a decorative icon inside the field's left end; the text moves clear of it. The icon is hidden from screen readers, so name the field with `ariaLabel`. Paired with an `action` that clears, shown only while there is text, it makes a search box.",
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { TextInput } from '@korzun/design/control';\nimport { CircleXIcon, SearchIcon } from '@korzun/design/icon';\nimport { useState } from 'react';\n\nexport default function SearchField() {\n  const [query, setQuery] = useState<string | undefined>(undefined);\n  return (\n    <Stack>\n      <TextInput\n        name=\"search\"\n        ariaLabel=\"Search books\"\n        placeholder=\"Search by title or author\"\n        prefix={SearchIcon}\n        value={query}\n        onChange={setQuery}\n        action={\n          query === undefined\n            ? undefined\n            : { icon: CircleXIcon, ariaLabel: 'Clear search', action: () => setQuery(undefined) }\n        }\n      />\n      <Text tone=\"muted\">Query: {query === undefined ? 'none' : `“${query}”`}</Text>\n    </Stack>\n  );\n}\n"
         }
       ],
       "preview": {
@@ -4054,6 +4062,12 @@
               "description": "Placeholder text for the input."
             },
             {
+              "name": "prefix",
+              "type": "ComponentType<IconProps>",
+              "required": false,
+              "description": "A decorative icon inside the field's left end (`prefix={SearchIcon}`), an icon component, not an element. It is hidden from screen readers and lets clicks through to the field, so name the field with `label` or `ariaLabel`."
+            },
+            {
               "name": "validate",
               "type": "(newValue: string) => boolean",
               "required": false,
@@ -4119,6 +4133,12 @@
           "kind": "color",
           "light": "#9ca3af",
           "dark": "#6E7480"
+        },
+        {
+          "path": "color.text.muted",
+          "kind": "color",
+          "light": "#6E6E6E",
+          "dark": "#9CA1AB"
         },
         {
           "path": "fontSize.xxs",
@@ -4212,6 +4232,14 @@
         }
       ],
       "changelog": [
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "TextInput"
+          ],
+          "text": "New `prefix`: a decorative icon component drawn inside the field's left end (`prefix={SearchIcon}`) in `text.muted`, with the text moved clear of it. It is hidden from screen readers and lets clicks through. With a clearing `action` it makes a search box (new Search field example)."
+        },
         {
           "version": "0.7.0",
           "date": "2026-11-26",
@@ -11208,6 +11236,14 @@
       "version": "0.7.0",
       "date": "2026-11-26",
       "entries": [
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "TextInput"
+          ],
+          "text": "New `prefix`: a decorative icon component drawn inside the field's left end (`prefix={SearchIcon}`) in `text.muted`, with the text moved clear of it. It is hidden from screen readers and lets clicks through. With a clearing `action` it makes a search box (new Search field example)."
+        },
         {
           "version": "0.7.0",
           "date": "2026-11-26",
