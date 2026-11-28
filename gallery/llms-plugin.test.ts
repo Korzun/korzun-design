@@ -29,11 +29,19 @@ describe('buildLlmsTxt', () => {
     );
   });
 
-  it('lists Button under Actions with its doc link and description', () => {
+  it('lists Button under Inputs with its doc link and description', () => {
     const button = siteData.modules.find((m) => m.slug === 'button')!;
-    expect(section('Actions')).toContain(
+    expect(section('Inputs')).toContain(
       `- [Button](${site}docs/control/button.md): ${button.description}`
     );
+  });
+
+  it('indents a nested module under its parent', () => {
+    const layout = section('Layout');
+    const page = layout.indexOf('- [Page](');
+    const bar = layout.indexOf('  - [PageActionsBar](');
+    expect(page).toBeGreaterThanOrEqual(0);
+    expect(bar).toBeGreaterThan(page);
   });
 
   it('orders Start here, the categories by the closed list, then Guides, Recipes and Optional', () => {

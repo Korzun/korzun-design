@@ -57,12 +57,12 @@ const grouped = (repo, area) => {
   }));
 };
 
-// Module skeletons from the package barrels. `hooks` is not a module (its doc
-// is a guide).
+// Module skeletons from the package barrels.
 export const listModules = (repo) => [
   ...grouped(repo, 'control'),
   ...grouped(repo, 'component'),
   single(repo, 'theme'),
   single(repo, 'toast'),
   single(repo, 'icon'),
+  single(repo, 'hooks'),
 ];

@@ -41,7 +41,10 @@ export const buildLlmsTxt = (data: SiteData, siteUrl: string): string => {
       title: category,
       items: data.modules
         .filter((m) => m.category === category)
-        .map((m) => item(m.title, `${siteUrl}${m.docPath}`, m.description)),
+        // A nested module (categories.mjs) is indented under its parent, which it follows.
+        .map(
+          (m) => (m.parent ? '  ' : '') + item(m.title, `${siteUrl}${m.docPath}`, m.description)
+        ),
     });
   sections.push({
     title: 'Guides',

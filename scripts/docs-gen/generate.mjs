@@ -3,7 +3,7 @@ import { createRequire } from 'node:module';
 import { join, posix, sep } from 'node:path';
 
 import { barrelStatements, knownNames } from './barrels.mjs';
-import { CATEGORIES } from './categories.mjs';
+import { CATEGORIES, moduleOrder } from './categories.mjs';
 import { currentTags, parseChangelog, validateTags } from './changelog.mjs';
 import { readDefaults } from './defaults.mjs';
 import { docFiles } from './doc-files.mjs';
@@ -277,6 +277,7 @@ export function generate(repo, { strict = false, warn = console.warn } = {}) {
   /** @type {Map<ModuleInfo, Set<string>>} the types each module's own .d.ts files declare */
   const defines = new Map();
   const skeletons = listModules(repo);
+  const order = new Map(moduleOrder().map((m, i) => [m.slug, { ...m, index: i }]));
   const moduleDirs = new Set(skeletons.map((s) => s.srcDir));
   for (const skel of skeletons) {
     const parsed = fm.get(skel.docPath);
@@ -289,6 +290,12 @@ export function generate(repo, { strict = false, warn = console.warn } = {}) {
       if (!parsed.data[k]) throw new Error(`${skel.docPath}: front matter missing ${k}`);
     }
     checkCategory(skel.docPath, category, false);
+    const placed = order.get(skel.slug);
+    if (placed && placed.category !== category) {
+      throw new Error(
+        `${skel.docPath}: category "${category}", but categories.mjs lists ${skel.slug} under "${placed.category}"`
+      );
+    }
 
     const examples = readExamples(repo, skel);
     if (strict && examples.length === 0) throw new Error(`${skel.docPath}: no examples`);
@@ -334,6 +341,7 @@ export function generate(repo, { strict = false, warn = console.warn } = {}) {
       title,
       description,
       category,
+      ...(order.get(skel.slug)?.parent ? { parent: order.get(skel.slug).parent } : {}),
       values: skel.values,
       types: skel.types,
       importLine: '',
@@ -353,6 +361,11 @@ export function generate(repo, { strict = false, warn = console.warn } = {}) {
       new Set([...declared].filter(([, file]) => file.startsWith(dtsRoot)).map(([n]) => n))
     );
   }
+
+  // Display order: as categories.mjs lists them; a module it does not list
+  // goes after the listed ones (the categories test keeps the real repo complete).
+  const rank = (m) => order.get(m.slug)?.index ?? Infinity;
+  modules.sort((a, b) => rank(a) - rank(b));
 
   // The module whose page owns each type's table: the one that declares it
   // when several document it (one re-exports it), else the first; warn then.

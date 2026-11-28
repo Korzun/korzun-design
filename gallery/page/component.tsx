@@ -1,11 +1,11 @@
 import { Heading, Inline, Page, Stack, Surface, Text } from '@korzun/design/component';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import cx from 'classnames';
-import type { ReactNode } from 'react';
-import { useParams } from 'react-router';
+import { Fragment, type ReactNode } from 'react';
+import { Link, useParams } from 'react-router';
 
 import type { ChangelogEntry, ModuleInfo } from '../../scripts/docs-gen/types.js';
-import { moduleBySlug, moduleOwner, typePages } from '../data.js';
+import { childrenOf, moduleBySlug, moduleOwner, typePages } from '../data.js';
 import { siteColumn } from '../layout/column.js';
 import { useScrollToHash } from '../layout/scroll.js';
 import { codeBlock, PROSE_WIDTH } from '../layout/type.js';
@@ -70,6 +70,40 @@ const byVersion = (entries: ChangelogEntry[]) => {
   return groups;
 };
 
+/** A list of module links: "A", "A and B", "A, B and C". */
+const ModuleLinks = ({ mods }: { mods: ModuleInfo[] }) => {
+  const styles = useStyle();
+  return mods.map((m, i) => (
+    <Fragment key={m.slug}>
+      {i === 0 ? '' : i === mods.length - 1 ? ' and ' : ', '}
+      <Link to={`/components/${m.slug}`} className={styles.link}>
+        {m.title}
+      </Link>
+    </Fragment>
+  ));
+};
+
+/** Under the lead: the parent a nested module belongs to, or the modules nested under this one. */
+const Family = ({ mod }: { mod: ModuleInfo }) => {
+  const parent = mod.parent ? moduleBySlug(mod.parent) : undefined;
+  const children = childrenOf(mod);
+  if (parent) {
+    return (
+      <Text size="sm" tone="description">
+        {'Part of '}
+        <ModuleLinks mods={[parent]} />.
+      </Text>
+    );
+  }
+  if (children.length === 0) return null;
+  return (
+    <Text size="sm" tone="description">
+      {'Goes with '}
+      <ModuleLinks mods={children} />.
+    </Text>
+  );
+};
+
 const Section = ({ title, id, children }: { title: string; id: string; children: ReactNode }) => (
   <Stack as="section" gap="xl" aria-label={title}>
     <Heading level={2} id={id}>
@@ -112,6 +146,7 @@ export const ComponentPage = () => {
             <Stack gap="sm">
               <Heading level={1}>{mod.title}</Heading>
               <Lead>{mod.description}</Lead>
+              <Family mod={mod} />
             </Stack>
             <Inline gap="md" align="center" className={styles.importBox}>
               <code

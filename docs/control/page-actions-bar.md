@@ -1,7 +1,7 @@
 ---
 title: PageActionsBar
 description: The desktop page-actions row: primary actions as inline buttons and the rest in an overflow menu.
-category: Actions
+category: Layout
 ---
 
 # PageActionsBar

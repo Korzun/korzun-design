@@ -29,7 +29,7 @@ const put = (root, rel, text) => {
 const DOC = `---
 title: Widget
 description: A fixture widget.
-category: Actions
+category: Inputs
 ---
 
 # Widget
@@ -447,7 +447,7 @@ test('generating twice gives identical output, and feeding output back is stable
 });
 
 test('unknown category throws', () => {
-  const root = fixture({ doc: DOC.replace('Actions', 'Bogus') });
+  const root = fixture({ doc: DOC.replace('Inputs', 'Bogus') });
   assert.throws(() => generate(root), /docs\/control\/widget\.md: unknown category "Bogus"/);
 });
 
@@ -512,14 +512,15 @@ test('--check exits 0 when current, 1 after a JSDoc edit', () => {
   }
   // The CLI is strict: every module, entry points included, needs front matter and an example.
   for (const [area, category] of [
-    ['theme', 'Theme'],
+    ['theme', 'Foundations'],
     ['toast', 'Feedback'],
-    ['icon', 'Data display'],
+    ['icon', 'Foundations'],
+    ['hooks', 'Hooks'],
   ]) {
     put(
       root,
       `docs/${area}.md`,
-      DOC.replace('Widget', area).replace('Actions', category).replace('# Widget', `# ${area}`)
+      DOC.replace('Widget', area).replace('Inputs', category).replace('# Widget', `# ${area}`)
     );
     put(
       root,

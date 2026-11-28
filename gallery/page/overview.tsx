@@ -6,7 +6,7 @@ import { Link } from 'react-router';
 
 import { CATEGORIES } from '../../scripts/docs-gen/categories.mjs';
 import type { ModuleInfo } from '../../scripts/docs-gen/types.js';
-import { moduleOwner, siteData } from '../data.js';
+import { moduleBySlug, moduleOwner, siteData } from '../data.js';
 import { siteColumn } from '../layout/column.js';
 import { Markdown } from '../part/markdown.js';
 import { Thumbnail } from '../part/thumbnail.js';
@@ -51,14 +51,21 @@ const useStyle = createUseStyles((theme: Theme) => ({
   },
 }));
 
+/** A module's card. A nested module (categories.mjs) follows its parent and names it first. */
 const ModuleCard = ({ mod }: { mod: ModuleInfo }) => {
   const styles = useStyle();
+  const parent = mod.parent ? moduleBySlug(mod.parent) : undefined;
   return (
     <Link to={`/components/${mod.slug}`} className={styles.card}>
       <Card>
         <Stack gap="md" className={styles.cardBody}>
           <Thumbnail owner={moduleOwner(mod)} compact />
           <Stack gap="xs" className={styles.cardText}>
+            {parent && (
+              <Text size="sm" tone="muted">
+                {parent.title} /
+              </Text>
+            )}
             <Heading level={3} size="md">
               {mod.title}
             </Heading>

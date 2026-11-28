@@ -1,7 +1,7 @@
 ---
 title: PageActionsMenu
 description: The mobile page-actions control: a round glass button that opens a menu of every page action.
-category: Actions
+category: Layout
 ---
 
 # PageActionsMenu

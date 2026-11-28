@@ -46,7 +46,8 @@ test('single-module areas', () => {
   assert.ok(byId('theme').values.includes('createUseStyles'));
   assert.equal(byId('toast').docPath, 'docs/toast.md');
   assert.equal(byId('icon').dtsDir, 'dist/icon');
-  assert.equal(byId('hooks'), undefined);
+  assert.equal(byId('hooks').docPath, 'docs/hooks.md');
+  assert.ok(byId('hooks').values.includes('usePullToRefresh'));
 });
 
 test('internal folders are excluded', () => {
