@@ -34,7 +34,13 @@ const useStyle = createUseStyles((theme: Theme) => ({
     [theme.breakpoint.mobile]: { gap: theme.space.md },
   },
   // A phone row: a small thumbnail beside the name and description.
-  cardText: { minWidth: 0 },
+  cardText: {
+    minWidth: 0,
+    // An extra xs between the preview and the title, on top of the card's md gap.
+    paddingTop: theme.space.xs,
+    // On a phone the text sits beside the thumbnail, so it lines up with its top.
+    [theme.breakpoint.mobile]: { paddingTop: 0 },
+  },
   cardBody: {
     // Doubled, to win over Stack's own column direction.
     [theme.breakpoint.mobile]: { '&&': { flexDirection: 'row', alignItems: 'flex-start' } },
