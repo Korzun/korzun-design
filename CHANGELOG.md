@@ -2,6 +2,7 @@
 
 ## 0.7.0 — 2026-11-26
 
+- [Code] New `Code` (component): inline `<code>` in the mono font at 0.875em of the surrounding text (so it scales in a heading), on a `bg.cardHeader` chip with `sm` corners; a long name breaks only when it cannot fit. In dark mode directly on a Page it gets a 1px `border.default` edge. Takes `children` and `className`.
 - [lightTheme, darkTheme] New `color.code` palette (foreground, keyword, string, function, parameter, constant, punctuation, comment, link) for syntax colours, and `recipe.codeBlock` and `recipe.inlineCode` for code rendered outside `CodeBlock` and `Code`.
 - [Button] **Breaking:** the `success` prop is removed. It only tinted a `default` button green (a `primary` one stayed blue), which read as a fourth kind of button. For a done state such as Copy turning into Copied!, change the label and add a `CheckIcon` prefix. The `color.bg.success` and `color.border.success` tokens stay. The Button examples now show every type, and `danger` on both `default` and `primary`.
 - [Button] A `link` button's spinner and `prefix`/`suffix` icons sit 0.5em from the label and centred on the text, like the other types; before they touched the label and sat high on the baseline. An icon-only link gets no extra space.
