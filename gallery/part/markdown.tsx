@@ -6,8 +6,8 @@ import { useLocation, useNavigate } from 'react-router';
 
 import { anchor } from '../../scripts/docs-gen/slug.mjs';
 import { useScrollHint } from '../layout/scroll-hint.js';
-import { codeBlock, inlineCode, pageCodeEdge, PROSE_WIDTH, scrollHint } from '../layout/type.js';
-import { highlight, useHighlightStyle } from './highlight.js';
+import { PROSE_WIDTH, scrollHint } from '../layout/type.js';
+import { highlight } from './highlight.js';
 
 // Schemes a rendered link may use; any other (`javascript:`, `data:`) becomes `#`.
 const SAFE_SCHEMES = new Set(['http:', 'https:', 'mailto:']);
@@ -122,84 +122,105 @@ const render = (
     : marked.parse(source, { async: false });
 };
 
-const useStyle = createUseStyles((theme: Theme) => ({
-  root: {
-    lineHeight: theme.lineHeight.body,
-    '& > :first-child': { marginTop: 0 },
-    '& > :last-child': { marginBottom: 0 },
-    // The page templates' scale (layout/type.ts): an h2 here matches a page's
-    // `<Heading level={2}>` section, an h3 an example or props title.
-    '& h2, & h3, & h4': { lineHeight: theme.lineHeight.tight },
-    '& h2': {
-      fontSize: theme.fontSize.xl,
-      fontWeight: theme.fontWeight.bold,
-      margin: `${theme.space.xxxxxl} 0 ${theme.space.xl}`,
+const useStyle = createUseStyles((theme: Theme) => {
+  // Markdown sits on the page: in dark, `bg.cardHeader` is 1.01:1 on `bg.page`,
+  // so its code draws a `border.default` hairline, inset so the box keeps its size.
+  // The recipes carry the in-surface look; this is the page edge CodeBlock and Code add.
+  const pageEdge =
+    theme.colorScheme === 'dark'
+      ? { boxShadow: `inset 0 0 0 1px ${theme.color.border.default}` }
+      : {};
+  return {
+    root: {
+      lineHeight: theme.lineHeight.body,
+      '& > :first-child': { marginTop: 0 },
+      '& > :last-child': { marginBottom: 0 },
+      // The page templates' scale (layout/type.ts): an h2 here matches a page's
+      // `<Heading level={2}>` section, an h3 an example or props title.
+      '& h2, & h3, & h4': { lineHeight: theme.lineHeight.tight },
+      '& h2': {
+        fontSize: theme.fontSize.xl,
+        fontWeight: theme.fontWeight.bold,
+        margin: `${theme.space.xxxxxl} 0 ${theme.space.xl}`,
+      },
+      '& h3': {
+        fontSize: theme.fontSize.lg,
+        fontWeight: theme.fontWeight.semibold,
+        margin: `${theme.space.xxxl} 0 ${theme.space.md}`,
+      },
+      '& h4': {
+        fontSize: theme.fontSize.md,
+        fontWeight: theme.fontWeight.semibold,
+        margin: `${theme.space.xxl} 0 ${theme.space.sm}`,
+      },
+      // Lines of prose stop at a readable length; tables and code keep the full width.
+      '& > p, & > ul, & > ol, & > blockquote, & > h2, & > h3, & > h4': { maxWidth: PROSE_WIDTH },
+      '& p, & ul, & ol': { margin: `0 0 ${theme.space.lg}` },
+      '& ul, & ol': { paddingLeft: theme.space.xxxl },
+      '& li + li': { marginTop: theme.space.xs },
+      '& li > ul': { margin: `${theme.space.xs} 0 0` },
+      '& pre': {
+        ...theme.recipe.codeBlock,
+        color: theme.color.code.foreground,
+        margin: `0 0 ${theme.space.lg}`,
+        // A box on the page background: the page's corner, not the recipe's in-surface one.
+        borderRadius: theme.radius.lg,
+        ...pageEdge,
+        ...scrollHint,
+      },
+      // Inline code here sits on the page too, so it takes the same edge.
+      '& :not(pre) > code': { ...theme.recipe.inlineCode, ...pageEdge },
+      // The block sets the size; its code is not an inline span.
+      '& pre code': {
+        fontSize: 'inherit',
+        padding: 0,
+        borderRadius: 0,
+        backgroundColor: 'transparent',
+        overflowWrap: 'normal',
+      },
+      // Guides lean on tables (corners, tokens): ruled rows, left-aligned heads.
+      '& table': {
+        display: 'block',
+        maxWidth: '100%',
+        overflowX: 'auto',
+        margin: `0 0 ${theme.space.lg}`,
+        borderCollapse: 'collapse',
+        fontSize: theme.fontSize.md,
+      },
+      '& th, & td': {
+        padding: `${theme.space.sm} ${theme.space.lg} ${theme.space.sm} 0`,
+        borderBottom: `1px solid ${theme.color.border.default}`,
+        textAlign: 'left',
+        verticalAlign: 'top',
+      },
+      '& th': { fontWeight: theme.fontWeight.semibold, color: theme.color.text.secondary },
     },
-    '& h3': {
-      fontSize: theme.fontSize.lg,
-      fontWeight: theme.fontWeight.semibold,
-      margin: `${theme.space.xxxl} 0 ${theme.space.md}`,
+    // Highlighted code's colours: the `--code-*` variables Shiki's css-variables
+    // theme reads, from `theme.color.code`, as CodeBlock sets them.
+    codeColours: {
+      '--code-foreground': theme.color.code.foreground,
+      '--code-token-keyword': theme.color.code.keyword,
+      '--code-token-string': theme.color.code.string,
+      '--code-token-string-expression': theme.color.code.string,
+      '--code-token-function': theme.color.code.function,
+      '--code-token-parameter': theme.color.code.parameter,
+      '--code-token-constant': theme.color.code.constant,
+      '--code-token-punctuation': theme.color.code.punctuation,
+      '--code-token-comment': theme.color.code.comment,
+      '--code-token-link': theme.color.code.link,
     },
-    '& h4': {
-      fontSize: theme.fontSize.md,
-      fontWeight: theme.fontWeight.semibold,
-      margin: `${theme.space.xxl} 0 ${theme.space.sm}`,
+    // Inline runs (a prop or example description) share the code and link look.
+    text: {
+      // In em, so code in a heading takes the heading's size.
+      '& code': theme.recipe.inlineCode,
+      '& a': {
+        color: theme.color.brand.default,
+        textDecoration: 'none',
+        '&:hover': { color: theme.color.brand.linkHover, textDecoration: 'underline' },
+      },
     },
-    // Lines of prose stop at a readable length; tables and code keep the full width.
-    '& > p, & > ul, & > ol, & > blockquote, & > h2, & > h3, & > h4': { maxWidth: PROSE_WIDTH },
-    '& p, & ul, & ol': { margin: `0 0 ${theme.space.lg}` },
-    '& ul, & ol': { paddingLeft: theme.space.xxxl },
-    '& li + li': { marginTop: theme.space.xs },
-    '& li > ul': { margin: `${theme.space.xs} 0 0` },
-    '& pre': {
-      ...codeBlock(theme),
-      margin: `0 0 ${theme.space.lg}`,
-      padding: theme.space.xl,
-      overflowX: 'auto',
-      // A box on the page background.
-      borderRadius: theme.radius.lg,
-      backgroundColor: theme.color.bg.cardHeader,
-      ...pageCodeEdge(theme),
-      ...scrollHint,
-    },
-    // Inline code here sits on the page too, so it takes the same edge.
-    '& :not(pre) > code': pageCodeEdge(theme),
-    // The block sets the size; its code is not an inline span.
-    '& pre code': {
-      fontSize: 'inherit',
-      padding: 0,
-      borderRadius: 0,
-      backgroundColor: 'transparent',
-      overflowWrap: 'normal',
-    },
-    // Guides lean on tables (corners, tokens): ruled rows, left-aligned heads.
-    '& table': {
-      display: 'block',
-      maxWidth: '100%',
-      overflowX: 'auto',
-      margin: `0 0 ${theme.space.lg}`,
-      borderCollapse: 'collapse',
-      fontSize: theme.fontSize.md,
-    },
-    '& th, & td': {
-      padding: `${theme.space.sm} ${theme.space.lg} ${theme.space.sm} 0`,
-      borderBottom: `1px solid ${theme.color.border.default}`,
-      textAlign: 'left',
-      verticalAlign: 'top',
-    },
-    '& th': { fontWeight: theme.fontWeight.semibold, color: theme.color.text.secondary },
-  },
-  // Inline runs (a prop or example description) share the code and link look.
-  text: {
-    // In em, so code in a heading takes the heading's size.
-    '& code': inlineCode(theme),
-    '& a': {
-      color: theme.color.brand.default,
-      textDecoration: 'none',
-      '&:hover': { color: theme.color.brand.linkHover, textDecoration: 'underline' },
-    },
-  },
-}));
+  };
+});
 
 export type MarkdownProps = {
   /** Markdown from the repo. Raw HTML in it shows as text; links outside http(s), mailto and relative become `#`. */
@@ -226,7 +247,6 @@ export const Markdown = ({
   className,
 }: MarkdownProps) => {
   const styles = useStyle();
-  const tokens = useHighlightStyle();
   const { pathname } = useLocation();
   const navigate = useNavigate();
   // A div or a span (`inline`); the hook only needs an element.
@@ -256,7 +276,7 @@ export const Markdown = ({
   return (
     <Tag
       ref={ref}
-      className={cx(styles.text, !inline && styles.root, tokens.tokens, className)}
+      className={cx(styles.text, !inline && styles.root, styles.codeColours, className)}
       onClick={onClick}
       // Repo docs and JSDoc, with raw HTML escaped and link schemes allowlisted above.
       dangerouslySetInnerHTML={{ __html: html }}

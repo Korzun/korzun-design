@@ -1,6 +1,5 @@
-import { Heading, Inline, Page, Stack, Surface, Text } from '@korzun/design/component';
+import { CodeBlock, Heading, Inline, Page, Stack, Text } from '@korzun/design/component';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
-import cx from 'classnames';
 import { Fragment, type ReactNode } from 'react';
 import { Link, useParams } from 'react-router';
 
@@ -8,11 +7,10 @@ import type { ChangelogEntry, ExampleInfo, ModuleInfo } from '../../scripts/docs
 import { childrenOf, moduleBySlug, moduleOwner, typePages } from '../data.js';
 import { siteColumn } from '../layout/column.js';
 import { useScrollToHash } from '../layout/scroll.js';
-import { codeBlock, PROSE_WIDTH } from '../layout/type.js';
+import { PROSE_WIDTH } from '../layout/type.js';
 import { NotFound } from '../not-found.js';
-import { CopyButton } from '../part/copy-button.js';
 import { ExampleBlock } from '../part/example-block.js';
-import { highlight, useHighlightStyle } from '../part/highlight.js';
+import { highlight } from '../part/highlight.js';
 import { IconGrid } from '../part/icon-grid.js';
 import { Lead } from '../part/lead.js';
 import { createSlugger, headingTexts, Markdown } from '../part/markdown.js';
@@ -27,17 +25,12 @@ const useStyle = createUseStyles((theme: Theme) => ({
     paddingTop: theme.space.xxxxxl,
     paddingBottom: theme.space.xxxxxl,
   },
+  // The import line keeps its hairline in both modes (it stands in for the
+  // dark page edge) and centres Copy on a line that wraps on a phone.
   importBox: {
-    padding: `${theme.space.md} ${theme.space.md} ${theme.space.md} ${theme.space.xl}`,
+    alignItems: 'center',
     border: `1px solid ${theme.color.border.default}`,
-    borderRadius: theme.radius.lg,
-    backgroundColor: theme.color.bg.cardHeader,
-  },
-  importCode: {
-    flex: '1 1 0',
-    minWidth: 0,
-    ...codeBlock(theme),
-    overflowWrap: 'break-word',
+    boxShadow: 'none',
   },
   link: {
     color: theme.color.brand.default,
@@ -176,7 +169,6 @@ const Section = ({ title, id, children }: { title: string; id: string; children:
 /** `#/components/<slug>`: everything about one module, from the generated site data. */
 export const ComponentPage = () => {
   const styles = useStyle();
-  const tokens = useHighlightStyle();
   const mod = moduleBySlug(useParams().slug ?? '');
   // A link to a supporting type (`#/components/button#buttontypevalue`) or a
   // Usage section (`#/components/popover#layers`) lands on it.
@@ -210,17 +202,16 @@ export const ComponentPage = () => {
               <Lead>{mod.description}</Lead>
               <Family mod={mod} />
             </Stack>
-            <Inline gap="md" align="center" className={styles.importBox}>
-              <code
-                className={cx(styles.importCode, tokens.tokens)}
-                // highlight() escapes the line; the spans are its own.
-                dangerouslySetInnerHTML={{ __html: highlight(mod.importLine) }}
-              />
-              {/* A hand-drawn box on the page: its Copy button sits one level in. */}
-              <Surface>
-                <CopyButton text={mod.importLine} label="Copy import" />
-              </Surface>
-            </Inline>
+            <CodeBlock
+              code={mod.importLine}
+              copyable
+              copyLabel="Copy import"
+              wrap
+              className={styles.importBox}
+            >
+              {/* highlight() escapes the line; the spans are its own. */}
+              <code dangerouslySetInnerHTML={{ __html: highlight(mod.importLine) }} />
+            </CodeBlock>
             <Text size="sm" tone="description">
               {'Agents: read the '}
               <a href={llmDoc} className={styles.link}>

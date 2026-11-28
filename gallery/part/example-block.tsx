@@ -1,4 +1,4 @@
-import { Heading, Inline, Stack, Surface } from '@korzun/design/component';
+import { CodeBlock, Heading, Inline, Stack, Surface } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import cx from 'classnames';
@@ -8,12 +8,11 @@ import { anchor } from '../../scripts/docs-gen/slug.mjs';
 import type { ExampleInfo } from '../../scripts/docs-gen/types.js';
 import type { ExampleOwner } from '../data.js';
 import { frameSrc, MOBILE_WIDTH, SCREEN_HEIGHT, useFrameTheme } from '../frame-url.js';
-import { useScrollHint } from '../layout/scroll-hint.js';
 import { tapTarget } from '../layout/tap-target.js';
-import { codeBlock, PROSE_WIDTH, scrollHint } from '../layout/type.js';
+import { PROSE_WIDTH } from '../layout/type.js';
 import { isHeightMessage } from '../messages.js';
 import { CopyButton } from './copy-button.js';
-import { highlight, useHighlightStyle } from './highlight.js';
+import { highlight } from './highlight.js';
 import { Markdown } from './markdown.js';
 
 const useStyle = createUseStyles((theme: Theme) => ({
@@ -43,14 +42,10 @@ const useStyle = createUseStyles((theme: Theme) => ({
   meta: { padding: `${theme.space.xl} ${theme.space.xxl}` },
   // A long description stops at a readable line length.
   description: { maxWidth: PROSE_WIDTH },
+  // The code sits flush at the card's bottom: square, ruled off from the meta above.
   code: {
-    margin: 0,
-    padding: theme.space.xxl,
-    overflowX: 'auto',
+    borderRadius: 0,
     borderTop: `1px solid ${theme.color.border.light}`,
-    backgroundColor: theme.color.bg.cardHeader,
-    ...codeBlock(theme),
-    ...scrollHint,
   },
   // "Show code" is a text-height link: on a phone its hit area grows to 44px.
   toggle: tapTarget(theme),
@@ -68,7 +63,6 @@ export type ExampleBlockProps = {
 /** One example: its live demo in a frame sized to fit, title, description and copyable code. */
 export const ExampleBlock = ({ owner, example, headingId }: ExampleBlockProps) => {
   const styles = useStyle();
-  const tokens = useHighlightStyle();
   const [theme, onLoad] = useFrameTheme();
   const [height, setHeight] = useState<number | null>(null);
   // A full-height screen sizes itself to the frame, so the frame gets a fixed height.
@@ -76,8 +70,6 @@ export const ExampleBlock = ({ owner, example, headingId }: ExampleBlockProps) =
   const [loaded, setLoaded] = useState(false);
   const [showCode, setShowCode] = useState(false);
   const frameRef = useRef<HTMLIFrameElement>(null);
-  const codeRef = useRef<HTMLPreElement>(null);
-  useScrollHint(codeRef, showCode);
   // The id the doc's `### <title>` heading has, so `#expanded-side` links land here too.
   const titleId = headingId ?? anchor(example.title);
   const codeId = useId();
@@ -151,10 +143,15 @@ export const ExampleBlock = ({ owner, example, headingId }: ExampleBlockProps) =
         </Stack>
       </Surface>
       {showCode && (
-        <pre className={cx(styles.code, tokens.tokens)} id={codeId} ref={codeRef}>
-          {/* highlight.js escapes the source; the spans are its own. */}
-          <code dangerouslySetInnerHTML={{ __html: highlight(example.code) }} />
-        </pre>
+        // Inside the hand-drawn card: one level in, so the box draws no page edge.
+        <Surface>
+          <div id={codeId}>
+            <CodeBlock code={example.code} className={styles.code}>
+              {/* highlight() escapes the source; the spans are its own. */}
+              <code dangerouslySetInnerHTML={{ __html: highlight(example.code) }} />
+            </CodeBlock>
+          </div>
+        </Surface>
       )}
     </section>
   );

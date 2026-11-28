@@ -1,5 +1,4 @@
 import { ThemeProvider } from '@korzun/design/theme';
-import { ToastProvider } from '@korzun/design/toast';
 import { act, fireEvent, render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 
@@ -13,11 +12,9 @@ describe('ExampleBlock', () => {
   it('sets data-ready once its frame has loaded and posted its height', () => {
     const { container } = render(
       <ThemeProvider identity="test">
-        <ToastProvider>
-          <MemoryRouter>
-            <ExampleBlock owner={moduleOwner(button)} example={button.examples[0]} />
-          </MemoryRouter>
-        </ToastProvider>
+        <MemoryRouter>
+          <ExampleBlock owner={moduleOwner(button)} example={button.examples[0]} />
+        </MemoryRouter>
       </ThemeProvider>
     );
     const section = container.querySelector('section')!;
@@ -41,11 +38,9 @@ describe('ExampleBlock', () => {
   it('reveals the frame on its first height message, even before load fires', () => {
     const { container } = render(
       <ThemeProvider identity="test">
-        <ToastProvider>
-          <MemoryRouter>
-            <ExampleBlock owner={moduleOwner(button)} example={button.examples[0]} />
-          </MemoryRouter>
-        </ToastProvider>
+        <MemoryRouter>
+          <ExampleBlock owner={moduleOwner(button)} example={button.examples[0]} />
+        </MemoryRouter>
       </ThemeProvider>
     );
     const iframe = container.querySelector('iframe')!;
@@ -66,12 +61,10 @@ describe('ExampleBlock', () => {
     const mobile = { ...button.examples[0], viewport: 'mobile' as const };
     const { container } = render(
       <ThemeProvider identity="test">
-        <ToastProvider>
-          <MemoryRouter>
-            <ExampleBlock owner={moduleOwner(button)} example={mobile} />
-            <ExampleBlock owner={moduleOwner(button)} example={button.examples[1]} />
-          </MemoryRouter>
-        </ToastProvider>
+        <MemoryRouter>
+          <ExampleBlock owner={moduleOwner(button)} example={mobile} />
+          <ExampleBlock owner={moduleOwner(button)} example={button.examples[1]} />
+        </MemoryRouter>
       </ThemeProvider>
     );
     const [phone, wide] = container.querySelectorAll('iframe');
@@ -84,11 +77,9 @@ describe('ExampleBlock', () => {
   const mountBlock = (owner: ExampleOwner, example = button.examples[0]!) =>
     render(
       <ThemeProvider identity="test">
-        <ToastProvider>
-          <MemoryRouter>
-            <ExampleBlock owner={owner} example={example} />
-          </MemoryRouter>
-        </ToastProvider>
+        <MemoryRouter>
+          <ExampleBlock owner={owner} example={example} />
+        </MemoryRouter>
       </ThemeProvider>
     );
   const recipe: ExampleOwner = {
@@ -130,11 +121,9 @@ describe('ExampleBlock code', () => {
   it('shows the example code highlighted, text unchanged', () => {
     const { container, getByRole } = render(
       <ThemeProvider identity="test">
-        <ToastProvider>
-          <MemoryRouter>
-            <ExampleBlock owner={moduleOwner(button)} example={button.examples[0]!} />
-          </MemoryRouter>
-        </ToastProvider>
+        <MemoryRouter>
+          <ExampleBlock owner={moduleOwner(button)} example={button.examples[0]!} />
+        </MemoryRouter>
       </ThemeProvider>
     );
     fireEvent.click(getByRole('button', { name: 'Show code' }));

@@ -1,5 +1,4 @@
 import { ThemeProvider } from '@korzun/design/theme';
-import { ToastProvider } from '@korzun/design/toast';
 import { act, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes } from 'react-router';
@@ -11,13 +10,11 @@ import { ComponentPage, exampleRows } from './component.js';
 const mount = (slug: string) =>
   render(
     <ThemeProvider identity="test">
-      <ToastProvider>
-        <MemoryRouter initialEntries={[`/components/${slug}`]}>
-          <Routes>
-            <Route path="/components/:slug" element={<ComponentPage />} />
-          </Routes>
-        </MemoryRouter>
-      </ToastProvider>
+      <MemoryRouter initialEntries={[`/components/${slug}`]}>
+        <Routes>
+          <Route path="/components/:slug" element={<ComponentPage />} />
+        </Routes>
+      </MemoryRouter>
     </ThemeProvider>
   );
 
@@ -51,7 +48,9 @@ describe('ComponentPage', () => {
     mount('button');
     await user.click(screen.getByRole('button', { name: 'Copy import' }));
     expect(write).toHaveBeenCalledWith(button.importLine);
-    expect(await screen.findByText('Copied')).toBeInTheDocument();
+    // The feedback is in the button and its status region, not a toast.
+    expect(await screen.findByRole('button', { name: 'Copied' })).toBeInTheDocument();
+    expect(screen.getAllByRole('status').some((s) => s.textContent === 'Copied')).toBe(true);
   });
 
   it('links the LLM doc to the raw markdown', () => {
