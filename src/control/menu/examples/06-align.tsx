@@ -3,7 +3,7 @@
  * The wide triggers show it: each menu is narrower than its trigger. Use `end` for
  * a trigger at the right edge of the screen.
  */
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button, Menu } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -14,7 +14,7 @@ export default function Align() {
     { label: 'Close', onClick: () => setChosen(`Close (${align})`) },
   ];
   return (
-    <Stack align="start">
+    <Space direction="vertical" align="start">
       <Menu
         align="start"
         trigger={(p) => <Button {...p}>align start: menu at the left edge</Button>}
@@ -31,6 +31,6 @@ export default function Align() {
         items={items('end')}
       />
       <Text tone="muted">Chosen: {chosen}</Text>
-    </Stack>
+    </Space>
   );
 }

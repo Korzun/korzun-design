@@ -3,7 +3,7 @@
  * and key presses inside an action stay with it, so Add does not toggle the
  * section.
  */
-import { CollapsibleSection, Stack, Text } from '@korzun/design/component';
+import { CollapsibleSection, Space, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -22,11 +22,11 @@ export default function Actions() {
         </Button>,
       ]}
     >
-      <Stack gap="xs">
+      <Space direction="vertical" gap="xs">
         {Array.from({ length: count }, (_, i) => (
           <Text key={i}>Book {i + 1}</Text>
         ))}
-      </Stack>
+      </Space>
     </CollapsibleSection>
   );
 }

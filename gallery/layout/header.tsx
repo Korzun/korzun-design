@@ -1,4 +1,4 @@
-import { Inline, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { SegmentedControl } from '@korzun/design/control';
 import { createUseStyles, useThemeSetting, type Theme } from '@korzun/design/theme';
 import cx from 'classnames';
@@ -145,15 +145,15 @@ export const Header = () => {
     <header className={styles.root}>
       <div className={styles.inner}>
         <Link to="/" className={styles.brand}>
-          <Inline gap="sm" align="baseline">
+          <Space gap="sm" align="baseline">
             <Text weight="semibold">@korzun/design</Text>
             <Text size="xs" tone="muted">
               {siteData.version}
             </Text>
-          </Inline>
+          </Space>
         </Link>
         <nav aria-label="Site" className={styles.nav}>
-          <Inline gap="lg" wrap>
+          <Space gap="lg" wrap>
             {NAV_LINKS.map(({ to, label, active }) => {
               const current = active(pathname);
               return (
@@ -168,7 +168,7 @@ export const Header = () => {
                 </Link>
               );
             })}
-          </Inline>
+          </Space>
         </nav>
         <div className={styles.theme}>
           <SegmentedControl label="Theme" value={setting} options={THEMES} onChange={setSetting} />

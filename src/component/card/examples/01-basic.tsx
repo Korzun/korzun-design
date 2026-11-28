@@ -2,7 +2,7 @@
  * A feature on a screen: `title`, a `subTitle`, a `headerAction`, a form in the body and its
  * submit button in the `footer`. The footer button reaches the form by `form` id, so it submits it.
  */
-import { Card, Stack, Text } from '@korzun/design/component';
+import { Card, Space, Text } from '@korzun/design/component';
 import { Button, TextInput } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -32,10 +32,10 @@ export default function Basic() {
           setSaved(name ?? '');
         }}
       >
-        <Stack>
+        <Space direction="vertical">
           <TextInput name="name" label="Name" value={name} onChange={setName} />
           <Text tone="muted">Saved name: {saved}</Text>
-        </Stack>
+        </Space>
       </form>
     </Card>
   );

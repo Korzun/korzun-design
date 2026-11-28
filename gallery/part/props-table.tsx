@@ -1,7 +1,7 @@
 import {
   CodeBlock,
   Heading,
-  Stack,
+  Space,
   Table,
   type TableColumn,
   Tag,
@@ -197,7 +197,7 @@ export const PropsTable = ({ table, tables, typePages = NO_PAGES, from }: PropsT
       label: false,
       nowrap: true,
       render: (row) => (
-        <Stack gap="xs" align="start" className={styles.nameStack}>
+        <Space direction="vertical" gap="xs" align="start" className={styles.nameStack}>
           <code className={cx(styles.code, styles.propName, row.deprecated && styles.deprecated)}>
             {row.name}
           </code>
@@ -211,7 +211,7 @@ export const PropsTable = ({ table, tables, typePages = NO_PAGES, from }: PropsT
               deprecated
             </Tag>
           )}
-        </Stack>
+        </Space>
       ),
     },
     {
@@ -261,7 +261,7 @@ export const PropsTable = ({ table, tables, typePages = NO_PAGES, from }: PropsT
 
   if (table.kind === 'alias')
     return (
-      <Stack gap="md">
+      <Space direction="vertical" gap="md">
         {caption}
         <CodeBlock code={`type ${table.name} = ${table.text ?? ''}`} wrap className={styles.alias}>
           <code>
@@ -275,11 +275,11 @@ export const PropsTable = ({ table, tables, typePages = NO_PAGES, from }: PropsT
             />
           </code>
         </CodeBlock>
-      </Stack>
+      </Space>
     );
 
   return (
-    <Stack gap="md">
+    <Space direction="vertical" gap="md">
       {caption}
       <Table
         ariaLabel={table.name}
@@ -300,6 +300,6 @@ export const PropsTable = ({ table, tables, typePages = NO_PAGES, from }: PropsT
           .
         </Text>
       )}
-    </Stack>
+    </Space>
   );
 };

@@ -3,7 +3,7 @@
  * `horizontal` and `vertical` add the label on a header row, like the other
  * fields in a form.
  */
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { ChipsInput } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -14,14 +14,14 @@ export default function Layouts() {
   const [horizontal, setHorizontal] = useState(['Memoir']);
   const [vertical, setVertical] = useState(['Reference']);
   return (
-    <Stack gap="xl">
-      <Stack gap="xs">
+    <Space direction="vertical" gap="xl">
+      <Space direction="vertical" gap="xs">
         <Text size="sm" tone="muted">
           layout="block"
         </Text>
         <ChipsInput label="Tags" value={block} suggestions={TAGS} onChange={setBlock} />
-      </Stack>
-      <Stack gap="xs">
+      </Space>
+      <Space direction="vertical" gap="xs">
         <Text size="sm" tone="muted">
           layout="horizontal"
         </Text>
@@ -32,8 +32,8 @@ export default function Layouts() {
           suggestions={TAGS}
           onChange={setHorizontal}
         />
-      </Stack>
-      <Stack gap="xs">
+      </Space>
+      <Space direction="vertical" gap="xs">
         <Text size="sm" tone="muted">
           layout="vertical"
         </Text>
@@ -44,7 +44,7 @@ export default function Layouts() {
           suggestions={TAGS}
           onChange={setVertical}
         />
-      </Stack>
-    </Stack>
+      </Space>
+    </Space>
   );
 }

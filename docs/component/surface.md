@@ -68,7 +68,7 @@ Depth never goes below `sm`; deeper nesting stays at `sm`. Hand-drawn boxes are 
 A hand-made bordered box inside a `Card`. The box reads its own radius from `useSurfaceRadius()` and wraps its contents in `Surface`, so the Button inside is one corner step smaller than the box.
 
 ```tsx
-import { Card, Inline, Stack, Surface, Text, useSurfaceRadius } from '@korzun/design/component';
+import { Card, Space, Surface, Text, useSurfaceRadius } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { useState, type ReactNode } from 'react';
@@ -95,15 +95,15 @@ export default function Basic() {
   return (
     <Card title="Settings">
       <InsetBox>
-        <Stack gap="sm">
+        <Space direction="vertical" gap="sm">
           <Text>
             Your own box: its corners follow the card, and the button inside is one step smaller.
           </Text>
-          <Inline>
+          <Space>
             <Button onClick={() => setSaves((n) => n + 1)}>Save</Button>
-          </Inline>
+          </Space>
           <Text tone="muted">Saves: {saves}</Text>
-        </Stack>
+        </Space>
       </InsetBox>
     </Card>
   );
@@ -115,7 +115,7 @@ export default function Basic() {
 Each hand-made box inside another sits one level deeper, so corners step down one radius per level and stop at `sm`. Each box shows the radius `useSurfaceRadius()` returned for where it sits.
 
 ```tsx
-import { Card, Inline, Stack, Surface, Text, useSurfaceRadius } from '@korzun/design/component';
+import { Card, Space, Surface, Text, useSurfaceRadius } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { useState, type ReactNode } from 'react';
@@ -134,15 +134,15 @@ const LevelBox = ({ name, children }: { name: string; children?: ReactNode }) =>
   return (
     <div className={styles.box} style={{ borderRadius }}>
       <Surface>
-        <Stack gap="sm">
-          <Inline>
+        <Space direction="vertical" gap="sm">
+          <Space>
             <Button onClick={() => setTaps((n) => n + 1)}>{name}</Button>
             <Text tone="muted">
               Radius {borderRadius}, taps: {taps}
             </Text>
-          </Inline>
+          </Space>
           {children}
-        </Stack>
+        </Space>
       </Surface>
     </div>
   );

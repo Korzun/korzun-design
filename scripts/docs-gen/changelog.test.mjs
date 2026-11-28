@@ -74,12 +74,15 @@ test('the real CHANGELOG.md validates against the barrels', () => {
 test('currentTags maps a removed former name to its current name, once', () => {
   const versions = currentTags(
     parseChangelog(
-      '## 0.3.0 — 2026-11-22\n\n- [Dialog] New Dialog.\n- [Modal, Dialog, useModalDialog] Renamed.\n- [CardDivider] Old.\n- [Button] Kept.\n'
+      '## 0.3.0 — 2026-11-22\n\n- [Dialog] New Dialog.\n- [Modal, Dialog, useModalDialog] Renamed.\n- [CardDivider] Old.\n- [Button] Kept.\n- [Stack, Inline] Gone.\n'
     )
   );
   assert.deepEqual(
     versions[0].entries.map((e) => e.tags),
-    [['Modal'], ['Modal', 'useModal'], ['Divider'], ['Button']]
+    [['Modal'], ['Modal', 'useModal'], ['Divider'], ['Button'], ['Space']]
   );
-  assert.deepEqual(validateTags(versions, new Set(['Modal', 'useModal', 'Divider', 'Button'])), []);
+  assert.deepEqual(
+    validateTags(versions, new Set(['Modal', 'useModal', 'Divider', 'Button', 'Space'])),
+    []
+  );
 });

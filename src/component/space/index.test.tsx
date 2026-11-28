@@ -3,54 +3,28 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { renderWithProviders } from '../../test-utils.js';
 import { lightTheme } from '../../theme/theme.js';
-import { Inline } from '../inline/index.js';
-import { Stack } from '../stack/index.js';
 import { Space } from './index.js';
 
 const spaceKeys = Object.keys(lightTheme.space) as (keyof typeof lightTheme.space)[];
-const computedOf = (el: HTMLElement) => {
-  const c = getComputedStyle(el);
-  return {
-    display: c.display,
-    flexDirection: c.flexDirection,
-    alignItems: c.alignItems,
-    // Stack sets none; 'normal' packs flex items exactly like 'flex-start'.
-    justifyContent: c.justifyContent === 'normal' ? 'flex-start' : c.justifyContent,
-    flexWrap: c.flexWrap,
-    gap: c.gap,
-    minWidth: c.minWidth,
-  };
-};
-
 describe('Space', () => {
-  it('defaults to a horizontal row like Inline', () => {
-    const { getByTestId } = renderWithProviders(
-      <>
-        <Space data-testid="s" />
-        <Inline data-testid="i" />
-      </>
-    );
+  it('defaults to a horizontal row', () => {
+    const { getByTestId } = renderWithProviders(<Space data-testid="s" />);
     const el = getByTestId('s');
     const c = getComputedStyle(el);
     expect(el.tagName).toBe('DIV');
     expect(c.flexDirection).toBe('row');
     expect(c.alignItems).toBe('center');
     expect(c.gap).toBe(lightTheme.space.sm);
-    expect(computedOf(el)).toEqual(computedOf(getByTestId('i')));
+    expect(c.flexWrap).toBe('nowrap');
+    expect(c.minWidth).toBe('0px');
   });
 
-  it('direction="vertical" is a column like Stack', () => {
-    const { getByTestId } = renderWithProviders(
-      <>
-        <Space data-testid="s" direction="vertical" />
-        <Stack data-testid="k" />
-      </>
-    );
+  it('direction="vertical" is a column', () => {
+    const { getByTestId } = renderWithProviders(<Space data-testid="s" direction="vertical" />);
     const c = getComputedStyle(getByTestId('s'));
     expect(c.flexDirection).toBe('column');
     expect(c.alignItems).toBe('stretch');
     expect(c.gap).toBe(lightTheme.space.md);
-    expect(computedOf(getByTestId('s'))).toEqual(computedOf(getByTestId('k')));
   });
 
   it.each(spaceKeys)('gap %s uses the space token', (key) => {

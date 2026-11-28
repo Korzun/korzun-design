@@ -89,7 +89,7 @@ export const useStyle = createUseStyles((theme: Theme) => ({
 ```
 
 - Style files are for padding, borders, backgrounds, and one-offs (borders come from the border tokens). Lay out with
-  `Stack`/`Inline` and set text with `Text`/`Heading`.
+  `Space` and set text with `Text`/`Heading`.
 - `applyTransparency(color, alpha)` turns a hex or rgb token into an `rgba()`
   string. Use it for tints instead of writing an rgba literal.
 - Media queries: use the `theme.breakpoint.mobile` / `.normal` strings as keys.
@@ -161,7 +161,7 @@ same sheet (`danger: {}`).
 
 ```tsx
 import { applyTransparency } from '@korzun/design';
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { useState } from 'react';
@@ -186,12 +186,12 @@ export default function Styles() {
   const [picks, setPicks] = useState(0);
   return (
     <div className={styles.panel}>
-      <Stack gap="md" align="start">
+      <Space direction="vertical" gap="md" align="start">
         <div className={styles.highlight}>
           <Text>Picked {picks} times</Text>
         </div>
         <Button onClick={() => setPicks((n) => n + 1)}>Pick</Button>
-      </Stack>
+      </Space>
     </div>
   );
 }
@@ -202,7 +202,7 @@ export default function Styles() {
 `useThemeSetting` returns the choice and its setter; `useTheme().colorScheme` is the mode it resolved to. Pass the app's root `ThemeProvider` an `identity` and the choice is saved for that user and restored when they return; with `null` nothing is saved. Switch the identity below and the choice follows it.
 
 ```tsx
-import { Inline, Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { ThemeProvider, useTheme, useThemeSetting, type ThemeSetting } from '@korzun/design/theme';
 import { useState } from 'react';
@@ -213,12 +213,12 @@ const Picker = ({ identity }: { identity: string | null }) => {
   const [setting, setSetting] = useThemeSetting();
   const theme = useTheme();
   return (
-    <Stack gap="md" align="start">
+    <Space direction="vertical" gap="md" align="start">
       <Text tone="muted">
         {identity === null ? 'Signed out' : `Signed in as ${identity}`}: setting {setting}, mode{' '}
         {theme.colorScheme}
       </Text>
-      <Inline>
+      <Space>
         {settings.map((next) => (
           <Button
             key={next}
@@ -228,8 +228,8 @@ const Picker = ({ identity }: { identity: string | null }) => {
             {next}
           </Button>
         ))}
-      </Inline>
-    </Stack>
+      </Space>
+    </Space>
   );
 };
 
@@ -237,14 +237,14 @@ export default function Setting() {
   const [identity, setIdentity] = useState<string | null>('ada');
   return (
     <ThemeProvider identity={identity}>
-      <Stack gap="lg" align="start">
+      <Space direction="vertical" gap="lg" align="start">
         <Picker identity={identity} />
-        <Inline>
+        <Space>
           <Button onClick={() => setIdentity(identity === null ? 'ada' : null)}>
             {identity === null ? 'Sign in' : 'Sign out'}
           </Button>
-        </Inline>
-      </Stack>
+        </Space>
+      </Space>
     </ThemeProvider>
   );
 }
@@ -255,7 +255,7 @@ export default function Setting() {
 `useTheme` returns the current `Theme` for a value a stylesheet cannot take, such as a label or a chart option. `lightTheme` and `darkTheme` are the two concrete themes, handy in tests. Pick one to read the same tokens from it.
 
 ```tsx
-import { Inline, Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { darkTheme, lightTheme, useTheme } from '@korzun/design/theme';
 import { useState } from 'react';
@@ -265,20 +265,20 @@ export default function Values() {
   const [mode, setMode] = useState<'light' | 'dark'>('light');
   const picked = mode === 'light' ? lightTheme : darkTheme;
   return (
-    <Stack gap="md" align="start">
+    <Space direction="vertical" gap="md" align="start">
       <Text>Page background here: {current.color.bg.page}</Text>
-      <Inline>
+      <Space>
         <Button type={mode === 'light' ? 'primary' : 'default'} onClick={() => setMode('light')}>
           lightTheme
         </Button>
         <Button type={mode === 'dark' ? 'primary' : 'default'} onClick={() => setMode('dark')}>
           darkTheme
         </Button>
-      </Inline>
+      </Space>
       <Text tone="muted">
         {picked.colorScheme}: page {picked.color.bg.page}, text {picked.color.text.primary}
       </Text>
-    </Stack>
+    </Space>
   );
 }
 ```

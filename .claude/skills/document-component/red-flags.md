@@ -24,7 +24,7 @@ and do what the right column says.
 | "The textbox has no name, so I can't shoot the invalid state." | `--type "textbox:…"` needs no name; it types into the first textbox (`textbox#2:…` for the second). | Type the invalid value and shoot it; `--press` keys land in the focused field. |
 | "The component is hidden at desktop width, so its frame is empty; that's the gallery." | `@viewport mobile` renders the example at phone width. | Add the tag to the example's doc comment and reshoot. |
 | "This note is about an inherited member, so I'll put it on a sibling prop." | A reader of that member's row never sees it, and the sibling's row says something about another prop. | `@member <name> <note>` on the type's own comment (step 2). |
-| "The lone trigger stretches across the demo; that's the gallery." | A Button at the frame's root fills its width. | Wrap the trigger in `Inline`. |
+| "The lone trigger stretches across the demo; that's the gallery." | A Button at the frame's root fills its width. | Wrap the trigger in `Space`. |
 | "The type isn't linked; I'll write the link to the other doc in the JSDoc." | The generator links a type whose table is in another migrated doc; an unmigrated one links once it is. | Leave the JSDoc as behaviour only. |
 | "The old example needs the router, so I'll trim it to the lines that matter." | A trimmed fragment uses names it no longer defines, and readers copy it. | Keep the old block verbatim as a Usage fragment, say why it is code, and put every runnable part in one example (step 3). |
 | "Tests passed earlier; no need to keep the log." | The review cannot confirm a run it cannot see. | Write `npm test` to `$S/<slug>/test.log` after your last edit and quote its last lines in the report. |

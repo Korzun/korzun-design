@@ -62,14 +62,14 @@ Cancel and Save on the trailing side. Give exactly one item `emphasis` so
 the main action reads as primary. `onClick` takes no arguments.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { PageFooterActions } from '@korzun/design/control';
 import { useState } from 'react';
 
 export default function Basic() {
   const [last, setLast] = useState('nothing yet');
   return (
-    <Stack>
+    <Space direction="vertical">
       <PageFooterActions
         items={[
           { label: 'Cancel', onClick: () => setLast('Cancel') },
@@ -77,7 +77,7 @@ export default function Basic() {
         ]}
       />
       <Text tone="muted">Last pressed: {last}</Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -88,14 +88,14 @@ export default function Basic() {
 away from Save; `danger` gives it the red treatment.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { PageFooterActions } from '@korzun/design/control';
 import { useState } from 'react';
 
 export default function LeadingAndTrailing() {
   const [last, setLast] = useState('nothing yet');
   return (
-    <Stack>
+    <Space direction="vertical">
       <PageFooterActions
         items={[
           { label: 'Delete', onClick: () => setLast('Delete'), danger: true, align: 'leading' },
@@ -104,7 +104,7 @@ export default function LeadingAndTrailing() {
         ]}
       />
       <Text tone="muted">Last pressed: {last}</Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -116,7 +116,7 @@ The label can change between renders (`Save` to `Saving…`) without
 remounting the button. Both switches hold their state on.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { PageFooterActions, Switch } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -125,7 +125,7 @@ export default function LoadingAndDisabled() {
   const [invalid, setInvalid] = useState(true);
   const [last, setLast] = useState('nothing yet');
   return (
-    <Stack>
+    <Space direction="vertical">
       <Switch name="saving" label="Saving" checked={saving} onChange={setSaving} />
       <Switch name="invalid" label="Form invalid" checked={invalid} onChange={setInvalid} />
       <PageFooterActions
@@ -141,7 +141,7 @@ export default function LoadingAndDisabled() {
         ]}
       />
       <Text tone="muted">Last pressed: {last}</Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -154,7 +154,7 @@ for a submit one (pass an empty function): the form's `action` runs instead. `lo
 pending save, and Save is disabled while a field is empty.
 
 ```tsx
-import { Card, Stack, Text } from '@korzun/design/component';
+import { Card, Space, Text } from '@korzun/design/component';
 import { PageFooterActions, TextInput } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -165,7 +165,7 @@ export default function SubmitAForm() {
   const [status, setStatus] = useState('Not saved');
   const hasInvalidFields = !title?.trim() || !author?.trim();
   return (
-    <Stack>
+    <Space direction="vertical">
       <form
         id="book-form"
         action={async (data) => {
@@ -175,14 +175,14 @@ export default function SubmitAForm() {
           setStatus(`Saved ${String(data.get('title'))}`);
         }}
       >
-        <Stack>
+        <Space direction="vertical">
           <Card title="Details">
             <TextInput name="title" label="Title" value={title} onChange={setTitle} />
           </Card>
           <Card title="Identifiers">
             <TextInput name="author" label="Author" value={author} onChange={setAuthor} />
           </Card>
-        </Stack>
+        </Space>
       </form>
       <PageFooterActions
         items={[
@@ -199,7 +199,7 @@ export default function SubmitAForm() {
         ]}
       />
       <Text tone="muted">{status}</Text>
-    </Stack>
+    </Space>
   );
 }
 ```

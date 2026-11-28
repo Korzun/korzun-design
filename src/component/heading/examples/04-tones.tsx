@@ -2,7 +2,7 @@
  * `tone` sets the text colour. `danger` and `success` are for inline error
  * and confirmation text.
  */
-import { Heading, Stack } from '@korzun/design/component';
+import { Heading, Space } from '@korzun/design/component';
 
 const tones = [
   'primary',
@@ -16,12 +16,12 @@ const tones = [
 
 export default function Tones() {
   return (
-    <Stack gap="sm">
+    <Space direction="vertical" gap="sm">
       {tones.map((tone) => (
         <Heading key={tone} level={3} tone={tone}>
           {`tone="${tone}"`}
         </Heading>
       ))}
-    </Stack>
+    </Space>
   );
 }

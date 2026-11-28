@@ -1,4 +1,4 @@
-import { EmptyState, Heading, Page, Stack } from '@korzun/design/component';
+import { EmptyState, Heading, Page, Space } from '@korzun/design/component';
 import { Button, TextInput } from '@korzun/design/control';
 import { CircleXIcon, SearchIcon } from '@korzun/design/icon';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
@@ -74,23 +74,23 @@ export const OverviewPage = () => {
   return (
     <div className={styles.column}>
       <Page type="minimal" documentTitle="@korzun/design">
-        <Stack gap="xxxxl">
+        <Space direction="vertical" gap="xxxxl">
           <SearchBox value={query} onChange={setQuery} />
           {groups.length === 0 && (
             <EmptyState title={`No components match “${query.trim()}”.`}>
-              <Stack gap="md" align="center">
+              <Space direction="vertical" gap="md" align="center">
                 Try a component name, a word from its description, or a prop.
                 <Button onClick={() => setQuery('')}>Clear search</Button>
-              </Stack>
+              </Space>
             </EmptyState>
           )}
           {groups.map(({ category, modules }) => (
-            <Stack as="section" gap="lg" key={category}>
+            <Space direction="vertical" as="section" gap="lg" key={category}>
               <Heading level={2}>{category}</Heading>
               <ModuleGrid mods={modules} />
-            </Stack>
+            </Space>
           ))}
-        </Stack>
+        </Space>
       </Page>
     </div>
   );

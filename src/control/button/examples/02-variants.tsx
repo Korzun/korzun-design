@@ -4,15 +4,15 @@
  * row action, and `dashed` an "add a row" affordance. The second row adds
  * `danger`, on `default` and on `primary`.
  */
-import { Inline, Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { useState } from 'react';
 
 export default function Variants() {
   const [pressed, setPressed] = useState('nothing yet');
   return (
-    <Stack align="start">
-      <Inline wrap>
+    <Space direction="vertical" align="start">
+      <Space wrap>
         <Button type="primary" onClick={() => setPressed('Primary')}>
           Primary
         </Button>
@@ -26,16 +26,16 @@ export default function Variants() {
         <Button type="dashed" onClick={() => setPressed('Dashed')}>
           Dashed
         </Button>
-      </Inline>
-      <Inline wrap>
+      </Space>
+      <Space wrap>
         <Button danger onClick={() => setPressed('Danger')}>
           Danger
         </Button>
         <Button type="primary" danger onClick={() => setPressed('Primary danger')}>
           Primary danger
         </Button>
-      </Inline>
+      </Space>
       <Text tone="muted">Pressed: {pressed}</Text>
-    </Stack>
+    </Space>
   );
 }

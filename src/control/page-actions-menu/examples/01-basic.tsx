@@ -4,14 +4,14 @@
  * takes no arguments.
  * @viewport mobile
  */
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { PageActionsMenu } from '@korzun/design/control';
 import { useState } from 'react';
 
 export default function Basic() {
   const [chosen, setChosen] = useState('nothing yet');
   return (
-    <Stack>
+    <Space direction="vertical">
       <PageActionsMenu
         items={[
           { label: 'Edit', onClick: () => setChosen('Edit') },
@@ -20,6 +20,6 @@ export default function Basic() {
         ]}
       />
       <Text tone="muted">Chosen: {chosen}</Text>
-    </Stack>
+    </Space>
   );
 }

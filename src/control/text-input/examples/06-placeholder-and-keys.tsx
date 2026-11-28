@@ -3,7 +3,7 @@
  * unlike `onChange`, receives the event. `autoCapitalize="none"` keeps
  * mobile keyboards from capitalising the first letter.
  */
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { TextInput } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -11,7 +11,7 @@ export default function PlaceholderAndKeys() {
   const [username, setUsername] = useState<string | undefined>(undefined);
   const [submitted, setSubmitted] = useState<string | null>(null);
   return (
-    <Stack>
+    <Space direction="vertical">
       <TextInput
         name="username"
         layout="inline"
@@ -26,6 +26,6 @@ export default function PlaceholderAndKeys() {
         }}
       />
       <Text tone="muted">Submitted: {submitted === null ? 'nothing yet' : `“${submitted}”`}</Text>
-    </Stack>
+    </Space>
   );
 }

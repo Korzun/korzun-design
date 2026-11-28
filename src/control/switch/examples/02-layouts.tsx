@@ -4,7 +4,7 @@
  * right, and the whole row toggles. In both, the `description` is helper text
  * linked by `aria-describedby`.
  */
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Switch } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -12,8 +12,8 @@ export default function Layouts() {
   const [inline, setInline] = useState(true);
   const [row, setRow] = useState(false);
   return (
-    <Stack gap="xl">
-      <Stack gap="xs">
+    <Space direction="vertical" gap="xl">
+      <Space direction="vertical" gap="xs">
         <Text size="sm" tone="muted">
           layout="default"
         </Text>
@@ -24,8 +24,8 @@ export default function Layouts() {
           checked={inline}
           onChange={setInline}
         />
-      </Stack>
-      <Stack gap="xs">
+      </Space>
+      <Space direction="vertical" gap="xs">
         <Text size="sm" tone="muted">
           layout="horizontal"
         </Text>
@@ -37,7 +37,7 @@ export default function Layouts() {
           checked={row}
           onChange={setRow}
         />
-      </Stack>
-    </Stack>
+      </Space>
+    </Space>
   );
 }

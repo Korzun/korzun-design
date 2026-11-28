@@ -3,14 +3,14 @@
  * Pass "Actions" when every item is in the menu, as here, because "More…"
  * would promise inline actions that are not there.
  */
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { PageActionsBar } from '@korzun/design/control';
 import { useState } from 'react';
 
 export default function ActionsLabel() {
   const [chosen, setChosen] = useState('nothing yet');
   return (
-    <Stack>
+    <Space direction="vertical">
       <PageActionsBar
         actionsLabel="Actions"
         items={[
@@ -19,6 +19,6 @@ export default function ActionsLabel() {
         ]}
       />
       <Text tone="muted">Chosen: {chosen}</Text>
-    </Stack>
+    </Space>
   );
 }

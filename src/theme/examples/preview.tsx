@@ -1,5 +1,5 @@
 /** Preview */
-import { Inline } from '@korzun/design/component';
+import { Space } from '@korzun/design/component';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 
 const useStyle = createUseStyles((theme: Theme) => ({
@@ -22,10 +22,10 @@ const tokens = ['brand', 'success', 'warning', 'danger', 'text', 'card'] as cons
 export default function Preview() {
   const styles = useStyle();
   return (
-    <Inline gap="sm">
+    <Space gap="sm">
       {tokens.map((token) => (
         <div key={token} className={`${styles.swatch} ${styles[token]}`} />
       ))}
-    </Inline>
+    </Space>
   );
 }

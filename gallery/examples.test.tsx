@@ -42,7 +42,7 @@ describe('previews', () => {
 });
 
 describe('pilot examples wire every button', () => {
-  // A demo whose button does nothing looks broken; the Stack pilot is copied by
+  // A demo whose button does nothing looks broken; the Button pilot is copied by
   // other modules' examples, so its buttons must change what the demo shows.
   const clickChangesDemo = (file: string, name: RegExp) => {
     const Example = exampleComponents[file];
@@ -55,10 +55,6 @@ describe('pilot examples wire every button', () => {
     }
   };
 
-  it('Stack 03: each "Add a book" counts', () => {
-    clickChangesDemo('src/component/stack/examples/03-align.tsx', /Add a book/);
-  });
-
   it.each([
     ['02-variants', /^(Primary|Default|Text|Link|Dashed|Danger|Primary danger)$/],
     ['03-danger', /^(Log out|Delete book)$/],
@@ -67,7 +63,7 @@ describe('pilot examples wire every button', () => {
     clickChangesDemo(`src/control/button/examples/${file}.tsx`, name);
   });
 
-  it('Stack 05: "See all" shows more tags', () => {
-    clickChangesDemo('src/component/stack/examples/05-nested-with-inline.tsx', /See all/);
+  it('Space 04: "See all" shows more tags', () => {
+    clickChangesDemo('src/component/space/examples/04-wrap-and-justify.tsx', /See all/);
   });
 });

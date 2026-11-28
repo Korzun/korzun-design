@@ -1,4 +1,4 @@
-import { Heading, Inline, Page, Stack, Tag, Text } from '@korzun/design/component';
+import { Heading, Space, Page, Tag, Text } from '@korzun/design/component';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { Link } from 'react-router';
 
@@ -64,33 +64,39 @@ export const ChangelogPage = () => {
   return (
     <div className={styles.column}>
       <Page type="minimal" documentTitle="Changelog · @korzun/design">
-        <Stack gap="xxxxl">
+        <Space direction="vertical" gap="xxxxl">
           <Heading level={1}>Changelog</Heading>
           {siteData.changelog.map((release) => (
-            <Stack as="section" gap="xl" key={release.version} aria-label={release.version}>
-              <Inline gap="md" align="baseline">
+            <Space
+              direction="vertical"
+              as="section"
+              gap="xl"
+              key={release.version}
+              aria-label={release.version}
+            >
+              <Space gap="md" align="baseline">
                 <Heading level={2}>{release.version}</Heading>
                 <Text size="sm" tone="muted">
                   {release.date}
                 </Text>
-              </Inline>
+              </Space>
               <ul className={styles.entries}>
                 {release.entries.map((entry, i) => (
                   <li key={i} className={styles.entry}>
-                    <Stack gap="xs">
-                      <Inline gap="xs" wrap>
+                    <Space direction="vertical" gap="xs">
+                      <Space gap="xs" wrap>
                         {entry.tags.map((tag) => (
                           <TagChip key={tag} tag={tag} />
                         ))}
-                      </Inline>
+                      </Space>
                       <Markdown source={entry.text} from="CHANGELOG.md" />
-                    </Stack>
+                    </Space>
                   </li>
                 ))}
               </ul>
-            </Stack>
+            </Space>
           ))}
-        </Stack>
+        </Space>
       </Page>
     </div>
   );

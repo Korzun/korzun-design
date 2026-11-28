@@ -4,7 +4,7 @@
  * good.
  * @viewport mobile
  */
-import { Card, Inline, NavMobile, Page, Stack, Text, type NavItem } from '@korzun/design/component';
+import { Card, Space, NavMobile, Page, Text, type NavItem } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { BookIcon, HomeIcon, ListCheckIcon, SettingsIcon, UploadIcon } from '@korzun/design/icon';
 import { useState } from 'react';
@@ -20,13 +20,13 @@ export default function Badges() {
     <>
       <Page bottomNav>
         <Card title="Navigation">
-          <Stack>
-            <Inline>
+          <Space direction="vertical">
+            <Space>
               <Button onClick={() => setPending((n) => n + 1)}>Add a fix</Button>
               <Button onClick={() => setPending(0)}>Clear fixes</Button>
-            </Inline>
+            </Space>
             <Text tone="muted">Pending fixes: {pending}</Text>
-          </Stack>
+          </Space>
         </Card>
       </Page>
       <NavMobile

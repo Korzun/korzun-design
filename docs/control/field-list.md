@@ -103,7 +103,7 @@ A `number` column renders a `NumberInput` and reports a `number`, or
 and `onValidChange` reports that field once, when validity flips.
 
 ```tsx
-import { Card, Stack, Text } from '@korzun/design/component';
+import { Card, Space, Text } from '@korzun/design/component';
 import { FieldList, type FieldRow } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -114,7 +114,7 @@ export default function NumberAndValidation() {
   const [invalid, setInvalid] = useState<string[]>([]);
   return (
     <Card title="Order">
-      <Stack>
+      <Space direction="vertical">
         <FieldList
           addLabel="Add item"
           columns={[
@@ -144,7 +144,7 @@ export default function NumberAndValidation() {
             ? `Invalid: ${invalid.map((name) => name.split('.')[1]).join(', ')}`
             : 'All fields valid'}
         </Text>
-      </Stack>
+      </Space>
     </Card>
   );
 }

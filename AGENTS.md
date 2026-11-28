@@ -30,7 +30,7 @@ To load this guide in a consuming app, add this line to its `CLAUDE.md` or
 | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `@korzun/design/theme`     | `ThemeProvider`, `useTheme`, `useThemeSetting`, `createUseStyles`, `Theme`, `lightTheme`, `darkTheme`                                                                                                  |
 | `@korzun/design/control`   | buttons, inputs, select, switch, segmented control, popover, `ConfirmModal`, `Modal`, `useModal`, page actions                                                                                         |
-| `@korzun/design/component` | `Page`, `Alert`, `Card` family, `Space`, `Stack`, `Inline`, `Text`, `Heading`, `Code`, `CodeBlock`, `EmptyState`, `ErrorMessage`, `Spinner`, `Table`, `Tag`, metadata, navs, `ThemeSetting`, `TopFade` |
+| `@korzun/design/component` | `Page`, `Alert`, `Card` family, `Space`, `Text`, `Heading`, `Code`, `CodeBlock`, `EmptyState`, `ErrorMessage`, `Spinner`, `Table`, `Tag`, metadata, navs, `ThemeSetting`, `TopFade` |
 | `@korzun/design/icon`      | `*Icon` components, `IconProps`                                                                                                                                                                        |
 | `@korzun/design/toast`     | `ToastProvider`, `useToast`                                                                                                                                                                            |
 | `@korzun/design/hooks`     | `useMinimizeOnScroll`, `usePullToRefresh`, `useIsStandalone`                                                                                                                                           |
@@ -51,7 +51,7 @@ Every component exports its props type as `<Name>Props` (`ButtonProps`,
    state use a status tone**; label tones (`subject`, `author`, …) name
    things. `status` is a legacy label tone despite its name; for a state use
    `success`/`warning`/`danger`/`info`, or `neutral` when it carries no
-   meaning. Lay out with `Stack`/`Inline` and set text with `Text`/`Heading`.
+   meaning. Lay out with `Space` and set text with `Text`/`Heading`.
    Don't write `display: 'flex'`, `gap`, `fontSize`, `fontWeight`, or text
    `color` in style files for that. Style files are for padding, borders,
    backgrounds, and one-offs.
@@ -101,6 +101,6 @@ Before building a whole screen or a common group of parts (sign-in, …), check
 
 [docs]|theme.md: ThemeProvider, the light and dark themes, and createUseStyles for writing token-based styles.|corners.md: Corner radius by nesting depth, one radius step per level.|patterns.md: How screens are built: forms in cards, confirmations, menus, modals, toasts and style overrides.|tokens.md: Every theme token key in detail, group by group.|philosophy.md: The design rules the code enforces, and why.|icon.md: Inline SVG icon components that take the surrounding text colour, with the shared IconProps.|toast.md: Short, transient confirmations and errors that slide in from a corner and leave on their own.
 [docs/control]|{back-button,button,chips-input,confirm-modal,date-time-input,field-list,menu,modal,number-input,page-actions-bar,page-actions-menu,page-footer-actions,popover,segmented-control,select,switch,text-area,text-input,use-modal}.md
-[docs/component]|{alert,card,card-row,code,code-block,collapsible-section,divider,empty-state,error-message,heading,inline,meta-line,nav-desktop,nav-mobile,page,progress-indicator,space,spinner,stack,surface,table,tag,text,theme-setting,top-fade}.md
+[docs/component]|{alert,card,card-row,code,code-block,collapsible-section,divider,empty-state,error-message,heading,meta-line,nav-desktop,nav-mobile,page,progress-indicator,space,spinner,surface,table,tag,text,theme-setting,top-fade}.md
 [docs/hooks]|{use-is-standalone,use-minimize-on-scroll,use-pull-to-refresh}.md
 [docs/recipes]|{copy-button,login}.md

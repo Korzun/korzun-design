@@ -3,7 +3,7 @@
  * tags the same values elsewhere in the app, so a subject looks like a subject
  * everywhere.
  */
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { ChipsInput, type ChipColor } from '@korzun/design/control';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { useState } from 'react';
@@ -37,12 +37,12 @@ const useStyles = createUseStyles((theme: Theme) => ({
 function ColorField({ chipColor }: { chipColor: ChipColor }) {
   const [value, setValue] = useState<string[]>([chipColor]);
   return (
-    <Stack gap="xs">
+    <Space direction="vertical" gap="xs">
       <Text size="sm" tone="muted">
         {chipColor}
       </Text>
       <ChipsInput value={value} suggestions={[]} onChange={setValue} chipColor={chipColor} />
-    </Stack>
+    </Space>
   );
 }
 

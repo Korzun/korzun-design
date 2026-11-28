@@ -85,18 +85,18 @@ No `className`. Position, colours and corners come from theme tokens.
 `useToast` returns a function that takes a one-line message and a `type`. `success` shows a green check, `error` a red X and is announced assertively, and `info` a blue info icon.
 
 ```tsx
-import { Inline } from '@korzun/design/component';
+import { Space } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { useToast } from '@korzun/design/toast';
 
 export default function Basic() {
   const showToast = useToast();
   return (
-    <Inline>
+    <Space>
       <Button onClick={() => showToast('Password changed', 'success')}>Success</Button>
       <Button onClick={() => showToast('Failed to reset password', 'error')}>Error</Button>
       <Button onClick={() => showToast('Reading progress syncs when online', 'info')}>Info</Button>
-    </Inline>
+    </Space>
   );
 }
 ```
@@ -106,7 +106,7 @@ export default function Basic() {
 A form submitted from the Card footer reports its result with the function `useToast` returns. A failed save also puts the message in an `ErrorMessage` beside the field, so the toast is never the only copy of an error the user must fix.
 
 ```tsx
-import { Card, ErrorMessage, Stack } from '@korzun/design/component';
+import { Card, ErrorMessage, Space } from '@korzun/design/component';
 import { Button, TextInput } from '@korzun/design/control';
 import { useToast } from '@korzun/design/toast';
 import { useState } from 'react';
@@ -143,7 +143,7 @@ export default function FormOutcome() {
           save();
         }}
       >
-        <Stack gap="md">
+        <Space direction="vertical" gap="md">
           <TextInput
             name="password"
             label="New password"
@@ -154,7 +154,7 @@ export default function FormOutcome() {
             validate={(next) => next.length >= 8}
           />
           <ErrorMessage>{error}</ErrorMessage>
-        </Stack>
+        </Space>
       </form>
     </Card>
   );
@@ -166,7 +166,7 @@ export default function FormOutcome() {
 `maxToasts` caps how many toasts show at once: when a new one would exceed it, the oldest starts to leave. It goes on the app's one root `ToastProvider`; here the cap is two, so the third click pushes the first toast out.
 
 ```tsx
-import { Inline, Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { ToastProvider, useToast } from '@korzun/design/toast';
 import { useState } from 'react';
@@ -175,8 +175,8 @@ const Sender = () => {
   const showToast = useToast();
   const [sent, setSent] = useState(0);
   return (
-    <Stack gap="md">
-      <Inline>
+    <Space direction="vertical" gap="md">
+      <Space>
         <Button
           onClick={() => {
             showToast(`Message ${sent + 1} sent`, 'success');
@@ -185,9 +185,9 @@ const Sender = () => {
         >
           Send message
         </Button>
-      </Inline>
+      </Space>
       <Text tone="muted">Sent: {sent}</Text>
-    </Stack>
+    </Space>
   );
 };
 

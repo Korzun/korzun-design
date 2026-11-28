@@ -250,5 +250,8 @@ type Gap = 'xxxs' | 'xxs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl' | 
 ## Changelog
 
 - **0.7.0** (2026-11-26): New `Space`: one layout primitive with a `direction` (default `'horizontal'`), `gap`, `align`, `justify`, `wrap`, `as` and a `split` separator drawn between items (hidden from screen readers, an `li` inside a list). Each direction keeps Stack's or Inline's defaults.
+- **0.7.0** (2026-11-26): **Breaking:** `Stack` and `Inline` (and `StackProps`, `InlineProps`) are removed; use `Space`. `<Stack …>` is `<Space direction="vertical" …>` and `<Inline …>` is `<Space …>`, with every prop and default unchanged.
+- **0.2.0** (2026-11-21): New `Stack` (vertical flex column; `gap`, default `md`), `Inline` (horizontal row; `gap` default `sm`, `justify` including `between`), `Text` (`size`, `tone`, `weight`; unset props inherit), and `Heading` (`level` 1–4), so layout and text are set with props instead of style files.
+- **0.2.0** (2026-11-21): `truncate` on `Text` and `Heading` clips inside `Stack` (any `align`), `Inline`, and a `Stack` nested in an `Inline`; `Stack` and `Inline` roots have `min-width: 0`.
 
 <!-- /generated:changelog -->

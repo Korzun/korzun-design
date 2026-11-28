@@ -6,13 +6,13 @@
  * place it in your own row.
  * @viewport mobile
  */
-import { Inline } from '@korzun/design/component';
+import { Space } from '@korzun/design/component';
 import { BackButton } from '@korzun/design/control';
 
 export default function Basic() {
   return (
-    <Inline>
+    <Space>
       <BackButton to="/library" />
-    </Inline>
+    </Space>
   );
 }

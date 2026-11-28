@@ -3,16 +3,16 @@
  * is faint text after the title, such as a count; the header toggles on click,
  * Enter or Space.
  */
-import { CollapsibleSection, Stack, Text } from '@korzun/design/component';
+import { CollapsibleSection, Space, Text } from '@korzun/design/component';
 
 export default function Basic() {
   return (
     <CollapsibleSection title="Archived" subTitle="3 items">
-      <Stack gap="xs">
+      <Space direction="vertical" gap="xs">
         <Text>Middlemarch</Text>
         <Text>Bleak House</Text>
         <Text>Persuasion</Text>
-      </Stack>
+      </Space>
     </CollapsibleSection>
   );
 }

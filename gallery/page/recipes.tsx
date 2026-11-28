@@ -1,4 +1,4 @@
-import { Card, Heading, Page, Stack, Text } from '@korzun/design/component';
+import { Card, Heading, Page, Space, Text } from '@korzun/design/component';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { Link, useParams } from 'react-router';
 
@@ -41,9 +41,9 @@ const RecipeCard = ({ recipe }: { recipe: Recipe }) => {
   return (
     <Link to={`/recipes/${recipe.slug}`} className={styles.card}>
       <Card>
-        <Stack gap="md">
+        <Space direction="vertical" gap="md">
           <Thumbnail owner={recipeOwner(recipe)} />
-          <Stack gap="xs">
+          <Space direction="vertical" gap="xs">
             <Heading level={2} size="md">
               {recipe.title}
             </Heading>
@@ -51,8 +51,8 @@ const RecipeCard = ({ recipe }: { recipe: Recipe }) => {
             <Text size="sm" tone="description">
               <Markdown source={recipe.description} from={recipe.docPath} inline links={false} />
             </Text>
-          </Stack>
-        </Stack>
+          </Space>
+        </Space>
       </Card>
     </Link>
   );
@@ -64,20 +64,20 @@ export const RecipesPage = () => {
   return (
     <div className={styles.column}>
       <Page type="minimal" documentTitle="Recipes · @korzun/design">
-        <Stack gap="xxxl">
-          <Stack gap="sm">
+        <Space direction="vertical" gap="xxxl">
+          <Space direction="vertical" gap="sm">
             <Heading level={1}>Recipes</Heading>
             <Lead>
               Library parts put together for one job: a whole screen or a common group, live and
               ready to copy.
             </Lead>
-          </Stack>
+          </Space>
           <div className={styles.grid}>
             {siteData.recipes.map((recipe) => (
               <RecipeCard key={recipe.slug} recipe={recipe} />
             ))}
           </div>
-        </Stack>
+        </Space>
       </Page>
     </div>
   );
@@ -94,16 +94,16 @@ export const RecipePage = () => {
   return (
     <div className={styles.column}>
       <Page type="minimal" documentTitle={`${recipe.title} · @korzun/design`}>
-        <Stack gap="xxxl">
-          <Stack gap="sm">
+        <Space direction="vertical" gap="xxxl">
+          <Space direction="vertical" gap="sm">
             <Heading level={1}>{recipe.title}</Heading>
             <Lead>{recipe.description}</Lead>
-          </Stack>
+          </Space>
           {recipe.examples.map((example) => (
             <ExampleBlock key={example.slug} owner={owner} example={example} />
           ))}
           <Markdown source={recipe.body} from={recipe.docPath} />
-        </Stack>
+        </Space>
       </Page>
     </div>
   );

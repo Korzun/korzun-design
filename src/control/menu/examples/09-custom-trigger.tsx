@@ -4,7 +4,7 @@
  * element, attach `ref` and `onClick` and map the rest to `aria-*` attributes: here a
  * native `<button>` styled from theme tokens.
  */
-import { Inline, Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button, Menu } from '@korzun/design/control';
 import { MoreIcon } from '@korzun/design/icon';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
@@ -34,8 +34,8 @@ export default function CustomTrigger() {
     { label: 'Duplicate', onClick: () => setChosen('Duplicate') },
   ];
   return (
-    <Stack align="start">
-      <Inline>
+    <Space direction="vertical" align="start">
+      <Space>
         <Menu
           ariaLabel="Row actions"
           trigger={(p) => <Button {...p} prefix={MoreIcon} ariaLabel="More actions" />}
@@ -57,8 +57,8 @@ export default function CustomTrigger() {
           )}
           items={items}
         />
-      </Inline>
+      </Space>
       <Text tone="muted">Chosen: {chosen}</Text>
-    </Stack>
+    </Space>
   );
 }

@@ -116,7 +116,7 @@ describe('ComponentPage', () => {
   });
 
   it('notes the external types a props table also accepts', () => {
-    mount('stack');
+    mount('space');
     expect(screen.getByText(/Also accepts:/)).toHaveTextContent('HTMLAttributes');
   });
 

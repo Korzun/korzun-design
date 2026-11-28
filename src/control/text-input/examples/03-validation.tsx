@@ -5,7 +5,7 @@
  * The demo opens with an over-long title typed in, so it starts invalid; shorten it to
  * ten characters or fewer.
  */
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { TextInput } from '@korzun/design/control';
 import { useEffect, useRef, useState } from 'react';
 
@@ -29,7 +29,7 @@ export default function Validation() {
   const [valid, setValid] = useState(true);
   const box = useTypeOnMount('Dune Messiah');
   return (
-    <Stack>
+    <Space direction="vertical">
       <div ref={box}>
         <TextInput
           name="title"
@@ -43,6 +43,6 @@ export default function Validation() {
       </div>
       <Text tone={valid ? 'success' : 'danger'}>{valid ? 'Valid' : 'Invalid'}</Text>
       <Text tone="muted">Saved value: {title === undefined ? 'undefined' : `“${title}”`}</Text>
-    </Stack>
+    </Space>
   );
 }

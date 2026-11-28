@@ -63,6 +63,8 @@ export const FORMER_NAMES = {
   Dialog: 'Modal',
   useModalDialog: 'useModal',
   isStandalone: 'useIsStandalone',
+  Stack: 'Space',
+  Inline: 'Space',
 };
 
 /** `versions` with each former-name tag replaced by its current name (deduplicated). */

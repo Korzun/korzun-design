@@ -2,7 +2,7 @@
  * `primary` to `description` step down in emphasis. `danger` and `success`
  * colour inline error and confirmation text.
  */
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 
 const tones = [
   'primary',
@@ -16,12 +16,12 @@ const tones = [
 
 export default function Tones() {
   return (
-    <Stack gap="xs">
+    <Space direction="vertical" gap="xs">
       {tones.map((tone) => (
         <Text key={tone} as="div" tone={tone}>
           {`tone="${tone}"`}
         </Text>
       ))}
-    </Stack>
+    </Space>
   );
 }

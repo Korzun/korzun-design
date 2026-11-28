@@ -66,7 +66,7 @@ are typed to the option values. The `label` names the group for assistive tech
 and is not drawn, so put a visible label beside the control yourself.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { SegmentedControl } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -79,11 +79,11 @@ const SORTS = [
 export default function Basic() {
   const [sort, setSort] = useState<(typeof SORTS)[number]['value']>('title');
   return (
-    <Stack align="start">
+    <Space direction="vertical" align="start">
       <Text tone="muted">Sort by</Text>
       <SegmentedControl label="Sort by" options={SORTS} value={sort} onChange={setSort} />
       <Text tone="muted">Sorted by: {sort}</Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -96,7 +96,7 @@ caption. `showLabels={false}` drops the captions and leaves icons only; the
 (`ThumbDownIcon`), not an element.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { SegmentedControl } from '@korzun/design/control';
 import { HandLoveYouIcon, HandOkIcon, ThumbDownIcon } from '@korzun/design/icon';
 import { useState } from 'react';
@@ -110,14 +110,14 @@ const RATINGS = [
 export default function Icons() {
   const [rating, setRating] = useState<(typeof RATINGS)[number]['value']>('ok');
   return (
-    <Stack gap="xl" align="start">
-      <Stack gap="xs" align="start">
+    <Space direction="vertical" gap="xl" align="start">
+      <Space direction="vertical" gap="xs" align="start">
         <Text size="sm" tone="muted">
           With captions
         </Text>
         <SegmentedControl label="Rating" options={RATINGS} value={rating} onChange={setRating} />
-      </Stack>
-      <Stack gap="xs" align="start">
+      </Space>
+      <Space direction="vertical" gap="xs" align="start">
         <Text size="sm" tone="muted">
           {'showLabels={false}'}
         </Text>
@@ -128,9 +128,9 @@ export default function Icons() {
           onChange={setRating}
           showLabels={false}
         />
-      </Stack>
+      </Space>
       <Text tone="muted">Rating: {rating}</Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -142,7 +142,7 @@ With `clearable`, clicking the checked segment, Backspace or Delete calls
 drawn. Without `clearable`, `onChange` never receives `null`.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { SegmentedControl } from '@korzun/design/control';
 import { HandLoveYouIcon, HandOkIcon, ThumbDownIcon } from '@korzun/design/icon';
 import { useState } from 'react';
@@ -156,7 +156,7 @@ const RATINGS = [
 export default function Clearable() {
   const [rating, setRating] = useState<(typeof RATINGS)[number]['value'] | null>('great');
   return (
-    <Stack align="start">
+    <Space direction="vertical" align="start">
       <SegmentedControl
         label="Rating"
         options={RATINGS}
@@ -166,7 +166,7 @@ export default function Clearable() {
         showLabels={false}
       />
       <Text tone="muted">Rating: {rating ?? 'none'}</Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -178,7 +178,7 @@ marked `aria-disabled` and ignore clicks and keys. A `null` value checks
 nothing and draws no lens.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { SegmentedControl } from '@korzun/design/control';
 
 const OPTIONS = [
@@ -189,20 +189,20 @@ const OPTIONS = [
 
 export default function ReadOnly() {
   return (
-    <Stack gap="xl" align="start">
-      <Stack gap="xs" align="start">
+    <Space direction="vertical" gap="xl" align="start">
+      <Space direction="vertical" gap="xs" align="start">
         <Text size="sm" tone="muted">
           value="review"
         </Text>
         <SegmentedControl label="Status" options={OPTIONS} value="review" />
-      </Stack>
-      <Stack gap="xs" align="start">
+      </Space>
+      <Space direction="vertical" gap="xs" align="start">
         <Text size="sm" tone="muted">
           {'value={null}'}
         </Text>
         <SegmentedControl label="Status" options={OPTIONS} value={null} />
-      </Stack>
-    </Stack>
+      </Space>
+    </Space>
   );
 }
 ```
@@ -215,7 +215,7 @@ shows. The corner is the same in both: the control belongs inside a card or
 modal.
 
 ```tsx
-import { Card, Stack, Text } from '@korzun/design/component';
+import { Card, Space, Text } from '@korzun/design/component';
 import { SegmentedControl } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -230,7 +230,7 @@ export default function Surfaces() {
   const [body, setBody] = useState<View>('grid');
   const [header, setHeader] = useState<View>('list');
   return (
-    <Stack>
+    <Space direction="vertical">
       <Card title="surface card, in the body">
         <SegmentedControl label="Body view" options={VIEWS} value={body} onChange={setBody} />
       </Card>
@@ -248,7 +248,7 @@ export default function Surfaces() {
       >
         <Text>Showing {header}.</Text>
       </Card>
-    </Stack>
+    </Space>
   );
 }
 ```

@@ -6,7 +6,7 @@
  * is set on the text input only: form data gets the half-typed text, so submit
  * the chips from state.
  */
-import { Card, Stack, Text } from '@korzun/design/component';
+import { Card, Space, Text } from '@korzun/design/component';
 import { Button, ChipsInput, TextInput } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -25,7 +25,7 @@ export default function FormRow() {
         </Button>
       }
     >
-      <Stack>
+      <Space direction="vertical">
         <ChipsInput
           name="users"
           label="Users"
@@ -47,7 +47,7 @@ export default function FormRow() {
           onChange={setTitle}
         />
         <Text tone="muted">Shared with: {users.join(', ') || 'nobody'}</Text>
-      </Stack>
+      </Space>
     </Card>
   );
 }

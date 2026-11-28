@@ -3,7 +3,7 @@
  * glass recipe, for a menu over an image or a glass control. Each trigger is
  * labelled with its value.
  */
-import { Inline, Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button, Menu } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -14,8 +14,8 @@ export default function Surface() {
     { label: `Reject (${surface})`, danger: true, onClick: () => setChosen(`Reject (${surface})`) },
   ];
   return (
-    <Stack>
-      <Inline>
+    <Space direction="vertical">
+      <Space>
         <Menu
           surface="solid"
           trigger={(p) => <Button {...p}>solid</Button>}
@@ -26,8 +26,8 @@ export default function Surface() {
           trigger={(p) => <Button {...p}>glass</Button>}
           items={items('glass')}
         />
-      </Inline>
+      </Space>
       <Text tone="muted">Chosen: {chosen}</Text>
-    </Stack>
+    </Space>
   );
 }

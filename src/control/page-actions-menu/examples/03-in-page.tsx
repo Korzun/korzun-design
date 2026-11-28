@@ -6,7 +6,7 @@
  * lists them all in order. Delete is `danger`, set apart by `separatorBefore`.
  * @viewport mobile
  */
-import { Card, Page, Stack, Text } from '@korzun/design/component';
+import { Card, Page, Space, Text } from '@korzun/design/component';
 import { useState } from 'react';
 
 export default function InPage() {
@@ -38,10 +38,10 @@ export default function InPage() {
       ]}
     >
       <Card title="Dune">
-        <Stack>
+        <Space direction="vertical">
           <Text>{message}</Text>
           <Text tone="muted">Prefetched: {prefetched}</Text>
-        </Stack>
+        </Space>
       </Card>
     </Page>
   );

@@ -4,7 +4,7 @@
  * fields report validity through `onValidChange`, so Save stays disabled while
  * either is invalid.
  */
-import { Card, Stack, Text } from '@korzun/design/component';
+import { Card, Space, Text } from '@korzun/design/component';
 import { Button, NumberInput } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -28,7 +28,7 @@ export default function FormInCard() {
         </Button>
       }
     >
-      <Stack>
+      <Space direction="vertical">
         <NumberInput
           name="seriesIndex"
           label="Index"
@@ -45,7 +45,7 @@ export default function FormInCard() {
           onValidChange={onValidChange}
         />
         {saved !== null && <Text tone="success">Saved: {saved}</Text>}
-      </Stack>
+      </Space>
     </Card>
   );
 }

@@ -53,11 +53,11 @@ smaller than a line of text. See [corners](../corners.md).
 A prop name inside a sentence. `Code` takes 0.875em of the text around it, so it sits in the line without looking larger.
 
 ```tsx
-import { Code, Stack, Text } from '@korzun/design/component';
+import { Code, Space, Text } from '@korzun/design/component';
 
 export default function InText() {
   return (
-    <Stack gap="sm">
+    <Space direction="vertical" gap="sm">
       <Text as="p">
         Set <Code>maxLength</Code> to cap the title, or <Code>onChange</Code> to follow each
         keystroke.
@@ -65,7 +65,7 @@ export default function InText() {
       <Text as="p" size="sm" tone="muted">
         It follows smaller text too: <Code>value</Code> and <Code>defaultValue</Code>.
       </Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -75,11 +75,11 @@ export default function InText() {
 `Code` scales with its heading, so a name stays in proportion at every level.
 
 ```tsx
-import { Code, Heading, Stack } from '@korzun/design/component';
+import { Code, Heading, Space } from '@korzun/design/component';
 
 export default function InAHeading() {
   return (
-    <Stack gap="sm">
+    <Space direction="vertical" gap="sm">
       <Heading level={1}>
         The <Code>Table</Code> component
       </Heading>
@@ -89,7 +89,7 @@ export default function InAHeading() {
       <Heading level={3}>
         The <Code>Table</Code> component
       </Heading>
-    </Stack>
+    </Space>
   );
 }
 ```

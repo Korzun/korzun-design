@@ -2,7 +2,7 @@
  * `outlined` has a border and the input background; `borderless` drops both, so
  * the browser's own textarea background shows. Check it in dark mode.
  */
-import { Stack } from '@korzun/design/component';
+import { Space } from '@korzun/design/component';
 import { TextArea } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -10,7 +10,7 @@ export default function Variants() {
   const [outlined, setOutlined] = useState<string | undefined>('Outlined');
   const [borderless, setBorderless] = useState<string | undefined>('Borderless');
   return (
-    <Stack>
+    <Space direction="vertical">
       <TextArea
         name="outlined"
         layout="vertical"
@@ -27,6 +27,6 @@ export default function Variants() {
         value={borderless}
         onChange={setBorderless}
       />
-    </Stack>
+    </Space>
   );
 }

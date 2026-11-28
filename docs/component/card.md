@@ -64,7 +64,7 @@ A feature on a screen: `title`, a `subTitle`, a `headerAction`, a form in the bo
 submit button in the `footer`. The footer button reaches the form by `form` id, so it submits it.
 
 ```tsx
-import { Card, Stack, Text } from '@korzun/design/component';
+import { Card, Space, Text } from '@korzun/design/component';
 import { Button, TextInput } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -94,10 +94,10 @@ export default function Basic() {
           setSaved(name ?? '');
         }}
       >
-        <Stack>
+        <Space direction="vertical">
           <TextInput name="name" label="Name" value={name} onChange={setName} />
           <Text tone="muted">Saved name: {saved}</Text>
-        </Stack>
+        </Space>
       </form>
     </Card>
   );
@@ -111,14 +111,14 @@ one is closed; pass `defaultCollapsed={false}` to start open, as the second one 
 footer's destructive action is only reachable while the card is open.
 
 ```tsx
-import { Card, Stack, Text } from '@korzun/design/component';
+import { Card, Space, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { useState } from 'react';
 
 export default function Collapsible() {
   const [removed, setRemoved] = useState<string | undefined>();
   return (
-    <Stack>
+    <Space direction="vertical">
       <Card isCollapsible title="ada" subTitle="Starts collapsed">
         <Text>ada@example.com</Text>
       </Card>
@@ -136,7 +136,7 @@ export default function Collapsible() {
         <Text>grace@example.com</Text>
       </Card>
       <Text tone="muted">Deleted: {removed ?? 'nobody'}</Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -148,7 +148,7 @@ padding, so the child supplies its own padding and corner. A `CardRow` inside is
 card and concentric with it. Clicking anywhere on a row fires `onClick`.
 
 ```tsx
-import { Card, CardRow, Stack, Text } from '@korzun/design/component';
+import { Card, CardRow, Space, Text } from '@korzun/design/component';
 import { useState } from 'react';
 
 const books = ['Middlemarch', 'Persuasion', 'Villette'];
@@ -156,7 +156,7 @@ const books = ['Middlemarch', 'Persuasion', 'Villette'];
 export default function ClickableRows() {
   const [opened, setOpened] = useState<string | undefined>();
   return (
-    <Stack>
+    <Space direction="vertical">
       {books.map((book) => (
         <Card key={book} size="small" onClick={() => setOpened(book)}>
           <CardRow>
@@ -165,7 +165,7 @@ export default function ClickableRows() {
         </Card>
       ))}
       <Text tone="muted">Opened: {opened ?? 'nothing yet'}</Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -175,14 +175,14 @@ export default function ClickableRows() {
 `onClickHeader` makes the header clickable. A click in `headerAction` does not reach it.
 
 ```tsx
-import { Card, Stack, Text } from '@korzun/design/component';
+import { Card, Space, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { useState } from 'react';
 
 export default function HeaderClick() {
   const [event, setEvent] = useState('none yet');
   return (
-    <Stack>
+    <Space direction="vertical">
       <Card
         title="Library"
         onClickHeader={() => setEvent('header clicked')}
@@ -195,7 +195,7 @@ export default function HeaderClick() {
         <Text>42 books</Text>
       </Card>
       <Text tone="muted">Last event: {event}</Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -207,7 +207,7 @@ A Card inside a Card steps its corner down one level: `lg` on the page, `md` ins
 for a group that is itself a feature; to split one body into sections use `Divider`.
 
 ```tsx
-import { Card, Stack, Text } from '@korzun/design/component';
+import { Card, Space, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -218,21 +218,21 @@ export default function Nested() {
       title="Library (16px)"
       footer={<Button onClick={() => setPressed('Sync library')}>Sync library</Button>}
     >
-      <Stack>
+      <Space direction="vertical">
         <Text>The feature sits on the page.</Text>
         <Card
           title="Devices (8px)"
           footer={<Button onClick={() => setPressed('Pair device')}>Pair device</Button>}
         >
-          <Stack>
+          <Space direction="vertical">
             <Text>A group inside the feature, one level in.</Text>
             <Card title="Kitchen frame (4px)">
               <Text>Deeper Cards stay at the smallest step.</Text>
             </Card>
-          </Stack>
+          </Space>
         </Card>
         <Text tone="muted">Pressed: {pressed ?? 'nothing yet'}</Text>
-      </Stack>
+      </Space>
     </Card>
   );
 }

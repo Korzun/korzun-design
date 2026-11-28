@@ -50,17 +50,17 @@ A controlled number field. `onChange` receives a number, not an event or the
 text, and `undefined` once the field is emptied.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { NumberInput } from '@korzun/design/control';
 import { useState } from 'react';
 
 export default function Basic() {
   const [pages, setPages] = useState<number | undefined>(42);
   return (
-    <Stack>
+    <Space direction="vertical">
       <NumberInput name="pages" label="Pages" value={pages} onChange={setPages} />
       <Text tone="muted">Value: {pages === undefined ? 'undefined' : pages}</Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -72,7 +72,7 @@ the label above the field on that row, and `inline` paints nothing around the
 pair.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { NumberInput } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -81,8 +81,8 @@ export default function Layouts() {
   const [vertical, setVertical] = useState<number | undefined>(880);
   const [inline, setInline] = useState<number | undefined>(160);
   return (
-    <Stack gap="xl">
-      <Stack gap="xs">
+    <Space direction="vertical" gap="xl">
+      <Space direction="vertical" gap="xs">
         <Text size="sm" tone="muted">
           layout="horizontal"
         </Text>
@@ -93,8 +93,8 @@ export default function Layouts() {
           value={horizontal}
           onChange={setHorizontal}
         />
-      </Stack>
-      <Stack gap="xs">
+      </Space>
+      <Space direction="vertical" gap="xs">
         <Text size="sm" tone="muted">
           layout="vertical"
         </Text>
@@ -105,8 +105,8 @@ export default function Layouts() {
           value={vertical}
           onChange={setVertical}
         />
-      </Stack>
-      <Stack gap="xs">
+      </Space>
+      <Space direction="vertical" gap="xs">
         <Text size="sm" tone="muted">
           layout="inline"
         </Text>
@@ -117,8 +117,8 @@ export default function Layouts() {
           value={inline}
           onChange={setInline}
         />
-      </Stack>
-    </Stack>
+      </Space>
+    </Space>
   );
 }
 ```
@@ -133,7 +133,7 @@ label and border red, `onValidChange` fires once, and `onChange` is not called,
 so the saved number stays at the last valid one. Type `abc` to see it.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { NumberInput } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -141,7 +141,7 @@ export default function DefaultCheck() {
   const [rating, setRating] = useState<number | undefined>(4.5);
   const [valid, setValid] = useState(true);
   return (
-    <Stack>
+    <Space direction="vertical">
       <NumberInput
         name="rating"
         layout="vertical"
@@ -152,7 +152,7 @@ export default function DefaultCheck() {
       />
       <Text tone={valid ? 'success' : 'danger'}>{valid ? 'Valid' : 'Invalid'}</Text>
       <Text tone="muted">Saved number: {rating === undefined ? 'undefined' : rating}</Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -165,7 +165,7 @@ fields report validity through `onValidChange`, so Save stays disabled while
 either is invalid.
 
 ```tsx
-import { Card, Stack, Text } from '@korzun/design/component';
+import { Card, Space, Text } from '@korzun/design/component';
 import { Button, NumberInput } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -189,7 +189,7 @@ export default function FormInCard() {
         </Button>
       }
     >
-      <Stack>
+      <Space direction="vertical">
         <NumberInput
           name="seriesIndex"
           label="Index"
@@ -206,7 +206,7 @@ export default function FormInCard() {
           onValidChange={onValidChange}
         />
         {saved !== null && <Text tone="success">Saved: {saved}</Text>}
-      </Stack>
+      </Space>
     </Card>
   );
 }
@@ -218,14 +218,14 @@ export default function FormInCard() {
 label, name the field with `ariaLabel`, and describe it with a `placeholder`.
 
 ```tsx
-import { Inline, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { NumberInput } from '@korzun/design/control';
 import { useState } from 'react';
 
 export default function WithoutLabel() {
   const [quantity, setQuantity] = useState<number | undefined>(undefined);
   return (
-    <Inline>
+    <Space>
       <NumberInput
         name="quantity"
         layout="inline"
@@ -236,7 +236,7 @@ export default function WithoutLabel() {
         onChange={setQuantity}
       />
       <Text tone="muted">Quantity: {quantity === undefined ? 'none' : quantity}</Text>
-    </Inline>
+    </Space>
   );
 }
 ```

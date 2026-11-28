@@ -4,7 +4,7 @@
  * Select has no `open` prop, so this demo clicks the trigger once on mount to
  * start open.
  */
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Select } from '@korzun/design/control';
 import { useEffect, useRef, useState } from 'react';
 
@@ -21,11 +21,11 @@ export default function Basic() {
     box.current?.querySelector<HTMLElement>('[role="button"]')?.click();
   }, []);
   return (
-    <Stack>
+    <Space direction="vertical">
       <div ref={box}>
         <Select name="fruit" label="Fruit" value={fruit} options={FRUITS} onChange={setFruit} />
       </div>
       <Text tone="muted">Chosen: {fruit ?? 'nothing'}</Text>
-    </Stack>
+    </Space>
   );
 }

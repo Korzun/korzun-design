@@ -5,7 +5,7 @@
  * fades the whole control and means "you may not change this". The button holds
  * the save open; the count shows that clicks during it do nothing.
  */
-import { Inline, Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button, Switch } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -15,7 +15,7 @@ export default function LoadingAndDisabled() {
   const [saving, setSaving] = useState(true);
   const [changes, setChanges] = useState(0);
   return (
-    <Stack>
+    <Space direction="vertical">
       <Switch
         name="push-device"
         label="This device"
@@ -34,11 +34,11 @@ export default function LoadingAndDisabled() {
         loading={saving}
         onChange={setSubscribed}
       />
-      <Inline>
+      <Space>
         <Button onClick={() => setSaving((s) => !s)}>
           {saving ? 'Finish save' : 'Start save'}
         </Button>
-      </Inline>
+      </Space>
       <Text tone="muted">Changes made: {changes}</Text>
       <Switch
         name="push-email"
@@ -47,6 +47,6 @@ export default function LoadingAndDisabled() {
         checked={email}
         onChange={setEmail}
       />
-    </Stack>
+    </Space>
   );
 }

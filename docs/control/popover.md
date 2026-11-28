@@ -125,7 +125,7 @@ content brings its own background, border and radius. It does not close on
 selection: choosing an option calls `setOpen(false)` itself. This demo starts open.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button, Popover } from '@korzun/design/control';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { useRef, useState } from 'react';
@@ -150,13 +150,13 @@ export default function Basic() {
     setOpen(false);
   };
   return (
-    <Stack align="start">
+    <Space direction="vertical" align="start">
       <Button ref={anchor} onClick={() => setOpen((value) => !value)}>
         Filters
       </Button>
       <Popover anchorRef={anchor} open={open} matchWidth={false} onClose={() => setOpen(false)}>
         <div className={styles.panel}>
-          <Stack gap="xxs">
+          <Space direction="vertical" gap="xxs">
             <Button type="text" onClick={() => choose('Unread')}>
               Unread
             </Button>
@@ -166,11 +166,11 @@ export default function Basic() {
             <Button type="text" onClick={() => choose('Favourites')}>
               Favourites
             </Button>
-          </Stack>
+          </Space>
         </div>
       </Popover>
       <Text tone="muted">Chosen: {chosen}</Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -181,7 +181,7 @@ export default function Basic() {
 Each anchor is labelled with the side it asks for.
 
 ```tsx
-import { Inline, Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button, Popover } from '@korzun/design/control';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { useRef, useState } from 'react';
@@ -203,16 +203,16 @@ export default function Side() {
   const [open, setOpen] = useState<'bottom' | 'top' | null>(null);
   const toggle = (side: 'bottom' | 'top') => setOpen((current) => (current === side ? null : side));
   return (
-    <Stack>
+    <Space direction="vertical">
       <Text tone="muted">Open: {open ?? 'none'}</Text>
-      <Inline>
+      <Space>
         <Button ref={belowAnchor} onClick={() => toggle('bottom')}>
           Opens below
         </Button>
         <Button ref={aboveAnchor} onClick={() => toggle('top')}>
           Opens above
         </Button>
-      </Inline>
+      </Space>
       <Popover
         anchorRef={belowAnchor}
         open={open === 'bottom'}
@@ -235,7 +235,7 @@ export default function Side() {
           <Text>Above the anchor</Text>
         </div>
       </Popover>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -246,7 +246,7 @@ export default function Side() {
 edge. The anchors are wider than the popover so each edge shows.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button, Popover } from '@korzun/design/control';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { useRef, useState } from 'react';
@@ -272,7 +272,7 @@ export default function Align() {
   const toggle = (align: Align) => setOpen((current) => (current === align ? null : align));
   const anchors = { start: startAnchor, center: centerAnchor, end: endAnchor };
   return (
-    <Stack align="start">
+    <Space direction="vertical" align="start">
       <Button ref={startAnchor} onClick={() => toggle('start')}>
         align start: popover at the left edge
       </Button>
@@ -297,7 +297,7 @@ export default function Align() {
           </div>
         </Popover>
       ))}
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -308,7 +308,7 @@ export default function Align() {
 list is. `matchWidth={false}` lets the content size itself.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button, Popover } from '@korzun/design/control';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { useRef, useState } from 'react';
@@ -331,7 +331,7 @@ export default function Width() {
   const toggle = (name: 'matched' | 'content') =>
     setOpen((current) => (current === name ? null : name));
   return (
-    <Stack align="start">
+    <Space direction="vertical" align="start">
       <Button ref={matchedAnchor} onClick={() => toggle('matched')}>
         matchWidth: as wide as this button
       </Button>
@@ -359,7 +359,7 @@ export default function Width() {
           <Text>Short</Text>
         </div>
       </Popover>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -371,7 +371,7 @@ pixels, a `px` or `rem` string, or a theme space value (`theme.space.xl`).
 Each button is labelled with the value it passes.
 
 ```tsx
-import { Inline, Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button, Popover } from '@korzun/design/control';
 import { createUseStyles, useTheme, type Theme } from '@korzun/design/theme';
 import { useRef, useState } from 'react';
@@ -404,8 +404,8 @@ export default function Gap() {
     </div>
   );
   return (
-    <Stack>
-      <Inline>
+    <Space direction="vertical">
+      <Space>
         <Button ref={pixelsAnchor} onClick={() => toggle('pixels')}>
           {'gap={24}'}
         </Button>
@@ -418,7 +418,7 @@ export default function Gap() {
         <Button ref={themeAnchor} onClick={() => toggle('theme')}>
           {'gap={theme.space.xl}'}
         </Button>
-      </Inline>
+      </Space>
       <Text tone="muted">Open: {open ?? 'none'}</Text>
       <Popover
         anchorRef={pixelsAnchor}
@@ -456,7 +456,7 @@ export default function Gap() {
       >
         {panel('theme.space.xl')}
       </Popover>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -468,7 +468,7 @@ close the innermost open layer first: Escape closes "More" before "Filters",
 and a press inside "More" closes neither.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button, Popover } from '@korzun/design/control';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { useRef, useState } from 'react';
@@ -491,7 +491,7 @@ export default function Nested() {
   const [innerOpen, setInnerOpen] = useState(false);
   const [chosen, setChosen] = useState('nothing yet');
   return (
-    <Stack align="start">
+    <Space direction="vertical" align="start">
       <Button ref={outerAnchor} onClick={() => setOuterOpen((value) => !value)}>
         Filters
       </Button>
@@ -502,14 +502,14 @@ export default function Nested() {
         onClose={() => setOuterOpen(false)}
       >
         <div className={styles.panel}>
-          <Stack gap="xxs">
+          <Space direction="vertical" gap="xxs">
             <Button type="text" onClick={() => setChosen('Unread')}>
               Unread
             </Button>
             <Button ref={innerAnchor} type="text" onClick={() => setInnerOpen((value) => !value)}>
               More
             </Button>
-          </Stack>
+          </Space>
           <Popover
             anchorRef={innerAnchor}
             open={innerOpen}
@@ -517,20 +517,20 @@ export default function Nested() {
             onClose={() => setInnerOpen(false)}
           >
             <div className={styles.panel}>
-              <Stack gap="xxs">
+              <Space direction="vertical" gap="xxs">
                 <Button type="text" onClick={() => setChosen('Finished')}>
                   Finished
                 </Button>
                 <Button type="text" onClick={() => setChosen('Favourites')}>
                   Favourites
                 </Button>
-              </Stack>
+              </Space>
             </div>
           </Popover>
         </div>
       </Popover>
       <Text tone="muted">Chosen: {chosen}</Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -542,7 +542,7 @@ it shows above the backdrop. Escape closes the popover first and the Modal
 on the next press.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button, Modal, Popover } from '@korzun/design/control';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { useRef, useState } from 'react';
@@ -568,29 +568,29 @@ export default function InDialog() {
     setOpen(false);
   };
   return (
-    <Stack align="start">
+    <Space direction="vertical" align="start">
       <Button onClick={() => setDialogOpen(true)}>Open dialog</Button>
       <Modal open={dialogOpen} onClose={() => setDialogOpen(false)} title="Edit book">
-        <Stack align="start">
+        <Space direction="vertical" align="start">
           <Button ref={anchor} onClick={() => setOpen((value) => !value)}>
             Status
           </Button>
           <Popover anchorRef={anchor} open={open} matchWidth={false} onClose={() => setOpen(false)}>
             <div className={styles.panel}>
-              <Stack gap="xxs">
+              <Space direction="vertical" gap="xxs">
                 <Button type="text" onClick={() => choose('Reading')}>
                   Reading
                 </Button>
                 <Button type="text" onClick={() => choose('Finished')}>
                   Finished
                 </Button>
-              </Stack>
+              </Space>
             </div>
           </Popover>
           <Text tone="muted">Chosen: {chosen}</Text>
-        </Stack>
+        </Space>
       </Modal>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -601,7 +601,7 @@ With no `onClose`, Escape and a press outside do nothing: the popover stays
 open until your code sets `open` to `false`, here the Show and Hide button.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button, Popover } from '@korzun/design/control';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { useRef, useState } from 'react';
@@ -621,7 +621,7 @@ export default function WithoutOnClose() {
   const anchor = useRef<HTMLElement>(null);
   const [open, setOpen] = useState(true);
   return (
-    <Stack align="start">
+    <Space direction="vertical" align="start">
       <Button ref={anchor} onClick={() => setOpen((value) => !value)}>
         {open ? 'Hide' : 'Show'}
       </Button>
@@ -631,7 +631,7 @@ export default function WithoutOnClose() {
         </div>
       </Popover>
       <Text tone="muted">Open: {open ? 'yes' : 'no'}</Text>
-    </Stack>
+    </Space>
   );
 }
 ```

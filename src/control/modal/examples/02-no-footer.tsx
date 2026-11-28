@@ -2,7 +2,7 @@
  * With no `footer` no action bar is drawn. The dialog is dismissed with Escape or a
  * click on the backdrop, both of which call `onClose`.
  */
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button, Modal } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -14,12 +14,12 @@ export default function NoFooter() {
     setOpen(false);
   };
   return (
-    <Stack align="start">
+    <Space direction="vertical" align="start">
       <Button onClick={() => setOpen(true)}>Show notice</Button>
       <Text tone="muted">Dismissed: {dismissals}</Text>
       <Modal open={open} onClose={dismiss} title="Sync finished">
         Press Escape or click outside the dialog to close it.
       </Modal>
-    </Stack>
+    </Space>
   );
 }

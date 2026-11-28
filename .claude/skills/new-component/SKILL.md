@@ -57,15 +57,15 @@ When a module disagrees with an AGENTS rule, the rule wins.
   literal. Every literal that remains, with no exception, goes in a comment
   block at the top of the file, one line each with its reason, as Button's
   `style.ts` does.
-- Layout is `Stack`/`Inline` and text is `Text`/`Heading`, composed in
+- Layout is `Space` and text is `Text`/`Heading`, composed in
   `index.tsx`; `style.ts` never sets `gap`, `alignItems`, `fontSize`,
   `fontWeight` or text `color`. Inside a `<label>` or `<button>` root, wrap the
-  children in `<Inline as="span" gap="…">` and set text with
-  `<Text as="span">`, or make the root itself `<Text as="label">`. `Inline`
+  children in `<Space as="span" gap="…">` and set text with
+  `<Text as="span">`, or make the root itself `<Text as="label">`. `Space`
   renders block-level, full-width `flex`, so a root that must hug its content
   (a checkbox row, whose click target would otherwise span the line) keeps
   `display: 'inline-flex'` on the root with a one-line comment saying so; the
-  gap still comes from the inner `Inline`. No other `display` on the root.
+  gap still comes from the inner `Space`. No other `display` on the root.
 - Corners follow depth. Read `useSurfaceDepth()` and pick a class with
   `depthClass(depth)` as Button and Select do, or draw a box with
   `useSurfaceRadius()`. A fixed radius is allowed only for a glyph smaller than
@@ -202,7 +202,7 @@ props>.`` The tag is the value name, so the site links it.
 1. Files created and changed.
 2. The checklist, one line each with its evidence (path:line or command
    output): §1 props/JSDoc, `className` last, `ref`, `name`, relative imports,
-   tokens-only `style.ts` (literals listed), layout via Stack/Inline, corner
+   tokens-only `style.ts` (literals listed), layout via Space, corner
    decision, distinct focus; test table rows; barrel line; §2 doc front
    matter, regions, examples; §3 imports row, rule 11; §4 smoke lines; §5 tag,
    version before and after, bullet.

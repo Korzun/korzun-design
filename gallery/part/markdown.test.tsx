@@ -97,7 +97,7 @@ describe('Markdown', () => {
       <ThemeProvider identity="test">
         <MemoryRouter>
           <Markdown
-            source="Uses `Stack`; see [corners](../corners.md) and ![a logo](x.png)."
+            source="Uses `Space`; see [corners](../corners.md) and ![a logo](x.png)."
             inline
             links={false}
           />
@@ -106,8 +106,8 @@ describe('Markdown', () => {
     );
     const span = container.querySelector('span')!;
     expect(span.querySelector('a, img')).toBeNull();
-    expect(span.querySelector('code')).toHaveTextContent('Stack');
-    expect(span).toHaveTextContent('Uses Stack; see corners and a logo.');
+    expect(span.querySelector('code')).toHaveTextContent('Space');
+    expect(span).toHaveTextContent('Uses Space; see corners and a logo.');
   });
 
   it('gives headings the slug ids section links use, unique on the page', () => {
@@ -178,7 +178,7 @@ describe('Markdown type scale', () => {
   });
 
   it('sizes inline code in em, so code in a heading takes the heading size', () => {
-    const { container } = mount('## `useIsStandalone()`\n\nUse `Stack`.');
+    const { container } = mount('## `useIsStandalone()`\n\nUse `Space`.');
     expect(getComputedStyle(container.querySelector('h2 code')!).fontSize).toBe('0.875em');
     expect(getComputedStyle(container.querySelector('p code')!).fontSize).toBe('0.875em');
   });

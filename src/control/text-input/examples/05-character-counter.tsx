@@ -3,7 +3,7 @@
  * within the last 10% of the limit (at least 10 characters) and turns red at the limit.
  * The first field is near its limit, the second is at it.
  */
-import { Stack } from '@korzun/design/component';
+import { Space } from '@korzun/design/component';
 import { TextInput } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -11,7 +11,7 @@ export default function CharacterCounter() {
   const [near, setNear] = useState<string | undefined>('Short story collection, volume two');
   const [full, setFull] = useState<string | undefined>('Exactly thirty characters long');
   return (
-    <Stack>
+    <Space direction="vertical">
       <TextInput
         name="near"
         layout="vertical"
@@ -28,6 +28,6 @@ export default function CharacterCounter() {
         value={full}
         onChange={setFull}
       />
-    </Stack>
+    </Space>
   );
 }

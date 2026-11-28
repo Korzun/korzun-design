@@ -4,7 +4,7 @@
  * `label` stays each segment's accessible name. `Icon` takes a component
  * (`ThumbDownIcon`), not an element.
  */
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { SegmentedControl } from '@korzun/design/control';
 import { HandLoveYouIcon, HandOkIcon, ThumbDownIcon } from '@korzun/design/icon';
 import { useState } from 'react';
@@ -18,14 +18,14 @@ const RATINGS = [
 export default function Icons() {
   const [rating, setRating] = useState<(typeof RATINGS)[number]['value']>('ok');
   return (
-    <Stack gap="xl" align="start">
-      <Stack gap="xs" align="start">
+    <Space direction="vertical" gap="xl" align="start">
+      <Space direction="vertical" gap="xs" align="start">
         <Text size="sm" tone="muted">
           With captions
         </Text>
         <SegmentedControl label="Rating" options={RATINGS} value={rating} onChange={setRating} />
-      </Stack>
-      <Stack gap="xs" align="start">
+      </Space>
+      <Space direction="vertical" gap="xs" align="start">
         <Text size="sm" tone="muted">
           {'showLabels={false}'}
         </Text>
@@ -36,8 +36,8 @@ export default function Icons() {
           onChange={setRating}
           showLabels={false}
         />
-      </Stack>
+      </Space>
       <Text tone="muted">Rating: {rating}</Text>
-    </Stack>
+    </Space>
   );
 }

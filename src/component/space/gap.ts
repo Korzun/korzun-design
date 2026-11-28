@@ -2,7 +2,7 @@ import type { Theme } from '../../theme/index.js';
 
 export type Gap = keyof Theme['space'] | 'none';
 
-// One static class per space token (shared by Stack and Inline), so a gap is a
+// One static class per space token (shared by every Space), so a gap is a
 // class swap rather than a per-instance dynamic style sheet.
 export const gapRules = (theme: Theme) =>
   ({

@@ -75,14 +75,14 @@ and the rest sit at the right. Everything else collapses into the overflow
 menu, where `danger` turns Delete red and `separatorBefore` sets it apart.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { PageActionsBar } from '@korzun/design/control';
 import { useState } from 'react';
 
 export default function Basic() {
   const [chosen, setChosen] = useState('nothing yet');
   return (
-    <Stack>
+    <Space direction="vertical">
       <PageActionsBar
         items={[
           { label: 'Read', onClick: () => setChosen('Read'), primary: true, align: 'leading' },
@@ -97,7 +97,7 @@ export default function Basic() {
         ]}
       />
       <Text tone="muted">Chosen: {chosen}</Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -109,14 +109,14 @@ Pass "Actions" when every item is in the menu, as here, because "More…"
 would promise inline actions that are not there.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { PageActionsBar } from '@korzun/design/control';
 import { useState } from 'react';
 
 export default function ActionsLabel() {
   const [chosen, setChosen] = useState('nothing yet');
   return (
-    <Stack>
+    <Space direction="vertical">
       <PageActionsBar
         actionsLabel="Actions"
         items={[
@@ -125,7 +125,7 @@ export default function ActionsLabel() {
         ]}
       />
       <Text tone="muted">Chosen: {chosen}</Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -138,7 +138,7 @@ does: Read online shows its `Icon`, Download runs `intentProps` when the
 pointer, focus or a touch reaches it, and Archive is `disabled`.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { PageActionsBar } from '@korzun/design/control';
 import { BookIcon } from '@korzun/design/icon';
 import { useState } from 'react';
@@ -148,7 +148,7 @@ export default function ItemOptions() {
   const [prefetched, setPrefetched] = useState('nothing yet');
   const prefetch = () => setPrefetched('Download');
   return (
-    <Stack>
+    <Space direction="vertical">
       <PageActionsBar
         items={[
           { label: 'Edit', onClick: () => setChosen('Edit'), primary: true },
@@ -165,7 +165,7 @@ export default function ItemOptions() {
       />
       <Text tone="muted">Chosen: {chosen}</Text>
       <Text tone="muted">Prefetched: {prefetched}</Text>
-    </Stack>
+    </Space>
   );
 }
 ```

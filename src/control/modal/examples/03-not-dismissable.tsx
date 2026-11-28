@@ -3,7 +3,7 @@
  * runs. The switch holds the busy state on so you can try both; the footer buttons
  * are disabled or loading to match, so every way out is gated the same.
  */
-import { Stack } from '@korzun/design/component';
+import { Space } from '@korzun/design/component';
 import { Button, Modal, Switch } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -11,7 +11,7 @@ export default function NotDismissable() {
   const [open, setOpen] = useState(false);
   const [saving, setSaving] = useState(true);
   return (
-    <Stack align="start">
+    <Space direction="vertical" align="start">
       <Button onClick={() => setOpen(true)}>Open busy dialog</Button>
       <Modal
         open={open}
@@ -29,11 +29,11 @@ export default function NotDismissable() {
           </>
         }
       >
-        <Stack>
+        <Space direction="vertical">
           Escape and the backdrop are ignored while the request is in flight.
           <Switch name="saving" label="Request in flight" checked={saving} onChange={setSaving} />
-        </Stack>
+        </Space>
       </Modal>
-    </Stack>
+    </Space>
   );
 }

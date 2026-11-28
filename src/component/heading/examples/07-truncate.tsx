@@ -1,8 +1,8 @@
 /** Truncate
  * `truncate` clips a long title to one line with an ellipsis. Beside an
- * action in an `Inline`, the title shrinks and the button keeps its width.
+ * action in a `Space`, the title shrinks and the button keeps its width.
  */
-import { Heading, Inline, Stack, Text } from '@korzun/design/component';
+import { Heading, Space, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -12,29 +12,29 @@ const title =
 export default function Truncate() {
   const [opened, setOpened] = useState(0);
   return (
-    <Stack gap="xl">
-      <Stack gap="xs">
+    <Space direction="vertical" gap="xl">
+      <Space direction="vertical" gap="xs">
         <Text size="sm" tone="muted">
           Without truncate
         </Text>
         <Heading level={3}>{title}</Heading>
-      </Stack>
-      <Stack gap="xs">
+      </Space>
+      <Space direction="vertical" gap="xs">
         <Text size="sm" tone="muted">
           With truncate, beside an action
         </Text>
-        <Inline justify="between">
+        <Space justify="between">
           <Heading level={3} truncate>
             {title}
           </Heading>
           <Button type="primary" onClick={() => setOpened((n) => n + 1)}>
             Open
           </Button>
-        </Inline>
+        </Space>
         <Text size="sm" tone="muted">
           Opened: {opened}
         </Text>
-      </Stack>
-    </Stack>
+      </Space>
+    </Space>
   );
 }

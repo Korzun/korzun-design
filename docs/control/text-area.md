@@ -42,17 +42,17 @@ A controlled multi-line field. `onChange` receives the string, not an event,
 and `undefined` once the field is emptied.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { TextArea } from '@korzun/design/control';
 import { useState } from 'react';
 
 export default function Basic() {
   const [note, setNote] = useState<string | undefined>('Remember to return the book.');
   return (
-    <Stack>
+    <Space direction="vertical">
       <TextArea name="note" layout="vertical" label="Note" value={note} onChange={setNote} />
       <Text tone="muted">Length: {note === undefined ? 'undefined' : note.length}</Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -64,7 +64,7 @@ the label above the field on that row, and `inline` paints nothing around the
 pair.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { TextArea } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -73,8 +73,8 @@ export default function Layouts() {
   const [vertical, setVertical] = useState<string | undefined>('Lend to Sam.');
   const [inline, setInline] = useState<string | undefined>('Reread next year.');
   return (
-    <Stack gap="xl">
-      <Stack gap="xs">
+    <Space direction="vertical" gap="xl">
+      <Space direction="vertical" gap="xs">
         <Text size="sm" tone="muted">
           layout="horizontal"
         </Text>
@@ -85,8 +85,8 @@ export default function Layouts() {
           value={horizontal}
           onChange={setHorizontal}
         />
-      </Stack>
-      <Stack gap="xs">
+      </Space>
+      <Space direction="vertical" gap="xs">
         <Text size="sm" tone="muted">
           layout="vertical"
         </Text>
@@ -97,14 +97,14 @@ export default function Layouts() {
           value={vertical}
           onChange={setVertical}
         />
-      </Stack>
-      <Stack gap="xs">
+      </Space>
+      <Space direction="vertical" gap="xs">
         <Text size="sm" tone="muted">
           layout="inline"
         </Text>
         <TextArea name="inline" layout="inline" label="Note" value={inline} onChange={setInline} />
-      </Stack>
-    </Stack>
+      </Space>
+    </Space>
   );
 }
 ```
@@ -115,7 +115,7 @@ export default function Layouts() {
 the browser's own textarea background shows. Check it in dark mode.
 
 ```tsx
-import { Stack } from '@korzun/design/component';
+import { Space } from '@korzun/design/component';
 import { TextArea } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -123,7 +123,7 @@ export default function Variants() {
   const [outlined, setOutlined] = useState<string | undefined>('Outlined');
   const [borderless, setBorderless] = useState<string | undefined>('Borderless');
   return (
-    <Stack>
+    <Space direction="vertical">
       <TextArea
         name="outlined"
         layout="vertical"
@@ -140,7 +140,7 @@ export default function Variants() {
         value={borderless}
         onChange={setBorderless}
       />
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -152,7 +152,7 @@ its minimum height is 7rem. Without it the height stays at 10rem and long text
 scrolls. Both start with the same text: add lines to each.
 
 ```tsx
-import { Stack } from '@korzun/design/component';
+import { Space } from '@korzun/design/component';
 import { TextArea } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -162,7 +162,7 @@ export default function AutoResize() {
   const [grows, setGrows] = useState<string | undefined>(SAMPLE);
   const [fixed, setFixed] = useState<string | undefined>(SAMPLE);
   return (
-    <Stack>
+    <Space direction="vertical">
       <TextArea
         name="grows"
         layout="vertical"
@@ -178,7 +178,7 @@ export default function AutoResize() {
         value={fixed}
         onChange={setFixed}
       />
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -190,7 +190,7 @@ within the last 10% of the limit (at least 50 characters) and turns red at the l
 The first field is inside that window, the second is at the limit.
 
 ```tsx
-import { Stack } from '@korzun/design/component';
+import { Space } from '@korzun/design/component';
 import { TextArea } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -202,7 +202,7 @@ export default function CharacterCounter() {
     'A short summary of the book that fills every one of the characters allowed.'
   );
   return (
-    <Stack>
+    <Space direction="vertical">
       <TextArea
         name="near"
         layout="vertical"
@@ -219,7 +219,7 @@ export default function CharacterCounter() {
         value={full}
         onChange={setFull}
       />
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -233,7 +233,7 @@ fires once when validity flips. The demo opens with two lines typed in, so it
 starts invalid; remove the line break to fix it.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { TextArea } from '@korzun/design/control';
 import { useEffect, useRef, useState } from 'react';
 
@@ -257,7 +257,7 @@ export default function Validation() {
   const [valid, setValid] = useState(true);
   const box = useTypeOnMount('Read on the train.\nLend to Sam.');
   return (
-    <Stack>
+    <Space direction="vertical">
       <div ref={box}>
         <TextArea
           name="one-line"
@@ -272,7 +272,7 @@ export default function Validation() {
       </div>
       <Text tone={valid ? 'success' : 'danger'}>{valid ? 'Valid' : 'Invalid'}</Text>
       <Text tone="muted">Saved text: {text === undefined ? 'nothing' : `“${text}”`}</Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -284,7 +284,7 @@ grows as the user types, with its label above and a `maxLength` the server
 enforces.
 
 ```tsx
-import { Card, Stack, Text } from '@korzun/design/component';
+import { Card, Space, Text } from '@korzun/design/component';
 import { Button, TextArea } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -303,7 +303,7 @@ export default function FormInCard() {
         </Button>
       }
     >
-      <Stack>
+      <Space direction="vertical">
         <TextArea name="note" label="Note" value={note} onChange={setNote} />
         <TextArea
           name="description"
@@ -315,7 +315,7 @@ export default function FormInCard() {
           onChange={setDescription}
         />
         <Text tone="muted">Saved {saved} times</Text>
-      </Stack>
+      </Space>
     </Card>
   );
 }
@@ -327,14 +327,14 @@ A textarea with no visible `label` takes `ariaLabel`, so assistive tech can
 still name it.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { TextArea } from '@korzun/design/control';
 import { useState } from 'react';
 
 export default function WithoutLabel() {
   const [notes, setNotes] = useState<string | undefined>(undefined);
   return (
-    <Stack>
+    <Space direction="vertical">
       <TextArea
         name="notes"
         layout="inline"
@@ -344,7 +344,7 @@ export default function WithoutLabel() {
         onChange={setNotes}
       />
       <Text tone="muted">Characters: {notes?.length ?? 0}</Text>
-    </Stack>
+    </Space>
   );
 }
 ```

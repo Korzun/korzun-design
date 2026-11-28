@@ -55,7 +55,7 @@ adds the highlighted one, or the typed text; Backspace on an empty field
 removes the last chip. `onChange` receives the whole new array, not an event.
 
 ```tsx
-import { Card, Stack, Text } from '@korzun/design/component';
+import { Card, Space, Text } from '@korzun/design/component';
 import { ChipsInput } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -65,7 +65,7 @@ export default function Basic() {
   const [subjects, setSubjects] = useState(['History']);
   return (
     <Card title="Subjects">
-      <Stack>
+      <Space direction="vertical">
         <ChipsInput
           value={subjects}
           suggestions={SUBJECTS}
@@ -73,7 +73,7 @@ export default function Basic() {
           placeholder="Add subject…"
         />
         <Text tone="muted">Chosen: {subjects.join(', ') || 'nothing'}</Text>
-      </Stack>
+      </Space>
     </Card>
   );
 }
@@ -86,7 +86,7 @@ Enter or Tab also adds text that matches no suggestion. With
 the field.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { ChipsInput } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -96,8 +96,8 @@ export default function SuggestionsOnly() {
   const [anything, setAnything] = useState<string[]>([]);
   const [listed, setListed] = useState<string[]>([]);
   return (
-    <Stack gap="xl">
-      <Stack gap="xs">
+    <Space direction="vertical" gap="xl">
+      <Space direction="vertical" gap="xs">
         <Text size="sm" tone="muted">
           Custom values allowed
         </Text>
@@ -107,8 +107,8 @@ export default function SuggestionsOnly() {
           onChange={setAnything}
           placeholder="Type any colour…"
         />
-      </Stack>
-      <Stack gap="xs">
+      </Space>
+      <Space direction="vertical" gap="xs">
         <Text size="sm" tone="muted">
           {'allowCustom={false}: suggestions only'}
         </Text>
@@ -119,8 +119,8 @@ export default function SuggestionsOnly() {
           allowCustom={false}
           placeholder="Pick a listed colour…"
         />
-      </Stack>
-    </Stack>
+      </Space>
+    </Space>
   );
 }
 ```
@@ -132,7 +132,7 @@ export default function SuggestionsOnly() {
 fields in a form.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { ChipsInput } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -143,14 +143,14 @@ export default function Layouts() {
   const [horizontal, setHorizontal] = useState(['Memoir']);
   const [vertical, setVertical] = useState(['Reference']);
   return (
-    <Stack gap="xl">
-      <Stack gap="xs">
+    <Space direction="vertical" gap="xl">
+      <Space direction="vertical" gap="xs">
         <Text size="sm" tone="muted">
           layout="block"
         </Text>
         <ChipsInput label="Tags" value={block} suggestions={TAGS} onChange={setBlock} />
-      </Stack>
-      <Stack gap="xs">
+      </Space>
+      <Space direction="vertical" gap="xs">
         <Text size="sm" tone="muted">
           layout="horizontal"
         </Text>
@@ -161,8 +161,8 @@ export default function Layouts() {
           suggestions={TAGS}
           onChange={setHorizontal}
         />
-      </Stack>
-      <Stack gap="xs">
+      </Space>
+      <Space direction="vertical" gap="xs">
         <Text size="sm" tone="muted">
           layout="vertical"
         </Text>
@@ -173,8 +173,8 @@ export default function Layouts() {
           suggestions={TAGS}
           onChange={setVertical}
         />
-      </Stack>
-    </Stack>
+      </Space>
+    </Space>
   );
 }
 ```
@@ -186,7 +186,7 @@ tags the same values elsewhere in the app, so a subject looks like a subject
 everywhere.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { ChipsInput, type ChipColor } from '@korzun/design/control';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { useState } from 'react';
@@ -220,12 +220,12 @@ const useStyles = createUseStyles((theme: Theme) => ({
 function ColorField({ chipColor }: { chipColor: ChipColor }) {
   const [value, setValue] = useState<string[]>([chipColor]);
   return (
-    <Stack gap="xs">
+    <Space direction="vertical" gap="xs">
       <Text size="sm" tone="muted">
         {chipColor}
       </Text>
       <ChipsInput value={value} suggestions={[]} onChange={setValue} chipColor={chipColor} />
-    </Stack>
+    </Space>
   );
 }
 
@@ -247,7 +247,7 @@ export default function ChipColors() {
 toggles it so both states can be tried.
 
 ```tsx
-import { Stack } from '@korzun/design/component';
+import { Space } from '@korzun/design/component';
 import { ChipsInput, Switch } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -255,7 +255,7 @@ export default function Disabled() {
   const [disabled, setDisabled] = useState(true);
   const [value, setValue] = useState(['Cherry', 'Date']);
   return (
-    <Stack>
+    <Space direction="vertical">
       <Switch name="disabled" label="Disabled" checked={disabled} onChange={setDisabled} />
       <ChipsInput
         value={value}
@@ -264,7 +264,7 @@ export default function Disabled() {
         disabled={disabled}
         placeholder="Add fruit…"
       />
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -279,7 +279,7 @@ is set on the text input only: form data gets the half-typed text, so submit
 the chips from state.
 
 ```tsx
-import { Card, Stack, Text } from '@korzun/design/component';
+import { Card, Space, Text } from '@korzun/design/component';
 import { Button, ChipsInput, TextInput } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -298,7 +298,7 @@ export default function FormRow() {
         </Button>
       }
     >
-      <Stack>
+      <Space direction="vertical">
         <ChipsInput
           name="users"
           label="Users"
@@ -320,7 +320,7 @@ export default function FormRow() {
           onChange={setTitle}
         />
         <Text tone="muted">Shared with: {users.join(', ') || 'nobody'}</Text>
-      </Stack>
+      </Space>
     </Card>
   );
 }
@@ -332,7 +332,7 @@ The suggestion list opens inside an open `Modal` that contains the field,
 so it works in a modal.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button, ChipsInput, Modal } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -342,7 +342,7 @@ export default function InDialog() {
   const [open, setOpen] = useState(false);
   const [subjects, setSubjects] = useState<string[]>([]);
   return (
-    <Stack align="start">
+    <Space direction="vertical" align="start">
       <Button onClick={() => setOpen(true)}>Edit subjects</Button>
       <Text tone="muted">Subjects: {subjects.join(', ') || 'none'}</Text>
       <Modal
@@ -362,7 +362,7 @@ export default function InDialog() {
           placeholder="Add subject…"
         />
       </Modal>
-    </Stack>
+    </Space>
   );
 }
 ```

@@ -30,7 +30,7 @@ export const SettingsPage = () => (
 
 ## A form in a card
 
-- Fields go in the card body, in a `<Stack gap="md">`. Keep each
+- Fields go in the card body, in a `<Space direction="vertical" gap="md">`. Keep each
   input's default `horizontal` layout (label and control on one shaded row).
 - Every field needs a `name`. It is required, and it is the key passed to
   `onValidChange`.
@@ -44,10 +44,10 @@ export const SettingsPage = () => (
   }
 >
   <form id="change-password" action={save}>
-    <Stack gap="md">
+    <Space direction="vertical" gap="md">
       <TextInput name="current" label="Current" password value={current} onChange={setCurrent} />
       <TextInput name="next" label="New" password value={next} onChange={setNext} />
-    </Stack>
+    </Space>
   </form>
 </Card>
 ```
@@ -104,7 +104,7 @@ a separator.
 ## A custom modal
 
 Use `Modal` for anything that is not a yes/no question: a title, a body, and
-an optional footer. Put form errors in the form's `Stack` with `ErrorMessage`,
+an optional footer. Put form errors in the form's `Space` with `ErrorMessage`,
 and show loading with `Spinner` (or `loading` on the Button).
 
 ```tsx
@@ -138,16 +138,16 @@ async function save(formData: FormData) {
   }
 >
   <form id="edit-progress" action={save}>
-    <Stack gap="md">
+    <Space direction="vertical" gap="md">
       <NumberInput name="page" label="Page" value={page} onChange={setPage} />
       <ErrorMessage>{error}</ErrorMessage>
-    </Stack>
+    </Space>
   </form>
 </Modal>
 ```
 
 - A panel that loads on its own shows a `Spinner`:
-  `<Stack align="center"><Spinner label="Loading books" /></Stack>`.
+  `<Space direction="vertical" align="center"><Spinner label="Loading books" /></Space>`.
 - Buttons in the footer get Modal's corners from depth; don't set `radius`.
 - `Modal` stays mounted: toggle `open`, never render it conditionally.
 - Escape and backdrop clicks call `onClose`, unless `canDismiss` is false.
@@ -172,25 +172,25 @@ Never use `!important`, and never target the library's internal class names.
 
 ## Layout and text
 
-Use `Stack` and `Inline` for layout and `Text` and `Heading` for text, not
+Use `Space` for layout and `Text` and `Heading` for text, not
 style files. Recipes:
 
 - Body text: a bare `<Text>`; it takes the surrounding look.
 - Meta line: `<Text size="sm" tone="muted">`.
 - Caption: `<Text size="xs" tone="faint">`.
 - Section title: `<Heading level={2}>`.
-- Spread row: `<Inline justify="between">`.
+- Spread row: `<Space justify="between">`.
 
 ```tsx
-<Stack gap="md">
+<Space direction="vertical" gap="md">
   <Heading level={2}>Devices</Heading>
-  <Inline justify="between">
+  <Space justify="between">
     <Text>Kindle</Text>
     <Text size="sm" tone="muted">Synced today</Text>
-  </Inline>
+  </Space>
   <Text size="xs" tone="faint">Up to five devices.</Text>
-</Stack>
+</Space>
 ```
 
-See [stack](component/stack.md), [inline](component/inline.md),
+See [space](component/space.md),
 [text](component/text.md), and [heading](component/heading.md).

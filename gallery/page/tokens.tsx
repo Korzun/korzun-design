@@ -1,4 +1,4 @@
-import { Heading, Page, Stack } from '@korzun/design/component';
+import { Heading, Page, Space } from '@korzun/design/component';
 import { createUseStyles, useTheme, type Theme } from '@korzun/design/theme';
 import type { ReactNode } from 'react';
 
@@ -195,8 +195,8 @@ export function TokensPage() {
   return (
     <div className={styles.column}>
       <Page type="minimal" documentTitle="Tokens · @korzun/design">
-        <Stack gap="xxxxl">
-          <Stack gap="sm">
+        <Space direction="vertical" gap="xxxxl">
+          <Space direction="vertical" gap="sm">
             <Heading level={1}>Tokens</Heading>
             <Lead>
               {'Every theme value, as the current theme resolves it ('}
@@ -207,14 +207,14 @@ export function TokensPage() {
               </a>
               {' explains each group.'}
             </Lead>
-          </Stack>
+          </Space>
 
           {tokenGroups(theme).map((group) => (
             <Section key={group} title={group}>
               {body(group)}
             </Section>
           ))}
-        </Stack>
+        </Space>
       </Page>
     </div>
   );

@@ -57,17 +57,17 @@ box stays disabled until there is a date. `onChange` receives the recomposed ISO
 not an event, and `undefined` once the date is cleared.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { DateTimeInput } from '@korzun/design/control';
 import { useState } from 'react';
 
 export default function Basic() {
   const [value, setValue] = useState<string | undefined>(undefined);
   return (
-    <Stack>
+    <Space direction="vertical">
       <DateTimeInput name="publishDate" label="Publish date" value={value} onChange={setValue} />
       <Text tone="muted">Value: {value ?? 'undefined'}</Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -78,7 +78,7 @@ export default function Basic() {
 above them. `inline` paints no row, for a spot inside your own layout.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { DateTimeInput } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -87,8 +87,8 @@ export default function Layouts() {
   const [vertical, setVertical] = useState<string | undefined>('2023-06-06');
   const [inline, setInline] = useState<string | undefined>(undefined);
   return (
-    <Stack gap="xl">
-      <Stack gap="xs">
+    <Space direction="vertical" gap="xl">
+      <Space direction="vertical" gap="xs">
         <Text size="sm" tone="muted">
           layout="horizontal"
         </Text>
@@ -99,8 +99,8 @@ export default function Layouts() {
           value={horizontal}
           onChange={setHorizontal}
         />
-      </Stack>
-      <Stack gap="xs">
+      </Space>
+      <Space direction="vertical" gap="xs">
         <Text size="sm" tone="muted">
           layout="vertical"
         </Text>
@@ -111,8 +111,8 @@ export default function Layouts() {
           value={vertical}
           onChange={setVertical}
         />
-      </Stack>
-      <Stack gap="xs">
+      </Space>
+      <Space direction="vertical" gap="xs">
         <Text size="sm" tone="muted">
           layout="inline"
         </Text>
@@ -123,8 +123,8 @@ export default function Layouts() {
           value={inline}
           onChange={setInline}
         />
-      </Stack>
-    </Stack>
+      </Space>
+    </Space>
   );
 }
 ```
@@ -137,7 +137,7 @@ changes. A year or year-month shows as the 1st of the period, a timestamp shows 
 Pick a sample, then edit the date to see what `onChange` sends back.
 
 ```tsx
-import { Inline, Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { DateTimeInput, SegmentedControl } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -153,18 +153,18 @@ const SAMPLES = [
 export default function StoredValues() {
   const [value, setValue] = useState<string | undefined>('2023-06');
   return (
-    <Stack>
-      <Inline>
+    <Space direction="vertical">
+      <Space>
         <SegmentedControl
           label="Stored value"
           options={SAMPLES}
           value={value ?? null}
           onChange={setValue}
         />
-      </Inline>
+      </Space>
       <DateTimeInput name="stored" label="Publish date" value={value} onChange={setValue} />
       <Text tone="muted">Value: {value === undefined ? 'undefined' : `'${value}'`}</Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -176,7 +176,7 @@ A form field beside the others in a Card. Keep the composed string from
 two separate fields (`publishDate`, `publishDateTime`).
 
 ```tsx
-import { Card, Stack, Text } from '@korzun/design/component';
+import { Card, Space, Text } from '@korzun/design/component';
 import { Button, DateTimeInput, TextInput } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -196,7 +196,7 @@ export default function InACard() {
         </Button>
       }
     >
-      <Stack>
+      <Space direction="vertical">
         <TextInput name="title" label="Title" value={title} onChange={setTitle} />
         <DateTimeInput
           name="publishDate"
@@ -205,7 +205,7 @@ export default function InACard() {
           onChange={setPublishDate}
         />
         {sent !== null && <Text tone="success">Sent: {sent}</Text>}
-      </Stack>
+      </Space>
     </Card>
   );
 }

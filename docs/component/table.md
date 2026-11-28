@@ -17,8 +17,7 @@ inside its own box when it is too wide; on a phone each row stacks, with every
 value labelled by its column title.
 
 Use something else for: a short list of items with actions (`CardRow`), a
-list of name and value pairs (`MetaLine`), a layout grid (`Stack`,
-`Inline`). A table is for data with the same fields in every row.
+list of name and value pairs (`MetaLine`), a layout grid (`Space`). A table is for data with the same fields in every row.
 
 ## Usage
 
@@ -68,7 +67,7 @@ Card, `sm` deeper, and a control in a cell sits one level deeper still. See
 
 - Do use one table per dataset, with the same fields in every row.
 - Do right-align numeric columns with `align: 'end'`.
-- Don't use a table for layout; use `Stack` or `Inline`.
+- Don't use a table for layout; use `Space`.
 
 <!-- generated:examples -->
 

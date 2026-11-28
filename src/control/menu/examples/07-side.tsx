@@ -2,14 +2,14 @@
  * `side="top"` opens the menu above the trigger. It flips to the other side when
  * there is no room, so the trigger sits below other content here.
  */
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button, Menu } from '@korzun/design/control';
 import { useState } from 'react';
 
 export default function Side() {
   const [chosen, setChosen] = useState('nothing yet');
   return (
-    <Stack align="start">
+    <Space direction="vertical" align="start">
       <Text tone="muted">Chosen: {chosen}</Text>
       <Menu
         side="top"
@@ -20,6 +20,6 @@ export default function Side() {
           { label: 'Mark unread', onClick: () => setChosen('Mark unread') },
         ]}
       />
-    </Stack>
+    </Space>
   );
 }

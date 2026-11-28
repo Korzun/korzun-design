@@ -91,7 +91,7 @@ the `theme.recipe.modal.*` styles, and its contents are wrapped in `Surface` so 
 Buttons get the corners they would have in a `Modal`. This demo starts open.
 
 ```tsx
-import { Stack, Surface, Text } from '@korzun/design/component';
+import { Space, Surface, Text } from '@korzun/design/component';
 import { Button, useModal } from '@korzun/design/control';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { useState } from 'react';
@@ -113,7 +113,7 @@ export default function Basic() {
   const close = () => setIsOpen(false);
   const ref = useModal(isOpen, close);
   return (
-    <Stack align="start">
+    <Space direction="vertical" align="start">
       <Button onClick={() => setIsOpen(true)}>Edit progress</Button>
       <Text tone="muted">Saved: {saves}</Text>
       <dialog ref={ref} className={styles.dialog}>
@@ -136,7 +136,7 @@ export default function Basic() {
           </div>
         </Surface>
       </dialog>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -149,7 +149,7 @@ The switch holds the busy state on. The `onClick` that stops propagation keeps a
 click in the dialog from reaching a clickable ancestor; dismissal is the hook's job.
 
 ```tsx
-import { Stack, Surface } from '@korzun/design/component';
+import { Space, Surface } from '@korzun/design/component';
 import { Button, Switch, useModal } from '@korzun/design/control';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { useState } from 'react';
@@ -171,13 +171,13 @@ export default function GatedDismissal() {
   const close = () => setIsOpen(false);
   const ref = useModal(isOpen, close, !saving);
   return (
-    <Stack align="start">
+    <Space direction="vertical" align="start">
       <Button onClick={() => setIsOpen(true)}>Open busy modal</Button>
       <dialog ref={ref} className={styles.dialog} onClick={(event) => event.stopPropagation()}>
         <Surface>
           <div className={styles.header}>Saving progress</div>
           <div className={styles.body}>
-            <Stack>
+            <Space direction="vertical">
               Escape and the backdrop are ignored while the request is in flight.
               <Switch
                 name="saving"
@@ -185,7 +185,7 @@ export default function GatedDismissal() {
                 checked={saving}
                 onChange={setSaving}
               />
-            </Stack>
+            </Space>
           </div>
           <div className={styles.footer}>
             <Button type="text" disabled={saving} onClick={close}>
@@ -197,7 +197,7 @@ export default function GatedDismissal() {
           </div>
         </Surface>
       </dialog>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -209,7 +209,7 @@ hook gives no surface depth, so the contents are wrapped in `Surface` and the
 `Select` gets card corners.
 
 ```tsx
-import { Stack, Surface, Text } from '@korzun/design/component';
+import { Space, Surface, Text } from '@korzun/design/component';
 import { Button, Select, useModal } from '@korzun/design/control';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { useState } from 'react';
@@ -232,7 +232,7 @@ export default function SelectInside() {
   const close = () => setIsOpen(false);
   const ref = useModal(isOpen, close);
   return (
-    <Stack align="start">
+    <Space direction="vertical" align="start">
       <Button onClick={() => setIsOpen(true)}>Move book</Button>
       <Text tone="muted">Shelf: {shelf ?? 'none'}</Text>
       <dialog ref={ref} className={styles.dialog}>
@@ -255,7 +255,7 @@ export default function SelectInside() {
           </div>
         </Surface>
       </dialog>
-    </Stack>
+    </Space>
   );
 }
 ```

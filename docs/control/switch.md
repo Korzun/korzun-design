@@ -55,17 +55,17 @@ A controlled switch with a visible `label`. `onChange` receives the new
 value, not an event; Enter and Space toggle it from the keyboard.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Switch } from '@korzun/design/control';
 import { useState } from 'react';
 
 export default function Basic() {
   const [checked, setChecked] = useState(true);
   return (
-    <Stack>
+    <Space direction="vertical">
       <Switch name="notifications" label="Notifications" checked={checked} onChange={setChecked} />
       <Text tone="muted">Notifications: {checked ? 'on' : 'off'}</Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -78,7 +78,7 @@ right, and the whole row toggles. In both, the `description` is helper text
 linked by `aria-describedby`.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Switch } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -86,8 +86,8 @@ export default function Layouts() {
   const [inline, setInline] = useState(true);
   const [row, setRow] = useState(false);
   return (
-    <Stack gap="xl">
-      <Stack gap="xs">
+    <Space direction="vertical" gap="xl">
+      <Space direction="vertical" gap="xs">
         <Text size="sm" tone="muted">
           layout="default"
         </Text>
@@ -98,8 +98,8 @@ export default function Layouts() {
           checked={inline}
           onChange={setInline}
         />
-      </Stack>
-      <Stack gap="xs">
+      </Space>
+      <Space direction="vertical" gap="xs">
         <Text size="sm" tone="muted">
           layout="horizontal"
         </Text>
@@ -111,8 +111,8 @@ export default function Layouts() {
           checked={row}
           onChange={setRow}
         />
-      </Stack>
-    </Stack>
+      </Space>
+    </Space>
   );
 }
 ```
@@ -124,7 +124,7 @@ row's own corner. `pill` is the capsule for a switch with no nearby corner to
 echo.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Switch } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -132,8 +132,8 @@ export default function Radius() {
   const [inset, setInset] = useState(true);
   const [pill, setPill] = useState(true);
   return (
-    <Stack gap="xl">
-      <Stack gap="xs">
+    <Space direction="vertical" gap="xl">
+      <Space direction="vertical" gap="xs">
         <Text size="sm" tone="muted">
           radius="inset", in a shaded row
         </Text>
@@ -145,14 +145,14 @@ export default function Radius() {
           checked={inset}
           onChange={setInset}
         />
-      </Stack>
-      <Stack gap="xs">
+      </Space>
+      <Space direction="vertical" gap="xs">
         <Text size="sm" tone="muted">
           radius="pill", no corner nearby
         </Text>
         <Switch name="pill" label="Pill track" radius="pill" checked={pill} onChange={setPill} />
-      </Stack>
-    </Stack>
+      </Space>
+    </Space>
   );
 }
 ```
@@ -164,7 +164,7 @@ header, with no nearby corner, takes `radius="pill"`; with no visible label it
 needs an `ariaLabel`.
 
 ```tsx
-import { Card, Stack, Text } from '@korzun/design/component';
+import { Card, Space, Text } from '@korzun/design/component';
 import { Switch } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -184,7 +184,7 @@ export default function InACard() {
         />
       }
     >
-      <Stack>
+      <Space direction="vertical">
         <Switch
           name="bwCover"
           label="Grayscale"
@@ -194,7 +194,7 @@ export default function InACard() {
           onChange={setBwCover}
         />
         <Text tone="muted">Part of a series: {isSeries ? 'yes' : 'no'}</Text>
-      </Stack>
+      </Space>
     </Card>
   );
 }
@@ -209,7 +209,7 @@ fades the whole control and means "you may not change this". The button holds
 the save open; the count shows that clicks during it do nothing.
 
 ```tsx
-import { Inline, Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button, Switch } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -219,7 +219,7 @@ export default function LoadingAndDisabled() {
   const [saving, setSaving] = useState(true);
   const [changes, setChanges] = useState(0);
   return (
-    <Stack>
+    <Space direction="vertical">
       <Switch
         name="push-device"
         label="This device"
@@ -238,11 +238,11 @@ export default function LoadingAndDisabled() {
         loading={saving}
         onChange={setSubscribed}
       />
-      <Inline>
+      <Space>
         <Button onClick={() => setSaving((s) => !s)}>
           {saving ? 'Finish save' : 'Start save'}
         </Button>
-      </Inline>
+      </Space>
       <Text tone="muted">Changes made: {changes}</Text>
       <Switch
         name="push-email"
@@ -251,7 +251,7 @@ export default function LoadingAndDisabled() {
         checked={email}
         onChange={setEmail}
       />
-    </Stack>
+    </Space>
   );
 }
 ```

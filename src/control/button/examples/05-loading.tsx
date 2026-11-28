@@ -3,7 +3,7 @@
  * the button leaves the tab order until it finishes. Every type has a loading
  * look, `danger` included. Press Upload to watch one go through it.
  */
-import { Inline, Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { UploadIcon } from '@korzun/design/icon';
 import { useState } from 'react';
@@ -19,8 +19,8 @@ export default function Loading() {
     }, 1500);
   };
   return (
-    <Stack align="start">
-      <Inline wrap>
+    <Space direction="vertical" align="start">
+      <Space wrap>
         <Button type="primary" loading>
           Primary
         </Button>
@@ -34,21 +34,21 @@ export default function Loading() {
         <Button type="link" loading>
           Link
         </Button>
-      </Inline>
-      <Inline wrap>
+      </Space>
+      <Space wrap>
         <Button danger loading>
           Danger
         </Button>
         <Button type="primary" danger loading>
           Primary danger
         </Button>
-      </Inline>
-      <Inline wrap>
+      </Space>
+      <Space wrap>
         <Button type="primary" prefix={UploadIcon} loading={uploading} onClick={upload}>
           {uploading ? 'Uploading' : 'Upload'}
         </Button>
         <Text tone="muted">Uploaded {uploads} times</Text>
-      </Inline>
-    </Stack>
+      </Space>
+    </Space>
   );
 }

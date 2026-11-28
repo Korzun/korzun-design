@@ -1,5 +1,5 @@
 /** Preview */
-import { Inline } from '@korzun/design/component';
+import { Space } from '@korzun/design/component';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 
 const useStyle = createUseStyles((theme: Theme) => ({
@@ -39,7 +39,7 @@ const useStyle = createUseStyles((theme: Theme) => ({
 export default function Preview() {
   const styles = useStyle();
   return (
-    <Inline gap="xxl">
+    <Space gap="xxl">
       <div className={styles.phone}>
         <div className={styles.block} />
         <div className={styles.block} />
@@ -54,6 +54,6 @@ export default function Preview() {
         <div className={styles.block} />
         <div className={`${styles.bar} ${styles.minimized}`} />
       </div>
-    </Inline>
+    </Space>
   );
 }

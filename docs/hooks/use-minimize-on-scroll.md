@@ -63,7 +63,7 @@ the top or press Expand and it comes back. A slow scroll leaves it alone. `NavMo
 does this; call the hook for other bottom chrome.
 
 ```tsx
-import { Card, Inline, Page, Text } from '@korzun/design/component';
+import { Card, Space, Page, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { useMinimizeOnScroll } from '@korzun/design/hooks';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
@@ -100,14 +100,14 @@ export default function MinimizeOnScroll() {
         ))}
       </Page>
       <div className={cx(styles.bar, minimized && styles.minimized)}>
-        <Inline justify="between">
+        <Space justify="between">
           <Text tone="muted">{minimized ? 'Minimized' : 'Expanded'}</Text>
           {minimized && (
             <Button type="link" onClick={expand}>
               Expand
             </Button>
           )}
-        </Inline>
+        </Space>
       </div>
     </>
   );

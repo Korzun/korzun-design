@@ -3,20 +3,20 @@
  * `Surface` box or a Popover) the line spans its container. In a Card body it reaches the
  * borders; `bleed={false}` keeps it inside the padding there.
  */
-import { Card, CardRow, Divider, Stack, Text } from '@korzun/design/component';
+import { Card, CardRow, Divider, Space, Text } from '@korzun/design/component';
 
 export default function Anywhere() {
   return (
-    <Stack gap="xl">
-      <Stack gap="xs">
+    <Space direction="vertical" gap="xl">
+      <Space direction="vertical" gap="xs">
         <Text size="sm" tone="muted">
           On the page: spans the column
         </Text>
         <Divider>Devices</Divider>
         <Text>Kitchen frame, Hallway frame</Text>
-      </Stack>
+      </Space>
       <Card title="Notifications">
-        <Stack>
+        <Space direction="vertical">
           <Text size="sm" tone="muted">
             In the Card body: meets the borders
           </Text>
@@ -26,16 +26,16 @@ export default function Anywhere() {
           </Text>
           <Divider bleed={false} />
           <CardRow>
-            <Stack gap="xs">
+            <Space direction="vertical" gap="xs">
               <Text size="sm" tone="muted">
                 In a CardRow: spans the row
               </Text>
               <Divider />
               <Text>Keep notifications for 30 days.</Text>
-            </Stack>
+            </Space>
           </CardRow>
-        </Stack>
+        </Space>
       </Card>
-    </Stack>
+    </Space>
   );
 }

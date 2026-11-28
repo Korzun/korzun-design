@@ -32,7 +32,7 @@ a non-blocking notice (toast).
   on close.
 - Clicks inside the dialog do not bubble to clickable ancestors.
 - Content is one surface level in: Buttons in the body, header and `footer`
-  (including nested ones inside an `Inline`) default to 8px. An explicit
+  (including nested ones inside a `Space`) default to 8px. An explicit
   `radius` on a Button still wins.
 
 ## Do / don't
@@ -55,7 +55,7 @@ backdrop, and closes nothing by itself, so it sets `open` to `false`. This demo
 starts open; Review fixes opens it again.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button, Modal } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -67,7 +67,7 @@ export default function Basic() {
     setOpen(false);
   };
   return (
-    <Stack align="start">
+    <Space direction="vertical" align="start">
       <Button onClick={() => setOpen(true)}>Review fixes</Button>
       <Text tone="muted">Saved: {saves}</Text>
       <Modal
@@ -87,7 +87,7 @@ export default function Basic() {
       >
         Three metadata fixes are waiting for review.
       </Modal>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -98,7 +98,7 @@ With no `footer` no action bar is drawn. The dialog is dismissed with Escape or 
 click on the backdrop, both of which call `onClose`.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button, Modal } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -110,13 +110,13 @@ export default function NoFooter() {
     setOpen(false);
   };
   return (
-    <Stack align="start">
+    <Space direction="vertical" align="start">
       <Button onClick={() => setOpen(true)}>Show notice</Button>
       <Text tone="muted">Dismissed: {dismissals}</Text>
       <Modal open={open} onClose={dismiss} title="Sync finished">
         Press Escape or click outside the dialog to close it.
       </Modal>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -128,7 +128,7 @@ runs. The switch holds the busy state on so you can try both; the footer buttons
 are disabled or loading to match, so every way out is gated the same.
 
 ```tsx
-import { Stack } from '@korzun/design/component';
+import { Space } from '@korzun/design/component';
 import { Button, Modal, Switch } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -136,7 +136,7 @@ export default function NotDismissable() {
   const [open, setOpen] = useState(false);
   const [saving, setSaving] = useState(true);
   return (
-    <Stack align="start">
+    <Space direction="vertical" align="start">
       <Button onClick={() => setOpen(true)}>Open busy dialog</Button>
       <Modal
         open={open}
@@ -154,12 +154,12 @@ export default function NotDismissable() {
           </>
         }
       >
-        <Stack>
+        <Space direction="vertical">
           Escape and the backdrop are ignored while the request is in flight.
           <Switch name="saving" label="Request in flight" checked={saving} onChange={setSaving} />
-        </Stack>
+        </Space>
       </Modal>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -171,7 +171,7 @@ and Escape closes the list before the dialog. `canDismiss={!saving}` and a
 `loading` Save keep it open until the request finishes.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button, Modal, Select, TextInput } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -192,7 +192,7 @@ export default function Form() {
     }, 1000);
   };
   return (
-    <Stack align="start">
+    <Space direction="vertical" align="start">
       <Button onClick={() => setOpen(true)}>Edit book</Button>
       <Text tone="muted">Saved: {saved}</Text>
       <Modal
@@ -211,7 +211,7 @@ export default function Form() {
           </>
         }
       >
-        <Stack>
+        <Space direction="vertical">
           <TextInput name="note" label="Note" layout="vertical" value={note} onChange={setNote} />
           <Select
             name="shelf"
@@ -221,9 +221,9 @@ export default function Form() {
             value={shelf}
             onChange={setShelf}
           />
-        </Stack>
+        </Space>
       </Modal>
-    </Stack>
+    </Space>
   );
 }
 ```

@@ -4,7 +4,7 @@ import { useRef } from 'react';
 import { beforeEach, describe, expect, it, vi, type Mock } from 'vitest';
 
 import { Card } from '../../component/card/index.js';
-import { Inline } from '../../component/inline/index.js';
+import { Space } from '../../component/space/index.js';
 import { renderWithProviders } from '../../test-utils.js';
 import { Button } from '../button/index.js';
 import { Popover } from '../popover/index.js';
@@ -158,9 +158,9 @@ describe('Modal', () => {
           onClose={() => {}}
           title="T"
           footer={
-            <Inline>
+            <Space>
               <Button>Nested</Button>
-            </Inline>
+            </Space>
           }
         />
       </>

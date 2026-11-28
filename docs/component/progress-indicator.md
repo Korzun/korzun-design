@@ -52,25 +52,25 @@ No `className`.
 `value` is a fraction from 0 to 1, not a percentage: `0.42` shows "42%". `ariaLabel` names the progress for assistive tech. The buttons step the value by a tenth.
 
 ```tsx
-import { Inline, ProgressIndicator, Stack, Text } from '@korzun/design/component';
+import { Space, ProgressIndicator, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { useState } from 'react';
 
 export default function Basic() {
   const [value, setValue] = useState(0.4);
   return (
-    <Stack>
+    <Space direction="vertical">
       <ProgressIndicator value={value} ariaLabel="Reading progress for Middlemarch" />
-      <Inline>
+      <Space>
         <Button onClick={() => setValue((v) => Math.max(0, Math.round((v - 0.1) * 10) / 10))}>
           Less
         </Button>
         <Button onClick={() => setValue((v) => Math.min(1, Math.round((v + 0.1) * 10) / 10))}>
           More
         </Button>
-      </Inline>
+      </Space>
       <Text tone="muted">value: {value}</Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -80,28 +80,28 @@ export default function Basic() {
 The label reads "Not started" at 0, "N%" in between and "Completed" at 1. At exactly 0 or 1 only the label renders, with no pie. The label is rounded, so `0.996` shows "100%" next to a near-full pie, not "Completed". Each is labelled with its `value`.
 
 ```tsx
-import { Inline, ProgressIndicator, Stack, Text } from '@korzun/design/component';
+import { Space, ProgressIndicator, Text } from '@korzun/design/component';
 
 export default function LabelStates() {
   return (
-    <Stack gap="sm">
-      <Inline>
+    <Space direction="vertical" gap="sm">
+      <Space>
         <ProgressIndicator value={0} ariaLabel="Upload progress" />
         <Text tone="muted">value 0</Text>
-      </Inline>
-      <Inline>
+      </Space>
+      <Space>
         <ProgressIndicator value={0.42} ariaLabel="Upload progress" />
         <Text tone="muted">value 0.42</Text>
-      </Inline>
-      <Inline>
+      </Space>
+      <Space>
         <ProgressIndicator value={0.996} ariaLabel="Upload progress" />
         <Text tone="muted">value 0.996</Text>
-      </Inline>
-      <Inline>
+      </Space>
+      <Space>
         <ProgressIndicator value={1} ariaLabel="Upload progress" />
         <Text tone="muted">value 1</Text>
-      </Inline>
-    </Stack>
+      </Space>
+    </Space>
   );
 }
 ```
@@ -111,28 +111,28 @@ export default function LabelStates() {
 `size` is the width and height of the pie in px. The label's font size does not scale with it. Each is labelled with its `size`.
 
 ```tsx
-import { Inline, ProgressIndicator, Stack, Text } from '@korzun/design/component';
+import { Space, ProgressIndicator, Text } from '@korzun/design/component';
 
 export default function Sizes() {
   return (
-    <Stack gap="sm">
-      <Inline>
+    <Space direction="vertical" gap="sm">
+      <Space>
         <ProgressIndicator value={0.6} ariaLabel="Reading progress, 14" size={14} />
         <Text tone="muted">size 14</Text>
-      </Inline>
-      <Inline>
+      </Space>
+      <Space>
         <ProgressIndicator value={0.6} ariaLabel="Reading progress, 24" size={24} />
         <Text tone="muted">size 24</Text>
-      </Inline>
-      <Inline>
+      </Space>
+      <Space>
         <ProgressIndicator value={0.6} ariaLabel="Reading progress, 40" size={40} />
         <Text tone="muted">size 40</Text>
-      </Inline>
-      <Inline>
+      </Space>
+      <Space>
         <ProgressIndicator value={0.6} ariaLabel="Reading progress, 64" size={64} />
         <Text tone="muted">size 64</Text>
-      </Inline>
-    </Stack>
+      </Space>
+    </Space>
   );
 }
 ```
@@ -142,22 +142,22 @@ export default function Sizes() {
 A 0–100 API value is divided by 100 before it is passed; passing `42` itself would clamp to 1 and show "Completed". Pick a percent and the indicator follows.
 
 ```tsx
-import { Inline, ProgressIndicator, Stack, Text } from '@korzun/design/component';
+import { Space, ProgressIndicator, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { useState } from 'react';
 
 export default function FromPercent() {
   const [percent, setPercent] = useState(42);
   return (
-    <Stack>
+    <Space direction="vertical">
       <ProgressIndicator value={percent / 100} ariaLabel="Upload progress" />
-      <Inline>
+      <Space>
         <Button onClick={() => setPercent(0)}>0%</Button>
         <Button onClick={() => setPercent(42)}>42%</Button>
         <Button onClick={() => setPercent(100)}>100%</Button>
-      </Inline>
+      </Space>
       <Text tone="muted">API percent: {percent}</Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -167,21 +167,21 @@ export default function FromPercent() {
 A small indicator beside a title in a list row. It prints its own label, so the row adds no "42%" next to it, and `ariaLabel` names the book.
 
 ```tsx
-import { Card, Inline, ProgressIndicator, Stack, Text } from '@korzun/design/component';
+import { Card, Space, ProgressIndicator, Text } from '@korzun/design/component';
 
 export default function InARow() {
   return (
     <Card title="Reading">
-      <Stack gap="sm">
-        <Inline justify="between">
+      <Space direction="vertical" gap="sm">
+        <Space justify="between">
           <Text weight="semibold">Middlemarch</Text>
           <ProgressIndicator value={0.42} ariaLabel="Reading progress for Middlemarch" size={14} />
-        </Inline>
-        <Inline justify="between">
+        </Space>
+        <Space justify="between">
           <Text weight="semibold">Persuasion</Text>
           <ProgressIndicator value={1} ariaLabel="Reading progress for Persuasion" size={14} />
-        </Inline>
-      </Stack>
+        </Space>
+      </Space>
     </Card>
   );
 }

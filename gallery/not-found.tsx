@@ -1,4 +1,4 @@
-import { Heading, Page, Stack, Text } from '@korzun/design/component';
+import { Heading, Page, Space, Text } from '@korzun/design/component';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { Link, useLocation } from 'react-router';
 
@@ -21,7 +21,7 @@ export const NotFound = () => {
   return (
     <div className={styles.column}>
       <Page type="minimal" documentTitle="Not found · @korzun/design">
-        <Stack gap="md">
+        <Space direction="vertical" gap="md">
           <Heading level={1}>Not found</Heading>
           <Text as="p">
             Nothing lives at <code>{useLocation().pathname}</code>.
@@ -29,7 +29,7 @@ export const NotFound = () => {
           <Link to="/" className={styles.link}>
             Back to the components
           </Link>
-        </Stack>
+        </Space>
       </Page>
     </div>
   );

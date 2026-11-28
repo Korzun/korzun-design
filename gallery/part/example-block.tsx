@@ -1,4 +1,4 @@
-import { CodeBlock, Heading, Inline, Stack, Surface } from '@korzun/design/component';
+import { CodeBlock, Heading, Space, Surface } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import cx from 'classnames';
@@ -118,7 +118,7 @@ export const ExampleBlock = ({ owner, example, headingId }: ExampleBlockProps) =
       </div>
       {/* The block is a hand-drawn card on the page: its buttons sit one level in. */}
       <Surface>
-        <Stack gap="md" className={styles.meta}>
+        <Space direction="vertical" gap="md" className={styles.meta}>
           <Heading level={3} id={titleId}>
             {example.title}
           </Heading>
@@ -130,7 +130,7 @@ export const ExampleBlock = ({ owner, example, headingId }: ExampleBlockProps) =
               className={styles.description}
             />
           )}
-          <Inline gap="md" wrap>
+          <Space gap="md" wrap>
             <Button
               type="link"
               className={styles.toggle}
@@ -141,8 +141,8 @@ export const ExampleBlock = ({ owner, example, headingId }: ExampleBlockProps) =
               {showCode ? 'Hide code' : 'Show code'}
             </Button>
             <CopyButton text={example.code} label={`Copy ${example.title} code`} />
-          </Inline>
-        </Stack>
+          </Space>
+        </Space>
       </Surface>
       {showCode && (
         // Inside the hand-drawn card: one level in, so the box draws no page edge.

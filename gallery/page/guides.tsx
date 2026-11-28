@@ -1,4 +1,4 @@
-import { Card, Heading, Page, Stack, Text } from '@korzun/design/component';
+import { Card, Heading, Page, Space, Text } from '@korzun/design/component';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { Link } from 'react-router';
 
@@ -40,19 +40,19 @@ export const GuidesPage = () => {
   return (
     <div className={styles.column}>
       <Page type="minimal" documentTitle="Guides · @korzun/design">
-        <Stack gap="xxxl">
-          <Stack gap="sm">
+        <Space direction="vertical" gap="xxxl">
+          <Space direction="vertical" gap="sm">
             <Heading level={1}>Guides</Heading>
             <Lead>
               How the library is meant to be used: the rules behind the components, and the patterns
               screens are built from.
             </Lead>
-          </Stack>
+          </Space>
           <div className={styles.grid}>
             {siteData.guides.map((guide) => (
               <Link key={guide.slug} to={`/guides/${guide.slug}`} className={styles.card}>
                 <Card>
-                  <Stack gap="xs">
+                  <Space direction="vertical" gap="xs">
                     <Heading level={2} size="md">
                       {guide.title}
                     </Heading>
@@ -64,12 +64,12 @@ export const GuidesPage = () => {
                         links={false}
                       />
                     </Text>
-                  </Stack>
+                  </Space>
                 </Card>
               </Link>
             ))}
           </div>
-        </Stack>
+        </Space>
       </Page>
     </div>
   );

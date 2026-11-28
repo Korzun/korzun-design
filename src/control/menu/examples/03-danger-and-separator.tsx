@@ -3,14 +3,14 @@
  * with no divider. `separatorBefore` draws the divider above an item, so the
  * destructive item sits apart from the rest.
  */
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button, Menu } from '@korzun/design/control';
 import { useState } from 'react';
 
 export default function DangerAndSeparator() {
   const [chosen, setChosen] = useState('nothing yet');
   return (
-    <Stack align="start">
+    <Space direction="vertical" align="start">
       <Menu
         trigger={(p) => <Button {...p}>Book</Button>}
         items={[
@@ -25,6 +25,6 @@ export default function DangerAndSeparator() {
         ]}
       />
       <Text tone="muted">Chosen: {chosen}</Text>
-    </Stack>
+    </Space>
   );
 }

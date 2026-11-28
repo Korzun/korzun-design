@@ -99,7 +99,7 @@ the page's rubber-band overscroll, so only a touch pull on iOS moves it; with a 
 phase stays `idle`. Releasing while `armed` runs `onRefresh` until its promise settles.
 
 ```tsx
-import { Card, Spinner, Stack, Text } from '@korzun/design/component';
+import { Card, Spinner, Space, Text } from '@korzun/design/component';
 import { usePullToRefresh } from '@korzun/design/hooks';
 import { useState } from 'react';
 
@@ -111,13 +111,13 @@ export default function PullToRefresh() {
   });
   return (
     <Card title="Library">
-      <Stack gap="sm">
+      <Space direction="vertical" gap="sm">
         {phase === 'refreshing' ? <Spinner label="Refreshing" /> : null}
         <Text>
           Phase: {phase}, offset: {Math.round(offset)}px
         </Text>
         <Text tone="muted">Refreshed {refreshes} times</Text>
-      </Stack>
+      </Space>
     </Card>
   );
 }

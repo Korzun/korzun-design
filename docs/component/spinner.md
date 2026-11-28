@@ -50,18 +50,18 @@ There is no `style` prop and no other attribute passthrough.
 With no props the spinner is `1em` square and takes the colour and font size of the text around it, so it sits inline without any sizing. The text names the load, so the spinner is `decorative`.
 
 ```tsx
-import { Spinner, Stack, Text } from '@korzun/design/component';
+import { Spinner, Space, Text } from '@korzun/design/component';
 
 export default function Basic() {
   return (
-    <Stack gap="sm">
+    <Space direction="vertical" gap="sm">
       <Text>
         Syncing your library <Spinner decorative />
       </Text>
       <Text size="xl" tone="muted">
         Fetching covers <Spinner decorative />
       </Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -71,40 +71,40 @@ export default function Basic() {
 `size` takes a `fontSize` token and sets the spinner to that many `em`. Each spinner is labelled with its size.
 
 ```tsx
-import { Inline, Stack, Spinner, Text } from '@korzun/design/component';
+import { Space, Spinner, Text } from '@korzun/design/component';
 
 export default function Sizes() {
   return (
-    <Stack gap="sm">
-      <Inline>
+    <Space direction="vertical" gap="sm">
+      <Space>
         <Spinner size="xxs" label="Loading, xxs" />
         <Text tone="muted">xxs</Text>
-      </Inline>
-      <Inline>
+      </Space>
+      <Space>
         <Spinner size="xs" label="Loading, xs" />
         <Text tone="muted">xs</Text>
-      </Inline>
-      <Inline>
+      </Space>
+      <Space>
         <Spinner size="sm" label="Loading, sm" />
         <Text tone="muted">sm</Text>
-      </Inline>
-      <Inline>
+      </Space>
+      <Space>
         <Spinner size="md" label="Loading, md" />
         <Text tone="muted">md</Text>
-      </Inline>
-      <Inline>
+      </Space>
+      <Space>
         <Spinner size="lg" label="Loading, lg" />
         <Text tone="muted">lg</Text>
-      </Inline>
-      <Inline>
+      </Space>
+      <Space>
         <Spinner size="xl" label="Loading, xl" />
         <Text tone="muted">xl</Text>
-      </Inline>
-      <Inline>
+      </Space>
+      <Space>
         <Spinner size="xxl" label="Loading, xxl" />
         <Text tone="muted">xxl</Text>
-      </Inline>
-    </Stack>
+      </Space>
+    </Space>
   );
 }
 ```
@@ -114,23 +114,23 @@ export default function Sizes() {
 Beside text that already names the load, set `decorative` so the spinner is hidden from assistive tech and `label` is ignored. With it off, the spinner is a `role="status"` that a screen reader announces by its `label`, here a second time.
 
 ```tsx
-import { Inline, Spinner, Stack, Text } from '@korzun/design/component';
+import { Space, Spinner, Text } from '@korzun/design/component';
 import { Switch } from '@korzun/design/control';
 import { useState } from 'react';
 
 export default function Decorative() {
   const [decorative, setDecorative] = useState(true);
   return (
-    <Stack>
+    <Space direction="vertical">
       <Switch name="decorative" label="Decorative" checked={decorative} onChange={setDecorative} />
-      <Inline gap="xs">
+      <Space gap="xs">
         <Spinner decorative={decorative} label="Loading books" />
         <Text>Loading books</Text>
-      </Inline>
+      </Space>
       <Text tone="muted">
         Screen readers: {decorative ? 'the spinner is hidden' : 'announce “Loading books” twice'}
       </Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -140,14 +140,14 @@ export default function Decorative() {
 A page or panel load with no progress value: a large spinner above a line of text. The text names the load, so the spinner is `decorative`; with no text, give it a specific `label` instead.
 
 ```tsx
-import { Spinner, Stack, Text } from '@korzun/design/component';
+import { Spinner, Space, Text } from '@korzun/design/component';
 
 export default function LoadingPage() {
   return (
-    <Stack align="center" gap="sm">
+    <Space direction="vertical" align="center" gap="sm">
       <Spinner size="xxl" decorative />
       <Text tone="muted">Loading your library</Text>
-    </Stack>
+    </Space>
   );
 }
 ```

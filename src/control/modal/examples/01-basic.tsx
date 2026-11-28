@@ -4,7 +4,7 @@
  * backdrop, and closes nothing by itself, so it sets `open` to `false`. This demo
  * starts open; Review fixes opens it again.
  */
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button, Modal } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -16,7 +16,7 @@ export default function Basic() {
     setOpen(false);
   };
   return (
-    <Stack align="start">
+    <Space direction="vertical" align="start">
       <Button onClick={() => setOpen(true)}>Review fixes</Button>
       <Text tone="muted">Saved: {saves}</Text>
       <Modal
@@ -36,6 +36,6 @@ export default function Basic() {
       >
         Three metadata fixes are waiting for review.
       </Modal>
-    </Stack>
+    </Space>
   );
 }

@@ -21,7 +21,7 @@ export interface HeadingProps extends Omit<HTMLAttributes<HTMLHeadingElement>, '
   tone?: TextTone;
   /** Font weight, from the theme's `fontWeight` tokens. Unset, it follows `level`: 1 and 2 `bold`, 3 and 4 `semibold`. A weight you set wins over the level default. */
   weight?: TextWeight;
-  /** Clips to one line with an ellipsis. Also sets `min-width: 0` and `max-width: 100%`, so it clips inside an `Inline` or `Stack` with any `align`. */
+  /** Clips to one line with an ellipsis. Also sets `min-width: 0` and `max-width: 100%`, so it clips inside a `Space` with any `align`. */
   truncate?: boolean;
   /** Extra class on the root. Override with `'&&'` specificity, never `!important`. */
   className?: string;

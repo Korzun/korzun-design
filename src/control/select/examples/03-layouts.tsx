@@ -3,7 +3,7 @@
  * stacks the label above the trigger in that row, and `inline` is just the
  * trigger with the label beside it.
  */
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Select } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -14,8 +14,8 @@ export default function Layouts() {
   const [vertical, setVertical] = useState<string | undefined>('Medium');
   const [inline, setInline] = useState<string | undefined>('Large');
   return (
-    <Stack gap="xl">
-      <Stack gap="xs">
+    <Space direction="vertical" gap="xl">
+      <Space direction="vertical" gap="xs">
         <Text size="sm" tone="muted">
           layout="horizontal"
         </Text>
@@ -27,8 +27,8 @@ export default function Layouts() {
           options={SIZES}
           onChange={setHorizontal}
         />
-      </Stack>
-      <Stack gap="xs">
+      </Space>
+      <Space direction="vertical" gap="xs">
         <Text size="sm" tone="muted">
           layout="vertical"
         </Text>
@@ -40,8 +40,8 @@ export default function Layouts() {
           options={SIZES}
           onChange={setVertical}
         />
-      </Stack>
-      <Stack gap="xs">
+      </Space>
+      <Space direction="vertical" gap="xs">
         <Text size="sm" tone="muted">
           layout="inline"
         </Text>
@@ -53,7 +53,7 @@ export default function Layouts() {
           options={SIZES}
           onChange={setInline}
         />
-      </Stack>
-    </Stack>
+      </Space>
+    </Space>
   );
 }

@@ -1,4 +1,4 @@
-import { Card, Heading, Stack, Text } from '@korzun/design/component';
+import { Card, Heading, Space, Text } from '@korzun/design/component';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { Link } from 'react-router';
 
@@ -25,7 +25,7 @@ const useStyle = createUseStyles((theme: Theme) => ({
     [theme.breakpoint.mobile]: { paddingTop: 0 },
   },
   cardBody: {
-    // Doubled, to win over Stack's own column direction.
+    // Doubled, to win over Space's own column direction.
     [theme.breakpoint.mobile]: { '&&': { flexDirection: 'row', alignItems: 'flex-start' } },
   },
   card: {
@@ -57,9 +57,9 @@ export const ModuleCard = ({
   return (
     <Link to={`/components/${mod.slug}`} className={styles.card}>
       <Card>
-        <Stack gap="md" className={styles.cardBody}>
+        <Space direction="vertical" gap="md" className={styles.cardBody}>
           <Thumbnail owner={moduleOwner(mod)} compact />
-          <Stack gap="xs" className={styles.cardText}>
+          <Space direction="vertical" gap="xs" className={styles.cardText}>
             {parent && (
               <Text size="sm" tone="muted">
                 {parent.title} /
@@ -72,8 +72,8 @@ export const ModuleCard = ({
             <Text size="sm" tone="description">
               <Markdown source={mod.description} from={mod.docPath} inline links={false} />
             </Text>
-          </Stack>
-        </Stack>
+          </Space>
+        </Space>
       </Card>
     </Link>
   );

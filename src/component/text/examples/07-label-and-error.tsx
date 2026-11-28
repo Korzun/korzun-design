@@ -3,7 +3,7 @@
  * inline error shows: `as="div"` with `tone="danger"` and `aria-live="polite"`. The native
  * `<input>` takes `theme.recipe.input`, so it matches the library's fields.
  */
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { useState } from 'react';
 
@@ -17,7 +17,7 @@ export default function LabelAndError() {
   const styles = useStyles();
   const [title, setTitle] = useState('');
   return (
-    <Stack gap="xs">
+    <Space direction="vertical" gap="xs">
       <Text as="label" htmlFor="book-title" size="sm" weight="medium">
         Title
       </Text>
@@ -31,6 +31,6 @@ export default function LabelAndError() {
       <Text as="div" size="sm" tone="danger" aria-live="polite">
         {title === '' ? 'Title is required.' : null}
       </Text>
-    </Stack>
+    </Space>
   );
 }

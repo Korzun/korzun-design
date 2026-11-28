@@ -86,16 +86,16 @@ body, `tone="faint"` for a row's secondary line).
 A book row's secondary line: author, series and progress, separated by middots. Wrap it in `Text` to set the size and tone the items inherit.
 
 ```tsx
-import { MetaLine, Stack, Text } from '@korzun/design/component';
+import { MetaLine, Space, Text } from '@korzun/design/component';
 
 export default function Basic() {
   return (
-    <Stack gap="xs">
+    <Space direction="vertical" gap="xs">
       <Text weight="semibold">Children of Dune</Text>
       <Text as="div" size="sm" tone="faint">
         <MetaLine separator="·" items={['Frank Herbert', 'Dune #3', '42%']} />
       </Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -105,7 +105,7 @@ export default function Basic() {
 Pass optional data as `cond && value`: `false` is skipped and leaves no separator. When every item is skipped nothing renders, so the line leaves no gap behind.
 
 ```tsx
-import { Inline, MetaLine, Stack, Text } from '@korzun/design/component';
+import { Space, MetaLine, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -113,22 +113,22 @@ export default function ConditionalData() {
   const [hasSeries, setHasSeries] = useState(true);
   const [hasProgress, setHasProgress] = useState(true);
   return (
-    <Stack gap="md">
-      <Inline>
+    <Space direction="vertical" gap="md">
+      <Space>
         <Button onClick={() => setHasSeries((on) => !on)}>
           {hasSeries ? 'Remove series' : 'Add series'}
         </Button>
         <Button onClick={() => setHasProgress((on) => !on)}>
           {hasProgress ? 'Remove progress' : 'Add progress'}
         </Button>
-      </Inline>
-      <Stack gap="xs">
+      </Space>
+      <Space direction="vertical" gap="xs">
         <Text weight="semibold">Dune Messiah</Text>
         <Text as="div" size="sm" tone="faint">
           <MetaLine separator="·" items={[hasSeries && 'Dune #2', hasProgress && '42%']} />
         </Text>
-      </Stack>
-    </Stack>
+      </Space>
+    </Space>
   );
 }
 ```
@@ -238,14 +238,14 @@ export default function LabelledPairs() {
 `separator` takes any one character, drawn between items by CSS. Pairs take a separator too.
 
 ```tsx
-import { MetaLine, Stack, Text } from '@korzun/design/component';
+import { MetaLine, Space, Text } from '@korzun/design/component';
 
 const data = ['Frank Herbert', 'Dune #3', '42%'];
 
 export default function SeparatorChoices() {
   return (
     <Text as="div" size="sm" tone="muted">
-      <Stack gap="sm">
+      <Space direction="vertical" gap="sm">
         <MetaLine separator="·" items={data} />
         <MetaLine separator="|" items={data} />
         <MetaLine separator="/" items={data} />
@@ -256,7 +256,7 @@ export default function SeparatorChoices() {
             { label: 'size', value: '2.1 MB' },
           ]}
         />
-      </Stack>
+      </Space>
     </Text>
   );
 }

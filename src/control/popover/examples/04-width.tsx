@@ -2,7 +2,7 @@
  * `matchWidth` makes the popover exactly as wide as its anchor, as a Select's
  * list is. `matchWidth={false}` lets the content size itself.
  */
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button, Popover } from '@korzun/design/control';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { useRef, useState } from 'react';
@@ -25,7 +25,7 @@ export default function Width() {
   const toggle = (name: 'matched' | 'content') =>
     setOpen((current) => (current === name ? null : name));
   return (
-    <Stack align="start">
+    <Space direction="vertical" align="start">
       <Button ref={matchedAnchor} onClick={() => toggle('matched')}>
         matchWidth: as wide as this button
       </Button>
@@ -53,6 +53,6 @@ export default function Width() {
           <Text>Short</Text>
         </div>
       </Popover>
-    </Stack>
+    </Space>
   );
 }

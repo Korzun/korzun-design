@@ -423,7 +423,7 @@ test('tokens do not follow imports into src/theme (the provider and global style
 });
 
 test(
-  'real repo: stack tokens are exactly space paths',
+  'real repo: Space tokens are exactly space paths',
   { skip: !existsSync(join(realRepo, 'dist')) && 'dist missing; run npm run build' },
   () => {
     const root = mkdtempSync(join(tmpdir(), 'docs-gen-real-'));
@@ -440,9 +440,9 @@ test(
       cpSync(join(realRepo, p), join(root, p), { recursive: true });
     }
     const site = JSON.parse(generate(root).get('gallery/generated/site-data.json'));
-    const stack = site.modules.find((m) => m.id === 'component/stack');
-    assert.ok(stack.tokens.length > 0);
-    assert.ok(stack.tokens.every((t) => t.path.startsWith('space.')));
+    const space = site.modules.find((m) => m.id === 'component/space');
+    assert.ok(space.tokens.length > 0);
+    assert.ok(space.tokens.every((t) => t.path.startsWith('space.')));
   }
 );
 

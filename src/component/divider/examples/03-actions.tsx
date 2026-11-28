@@ -3,7 +3,7 @@
  * `actionsAlign` places them on the `left`, `center` or `right`. When it equals `align` the label
  * and the actions share one group, label first. Each divider is captioned with its props.
  */
-import { Card, Divider, Stack, Text } from '@korzun/design/component';
+import { Card, Divider, Space, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -12,8 +12,8 @@ export default function Actions() {
   const [last, setLast] = useState('nothing yet');
   return (
     <Card title="Requests">
-      <Stack gap="xl">
-        <Stack gap="xs">
+      <Space direction="vertical" gap="xl">
+        <Space direction="vertical" gap="xs">
           <Text size="sm" tone="muted">
             Unset: label left, actions right
           </Text>
@@ -27,8 +27,8 @@ export default function Actions() {
             Pending
           </Divider>
           <Text>{pending.length > 0 ? pending.join(', ') : 'Nothing pending'}</Text>
-        </Stack>
-        <Stack gap="xs">
+        </Space>
+        <Space direction="vertical" gap="xs">
           <Text size="sm" tone="muted">
             {'align="center" actionsAlign="left"'}
           </Text>
@@ -43,8 +43,8 @@ export default function Actions() {
           >
             Finished
           </Divider>
-        </Stack>
-        <Stack gap="xs">
+        </Space>
+        <Space direction="vertical" gap="xs">
           <Text size="sm" tone="muted">
             {'align="right" actionsAlign="right": one group, label first'}
           </Text>
@@ -59,9 +59,9 @@ export default function Actions() {
           >
             Shared
           </Divider>
-        </Stack>
+        </Space>
         <Text tone="muted">Last action: {last}</Text>
-      </Stack>
+      </Space>
     </Card>
   );
 }

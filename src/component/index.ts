@@ -8,7 +8,6 @@ export { CollapsibleSection, type CollapsibleSectionProps } from './collapsible-
 export { EmptyState, type EmptyStateProps } from './empty-state/index.js';
 export { ErrorMessage, type ErrorMessageProps } from './error-message/index.js';
 export { Heading, type HeadingProps } from './heading/index.js';
-export { Inline, type InlineProps } from './inline/index.js';
 export {
   MetaLine,
   type MetaLineItem,
@@ -22,7 +21,6 @@ export { Page, type PageProps, type PageTypeValue } from './page/index.js';
 export { ProgressIndicator, type ProgressIndicatorProps } from './progress-indicator/index.js';
 export { Spinner, type SpinnerProps } from './spinner/index.js';
 export { Space, type SpaceProps, type Gap } from './space/index.js';
-export { Stack, type StackProps } from './stack/index.js';
 export { Surface, useSurfaceRadius, type SurfaceProps } from './surface/index.js';
 export { Table, type TableColumn, type TableProps } from './table/index.js';
 export { Tag, type TagProps, type TagTone } from './tag/index.js';

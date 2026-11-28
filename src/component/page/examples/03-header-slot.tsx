@@ -3,7 +3,7 @@
  * leading the actions bar in the same row. `actionsLabel` renames the overflow
  * trigger when every action lives in the menu.
  */
-import { Card, Page, Stack, Text } from '@korzun/design/component';
+import { Card, Page, Space, Text } from '@korzun/design/component';
 import { TextInput } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -20,10 +20,10 @@ export default function HeaderSlot() {
       ]}
     >
       <Card title="Library">
-        <Stack>
+        <Space direction="vertical">
           <Text>Searching for: {query || 'nothing'}</Text>
           <Text tone="muted">Last action: {last}</Text>
-        </Stack>
+        </Space>
       </Card>
     </Page>
   );

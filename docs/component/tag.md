@@ -89,15 +89,15 @@ see [corners](../corners.md).
 Chips beside a title: the label is the child. An author chip names a person; a subject or keyword chip needs no `tone`.
 
 ```tsx
-import { Inline, Tag, Text } from '@korzun/design/component';
+import { Space, Tag, Text } from '@korzun/design/component';
 
 export default function Basic() {
   return (
-    <Inline>
+    <Space>
       <Text weight="semibold">Middlemarch</Text>
       <Tag tone="author">George Eliot</Tag>
       <Tag>Fiction</Tag>
-    </Inline>
+    </Space>
   );
 }
 ```
@@ -198,23 +198,23 @@ export default function LabelTones() {
 `md` is the regular chip and `sm` the compact one. `sm` sits inside a line of text without making the row taller.
 
 ```tsx
-import { Inline, Stack, Tag, Text } from '@korzun/design/component';
+import { Space, Tag, Text } from '@korzun/design/component';
 
 export default function Sizes() {
   return (
-    <Stack gap="sm" align="start">
-      <Inline>
+    <Space direction="vertical" gap="sm" align="start">
+      <Space>
         <Tag size="md">Medium</Tag>
         <Text tone="muted">md</Text>
-      </Inline>
-      <Inline>
+      </Space>
+      <Space>
         <Tag size="sm">Small</Tag>
         <Text tone="muted">sm</Text>
-      </Inline>
+      </Space>
       <Text>
         Chapter 12 <Tag size="sm">Fiction</Tag> <Tag size="sm">Classic</Tag> in a line of text
       </Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -224,7 +224,7 @@ export default function Sizes() {
 `onClick` makes a tag a button: focusable, Enter and Space activate it, and hover deepens the tone. It receives no event. Here an author chip filters the list, and clearing the filter is an action, so it is a link `Button`.
 
 ```tsx
-import { Inline, Stack, Tag, Text } from '@korzun/design/component';
+import { Space, Tag, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -233,8 +233,8 @@ const authors = ['George Eliot', 'Terry Pratchett', 'Ursula K. Le Guin'];
 export default function Clickable() {
   const [author, setAuthor] = useState<string | undefined>(undefined);
   return (
-    <Stack gap="sm" align="start">
-      <Inline wrap>
+    <Space direction="vertical" gap="sm" align="start">
+      <Space wrap>
         {authors.map((name) => (
           <Tag key={name} tone="author" onClick={() => setAuthor(name)}>
             {name}
@@ -243,9 +243,9 @@ export default function Clickable() {
         <Button type="link" onClick={() => setAuthor(undefined)}>
           Clear
         </Button>
-      </Inline>
+      </Space>
       <Text tone="muted">Filter: {author ?? 'none'}</Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -255,27 +255,27 @@ export default function Clickable() {
 Compact `sm` chips in rows inside a `Card`. A kind of thing keeps its own tone; a state with no meaning to signal is `neutral`.
 
 ```tsx
-import { Card, Inline, Stack, Tag, Text } from '@korzun/design/component';
+import { Card, Space, Tag, Text } from '@korzun/design/component';
 
 export default function InCard() {
   return (
     <Card title="Metadata fixes">
-      <Stack gap="sm">
-        <Inline wrap gap="xs">
+      <Space direction="vertical" gap="sm">
+        <Space wrap gap="xs">
           <Text>Middlemarch</Text>
           <Tag size="sm" tone="author">
             George Eliot
           </Tag>
           <Tag size="sm">Fiction</Tag>
           <Tag size="sm">Classic</Tag>
-        </Inline>
-        <Inline gap="xs">
+        </Space>
+        <Space gap="xs">
           <Text>Access</Text>
           <Tag size="sm" tone="neutral">
             Read only
           </Tag>
-        </Inline>
-      </Stack>
+        </Space>
+      </Space>
     </Card>
   );
 }

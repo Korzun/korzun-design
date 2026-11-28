@@ -19,7 +19,7 @@ stubbed action with your auth call.
 A centred sign-in card with Forgot password? below it, on the page background.
 
 ```tsx
-import { Card, Page, Stack } from '@korzun/design/component';
+import { Card, Page, Space } from '@korzun/design/component';
 import { Button, TextInput } from '@korzun/design/control';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { useToast } from '@korzun/design/toast';
@@ -27,7 +27,7 @@ import { useState } from 'react';
 
 // In your app this goes in a sibling style.ts.
 const useStyle = createUseStyles((theme: Theme) => ({
-  // Centring a column in the viewport is the one layout Stack can't express.
+  // Centring a column in the viewport is the one layout Space can't express.
   screen: {
     display: 'grid',
     placeItems: 'center',
@@ -61,11 +61,11 @@ export default function SignIn() {
   return (
     <Page type="minimal">
       <div className={styles.screen}>
-        <Stack gap="xxl" className={styles.column}>
+        <Space direction="vertical" gap="xxl" className={styles.column}>
           <Card>
             <form action={signIn}>
-              <Stack gap="xxl">
-                <Stack gap="md">
+              <Space direction="vertical" gap="xxl">
+                <Space direction="vertical" gap="md">
                   <TextInput
                     name="username"
                     placeholder="Username or email"
@@ -82,17 +82,17 @@ export default function SignIn() {
                     value={password}
                     onChange={setPassword}
                   />
-                </Stack>
+                </Space>
                 <Button type="primary" submit>
                   Sign In
                 </Button>
-              </Stack>
+              </Space>
             </form>
           </Card>
           <Button onClick={() => toast('Check your email for a reset link', 'info')}>
             Forgot password?
           </Button>
-        </Stack>
+        </Space>
       </div>
     </Page>
   );

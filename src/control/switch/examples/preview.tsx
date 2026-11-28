@@ -1,5 +1,5 @@
 /** Preview */
-import { Stack } from '@korzun/design/component';
+import { Space } from '@korzun/design/component';
 import { Switch } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -7,7 +7,7 @@ export default function Preview() {
   const [notifications, setNotifications] = useState(true);
   const [autoSync, setAutoSync] = useState(false);
   return (
-    <Stack align="start">
+    <Space direction="vertical" align="start">
       <Switch
         name="notifications"
         label="Notifications"
@@ -15,6 +15,6 @@ export default function Preview() {
         onChange={setNotifications}
       />
       <Switch name="autoSync" label="Auto sync" checked={autoSync} onChange={setAutoSync} />
-    </Stack>
+    </Space>
   );
 }

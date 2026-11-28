@@ -1,5 +1,5 @@
 /** Preview */
-import { Inline } from '@korzun/design/component';
+import { Space } from '@korzun/design/component';
 import {
   BookIcon,
   CheckIcon,
@@ -14,10 +14,10 @@ const icons = [HomeIcon, BookIcon, SearchIcon, UploadIcon, UserIcon, CheckIcon, 
 
 export default function Preview() {
   return (
-    <Inline gap="lg">
+    <Space gap="lg">
       {icons.map((Icon, index) => (
         <Icon key={index} width={28} height={28} aria-hidden />
       ))}
-    </Inline>
+    </Space>
   );
 }

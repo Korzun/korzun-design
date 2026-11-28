@@ -2,7 +2,7 @@
  * A Menu inside a Modal opens into the dialog, so it shows above the dialog's
  * backdrop. Escape closes the menu first and the Modal on the next press.
  */
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button, Modal, Menu } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -10,10 +10,10 @@ export default function InDialog() {
   const [open, setOpen] = useState(false);
   const [chosen, setChosen] = useState('nothing yet');
   return (
-    <Stack align="start">
+    <Space direction="vertical" align="start">
       <Button onClick={() => setOpen(true)}>Open dialog</Button>
       <Modal open={open} onClose={() => setOpen(false)} title="Edit book">
-        <Stack align="start">
+        <Space direction="vertical" align="start">
           <Menu
             trigger={(p) => <Button {...p}>Actions</Button>}
             items={[
@@ -23,8 +23,8 @@ export default function InDialog() {
             ]}
           />
           <Text tone="muted">Chosen: {chosen}</Text>
-        </Stack>
+        </Space>
       </Modal>
-    </Stack>
+    </Space>
   );
 }

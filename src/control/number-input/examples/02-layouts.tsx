@@ -3,7 +3,7 @@
  * the label above the field on that row, and `inline` paints nothing around the
  * pair.
  */
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { NumberInput } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -12,8 +12,8 @@ export default function Layouts() {
   const [vertical, setVertical] = useState<number | undefined>(880);
   const [inline, setInline] = useState<number | undefined>(160);
   return (
-    <Stack gap="xl">
-      <Stack gap="xs">
+    <Space direction="vertical" gap="xl">
+      <Space direction="vertical" gap="xs">
         <Text size="sm" tone="muted">
           layout="horizontal"
         </Text>
@@ -24,8 +24,8 @@ export default function Layouts() {
           value={horizontal}
           onChange={setHorizontal}
         />
-      </Stack>
-      <Stack gap="xs">
+      </Space>
+      <Space direction="vertical" gap="xs">
         <Text size="sm" tone="muted">
           layout="vertical"
         </Text>
@@ -36,8 +36,8 @@ export default function Layouts() {
           value={vertical}
           onChange={setVertical}
         />
-      </Stack>
-      <Stack gap="xs">
+      </Space>
+      <Space direction="vertical" gap="xs">
         <Text size="sm" tone="muted">
           layout="inline"
         </Text>
@@ -48,7 +48,7 @@ export default function Layouts() {
           value={inline}
           onChange={setInline}
         />
-      </Stack>
-    </Stack>
+      </Space>
+    </Space>
   );
 }

@@ -5,7 +5,7 @@
  * fires once when validity flips. The demo opens with two lines typed in, so it
  * starts invalid; remove the line break to fix it.
  */
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { TextArea } from '@korzun/design/control';
 import { useEffect, useRef, useState } from 'react';
 
@@ -29,7 +29,7 @@ export default function Validation() {
   const [valid, setValid] = useState(true);
   const box = useTypeOnMount('Read on the train.\nLend to Sam.');
   return (
-    <Stack>
+    <Space direction="vertical">
       <div ref={box}>
         <TextArea
           name="one-line"
@@ -44,6 +44,6 @@ export default function Validation() {
       </div>
       <Text tone={valid ? 'success' : 'danger'}>{valid ? 'Valid' : 'Invalid'}</Text>
       <Text tone="muted">Saved text: {text === undefined ? 'nothing' : `“${text}”`}</Text>
-    </Stack>
+    </Space>
   );
 }

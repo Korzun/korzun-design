@@ -1,5 +1,5 @@
 /** Preview */
-import { Stack } from '@korzun/design/component';
+import { Space } from '@korzun/design/component';
 import { Button, Popover } from '@korzun/design/control';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { useRef } from 'react';
@@ -20,13 +20,13 @@ export default function Preview() {
   const styles = useStyle();
   const anchor = useRef<HTMLElement>(null);
   return (
-    <Stack align="start" className={styles.box}>
+    <Space direction="vertical" align="start" className={styles.box}>
       <Button ref={anchor} onClick={() => {}}>
         Filters
       </Button>
       <Popover anchorRef={anchor} open matchWidth={false} onClose={() => {}}>
         <div className={styles.panel}>
-          <Stack gap="xxs">
+          <Space direction="vertical" gap="xxs">
             <Button type="text" onClick={() => {}}>
               Unread
             </Button>
@@ -36,9 +36,9 @@ export default function Preview() {
             <Button type="text" onClick={() => {}}>
               Favourites
             </Button>
-          </Stack>
+          </Space>
         </div>
       </Popover>
-    </Stack>
+    </Space>
   );
 }

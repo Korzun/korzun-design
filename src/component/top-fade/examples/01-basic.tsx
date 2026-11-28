@@ -7,7 +7,7 @@
  * edge blurs while the switch is on.
  * @viewport mobile
  */
-import { Stack, Tag, Text, TopFade } from '@korzun/design/component';
+import { Space, Tag, Text, TopFade } from '@korzun/design/component';
 import { Switch } from '@korzun/design/control';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { useState } from 'react';
@@ -39,7 +39,7 @@ export default function Basic() {
         <Tag tone="subject">Fiction</Tag>
       </div>
       {installed && <TopFade />}
-      <Stack className={styles.content}>
+      <Space direction="vertical" className={styles.content}>
         <Text>Scrolled content under the band blurs, then fades to sharp below it.</Text>
         <Switch
           name="installed"
@@ -47,7 +47,7 @@ export default function Basic() {
           checked={installed}
           onChange={setInstalled}
         />
-      </Stack>
+      </Space>
     </>
   );
 }

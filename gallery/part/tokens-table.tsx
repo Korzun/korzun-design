@@ -1,4 +1,4 @@
-import { Inline, Stack, Table, type TableColumn, Text } from '@korzun/design/component';
+import { Space, Table, type TableColumn, Text } from '@korzun/design/component';
 import { createUseStyles, darkTheme, lightTheme, type Theme, useTheme } from '@korzun/design/theme';
 import cx from 'classnames';
 
@@ -38,7 +38,7 @@ const Value = ({
   const table = useTableStyle();
   if (value === null) return <Text tone="muted">–</Text>;
   return (
-    <Inline gap="sm" align="center" wrap={false}>
+    <Space gap="sm" align="center" wrap={false}>
       {color && (
         <span className={cx(styles.backdrop, mode === 'light' ? styles.onLight : styles.onDark)}>
           {/* The token's value is data, so it is the one inline style. */}
@@ -46,7 +46,7 @@ const Value = ({
         </span>
       )}
       <code className={table.code}>{value}</code>
-    </Inline>
+    </Space>
   );
 };
 
@@ -126,7 +126,7 @@ export const TokensTable = ({ tokens }: TokensTableProps) => {
     },
   ];
   return (
-    <Stack gap="lg">
+    <Space direction="vertical" gap="lg">
       {(values.length > 0 || recipes.length === 0) && (
         <Table
           ariaLabel="Tokens"
@@ -145,6 +145,6 @@ export const TokensTable = ({ tokens }: TokensTableProps) => {
           minWidth={minWidth}
         />
       )}
-    </Stack>
+    </Space>
   );
 };

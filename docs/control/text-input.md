@@ -61,17 +61,17 @@ A controlled field. `onChange` receives the string, not an event, and
 `undefined` once the field is emptied.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { TextInput } from '@korzun/design/control';
 import { useState } from 'react';
 
 export default function Basic() {
   const [name, setName] = useState<string | undefined>('Ada');
   return (
-    <Stack>
+    <Space direction="vertical">
       <TextInput name="name" label="Name" value={name} onChange={setName} />
       <Text tone="muted">Value: {name === undefined ? 'undefined' : `“${name}”`}</Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -83,7 +83,7 @@ the label above the field on that row, and `inline` paints nothing around the
 pair.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { TextInput } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -92,8 +92,8 @@ export default function Layouts() {
   const [vertical, setVertical] = useState<string | undefined>('Middlemarch');
   const [inline, setInline] = useState<string | undefined>('Emma');
   return (
-    <Stack gap="xl">
-      <Stack gap="xs">
+    <Space direction="vertical" gap="xl">
+      <Space direction="vertical" gap="xs">
         <Text size="sm" tone="muted">
           layout="horizontal"
         </Text>
@@ -104,8 +104,8 @@ export default function Layouts() {
           value={horizontal}
           onChange={setHorizontal}
         />
-      </Stack>
-      <Stack gap="xs">
+      </Space>
+      <Space direction="vertical" gap="xs">
         <Text size="sm" tone="muted">
           layout="vertical"
         </Text>
@@ -116,8 +116,8 @@ export default function Layouts() {
           value={vertical}
           onChange={setVertical}
         />
-      </Stack>
-      <Stack gap="xs">
+      </Space>
+      <Space direction="vertical" gap="xs">
         <Text size="sm" tone="muted">
           layout="inline"
         </Text>
@@ -128,8 +128,8 @@ export default function Layouts() {
           value={inline}
           onChange={setInline}
         />
-      </Stack>
-    </Stack>
+      </Space>
+    </Space>
   );
 }
 ```
@@ -143,7 +143,7 @@ The demo opens with an over-long title typed in, so it starts invalid; shorten i
 ten characters or fewer.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { TextInput } from '@korzun/design/control';
 import { useEffect, useRef, useState } from 'react';
 
@@ -167,7 +167,7 @@ export default function Validation() {
   const [valid, setValid] = useState(true);
   const box = useTypeOnMount('Dune Messiah');
   return (
-    <Stack>
+    <Space direction="vertical">
       <div ref={box}>
         <TextInput
           name="title"
@@ -181,7 +181,7 @@ export default function Validation() {
       </div>
       <Text tone={valid ? 'success' : 'danger'}>{valid ? 'Valid' : 'Invalid'}</Text>
       <Text tone="muted">Saved value: {title === undefined ? 'undefined' : `“${title}”`}</Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -192,14 +192,14 @@ export default function Validation() {
 browser to offer a generated one rather than a saved one.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { TextInput } from '@korzun/design/control';
 import { useState } from 'react';
 
 export default function Password() {
   const [password, setPassword] = useState('');
   return (
-    <Stack>
+    <Space direction="vertical">
       <TextInput
         name="new-password"
         label="New"
@@ -209,7 +209,7 @@ export default function Password() {
         onChange={(v) => setPassword(v ?? '')}
       />
       <Text tone="muted">Length: {password.length}</Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -221,7 +221,7 @@ within the last 10% of the limit (at least 10 characters) and turns red at the l
 The first field is near its limit, the second is at it.
 
 ```tsx
-import { Stack } from '@korzun/design/component';
+import { Space } from '@korzun/design/component';
 import { TextInput } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -229,7 +229,7 @@ export default function CharacterCounter() {
   const [near, setNear] = useState<string | undefined>('Short story collection, volume two');
   const [full, setFull] = useState<string | undefined>('Exactly thirty characters long');
   return (
-    <Stack>
+    <Space direction="vertical">
       <TextInput
         name="near"
         layout="vertical"
@@ -246,7 +246,7 @@ export default function CharacterCounter() {
         value={full}
         onChange={setFull}
       />
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -258,7 +258,7 @@ unlike `onChange`, receives the event. `autoCapitalize="none"` keeps
 mobile keyboards from capitalising the first letter.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { TextInput } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -266,7 +266,7 @@ export default function PlaceholderAndKeys() {
   const [username, setUsername] = useState<string | undefined>(undefined);
   const [submitted, setSubmitted] = useState<string | null>(null);
   return (
-    <Stack>
+    <Space direction="vertical">
       <TextInput
         name="username"
         layout="inline"
@@ -281,7 +281,7 @@ export default function PlaceholderAndKeys() {
         }}
       />
       <Text tone="muted">Submitted: {submitted === null ? 'nothing yet' : `“${submitted}”`}</Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -293,7 +293,7 @@ validity through `onValidChange`, so Save stays disabled while any is
 invalid.
 
 ```tsx
-import { Card, Stack, Text } from '@korzun/design/component';
+import { Card, Space, Text } from '@korzun/design/component';
 import { Button, TextInput } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -312,7 +312,7 @@ export default function FormInCard() {
         </Button>
       }
     >
-      <Stack>
+      <Space direction="vertical">
         <TextInput
           name="name"
           label="Name"
@@ -331,7 +331,7 @@ export default function FormInCard() {
           onChange={(v) => setPassword(v ?? '')}
         />
         {saved !== null && <Text tone="success">Saved: {saved}</Text>}
-      </Stack>
+      </Space>
     </Card>
   );
 }
@@ -343,7 +343,7 @@ export default function FormInCard() {
 `ariaLabel`, since the icon alone has no name. Here it clears the search.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { TextInput } from '@korzun/design/control';
 import { CircleXIcon } from '@korzun/design/icon';
 import { useState } from 'react';
@@ -351,7 +351,7 @@ import { useState } from 'react';
 export default function Action() {
   const [query, setQuery] = useState<string | undefined>('Earthsea');
   return (
-    <Stack>
+    <Space direction="vertical">
       <TextInput
         name="query"
         label="Search"
@@ -360,7 +360,7 @@ export default function Action() {
         action={{ icon: CircleXIcon, ariaLabel: 'Clear search', action: () => setQuery(undefined) }}
       />
       <Text tone="muted">Query: {query === undefined ? 'none' : `“${query}”`}</Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -371,14 +371,14 @@ A field with no visible `label` takes `ariaLabel`, so assistive tech can
 still name it. With a `label`, the label names the field instead.
 
 ```tsx
-import { Inline, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { TextInput } from '@korzun/design/control';
 import { useState } from 'react';
 
 export default function WithoutLabel() {
   const [filter, setFilter] = useState<string | undefined>(undefined);
   return (
-    <Inline>
+    <Space>
       <TextInput
         name="filter"
         layout="inline"
@@ -388,7 +388,7 @@ export default function WithoutLabel() {
         onChange={setFilter}
       />
       <Text tone="muted">Filter: {filter === undefined ? 'none' : `“${filter}”`}</Text>
-    </Inline>
+    </Space>
   );
 }
 ```
@@ -398,7 +398,7 @@ export default function WithoutLabel() {
 `prefix` puts a decorative icon inside the field's left end; the text moves clear of it. The icon is hidden from screen readers, so name the field with `ariaLabel`. Paired with an `action` that clears, shown only while there is text, it makes a search box.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { TextInput } from '@korzun/design/control';
 import { CircleXIcon, SearchIcon } from '@korzun/design/icon';
 import { useState } from 'react';
@@ -406,7 +406,7 @@ import { useState } from 'react';
 export default function SearchField() {
   const [query, setQuery] = useState<string | undefined>(undefined);
   return (
-    <Stack>
+    <Space direction="vertical">
       <TextInput
         name="search"
         ariaLabel="Search books"
@@ -421,7 +421,7 @@ export default function SearchField() {
         }
       />
       <Text tone="muted">Query: {query === undefined ? 'none' : `“${query}”`}</Text>
-    </Stack>
+    </Space>
   );
 }
 ```

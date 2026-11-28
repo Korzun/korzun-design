@@ -56,7 +56,7 @@ click, but it cannot be focused, so each row also holds a link `Button` with an 
 the keyboard-reachable way to the same action. A row without `onClick` is plain content.
 
 ```tsx
-import { CardRow, Inline, Stack, Text } from '@korzun/design/component';
+import { CardRow, Space, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -65,22 +65,22 @@ const uploads = ['middlemarch.epub', 'persuasion.epub', 'villette.epub'];
 export default function Basic() {
   const [opened, setOpened] = useState<string | undefined>();
   return (
-    <Stack>
+    <Space direction="vertical">
       {uploads.map((fileName) => (
         <CardRow key={fileName} onClick={() => setOpened(fileName)}>
-          <Inline justify="between">
+          <Space justify="between">
             <Text>{fileName}</Text>
             <Button type="link" ariaLabel={`Open ${fileName}`} onClick={() => setOpened(fileName)}>
               Open
             </Button>
-          </Inline>
+          </Space>
         </CardRow>
       ))}
       <CardRow>
         <Text>Not clickable</Text>
       </CardRow>
       <Text tone="muted">Opened: {opened ?? 'nothing yet'}</Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -91,11 +91,11 @@ A row's corner follows where it sits: `lg` (16px) on the page, `md` (8px) inside
 content inside a row steps down one level too.
 
 ```tsx
-import { Card, CardRow, Stack, Text } from '@korzun/design/component';
+import { Card, CardRow, Space, Text } from '@korzun/design/component';
 
 export default function Depth() {
   return (
-    <Stack>
+    <Space direction="vertical">
       <CardRow>
         <Text>On the page (16px)</Text>
       </CardRow>
@@ -104,7 +104,7 @@ export default function Depth() {
           <Text>In a Card (8px)</Text>
         </CardRow>
       </Card>
-    </Stack>
+    </Space>
   );
 }
 ```

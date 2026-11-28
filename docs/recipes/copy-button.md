@@ -18,7 +18,7 @@ A button that puts text on the clipboard and says what happened. Copy the
 A connection URL in Code with a Copy button that turns into Copied, or Could not copy.
 
 ```tsx
-import { Code, Inline } from '@korzun/design/component';
+import { Code, Space } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { CheckIcon } from '@korzun/design/icon';
 import { createUseStyles } from '@korzun/design/theme';
@@ -101,10 +101,10 @@ function CopyButton({ text }: { text: string }) {
 
 export default function CopyButtonExample() {
   return (
-    <Inline gap="md">
+    <Space gap="md">
       <Code>postgres://app@db.internal:5432/app</Code>
       <CopyButton text="postgres://app@db.internal:5432/app" />
-    </Inline>
+    </Space>
   );
 }
 ```

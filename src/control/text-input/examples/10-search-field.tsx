@@ -1,7 +1,7 @@
 /** Search field
  * `prefix` puts a decorative icon inside the field's left end; the text moves clear of it. The icon is hidden from screen readers, so name the field with `ariaLabel`. Paired with an `action` that clears, shown only while there is text, it makes a search box.
  */
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { TextInput } from '@korzun/design/control';
 import { CircleXIcon, SearchIcon } from '@korzun/design/icon';
 import { useState } from 'react';
@@ -9,7 +9,7 @@ import { useState } from 'react';
 export default function SearchField() {
   const [query, setQuery] = useState<string | undefined>(undefined);
   return (
-    <Stack>
+    <Space direction="vertical">
       <TextInput
         name="search"
         ariaLabel="Search books"
@@ -24,6 +24,6 @@ export default function SearchField() {
         }
       />
       <Text tone="muted">Query: {query === undefined ? 'none' : `“${query}”`}</Text>
-    </Stack>
+    </Space>
   );
 }

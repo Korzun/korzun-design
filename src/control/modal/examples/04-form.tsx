@@ -3,7 +3,7 @@
  * and Escape closes the list before the dialog. `canDismiss={!saving}` and a
  * `loading` Save keep it open until the request finishes.
  */
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button, Modal, Select, TextInput } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -24,7 +24,7 @@ export default function Form() {
     }, 1000);
   };
   return (
-    <Stack align="start">
+    <Space direction="vertical" align="start">
       <Button onClick={() => setOpen(true)}>Edit book</Button>
       <Text tone="muted">Saved: {saved}</Text>
       <Modal
@@ -43,7 +43,7 @@ export default function Form() {
           </>
         }
       >
-        <Stack>
+        <Space direction="vertical">
           <TextInput name="note" label="Note" layout="vertical" value={note} onChange={setNote} />
           <Select
             name="shelf"
@@ -53,8 +53,8 @@ export default function Form() {
             value={shelf}
             onChange={setShelf}
           />
-        </Stack>
+        </Space>
       </Modal>
-    </Stack>
+    </Space>
   );
 }

@@ -4,7 +4,7 @@
  * (`headerActions`).
  * @viewport mobile
  */
-import { Card, Page, Stack, Text } from '@korzun/design/component';
+import { Card, Page, Space, Text } from '@korzun/design/component';
 import { useState } from 'react';
 
 export default function InPage() {
@@ -18,10 +18,10 @@ export default function InPage() {
       ]}
     >
       <Card title="Dune">
-        <Stack>
+        <Space direction="vertical">
           <Text>Frank Herbert, 1965.</Text>
           <Text tone="muted">Status: {status}</Text>
-        </Stack>
+        </Space>
       </Card>
     </Page>
   );

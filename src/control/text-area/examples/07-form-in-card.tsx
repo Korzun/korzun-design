@@ -3,7 +3,7 @@
  * grows as the user types, with its label above and a `maxLength` the server
  * enforces.
  */
-import { Card, Stack, Text } from '@korzun/design/component';
+import { Card, Space, Text } from '@korzun/design/component';
 import { Button, TextArea } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -22,7 +22,7 @@ export default function FormInCard() {
         </Button>
       }
     >
-      <Stack>
+      <Space direction="vertical">
         <TextArea name="note" label="Note" value={note} onChange={setNote} />
         <TextArea
           name="description"
@@ -34,7 +34,7 @@ export default function FormInCard() {
           onChange={setDescription}
         />
         <Text tone="muted">Saved {saved} times</Text>
-      </Stack>
+      </Space>
     </Card>
   );
 }

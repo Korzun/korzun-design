@@ -1,9 +1,9 @@
 /** Preview */
-import { MetaLine, Stack, Text } from '@korzun/design/component';
+import { MetaLine, Space, Text } from '@korzun/design/component';
 
 export default function Preview() {
   return (
-    <Stack gap="sm">
+    <Space direction="vertical" gap="sm">
       <Text as="div" tone="faint">
         <MetaLine separator="·" items={['Frank Herbert', 'Dune #3', '42%']} />
       </Text>
@@ -15,6 +15,6 @@ export default function Preview() {
           ]}
         />
       </Text>
-    </Stack>
+    </Space>
   );
 }

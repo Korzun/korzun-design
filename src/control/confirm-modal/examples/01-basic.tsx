@@ -4,7 +4,7 @@
  * modal: it sets `isOpen` to `false` itself. `onCancel` also runs for Escape and a
  * click on the backdrop. This demo starts open; Sync library opens it again.
  */
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button, ConfirmModal } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -16,7 +16,7 @@ export default function Basic() {
     setIsOpen(false);
   };
   return (
-    <Stack align="start">
+    <Space direction="vertical" align="start">
       <Button onClick={() => setIsOpen(true)}>Sync library</Button>
       <Text tone="muted">Answer: {answer}</Text>
       <ConfirmModal
@@ -29,6 +29,6 @@ export default function Basic() {
       >
         This checks every connected device for new books.
       </ConfirmModal>
-    </Stack>
+    </Space>
   );
 }

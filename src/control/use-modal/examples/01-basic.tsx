@@ -5,7 +5,7 @@
  * the `theme.recipe.modal.*` styles, and its contents are wrapped in `Surface` so the
  * Buttons get the corners they would have in a `Modal`. This demo starts open.
  */
-import { Stack, Surface, Text } from '@korzun/design/component';
+import { Space, Surface, Text } from '@korzun/design/component';
 import { Button, useModal } from '@korzun/design/control';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { useState } from 'react';
@@ -27,7 +27,7 @@ export default function Basic() {
   const close = () => setIsOpen(false);
   const ref = useModal(isOpen, close);
   return (
-    <Stack align="start">
+    <Space direction="vertical" align="start">
       <Button onClick={() => setIsOpen(true)}>Edit progress</Button>
       <Text tone="muted">Saved: {saves}</Text>
       <dialog ref={ref} className={styles.dialog}>
@@ -50,6 +50,6 @@ export default function Basic() {
           </div>
         </Surface>
       </dialog>
-    </Stack>
+    </Space>
   );
 }

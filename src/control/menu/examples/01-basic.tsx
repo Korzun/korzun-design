@@ -4,7 +4,7 @@
  * no arguments. Menu has no `open` prop, so this demo calls the trigger's
  * `onClick` once on mount to start open.
  */
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button, Menu, type MenuTriggerProps } from '@korzun/design/control';
 import { useEffect, useRef, useState } from 'react';
 
@@ -23,7 +23,7 @@ function OpenOnMount(props: MenuTriggerProps) {
 export default function Basic() {
   const [chosen, setChosen] = useState('nothing yet');
   return (
-    <Stack align="start">
+    <Space direction="vertical" align="start">
       <Menu
         trigger={(p) => <OpenOnMount {...p} />}
         items={[
@@ -33,6 +33,6 @@ export default function Basic() {
         ]}
       />
       <Text tone="muted">Chosen: {chosen}</Text>
-    </Stack>
+    </Space>
   );
 }

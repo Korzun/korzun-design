@@ -3,8 +3,9 @@
 ## 0.7.0 — 2026-11-26
 
 - [Space] New `Space`: one layout primitive with a `direction` (default `'horizontal'`), `gap`, `align`, `justify`, `wrap`, `as` and a `split` separator drawn between items (hidden from screen readers, an `li` inside a list). Each direction keeps Stack's or Inline's defaults.
+- [Space] **Breaking:** `Stack` and `Inline` (and `StackProps`, `InlineProps`) are removed; use `Space`. `<Stack …>` is `<Space direction="vertical" …>` and `<Inline …>` is `<Space …>`, with every prop and default unchanged.
 - [Switch] While loading, an `inset` (squared) switch shows a rounded-square ring with an arc travelling around it in the thumb's place, instead of the round spinner, which clashed with its square corners. A `pill` switch keeps the round spinner.
-- [General] Docs site: the overview thumbnails for `Page`, `Surface`, `TopFade` and every hook are drawn with plain blocks, like `Stack` and `Inline`, instead of sample content.
+- [General] Docs site: the overview thumbnails for `Page`, `Surface`, `TopFade` and every hook are drawn with plain blocks, like `Space`, instead of sample content.
 - [General] Docs site: each section lists its modules alphabetically by name, on the overview and in `llms.txt`.
 - [useIsStandalone] **Breaking:** `isStandalone()` is now the hook `useIsStandalone()`, built on `useSyncExternalStore`. Call it at the top of a component and branch on its value (`const standalone = useIsStandalone();` then `{standalone && <TopFade />}`), not inside a condition or callback. It re-renders when the display mode changes and returns `false` during server rendering instead of throwing on `window`.
 - [General] Docs generator: CHANGELOG tags that name a removed former name (`CardDivider`, `Dialog`, `useModalDialog`) resolve to the current name, so that history stays on the renamed module's page.

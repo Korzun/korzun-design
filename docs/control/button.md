@@ -81,22 +81,22 @@ One `primary` action for the main step and a `default` button beside it.
 `onClick` takes no arguments: the button passes no event.
 
 ```tsx
-import { Inline, Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { useState } from 'react';
 
 export default function Basic() {
   const [saves, setSaves] = useState(0);
   return (
-    <Stack align="start">
-      <Inline>
+    <Space direction="vertical" align="start">
+      <Space>
         <Button onClick={() => setSaves(0)}>Reset</Button>
         <Button type="primary" onClick={() => setSaves((n) => n + 1)}>
           Save
         </Button>
-      </Inline>
+      </Space>
       <Text tone="muted">Saves: {saves}</Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -109,15 +109,15 @@ row action, and `dashed` an "add a row" affordance. The second row adds
 `danger`, on `default` and on `primary`.
 
 ```tsx
-import { Inline, Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { useState } from 'react';
 
 export default function Variants() {
   const [pressed, setPressed] = useState('nothing yet');
   return (
-    <Stack align="start">
-      <Inline wrap>
+    <Space direction="vertical" align="start">
+      <Space wrap>
         <Button type="primary" onClick={() => setPressed('Primary')}>
           Primary
         </Button>
@@ -131,17 +131,17 @@ export default function Variants() {
         <Button type="dashed" onClick={() => setPressed('Dashed')}>
           Dashed
         </Button>
-      </Inline>
-      <Inline wrap>
+      </Space>
+      <Space wrap>
         <Button danger onClick={() => setPressed('Danger')}>
           Danger
         </Button>
         <Button type="primary" danger onClick={() => setPressed('Primary danger')}>
           Primary danger
         </Button>
-      </Inline>
+      </Space>
       <Text tone="muted">Pressed: {pressed}</Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -152,24 +152,24 @@ Add `danger` to a destructive action: on `primary` when it confirms the
 deletion, on `default` otherwise.
 
 ```tsx
-import { Inline, Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { useState } from 'react';
 
 export default function Danger() {
   const [pressed, setPressed] = useState('nothing yet');
   return (
-    <Stack align="start">
-      <Inline wrap>
+    <Space direction="vertical" align="start">
+      <Space wrap>
         <Button danger onClick={() => setPressed('Log out')}>
           Log out
         </Button>
         <Button type="primary" danger onClick={() => setPressed('Delete book')}>
           Delete book
         </Button>
-      </Inline>
+      </Space>
       <Text tone="muted">Pressed: {pressed}</Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -180,7 +180,7 @@ export default function Danger() {
 element. An icon-only button needs an `ariaLabel` so it has an accessible name.
 
 ```tsx
-import { Inline, Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { ChevronIcon, SearchIcon, SettingsIcon } from '@korzun/design/icon';
 import { useState } from 'react';
@@ -188,8 +188,8 @@ import { useState } from 'react';
 export default function Icons() {
   const [pressed, setPressed] = useState('nothing yet');
   return (
-    <Stack align="start">
-      <Inline wrap>
+    <Space direction="vertical" align="start">
+      <Space wrap>
         <Button prefix={SearchIcon} onClick={() => setPressed('Search')}>
           Search
         </Button>
@@ -197,9 +197,9 @@ export default function Icons() {
           Next
         </Button>
         <Button prefix={SettingsIcon} ariaLabel="Settings" onClick={() => setPressed('Settings')} />
-      </Inline>
+      </Space>
       <Text tone="muted">Pressed: {pressed}</Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -211,7 +211,7 @@ the button leaves the tab order until it finishes. Every type has a loading
 look, `danger` included. Press Upload to watch one go through it.
 
 ```tsx
-import { Inline, Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { UploadIcon } from '@korzun/design/icon';
 import { useState } from 'react';
@@ -227,8 +227,8 @@ export default function Loading() {
     }, 1500);
   };
   return (
-    <Stack align="start">
-      <Inline wrap>
+    <Space direction="vertical" align="start">
+      <Space wrap>
         <Button type="primary" loading>
           Primary
         </Button>
@@ -242,22 +242,22 @@ export default function Loading() {
         <Button type="link" loading>
           Link
         </Button>
-      </Inline>
-      <Inline wrap>
+      </Space>
+      <Space wrap>
         <Button danger loading>
           Danger
         </Button>
         <Button type="primary" danger loading>
           Primary danger
         </Button>
-      </Inline>
-      <Inline wrap>
+      </Space>
+      <Space wrap>
         <Button type="primary" prefix={UploadIcon} loading={uploading} onClick={upload}>
           {uploading ? 'Uploading' : 'Upload'}
         </Button>
         <Text tone="muted">Uploaded {uploads} times</Text>
-      </Inline>
-    </Stack>
+      </Space>
+    </Space>
   );
 }
 ```
@@ -269,15 +269,15 @@ takes it out of the tab order. Every type has a disabled look, `danger`
 included. The switch enables Save.
 
 ```tsx
-import { Inline, Stack } from '@korzun/design/component';
+import { Space } from '@korzun/design/component';
 import { Button, Switch } from '@korzun/design/control';
 import { useState } from 'react';
 
 export default function Disabled() {
   const [changed, setChanged] = useState(false);
   return (
-    <Stack align="start">
-      <Inline wrap>
+    <Space direction="vertical" align="start">
+      <Space wrap>
         <Button type="primary" disabled>
           Primary
         </Button>
@@ -291,22 +291,22 @@ export default function Disabled() {
         <Button type="link" disabled>
           Link
         </Button>
-      </Inline>
-      <Inline wrap>
+      </Space>
+      <Space wrap>
         <Button danger disabled>
           Danger
         </Button>
         <Button type="primary" danger disabled>
           Primary danger
         </Button>
-      </Inline>
-      <Inline wrap>
+      </Space>
+      <Space wrap>
         <Switch name="changed" label="Has changes" checked={changed} onChange={setChanged} />
         <Button type="primary" disabled={!changed} onClick={() => setChanged(false)}>
           Save
         </Button>
-      </Inline>
-    </Stack>
+      </Space>
+    </Space>
   );
 }
 ```
@@ -318,7 +318,7 @@ in the card. `onClick` is ignored on a submit button, so handle the form's
 `action`. Inside a Card the corners step down by themselves: no `radius` prop.
 
 ```tsx
-import { Card, Stack, Text } from '@korzun/design/component';
+import { Card, Space, Text } from '@korzun/design/component';
 import { Button, TextInput } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -335,10 +335,10 @@ export default function SubmitInCard() {
       }
     >
       <form id="profile-form" action={(data) => setSaved(String(data.get('name') ?? ''))}>
-        <Stack>
+        <Space direction="vertical">
           <TextInput name="name" label="Name" value={name} onChange={setName} />
           {saved !== null && <Text tone="success">Saved as {saved}</Text>}
-        </Stack>
+        </Space>
       </form>
     </Card>
   );
@@ -353,7 +353,7 @@ keeps the dialog open until it finishes. Inside a Modal the corners step down
 by themselves: no `radius` prop.
 
 ```tsx
-import { Stack } from '@korzun/design/component';
+import { Space } from '@korzun/design/component';
 import { Button, Modal } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -369,7 +369,7 @@ export default function DialogFooter() {
     setTimeout(close, 1000);
   };
   return (
-    <Stack align="start">
+    <Space direction="vertical" align="start">
       <Button danger onClick={() => setOpen(true)}>
         Delete book
       </Button>
@@ -391,7 +391,7 @@ export default function DialogFooter() {
       >
         It is removed from every device. This cannot be undone.
       </Modal>
-    </Stack>
+    </Space>
   );
 }
 ```

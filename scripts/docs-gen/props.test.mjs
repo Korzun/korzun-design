@@ -194,8 +194,7 @@ test(
   () => {
     const [t] = extractTypeTables(realDts, ['ButtonProps']);
     const names = t.rows.map((r) => r.name);
-    for (const n of ['type', 'radius', 'danger', 'children'])
-      assert.ok(names.includes(n), n);
+    for (const n of ['type', 'radius', 'danger', 'children']) assert.ok(names.includes(n), n);
     assert.equal(names[0], 'children');
     const lower = names.slice(1).map((n) => n.toLowerCase());
     assert.deepEqual(lower, [...lower].sort());
@@ -222,11 +221,11 @@ type Gap = 'sm' | 'lg';`,
 test('external extends are skipped, own rows kept, names recorded', () => {
   const t = table(
     `import type { HTMLAttributes } from 'react';
-export interface StackProps extends Omit<HTMLAttributes<HTMLElement>, 'style'> {
+export interface SpaceProps extends Omit<HTMLAttributes<HTMLElement>, 'style'> {
   /** Space between children. */
   gap?: 'sm';
 }`,
-    'StackProps'
+    'SpaceProps'
   );
   assert.equal(t.kind, 'props');
   assert.deepEqual(
@@ -265,10 +264,10 @@ test('export * barrels are searched when resolving a name', () => {
 });
 
 test(
-  'real StackProps has gap and records HTMLAttributes',
-  { skip: !existsSync('dist/component/stack/index.d.ts') && 'dist missing; run npm run build' },
+  'real SpaceProps has gap and records HTMLAttributes',
+  { skip: !existsSync('dist/component/space/index.d.ts') && 'dist missing; run npm run build' },
   () => {
-    const [t] = extractTypeTables('dist/component/stack/index.d.ts', ['StackProps']);
+    const [t] = extractTypeTables('dist/component/space/index.d.ts', ['SpaceProps']);
     assert.equal(t.kind, 'props');
     assert.ok(row(t, 'gap'));
     assert.ok(t.extends.includes('HTMLAttributes'));

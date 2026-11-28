@@ -4,7 +4,7 @@
  * puts a spinner on Confirm, disables both buttons and ignores Escape and the
  * backdrop. `onConfirm` closes the modal itself once the work is done.
  */
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button, ConfirmModal } from '@korzun/design/control';
 import { AlertOctagonIcon } from '@korzun/design/icon';
 import { useState } from 'react';
@@ -22,7 +22,7 @@ export default function Danger() {
     }, 1000);
   };
   return (
-    <Stack align="start">
+    <Space direction="vertical" align="start">
       <Button danger onClick={() => setIsOpen(true)}>
         Delete
       </Button>
@@ -39,6 +39,6 @@ export default function Danger() {
       >
         This can’t be undone.
       </ConfirmModal>
-    </Stack>
+    </Space>
   );
 }

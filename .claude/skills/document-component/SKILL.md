@@ -6,7 +6,7 @@ description: Use when documenting or migrating a korzun-design module's doc (doc
 # Document a component
 
 The output is a module doc shaped like the pilots (`docs/control/button.md`,
-`docs/component/alert.md`, `docs/component/stack.md`): hand-written guidance,
+`docs/component/alert.md`, `docs/component/space.md`): hand-written guidance,
 JSDoc that carries every note the old tables had, runnable examples that cover
 every variant and state, and generated regions filled by `npm run docs:gen`.
 It documents the module's current API: component types and runtime code stay
@@ -38,7 +38,7 @@ The generator lives on `main`. Run `ls scripts/docs-gen/cli.mjs`.
    Read each hit and the sub-bullets indented under it (`sed -n '<line>,+12p' CHANGELOG.md`). They say what changed since the old prose was written.
 4. The doc of every module it builds on: each `../<other>/` import in its source has a doc at `docs/<area>/<other>.md` (Select and Menu build on Popover: read `docs/control/popover.md`).
 5. `AGENTS.md` (the styling rules examples must follow).
-6. One pilot doc and its `examples/` as the shape reference: Button for a control, Alert or Stack for a component.
+6. One pilot doc and its `examples/` as the shape reference: Button for a control, Alert or Space for a component.
 
 ## 2. JSDoc audit (REQUIRED, every prop)
 
@@ -131,22 +131,22 @@ Each example is `src/<area>/<module>/examples/NN-slug.tsx`:
  * One `primary` action for the main step and a `default` button beside it.
  * `onClick` takes no arguments: the button passes no event.
  */
-import { Inline, Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { useState } from 'react';
 
 export default function Basic() {
   const [saves, setSaves] = useState(0);
   return (
-    <Stack align="start">
-      <Inline>
+    <Space direction="vertical" align="start">
+      <Space>
         <Button onClick={() => setSaves(0)}>Reset</Button>
         <Button type="primary" onClick={() => setSaves((n) => n + 1)}>
           Save
         </Button>
-      </Inline>
+      </Space>
       <Text tone="muted">Saves: {saves}</Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -167,16 +167,16 @@ The component page lays examples out in two columns, as Ant does: each run fills
 A phone-width frame is still a browser tab: `env(safe-area-inset-*)` is 0 there, so chrome sized by the installed app's insets (TopFade's band, NavMobile's home-indicator padding) shows at its browser-tab size. That is expected; do not add props or descriptions to fake the inset. Check the page at phone width too: `shoot-page.mjs … --width 390`.
 
 - Imports: entry points only (`@korzun/design/<entry>`), all `@korzun/design/*` first then `react`, one block.
-- Default export, no props. Layout with `Stack`/`Inline`, text with `Text`/`Heading`, no inline styles or literals.
+- Default export, no props. Layout with `Space`, text with `Text`/`Heading`, no inline styles or literals.
 - Text is typed Unicode (`Loading…`, `2–5`), never HTML entities and never ASCII stand-ins; strings match the component's own (`Loading…`, not `Loading...`).
-- Every interactive control is wired to state, so using it visibly changes the demo, including a `Button` that is only there to show layout (Stack 03 counts its "Add a book" clicks): a controlled value with its setter, plus a `Text` readout where the control does not display its own value ("Chosen: Edit"). No handler that does nothing (`() => {}`, `() => undefined`, `() => null`, `noop`, a function with an empty body). Quick check, which must print nothing: `grep -rnE '\(\) => (\{\s*\}|undefined|null)|noop' --exclude=preview.tsx src/<area>/<module>/examples/`; it does not catch every do-nothing handler, so also read each handler. One exception: a callback the type requires but the component never calls (a `PageFooterActions` `FooterAction` with `submit: true` takes `onClick` and submits the form instead) gets `() => {}`, and that one grep hit is expected; say so in your report. Do not invent wiring for it (a ref that calls `requestSubmit()`). A shared `items` constant becomes a function of the setter, or moves inside the component.
+- Every interactive control is wired to state, so using it visibly changes the demo, including a `Button` that is only there to show layout (Space 04 toggles "See all"): a controlled value with its setter, plus a `Text` readout where the control does not display its own value ("Chosen: Edit"). No handler that does nothing (`() => {}`, `() => undefined`, `() => null`, `noop`, a function with an empty body). Quick check, which must print nothing: `grep -rnE '\(\) => (\{\s*\}|undefined|null)|noop' --exclude=preview.tsx src/<area>/<module>/examples/`; it does not catch every do-nothing handler, so also read each handler. One exception: a callback the type requires but the component never calls (a `PageFooterActions` `FooterAction` with `submit: true` takes `onClick` and submits the form instead) gets `() => {}`, and that one grep hit is expected; say so in your report. Do not invent wiring for it (a ref that calls `requestSubmit()`). A shared `items` constant becomes a function of the setter, or moves inside the component.
 - Titles and descriptions name no defaults: no "(the default)", no "`solid` by default".
 - Each description sentence is shown by the demo. "Set `ariaLabel` when the trigger is an icon" means the demo's trigger is an icon `Button` with `ariaLabel`.
 - Examples follow the Usage and Do / don't of this doc and of every component they use (read `docs/component/surface.md` before using `Surface`). An example never demonstrates a use those docs advise against (a `Surface` with no drawn box around it).
 - `01` is the canonical compact usage, the first demo on the component page. The overview thumbnail is the preview below, not `01`.
-- A lone trigger (a `Button` that opens a `Modal`, a fragment root `<>`) goes in an `Inline` or a `Stack align="start"`: at the root of the frame it stretches to the full width.
-- A readout ("Chosen: …", "Saved: …") goes under the trigger or row of buttons, never beside or above it (except over a `side="top"` trigger, below): `<Stack align="start">`, the controls (several in an `Inline`), then `<Text tone="muted">`.
-- Groups that show one value each (layouts, surfaces, radii) get a caption naming it: `<Stack gap="xl">` of groups, each a `<Stack gap="xs">` with `<Text size="sm" tone="muted">` (`layout="horizontal"`) above its demo. Labels in a `horizontal` form stay short (under about 6rem, "Index", "Width") so the fields line up.
+- A lone trigger (a `Button` that opens a `Modal`, a fragment root `<>`) goes in a `Space` or a `<Space direction="vertical" align="start">`: at the root of the frame it stretches to the full width.
+- A readout ("Chosen: …", "Saved: …") goes under the trigger or row of buttons, never beside or above it (except over a `side="top"` trigger, below): `<Space direction="vertical" align="start">`, the controls (several in a `Space`), then `<Text tone="muted">`.
+- Groups that show one value each (layouts, surfaces, radii) get a caption naming it: `<Space direction="vertical" gap="xl">` of groups, each a `<Space direction="vertical" gap="xs">` with `<Text size="sm" tone="muted">` (`layout="horizontal"`) above its demo. Labels in a `horizontal` form stay short (under about 6rem, "Index", "Width") so the fields line up.
 - The first example of an overlay module (Modal, ConfirmModal, useModal, Popover, Menu, Select) starts open: `useState(true)` for a controlled `open`, or a trigger that opens once on mount (Menu 01, Select 01). The frame hands back the focus the overlay takes while it loads, so the docs page keeps its keyboard.
 - An example with an overlay places its trigger so the overlay opens on the side the example is about (a `side="top"` trigger sits below other content, its readout included, or the overlay flips down before the frame can make room). The frame adds room above for a `side="top"` overlay, and room below for a list that flipped upward for lack of room, so it opens downward as it would on a page.
 - A description talks about the component, never the demo frame (no "to stay inside the demo"). No prop (`side`, a large `gap`) is set only to fit the frame. When the frame clips an overlay and the example is as it should be, report a gallery defect.
@@ -188,15 +188,15 @@ Every module also has `examples/preview.tsx`, its overview thumbnail. It is rend
 
 ```tsx
 /** Preview */
-import { Inline } from '@korzun/design/component';
+import { Space } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 
 export default function Preview() {
   return (
-    <Inline>
+    <Space>
       <Button type="primary">Save</Button>
       <Button>Cancel</Button>
-    </Inline>
+    </Space>
   );
 }
 ```

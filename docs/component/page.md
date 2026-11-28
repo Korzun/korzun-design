@@ -69,7 +69,7 @@ header row stays reserved above the first card even with no actions, so every
 page starts its content at the same height.
 
 ```tsx
-import { Card, Page, Stack, Text } from '@korzun/design/component';
+import { Card, Page, Space, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -83,12 +83,12 @@ export default function Basic() {
       <Card title="Change password">
         <Text>Choose a new password for your account.</Text>
       </Card>
-      <Stack align="start">
+      <Space direction="vertical" align="start">
         <Button danger onClick={() => setLoggedOut(true)}>
           Log out
         </Button>
         {loggedOut && <Text tone="muted">Logged out</Text>}
-      </Stack>
+      </Space>
     </Page>
   );
 }
@@ -130,7 +130,7 @@ leading the actions bar in the same row. `actionsLabel` renames the overflow
 trigger when every action lives in the menu.
 
 ```tsx
-import { Card, Page, Stack, Text } from '@korzun/design/component';
+import { Card, Page, Space, Text } from '@korzun/design/component';
 import { TextInput } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -147,10 +147,10 @@ export default function HeaderSlot() {
       ]}
     >
       <Card title="Library">
-        <Stack>
+        <Space direction="vertical">
           <Text>Searching for: {query || 'nothing'}</Text>
           <Text tone="muted">Last action: {last}</Text>
-        </Stack>
+        </Space>
       </Card>
     </Page>
   );
@@ -192,7 +192,7 @@ one "More actions" menu beside it, in a sticky row at the top. The `header`
 content, a search field here, leads the page content.
 
 ```tsx
-import { Card, Page, Stack, Text } from '@korzun/design/component';
+import { Card, Page, Space, Text } from '@korzun/design/component';
 import { TextInput } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -209,10 +209,10 @@ export default function BackAndActionsOnMobile() {
       ]}
     >
       <Card title="Dune">
-        <Stack>
+        <Space direction="vertical">
           <Text>Searching for: {query || 'nothing'}</Text>
           <Text tone="muted">Last action: {last}</Text>
-        </Stack>
+        </Space>
       </Card>
     </Page>
   );
@@ -264,7 +264,7 @@ export default function BottomNav() {
 for a sign-in or splash screen. You lay it out yourself.
 
 ```tsx
-import { Inline, Page, Stack, Text } from '@korzun/design/component';
+import { Space, Page, Text } from '@korzun/design/component';
 import { Button, TextInput } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -273,15 +273,15 @@ export default function Minimal() {
   const [signedIn, setSignedIn] = useState(false);
   return (
     <Page type="minimal">
-      <Stack>
+      <Space direction="vertical">
         <TextInput name="username" label="Username" value={name} onChange={setName} />
-        <Inline>
+        <Space>
           <Button type="primary" onClick={() => setSignedIn(true)}>
             Sign in
           </Button>
-        </Inline>
+        </Space>
         {signedIn && <Text tone="muted">Signed in as {name || 'nobody'}</Text>}
-      </Stack>
+      </Space>
     </Page>
   );
 }
@@ -294,7 +294,7 @@ whenever it changes. It is not restored on unmount, so omit it when the app
 manages titles itself.
 
 ```tsx
-import { Card, Page, Stack, Text } from '@korzun/design/component';
+import { Card, Page, Space, Text } from '@korzun/design/component';
 import { TextInput } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -303,10 +303,10 @@ export default function DocumentTitle() {
   return (
     <Page documentTitle={title}>
       <Card title="Tab title">
-        <Stack>
+        <Space direction="vertical">
           <TextInput name="title" label="Title" value={title} onChange={setTitle} />
           <Text tone="muted">Tab title: {title}</Text>
-        </Stack>
+        </Space>
       </Card>
     </Page>
   );

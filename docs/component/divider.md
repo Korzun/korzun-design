@@ -40,7 +40,7 @@ No `className`.
 
 ## Do / don't
 
-- Do put it straight in a Card body, or in a `Stack` there, not in a padded
+- Do put it straight in a Card body, or in a `Space` there, not in a padded
   `div`.
 - Do use `type="link"` Buttons or small `Tag`s as `actions`; the line is one
   text line tall.
@@ -56,7 +56,7 @@ A plain rule between a form's fields and its submit button. Directly in a Card b
 the body's padding, so the line meets the Card's borders.
 
 ```tsx
-import { Card, Divider, Inline, Stack, Text } from '@korzun/design/component';
+import { Card, Divider, Space, Text } from '@korzun/design/component';
 import { Button, TextInput } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -72,16 +72,16 @@ export default function Basic() {
           setRequested(title);
         }}
       >
-        <Stack>
+        <Space direction="vertical">
           <TextInput name="title" label="Title" value={title} onChange={setTitle} />
           <Divider />
-          <Inline>
+          <Space>
             <Button type="primary" submit>
               Request
             </Button>
-          </Inline>
+          </Space>
           <Text tone="muted">Requested: {requested ?? 'nothing yet'}</Text>
-        </Stack>
+        </Space>
       </form>
     </Card>
   );
@@ -94,12 +94,12 @@ A label names the section below the line. `align` places it: `left` and `right` 
 with a short stub of line past it, `center` leaves equal line on both sides.
 
 ```tsx
-import { Card, Divider, Stack, Text } from '@korzun/design/component';
+import { Card, Divider, Space, Text } from '@korzun/design/component';
 
 export default function Labelled() {
   return (
     <Card title="Notifications">
-      <Stack>
+      <Space direction="vertical">
         <Text>Email me when a book is ready.</Text>
         <Divider>Devices (left)</Divider>
         <Text>Kitchen frame, Hallway frame</Text>
@@ -107,7 +107,7 @@ export default function Labelled() {
         <Text>Check files for errors on upload.</Text>
         <Divider align="right">History (right)</Divider>
         <Text>Keep notifications for 30 days.</Text>
-      </Stack>
+      </Space>
     </Card>
   );
 }
@@ -120,7 +120,7 @@ export default function Labelled() {
 and the actions share one group, label first. Each divider is captioned with its props.
 
 ```tsx
-import { Card, Divider, Stack, Text } from '@korzun/design/component';
+import { Card, Divider, Space, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -129,8 +129,8 @@ export default function Actions() {
   const [last, setLast] = useState('nothing yet');
   return (
     <Card title="Requests">
-      <Stack gap="xl">
-        <Stack gap="xs">
+      <Space direction="vertical" gap="xl">
+        <Space direction="vertical" gap="xs">
           <Text size="sm" tone="muted">
             Unset: label left, actions right
           </Text>
@@ -144,8 +144,8 @@ export default function Actions() {
             Pending
           </Divider>
           <Text>{pending.length > 0 ? pending.join(', ') : 'Nothing pending'}</Text>
-        </Stack>
-        <Stack gap="xs">
+        </Space>
+        <Space direction="vertical" gap="xs">
           <Text size="sm" tone="muted">
             {'align="center" actionsAlign="left"'}
           </Text>
@@ -160,8 +160,8 @@ export default function Actions() {
           >
             Finished
           </Divider>
-        </Stack>
-        <Stack gap="xs">
+        </Space>
+        <Space direction="vertical" gap="xs">
           <Text size="sm" tone="muted">
             {'align="right" actionsAlign="right": one group, label first'}
           </Text>
@@ -176,9 +176,9 @@ export default function Actions() {
           >
             Shared
           </Divider>
-        </Stack>
+        </Space>
         <Text tone="muted">Last action: {last}</Text>
-      </Stack>
+      </Space>
     </Card>
   );
 }
@@ -191,20 +191,20 @@ Anywhere but directly in a Card or Modal body (on the page, in a CardRow, a hand
 borders; `bleed={false}` keeps it inside the padding there.
 
 ```tsx
-import { Card, CardRow, Divider, Stack, Text } from '@korzun/design/component';
+import { Card, CardRow, Divider, Space, Text } from '@korzun/design/component';
 
 export default function Anywhere() {
   return (
-    <Stack gap="xl">
-      <Stack gap="xs">
+    <Space direction="vertical" gap="xl">
+      <Space direction="vertical" gap="xs">
         <Text size="sm" tone="muted">
           On the page: spans the column
         </Text>
         <Divider>Devices</Divider>
         <Text>Kitchen frame, Hallway frame</Text>
-      </Stack>
+      </Space>
       <Card title="Notifications">
-        <Stack>
+        <Space direction="vertical">
           <Text size="sm" tone="muted">
             In the Card body: meets the borders
           </Text>
@@ -214,17 +214,17 @@ export default function Anywhere() {
           </Text>
           <Divider bleed={false} />
           <CardRow>
-            <Stack gap="xs">
+            <Space direction="vertical" gap="xs">
               <Text size="sm" tone="muted">
                 In a CardRow: spans the row
               </Text>
               <Divider />
               <Text>Keep notifications for 30 days.</Text>
-            </Stack>
+            </Space>
           </CardRow>
-        </Stack>
+        </Space>
       </Card>
-    </Stack>
+    </Space>
   );
 }
 ```

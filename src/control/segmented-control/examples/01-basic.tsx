@@ -3,7 +3,7 @@
  * are typed to the option values. The `label` names the group for assistive tech
  * and is not drawn, so put a visible label beside the control yourself.
  */
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { SegmentedControl } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -16,10 +16,10 @@ const SORTS = [
 export default function Basic() {
   const [sort, setSort] = useState<(typeof SORTS)[number]['value']>('title');
   return (
-    <Stack align="start">
+    <Space direction="vertical" align="start">
       <Text tone="muted">Sort by</Text>
       <SegmentedControl label="Sort by" options={SORTS} value={sort} onChange={setSort} />
       <Text tone="muted">Sorted by: {sort}</Text>
-    </Stack>
+    </Space>
   );
 }

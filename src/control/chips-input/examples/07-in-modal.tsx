@@ -2,7 +2,7 @@
  * The suggestion list opens inside an open `Modal` that contains the field,
  * so it works in a modal.
  */
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button, ChipsInput, Modal } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -12,7 +12,7 @@ export default function InDialog() {
   const [open, setOpen] = useState(false);
   const [subjects, setSubjects] = useState<string[]>([]);
   return (
-    <Stack align="start">
+    <Space direction="vertical" align="start">
       <Button onClick={() => setOpen(true)}>Edit subjects</Button>
       <Text tone="muted">Subjects: {subjects.join(', ') || 'none'}</Text>
       <Modal
@@ -32,6 +32,6 @@ export default function InDialog() {
           placeholder="Add subject…"
         />
       </Modal>
-    </Stack>
+    </Space>
   );
 }

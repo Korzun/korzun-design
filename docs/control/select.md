@@ -74,7 +74,7 @@ Select has no `open` prop, so this demo clicks the trigger once on mount to
 start open.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Select } from '@korzun/design/control';
 import { useEffect, useRef, useState } from 'react';
 
@@ -91,12 +91,12 @@ export default function Basic() {
     box.current?.querySelector<HTMLElement>('[role="button"]')?.click();
   }, []);
   return (
-    <Stack>
+    <Space direction="vertical">
       <div ref={box}>
         <Select name="fruit" label="Fruit" value={fruit} options={FRUITS} onChange={setFruit} />
       </div>
       <Text tone="muted">Chosen: {fruit ?? 'nothing'}</Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -108,7 +108,7 @@ passes `surface`: `'page'` directly on a `Page` (16px, with a shadow),
 `'card'` in a `Card` (8px, flat), `'inset'` in a `Card` inside a `Card` (4px, flat).
 
 ```tsx
-import { Card, Page, Stack, Text } from '@korzun/design/component';
+import { Card, Page, Space, Text } from '@korzun/design/component';
 import { Select } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -120,32 +120,32 @@ export default function Surfaces() {
   const [nested, setNested] = useState<string | undefined>('Cherry');
   return (
     <Page type="minimal">
-      <Stack gap="xl">
-        <Stack gap="xs">
+      <Space direction="vertical" gap="xl">
+        <Space direction="vertical" gap="xs">
           <Text size="sm" tone="muted">
             On a Page: 'page'
           </Text>
           <Select name="on-page" value={onPage} options={FRUITS} onChange={setOnPage} />
-        </Stack>
+        </Space>
         <Card title="In a Card">
-          <Stack gap="xl">
-            <Stack gap="xs">
+          <Space direction="vertical" gap="xl">
+            <Space direction="vertical" gap="xs">
               <Text size="sm" tone="muted">
                 In a Card: 'card'
               </Text>
               <Select name="in-card" value={inCard} options={FRUITS} onChange={setInCard} />
-            </Stack>
+            </Space>
             <Card title="In a Card in a Card">
-              <Stack gap="xs">
+              <Space direction="vertical" gap="xs">
                 <Text size="sm" tone="muted">
                   In a Card in a Card: 'inset'
                 </Text>
                 <Select name="nested" value={nested} options={FRUITS} onChange={setNested} />
-              </Stack>
+              </Space>
             </Card>
-          </Stack>
+          </Space>
         </Card>
-      </Stack>
+      </Space>
     </Page>
   );
 }
@@ -158,7 +158,7 @@ stacks the label above the trigger in that row, and `inline` is just the
 trigger with the label beside it.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Select } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -169,8 +169,8 @@ export default function Layouts() {
   const [vertical, setVertical] = useState<string | undefined>('Medium');
   const [inline, setInline] = useState<string | undefined>('Large');
   return (
-    <Stack gap="xl">
-      <Stack gap="xs">
+    <Space direction="vertical" gap="xl">
+      <Space direction="vertical" gap="xs">
         <Text size="sm" tone="muted">
           layout="horizontal"
         </Text>
@@ -182,8 +182,8 @@ export default function Layouts() {
           options={SIZES}
           onChange={setHorizontal}
         />
-      </Stack>
-      <Stack gap="xs">
+      </Space>
+      <Space direction="vertical" gap="xs">
         <Text size="sm" tone="muted">
           layout="vertical"
         </Text>
@@ -195,8 +195,8 @@ export default function Layouts() {
           options={SIZES}
           onChange={setVertical}
         />
-      </Stack>
-      <Stack gap="xs">
+      </Space>
+      <Space direction="vertical" gap="xs">
         <Text size="sm" tone="muted">
           layout="inline"
         </Text>
@@ -208,8 +208,8 @@ export default function Layouts() {
           options={SIZES}
           onChange={setInline}
         />
-      </Stack>
-    </Stack>
+      </Space>
+    </Space>
   );
 }
 ```
@@ -221,7 +221,7 @@ exactly. Choosing it passes the trimmed text to `onChange`, and the typed value
 then shows as the raw string because it is not in `options`.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Select } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -230,7 +230,7 @@ const SERIES = ['Discworld', 'The Expanse', 'Earthsea'];
 export default function AllowCreate() {
   const [series, setSeries] = useState<string | undefined>();
   return (
-    <Stack>
+    <Space direction="vertical">
       <Select
         name="series"
         label="Series"
@@ -242,7 +242,7 @@ export default function AllowCreate() {
         onChange={setSeries}
       />
       <Text tone="muted">Chosen: {series ?? 'nothing'}</Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -253,14 +253,14 @@ export default function AllowCreate() {
 be plain strings or `{ label, value, description }` objects, mixed in one list.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Select } from '@korzun/design/control';
 import { useState } from 'react';
 
 export default function PlainList() {
   const [fit, setFit] = useState<string | undefined>('contain');
   return (
-    <Stack>
+    <Space direction="vertical">
       <Select
         name="fit"
         label="Cover fit"
@@ -274,7 +274,7 @@ export default function PlainList() {
         onChange={setFit}
       />
       <Text tone="muted">Value: {fit ?? 'nothing'}</Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -286,7 +286,7 @@ A set value shows a ✕ that sends `undefined` to `onChange`. Pass
 Shelf can be cleared; Home shelf cannot.
 
 ```tsx
-import { Stack } from '@korzun/design/component';
+import { Space } from '@korzun/design/component';
 import { Select } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -296,7 +296,7 @@ export default function Clearable() {
   const [optional, setOptional] = useState<string | undefined>('Reading');
   const [required, setRequired] = useState<string | undefined>('To read');
   return (
-    <Stack>
+    <Space direction="vertical">
       <Select
         name="optional"
         label="Shelf"
@@ -312,7 +312,7 @@ export default function Clearable() {
         clearable={false}
         onChange={setRequired}
       />
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -324,7 +324,7 @@ can't open; turn it on while the options are on their way. `disabled` fades it,
 hides the ✕ and blocks opening.
 
 ```tsx
-import { Stack } from '@korzun/design/component';
+import { Space } from '@korzun/design/component';
 import { Select, Switch } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -334,7 +334,7 @@ export default function LoadingAndDisabled() {
   const [loading, setLoading] = useState(true);
   const [author, setAuthor] = useState<string | undefined>('Terry Pratchett');
   return (
-    <Stack>
+    <Space direction="vertical">
       <Switch name="loading" label="Loading" checked={loading} onChange={setLoading} />
       <Select
         name="author"
@@ -345,7 +345,7 @@ export default function LoadingAndDisabled() {
         onChange={setAuthor}
       />
       <Select name="locked" label="Disabled" value="N. K. Jemisin" options={AUTHORS} disabled />
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -358,7 +358,7 @@ A `Select` with no label sits directly on the `Page` and labelled ones in the
 state, so submit `value`: native form data never carries it.
 
 ```tsx
-import { Card, Page, Stack, Text } from '@korzun/design/component';
+import { Card, Page, Space, Text } from '@korzun/design/component';
 import { Button, Select } from '@korzun/design/control';
 import { useEffect, useState } from 'react';
 
@@ -380,7 +380,7 @@ export default function FormInCard() {
   }, []);
   return (
     <Page type="minimal">
-      <Stack>
+      <Space direction="vertical">
         <Select
           name="library"
           placeholder="Select library…"
@@ -399,7 +399,7 @@ export default function FormInCard() {
             </Button>
           }
         >
-          <Stack>
+          <Space direction="vertical">
             <Select
               name="coverFit"
               label="Fit"
@@ -422,9 +422,9 @@ export default function FormInCard() {
               onChange={setSeries}
             />
             {saved !== null && <Text tone="success">Saved: {saved}</Text>}
-          </Stack>
+          </Space>
         </Card>
-      </Stack>
+      </Space>
     </Page>
   );
 }
@@ -436,7 +436,7 @@ The list opens inside the open dialog, so a `Select` works in a modal. Escape
 closes the list first and a second Escape closes the dialog.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button, Modal, Select } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -446,7 +446,7 @@ export default function InDialog() {
   const [open, setOpen] = useState(false);
   const [shelf, setShelf] = useState<string | undefined>('To read');
   return (
-    <Stack align="start">
+    <Space direction="vertical" align="start">
       <Button onClick={() => setOpen(true)}>Move book</Button>
       <Text tone="muted">Shelf: {shelf ?? 'none'}</Text>
       <Modal
@@ -461,7 +461,7 @@ export default function InDialog() {
       >
         <Select name="shelf" label="Shelf" value={shelf} options={SHELVES} onChange={setShelf} />
       </Modal>
-    </Stack>
+    </Space>
   );
 }
 ```

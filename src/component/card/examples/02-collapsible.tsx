@@ -3,14 +3,14 @@
  * one is closed; pass `defaultCollapsed={false}` to start open, as the second one does. The
  * footer's destructive action is only reachable while the card is open.
  */
-import { Card, Stack, Text } from '@korzun/design/component';
+import { Card, Space, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { useState } from 'react';
 
 export default function Collapsible() {
   const [removed, setRemoved] = useState<string | undefined>();
   return (
-    <Stack>
+    <Space direction="vertical">
       <Card isCollapsible title="ada" subTitle="Starts collapsed">
         <Text>ada@example.com</Text>
       </Card>
@@ -28,6 +28,6 @@ export default function Collapsible() {
         <Text>grace@example.com</Text>
       </Card>
       <Text tone="muted">Deleted: {removed ?? 'nobody'}</Text>
-    </Stack>
+    </Space>
   );
 }

@@ -27,7 +27,7 @@ boxed message with a tone and an action (`Alert`).
   error (or `undefined`) as children; an alert region that appears with text
   is announced.
 - `0` is not empty and renders.
-- Space it from the field above with `Stack` `gap`; it has no margin.
+- Space it from the field above with `Space` `gap`; it has no margin.
 - Every other HTML attribute (`id`, `aria-*`, `data-*`, event handlers) passes
   through, and may override `role`.
 
@@ -37,10 +37,10 @@ Give the message an `id` and set `aria-describedby` on a native control to
 that `id`, so assistive tech reads the error with the field:
 
 ```tsx
-<Stack gap="sm">
+<Space direction="vertical" gap="sm">
   <input id="title" aria-describedby="title-error" aria-invalid={!!error} />
   <ErrorMessage id="title-error">{error}</ErrorMessage>
-</Stack>
+</Space>
 ```
 
 `TextInput` takes no `id` or `aria-*` props, so it cannot be linked this way;
@@ -56,7 +56,7 @@ never `!important`.
 - Do keep it mounted and pass `error` as children.
 - Do link it to a native field with `id` and `aria-describedby`.
 - Don't use it for permanent red copy; use `<Text tone="danger">`.
-- Don't add margins to it; use `Stack`.
+- Don't add margins to it; use `Space`.
 
 <!-- generated:examples -->
 
@@ -68,31 +68,31 @@ Keep it mounted and pass the error as `children`: it is announced when text
 appears and renders nothing when `children` is `undefined`.
 
 ```tsx
-import { ErrorMessage, Inline, Stack } from '@korzun/design/component';
+import { ErrorMessage, Space } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { useState } from 'react';
 
 export default function Basic() {
   const [error, setError] = useState<string | undefined>('Could not save the book.');
   return (
-    <Stack gap="sm">
-      <Inline>
+    <Space direction="vertical" gap="sm">
+      <Space>
         <Button onClick={() => setError('Could not save the book.')}>Show error</Button>
         <Button onClick={() => setError(undefined)}>Clear error</Button>
-      </Inline>
+      </Space>
       <ErrorMessage>{error}</ErrorMessage>
-    </Stack>
+    </Space>
   );
 }
 ```
 
 ### Under a field
 
-Space it from the field above with `Stack` `gap`; it has no margin. The
+Space it from the field above with `Space` `gap`; it has no margin. The
 message shows while the title is empty and goes away once one is typed.
 
 ```tsx
-import { Card, ErrorMessage, Stack } from '@korzun/design/component';
+import { Card, ErrorMessage, Space } from '@korzun/design/component';
 import { TextInput } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -100,10 +100,10 @@ export default function UnderAField() {
   const [title, setTitle] = useState<string | undefined>(undefined);
   return (
     <Card title="New book">
-      <Stack gap="sm">
+      <Space direction="vertical" gap="sm">
         <TextInput name="title" label="Title" value={title} onChange={setTitle} />
         <ErrorMessage>{title ? undefined : 'Title is required.'}</ErrorMessage>
-      </Stack>
+      </Space>
     </Card>
   );
 }
@@ -114,30 +114,30 @@ export default function UnderAField() {
 `as` picks the element: `p`, `div` or `span`. Each one keeps `role="alert"`.
 
 ```tsx
-import { ErrorMessage, Stack, Text } from '@korzun/design/component';
+import { ErrorMessage, Space, Text } from '@korzun/design/component';
 
 export default function As() {
   return (
-    <Stack gap="md">
-      <Stack gap="xs">
+    <Space direction="vertical" gap="md">
+      <Space direction="vertical" gap="xs">
         <Text tone="muted" size="sm">
           {'as="p"'}
         </Text>
         <ErrorMessage as="p">Could not save the book.</ErrorMessage>
-      </Stack>
-      <Stack gap="xs">
+      </Space>
+      <Space direction="vertical" gap="xs">
         <Text tone="muted" size="sm">
           {'as="div"'}
         </Text>
         <ErrorMessage as="div">Could not save the book.</ErrorMessage>
-      </Stack>
-      <Stack gap="xs">
+      </Space>
+      <Space direction="vertical" gap="xs">
         <Text tone="muted" size="sm">
           {'as="span"'}
         </Text>
         <ErrorMessage as="span">Could not save the book.</ErrorMessage>
-      </Stack>
-    </Stack>
+      </Space>
+    </Space>
   );
 }
 ```
@@ -148,42 +148,42 @@ export default function As() {
 `0` is not empty and renders.
 
 ```tsx
-import { ErrorMessage, Inline, Stack, Text } from '@korzun/design/component';
+import { ErrorMessage, Space, Text } from '@korzun/design/component';
 
 export default function EmptyChildren() {
   return (
-    <Stack gap="sm">
-      <Inline>
+    <Space direction="vertical" gap="sm">
+      <Space>
         <Text tone="muted" size="sm">
           undefined:
         </Text>
         <ErrorMessage>{undefined}</ErrorMessage>
-      </Inline>
-      <Inline>
+      </Space>
+      <Space>
         <Text tone="muted" size="sm">
           null:
         </Text>
         <ErrorMessage>{null}</ErrorMessage>
-      </Inline>
-      <Inline>
+      </Space>
+      <Space>
         <Text tone="muted" size="sm">
           false:
         </Text>
         <ErrorMessage>{false}</ErrorMessage>
-      </Inline>
-      <Inline>
+      </Space>
+      <Space>
         <Text tone="muted" size="sm">
           empty string:
         </Text>
         <ErrorMessage>{''}</ErrorMessage>
-      </Inline>
-      <Inline>
+      </Space>
+      <Space>
         <Text tone="muted" size="sm">
           0:
         </Text>
         <ErrorMessage>{0}</ErrorMessage>
-      </Inline>
-    </Stack>
+      </Space>
+    </Space>
   );
 }
 ```

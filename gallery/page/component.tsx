@@ -1,4 +1,4 @@
-import { CodeBlock, Heading, Inline, Page, Stack, Text } from '@korzun/design/component';
+import { CodeBlock, Heading, Space, Page, Text } from '@korzun/design/component';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { Fragment, type ReactNode } from 'react';
 import { Link, useParams } from 'react-router';
@@ -161,12 +161,12 @@ const Example = ({ mod, at, ids }: { mod: ModuleInfo; at: Placed; ids: Map<strin
 );
 
 const Section = ({ title, id, children }: { title: string; id: string; children: ReactNode }) => (
-  <Stack as="section" gap="xl" aria-label={title}>
+  <Space direction="vertical" as="section" gap="xl" aria-label={title}>
     <Heading level={2} id={id}>
       {title}
     </Heading>
     {children}
-  </Stack>
+  </Space>
 );
 
 /** `#/components/<slug>`: everything about one module, from the generated site data. */
@@ -198,13 +198,13 @@ export const ComponentPage = () => {
   return (
     <div className={styles.column}>
       <Page type="minimal" documentTitle={`${mod.title} · @korzun/design`}>
-        <Stack gap="xxxxxl">
-          <Stack gap="xl">
-            <Stack gap="sm">
+        <Space direction="vertical" gap="xxxxxl">
+          <Space direction="vertical" gap="xl">
+            <Space direction="vertical" gap="sm">
               <Heading level={1}>{mod.title}</Heading>
               <Lead>{mod.description}</Lead>
               <Family mod={mod} />
-            </Stack>
+            </Space>
             <CodeBlock
               code={mod.importLine}
               copyable
@@ -222,7 +222,7 @@ export const ComponentPage = () => {
               </a>
               {` (${mod.docPath}, also in the package under node_modules/@korzun/design/).`}
             </Text>
-          </Stack>
+          </Space>
 
           {usage && <Markdown source={usage} from={mod.docPath} />}
 
@@ -272,7 +272,7 @@ export const ComponentPage = () => {
 
           {mod.tables.length > 0 && (
             <Section title="Props" id={ids.props}>
-              <Stack gap="xxxl">
+              <Space direction="vertical" gap="xxxl">
                 {mod.tables.map((table) => (
                   <PropsTable
                     key={table.name}
@@ -282,7 +282,7 @@ export const ComponentPage = () => {
                     from={mod.docPath}
                   />
                 ))}
-              </Stack>
+              </Space>
             </Section>
           )}
 
@@ -294,15 +294,15 @@ export const ComponentPage = () => {
 
           {mod.changelog.length > 0 && (
             <Section title="Changelog" id={ids.changelog}>
-              <Stack gap="xxxl">
+              <Space direction="vertical" gap="xxxl">
                 {byVersion(mod.changelog).map((group) => (
-                  <Stack gap="md" key={group.version}>
-                    <Inline gap="md" align="baseline">
+                  <Space direction="vertical" gap="md" key={group.version}>
+                    <Space gap="md" align="baseline">
                       <Heading level={3}>{group.version}</Heading>
                       <Text size="sm" tone="muted">
                         {group.date}
                       </Text>
-                    </Inline>
+                    </Space>
                     <ul className={styles.changes}>
                       {group.entries.map((entry, i) => (
                         <li key={i} className={styles.change}>
@@ -310,12 +310,12 @@ export const ComponentPage = () => {
                         </li>
                       ))}
                     </ul>
-                  </Stack>
+                  </Space>
                 ))}
-              </Stack>
+              </Space>
             </Section>
           )}
-        </Stack>
+        </Space>
       </Page>
     </div>
   );

@@ -3,7 +3,7 @@
  * its minimum height is 7rem. Without it the height stays at 10rem and long text
  * scrolls. Both start with the same text: add lines to each.
  */
-import { Stack } from '@korzun/design/component';
+import { Space } from '@korzun/design/component';
 import { TextArea } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -13,7 +13,7 @@ export default function AutoResize() {
   const [grows, setGrows] = useState<string | undefined>(SAMPLE);
   const [fixed, setFixed] = useState<string | undefined>(SAMPLE);
   return (
-    <Stack>
+    <Space direction="vertical">
       <TextArea
         name="grows"
         layout="vertical"
@@ -29,6 +29,6 @@ export default function AutoResize() {
         value={fixed}
         onChange={setFixed}
       />
-    </Stack>
+    </Space>
   );
 }

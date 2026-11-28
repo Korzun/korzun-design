@@ -3,15 +3,15 @@
  * takes it out of the tab order. Every type has a disabled look, `danger`
  * included. The switch enables Save.
  */
-import { Inline, Stack } from '@korzun/design/component';
+import { Space } from '@korzun/design/component';
 import { Button, Switch } from '@korzun/design/control';
 import { useState } from 'react';
 
 export default function Disabled() {
   const [changed, setChanged] = useState(false);
   return (
-    <Stack align="start">
-      <Inline wrap>
+    <Space direction="vertical" align="start">
+      <Space wrap>
         <Button type="primary" disabled>
           Primary
         </Button>
@@ -25,21 +25,21 @@ export default function Disabled() {
         <Button type="link" disabled>
           Link
         </Button>
-      </Inline>
-      <Inline wrap>
+      </Space>
+      <Space wrap>
         <Button danger disabled>
           Danger
         </Button>
         <Button type="primary" danger disabled>
           Primary danger
         </Button>
-      </Inline>
-      <Inline wrap>
+      </Space>
+      <Space wrap>
         <Switch name="changed" label="Has changes" checked={changed} onChange={setChanged} />
         <Button type="primary" disabled={!changed} onClick={() => setChanged(false)}>
           Save
         </Button>
-      </Inline>
-    </Stack>
+      </Space>
+    </Space>
   );
 }

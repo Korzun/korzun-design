@@ -3,7 +3,7 @@
  * in the card. `onClick` is ignored on a submit button, so handle the form's
  * `action`. Inside a Card the corners step down by themselves: no `radius` prop.
  */
-import { Card, Stack, Text } from '@korzun/design/component';
+import { Card, Space, Text } from '@korzun/design/component';
 import { Button, TextInput } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -20,10 +20,10 @@ export default function SubmitInCard() {
       }
     >
       <form id="profile-form" action={(data) => setSaved(String(data.get('name') ?? ''))}>
-        <Stack>
+        <Space direction="vertical">
           <TextInput name="name" label="Name" value={name} onChange={setName} />
           {saved !== null && <Text tone="success">Saved as {saved}</Text>}
-        </Stack>
+        </Space>
       </form>
     </Card>
   );
