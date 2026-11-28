@@ -1,9 +1,23 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { metaItems, renderWithProviders } from '../../test-utils.js';
+import { lightTheme } from '../../theme/theme.js';
 import { MetaLine } from './index.js';
 
 const renderLine = renderWithProviders;
+
+/** The flex list inside the root: it carries the gaps and the separator variable. */
+const listOf = (container: HTMLElement) =>
+  container.firstElementChild!.firstElementChild as HTMLElement;
+
+const channels = (color: string): number[] => {
+  const hex = color.match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i);
+  if (hex) {
+    const full = hex[1].length === 3 ? [...hex[1]].map((c) => c + c).join('') : hex[1];
+    return [0, 2, 4].map((i) => parseInt(full.slice(i, i + 2), 16));
+  }
+  return (color.match(/[\d.]+/g) ?? []).map(Number).slice(0, 3);
+};
 
 describe('MetaLine', () => {
   it('renders each datum in its own item, in order', () => {
@@ -12,7 +26,9 @@ describe('MetaLine', () => {
   });
 
   it('keeps the separators out of the DOM text', () => {
-    const { container } = renderLine(<MetaLine items={['Frank Herbert', 'Book 3']} />);
+    const { container } = renderLine(
+      <MetaLine items={['Frank Herbert', 'Book 3']} separator="·" />
+    );
     expect(container.textContent).toBe('Frank HerbertBook 3');
     expect(container.textContent).not.toContain('·');
   });
@@ -48,5 +64,78 @@ describe('MetaLine', () => {
   it('passes className through to the outer element', () => {
     const { container } = renderLine(<MetaLine items={['x']} className="muted" />);
     expect(container.firstElementChild).toHaveClass('muted');
+  });
+
+  it('with no separator, items are spaced by gaps and draw no separator', () => {
+    const { container } = renderLine(<MetaLine items={['Slug', 'Cover']} />);
+    const list = listOf(container);
+    expect(getComputedStyle(list).columnGap).toBe(lightTheme.space.lg);
+    expect(getComputedStyle(list).rowGap).toBe(lightTheme.space.sm);
+    expect(list.style.getPropertyValue('--meta-separator')).toBe('');
+  });
+
+  it('separator draws that character between items, outside the DOM text', () => {
+    const { container } = renderLine(<MetaLine items={['a', 'b']} separator="|" />);
+    expect(container.textContent).toBe('ab');
+    expect(listOf(container).style.getPropertyValue('--meta-separator')).toBe('"|"');
+    const css = Array.from(document.querySelectorAll('style'))
+      .map((s) => s.textContent)
+      .join('\n');
+    expect(css).toContain('content: var(--meta-separator)');
+  });
+
+  it.each([
+    ['"', String.raw`"\""`],
+    ['\\', String.raw`"\\"`],
+    ['\n', String.raw`"\a "`],
+  ])('escapes the separator %j for CSS', (separator, literal) => {
+    const { container } = renderLine(<MetaLine items={['a', 'b']} separator={separator} />);
+    expect(listOf(container).style.getPropertyValue('--meta-separator')).toBe(literal);
+  });
+
+  it('renders a pair as a faint, capitalized label followed by its value', () => {
+    const { container, getByText } = renderLine(
+      <MetaLine items={[{ label: 'cover fit', value: 'Contain' }]} />
+    );
+    expect(metaItems(container)).toEqual(['cover fitContain']);
+    const label = getComputedStyle(getByText('cover fit'));
+    expect(channels(label.color)).toEqual(channels(lightTheme.color.text.faint));
+    expect(label.textTransform).toBe('capitalize');
+  });
+
+  it('skips a pair whose value is null, undefined or false, keeps 0 and empty string', () => {
+    const { container } = renderLine(
+      <MetaLine
+        items={[
+          { label: 'a', value: null },
+          { label: 'b', value: undefined },
+          { label: 'c', value: false },
+          { label: 'd', value: 0 },
+          { label: 'e', value: '' },
+        ]}
+      />
+    );
+    expect(metaItems(container)).toEqual(['d0', 'e']);
+  });
+
+  it('mixes plain items and pairs in order', () => {
+    const { container } = renderLine(
+      <MetaLine items={['Frank Herbert', { label: 'format', value: 'EPUB' }, '42%']} />
+    );
+    expect(metaItems(container)).toEqual(['Frank Herbert', 'formatEPUB', '42%']);
+  });
+
+  it('pairs sharing a label or holding elements do not warn about keys', () => {
+    const error = vi.spyOn(console, 'error').mockImplementation(() => {});
+    renderLine(
+      <MetaLine
+        items={[
+          { label: 'tag', value: <b>One</b> },
+          { label: 'tag', value: <b>Two</b> },
+        ]}
+      />
+    );
+    expect(error).not.toHaveBeenCalled();
+    error.mockRestore();
   });
 });

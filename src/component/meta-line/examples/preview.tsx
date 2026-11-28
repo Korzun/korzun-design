@@ -1,10 +1,20 @@
 /** Preview */
-import { MetaLine, Text } from '@korzun/design/component';
+import { MetaLine, Stack, Text } from '@korzun/design/component';
 
 export default function Preview() {
   return (
-    <Text as="div" tone="faint">
-      <MetaLine items={['Frank Herbert', 'Dune #3', '42%']} />
-    </Text>
+    <Stack gap="sm">
+      <Text as="div" tone="faint">
+        <MetaLine separator="·" items={['Frank Herbert', 'Dune #3', '42%']} />
+      </Text>
+      <Text as="div" size="sm">
+        <MetaLine
+          items={[
+            { label: 'format', value: 'EPUB' },
+            { label: 'size', value: '2.1 MB' },
+          ]}
+        />
+      </Text>
+    </Stack>
   );
 }

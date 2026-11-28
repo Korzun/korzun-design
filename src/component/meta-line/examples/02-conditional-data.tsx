@@ -21,7 +21,7 @@ export default function ConditionalData() {
       <Stack gap="xs">
         <Text weight="semibold">Dune Messiah</Text>
         <Text as="div" size="sm" tone="faint">
-          <MetaLine items={[hasSeries && 'Dune #2', hasProgress && '42%']} />
+          <MetaLine separator="·" items={[hasSeries && 'Dune #2', hasProgress && '42%']} />
         </Text>
       </Stack>
     </Stack>

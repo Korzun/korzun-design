@@ -1,39 +1,67 @@
 ---
 title: MetaLine
-description: A row's secondary line: a few short data separated by middots that wrap between data, never inside one.
+description: A short run of data about one record, as a dotted line or labelled pairs, wrapping between data, never inside one.
 category: Data display
 ---
 # MetaLine
 
 <!-- generated:import -->
 
-`import { MetaLine, type MetaLineProps } from '@korzun/design/component'`
+```ts
+import {
+  MetaLine,
+  type MetaLineItem,
+  type MetaLinePair,
+  type MetaLineProps,
+} from '@korzun/design/component';
+```
 
 <!-- /generated:import -->
 
-A row's secondary line: a few short data ("Frank Herbert", "Book 3", "42%")
-separated by middots. When too narrow, it wraps *between* data, never inside
-one, and never leaves a separator dangling at a line end or leading the next
-line. The separators are CSS (`::before`), not text, so screen readers read
-only the data.
+A short run of data about one record. Two looks:
 
-Use something else for: labelled key/value pairs (`MetadataList`), a row's
-primary title (`Text` or `Heading`).
+- **A separated line**, a row's secondary line: "Frank Herbert · Book 3 · 42%".
+  Pass `separator`.
+- **Labelled facts**, a card's body: "Format EPUB   Size 2.1 MB". Pass
+  `{ label, value }` items and no separator; items are spaced by gaps.
+
+Either way it wraps *between* data, never inside one.
+
+Use something else for: many fields, or the same fields across records
+(`Table`), a row's primary title (`Text` or `Heading`).
 
 ## Usage
 
-### Behaviour
+### Items and pairs
 
+`items` holds nodes and `{ label, value }` pairs, mixed freely. A pair shows
+its label in `text.faint`, capitalized by CSS (`'cover fit'` shows as "Cover
+Fit"), then its value.
+
+- `null`, `undefined` and `false` items are skipped, and so is a pair whose
+  `value` is one of them, so pass optional data as `cond && value` or
+  `{ label, value: maybe }`.
+- `''` and `0` are kept; filter them yourself.
 - **Renders `null`** when every item is skipped: no empty line is left behind.
-- Only `null`/`undefined`/`false` are skipped. `''` and `0` are kept and draw a
-  separator with nothing (or `0`) after it; filter them yourself.
-- A single datum wider than the line ellipsizes instead of wrapping.
-- Items are keyed by index.
+- Items are keyed by position.
+
+### Separator
+
+`separator` takes one character (`'·'`, `'|'`, `'/'`). It sits in a 1em
+cell before each item, drawn by CSS (`::before`), so screen readers read only
+the data, and the one that would lead a line is clipped: none dangles at a line
+end or starts the next line. It is drawn in `text.muted`. Without
+`separator`, items are `space.lg` apart and lines `space.sm` apart.
+
+### Long data
+
+A datum never wraps inside itself. One wider than the whole line ellipsizes.
 
 ### Typography
 
-MetaLine sets no font size or colour of its own except the separator colour
-(`text.muted`); wrap it in `Text` to set the rest.
+MetaLine sets no font size or colour of its own except the label and
+separator colours; wrap it in `Text` to set the rest (`size="sm"` in a card
+body, `tone="faint"` for a row's secondary line).
 
 ## Do / don't
 
@@ -41,7 +69,7 @@ MetaLine sets no font size or colour of its own except the separator colour
 - Do set typography by wrapping the line in `Text` (`size`, `tone`); the items inherit it.
 - Don't join data into one string with your own " · ": wrapping then breaks
   inside a datum and the dots are read aloud.
-- Don't pass empty strings; they leave a stray separator.
+- Don't pass empty strings; with a separator they leave a stray one.
 
 <!-- generated:examples -->
 
@@ -59,7 +87,7 @@ export default function Basic() {
     <Stack gap="xs">
       <Text weight="semibold">Children of Dune</Text>
       <Text as="div" size="sm" tone="faint">
-        <MetaLine items={['Frank Herbert', 'Dune #3', '42%']} />
+        <MetaLine separator="·" items={['Frank Herbert', 'Dune #3', '42%']} />
       </Text>
     </Stack>
   );
@@ -91,7 +119,7 @@ export default function ConditionalData() {
       <Stack gap="xs">
         <Text weight="semibold">Dune Messiah</Text>
         <Text as="div" size="sm" tone="faint">
-          <MetaLine items={[hasSeries && 'Dune #2', hasProgress && '42%']} />
+          <MetaLine separator="·" items={[hasSeries && 'Dune #2', hasProgress && '42%']} />
         </Text>
       </Stack>
     </Stack>
@@ -110,6 +138,7 @@ export default function Wrapping() {
   return (
     <Text as="div" size="sm" tone="faint">
       <MetaLine
+        separator="·"
         items={[
           'Frank Herbert',
           'Dune Chronicles #3',
@@ -140,6 +169,7 @@ export default function ElementItems() {
   return (
     <Text as="div" size="sm" tone="faint">
       <MetaLine
+        separator="·"
         items={[
           <time key="added" dateTime="2026-03-12">
             12 March 2026
@@ -155,6 +185,77 @@ export default function ElementItems() {
 }
 ```
 
+### Labelled pairs
+
+A card describing one record: `{ label, value }` items with no `separator` are spaced by gaps, each label faint and capitalized by CSS (“cover size” shows as “Cover Size”). A value can be any node, such as a `Tag`. A pair whose value is `undefined` is skipped, so “Last sync” appears only once there is one.
+
+```tsx
+import { Card, MetaLine, Tag, Text } from '@korzun/design/component';
+import { Button } from '@korzun/design/control';
+import { useState } from 'react';
+
+export default function LabelledPairs() {
+  const [lastSync, setLastSync] = useState<string | undefined>(undefined);
+  return (
+    <Card
+      title="Kindle Scribe"
+      headerAction={
+        <Button type="link" onClick={() => setLastSync(lastSync ? undefined : '12 March 2026')}>
+          {lastSync ? 'Forget sync' : 'Sync now'}
+        </Button>
+      }
+    >
+      <Text as="div" size="sm">
+        <MetaLine
+          items={[
+            { label: 'slug', value: 'my-kindle' },
+            { label: 'cover size', value: '1860×2480' },
+            { label: 'last sync', value: lastSync },
+            {
+              label: 'status',
+              value: (
+                <Tag size="sm" tone="success">
+                  Active
+                </Tag>
+              ),
+            },
+          ]}
+        />
+      </Text>
+    </Card>
+  );
+}
+```
+
+### Separator choices
+
+`separator` takes any one character, drawn between items by CSS. Pairs take a separator too.
+
+```tsx
+import { MetaLine, Stack, Text } from '@korzun/design/component';
+
+const data = ['Frank Herbert', 'Dune #3', '42%'];
+
+export default function SeparatorChoices() {
+  return (
+    <Text as="div" size="sm" tone="muted">
+      <Stack gap="sm">
+        <MetaLine separator="·" items={data} />
+        <MetaLine separator="|" items={data} />
+        <MetaLine separator="/" items={data} />
+        <MetaLine
+          separator="·"
+          items={[
+            { label: 'format', value: 'EPUB' },
+            { label: 'size', value: '2.1 MB' },
+          ]}
+        />
+      </Stack>
+    </Text>
+  );
+}
+```
+
 <!-- /generated:examples -->
 
 <!-- generated:props -->
@@ -164,7 +265,24 @@ export default function ElementItems() {
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `className` | `string` |  | On the outer element. The font size and colour set here reach every item, and the separators scale with it. Override with `'&&'` specificity, never `!important`. |
-| `items` (required) | `ReactNode[]` |  | The data, in order. `null`, `undefined` and `false` are skipped, and nothing renders when every item is. `''` and `0` are kept and draw a separator, so filter them yourself. |
+| `items` (required) | [MetaLineItem](#types)`[]` |  | The data, in order: nodes and `{ label, value }` pairs, mixed freely. `null`, `undefined` and `false` items (and pairs with such a value) are skipped, and nothing renders when every item is. `''` and `0` are kept, so filter them yourself. |
+| `separator` | `string` |  | One character drawn between items (`'·'`, `'\|'`, `'/'`). It never dangles at a line break and is not read by screen readers. Unset: items are spaced by gaps instead. |
+
+### MetaLinePair
+
+A labelled datum: a faint, CSS-capitalized label followed by its value.
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `label` (required) | `string` |  | Shown faint and capitalized by CSS: `'cover fit'` displays as “Cover Fit”. |
+| `value` (required) | `ReactNode` |  | The value. When it is `null`, `undefined` or `false` the whole pair is skipped; `''` and `0` are kept. |
+
+### Types
+
+```ts
+/** One datum: any node, or a labelled pair. */
+type MetaLineItem = ReactNode | MetaLinePair;
+```
 
 <!-- /generated:props -->
 
@@ -174,7 +292,11 @@ export default function ElementItems() {
 
 | Token | Light | Dark |
 | --- | --- | --- |
+| `theme.color.text.faint` | `#9ca3af` | `#6E7480` |
 | `theme.color.text.muted` | `#6E6E6E` | `#9CA1AB` |
+| `theme.space.lg` | `0.625rem` | `0.625rem` |
+| `theme.space.sm` | `0.375rem` | `0.375rem` |
+| `theme.space.xs` | `0.25rem` | `0.25rem` |
 
 <!-- /generated:tokens -->
 
@@ -182,6 +304,6 @@ export default function ElementItems() {
 
 ## Changelog
 
-No changes yet.
+- **0.7.0** (2026-11-26): **Breaking:** without `separator` the items are spaced by gaps (`space.lg`, lines `space.sm`), not dots; pass `separator="·"` for the old look. `separator` takes any one character, drawn by CSS between items. Items can now be labelled pairs, `{ label, value }`, shown with a faint capitalized label, mixed with plain items; a pair whose value is `null`, `undefined` or `false` is skipped. New `MetaLineItem` and `MetaLinePair` types. MetaLine replaces `MetadataList`.
 
 <!-- /generated:changelog -->

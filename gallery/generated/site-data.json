@@ -8722,16 +8722,18 @@
       "entry": "@korzun/design/component",
       "docPath": "docs/component/meta-line.md",
       "title": "MetaLine",
-      "description": "A row's secondary line: a few short data separated by middots that wrap between data, never inside one.",
+      "description": "A short run of data about one record, as a dotted line or labelled pairs, wrapping between data, never inside one.",
       "category": "Data display",
       "values": [
         "MetaLine"
       ],
       "types": [
+        "MetaLineItem",
+        "MetaLinePair",
         "MetaLineProps"
       ],
-      "importLine": "import { MetaLine, type MetaLineProps } from '@korzun/design/component'",
-      "body": "A row's secondary line: a few short data (\"Frank Herbert\", \"Book 3\", \"42%\")\nseparated by middots. When too narrow, it wraps *between* data, never inside\none, and never leaves a separator dangling at a line end or leading the next\nline. The separators are CSS (`::before`), not text, so screen readers read\nonly the data.\n\nUse something else for: labelled key/value pairs (`MetadataList`), a row's\nprimary title (`Text` or `Heading`).\n\n## Usage\n\n### Behaviour\n\n- **Renders `null`** when every item is skipped: no empty line is left behind.\n- Only `null`/`undefined`/`false` are skipped. `''` and `0` are kept and draw a\n  separator with nothing (or `0`) after it; filter them yourself.\n- A single datum wider than the line ellipsizes instead of wrapping.\n- Items are keyed by index.\n\n### Typography\n\nMetaLine sets no font size or colour of its own except the separator colour\n(`text.muted`); wrap it in `Text` to set the rest.\n\n## Do / don't\n\n- Do pass conditional data as `cond && value`; `false` is skipped.\n- Do set typography by wrapping the line in `Text` (`size`, `tone`); the items inherit it.\n- Don't join data into one string with your own \" · \": wrapping then breaks\n  inside a datum and the dots are read aloud.\n- Don't pass empty strings; they leave a stray separator.",
+      "importLine": "import { MetaLine, type MetaLineItem, type MetaLinePair, type MetaLineProps } from '@korzun/design/component'",
+      "body": "A short run of data about one record. Two looks:\n\n- **A separated line**, a row's secondary line: \"Frank Herbert · Book 3 · 42%\".\n  Pass `separator`.\n- **Labelled facts**, a card's body: \"Format EPUB   Size 2.1 MB\". Pass\n  `{ label, value }` items and no separator; items are spaced by gaps.\n\nEither way it wraps *between* data, never inside one.\n\nUse something else for: many fields, or the same fields across records\n(`Table`), a row's primary title (`Text` or `Heading`).\n\n## Usage\n\n### Items and pairs\n\n`items` holds nodes and `{ label, value }` pairs, mixed freely. A pair shows\nits label in `text.faint`, capitalized by CSS (`'cover fit'` shows as \"Cover\nFit\"), then its value.\n\n- `null`, `undefined` and `false` items are skipped, and so is a pair whose\n  `value` is one of them, so pass optional data as `cond && value` or\n  `{ label, value: maybe }`.\n- `''` and `0` are kept; filter them yourself.\n- **Renders `null`** when every item is skipped: no empty line is left behind.\n- Items are keyed by position.\n\n### Separator\n\n`separator` takes one character (`'·'`, `'|'`, `'/'`). It sits in a 1em\ncell before each item, drawn by CSS (`::before`), so screen readers read only\nthe data, and the one that would lead a line is clipped: none dangles at a line\nend or starts the next line. It is drawn in `text.muted`. Without\n`separator`, items are `space.lg` apart and lines `space.sm` apart.\n\n### Long data\n\nA datum never wraps inside itself. One wider than the whole line ellipsizes.\n\n### Typography\n\nMetaLine sets no font size or colour of its own except the label and\nseparator colours; wrap it in `Text` to set the rest (`size=\"sm\"` in a card\nbody, `tone=\"faint\"` for a row's secondary line).\n\n## Do / don't\n\n- Do pass conditional data as `cond && value`; `false` is skipped.\n- Do set typography by wrapping the line in `Text` (`size`, `tone`); the items inherit it.\n- Don't join data into one string with your own \" · \": wrapping then breaks\n  inside a datum and the dots are read aloud.\n- Don't pass empty strings; with a separator they leave a stray one.",
       "examples": [
         {
           "file": "src/component/meta-line/examples/01-basic.tsx",
@@ -8739,7 +8741,7 @@
           "order": 1,
           "title": "Basic",
           "description": "A book row's secondary line: author, series and progress, separated by middots. Wrap it in `Text` to set the size and tone the items inherit.",
-          "code": "import { MetaLine, Stack, Text } from '@korzun/design/component';\n\nexport default function Basic() {\n  return (\n    <Stack gap=\"xs\">\n      <Text weight=\"semibold\">Children of Dune</Text>\n      <Text as=\"div\" size=\"sm\" tone=\"faint\">\n        <MetaLine items={['Frank Herbert', 'Dune #3', '42%']} />\n      </Text>\n    </Stack>\n  );\n}\n"
+          "code": "import { MetaLine, Stack, Text } from '@korzun/design/component';\n\nexport default function Basic() {\n  return (\n    <Stack gap=\"xs\">\n      <Text weight=\"semibold\">Children of Dune</Text>\n      <Text as=\"div\" size=\"sm\" tone=\"faint\">\n        <MetaLine separator=\"·\" items={['Frank Herbert', 'Dune #3', '42%']} />\n      </Text>\n    </Stack>\n  );\n}\n"
         },
         {
           "file": "src/component/meta-line/examples/02-conditional-data.tsx",
@@ -8747,7 +8749,7 @@
           "order": 2,
           "title": "Conditional data",
           "description": "Pass optional data as `cond && value`: `false` is skipped and leaves no separator. When every item is skipped nothing renders, so the line leaves no gap behind.",
-          "code": "import { Inline, MetaLine, Stack, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function ConditionalData() {\n  const [hasSeries, setHasSeries] = useState(true);\n  const [hasProgress, setHasProgress] = useState(true);\n  return (\n    <Stack gap=\"md\">\n      <Inline>\n        <Button onClick={() => setHasSeries((on) => !on)}>\n          {hasSeries ? 'Remove series' : 'Add series'}\n        </Button>\n        <Button onClick={() => setHasProgress((on) => !on)}>\n          {hasProgress ? 'Remove progress' : 'Add progress'}\n        </Button>\n      </Inline>\n      <Stack gap=\"xs\">\n        <Text weight=\"semibold\">Dune Messiah</Text>\n        <Text as=\"div\" size=\"sm\" tone=\"faint\">\n          <MetaLine items={[hasSeries && 'Dune #2', hasProgress && '42%']} />\n        </Text>\n      </Stack>\n    </Stack>\n  );\n}\n"
+          "code": "import { Inline, MetaLine, Stack, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function ConditionalData() {\n  const [hasSeries, setHasSeries] = useState(true);\n  const [hasProgress, setHasProgress] = useState(true);\n  return (\n    <Stack gap=\"md\">\n      <Inline>\n        <Button onClick={() => setHasSeries((on) => !on)}>\n          {hasSeries ? 'Remove series' : 'Add series'}\n        </Button>\n        <Button onClick={() => setHasProgress((on) => !on)}>\n          {hasProgress ? 'Remove progress' : 'Add progress'}\n        </Button>\n      </Inline>\n      <Stack gap=\"xs\">\n        <Text weight=\"semibold\">Dune Messiah</Text>\n        <Text as=\"div\" size=\"sm\" tone=\"faint\">\n          <MetaLine separator=\"·\" items={[hasSeries && 'Dune #2', hasProgress && '42%']} />\n        </Text>\n      </Stack>\n    </Stack>\n  );\n}\n"
         },
         {
           "file": "src/component/meta-line/examples/03-wrapping.tsx",
@@ -8755,7 +8757,7 @@
           "order": 3,
           "title": "Wrapping",
           "description": "When the line is too narrow it wraps between data, never inside one, and no separator is left at a line end or leading the next line.",
-          "code": "import { MetaLine, Text } from '@korzun/design/component';\n\nexport default function Wrapping() {\n  return (\n    <Text as=\"div\" size=\"sm\" tone=\"faint\">\n      <MetaLine\n        items={[\n          'Frank Herbert',\n          'Dune Chronicles #3',\n          'Science fiction',\n          'Hardcover, first edition',\n          '612 pages',\n          'Added 12 March 2026',\n          'Last read on a Kindle Scribe',\n          'Finished in 9 days',\n          'Rated four stars',\n          'Lent to a friend in April',\n          'Recommended by the book club',\n        ]}\n      />\n    </Text>\n  );\n}\n"
+          "code": "import { MetaLine, Text } from '@korzun/design/component';\n\nexport default function Wrapping() {\n  return (\n    <Text as=\"div\" size=\"sm\" tone=\"faint\">\n      <MetaLine\n        separator=\"·\"\n        items={[\n          'Frank Herbert',\n          'Dune Chronicles #3',\n          'Science fiction',\n          'Hardcover, first edition',\n          '612 pages',\n          'Added 12 March 2026',\n          'Last read on a Kindle Scribe',\n          'Finished in 9 days',\n          'Rated four stars',\n          'Lent to a friend in April',\n          'Recommended by the book club',\n        ]}\n      />\n    </Text>\n  );\n}\n"
         },
         {
           "file": "src/component/meta-line/examples/04-element-items.tsx",
@@ -8763,7 +8765,23 @@
           "order": 4,
           "title": "Elements as items",
           "description": "An item can be any node, such as a `time` element or a `Tag`.",
-          "code": "import { MetaLine, Tag, Text } from '@korzun/design/component';\n\nexport default function ElementItems() {\n  return (\n    <Text as=\"div\" size=\"sm\" tone=\"faint\">\n      <MetaLine\n        items={[\n          <time key=\"added\" dateTime=\"2026-03-12\">\n            12 March 2026\n          </time>,\n          'Kindle Scribe',\n          <Tag key=\"sync\" size=\"sm\" tone=\"success\">\n            Synced\n          </Tag>,\n        ]}\n      />\n    </Text>\n  );\n}\n"
+          "code": "import { MetaLine, Tag, Text } from '@korzun/design/component';\n\nexport default function ElementItems() {\n  return (\n    <Text as=\"div\" size=\"sm\" tone=\"faint\">\n      <MetaLine\n        separator=\"·\"\n        items={[\n          <time key=\"added\" dateTime=\"2026-03-12\">\n            12 March 2026\n          </time>,\n          'Kindle Scribe',\n          <Tag key=\"sync\" size=\"sm\" tone=\"success\">\n            Synced\n          </Tag>,\n        ]}\n      />\n    </Text>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/meta-line/examples/05-labelled-pairs.tsx",
+          "slug": "labelled-pairs",
+          "order": 5,
+          "title": "Labelled pairs",
+          "description": "A card describing one record: `{ label, value }` items with no `separator` are spaced by gaps, each label faint and capitalized by CSS (“cover size” shows as “Cover Size”). A value can be any node, such as a `Tag`. A pair whose value is `undefined` is skipped, so “Last sync” appears only once there is one.",
+          "code": "import { Card, MetaLine, Tag, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function LabelledPairs() {\n  const [lastSync, setLastSync] = useState<string | undefined>(undefined);\n  return (\n    <Card\n      title=\"Kindle Scribe\"\n      headerAction={\n        <Button type=\"link\" onClick={() => setLastSync(lastSync ? undefined : '12 March 2026')}>\n          {lastSync ? 'Forget sync' : 'Sync now'}\n        </Button>\n      }\n    >\n      <Text as=\"div\" size=\"sm\">\n        <MetaLine\n          items={[\n            { label: 'slug', value: 'my-kindle' },\n            { label: 'cover size', value: '1860×2480' },\n            { label: 'last sync', value: lastSync },\n            {\n              label: 'status',\n              value: (\n                <Tag size=\"sm\" tone=\"success\">\n                  Active\n                </Tag>\n              ),\n            },\n          ]}\n        />\n      </Text>\n    </Card>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/meta-line/examples/06-separator-choices.tsx",
+          "slug": "separator-choices",
+          "order": 6,
+          "title": "Separator choices",
+          "description": "`separator` takes any one character, drawn between items by CSS. Pairs take a separator too.",
+          "code": "import { MetaLine, Stack, Text } from '@korzun/design/component';\n\nconst data = ['Frank Herbert', 'Dune #3', '42%'];\n\nexport default function SeparatorChoices() {\n  return (\n    <Text as=\"div\" size=\"sm\" tone=\"muted\">\n      <Stack gap=\"sm\">\n        <MetaLine separator=\"·\" items={data} />\n        <MetaLine separator=\"|\" items={data} />\n        <MetaLine separator=\"/\" items={data} />\n        <MetaLine\n          separator=\"·\"\n          items={[\n            { label: 'format', value: 'EPUB' },\n            { label: 'size', value: '2.1 MB' },\n          ]}\n        />\n      </Stack>\n    </Text>\n  );\n}\n"
         }
       ],
       "preview": {
@@ -8772,7 +8790,7 @@
         "order": 0,
         "title": "Preview",
         "description": "",
-        "code": "import { MetaLine, Text } from '@korzun/design/component';\n\nexport default function Preview() {\n  return (\n    <Text as=\"div\" tone=\"faint\">\n      <MetaLine items={['Frank Herbert', 'Dune #3', '42%']} />\n    </Text>\n  );\n}\n"
+        "code": "import { MetaLine, Stack, Text } from '@korzun/design/component';\n\nexport default function Preview() {\n  return (\n    <Stack gap=\"sm\">\n      <Text as=\"div\" tone=\"faint\">\n        <MetaLine separator=\"·\" items={['Frank Herbert', 'Dune #3', '42%']} />\n      </Text>\n      <Text as=\"div\" size=\"sm\">\n        <MetaLine\n          items={[\n            { label: 'format', value: 'EPUB' },\n            { label: 'size', value: '2.1 MB' },\n          ]}\n        />\n      </Text>\n    </Stack>\n  );\n}\n"
       },
       "tables": [
         {
@@ -8787,22 +8805,87 @@
             },
             {
               "name": "items",
-              "type": "ReactNode[]",
+              "type": "MetaLineItem[]",
               "required": true,
-              "description": "The data, in order. `null`, `undefined` and `false` are skipped, and nothing renders when every item is. `''` and `0` are kept and draw a separator, so filter them yourself."
+              "description": "The data, in order: nodes and `{ label, value }` pairs, mixed freely. `null`, `undefined` and `false` items (and pairs with such a value) are skipped, and nothing renders when every item is. `''` and `0` are kept, so filter them yourself."
+            },
+            {
+              "name": "separator",
+              "type": "string",
+              "required": false,
+              "description": "One character drawn between items (`'·'`, `'|'`, `'/'`). It never dangles at a line break and is not read by screen readers. Unset: items are spaced by gaps instead."
             }
           ]
+        },
+        {
+          "name": "MetaLinePair",
+          "kind": "object",
+          "rows": [
+            {
+              "name": "label",
+              "type": "string",
+              "required": true,
+              "description": "Shown faint and capitalized by CSS: `'cover fit'` displays as “Cover Fit”."
+            },
+            {
+              "name": "value",
+              "type": "ReactNode",
+              "required": true,
+              "description": "The value. When it is `null`, `undefined` or `false` the whole pair is skipped; `''` and `0` are kept."
+            }
+          ],
+          "description": "A labelled datum: a faint, CSS-capitalized label followed by its value."
+        },
+        {
+          "name": "MetaLineItem",
+          "kind": "alias",
+          "rows": [],
+          "text": "ReactNode | MetaLinePair",
+          "description": "One datum: any node, or a labelled pair."
         }
       ],
       "tokens": [
+        {
+          "path": "color.text.faint",
+          "kind": "color",
+          "light": "#9ca3af",
+          "dark": "#6E7480"
+        },
         {
           "path": "color.text.muted",
           "kind": "color",
           "light": "#6E6E6E",
           "dark": "#9CA1AB"
+        },
+        {
+          "path": "space.lg",
+          "kind": "value",
+          "light": "0.625rem",
+          "dark": "0.625rem"
+        },
+        {
+          "path": "space.sm",
+          "kind": "value",
+          "light": "0.375rem",
+          "dark": "0.375rem"
+        },
+        {
+          "path": "space.xs",
+          "kind": "value",
+          "light": "0.25rem",
+          "dark": "0.25rem"
         }
       ],
-      "changelog": []
+      "changelog": [
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "MetaLine"
+          ],
+          "text": "**Breaking:** without `separator` the items are spaced by gaps (`space.lg`, lines `space.sm`), not dots; pass `separator=\"·\"` for the old look. `separator` takes any one character, drawn by CSS between items. Items can now be labelled pairs, `{ label, value }`, shown with a faint capitalized label, mixed with plain items; a pair whose value is `null`, `undefined` or `false` is skipped. New `MetaLineItem` and `MetaLinePair` types. MetaLine replaces `MetadataList`."
+        }
+      ]
     },
     {
       "id": "component/metadata-list",
@@ -11168,6 +11251,14 @@
           "version": "0.7.0",
           "date": "2026-11-26",
           "tags": [
+            "MetaLine"
+          ],
+          "text": "**Breaking:** without `separator` the items are spaced by gaps (`space.lg`, lines `space.sm`), not dots; pass `separator=\"·\"` for the old look. `separator` takes any one character, drawn by CSS between items. Items can now be labelled pairs, `{ label, value }`, shown with a faint capitalized label, mixed with plain items; a pair whose value is `null`, `undefined` or `false` is skipped. New `MetaLineItem` and `MetaLinePair` types. MetaLine replaces `MetadataList`."
+        },
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
             "Table"
           ],
           "text": "New `Table` (component): a generic data table. `columns` name a row field or `render` a cell, `rowKey` is a field name or a function, and `empty` shows one full-width row when there are no rows. It scrolls inside its own bordered box on a wide screen (`minWidth` sets a minimum width there only), and on a phone each row stacks with every value labelled by its column title (`label`, `wide`). `nowrap`, `align: 'end'` and `width` shape the cells. Its corners follow surface depth, and a control in a cell sits one level deeper. Falsy values (`0`, `false`, `''`) show as themselves; only `null` and `undefined` show a dash."
@@ -12071,6 +12162,8 @@
     "TagProps": "tag",
     "TagTone": "tag",
     "MetaLineProps": "meta-line",
+    "MetaLinePair": "meta-line",
+    "MetaLineItem": "meta-line",
     "MetadataListProps": "metadata-list",
     "Metadata": "metadata-list",
     "TableProps": "table",

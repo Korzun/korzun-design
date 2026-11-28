@@ -8,7 +8,7 @@ export default function Basic() {
     <Stack gap="xs">
       <Text weight="semibold">Children of Dune</Text>
       <Text as="div" size="sm" tone="faint">
-        <MetaLine items={['Frank Herbert', 'Dune #3', '42%']} />
+        <MetaLine separator="·" items={['Frank Herbert', 'Dune #3', '42%']} />
       </Text>
     </Stack>
   );
