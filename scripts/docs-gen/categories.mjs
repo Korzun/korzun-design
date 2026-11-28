@@ -22,7 +22,7 @@ export const SECTIONS = Object.freeze([
     ],
   },
   { name: 'Navigation', modules: ['nav-desktop', 'nav-mobile', 'back-button'] },
-  { name: 'Typography', modules: ['heading', 'text'] },
+  { name: 'Typography', modules: ['heading', 'text', 'code'] },
   {
     name: 'Inputs',
     modules: [

@@ -3218,6 +3218,99 @@
       ]
     },
     {
+      "id": "component/code",
+      "slug": "code",
+      "entry": "@korzun/design/component",
+      "docPath": "docs/component/code.md",
+      "title": "Code",
+      "description": "Inline code in the mono font, sized to the surrounding text, for a prop name or a short expression in a line of prose.",
+      "category": "Typography",
+      "values": [
+        "Code"
+      ],
+      "types": [
+        "CodeProps"
+      ],
+      "importLine": "import { Code, type CodeProps } from '@korzun/design/component'",
+      "body": "Inline code in the mono font, sized to the surrounding text, for a prop name or\na short expression in a line of prose. It renders a `<code>` element at 0.875em\nof the text around it, so it scales in a heading, on a tinted chip with\n`space.xxs` side padding.\n\nUse something else for: a block of several lines or a snippet to copy\n(`CodeBlock`), a keyboard key or a status chip (`Tag`).\n\n## Usage\n\n### Styling\n\nTakes `className`, merged last. The look is fixed: it is the same\n`theme.recipe.inlineCode` that styles code in the docs' markdown.\n\n### Surprising behaviour\n\n- **Breaks only when it must.** A long name stays on its line and wraps\n  (`overflow-wrap: break-word`) only when it cannot fit the line.\n- **Dark mode adds an edge on the page only.** Directly on a `Page` in dark\n  mode, a 1px `border.default` hairline separates the chip from the page. Inside\n  a `Card`, `Modal` or other surface the tint reads on its own, so there is none.\n\n### Corners\n\nThe chip's corners are fixed at `radius.sm` at every depth: it is a glyph\nsmaller than a line of text. See [corners](../corners.md).\n\n## Do / don't\n\n- Do use it for names and short expressions inside a sentence or a heading.\n- Don't put a multi-line snippet in it; use `CodeBlock`.",
+      "examples": [
+        {
+          "file": "src/component/code/examples/01-in-text.tsx",
+          "slug": "in-text",
+          "order": 1,
+          "title": "In text",
+          "description": "A prop name inside a sentence. `Code` takes 0.875em of the text around it, so it sits in the line without looking larger.",
+          "code": "import { Code, Stack, Text } from '@korzun/design/component';\n\nexport default function InText() {\n  return (\n    <Stack gap=\"sm\">\n      <Text as=\"p\">\n        Set <Code>maxLength</Code> to cap the title, or <Code>onChange</Code> to follow each\n        keystroke.\n      </Text>\n      <Text as=\"p\" size=\"sm\" tone=\"muted\">\n        It follows smaller text too: <Code>value</Code> and <Code>defaultValue</Code>.\n      </Text>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/code/examples/02-in-a-heading.tsx",
+          "slug": "in-a-heading",
+          "order": 2,
+          "title": "In a heading",
+          "description": "`Code` scales with its heading, so a name stays in proportion at every level.",
+          "code": "import { Code, Heading, Stack } from '@korzun/design/component';\n\nexport default function InAHeading() {\n  return (\n    <Stack gap=\"sm\">\n      <Heading level={1}>\n        The <Code>Table</Code> component\n      </Heading>\n      <Heading level={2}>\n        The <Code>Table</Code> component\n      </Heading>\n      <Heading level={3}>\n        The <Code>Table</Code> component\n      </Heading>\n    </Stack>\n  );\n}\n"
+        }
+      ],
+      "preview": {
+        "file": "src/component/code/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { Code, Text } from '@korzun/design/component';\n\nexport default function Preview() {\n  return (\n    <Text as=\"p\">\n      Limit the title with <Code>maxLength</Code>.\n    </Text>\n  );\n}\n"
+      },
+      "tables": [
+        {
+          "name": "CodeProps",
+          "kind": "props",
+          "rows": [
+            {
+              "name": "children",
+              "type": "ReactNode",
+              "required": false,
+              "description": "The code to show, a name or a short expression. It stays on the text's line and breaks only when it cannot fit."
+            },
+            {
+              "name": "className",
+              "type": "string",
+              "required": false,
+              "description": "Extra class on the `<code>` element, merged after the component's own."
+            }
+          ]
+        }
+      ],
+      "tokens": [
+        {
+          "path": "color.border.default",
+          "kind": "color",
+          "light": "#D9D9D9",
+          "dark": "#3A3B40"
+        },
+        {
+          "path": "colorScheme",
+          "kind": "value",
+          "light": "light",
+          "dark": "dark"
+        },
+        {
+          "path": "recipe.inlineCode",
+          "kind": "recipe",
+          "light": null,
+          "dark": null
+        }
+      ],
+      "changelog": [
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "Code"
+          ],
+          "text": "New `Code` (component): inline `<code>` in the mono font at 0.875em of the surrounding text (so it scales in a heading), on a `bg.cardHeader` chip with `sm` corners; a long name breaks only when it cannot fit. In dark mode directly on a Page it gets a 1px `border.default` edge. Takes `children` and `className`."
+        }
+      ]
+    },
+    {
       "id": "control/button",
       "slug": "button",
       "entry": "@korzun/design/control",
@@ -10550,6 +10643,14 @@
           "version": "0.7.0",
           "date": "2026-11-26",
           "tags": [
+            "Code"
+          ],
+          "text": "New `Code` (component): inline `<code>` in the mono font at 0.875em of the surrounding text (so it scales in a heading), on a `bg.cardHeader` chip with `sm` corners; a long name breaks only when it cannot fit. In dark mode directly on a Page it gets a 1px `border.default` edge. Takes `children` and `className`."
+        },
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
             "lightTheme",
             "darkTheme"
           ],
@@ -11372,6 +11473,7 @@
     "BackButtonProps": "back-button",
     "HeadingProps": "heading",
     "TextProps": "text",
+    "CodeProps": "code",
     "ButtonProps": "button",
     "ButtonRadiusValue": "button",
     "ButtonTypeValue": "button",
