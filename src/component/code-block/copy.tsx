@@ -1,0 +1,59 @@
+import { useEffect, useRef, useState } from 'react';
+
+import { Button } from '../../control/button/index.js';
+import { CheckIcon } from '../../icon/index.js';
+import { useStyle } from './style.js';
+
+type State = 'idle' | 'done' | 'failed';
+
+const RESET_MS = 2000;
+
+export type CopyCodeButtonProps = {
+  /** The exact text put on the clipboard. */
+  text: string;
+  /** The idle button's accessible name; it reads "Copy". */
+  label: string;
+};
+
+/** Copies `text`, shows the result for two seconds and announces it. */
+export const CopyCodeButton = ({ text, label }: CopyCodeButtonProps) => {
+  const styles = useStyle();
+  const [state, setState] = useState<State>('idle');
+  const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+
+  useEffect(() => () => clearTimeout(timer.current), []);
+
+  const show = (next: State) => {
+    clearTimeout(timer.current);
+    setState(next);
+    timer.current = setTimeout(() => setState('idle'), RESET_MS);
+  };
+
+  const copy = () => {
+    // The clipboard API is missing outside a secure context (the dev server on a LAN address).
+    const written = navigator.clipboard
+      ? navigator.clipboard.writeText(text)
+      : Promise.reject(new Error('No clipboard'));
+    written.then(
+      () => show('done'),
+      () => show('failed')
+    );
+  };
+
+  const message = state === 'done' ? 'Copied' : state === 'failed' ? 'Could not copy' : '';
+  return (
+    <>
+      <Button
+        type="text"
+        ariaLabel={state === 'idle' ? label : undefined}
+        prefix={state === 'done' ? CheckIcon : undefined}
+        onClick={copy}
+      >
+        {state === 'idle' ? 'Copy' : message}
+      </Button>
+      <span role="status" className={styles.status}>
+        {message}
+      </span>
+    </>
+  );
+};

@@ -9233,6 +9233,226 @@
       ]
     },
     {
+      "id": "component/code-block",
+      "slug": "code-block",
+      "entry": "@korzun/design/component",
+      "docPath": "docs/component/code-block.md",
+      "title": "CodeBlock",
+      "description": "A block of code in mono type that scrolls or wraps, can show highlighted children, and can offer a Copy button.",
+      "category": "Data display",
+      "values": [
+        "CodeBlock"
+      ],
+      "types": [
+        "CodeBlockProps"
+      ],
+      "importLine": "import { CodeBlock, type CodeBlockProps } from '@korzun/design/component'",
+      "body": "A block of code in mono type on a tinted box, for a command, an import line or a\nsnippet a reader may copy. It scrolls sideways (or wraps), shows either plain\ntext or highlighted children, and can add a Copy button.\n\nUse something else for: a name or short expression inside a sentence (`Code`),\ndata in rows and columns (`Table`).\n\n## Usage\n\n### Plain and highlighted\n\nPass `code` alone for plain text. To colour it, pass highlighted spans as\n`children`: they replace what shows, and Copy still copies `code`, so keep the\ntwo the same text.\n\n### Code colours\n\n`CodeBlock` sets these CSS variables on its root from `theme.color.code`, the\nnames Shiki's css-variables theme emits with `variablePrefix: '--code-'`. A\nhighlighter that uses that theme follows the light and dark themes with no\ncolour work.\n\n| Variable | Theme token |\n| --- | --- |\n| `--code-foreground` | `color.code.foreground` |\n| `--code-token-keyword` | `color.code.keyword` |\n| `--code-token-string` | `color.code.string` |\n| `--code-token-string-expression` | `color.code.string` |\n| `--code-token-function` | `color.code.function` |\n| `--code-token-parameter` | `color.code.parameter` |\n| `--code-token-constant` | `color.code.constant` |\n| `--code-token-punctuation` | `color.code.punctuation` |\n| `--code-token-comment` | `color.code.comment` |\n| `--code-token-link` | `color.code.link` |\n\n### Copy\n\n`copyable` adds a text button that reads Copy. Pressed, it writes `code` to the\nclipboard and reads Copied with a check for 2 seconds; pressing again restarts\nthe 2 seconds. Where there is no clipboard (an insecure page) or the write is\nrefused, it reads Could not copy for 2 seconds and throws nothing. A visually\nhidden status region announces the result. `copyLabel` is the idle button's\naccessible name.\n\n### Scrolling and wrapping\n\nA long line scrolls inside the box and never widens the page; the right edge\nfades while more is hidden, since phones hide scrollbars. `wrap` breaks long\nlines instead.\n\n### Styling\n\nTakes `className` on the root, merged last. The look is fixed: it is the\n`theme.recipe.codeBlock` look, drawn by the component.\n\n### Corners\n\nThe box's corners follow where it sits: `lg` on a `Page`, `md` in a Card or\n`Surface`, `sm` two levels in. The Copy button sits one level deeper. In dark\nmode directly on a `Page` a 1px `border.default` edge separates the box from the\npage. See [corners](../corners.md).\n\n## Do / don't\n\n- Do pass the same text as `code` and as the highlighted `children`.\n- Don't use it inline in a sentence; use `Code`.",
+      "examples": [
+        {
+          "file": "src/component/code-block/examples/01-basic.tsx",
+          "slug": "basic",
+          "order": 1,
+          "title": "Basic",
+          "description": "Plain code in a mono box. A line longer than the box scrolls sideways inside it, with a fade at the edge while more is hidden.",
+          "code": "import { CodeBlock } from '@korzun/design/component';\n\nexport default function Basic() {\n  return <CodeBlock code=\"npm install @korzun/design react react-dom react-jss\" />;\n}\n"
+        },
+        {
+          "file": "src/component/code-block/examples/02-copyable.tsx",
+          "slug": "copyable",
+          "order": 2,
+          "title": "Copyable",
+          "description": "`copyable` adds a Copy button that turns into Copied for two seconds; `copyLabel` names it for screen readers.",
+          "code": "import { CodeBlock } from '@korzun/design/component';\n\nexport default function Copyable() {\n  return (\n    <CodeBlock\n      code=\"import { Button } from '@korzun/design/control';\"\n      copyable\n      copyLabel=\"Copy import\"\n    />\n  );\n}\n"
+        },
+        {
+          "file": "src/component/code-block/examples/03-highlighted.tsx",
+          "slug": "highlighted",
+          "order": 3,
+          "title": "Highlighted",
+          "description": "Children replace the plain text; Copy still copies `code`. `CodeBlock` sets the `--code-*` variables, so a highlighter that emits them, such as Shiki's css-variables theme with `variablePrefix: '--code-'`, follows the light and dark themes.",
+          "code": "import { CodeBlock } from '@korzun/design/component';\n\nconst code = \"const label = 'Copy';\";\n\nexport default function Highlighted() {\n  return (\n    <CodeBlock code={code} copyable>\n      <span style={{ color: 'var(--code-token-keyword)' }}>const</span>{' '}\n      <span style={{ color: 'var(--code-token-constant)' }}>label</span>\n      <span style={{ color: 'var(--code-token-punctuation)' }}> = </span>\n      <span style={{ color: 'var(--code-token-string)' }}>'Copy'</span>\n      <span style={{ color: 'var(--code-token-punctuation)' }}>;</span>\n    </CodeBlock>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/code-block/examples/04-wrap.tsx",
+          "slug": "wrap",
+          "order": 4,
+          "title": "Wrap",
+          "description": "`wrap` breaks long lines inside the box instead of scrolling them, for output a reader should see whole.",
+          "code": "import { CodeBlock } from '@korzun/design/component';\n\nexport default function Wrap() {\n  return (\n    <CodeBlock\n      wrap\n      code=\"curl --fail --location --header 'Accept: application/json' https://example.com/api/v1/books?sort=title&order=asc&limit=100\"\n    />\n  );\n}\n"
+        }
+      ],
+      "preview": {
+        "file": "src/component/code-block/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { CodeBlock } from '@korzun/design/component';\n\nexport default function Preview() {\n  return <CodeBlock code={'npm install @korzun/design\\nnpm run build'} copyable />;\n}\n"
+      },
+      "tables": [
+        {
+          "name": "CodeBlockProps",
+          "kind": "props",
+          "rows": [
+            {
+              "name": "children",
+              "type": "ReactNode",
+              "required": false,
+              "description": "What to show in place of `code`, such as syntax-highlighted spans. Copy still copies `code`."
+            },
+            {
+              "name": "className",
+              "type": "string",
+              "required": false,
+              "description": "Extra class on the root, merged after the component's own."
+            },
+            {
+              "name": "code",
+              "type": "string",
+              "required": true,
+              "description": "The code as plain text. It is what Copy puts on the clipboard, and what shows when there are no `children`."
+            },
+            {
+              "name": "copyable",
+              "type": "boolean",
+              "required": false,
+              "description": "Adds a Copy button beside the code.",
+              "default": "false"
+            },
+            {
+              "name": "copyLabel",
+              "type": "string",
+              "required": false,
+              "description": "The Copy button's accessible name; it reads \"Copy\".",
+              "default": "'Copy code'"
+            },
+            {
+              "name": "wrap",
+              "type": "boolean",
+              "required": false,
+              "description": "Wraps long lines instead of scrolling them sideways.",
+              "default": "false"
+            }
+          ]
+        }
+      ],
+      "tokens": [
+        {
+          "path": "color.bg.cardHeader",
+          "kind": "color",
+          "light": "#EEEEEE",
+          "dark": "#232427"
+        },
+        {
+          "path": "color.border.default",
+          "kind": "color",
+          "light": "#D9D9D9",
+          "dark": "#3A3B40"
+        },
+        {
+          "path": "color.code.comment",
+          "kind": "color",
+          "light": "#6E6E6E",
+          "dark": "#9CA1AB"
+        },
+        {
+          "path": "color.code.constant",
+          "kind": "color",
+          "light": "#c0415e",
+          "dark": "#E89BAC"
+        },
+        {
+          "path": "color.code.foreground",
+          "kind": "color",
+          "light": "#111",
+          "dark": "#F5F5F7"
+        },
+        {
+          "path": "color.code.function",
+          "kind": "color",
+          "light": "#1a5fa8",
+          "dark": "#8EC3F5"
+        },
+        {
+          "path": "color.code.keyword",
+          "kind": "color",
+          "light": "#6d3fc0",
+          "dark": "#C9B0F2"
+        },
+        {
+          "path": "color.code.link",
+          "kind": "color",
+          "light": "#1777FF",
+          "dark": "#3696fe"
+        },
+        {
+          "path": "color.code.parameter",
+          "kind": "color",
+          "light": "#8a5e00",
+          "dark": "#E8C879"
+        },
+        {
+          "path": "color.code.punctuation",
+          "kind": "color",
+          "light": "#5A6375",
+          "dark": "#C8CBD2"
+        },
+        {
+          "path": "color.code.string",
+          "kind": "color",
+          "light": "#1a7a52",
+          "dark": "#7EE6B4"
+        },
+        {
+          "path": "colorScheme",
+          "kind": "value",
+          "light": "light",
+          "dark": "dark"
+        },
+        {
+          "path": "radius.lg",
+          "kind": "value",
+          "light": "16px",
+          "dark": "16px"
+        },
+        {
+          "path": "radius.md",
+          "kind": "value",
+          "light": "8px",
+          "dark": "8px"
+        },
+        {
+          "path": "radius.sm",
+          "kind": "value",
+          "light": "4px",
+          "dark": "4px"
+        },
+        {
+          "path": "recipe.codeBlock",
+          "kind": "recipe",
+          "light": null,
+          "dark": null
+        },
+        {
+          "path": "space.md",
+          "kind": "value",
+          "light": "0.5rem",
+          "dark": "0.5rem"
+        }
+      ],
+      "changelog": [
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "CodeBlock"
+          ],
+          "text": "New `CodeBlock` (component): a block of code in mono type on a `bg.cardHeader` box that scrolls sideways (with a fade at the edge while more is hidden) or wraps with `wrap`. `code` is the plain text; `children` replace what shows (highlighted spans) while Copy still copies `code`. `copyable` adds a Copy button that becomes Copied with a check, or Could not copy, for 2 seconds and announces it in a status region; `copyLabel` names it. It sets the `--code-*` variables Shiki's css-variables theme emits, from `color.code`. Corners follow surface depth, and in dark mode directly on a Page it gets a 1px `border.default` edge."
+        }
+      ]
+    },
+    {
       "id": "component/alert",
       "slug": "alert",
       "entry": "@korzun/design/component",
@@ -10975,6 +11195,14 @@
           "version": "0.7.0",
           "date": "2026-11-26",
           "tags": [
+            "CodeBlock"
+          ],
+          "text": "New `CodeBlock` (component): a block of code in mono type on a `bg.cardHeader` box that scrolls sideways (with a fade at the edge while more is hidden) or wraps with `wrap`. `code` is the plain text; `children` replace what shows (highlighted spans) while Copy still copies `code`. `copyable` adds a Copy button that becomes Copied with a check, or Could not copy, for 2 seconds and announces it in a status region; `copyLabel` names it. It sets the `--code-*` variables Shiki's css-variables theme emits, from `color.code`. Corners follow surface depth, and in dark mode directly on a Page it gets a 1px `border.default` edge."
+        },
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
             "Code"
           ],
           "text": "New `Code` (component): inline `<code>` in the mono font at 0.875em of the surrounding text (so it scales in a heading), on a `bg.cardHeader` chip with `sm` corners; a long name breaks only when it cannot fit. In dark mode directly on a Page it gets a 1px `border.default` edge. Takes `children` and `className`."
@@ -11850,6 +12078,7 @@
     "Metadata": "metadata-list",
     "TableProps": "table",
     "TableColumn": "table",
+    "CodeBlockProps": "code-block",
     "AlertProps": "alert",
     "AlertTone": "alert",
     "ErrorMessageProps": "error-message",
