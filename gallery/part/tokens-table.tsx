@@ -120,18 +120,22 @@ export const TokensTable = ({ tokens }: TokensTableProps) => {
     {
       key: 'properties',
       title: 'Properties',
+      label: false,
+      wide: true,
       render: (token) => <Recipe path={token.path} />,
     },
   ];
   return (
     <Stack gap="lg">
-      <Table
-        ariaLabel="Tokens"
-        rowKey="path"
-        columns={valueColumns}
-        rows={values}
-        minWidth={minWidth}
-      />
+      {(values.length > 0 || recipes.length === 0) && (
+        <Table
+          ariaLabel="Tokens"
+          rowKey="path"
+          columns={valueColumns}
+          rows={values}
+          minWidth={minWidth}
+        />
+      )}
       {recipes.length > 0 && (
         <Table
           ariaLabel="Recipe tokens"

@@ -19,6 +19,12 @@ export const useTableStyle = createUseStyles((theme: Theme) => ({
   },
   // The prop name is what a reader scans for; the type beside it steps back.
   propName: { fontWeight: theme.fontWeight.semibold, color: theme.color.text.primary },
+  // On a phone the required and deprecated tags sit beside the name on the shared line.
+  nameStack: {
+    [theme.breakpoint.mobile]: {
+      '&&': { flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap' },
+    },
+  },
   typeText: { color: theme.color.text.muted },
   // One member of a union: it wraps inside only when it is wider than the cell.
   member: { display: 'inline-block', maxWidth: '100%' },
@@ -187,7 +193,7 @@ export const PropsTable = ({ table, tables, typePages = NO_PAGES, from }: PropsT
       label: false,
       nowrap: true,
       render: (row) => (
-        <Stack gap="xs" align="start">
+        <Stack gap="xs" align="start" className={styles.nameStack}>
           <code className={cx(styles.code, styles.propName, row.deprecated && styles.deprecated)}>
             {row.name}
           </code>
