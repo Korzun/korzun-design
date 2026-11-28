@@ -1,31 +1,38 @@
 /** Preview */
-import { Card, Surface, useSurfaceRadius } from '@korzun/design/component';
-import { Button } from '@korzun/design/control';
+import { Surface, useSurfaceRadius } from '@korzun/design/component';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
+import type { ReactNode } from 'react';
 
 const useStyle = createUseStyles((theme: Theme) => ({
   box: {
-    border: `1px solid ${theme.color.border.default}`,
-    padding: theme.space.lg,
+    padding: theme.space.xxl,
+    backgroundColor: theme.color.brand.light,
+    border: `1px solid ${theme.color.brand.outline}`,
   },
+  core: { width: 120, height: 24 },
 }));
 
-const InsetBox = () => {
+// A box drawn at the current depth, its contents one level deeper.
+const Box = ({ children }: { children?: ReactNode }) => {
   const styles = useStyle();
   const borderRadius = useSurfaceRadius();
   return (
-    <div className={styles.box} style={{ borderRadius }}>
-      <Surface>
-        <Button>Save</Button>
-      </Surface>
+    <div
+      className={children ? styles.box : `${styles.box} ${styles.core}`}
+      style={{ borderRadius }}
+    >
+      {children && <Surface>{children}</Surface>}
     </div>
   );
 };
 
+// Each level of nesting takes the next corner radius down: lg, md, sm.
 export default function Preview() {
   return (
-    <Card title="Settings">
-      <InsetBox />
-    </Card>
+    <Box>
+      <Box>
+        <Box />
+      </Box>
+    </Box>
   );
 }

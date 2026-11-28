@@ -1,18 +1,30 @@
 /** Preview
  * @viewport mobile
  */
-import { Stack, Text, TopFade } from '@korzun/design/component';
+import { Stack, TopFade } from '@korzun/design/component';
+import { createUseStyles, type Theme } from '@korzun/design/theme';
 
-// Page content scrolled up under the band at the top edge.
+const useStyle = createUseStyles((theme: Theme) => ({
+  content: { position: 'fixed', top: -14, left: 16, right: 16 },
+  block: {
+    height: 28,
+    backgroundColor: theme.color.brand.light,
+    border: `1px solid ${theme.color.brand.outline}`,
+    borderRadius: theme.radius.md,
+  },
+}));
+
+// Page content scrolled up under the frosted band at the top edge.
 export default function Preview() {
+  const styles = useStyle();
   return (
     <>
       <TopFade />
-      <div style={{ position: 'fixed', top: -6, left: 16, right: 16 }}>
-        <Stack gap="xs">
-          <Text>Middlemarch</Text>
-          <Text>Persuasion</Text>
-          <Text>Villette</Text>
+      <div className={styles.content}>
+        <Stack>
+          <div className={styles.block} />
+          <div className={styles.block} />
+          <div className={styles.block} />
         </Stack>
       </div>
     </>
