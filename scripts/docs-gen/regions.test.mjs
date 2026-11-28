@@ -254,7 +254,7 @@ test('props: zero-row table renders placeholder, or just its Also accepts line',
   );
   assert.equal(
     renderRegion('props', mod({ tables: [{ ...empty, extends: ['HTMLAttributes'] }] })),
-    '## Props\n\nAlso accepts: \`HTMLAttributes\`.'
+    '## Props\n\nAlso accepts: `HTMLAttributes`.'
   );
 });
 

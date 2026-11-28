@@ -37,6 +37,15 @@
           "viewport": "mobile"
         }
       ],
+      "preview": {
+        "file": "src/control/back-button/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { BackButton } from '@korzun/design/control';\n\nexport default function Preview() {\n  return <BackButton to=\"/library\" />;\n}\n",
+        "viewport": "mobile"
+      },
       "tables": [
         {
           "name": "BackButtonProps",
@@ -155,6 +164,14 @@
           "code": "import { Button, Dialog } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function DialogFooter() {\n  const [open, setOpen] = useState(false);\n  const [deleting, setDeleting] = useState(false);\n  const close = () => {\n    setDeleting(false);\n    setOpen(false);\n  };\n  const confirm = () => {\n    setDeleting(true);\n    setTimeout(close, 1000);\n  };\n  return (\n    <>\n      <Button danger onClick={() => setOpen(true)}>\n        Delete book\n      </Button>\n      <Dialog\n        open={open}\n        onClose={close}\n        canDismiss={!deleting}\n        title=\"Delete this book?\"\n        footer={\n          <>\n            <Button type=\"text\" disabled={deleting} onClick={close}>\n              Cancel\n            </Button>\n            <Button type=\"primary\" danger loading={deleting} onClick={confirm}>\n              Delete\n            </Button>\n          </>\n        }\n      >\n        It is removed from every device. This cannot be undone.\n      </Dialog>\n    </>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/control/button/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { Inline } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\n\nexport default function Preview() {\n  return (\n    <Inline>\n      <Button type=\"primary\" onClick={() => {}}>\n        Primary\n      </Button>\n      <Button onClick={() => {}}>Default</Button>\n    </Inline>\n  );\n}\n"
+      },
       "tables": [
         {
           "name": "ButtonProps",
@@ -663,6 +680,14 @@
           "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button, ChipsInput, Dialog } from '@korzun/design/control';\nimport { useState } from 'react';\n\nconst SUBJECTS = ['Astronomy', 'Biology', 'Cooking', 'History', 'Poetry', 'Travel'];\n\nexport default function InDialog() {\n  const [open, setOpen] = useState(false);\n  const [subjects, setSubjects] = useState<string[]>([]);\n  return (\n    <Stack>\n      <Button onClick={() => setOpen(true)}>Edit subjects</Button>\n      <Text tone=\"muted\">Subjects: {subjects.join(', ') || 'none'}</Text>\n      <Dialog\n        open={open}\n        onClose={() => setOpen(false)}\n        title=\"Edit subjects\"\n        footer={\n          <Button type=\"primary\" onClick={() => setOpen(false)}>\n            Done\n          </Button>\n        }\n      >\n        <ChipsInput\n          value={subjects}\n          suggestions={SUBJECTS}\n          onChange={setSubjects}\n          placeholder=\"Add subject…\"\n        />\n      </Dialog>\n    </Stack>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/control/chips-input/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { ChipsInput } from '@korzun/design/control';\nimport { createUseStyles } from '@korzun/design/theme';\nimport { useState } from 'react';\n\nconst useStyle = createUseStyles({ box: { width: 300 } });\n\nconst SUBJECTS = ['Astronomy', 'Biology', 'Cooking', 'History', 'Poetry', 'Travel'];\n\nexport default function Preview() {\n  const styles = useStyle();\n  const [subjects, setSubjects] = useState(['History', 'Poetry']);\n  return (\n    <div className={styles.box}>\n      <ChipsInput\n        value={subjects}\n        suggestions={SUBJECTS}\n        onChange={setSubjects}\n        placeholder=\"Add subject…\"\n      />\n    </div>\n  );\n}\n"
+      },
       "tables": [
         {
           "name": "ChipsInputProps",
@@ -1231,6 +1256,14 @@
           "code": "import { Inline, Stack } from '@korzun/design/component';\nimport { Button, ConfirmModal, Switch } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function ConfirmDisabled() {\n  const [isOpen, setIsOpen] = useState(false);\n  const [understood, setUnderstood] = useState(false);\n  const close = () => {\n    setIsOpen(false);\n    setUnderstood(false);\n  };\n  return (\n    <Inline>\n      <Button onClick={() => setIsOpen(true)}>Reset library</Button>\n      <ConfirmModal\n        isOpen={isOpen}\n        title=\"Reset library?\"\n        confirmText=\"Reset\"\n        confirmDisabled={!understood}\n        danger\n        onCancel={close}\n        onConfirm={close}\n      >\n        <Stack>\n          Every book is removed from this device.\n          <Switch\n            name=\"understood\"\n            label=\"I understand\"\n            checked={understood}\n            onChange={setUnderstood}\n          />\n        </Stack>\n      </ConfirmModal>\n    </Inline>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/control/confirm-modal/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { ConfirmModal } from '@korzun/design/control';\n\nexport default function Preview() {\n  return (\n    <ConfirmModal\n      isOpen\n      title=\"Sync library?\"\n      confirmText=\"Sync now\"\n      cancelText=\"Not now\"\n      onCancel={() => {}}\n      onConfirm={() => {}}\n    >\n      This checks every connected device for new books.\n    </ConfirmModal>\n  );\n}\n"
+      },
       "tables": [
         {
           "name": "ConfirmModalProps",
@@ -1390,6 +1423,14 @@
           "code": "import { Card, Stack, Text } from '@korzun/design/component';\nimport { Button, DateTimeInput, TextInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function InACard() {\n  const [title, setTitle] = useState<string | undefined>('Dune');\n  const [publishDate, setPublishDate] = useState<string | undefined>('2023-06-06T16:30:00Z');\n  const [sent, setSent] = useState<string | null>(null);\n  return (\n    <Card\n      title=\"Publication\"\n      footer={\n        <Button\n          type=\"primary\"\n          onClick={() => setSent(`${title ?? ''}, ${publishDate ?? 'no date'}`)}\n        >\n          Save\n        </Button>\n      }\n    >\n      <Stack>\n        <TextInput name=\"title\" label=\"Title\" value={title} onChange={setTitle} />\n        <DateTimeInput\n          name=\"publishDate\"\n          label=\"Publish date\"\n          value={publishDate}\n          onChange={setPublishDate}\n        />\n        {sent !== null && <Text tone=\"success\">Sent: {sent}</Text>}\n      </Stack>\n    </Card>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/control/date-time-input/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { DateTimeInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Preview() {\n  const [value, setValue] = useState<string | undefined>('2023-06-06T09:30');\n  return (\n    <DateTimeInput\n      name=\"publishDate\"\n      label=\"Publish date\"\n      layout=\"vertical\"\n      value={value}\n      onChange={setValue}\n    />\n  );\n}\n"
+      },
       "tables": [
         {
           "name": "DateTimeInputProps",
@@ -1584,6 +1625,14 @@
           "code": "import { Inline, Stack, Text } from '@korzun/design/component';\nimport { Button, Dialog, Select, TextInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nconst SHELVES = ['Reading', 'To read', 'Finished', 'Abandoned'];\n\nexport default function Form() {\n  const [open, setOpen] = useState(false);\n  const [saving, setSaving] = useState(false);\n  const [note, setNote] = useState<string | undefined>('');\n  const [shelf, setShelf] = useState<string | undefined>('Reading');\n  const [saved, setSaved] = useState('nothing yet');\n  const save = () => {\n    setSaving(true);\n    setTimeout(() => {\n      setSaved(`${shelf ?? 'no shelf'}, note “${note ?? ''}”`);\n      setSaving(false);\n      setOpen(false);\n    }, 1000);\n  };\n  return (\n    <Stack>\n      <Inline>\n        <Button onClick={() => setOpen(true)}>Edit book</Button>\n        <Text tone=\"muted\">Saved: {saved}</Text>\n      </Inline>\n      <Dialog\n        open={open}\n        onClose={() => setOpen(false)}\n        canDismiss={!saving}\n        title=\"Edit book\"\n        footer={\n          <>\n            <Button type=\"text\" disabled={saving} onClick={() => setOpen(false)}>\n              Cancel\n            </Button>\n            <Button type=\"primary\" loading={saving} onClick={save}>\n              Save\n            </Button>\n          </>\n        }\n      >\n        <Stack>\n          <TextInput name=\"note\" label=\"Note\" layout=\"vertical\" value={note} onChange={setNote} />\n          <Select\n            name=\"shelf\"\n            label=\"Shelf\"\n            layout=\"vertical\"\n            options={SHELVES}\n            value={shelf}\n            onChange={setShelf}\n          />\n        </Stack>\n      </Dialog>\n    </Stack>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/control/dialog/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { Button, Dialog } from '@korzun/design/control';\n\nexport default function Preview() {\n  return (\n    <Dialog\n      open\n      onClose={() => {}}\n      title=\"Fixes waiting\"\n      footer={\n        <>\n          <Button type=\"text\" onClick={() => {}}>\n            Cancel\n          </Button>\n          <Button type=\"primary\" onClick={() => {}}>\n            Save\n          </Button>\n        </>\n      }\n    >\n      Three metadata fixes are waiting for review.\n    </Dialog>\n  );\n}\n"
+      },
       "tables": [
         {
           "name": "DialogProps",
@@ -1807,6 +1856,14 @@
           "code": "import { Card, Stack, Text } from '@korzun/design/component';\nimport { FieldList, type FieldRow } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function NumberAndValidation() {\n  const [rows, setRows] = useState<FieldRow[]>([\n    { _key: crypto.randomUUID(), name: 'Dune', qty: 2 },\n  ]);\n  const [invalid, setInvalid] = useState<string[]>([]);\n  return (\n    <Card title=\"Order\">\n      <Stack>\n        <FieldList\n          addLabel=\"Add item\"\n          columns={[\n            {\n              type: 'text',\n              key: 'name',\n              placeholder: 'Title (letters only)',\n              validate: (text) => /^[A-Za-z ]*$/.test(text),\n            },\n            { type: 'number', key: 'qty', placeholder: 'Quantity' },\n          ]}\n          rows={rows}\n          onAdd={() => setRows((r) => [...r, { _key: crypto.randomUUID() }])}\n          onRemove={(key) => setRows((r) => r.filter((row) => row._key !== key))}\n          onChange={(key, field, value) =>\n            setRows((r) => r.map((row) => (row._key === key ? { ...row, [field]: value } : row)))\n          }\n          onValidChange={(field, valid) =>\n            setInvalid((names) => (valid ? names.filter((n) => n !== field) : [...names, field]))\n          }\n        />\n        <Text tone=\"muted\">\n          Stored: {rows.map((row) => `${row.name ?? '–'} × ${row.qty ?? '–'}`).join(', ') || 'none'}\n        </Text>\n        <Text tone={invalid.length > 0 ? 'danger' : 'muted'}>\n          {invalid.length > 0\n            ? `Invalid: ${invalid.map((name) => name.split('.')[1]).join(', ')}`\n            : 'All fields valid'}\n        </Text>\n      </Stack>\n    </Card>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/control/field-list/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { FieldList, type FieldRow } from '@korzun/design/control';\nimport { createUseStyles } from '@korzun/design/theme';\nimport { useState } from 'react';\n\nconst useStyle = createUseStyles({ box: { width: 360 } });\n\nexport default function Preview() {\n  const styles = useStyle();\n  const [identifiers, setIdentifiers] = useState<FieldRow[]>([\n    { _key: 'isbn', scheme: 'isbn', value: '9780441172719' },\n  ]);\n  return (\n    <div className={styles.box}>\n      <FieldList\n        addLabel=\"Add identifier\"\n        columns={[\n          { type: 'text', key: 'scheme', placeholder: 'Scheme (e.g. isbn)' },\n          { type: 'text', key: 'value', placeholder: 'Value' },\n        ]}\n        rows={identifiers}\n        onAdd={() => setIdentifiers((r) => [...r, { _key: crypto.randomUUID() }])}\n        onRemove={(key) => setIdentifiers((r) => r.filter((row) => row._key !== key))}\n        onChange={(key, field, value) =>\n          setIdentifiers((r) =>\n            r.map((row) => (row._key === key ? { ...row, [field]: value } : row))\n          )\n        }\n      />\n    </div>\n  );\n}\n"
+      },
       "tables": [
         {
           "name": "FieldListProps",
@@ -2051,6 +2108,14 @@
           "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button, Dialog, Menu } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function InDialog() {\n  const [open, setOpen] = useState(false);\n  const [chosen, setChosen] = useState('nothing yet');\n  return (\n    <>\n      <Button onClick={() => setOpen(true)}>Open dialog</Button>\n      <Dialog open={open} onClose={() => setOpen(false)} title=\"Edit book\">\n        <Stack>\n          <Menu\n            trigger={(p) => <Button {...p}>Actions</Button>}\n            items={[\n              { label: 'Rename', onClick: () => setChosen('Rename') },\n              { label: 'Duplicate', onClick: () => setChosen('Duplicate') },\n              { label: 'Delete', danger: true, onClick: () => setChosen('Delete') },\n            ]}\n          />\n          <Text tone=\"muted\">Chosen: {chosen}</Text>\n        </Stack>\n      </Dialog>\n    </>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/control/menu/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { Button, Menu, type MenuTriggerProps } from '@korzun/design/control';\nimport { createUseStyles } from '@korzun/design/theme';\nimport { useEffect, useRef } from 'react';\n\n// Tall enough for the open list, so the centred thumbnail keeps it in frame.\nconst useStyle = createUseStyles({ box: { height: 170 } });\n\n// Opens the menu once on mount (the ref survives Strict Mode's second effect run).\nfunction OpenTrigger(props: MenuTriggerProps) {\n  const { onClick } = props;\n  const opened = useRef(false);\n  useEffect(() => {\n    if (opened.current) return;\n    opened.current = true;\n    onClick();\n    // Opening focuses the first item; drop that ring, the thumbnail is not interactive.\n    requestAnimationFrame(() => (document.activeElement as HTMLElement | null)?.blur());\n  }, [onClick]);\n  return <Button {...props}>Sort by</Button>;\n}\n\nexport default function Preview() {\n  const styles = useStyle();\n  return (\n    <div className={styles.box}>\n      <Menu\n        trigger={(p) => <OpenTrigger {...p} />}\n        items={[\n          { label: 'Title', onClick: () => {} },\n          { label: 'Author', onClick: () => {} },\n          { label: 'Date added', onClick: () => {} },\n        ]}\n      />\n    </div>\n  );\n}\n"
+      },
       "tables": [
         {
           "name": "MenuProps",
@@ -2551,6 +2616,14 @@
           "code": "import { Inline, Text } from '@korzun/design/component';\nimport { NumberInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function WithoutLabel() {\n  const [quantity, setQuantity] = useState<number | undefined>(undefined);\n  return (\n    <Inline>\n      <NumberInput\n        name=\"quantity\"\n        layout=\"inline\"\n        label={undefined}\n        ariaLabel=\"Quantity\"\n        placeholder=\"Quantity\"\n        value={quantity}\n        onChange={setQuantity}\n      />\n      <Text tone=\"muted\">Quantity: {quantity === undefined ? 'none' : quantity}</Text>\n    </Inline>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/control/number-input/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { NumberInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Preview() {\n  const [pages, setPages] = useState<number | undefined>(42);\n  return <NumberInput name=\"pages\" label=\"Pages\" value={pages} onChange={setPages} />;\n}\n"
+      },
       "tables": [
         {
           "name": "NumberInputProps",
@@ -2764,6 +2837,15 @@
           "code": "import { Card, Page, Text } from '@korzun/design/component';\nimport { useState } from 'react';\n\nexport default function InPage() {\n  const [message, setMessage] = useState('Nothing chosen yet.');\n  return (\n    <Page\n      headerActions={[\n        {\n          label: 'Read',\n          onClick: () => setMessage('Read chosen'),\n          primary: true,\n          align: 'leading',\n        },\n        { label: 'Edit', onClick: () => setMessage('Edit chosen'), primary: true },\n        { label: 'Download', onClick: () => setMessage('Download chosen') },\n        {\n          label: 'Delete',\n          onClick: () => setMessage('Delete chosen'),\n          danger: true,\n          separatorBefore: true,\n        },\n      ]}\n    >\n      <Card title=\"Dune\">\n        <Text>{message}</Text>\n      </Card>\n    </Page>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/control/page-actions-bar/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { PageActionsBar } from '@korzun/design/control';\n\nexport default function Preview() {\n  return (\n    <PageActionsBar\n      items={[\n        { label: 'Read', onClick: () => {}, primary: true, align: 'leading' },\n        { label: 'Edit', onClick: () => {}, primary: true },\n        { label: 'Download', onClick: () => {} },\n        { label: 'Delete', onClick: () => {}, danger: true, separatorBefore: true },\n      ]}\n    />\n  );\n}\n",
+        "viewport": "desktop"
+      },
       "tables": [
         {
           "name": "PageActionsBarProps",
@@ -2925,6 +3007,15 @@
           "viewport": "mobile"
         }
       ],
+      "preview": {
+        "file": "src/control/page-actions-menu/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { PageActionsMenu } from '@korzun/design/control';\nimport { createUseStyles } from '@korzun/design/theme';\nimport { useEffect, useRef } from 'react';\n\n// Tall enough for the open list, so the centred thumbnail keeps it in frame.\nconst useStyle = createUseStyles({ box: { height: 190 } });\n\nexport default function Preview() {\n  const styles = useStyle();\n  const box = useRef<HTMLDivElement>(null);\n  const opened = useRef(false);\n  // Opens the menu once on mount (the ref survives Strict Mode's second effect run).\n  useEffect(() => {\n    if (opened.current) return;\n    opened.current = true;\n    box.current?.querySelector('button')?.click();\n    // Opening focuses the first item; drop that ring, the thumbnail is not interactive.\n    requestAnimationFrame(() => (document.activeElement as HTMLElement | null)?.blur());\n  }, []);\n  return (\n    <div ref={box} className={styles.box}>\n      <PageActionsMenu\n        items={[\n          { label: 'Edit', onClick: () => {} },\n          { label: 'Download', onClick: () => {} },\n          { label: 'Share', onClick: () => {} },\n        ]}\n      />\n    </div>\n  );\n}\n",
+        "viewport": "mobile"
+      },
       "tables": [
         {
           "name": "PageActionsMenuProps",
@@ -3121,6 +3212,14 @@
           "code": "import { Card, Stack, Text } from '@korzun/design/component';\nimport { PageFooterActions, TextInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function SubmitAForm() {\n  const [title, setTitle] = useState<string | undefined>('Dune');\n  const [author, setAuthor] = useState<string | undefined>('Frank Herbert');\n  const [saving, setSaving] = useState(false);\n  const [status, setStatus] = useState('Not saved');\n  const hasInvalidFields = !title?.trim() || !author?.trim();\n  return (\n    <Stack>\n      <form\n        id=\"book-form\"\n        action={async (data) => {\n          setSaving(true);\n          await new Promise((resolve) => setTimeout(resolve, 1500));\n          setSaving(false);\n          setStatus(`Saved ${String(data.get('title'))}`);\n        }}\n      >\n        <Stack>\n          <Card title=\"Details\">\n            <TextInput name=\"title\" label=\"Title\" value={title} onChange={setTitle} />\n          </Card>\n          <Card title=\"Identifiers\">\n            <TextInput name=\"author\" label=\"Author\" value={author} onChange={setAuthor} />\n          </Card>\n        </Stack>\n      </form>\n      <PageFooterActions\n        items={[\n          { label: 'Cancel', onClick: () => setStatus('Cancelled'), disabled: saving },\n          {\n            label: saving ? 'Saving…' : 'Save',\n            onClick: () => {},\n            submit: true,\n            form: 'book-form',\n            emphasis: true,\n            loading: saving,\n            disabled: hasInvalidFields,\n          },\n        ]}\n      />\n      <Text tone=\"muted\">{status}</Text>\n    </Stack>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/control/page-footer-actions/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { PageFooterActions } from '@korzun/design/control';\n\nexport default function Preview() {\n  return (\n    <PageFooterActions\n      items={[\n        { label: 'Cancel', onClick: () => {} },\n        { label: 'Save', onClick: () => {}, emphasis: true },\n      ]}\n    />\n  );\n}\n"
+      },
       "tables": [
         {
           "name": "PageFooterActionsProps",
@@ -3292,6 +3391,14 @@
           "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button, Popover } from '@korzun/design/control';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\nimport { useRef, useState } from 'react';\n\nconst useStyle = createUseStyles((theme: Theme) => ({\n  panel: {\n    backgroundColor: theme.color.bg.card,\n    border: `1px solid ${theme.color.border.strong}`,\n    borderRadius: theme.radius.md,\n    boxShadow: theme.shadow.hoverLift,\n    padding: theme.space.md,\n  },\n}));\n\nexport default function WithoutOnClose() {\n  const styles = useStyle();\n  const anchor = useRef<HTMLElement>(null);\n  const [open, setOpen] = useState(true);\n  return (\n    <Stack align=\"start\">\n      <Button ref={anchor} onClick={() => setOpen((value) => !value)}>\n        {open ? 'Hide' : 'Show'}\n      </Button>\n      <Popover anchorRef={anchor} open={open} matchWidth={false}>\n        <div className={styles.panel}>\n          <Text>Press Escape or click outside: it stays</Text>\n        </div>\n      </Popover>\n      <Text tone=\"muted\">Open: {open ? 'yes' : 'no'}</Text>\n    </Stack>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/control/popover/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { Stack } from '@korzun/design/component';\nimport { Button, Popover } from '@korzun/design/control';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\nimport { useRef } from 'react';\n\nconst useStyle = createUseStyles((theme: Theme) => ({\n  // Tall enough for the open panel, so the centred thumbnail keeps it in frame.\n  box: { height: 175 },\n  panel: {\n    backgroundColor: theme.color.bg.card,\n    border: `1px solid ${theme.color.border.strong}`,\n    borderRadius: theme.radius.md,\n    boxShadow: theme.shadow.hoverLift,\n    padding: theme.space.xs,\n  },\n}));\n\nexport default function Preview() {\n  const styles = useStyle();\n  const anchor = useRef<HTMLElement>(null);\n  return (\n    <Stack align=\"start\" className={styles.box}>\n      <Button ref={anchor} onClick={() => {}}>\n        Filters\n      </Button>\n      <Popover anchorRef={anchor} open matchWidth={false} onClose={() => {}}>\n        <div className={styles.panel}>\n          <Stack gap=\"xxs\">\n            <Button type=\"text\" onClick={() => {}}>\n              Unread\n            </Button>\n            <Button type=\"text\" onClick={() => {}}>\n              Finished\n            </Button>\n            <Button type=\"text\" onClick={() => {}}>\n              Favourites\n            </Button>\n          </Stack>\n        </div>\n      </Popover>\n    </Stack>\n  );\n}\n"
+      },
       "tables": [
         {
           "name": "PopoverProps",
@@ -3578,6 +3685,14 @@
           "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button, Dialog, Select } from '@korzun/design/control';\nimport { useState } from 'react';\n\nconst SHELVES = ['To read', 'Reading', 'Finished'];\n\nexport default function InDialog() {\n  const [open, setOpen] = useState(false);\n  const [shelf, setShelf] = useState<string | undefined>('To read');\n  return (\n    <Stack>\n      <Button onClick={() => setOpen(true)}>Move book</Button>\n      <Text tone=\"muted\">Shelf: {shelf ?? 'none'}</Text>\n      <Dialog\n        open={open}\n        onClose={() => setOpen(false)}\n        title=\"Move to shelf\"\n        footer={\n          <Button type=\"primary\" onClick={() => setOpen(false)}>\n            Done\n          </Button>\n        }\n      >\n        <Select name=\"shelf\" label=\"Shelf\" value={shelf} options={SHELVES} onChange={setShelf} />\n      </Dialog>\n    </Stack>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/control/select/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { Select } from '@korzun/design/control';\nimport { useState } from 'react';\n\nconst FRUITS = ['Apple', 'Banana', 'Cherry', 'Fig', 'Grape', 'Mango', 'Pear'];\n\nexport default function Preview() {\n  const [fruit, setFruit] = useState<string | undefined>('Banana');\n  return <Select name=\"fruit\" label=\"Fruit\" value={fruit} options={FRUITS} onChange={setFruit} />;\n}\n"
+      },
       "tables": [
         {
           "name": "SelectProps",
@@ -3991,6 +4106,14 @@
           "code": "import { Card, Stack, Text } from '@korzun/design/component';\nimport { SegmentedControl } from '@korzun/design/control';\nimport { useState } from 'react';\n\nconst VIEWS = [\n  { value: 'grid', label: 'Grid' },\n  { value: 'list', label: 'List' },\n] as const;\n\ntype View = (typeof VIEWS)[number]['value'];\n\nexport default function Surfaces() {\n  const [body, setBody] = useState<View>('grid');\n  const [header, setHeader] = useState<View>('list');\n  return (\n    <Stack>\n      <Card title=\"surface card, in the body\">\n        <SegmentedControl label=\"Body view\" options={VIEWS} value={body} onChange={setBody} />\n      </Card>\n      <Card\n        title=\"surface row, in the header\"\n        headerAction={\n          <SegmentedControl\n            label=\"Header view\"\n            options={VIEWS}\n            value={header}\n            onChange={setHeader}\n            surface=\"row\"\n          />\n        }\n      >\n        <Text>Showing {header}.</Text>\n      </Card>\n    </Stack>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/control/segmented-control/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { SegmentedControl } from '@korzun/design/control';\nimport { useState } from 'react';\n\nconst SORTS = [\n  { value: 'title', label: 'Title' },\n  { value: 'author', label: 'Author' },\n  { value: 'added', label: 'Added' },\n] as const;\n\nexport default function Preview() {\n  const [sort, setSort] = useState<(typeof SORTS)[number]['value']>('title');\n  return <SegmentedControl label=\"Sort by\" options={SORTS} value={sort} onChange={setSort} />;\n}\n"
+      },
       "tables": [
         {
           "name": "SegmentedControlProps",
@@ -4280,6 +4403,14 @@
           "code": "import { Inline, Stack, Text } from '@korzun/design/component';\nimport { Button, Switch } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function LoadingAndDisabled() {\n  const [subscribed, setSubscribed] = useState(false);\n  const [email, setEmail] = useState(false);\n  const [saving, setSaving] = useState(true);\n  const [changes, setChanges] = useState(0);\n  return (\n    <Stack>\n      <Switch\n        name=\"push-device\"\n        label=\"This device\"\n        checked={subscribed}\n        loading={saving}\n        onChange={(next) => {\n          setSubscribed(next);\n          setChanges((n) => n + 1);\n        }}\n      />\n      <Inline>\n        <Button onClick={() => setSaving((s) => !s)}>\n          {saving ? 'Finish save' : 'Start save'}\n        </Button>\n        <Text tone=\"muted\">Changes made: {changes}</Text>\n      </Inline>\n      <Switch\n        name=\"push-email\"\n        label=\"Email (not available)\"\n        disabled\n        checked={email}\n        onChange={setEmail}\n      />\n    </Stack>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/control/switch/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { Stack } from '@korzun/design/component';\nimport { Switch } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Preview() {\n  const [notifications, setNotifications] = useState(true);\n  const [autoSync, setAutoSync] = useState(false);\n  return (\n    <Stack align=\"start\">\n      <Switch\n        name=\"notifications\"\n        label=\"Notifications\"\n        checked={notifications}\n        onChange={setNotifications}\n      />\n      <Switch name=\"autoSync\" label=\"Auto sync\" checked={autoSync} onChange={setAutoSync} />\n    </Stack>\n  );\n}\n"
+      },
       "tables": [
         {
           "name": "SwitchProps",
@@ -4579,6 +4710,14 @@
           "code": "import { Stack, Text } from '@korzun/design/component';\nimport { TextArea } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function WithoutLabel() {\n  const [notes, setNotes] = useState<string | undefined>(undefined);\n  return (\n    <Stack>\n      <TextArea\n        name=\"notes\"\n        layout=\"inline\"\n        ariaLabel=\"Reading notes\"\n        placeholder=\"Reading notes\"\n        value={notes}\n        onChange={setNotes}\n      />\n      <Text tone=\"muted\">Characters: {notes?.length ?? 0}</Text>\n    </Stack>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/control/text-area/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { TextArea } from '@korzun/design/control';\nimport { createUseStyles } from '@korzun/design/theme';\nimport { useState } from 'react';\n\nconst useStyle = createUseStyles({ box: { width: 320 } });\n\nexport default function Preview() {\n  const styles = useStyle();\n  const [note, setNote] = useState<string | undefined>('Remember to return the book.');\n  return (\n    <div className={styles.box}>\n      <TextArea name=\"note\" layout=\"vertical\" label=\"Note\" value={note} onChange={setNote} />\n    </div>\n  );\n}\n"
+      },
       "tables": [
         {
           "name": "TextAreaProps",
@@ -4889,6 +5028,14 @@
           "code": "import { Inline, Text } from '@korzun/design/component';\nimport { TextInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function WithoutLabel() {\n  const [filter, setFilter] = useState<string | undefined>(undefined);\n  return (\n    <Inline>\n      <TextInput\n        name=\"filter\"\n        layout=\"inline\"\n        ariaLabel=\"Filter books\"\n        placeholder=\"Filter books\"\n        value={filter}\n        onChange={setFilter}\n      />\n      <Text tone=\"muted\">Filter: {filter === undefined ? 'none' : `“${filter}”`}</Text>\n    </Inline>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/control/text-input/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { TextInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Preview() {\n  const [name, setName] = useState<string | undefined>('Ada');\n  return <TextInput name=\"name\" label=\"Name\" value={name} onChange={setName} />;\n}\n"
+      },
       "tables": [
         {
           "name": "TextInputProps",
@@ -5210,6 +5357,14 @@
           "code": "import { Inline, Surface, Text } from '@korzun/design/component';\nimport { Button, Select, useModalDialog } from '@korzun/design/control';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\nimport { useState } from 'react';\n\nconst SHELVES = ['Reading', 'To read', 'Finished', 'Abandoned'];\n\nconst useStyles = createUseStyles((theme: Theme) => ({\n  dialog: { ...theme.recipe.modal.dialog, backgroundColor: theme.color.bg.card },\n  header: { ...theme.recipe.modal.header },\n  body: {\n    padding: `0 ${theme.space.xxl} ${theme.space.xxl}`,\n  },\n  footer: { ...theme.recipe.modal.footer },\n}));\n\nexport default function SelectInside() {\n  const styles = useStyles();\n  const [isOpen, setIsOpen] = useState(false);\n  const [shelf, setShelf] = useState<string | undefined>('Reading');\n  const close = () => setIsOpen(false);\n  const ref = useModalDialog(isOpen, close);\n  return (\n    <Inline>\n      <Button onClick={() => setIsOpen(true)}>Move book</Button>\n      <Text tone=\"muted\">Shelf: {shelf ?? 'none'}</Text>\n      <dialog ref={ref} className={styles.dialog}>\n        <Surface>\n          <div className={styles.header}>Move book</div>\n          <div className={styles.body}>\n            <Select\n              name=\"shelf\"\n              label=\"Shelf\"\n              layout=\"vertical\"\n              options={SHELVES}\n              value={shelf}\n              onChange={setShelf}\n            />\n          </div>\n          <div className={styles.footer}>\n            <Button type=\"primary\" onClick={close}>\n              Done\n            </Button>\n          </div>\n        </Surface>\n      </dialog>\n    </Inline>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/control/use-modal-dialog/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { Surface } from '@korzun/design/component';\nimport { Button, useModalDialog } from '@korzun/design/control';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\n\nconst useStyles = createUseStyles((theme: Theme) => ({\n  dialog: { ...theme.recipe.modal.dialog, backgroundColor: theme.color.bg.card },\n  header: { ...theme.recipe.modal.header },\n  body: {\n    padding: `0 ${theme.space.xxl} ${theme.space.xxl}`,\n    color: theme.color.text.secondary,\n  },\n  footer: { ...theme.recipe.modal.footer },\n}));\n\nexport default function Preview() {\n  const styles = useStyles();\n  const ref = useModalDialog(true, () => {});\n  return (\n    <dialog ref={ref} className={styles.dialog}>\n      <Surface>\n        <div className={styles.header}>Edit progress</div>\n        <div className={styles.body}>You are on page 42 of 310.</div>\n        <div className={styles.footer}>\n          <Button type=\"text\" onClick={() => {}}>\n            Cancel\n          </Button>\n          <Button type=\"primary\" onClick={() => {}}>\n            Save\n          </Button>\n        </div>\n      </Surface>\n    </dialog>\n  );\n}\n"
+      },
       "tables": [],
       "tokens": [],
       "changelog": [
@@ -5305,6 +5460,14 @@
           "code": "import { Alert, Card, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function WithAction() {\n  const [overdue, setOverdue] = useState(true);\n  return (\n    <Card title=\"Kitchen frame\">\n      {overdue ? (\n        <Alert\n          tone=\"warning\"\n          title=\"Frame is overdue\"\n          action={<Button onClick={() => setOverdue(false)}>Retry</Button>}\n        >\n          No check-in for 2h 14m.\n        </Alert>\n      ) : (\n        <Text tone=\"muted\">Checked in just now.</Text>\n      )}\n    </Card>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/component/alert/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { Alert } from '@korzun/design/component';\n\nexport default function Preview() {\n  return (\n    <Alert tone=\"warning\" title=\"Frame is overdue\">\n      No check-in for 2h 14m.\n    </Alert>\n  );\n}\n"
+      },
       "tables": [
         {
           "name": "AlertProps",
@@ -5581,6 +5744,14 @@
           "code": "import { Card, Stack, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Nested() {\n  const [pressed, setPressed] = useState<string | undefined>();\n  return (\n    <Card\n      title=\"Library (16px)\"\n      footer={<Button onClick={() => setPressed('Sync library')}>Sync library</Button>}\n    >\n      <Stack>\n        <Text>The feature sits on the page.</Text>\n        <Card\n          title=\"Devices (8px)\"\n          footer={<Button onClick={() => setPressed('Pair device')}>Pair device</Button>}\n        >\n          <Stack>\n            <Text>A group inside the feature, one level in.</Text>\n            <Card title=\"Kitchen frame (4px)\">\n              <Text>Deeper Cards stay at the smallest step.</Text>\n            </Card>\n          </Stack>\n        </Card>\n        <Text tone=\"muted\">Pressed: {pressed ?? 'nothing yet'}</Text>\n      </Stack>\n    </Card>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/component/card/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { Card, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\n\nexport default function Preview() {\n  return (\n    <Card\n      title=\"Device name\"\n      subTitle=\"Shown on the frame\"\n      footer={<Button type=\"primary\">Save</Button>}\n    >\n      <Text>Kitchen frame</Text>\n    </Card>\n  );\n}\n"
+      },
       "tables": [
         {
           "name": "CardProps",
@@ -5845,6 +6016,14 @@
           "code": "import { Card, CardDivider, Stack, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Actions() {\n  const [pending, setPending] = useState(['Middlemarch', 'Persuasion']);\n  const [last, setLast] = useState('nothing yet');\n  return (\n    <Card title=\"Requests\">\n      <Stack>\n        <CardDivider\n          actions={\n            <Button type=\"link\" onClick={() => setPending([])}>\n              Clear all\n            </Button>\n          }\n        >\n          Pending (actions right)\n        </CardDivider>\n        <Text>{pending.length > 0 ? pending.join(', ') : 'Nothing pending'}</Text>\n        <CardDivider\n          align=\"center\"\n          actionsAlign=\"left\"\n          actions={\n            <Button type=\"link\" onClick={() => setLast('Archive')}>\n              Archive\n            </Button>\n          }\n        >\n          Label center, actions left\n        </CardDivider>\n        <CardDivider\n          actionsAlign=\"center\"\n          actions={\n            <Button type=\"link\" onClick={() => setLast('Export')}>\n              Export\n            </Button>\n          }\n        >\n          Label left, actions center\n        </CardDivider>\n        <CardDivider\n          align=\"right\"\n          actionsAlign=\"right\"\n          actions={\n            <Button type=\"link\" onClick={() => setLast('Share')}>\n              Share\n            </Button>\n          }\n        >\n          Same side, label first\n        </CardDivider>\n        <Text tone=\"muted\">Last action: {last}</Text>\n      </Stack>\n    </Card>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/component/card-divider/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { Card, CardDivider, Stack, Text } from '@korzun/design/component';\n\nexport default function Preview() {\n  return (\n    <Card title=\"Notifications\">\n      <Stack>\n        <Text>Email me when a book is ready.</Text>\n        <CardDivider />\n        <Text>Keep notifications for 30 days.</Text>\n      </Stack>\n    </Card>\n  );\n}\n"
+      },
       "tables": [
         {
           "name": "CardDividerProps",
@@ -5960,6 +6139,14 @@
           "code": "import { Card, CardRow, Stack, Text } from '@korzun/design/component';\n\nexport default function Depth() {\n  return (\n    <Stack>\n      <CardRow>\n        <Text>On the page (16px)</Text>\n      </CardRow>\n      <Card title=\"Card\">\n        <CardRow>\n          <Text>In a Card (8px)</Text>\n        </CardRow>\n      </Card>\n    </Stack>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/component/card-row/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { CardRow, Stack, Text } from '@korzun/design/component';\n\nconst uploads = ['middlemarch.epub', 'persuasion.epub', 'villette.epub'];\n\nexport default function Preview() {\n  return (\n    <div style={{ width: 240 }}>\n      <Stack>\n        {uploads.map((fileName) => (\n          <CardRow key={fileName}>\n            <Text>{fileName}</Text>\n          </CardRow>\n        ))}\n      </Stack>\n    </div>\n  );\n}\n"
+      },
       "tables": [
         {
           "name": "CardRowProps",
@@ -6092,6 +6279,14 @@
           "code": "import { CollapsibleSection, Stack, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Actions() {\n  const [open, setOpen] = useState(true);\n  const [count, setCount] = useState(2);\n  return (\n    <CollapsibleSection\n      title=\"Reading list\"\n      subTitle={`${count} books`}\n      open={open}\n      onOpenToggle={() => setOpen((o) => !o)}\n      actions={[\n        <Button key=\"add\" type=\"text\" onClick={() => setCount((n) => n + 1)}>\n          Add\n        </Button>,\n      ]}\n    >\n      <Stack gap=\"xs\">\n        {Array.from({ length: count }, (_, i) => (\n          <Text key={i}>Book {i + 1}</Text>\n        ))}\n      </Stack>\n    </CollapsibleSection>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/component/collapsible-section/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { CollapsibleSection, Stack, Text } from '@korzun/design/component';\n\nexport default function Preview() {\n  return (\n    <CollapsibleSection title=\"Archived\" subTitle=\"3 items\" open>\n      <Stack gap=\"xs\">\n        <Text>Middlemarch</Text>\n        <Text>Bleak House</Text>\n        <Text>Persuasion</Text>\n      </Stack>\n    </CollapsibleSection>\n  );\n}\n"
+      },
       "tables": [
         {
           "name": "CollapsibleSectionProps",
@@ -6249,6 +6444,14 @@
           "code": "import { Card, EmptyState, Inline, Stack, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { useState } from 'react';\n\ntype State = 'loading' | 'error' | 'empty' | 'loaded';\n\nconst states: State[] = ['loading', 'error', 'empty', 'loaded'];\n\nexport default function ListStates() {\n  const [state, setState] = useState<State>('empty');\n\n  let list;\n  if (state === 'loading') {\n    list = <EmptyState title=\"Loading…\" />;\n  } else if (state === 'error') {\n    list = <EmptyState title=\"Error loading requests\" danger />;\n  } else if (state === 'empty') {\n    list = (\n      <EmptyState title=\"No requests yet\">Fill in the form above to ask for a book.</EmptyState>\n    );\n  } else {\n    list = (\n      <Card>\n        <Text>Middlemarch by George Eliot</Text>\n      </Card>\n    );\n  }\n\n  return (\n    <Stack>\n      <Inline wrap>\n        {states.map((s) => (\n          <Button key={s} type={s === state ? 'primary' : 'default'} onClick={() => setState(s)}>\n            {s}\n          </Button>\n        ))}\n      </Inline>\n      <Card title=\"New request\">\n        <Text tone=\"muted\">Title and author go here.</Text>\n      </Card>\n      {list}\n    </Stack>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/component/empty-state/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { EmptyState } from '@korzun/design/component';\n\nexport default function Preview() {\n  return <EmptyState title=\"No requests yet\">Fill in the form to ask for a book.</EmptyState>;\n}\n"
+      },
       "tables": [
         {
           "name": "EmptyStateProps",
@@ -6378,6 +6581,14 @@
           "code": "import { ErrorMessage, Inline, Stack, Text } from '@korzun/design/component';\n\nexport default function EmptyChildren() {\n  return (\n    <Stack gap=\"sm\">\n      <Inline>\n        <Text tone=\"muted\" size=\"sm\">\n          undefined:\n        </Text>\n        <ErrorMessage>{undefined}</ErrorMessage>\n      </Inline>\n      <Inline>\n        <Text tone=\"muted\" size=\"sm\">\n          null:\n        </Text>\n        <ErrorMessage>{null}</ErrorMessage>\n      </Inline>\n      <Inline>\n        <Text tone=\"muted\" size=\"sm\">\n          false:\n        </Text>\n        <ErrorMessage>{false}</ErrorMessage>\n      </Inline>\n      <Inline>\n        <Text tone=\"muted\" size=\"sm\">\n          empty string:\n        </Text>\n        <ErrorMessage>{''}</ErrorMessage>\n      </Inline>\n      <Inline>\n        <Text tone=\"muted\" size=\"sm\">\n          0:\n        </Text>\n        <ErrorMessage>{0}</ErrorMessage>\n      </Inline>\n    </Stack>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/component/error-message/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { ErrorMessage } from '@korzun/design/component';\n\nexport default function Preview() {\n  return <ErrorMessage>Could not save the book.</ErrorMessage>;\n}\n"
+      },
       "tables": [
         {
           "name": "ErrorMessageProps",
@@ -6513,6 +6724,14 @@
           "code": "import { Heading, Inline, Stack, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { useState } from 'react';\n\nconst title =\n  'Middlemarch: A Study of Provincial Life, in Eight Books, with a Prelude and a Finale, Followed by an Extended Note on the Text, a Chronology, a Map of the Midlands, and a Glossary of Provincial Terms';\n\nexport default function Truncate() {\n  const [opened, setOpened] = useState(0);\n  return (\n    <Stack gap=\"xl\">\n      <Stack gap=\"xs\">\n        <Text size=\"sm\" tone=\"muted\">\n          Without truncate\n        </Text>\n        <Heading level={3}>{title}</Heading>\n      </Stack>\n      <Stack gap=\"xs\">\n        <Text size=\"sm\" tone=\"muted\">\n          With truncate, beside an action\n        </Text>\n        <Inline justify=\"between\">\n          <Heading level={3} truncate>\n            {title}\n          </Heading>\n          <Button type=\"primary\" onClick={() => setOpened((n) => n + 1)}>\n            Open\n          </Button>\n        </Inline>\n        <Text size=\"sm\" tone=\"muted\">\n          Opened: {opened}\n        </Text>\n      </Stack>\n    </Stack>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/component/heading/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { Heading, Stack } from '@korzun/design/component';\n\nexport default function Preview() {\n  return (\n    <Stack gap=\"sm\">\n      <Heading level={1}>Library</Heading>\n      <Heading level={2}>Middlemarch</Heading>\n      <Heading level={3}>Chapter one</Heading>\n    </Stack>\n  );\n}\n"
+      },
       "tables": [
         {
           "name": "HeadingProps",
@@ -6799,6 +7018,14 @@
           "code": "import { Inline, Stack, Text } from '@korzun/design/component';\n\nexport default function Elements() {\n  return (\n    <Stack gap=\"lg\">\n      <Stack gap=\"xs\">\n        <Text size=\"sm\" tone=\"muted\">\n          as=\"nav\"\n        </Text>\n        <Inline as=\"nav\" gap=\"xl\">\n          <a href=\"/books\">Books</a>\n          <a href=\"/authors\">Authors</a>\n        </Inline>\n      </Stack>\n      <Stack gap=\"xs\">\n        <Text size=\"sm\" tone=\"muted\">\n          as=\"ul\"\n        </Text>\n        <Inline as=\"ul\" gap=\"xl\">\n          <li>\n            <Text>Middlemarch</Text>\n          </li>\n          <li>\n            <Text>Bleak House</Text>\n          </li>\n          <li>\n            <Text>Persuasion</Text>\n          </li>\n        </Inline>\n      </Stack>\n    </Stack>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/component/inline/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { Inline } from '@korzun/design/component';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\n\nconst useStyle = createUseStyles((theme: Theme) => ({\n  block: {\n    width: 64,\n    height: 48,\n    backgroundColor: theme.color.brand.light,\n    border: `1px solid ${theme.color.brand.outline}`,\n    borderRadius: theme.radius.md,\n  },\n}));\n\nexport default function Preview() {\n  const styles = useStyle();\n  return (\n    <Inline>\n      <div className={styles.block} />\n      <div className={styles.block} />\n      <div className={styles.block} />\n    </Inline>\n  );\n}\n"
+      },
       "tables": [
         {
           "name": "InlineProps",
@@ -7006,6 +7233,14 @@
           "code": "import { MetaLine, Tag, Text } from '@korzun/design/component';\n\nexport default function ElementItems() {\n  return (\n    <Text as=\"div\" size=\"sm\" tone=\"faint\">\n      <MetaLine\n        items={[\n          <time key=\"added\" dateTime=\"2026-03-12\">\n            12 March 2026\n          </time>,\n          'Kindle Scribe',\n          <Tag key=\"sync\" size=\"sm\" tone=\"success\">\n            Synced\n          </Tag>,\n        ]}\n      />\n    </Text>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/component/meta-line/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { MetaLine, Text } from '@korzun/design/component';\n\nexport default function Preview() {\n  return (\n    <Text as=\"div\" tone=\"faint\">\n      <MetaLine items={['Frank Herbert', 'Dune #3', '42%']} />\n    </Text>\n  );\n}\n"
+      },
       "tables": [
         {
           "name": "MetaLineProps",
@@ -7079,6 +7314,14 @@
           "code": "import { Inline, MetadataList, Stack } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function OptionalEntries() {\n  const [lastSync, setLastSync] = useState<string | undefined>(undefined);\n  return (\n    <Stack gap=\"md\">\n      <Inline>\n        <Button onClick={() => setLastSync(lastSync ? undefined : '12 March 2026')}>\n          {lastSync ? 'Forget sync' : 'Sync now'}\n        </Button>\n      </Inline>\n      <MetadataList\n        metadata={[\n          { title: 'Slug', value: 'my-kindle' },\n          ...(lastSync ? [{ title: 'Last sync', value: lastSync }] : []),\n        ]}\n      />\n    </Stack>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/component/metadata-list/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { MetadataList, Tag } from '@korzun/design/component';\n\nexport default function Preview() {\n  return (\n    <MetadataList\n      metadata={[\n        { title: 'Slug', value: 'my-kindle' },\n        { title: 'Cover size', value: '1860×2480' },\n        {\n          title: 'Status',\n          value: (\n            <Tag size=\"sm\" tone=\"success\">\n              Active\n            </Tag>\n          ),\n        },\n      ]}\n    />\n  );\n}\n"
+      },
       "tables": [
         {
           "name": "MetadataListProps",
@@ -7193,6 +7436,15 @@
           "code": "import { Inline, NavDesktop, Stack, type NavItem } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { BookIcon, SettingsIcon, UploadIcon } from '@korzun/design/icon';\nimport { useState } from 'react';\n\nexport default function Badges() {\n  const [pending, setPending] = useState(3);\n  const items: NavItem[] = [\n    { to: '/library', label: 'Library', Icon: BookIcon, active: true },\n    { to: '/upload', label: 'Upload', Icon: UploadIcon, active: false, badge: pending },\n    { to: '/settings', label: 'Settings', Icon: SettingsIcon, active: false, badge: 'dot' },\n  ];\n  return (\n    <Stack>\n      <NavDesktop items={items} />\n      <Inline>\n        <Button onClick={() => setPending((n) => n + 1)}>Add a fix</Button>\n        <Button onClick={() => setPending(0)}>Clear fixes</Button>\n      </Inline>\n    </Stack>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/component/nav-desktop/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { NavDesktop, type NavItem } from '@korzun/design/component';\nimport { BookIcon, SettingsIcon, UploadIcon } from '@korzun/design/icon';\n\nconst items: NavItem[] = [\n  { to: '/library', label: 'Library', Icon: BookIcon, active: true },\n  { to: '/upload', label: 'Upload', Icon: UploadIcon, active: false },\n  { to: '/settings', label: 'Settings', Icon: SettingsIcon, active: false },\n];\n\nexport default function Preview() {\n  return <NavDesktop items={items} />;\n}\n",
+        "viewport": "desktop"
+      },
       "tables": [
         {
           "name": "NavDesktopProps",
@@ -7354,6 +7606,15 @@
           "viewport": "mobile"
         }
       ],
+      "preview": {
+        "file": "src/component/nav-mobile/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { NavMobile, type NavItem } from '@korzun/design/component';\nimport { BookIcon, HomeIcon, ListCheckIcon, SettingsIcon, UploadIcon } from '@korzun/design/icon';\n\nconst items: NavItem[] = [\n  { to: '/library', label: 'Library', Icon: BookIcon, active: true },\n  { to: '/upload', label: 'Upload', Icon: UploadIcon, active: false },\n  { to: '/request', label: 'Request', Icon: ListCheckIcon, active: false },\n];\nconst home: NavItem = { to: '/library', label: 'Back to library', Icon: HomeIcon, active: false };\nconst settings: NavItem = { to: '/settings', label: 'Settings', Icon: SettingsIcon, active: false };\n\nexport default function Preview() {\n  return (\n    <NavMobile\n      main={{ items, collapsed: home }}\n      settings={{ items: [], collapsed: settings }}\n      expanded=\"main\"\n    />\n  );\n}\n",
+        "viewport": "mobile"
+      },
       "tables": [
         {
           "name": "NavMobileProps",
@@ -7590,6 +7851,14 @@
           "code": "import { Card, Page, Stack, Text } from '@korzun/design/component';\nimport { TextInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function DocumentTitle() {\n  const [title, setTitle] = useState<string | undefined>('Library');\n  return (\n    <Page documentTitle={title}>\n      <Card title=\"Tab title\">\n        <Stack>\n          <TextInput name=\"title\" label=\"Title\" value={title} onChange={setTitle} />\n          <Text tone=\"muted\">Tab title: {title}</Text>\n        </Stack>\n      </Card>\n    </Page>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/component/page/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { Card, Page, Text } from '@korzun/design/component';\n\nexport default function Preview() {\n  return (\n    <Page>\n      <Card title=\"Device password\" />\n      <Card title=\"Change password\">\n        <Text>Choose a new password.</Text>\n      </Card>\n    </Page>\n  );\n}\n"
+      },
       "tables": [
         {
           "name": "PageProps",
@@ -7822,6 +8091,14 @@
           "code": "import { Card, Inline, ProgressIndicator, Stack, Text } from '@korzun/design/component';\n\nexport default function InARow() {\n  return (\n    <Card title=\"Reading\">\n      <Stack gap=\"sm\">\n        <Inline justify=\"between\">\n          <Text weight=\"semibold\">Middlemarch</Text>\n          <ProgressIndicator value={0.42} ariaLabel=\"Reading progress for Middlemarch\" size={14} />\n        </Inline>\n        <Inline justify=\"between\">\n          <Text weight=\"semibold\">Persuasion</Text>\n          <ProgressIndicator value={1} ariaLabel=\"Reading progress for Persuasion\" size={14} />\n        </Inline>\n      </Stack>\n    </Card>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/component/progress-indicator/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { Inline, ProgressIndicator } from '@korzun/design/component';\n\nexport default function Preview() {\n  return (\n    <Inline gap=\"lg\">\n      <ProgressIndicator value={0.25} size={40} ariaLabel=\"Reading progress for Persuasion\" />\n      <ProgressIndicator value={0.6} size={40} ariaLabel=\"Reading progress for Middlemarch\" />\n      <ProgressIndicator value={0.9} size={40} ariaLabel=\"Reading progress for Villette\" />\n    </Inline>\n  );\n}\n"
+      },
       "tables": [
         {
           "name": "ProgressIndicatorProps",
@@ -7944,6 +8221,14 @@
           "code": "import { Spinner } from '@korzun/design/component';\n\nexport default function Standalone() {\n  return <Spinner size=\"xl\" label=\"Loading books\" />;\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/component/spinner/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { Spinner } from '@korzun/design/component';\n\n// Unsized, the spinner takes the surrounding font size: large here so it reads as a thumbnail.\nexport default function Preview() {\n  return (\n    <div style={{ fontSize: 48, display: 'flex' }}>\n      <Spinner label=\"Loading\" />\n    </div>\n  );\n}\n"
+      },
       "tables": [
         {
           "name": "SpinnerProps",
@@ -8097,6 +8382,14 @@
           "code": "import { Heading, Inline, Stack, Tag, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function NestedWithInline() {\n  const [all, setAll] = useState(false);\n  return (\n    <Stack gap=\"xxl\">\n      <Stack as=\"section\" gap=\"sm\">\n        <Inline justify=\"between\">\n          <Heading level={3}>Currently reading</Heading>\n          <Button type=\"link\" onClick={() => setAll((value) => !value)}>\n            {all ? 'Show less' : 'See all'}\n          </Button>\n        </Inline>\n        <Inline wrap>\n          <Tag>Fiction</Tag>\n          <Tag tone=\"author\">George Eliot</Tag>\n          {all && <Tag>Classic</Tag>}\n          {all && <Tag>1871</Tag>}\n        </Inline>\n      </Stack>\n      <Stack as=\"section\" gap=\"sm\">\n        <Heading level={3}>Up next</Heading>\n        <Text tone=\"muted\">Nothing queued yet.</Text>\n      </Stack>\n    </Stack>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/component/stack/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { Stack } from '@korzun/design/component';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\n\nconst useStyle = createUseStyles((theme: Theme) => ({\n  block: {\n    width: 200,\n    height: 28,\n    backgroundColor: theme.color.brand.light,\n    border: `1px solid ${theme.color.brand.outline}`,\n    borderRadius: theme.radius.md,\n  },\n}));\n\nexport default function Preview() {\n  const styles = useStyle();\n  return (\n    <Stack>\n      <div className={styles.block} />\n      <div className={styles.block} />\n      <div className={styles.block} />\n    </Stack>\n  );\n}\n"
+      },
       "tables": [
         {
           "name": "StackProps",
@@ -8275,6 +8568,14 @@
           "code": "import { Card, Inline, Stack, Surface, Text, useSurfaceRadius } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\nimport { useState, type ReactNode } from 'react';\n\nconst useStyle = createUseStyles((theme: Theme) => ({\n  box: {\n    border: `1px solid ${theme.color.border.default}`,\n    padding: theme.space.lg,\n  },\n}));\n\nconst LevelBox = ({ name, children }: { name: string; children?: ReactNode }) => {\n  const styles = useStyle();\n  const borderRadius = useSurfaceRadius();\n  const [taps, setTaps] = useState(0);\n  return (\n    <div className={styles.box} style={{ borderRadius }}>\n      <Surface>\n        <Stack gap=\"sm\">\n          <Inline>\n            <Button onClick={() => setTaps((n) => n + 1)}>{name}</Button>\n            <Text tone=\"muted\">\n              Radius {borderRadius}, taps: {taps}\n            </Text>\n          </Inline>\n          {children}\n        </Stack>\n      </Surface>\n    </div>\n  );\n};\n\nexport default function Nesting() {\n  return (\n    <Card title=\"Card\">\n      <LevelBox name=\"Box\">\n        <LevelBox name=\"Box in box\">\n          <LevelBox name=\"Box in box in box\" />\n        </LevelBox>\n      </LevelBox>\n    </Card>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/component/surface/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { Card, Surface, useSurfaceRadius } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\n\nconst useStyle = createUseStyles((theme: Theme) => ({\n  box: {\n    border: `1px solid ${theme.color.border.default}`,\n    padding: theme.space.lg,\n  },\n}));\n\nconst InsetBox = () => {\n  const styles = useStyle();\n  const borderRadius = useSurfaceRadius();\n  return (\n    <div className={styles.box} style={{ borderRadius }}>\n      <Surface>\n        <Button>Save</Button>\n      </Surface>\n    </div>\n  );\n};\n\nexport default function Preview() {\n  return (\n    <Card title=\"Settings\">\n      <InsetBox />\n    </Card>\n  );\n}\n"
+      },
       "tables": [
         {
           "name": "SurfaceProps",
@@ -8405,6 +8706,14 @@
           "code": "import { Card, Inline, Stack, Tag, Text } from '@korzun/design/component';\n\nexport default function InCard() {\n  return (\n    <Card title=\"Metadata fixes\">\n      <Stack gap=\"sm\">\n        <Inline wrap gap=\"xs\">\n          <Text>Middlemarch</Text>\n          <Tag size=\"sm\" tone=\"author\">\n            George Eliot\n          </Tag>\n          <Tag size=\"sm\">Fiction</Tag>\n          <Tag size=\"sm\">Classic</Tag>\n        </Inline>\n        <Inline gap=\"xs\">\n          <Text>Access</Text>\n          <Tag size=\"sm\" tone=\"neutral\">\n            Read only\n          </Tag>\n        </Inline>\n      </Stack>\n    </Card>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/component/tag/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { Inline, Tag } from '@korzun/design/component';\n\nexport default function Preview() {\n  return (\n    <Inline>\n      <Tag tone=\"success\">Published</Tag>\n      <Tag tone=\"author\">George Eliot</Tag>\n      <Tag tone=\"subject\">Fiction</Tag>\n    </Inline>\n  );\n}\n"
+      },
       "tables": [
         {
           "name": "TagProps",
@@ -8883,6 +9192,14 @@
           "code": "import { Inline, Stack, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { useState } from 'react';\n\nconst title =\n  'Middlemarch: A Study of Provincial Life, in Eight Books, with a Prelude and a Finale, Followed by an Extended Note on the Text, a Chronology, a Map of the Midlands, and a Glossary of Provincial Terms';\n\nexport default function Truncate() {\n  const [opened, setOpened] = useState(0);\n  return (\n    <Stack gap=\"xl\">\n      <Inline justify=\"between\">\n        <Text truncate weight=\"semibold\">\n          {title}\n        </Text>\n        <Button type=\"primary\" onClick={() => setOpened((n) => n + 1)}>\n          Open\n        </Button>\n      </Inline>\n      <Inline justify=\"between\">\n        <Stack gap=\"none\">\n          <Text truncate weight=\"semibold\">\n            {title}\n          </Text>\n          <Text size=\"sm\" tone=\"muted\">\n            George Eliot. Opened: {opened}\n          </Text>\n        </Stack>\n        <Button type=\"primary\" onClick={() => setOpened((n) => n + 1)}>\n          Open\n        </Button>\n      </Inline>\n    </Stack>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/component/text/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { Stack, Text } from '@korzun/design/component';\n\nexport default function Preview() {\n  return (\n    <Stack gap=\"sm\">\n      <Text as=\"p\">Welcome back.</Text>\n      <Text as=\"p\" size=\"sm\" tone=\"muted\">\n        3 books, updated yesterday\n      </Text>\n      <Text as=\"p\" size=\"xs\" tone=\"faint\">\n        Cover art by the publisher\n      </Text>\n    </Stack>\n  );\n}\n"
+      },
       "tables": [
         {
           "name": "TextProps",
@@ -9129,6 +9446,14 @@
           "code": "import { Card, Page, Text, ThemeSetting } from '@korzun/design/component';\nimport { useTheme, useThemeSetting } from '@korzun/design/theme';\n\nexport default function Basic() {\n  const [setting] = useThemeSetting();\n  const { colorScheme } = useTheme();\n  return (\n    <Page>\n      <ThemeSetting />\n      <Card title=\"Preview\">\n        <Text>\n          Choice: {setting}. Mode in use: {colorScheme}.\n        </Text>\n      </Card>\n    </Page>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/component/theme-setting/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { ThemeSetting } from '@korzun/design/component';\n\nexport default function Preview() {\n  return <ThemeSetting />;\n}\n"
+      },
       "tables": [
         {
           "name": "ThemeSettingProps",
@@ -9168,6 +9493,15 @@
           "viewport": "mobile"
         }
       ],
+      "preview": {
+        "file": "src/component/top-fade/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { Stack, Text, TopFade } from '@korzun/design/component';\n\n// Page content scrolled up under the band at the top edge.\nexport default function Preview() {\n  return (\n    <>\n      <TopFade />\n      <div style={{ position: 'fixed', top: -6, left: 16, right: 16 }}>\n        <Stack gap=\"xs\">\n          <Text>Middlemarch</Text>\n          <Text>Persuasion</Text>\n          <Text>Villette</Text>\n        </Stack>\n      </div>\n    </>\n  );\n}\n",
+        "viewport": "mobile"
+      },
       "tables": [
         {
           "name": "TopFadeProps",
@@ -9264,6 +9598,14 @@
           "code": "import { Inline, Stack, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { darkTheme, lightTheme, useTheme } from '@korzun/design/theme';\nimport { useState } from 'react';\n\nexport default function Values() {\n  const current = useTheme();\n  const [mode, setMode] = useState<'light' | 'dark'>('light');\n  const picked = mode === 'light' ? lightTheme : darkTheme;\n  return (\n    <Stack gap=\"md\" align=\"start\">\n      <Text>Page background here: {current.color.bg.page}</Text>\n      <Inline>\n        <Button type={mode === 'light' ? 'primary' : 'default'} onClick={() => setMode('light')}>\n          lightTheme\n        </Button>\n        <Button type={mode === 'dark' ? 'primary' : 'default'} onClick={() => setMode('dark')}>\n          darkTheme\n        </Button>\n      </Inline>\n      <Text tone=\"muted\">\n        {picked.colorScheme}: page {picked.color.bg.page}, text {picked.color.text.primary}\n      </Text>\n    </Stack>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/theme/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { Inline } from '@korzun/design/component';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\n\nconst useStyle = createUseStyles((theme: Theme) => ({\n  swatch: {\n    width: 40,\n    height: 40,\n    borderRadius: theme.radius.md,\n    border: `1px solid ${theme.color.border.default}`,\n  },\n  brand: { backgroundColor: theme.color.brand.default },\n  success: { backgroundColor: theme.color.success },\n  warning: { backgroundColor: theme.color.warning },\n  danger: { backgroundColor: theme.color.danger.default },\n  text: { backgroundColor: theme.color.text.primary },\n  card: { backgroundColor: theme.color.bg.card },\n}));\n\nconst tokens = ['brand', 'success', 'warning', 'danger', 'text', 'card'] as const;\n\nexport default function Preview() {\n  const styles = useStyle();\n  return (\n    <Inline gap=\"sm\">\n      {tokens.map((token) => (\n        <div key={token} className={`${styles.swatch} ${styles[token]}`} />\n      ))}\n    </Inline>\n  );\n}\n"
+      },
       "tables": [
         {
           "name": "ThemeProviderProps",
@@ -9516,6 +9858,14 @@
           "code": "import { Inline, Stack, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { ToastProvider, useToast } from '@korzun/design/toast';\nimport { useState } from 'react';\n\nconst Sender = () => {\n  const showToast = useToast();\n  const [sent, setSent] = useState(0);\n  return (\n    <Stack gap=\"md\">\n      <Inline>\n        <Button\n          onClick={() => {\n            showToast(`Message ${sent + 1} sent`, 'success');\n            setSent(sent + 1);\n          }}\n        >\n          Send message\n        </Button>\n      </Inline>\n      <Text tone=\"muted\">Sent: {sent}</Text>\n    </Stack>\n  );\n};\n\nexport default function MaxToasts() {\n  return (\n    <ToastProvider maxToasts={2}>\n      <Sender />\n    </ToastProvider>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/toast/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { ToastProvider, useToast } from '@korzun/design/toast';\nimport { useEffect } from 'react';\n\n// A toast leaves after a few seconds, so a fresh one replaces it just before it would go.\nconst Show = () => {\n  const showToast = useToast();\n  useEffect(() => {\n    showToast('Password changed', 'success');\n    const timer = setInterval(() => showToast('Password changed', 'success'), 3500);\n    return () => clearInterval(timer);\n  }, [showToast]);\n  return null;\n};\n\nexport default function Preview() {\n  return (\n    <ToastProvider maxToasts={1}>\n      <Show />\n    </ToastProvider>\n  );\n}\n"
+      },
       "tables": [
         {
           "name": "ToastProviderProps",
@@ -9746,6 +10096,14 @@
           "code": "import { Inline, Stack, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { ChevronIcon, SearchIcon } from '@korzun/design/icon';\nimport { useState } from 'react';\n\nexport default function InComponents() {\n  const [searches, setSearches] = useState(0);\n  const [pages, setPages] = useState(1);\n  return (\n    <Stack gap=\"md\" align=\"start\">\n      <Inline>\n        <Button prefix={SearchIcon} onClick={() => setSearches((n) => n + 1)}>\n          Search\n        </Button>\n        <Button suffix={ChevronIcon} onClick={() => setPages((n) => n + 1)}>\n          Next page\n        </Button>\n      </Inline>\n      <Text tone=\"muted\">\n        Searches: {searches}, page {pages}\n      </Text>\n    </Stack>\n  );\n}\n"
         }
       ],
+      "preview": {
+        "file": "src/icon/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { Inline } from '@korzun/design/component';\nimport {\n  BookIcon,\n  CheckIcon,\n  HomeIcon,\n  SearchIcon,\n  SettingsIcon,\n  UploadIcon,\n  UserIcon,\n} from '@korzun/design/icon';\n\nconst icons = [HomeIcon, BookIcon, SearchIcon, UploadIcon, UserIcon, CheckIcon, SettingsIcon];\n\nexport default function Preview() {\n  return (\n    <Inline gap=\"lg\">\n      {icons.map((Icon, index) => (\n        <Icon key={index} width={28} height={28} aria-hidden />\n      ))}\n    </Inline>\n  );\n}\n"
+      },
       "tables": [
         {
           "name": "IconProps",
@@ -9903,6 +10261,14 @@
             "Switch"
           ],
           "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.6.0 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px. A text field, `ChipsInput` box or field label directly on a Page also moves its text 16px in from the edge (8px elsewhere), the inset `Button` keeps, so it clears the deeper corner."
+        },
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "General"
+          ],
+          "text": "Docs site: each module has an `examples/preview.tsx` that shows the component alone; the overview thumbnails render it instead of the first example, and it never appears on the component page or in the doc. `npm run docs:check` fails for a module without one."
         }
       ]
     },
