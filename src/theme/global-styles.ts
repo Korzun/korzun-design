@@ -4,6 +4,13 @@ import type { Theme } from './theme.js';
 
 const useGlobalStyles = createUseStyles((theme: Theme) => ({
   '@global': {
+    // The reset every component is drawn against (Bookplate's index.html): with
+    // the browser's content-box, an input's padding and border land on top of
+    // `layout.controlHeight` and the field renders ~18px too tall.
+    // Two rules, not one list: a selector list fails whole where a
+    // pseudo-element is not understood (jsdom), and would drop the reset.
+    '*': { boxSizing: 'border-box', margin: 0, padding: 0 },
+    '*::before, *::after': { boxSizing: 'border-box', margin: 0, padding: 0 },
     html: {
       backgroundColor: theme.color.bg.page,
     },

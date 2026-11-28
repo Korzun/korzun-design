@@ -1,5 +1,5 @@
 {
-  "version": "0.6.0",
+  "version": "0.7.0",
   "modules": [
     {
       "id": "control/back-button",
@@ -9157,6 +9157,15 @@
       "tokens": [],
       "changelog": [
         {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "ThemeProvider",
+            "GlobalStyles"
+          ],
+          "text": "`GlobalStyles` (rendered by `ThemeProvider`) ships the reset the components are drawn against: every element is `box-sizing: border-box` with no default margin or padding, as in Bookplate's and Scribe's `index.html`. Without it a text field was 51px tall instead of `layout.controlHeight` (33px). An app that already carries this reset sees no change; one that relied on browser default margins (`p`, `h1`, `ul`) loses them."
+        },
+        {
           "version": "0.6.0",
           "date": "2026-11-26",
           "tags": [
@@ -9619,6 +9628,21 @@
     }
   ],
   "changelog": [
+    {
+      "version": "0.7.0",
+      "date": "2026-11-26",
+      "entries": [
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "ThemeProvider",
+            "GlobalStyles"
+          ],
+          "text": "`GlobalStyles` (rendered by `ThemeProvider`) ships the reset the components are drawn against: every element is `box-sizing: border-box` with no default margin or padding, as in Bookplate's and Scribe's `index.html`. Without it a text field was 51px tall instead of `layout.controlHeight` (33px). An app that already carries this reset sees no change; one that relied on browser default margins (`p`, `h1`, `ul`) loses them."
+        }
+      ]
+    },
     {
       "version": "0.6.0",
       "date": "2026-11-26",

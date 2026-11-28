@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.7.0 — 2026-11-26
+
+- [ThemeProvider, GlobalStyles] `GlobalStyles` (rendered by `ThemeProvider`) ships the reset the components are drawn against: every element is `box-sizing: border-box` with no default margin or padding, as in Bookplate's and Scribe's `index.html`. Without it a text field was 51px tall instead of `layout.controlHeight` (33px). An app that already carries this reset sees no change; one that relied on browser default margins (`p`, `h1`, `ul`) loses them.
+
 ## 0.6.0 — 2026-11-26
 
 - [lightTheme, darkTheme] New `theme.layout.formWidth` (`400px`): the width of a standalone form column such as sign-in, narrower than a dialog.
