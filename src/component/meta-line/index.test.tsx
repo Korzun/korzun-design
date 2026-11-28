@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { metaItems, renderWithProviders } from '../../test-utils.js';
 import { lightTheme } from '../../theme/theme.js';
@@ -137,5 +137,50 @@ describe('MetaLine', () => {
     );
     expect(error).not.toHaveBeenCalled();
     error.mockRestore();
+  });
+
+  it("treats separator='' as unset: gaps, no separator variable", () => {
+    const { container } = renderLine(<MetaLine items={['a', 'b']} separator="" />);
+    const list = listOf(container);
+    expect(getComputedStyle(list).columnGap).toBe(lightTheme.space.lg);
+    expect(list.style.getPropertyValue('--meta-separator')).toBe('');
+  });
+
+  it('mixes plain items and pairs with a separator, keeping order and no separator text', () => {
+    const { container } = renderLine(
+      <MetaLine
+        items={['Frank Herbert', { label: 'format', value: 'EPUB' }, '42%']}
+        separator="·"
+      />
+    );
+    expect(metaItems(container)).toEqual(['Frank Herbert', 'format EPUB', '42%']);
+    expect(container.textContent).not.toContain('·');
+  });
+
+  it('clips with logical properties so right-to-left lines clip the right edge', () => {
+    renderLine(<MetaLine items={['a', 'b']} separator="|" />);
+    const css = Array.from(document.querySelectorAll('style'))
+      .map((s) => s.textContent)
+      .join('\n');
+    expect(css).toContain('margin-inline-start: -1em');
+    expect(css).not.toContain('margin-left: -1em');
+  });
+
+  describe('multi-character separator warning', () => {
+    afterEach(() => vi.restoreAllMocks());
+
+    it("warns once per distinct separator for '->'", () => {
+      const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      renderLine(<MetaLine items={['a', 'b']} separator="->" />);
+      renderLine(<MetaLine items={['a', 'b']} separator="->" />);
+      expect(warn).toHaveBeenCalledTimes(1);
+      expect(warn.mock.calls[0][0]).toContain('"->"');
+    });
+
+    it.each(['·', '👍🏽', ''])('does not warn for %j', (separator) => {
+      const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      renderLine(<MetaLine items={['a', 'b']} separator={separator} />);
+      expect(warn).not.toHaveBeenCalled();
+    });
   });
 });

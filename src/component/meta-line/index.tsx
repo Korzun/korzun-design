@@ -17,7 +17,7 @@ export type MetaLineItem = ReactNode | MetaLinePair;
 export type MetaLineProps = {
   /** The data, in order: nodes and `{ label, value }` pairs, mixed freely. `null`, `undefined` and `false` items (and pairs with such a value) are skipped, and nothing renders when every item is. `''` and `0` are kept, so filter them yourself. */
   items: MetaLineItem[];
-  /** One character drawn between items (`'·'`, `'|'`, `'/'`). It never dangles at a line break and is not read by screen readers. Unset: items are spaced by gaps instead. */
+  /** One character (one grapheme) drawn between items (`'·'`, `'|'`, `'/'`). It never dangles at a line break, works in right-to-left text, and is not read by screen readers. Unset or `''`: items are spaced by gaps instead. A longer string overflows its one-character cell and overlaps the next item; in development it logs a console warning once. */
   separator?: string;
   /** On the outer element. The font size and colour set here reach every item, and the separators scale with it. Override with `'&&'` specificity, never `!important`. */
   className?: string;
@@ -25,6 +25,28 @@ export type MetaLineProps = {
 
 const isPair = (item: MetaLineItem): item is MetaLinePair =>
   typeof item === 'object' && item !== null && !isValidElement(item) && 'label' in item;
+
+declare const process: { env: { NODE_ENV?: string } };
+
+const graphemes = (s: string) =>
+  typeof Intl !== 'undefined' && 'Segmenter' in Intl
+    ? Array.from(new Intl.Segmenter().segment(s)).length
+    : Array.from(s).length;
+
+const warned = new Set<string>();
+
+/** Development only: the separator cell is one character wide, so say so once per separator. */
+const warnLongSeparator = (separator: string) => {
+  if (process.env.NODE_ENV === 'production' || warned.has(separator)) {
+    return;
+  }
+  if (graphemes(separator) > 1) {
+    warned.add(separator);
+    console.warn(
+      `MetaLine: separator "${separator}" is more than one character and will overflow its cell; use a single character such as "·".`
+    );
+  }
+};
 
 const absent = (value: unknown) => value === null || value === undefined || value === false;
 
@@ -52,9 +74,12 @@ export const MetaLine = ({ items, separator, className }: MetaLineProps) => {
   if (present.length === 0) {
     return null;
   }
-  const separated = separator !== undefined;
+  const separated = separator !== undefined && separator !== '';
+  if (separated) {
+    warnLongSeparator(separator);
+  }
   const style = separated
-    ? ({ '--meta-separator': cssString(separator) } as CSSProperties)
+    ? ({ '--meta-separator': cssString(separator!) } as CSSProperties)
     : undefined;
   return (
     <div className={cx(styles.root, className)}>

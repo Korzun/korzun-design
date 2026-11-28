@@ -2,8 +2,8 @@ import { createUseStyles, type Theme } from '../../theme/index.js';
 
 /**
  * Width of one separator cell. In `em` so it scales with whatever font size
- * the caller sets on the line. With a separator, the list is shifted left by
- * exactly this much and its overflow clipped, so the separator that leads the
+ * the caller sets on the line. With a separator, the list is shifted toward the
+ * line start (left, or right in RTL) by exactly this much and its overflow clipped, so the separator that leads the
  * FIRST item on every line (not just the first line) falls outside the box.
  */
 const separatorWidth = '1em';
@@ -22,7 +22,7 @@ export const useStyle = createUseStyles((theme: Theme) => ({
   // A separator: the character (a CSS string in `--meta-separator`, set
   // inline) leads each item in a 1em cell; the first on each line is clipped.
   separated: {
-    '&&': { columnGap: 0, rowGap: 0, marginLeft: `-${separatorWidth}` },
+    '&&': { columnGap: 0, rowGap: 0, marginInlineStart: `-${separatorWidth}` },
     '& $item::before': {
       content: 'var(--meta-separator)',
       display: 'inline-block',

@@ -47,11 +47,17 @@ Fit"), then its value.
 
 ### Separator
 
-`separator` takes one character (`'·'`, `'|'`, `'/'`). It sits in a 1em
+`separator` takes one character (`'·'`, `'|'`, `'/'`); `''` counts as unset. It sits in a 1em
 cell before each item, drawn by CSS (`::before`), so screen readers read only
 the data, and the one that would lead a line is clipped: none dangles at a line
 end or starts the next line. It is drawn in `text.muted`. Without
 `separator`, items are `space.lg` apart and lines `space.sm` apart.
+
+One character means one grapheme (an emoji with a skin tone counts as one). A
+longer string such as `' | '` or `'->'` overflows the 1em cell and overlaps the
+next item, so in development MetaLine logs a `console.warn` once per such
+separator. It works in right-to-left text too: the clip uses logical
+properties, so the line start is clipped on whichever side it is.
 
 ### Long data
 
@@ -266,7 +272,7 @@ export default function SeparatorChoices() {
 | --- | --- | --- | --- |
 | `className` | `string` |  | On the outer element. The font size and colour set here reach every item, and the separators scale with it. Override with `'&&'` specificity, never `!important`. |
 | `items` (required) | [MetaLineItem](#types)`[]` |  | The data, in order: nodes and `{ label, value }` pairs, mixed freely. `null`, `undefined` and `false` items (and pairs with such a value) are skipped, and nothing renders when every item is. `''` and `0` are kept, so filter them yourself. |
-| `separator` | `string` |  | One character drawn between items (`'·'`, `'\|'`, `'/'`). It never dangles at a line break and is not read by screen readers. Unset: items are spaced by gaps instead. |
+| `separator` | `string` |  | One character (one grapheme) drawn between items (`'·'`, `'\|'`, `'/'`). It never dangles at a line break, works in right-to-left text, and is not read by screen readers. Unset or `''`: items are spaced by gaps instead. A longer string overflows its one-character cell and overlaps the next item; in development it logs a console warning once. |
 
 ### MetaLinePair
 
@@ -303,6 +309,7 @@ type MetaLineItem = ReactNode | MetaLinePair;
 
 ## Changelog
 
+- **0.7.0** (2026-11-26): `separator=""` now counts as unset (gaps, no empty cells); a separator longer than one character logs a development-only console warning once, since it overflows its cell; the separator clip uses logical properties, so right-to-left lines clip and place the separator correctly.
 - **0.7.0** (2026-11-26): **Breaking:** without `separator` the items are spaced by gaps (`space.lg`, lines `space.sm`), not dots; pass `separator="·"` for the old look. `separator` takes any one character, drawn by CSS between items. Items can now be labelled pairs, `{ label, value }`, shown with a faint capitalized label, mixed with plain items; a pair whose value is `null`, `undefined` or `false` is skipped. New `MetaLineItem` and `MetaLinePair` types. MetaLine replaces `MetadataList`.
 - **0.7.0** (2026-11-26): **Breaking:** `MetadataList` (and its `Metadata` and `MetadataListProps` types) is removed; use `MetaLine` with `{ label, value }` items and no `separator` for its gapped, labelled look, wrapped in `Text size="sm"` for its size (MetaLine inherits font size and colour; MetadataList set `fontSize.sm` and `text.primary`). Its 15rem cap on each value is gone, and a pair with an empty value is skipped instead of showing its label alone.
 

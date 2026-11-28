@@ -8733,7 +8733,7 @@
         "MetaLineProps"
       ],
       "importLine": "import { MetaLine, type MetaLineItem, type MetaLinePair, type MetaLineProps } from '@korzun/design/component'",
-      "body": "A short run of data about one record. Two looks:\n\n- **A separated line**, a row's secondary line: \"Frank Herbert · Book 3 · 42%\".\n  Pass `separator`.\n- **Labelled facts**, a card's body: \"Format EPUB   Size 2.1 MB\". Pass\n  `{ label, value }` items and no separator; items are spaced by gaps.\n\nEither way it wraps *between* data, never inside one.\n\nUse something else for: many fields, or the same fields across records\n(`Table`), a row's primary title (`Text` or `Heading`).\n\n## Usage\n\n### Items and pairs\n\n`items` holds nodes and `{ label, value }` pairs, mixed freely. A pair shows\nits label in `text.faint`, capitalized by CSS (`'cover fit'` shows as \"Cover\nFit\"), then its value.\n\n- `null`, `undefined` and `false` items are skipped, and so is a pair whose\n  `value` is one of them, so pass optional data as `cond && value` or\n  `{ label, value: maybe }`.\n- `''` and `0` are kept; filter them yourself.\n- **Renders `null`** when every item is skipped: no empty line is left behind.\n- Items are keyed by position.\n\n### Separator\n\n`separator` takes one character (`'·'`, `'|'`, `'/'`). It sits in a 1em\ncell before each item, drawn by CSS (`::before`), so screen readers read only\nthe data, and the one that would lead a line is clipped: none dangles at a line\nend or starts the next line. It is drawn in `text.muted`. Without\n`separator`, items are `space.lg` apart and lines `space.sm` apart.\n\n### Long data\n\nA datum never wraps inside itself. One wider than the whole line ellipsizes.\n\n### Typography\n\nMetaLine sets no font size or colour of its own except the label and\nseparator colours; wrap it in `Text` to set the rest (`size=\"sm\"` in a card\nbody, `tone=\"faint\"` for a row's secondary line).\n\n## Do / don't\n\n- Do pass conditional data as `cond && value`; `false` is skipped.\n- Do set typography by wrapping the line in `Text` (`size`, `tone`); the items inherit it.\n- Don't join data into one string with your own \" · \": wrapping then breaks\n  inside a datum and the dots are read aloud.\n- Don't pass empty strings; with a separator they leave a stray one.",
+      "body": "A short run of data about one record. Two looks:\n\n- **A separated line**, a row's secondary line: \"Frank Herbert · Book 3 · 42%\".\n  Pass `separator`.\n- **Labelled facts**, a card's body: \"Format EPUB   Size 2.1 MB\". Pass\n  `{ label, value }` items and no separator; items are spaced by gaps.\n\nEither way it wraps *between* data, never inside one.\n\nUse something else for: many fields, or the same fields across records\n(`Table`), a row's primary title (`Text` or `Heading`).\n\n## Usage\n\n### Items and pairs\n\n`items` holds nodes and `{ label, value }` pairs, mixed freely. A pair shows\nits label in `text.faint`, capitalized by CSS (`'cover fit'` shows as \"Cover\nFit\"), then its value.\n\n- `null`, `undefined` and `false` items are skipped, and so is a pair whose\n  `value` is one of them, so pass optional data as `cond && value` or\n  `{ label, value: maybe }`.\n- `''` and `0` are kept; filter them yourself.\n- **Renders `null`** when every item is skipped: no empty line is left behind.\n- Items are keyed by position.\n\n### Separator\n\n`separator` takes one character (`'·'`, `'|'`, `'/'`); `''` counts as unset. It sits in a 1em\ncell before each item, drawn by CSS (`::before`), so screen readers read only\nthe data, and the one that would lead a line is clipped: none dangles at a line\nend or starts the next line. It is drawn in `text.muted`. Without\n`separator`, items are `space.lg` apart and lines `space.sm` apart.\n\nOne character means one grapheme (an emoji with a skin tone counts as one). A\nlonger string such as `' | '` or `'->'` overflows the 1em cell and overlaps the\nnext item, so in development MetaLine logs a `console.warn` once per such\nseparator. It works in right-to-left text too: the clip uses logical\nproperties, so the line start is clipped on whichever side it is.\n\n### Long data\n\nA datum never wraps inside itself. One wider than the whole line ellipsizes.\n\n### Typography\n\nMetaLine sets no font size or colour of its own except the label and\nseparator colours; wrap it in `Text` to set the rest (`size=\"sm\"` in a card\nbody, `tone=\"faint\"` for a row's secondary line).\n\n## Do / don't\n\n- Do pass conditional data as `cond && value`; `false` is skipped.\n- Do set typography by wrapping the line in `Text` (`size`, `tone`); the items inherit it.\n- Don't join data into one string with your own \" · \": wrapping then breaks\n  inside a datum and the dots are read aloud.\n- Don't pass empty strings; with a separator they leave a stray one.",
       "examples": [
         {
           "file": "src/component/meta-line/examples/01-basic.tsx",
@@ -8813,7 +8813,7 @@
               "name": "separator",
               "type": "string",
               "required": false,
-              "description": "One character drawn between items (`'·'`, `'|'`, `'/'`). It never dangles at a line break and is not read by screen readers. Unset: items are spaced by gaps instead."
+              "description": "One character (one grapheme) drawn between items (`'·'`, `'|'`, `'/'`). It never dangles at a line break, works in right-to-left text, and is not read by screen readers. Unset or `''`: items are spaced by gaps instead. A longer string overflows its one-character cell and overlaps the next item; in development it logs a console warning once."
             }
           ]
         },
@@ -8871,6 +8871,14 @@
         }
       ],
       "changelog": [
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "MetaLine"
+          ],
+          "text": "`separator=\"\"` now counts as unset (gaps, no empty cells); a separator longer than one character logs a development-only console warning once, since it overflows its cell; the separator clip uses logical properties, so right-to-left lines clip and place the separator correctly."
+        },
         {
           "version": "0.7.0",
           "date": "2026-11-26",
@@ -11122,6 +11130,14 @@
       "version": "0.7.0",
       "date": "2026-11-26",
       "entries": [
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "MetaLine"
+          ],
+          "text": "`separator=\"\"` now counts as unset (gaps, no empty cells); a separator longer than one character logs a development-only console warning once, since it overflows its cell; the separator clip uses logical properties, so right-to-left lines clip and place the separator correctly."
+        },
         {
           "version": "0.7.0",
           "date": "2026-11-26",
