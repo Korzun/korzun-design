@@ -91,6 +91,3 @@ export function useModal(
 
   return ref;
 }
-
-/** @deprecated Renamed `useModal`. */
-export const useModalDialog = useModal;

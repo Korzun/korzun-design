@@ -7,15 +7,13 @@ category: Overlays
 
 <!-- generated:import -->
 
-`import { Dialog, Modal, type DialogProps, type ModalProps } from '@korzun/design/control'`
+`import { Modal, type ModalProps } from '@korzun/design/control'`
 
 <!-- /generated:import -->
 
 A modal on a native `<dialog>` (via [`useModal`](use-modal.md)): a title, a body
 (`children`), and an optional `footer` for actions. It is always mounted and
 fully controlled by `open`. The title names the dialog for assistive tech.
-
-`Dialog` and `DialogProps` are the old names, kept as deprecated aliases.
 
 Use something else for: a yes/no question ([`ConfirmModal`](confirm-modal.md)),
 a non-blocking notice (toast).
@@ -246,13 +244,6 @@ export default function Form() {
 | `open` (required) | `boolean` |  | Controls visibility. Keep the Modal mounted and toggle this. |
 | `title` (required) | `ReactNode` |  | Header content; also the dialog's accessible name. |
 
-### Types
-
-```ts
-/** Deprecated: use ModalProps. */
-type DialogProps = ModalProps;
-```
-
 <!-- /generated:props -->
 
 <!-- generated:tokens -->
@@ -276,7 +267,7 @@ type DialogProps = ModalProps;
 ## Changelog
 
 - **0.7.0** (2026-11-26): `CardDivider` is now `Divider` and works anywhere: directly in a Card or Dialog body it reaches the edges as before (cancelling `space.xl` in a large Card, 1px in a small one, `space.xxl` in a Dialog, where it used to overhang everything but a large Card), and on the page, in a `CardRow`, `Alert`, `Surface` or nested Card it spans its container. The new `bleed` prop overrides that. **Breaking:** the old names `CardDivider`, `CardDividerProps` and `CardDividerAlign` are removed; import `Divider`, `DividerProps` and `DividerAlign`.
-- **0.7.0** (2026-11-26): `Dialog` is renamed `Modal` and `useModalDialog` is renamed `useModal`, matching `ConfirmModal`; behaviour is unchanged. `Dialog`, `DialogProps` and `useModalDialog` stay as deprecated aliases. The footer marker attribute is now `data-modal-footer`.
+- **0.7.0** (2026-11-26): **Breaking:** `Dialog` is renamed `Modal` and `useModalDialog` is renamed `useModal`, matching `ConfirmModal`; behaviour is unchanged. The old names `Dialog`, `DialogProps` and `useModalDialog` are removed. The footer marker attribute is now `data-modal-footer`.
 - **0.5.0** (2026-11-24): Surface depth: corners are concentric site-wide with no radius props. `Page` provides depth 0, `Dialog` 1, and `Card`, `CardRow` and `Alert` each provide one level deeper than where they sit; `Popover` (so `Menu` and the `Select` list) provides a fixed 2. Depth 0 is `radius.lg`, 1 is `md`, 2 and deeper is `sm`. `Button`, `Select`, `Card`, `CardRow` and `Alert` follow it; an explicit `Button radius` or `Select surface` still wins. With no `Page`, `Dialog`, `Card`, `CardRow`, `Alert` or `Surface` above it, a component keeps its 0.4.0 look; a bare `Card` (no `Page`) still counts as depth 0 and gives its contents depth 1, so its Buttons and nested Cards change as below.
 - **0.5.0** (2026-11-24): **Visible changes:**
   - Buttons in a Card default to 8px (they were 16px unless `radius="card"` was set), and Buttons in a Dialog body are 8px.

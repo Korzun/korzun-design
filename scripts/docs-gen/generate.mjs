@@ -4,7 +4,7 @@ import { join, posix, sep } from 'node:path';
 
 import { barrelStatements, knownNames } from './barrels.mjs';
 import { CATEGORIES, moduleOrder } from './categories.mjs';
-import { parseChangelog, validateTags } from './changelog.mjs';
+import { currentTags, parseChangelog, validateTags } from './changelog.mjs';
 import { readDefaults } from './defaults.mjs';
 import { docFiles } from './doc-files.mjs';
 import { PREVIEW_FILE, readExample } from './examples.mjs';
@@ -261,7 +261,7 @@ export function generate(repo, { strict = false, warn = console.warn } = {}) {
   if (!existsSync(join(repo, 'dist'))) throw new Error('dist/ missing: run npm run build');
 
   const pkg = JSON.parse(readFileSync(join(repo, 'package.json'), 'utf8'));
-  const changelog = parseChangelog(readIf(join(repo, 'CHANGELOG.md')) ?? '');
+  const changelog = currentTags(parseChangelog(readIf(join(repo, 'CHANGELOG.md')) ?? ''));
   const errors = validateTags(changelog, knownNames(repo));
   if (errors.length > 0) throw new Error(errors.join('\n'));
 

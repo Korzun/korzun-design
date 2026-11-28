@@ -66,7 +66,7 @@ JSON
 cat >"$tmp/app/index.ts" <<'TS'
 import { applyTransparency } from '@korzun/design';
 import { Alert, Code, Page, Surface, Table, CodeBlock, MetaLine, useSurfaceRadius, type AlertProps, type AlertTone, type CardProps, type CodeBlockProps, type CodeProps, type ErrorMessageProps, type HeadingProps, type InlineProps, type MetaLineItem, type MetaLinePair, type SpinnerProps, type StackProps, type TableColumn, type TableProps, type TagTone, type TextProps } from '@korzun/design/component';
-import { Button, Menu, Dialog, useModal, useModalDialog, type ButtonProps, type DialogProps, type ModalProps, type MenuItem, type MenuProps, type PopoverSide } from '@korzun/design/control';
+import { Button, Menu, Modal, useModal, type ButtonProps, type ModalProps, type MenuItem, type MenuProps, type PopoverSide } from '@korzun/design/control';
 import { isStandalone } from '@korzun/design/hooks';
 import { CheckIcon } from '@korzun/design/icon';
 import { ThemeProvider, type SpaceValue, type Theme } from '@korzun/design/theme';
@@ -82,7 +82,7 @@ export const layoutProbe: [StackProps['gap'], InlineProps['justify'], TextProps[
 export const feedbackProbe: [ModalProps['canDismiss'], ErrorMessageProps['as'], SpinnerProps['size']] = [false, 'div', 'xl'];
 export const menuProbe: [MenuItem, MenuProps['surface']] = [{ label: 'Open', to: '/x' }, 'glass'];
 export const surfaceProbe: [AlertTone, AlertProps['title'], SpaceValue, Theme['space']['sm']] = ['warning', 'Overdue', '1rem', '0.5rem'];
-export const probe = [Alert, Code, CodeBlock, Surface, Table, useSurfaceRadius, ThemeProvider, Button, Menu, Dialog, useModal, useModalDialog, Page, CheckIcon, useToast, isStandalone, applyTransparency];
+export const probe = [Alert, Code, CodeBlock, Surface, Table, useSurfaceRadius, ThemeProvider, Button, Menu, Modal, useModal, Page, CheckIcon, useToast, isStandalone, applyTransparency];
 TS
 
 cd "$tmp/app"

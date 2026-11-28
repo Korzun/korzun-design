@@ -9,8 +9,7 @@ import { renderWithProviders } from '../../test-utils.js';
 import { Button } from '../button/index.js';
 import { Popover } from '../popover/index.js';
 import { Select } from '../select/index.js';
-import { useModal, useModalDialog } from '../use-modal/index.js';
-import { Dialog, Modal } from './index.js';
+import { Modal } from './index.js';
 
 let showModal: Mock<() => void>;
 let close: Mock<() => void>;
@@ -29,14 +28,6 @@ const radiusOf = (name: string) =>
   getComputedStyle(screen.getByText(name).closest('[role="button"]')!).borderRadius;
 
 describe('Modal', () => {
-  it('Dialog is the same component', () => {
-    expect(Dialog).toBe(Modal);
-  });
-
-  it('useModalDialog is the same hook as useModal', () => {
-    expect(useModalDialog).toBe(useModal);
-  });
-
   it('calls showModal when mounted open', () => {
     renderWithProviders(<Modal open onClose={() => {}} title="T" />);
     expect(showModal).toHaveBeenCalledOnce();

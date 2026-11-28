@@ -7,7 +7,7 @@ category: Hooks
 
 <!-- generated:import -->
 
-`import { useModal, useModalDialog } from '@korzun/design/control'`
+`import { useModal } from '@korzun/design/control'`
 
 <!-- /generated:import -->
 
@@ -16,8 +16,6 @@ A hook that drives a native `<dialog>` from an `isOpen` boolean: it calls
 `onDismiss`. It is the base under [`Modal`](modal.md) (and so `ConfirmModal`).
 Reach for `Modal` first; this hook remains for modals `Modal` cannot express,
 built from this hook plus the `theme.recipe.modal.*` styles.
-
-`useModalDialog` is the old name, kept as a deprecated alias.
 
 Use something else for: a plain yes/no confirmation (`ConfirmModal`), or a
 dropdown or non-modal floating layer (`Popover`).
@@ -284,7 +282,7 @@ This module has no styles of its own.
 
 ## Changelog
 
-- **0.7.0** (2026-11-26): `Dialog` is renamed `Modal` and `useModalDialog` is renamed `useModal`, matching `ConfirmModal`; behaviour is unchanged. `Dialog`, `DialogProps` and `useModalDialog` stay as deprecated aliases. The footer marker attribute is now `data-modal-footer`.
+- **0.7.0** (2026-11-26): **Breaking:** `Dialog` is renamed `Modal` and `useModalDialog` is renamed `useModal`, matching `ConfirmModal`; behaviour is unchanged. The old names `Dialog`, `DialogProps` and `useModalDialog` are removed. The footer marker attribute is now `data-modal-footer`.
 - **0.4.0** (2026-11-23): Layer stack: popovers and dialogs now close innermost-first. Escape and an outside press only affect the topmost layer, so a popover inside a popover closes one level at a time. **Behaviour change:** a popover beneath an open dialog no longer takes its Escape or closes on a press inside the dialog.
 - **0.3.0** (2026-11-22): `Popover` renders inside an open `<dialog>` that contains its anchor, so `Select` and `ChipsInput` work in modals.
 - **0.0.5** (2026-11-21): Every prop has a JSDoc comment, so editors and coding agents see the guidance in the `.d.ts`. `useModalDialog` declares its return type.

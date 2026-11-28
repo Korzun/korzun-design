@@ -23,7 +23,7 @@ export {
   type MenuProps,
   type MenuTriggerProps,
 } from './menu/index.js';
-export { Dialog, Modal, type DialogProps, type ModalProps } from './modal/index.js';
+export { Modal, type ModalProps } from './modal/index.js';
 export { NumberInput, type NumberInputProps } from './number-input/index.js';
 export { PageActionsBar, type PageActionsBarProps } from './page-actions-bar/index.js';
 export {
@@ -53,4 +53,4 @@ export {
 export { Switch, type SwitchProps, type SwitchRadiusValue } from './switch/index.js';
 export { TextArea, type TextAreaProps } from './text-area/index.js';
 export { TextInput, type TextInputAction, type TextInputProps } from './text-input/index.js';
-export { useModal, useModalDialog } from './use-modal/index.js';
+export { useModal } from './use-modal/index.js';

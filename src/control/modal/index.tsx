@@ -24,9 +24,6 @@ export type ModalProps = {
   className?: string;
 };
 
-/** @deprecated Renamed `ModalProps`. */
-export type DialogProps = ModalProps;
-
 /**
  * Modal dialog on a native `<dialog>`: title, body, optional footer. Always
  * mounted; controlled by `open`. Everything inside is one surface level in, so Buttons are 8px.
@@ -75,6 +72,3 @@ export function Modal({
     </dialog>
   );
 }
-
-/** @deprecated Renamed `Modal`. */
-export const Dialog = Modal;
