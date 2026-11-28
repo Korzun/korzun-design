@@ -74,7 +74,13 @@ export const headingTexts = (source: string): string[] =>
 const escapeHtml = (text: string): string =>
   text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
-const render = (source: string, from: string, inline: boolean, route: string): string => {
+const render = (
+  source: string,
+  from: string,
+  inline: boolean,
+  route: string,
+  links: boolean
+): string => {
   const slug = createSlugger();
   const marked = new Marked({
     walkTokens: (token: Token) => {
@@ -96,6 +102,17 @@ const render = (source: string, from: string, inline: boolean, route: string): s
       html({ text }: Tokens.HTML | Tokens.Tag) {
         return escapeHtml(text);
       },
+      // Without links (text inside a link already), a link is its text and an image its alt.
+      ...(links
+        ? {}
+        : {
+            link({ tokens }: Tokens.Link) {
+              return this.parser.parseInline(tokens);
+            },
+            image({ text }: Tokens.Image) {
+              return escapeHtml(text);
+            },
+          }),
     },
   });
   return inline
@@ -173,6 +190,8 @@ export type MarkdownProps = {
   from?: string;
   /** Render as an inline `<span>` (no paragraphs), for a table cell or a one-line description. */
   inline?: boolean;
+  /** Render links as their text, for markdown shown inside a link (an overview card). Default `true`. */
+  links?: boolean;
   /** Extra class on the root. */
   className?: string;
 };
@@ -185,6 +204,7 @@ export const Markdown = ({
   source,
   from = 'docs/index.md',
   inline = false,
+  links = true,
   className,
 }: MarkdownProps) => {
   const styles = useStyle();
@@ -192,8 +212,8 @@ export const Markdown = ({
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const html = useMemo(
-    () => render(source, from, inline, pathname),
-    [source, from, inline, pathname]
+    () => render(source, from, inline, pathname, links),
+    [source, from, inline, pathname, links]
   );
 
   // A link to a section of this page scrolls there and records the fragment;

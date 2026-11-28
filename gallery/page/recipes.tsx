@@ -46,8 +46,9 @@ const RecipeCard = ({ recipe }: { recipe: Recipe }) => {
             <Heading level={2} size="md">
               {recipe.title}
             </Heading>
+            {/* Inline markdown (code spans), with links as text: the card is a link already. */}
             <Text size="sm" tone="description">
-              {recipe.description}
+              <Markdown source={recipe.description} from={recipe.docPath} inline links={false} />
             </Text>
           </Stack>
         </Stack>
