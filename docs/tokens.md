@@ -33,10 +33,6 @@ The spacing scale, in `rem`: `xxxs xxs xs sm md lg xl xxl xxxl xxxxl xxxxxl` (`0
 
 Corner radii: `sm md lg circle pill` (`4px`, `8px`, `16px`, `50%`, `999px`).
 
-## size
-
-Fixed component sizes that are not part of the spacing scale. One key: `metadataValue`. See Slated for curation.
-
 ## layout
 
 Intrinsic sizes of chrome that other elements must lay out around. They are measured, not derived, so they are tuned on a device and kept in one place. Keys: `navHeightMobile` (the floating mobile nav, `96px`), `modalWidth` (the one width for every dialog, `500px`), `formWidth` (a standalone form column such as sign-in, `400px`), `controlHeight` (the shared single-line control height, `2.0625rem`), and `floatingControlTopBase`, a position rather than a size: the `top` at which the mobile back button and actions menu pin, `max(space.xxxl, env(safe-area-inset-top) + space.xxxxl)`.
@@ -93,9 +89,8 @@ JSS-spreadable style fragments (`...theme.recipe.x`), not components.
 
 ## Slated for curation
 
-Both groups below move into the package byte-for-byte in 0.0.1 and are due for a decision before the API settles.
+The group below moved into the package byte-for-byte in 0.0.1 and is due for a decision before the API settles.
 
 - `color.chip.*`: the eight label colourways (`status author series subject book entryType user rating`) are named after Bookplate's metadata chips, not after a general role.
-- `size.metadataValue`: `15rem`, a width named after Bookplate's metadata display.
 
 No other token name or comment in `src/theme/theme.ts` is clearly Bookplate-specific. Two comments mention app internals (`floatingControlTopBase` refers to the admin picker and `router/nav-layout-style`), but the tokens themselves are generic.

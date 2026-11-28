@@ -125,7 +125,6 @@ chosen by nesting depth; see [corners](corners.md).
 | `zIndex` | `behind`, `base`, `stack.{lo,md,hi}`, `header`, `sticky`, `toast` | |
 | `breakpoint` | `mobile` (≤640px), `normal` | Media query strings |
 | `layout` | `navHeightMobile`, `modalWidth`, `controlHeight`, `floatingControlTopBase` | Measured chrome sizes to lay out around |
-| `size` | `metadataValue` | |
 
 ### Recipes
 
@@ -312,7 +311,6 @@ The token object that `useTheme` returns and `createUseStyles` passes to a style
 | `radius` (required) | `{ sm: string; md: string; lg: string; circle: string; pill: string; }` |  |  |
 | `recipe` (required) | `{ input, focusRing, label, spinner, glass, glassHighlight, row, codeBlock, inlineCode, codeColours, modal, card }` |  |  |
 | `shadow` (required) | `{ card, cardStack, hoverLift, dangerStack, brandStack, glass, glassActive }` |  |  |
-| `size` (required) | `{ metadataValue: string; }` |  |  |
 | `space` (required) | `{ xxxs, xxs, xs, sm, md, lg, xl, xxl, xxxl, xxxxl, xxxxxl }` |  |  |
 | `transition` (required) | `{ fast: string; medium: string; slide: string; slow: string; spring: string; }` |  |  |
 | `zIndex` (required) | `{ behind: number; base: number; stack: { … }; header: number; sticky: number; toast: number; }` |  |  |
@@ -341,6 +339,7 @@ This module has no styles of its own.
 
 ## Changelog
 
+- **0.7.0** (2026-11-26): **Breaking:** `size.metadataValue` (and the `size` group) is removed; `MetadataList` was its only user.
 - **0.7.0** (2026-11-26): New `color.code` palette (foreground, keyword, string, function, parameter, constant, punctuation, comment, link) for syntax colours, and `recipe.codeBlock`, `recipe.inlineCode` and `recipe.codeColours` (the ten `--code-*` variables Shiki's css-variables theme reads, from `color.code`) for code rendered outside `CodeBlock` and `Code`.
 - **0.7.0** (2026-11-26): `GlobalStyles` (rendered by `ThemeProvider`) ships the reset the components are drawn against: every element is `box-sizing: border-box` with no default margin or padding, as in Bookplate's and Scribe's `index.html`. Without it a text field was 51px tall instead of `layout.controlHeight` (33px). An app that already carries this reset sees no change; one that relied on browser default margins (`p`, `h1`, `ul`) loses them.
 - **0.7.0** (2026-11-26): `color-scheme` is set on `html` as well as `body`. With body alone the root's scheme was `normal`, so in dark mode the page scrollbar stayed light and an iframe whose document uses `GlobalStyles` (or is still loading) painted an opaque white box.

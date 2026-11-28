@@ -17,7 +17,7 @@ clickable.
 
 Use something else for: a shaded row inside a `Card` body (a row built on
 `theme.recipe.row`), a section split (`Divider`), a key/value line
-(`MetadataList`). Bookplate itself lists items with `<Card size="small" onClick>`.
+(`MetaLine` with labelled pairs). Bookplate itself lists items with `<Card size="small" onClick>`.
 
 ## Usage
 

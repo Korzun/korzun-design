@@ -98,8 +98,8 @@ function valueImports(file, source) {
  * entry (`index.tsx`/`index.ts`) itself, as through `useTheme()`; and from the
  * style modules the entry imports for a value (Heading renders with Text's
  * `useTypography` from `../text/style.js`). An internal module the entry
- * imports for a value (a folder in no barrel, such as `metadata` under
- * MetadataList) is part of this module, so it is read the same way. The
+ * imports for a value (a folder in no barrel, such as `layer-stack` under
+ * Popover) is part of this module, so it is read the same way. The
  * entry's other imports (exported components, helpers) are not followed: a
  * component it renders lists its own tokens. A module outside src/theme/ does
  * not follow imports into it: they bring the provider and global styles, not

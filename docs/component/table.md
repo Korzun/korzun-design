@@ -17,7 +17,7 @@ inside its own box when it is too wide; on a phone each row stacks, with every
 value labelled by its column title.
 
 Use something else for: a short list of items with actions (`CardRow`), a
-list of name and value pairs (`MetadataList`), a layout grid (`Stack`,
+list of name and value pairs (`MetaLine`), a layout grid (`Stack`,
 `Inline`). A table is for data with the same fields in every row.
 
 ## Usage

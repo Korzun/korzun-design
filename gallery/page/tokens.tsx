@@ -132,7 +132,6 @@ export function TokensPage() {
   // A preview per group that has one; every other group lists its values.
   const previews: Partial<Record<keyof Theme, (value: string) => ReactNode>> = {
     space: (v) => <div className={styles.bar} style={{ width: v }} />,
-    size: (v) => <div className={styles.bar} style={{ width: v }} />,
     radius: (v) => <div className={styles.radiusTile} style={{ borderRadius: v }} />,
     fontSize: (v) => <span style={{ fontSize: v }}>{SAMPLE}</span>,
     fontFamily: (v) => <span style={{ fontFamily: v }}>{SAMPLE}</span>,

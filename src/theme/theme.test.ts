@@ -185,7 +185,6 @@ describe('light/dark themes', () => {
     expect(darkTheme.transition).toEqual(lightTheme.transition);
     expect(darkTheme.zIndex).toEqual(lightTheme.zIndex);
     expect(darkTheme.breakpoint).toEqual(lightTheme.breakpoint);
-    expect(darkTheme.size).toEqual(lightTheme.size);
   });
 });
 

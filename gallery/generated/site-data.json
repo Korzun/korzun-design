@@ -1819,7 +1819,7 @@
         "CardRowProps"
       ],
       "importLine": "import { CardRow, type CardRowProps } from '@korzun/design/component'",
-      "body": "A compact card-shell row (card background, border, stacked shadow, 6px\npadding) that sits on the page or in a Card, for a stack of list items. Optionally\nclickable.\n\nUse something else for: a shaded row inside a `Card` body (a row built on\n`theme.recipe.row`), a section split (`Divider`), a key/value line\n(`MetadataList`). Bookplate itself lists items with `<Card size=\"small\" onClick>`.\n\n## Usage\n\n### Styling\n\nNo `className`, no `ariaLabel`, no `role`.\n\n### Surprising behaviour\n\n- **Not keyboard-reachable.** With `onClick` it still gets no `role=\"button\"`\n  and no `tabIndex`, so it cannot be focused; the Enter/Space handler only\n  fires for keys bubbling from a focused child, and Space is not\n  `preventDefault`ed (the page scrolls). For a keyboard-accessible clickable\n  row, put a real control (`Button type=\"link\"`) inside it.\n- Bookplate itself does not use `CardRow`; it is the least-exercised layout\n  primitive here.\n\n### Corners\n\nFollows depth: 16px (`radius.lg`) on the page, 8px (`md`) in a Card, `sm`\ndeeper. Content inside it steps down one level. See [corners](../corners.md).\n\n## Do / don't\n\n- Place it on the page or inside a `Card`; its corners follow.\n- Don't rely on `onClick` as the only way to reach an action from the keyboard.",
+      "body": "A compact card-shell row (card background, border, stacked shadow, 6px\npadding) that sits on the page or in a Card, for a stack of list items. Optionally\nclickable.\n\nUse something else for: a shaded row inside a `Card` body (a row built on\n`theme.recipe.row`), a section split (`Divider`), a key/value line\n(`MetaLine` with labelled pairs). Bookplate itself lists items with `<Card size=\"small\" onClick>`.\n\n## Usage\n\n### Styling\n\nNo `className`, no `ariaLabel`, no `role`.\n\n### Surprising behaviour\n\n- **Not keyboard-reachable.** With `onClick` it still gets no `role=\"button\"`\n  and no `tabIndex`, so it cannot be focused; the Enter/Space handler only\n  fires for keys bubbling from a focused child, and Space is not\n  `preventDefault`ed (the page scrolls). For a keyboard-accessible clickable\n  row, put a real control (`Button type=\"link\"`) inside it.\n- Bookplate itself does not use `CardRow`; it is the least-exercised layout\n  primitive here.\n\n### Corners\n\nFollows depth: 16px (`radius.lg`) on the page, 8px (`md`) in a Card, `sm`\ndeeper. Content inside it steps down one level. See [corners](../corners.md).\n\n## Do / don't\n\n- Place it on the page or inside a `Card`; its corners follow.\n- Don't rely on `onClick` as the only way to reach an action from the keyboard.",
       "examples": [
         {
           "file": "src/component/card-row/examples/01-basic.tsx",
@@ -8884,138 +8884,16 @@
             "MetaLine"
           ],
           "text": "**Breaking:** without `separator` the items are spaced by gaps (`space.lg`, lines `space.sm`), not dots; pass `separator=\"·\"` for the old look. `separator` takes any one character, drawn by CSS between items. Items can now be labelled pairs, `{ label, value }`, shown with a faint capitalized label, mixed with plain items; a pair whose value is `null`, `undefined` or `false` is skipped. New `MetaLineItem` and `MetaLinePair` types. MetaLine replaces `MetadataList`."
+        },
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "MetaLine"
+          ],
+          "text": "**Breaking:** `MetadataList` (and its `Metadata` and `MetadataListProps` types) is removed; use `MetaLine` with `{ label, value }` items and no `separator` for the same gapped, labelled look. Its 15rem cap on each value is gone, and a pair with an empty value is skipped instead of showing its label alone."
         }
       ]
-    },
-    {
-      "id": "component/metadata-list",
-      "slug": "metadata-list",
-      "entry": "@korzun/design/component",
-      "docPath": "docs/component/metadata-list.md",
-      "title": "MetadataList",
-      "description": "A wrapping row of small labelled values, typically the body of a Card describing one record.",
-      "category": "Data display",
-      "values": [
-        "MetadataList"
-      ],
-      "types": [
-        "Metadata",
-        "MetadataListProps"
-      ],
-      "importLine": "import { MetadataList, type Metadata, type MetadataListProps } from '@korzun/design/component'",
-      "body": "A wrapping row of small labelled values (\"Slug my-kindle\", \"Cover fit\nContain\"): each pair is a faint, capitalized title followed by its value, laid\nout inline with `space.lg` between pairs and `space.sm` between wrapped lines.\nTypically the body of a `Card` describing one record.\n\nUse something else for: unlabelled secondary data on a row (`MetaLine`),\neditable fields (controls in `@korzun/design/control`).\n\n## Usage\n\n### Titles and keys\n\nTitles are CSS `text-transform: capitalize`: \"cover fit\" displays as\n\"Cover Fit\". Write titles in the case you want only if that agrees.\n\n**Keys are `title + value`.** With an element as `value` the key becomes\n`\"Title[object Object]\"`, so two entries with the same title and element\nvalues collide (React key warning, possible wrong reconciliation). Keep\ntitles unique.\n\nIts building block (`Metadata` component) is internal; only the `Metadata`\n**type** is exported.\n\n### Values\n\nEach value is truncated to `theme.size.metadataValue` (`15rem`) with an\nellipsis and never wraps (`white-space: nowrap`). Long values are cut off;\nthere is no tooltip. Every entry renders, including ones whose value is\n`null`/`undefined` (title with an empty value). Filter the array first.\n\n### Styling\n\nNo `className`.\n\n## Do / don't\n\n- Do keep values short (a word, a number, a small `Tag size=\"sm\"`).\n- Do keep `title`s unique within one list.\n- Don't use it for long text such as descriptions; it truncates at 15rem.\n- Don't include entries with missing values; filter them out.",
-      "examples": [
-        {
-          "file": "src/component/metadata-list/examples/01-basic.tsx",
-          "slug": "basic",
-          "order": 1,
-          "title": "Basic",
-          "description": "The body of a `Card` describing one record: short text values and a small `Tag` as a value. The header action flips the grayscale entry.",
-          "code": "import { Card, MetadataList, Tag } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Basic() {\n  const [grayscale, setGrayscale] = useState(false);\n  return (\n    <Card\n      title=\"Kindle Scribe\"\n      headerAction={\n        <Button type=\"link\" onClick={() => setGrayscale((on) => !on)}>\n          Toggle grayscale\n        </Button>\n      }\n    >\n      <MetadataList\n        metadata={[\n          { title: 'Slug', value: 'my-kindle' },\n          { title: 'Cover size', value: '1860×2480' },\n          { title: 'Grayscale cover', value: grayscale ? 'Yes' : 'No' },\n          {\n            title: 'Status',\n            value: (\n              <Tag size=\"sm\" tone=\"success\">\n                Active\n              </Tag>\n            ),\n          },\n        ]}\n      />\n    </Card>\n  );\n}\n"
-        },
-        {
-          "file": "src/component/metadata-list/examples/02-truncation.tsx",
-          "slug": "truncation",
-          "order": 2,
-          "title": "Long values",
-          "description": "A value wider than its cap is cut off with an ellipsis and never wraps, so keep values short. Titles are capitalized by CSS: “cover fit” displays as “Cover Fit”.",
-          "code": "import { MetadataList } from '@korzun/design/component';\n\nexport default function Truncation() {\n  return (\n    <MetadataList\n      metadata={[\n        { title: 'cover fit', value: 'Contain' },\n        { title: 'Path', value: '/library/science-fiction/frank-herbert/children-of-dune.epub' },\n      ]}\n    />\n  );\n}\n"
-        },
-        {
-          "file": "src/component/metadata-list/examples/03-optional-entries.tsx",
-          "slug": "optional-entries",
-          "order": 3,
-          "title": "Optional entries",
-          "description": "Every entry renders, even one with no value, so build the array without the entries you do not have. Here “Last sync” is added only once there is a value.",
-          "code": "import { Inline, MetadataList, Stack } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function OptionalEntries() {\n  const [lastSync, setLastSync] = useState<string | undefined>(undefined);\n  return (\n    <Stack gap=\"md\">\n      <Inline>\n        <Button onClick={() => setLastSync(lastSync ? undefined : '12 March 2026')}>\n          {lastSync ? 'Forget sync' : 'Sync now'}\n        </Button>\n      </Inline>\n      <MetadataList\n        metadata={[\n          { title: 'Slug', value: 'my-kindle' },\n          ...(lastSync ? [{ title: 'Last sync', value: lastSync }] : []),\n        ]}\n      />\n    </Stack>\n  );\n}\n"
-        }
-      ],
-      "preview": {
-        "file": "src/component/metadata-list/examples/preview.tsx",
-        "slug": "preview",
-        "order": 0,
-        "title": "Preview",
-        "description": "",
-        "code": "import { MetadataList, Tag } from '@korzun/design/component';\n\nexport default function Preview() {\n  return (\n    <MetadataList\n      metadata={[\n        { title: 'Slug', value: 'my-kindle' },\n        { title: 'Cover size', value: '1860×2480' },\n        {\n          title: 'Status',\n          value: (\n            <Tag size=\"sm\" tone=\"success\">\n              Active\n            </Tag>\n          ),\n        },\n      ]}\n    />\n  );\n}\n"
-      },
-      "tables": [
-        {
-          "name": "MetadataListProps",
-          "kind": "props",
-          "rows": [
-            {
-              "name": "metadata",
-              "type": "Metadata[]",
-              "required": true,
-              "description": "The pairs, in order. Every entry renders, even one whose value is `null` or `undefined` (its title shows with an empty value), so filter the array first."
-            }
-          ]
-        },
-        {
-          "name": "Metadata",
-          "kind": "object",
-          "rows": [
-            {
-              "name": "title",
-              "type": "string",
-              "required": true,
-              "description": "The label, shown faint and capitalized by CSS: `'cover fit'` displays as “Cover Fit”. It is part of the React key, so keep it unique within a list."
-            },
-            {
-              "name": "value",
-              "type": "string | ReactNode",
-              "required": true,
-              "description": "The value. It is cut off with an ellipsis at `theme.size.metadataValue` (`15rem`) and never wraps, with no tooltip. With an element as value the key becomes `Title[object Object]`, so entries that share a title and hold elements collide."
-            }
-          ],
-          "description": "One labelled value in a `MetadataList`."
-        }
-      ],
-      "tokens": [
-        {
-          "path": "color.text.faint",
-          "kind": "color",
-          "light": "#9ca3af",
-          "dark": "#6E7480"
-        },
-        {
-          "path": "color.text.primary",
-          "kind": "color",
-          "light": "#111",
-          "dark": "#F5F5F7"
-        },
-        {
-          "path": "fontSize.sm",
-          "kind": "value",
-          "light": "0.75rem",
-          "dark": "0.75rem"
-        },
-        {
-          "path": "size.metadataValue",
-          "kind": "value",
-          "light": "15rem",
-          "dark": "15rem"
-        },
-        {
-          "path": "space.lg",
-          "kind": "value",
-          "light": "0.625rem",
-          "dark": "0.625rem"
-        },
-        {
-          "path": "space.sm",
-          "kind": "value",
-          "light": "0.375rem",
-          "dark": "0.375rem"
-        },
-        {
-          "path": "space.xs",
-          "kind": "value",
-          "light": "0.25rem",
-          "dark": "0.25rem"
-        }
-      ],
-      "changelog": []
     },
     {
       "id": "component/table",
@@ -9033,7 +8911,7 @@
         "TableProps"
       ],
       "importLine": "import { Table, type TableColumn, type TableProps } from '@korzun/design/component'",
-      "body": "A generic data table: pass `columns` and `rows` and it draws a bordered box\nwith a header row and a row per item. On a wide screen it scrolls sideways\ninside its own box when it is too wide; on a phone each row stacks, with every\nvalue labelled by its column title.\n\nUse something else for: a short list of items with actions (`CardRow`), a\nlist of name and value pairs (`MetadataList`), a layout grid (`Stack`,\n`Inline`). A table is for data with the same fields in every row.\n\n## Usage\n\n### Columns and rows\n\nEach column has a `key` and a `title`. By default a cell shows the row's field\nnamed by `key`; `render(row, index)` draws it instead, for a `Tag` or a\n`Button`. A missing value (`null` or `undefined`) shows a dash; `0`, `false`\nand `''` show as themselves. Type the table with its row type\n(`<Table<Book> … />`) to check `render` and `rowKey`.\n\n### `rowKey`\n\nName the field that identifies a row (`rowKey=\"id\"`), or pass a function that\nreturns a unique string (`rowKey={(row, i) => row.isbn}`). It must be unique\nand stable, as a React key is.\n\n### Phone layout, `label` and `wide`\n\nBelow the mobile breakpoint the header is hidden for sighted users and each\nrow becomes a block: short cells share a line, each prefixed by its column\n`title` and a colon. `label` renames that prefix, and `label: false` shows the\nvalue bare (for a button). `wide: true` gives a cell the full width of the\nstacked row, for a long description. Pass `ariaLabel` to name the table for\nscreen readers.\n\n### Empty\n\nWith no rows the header stays. `empty` fills one row across all columns; omit\nit and the table shows the header only.\n\n### Scrolling and `minWidth`\n\nThe table never widens the page: it scrolls inside its box. `minWidth`\n(`'40rem'`) keeps columns readable by making the table that wide on a wide\nscreen before it scrolls. A phone ignores it, because rows stack there.\n`width` on a column sets its heading's width, `nowrap` keeps a value on one\nline and `align: 'end'` right-aligns numbers.\n\n### Corners\n\nThe box's corners follow where it sits: `radius.lg` on the page, `md` in a\nCard, `sm` deeper, and a control in a cell sits one level deeper still. See\n[corners](../corners.md).\n\n## Do / don't\n\n- Do use one table per dataset, with the same fields in every row.\n- Do right-align numeric columns with `align: 'end'`.\n- Don't use a table for layout; use `Stack` or `Inline`.",
+      "body": "A generic data table: pass `columns` and `rows` and it draws a bordered box\nwith a header row and a row per item. On a wide screen it scrolls sideways\ninside its own box when it is too wide; on a phone each row stacks, with every\nvalue labelled by its column title.\n\nUse something else for: a short list of items with actions (`CardRow`), a\nlist of name and value pairs (`MetaLine`), a layout grid (`Stack`,\n`Inline`). A table is for data with the same fields in every row.\n\n## Usage\n\n### Columns and rows\n\nEach column has a `key` and a `title`. By default a cell shows the row's field\nnamed by `key`; `render(row, index)` draws it instead, for a `Tag` or a\n`Button`. A missing value (`null` or `undefined`) shows a dash; `0`, `false`\nand `''` show as themselves. Type the table with its row type\n(`<Table<Book> … />`) to check `render` and `rowKey`.\n\n### `rowKey`\n\nName the field that identifies a row (`rowKey=\"id\"`), or pass a function that\nreturns a unique string (`rowKey={(row, i) => row.isbn}`). It must be unique\nand stable, as a React key is.\n\n### Phone layout, `label` and `wide`\n\nBelow the mobile breakpoint the header is hidden for sighted users and each\nrow becomes a block: short cells share a line, each prefixed by its column\n`title` and a colon. `label` renames that prefix, and `label: false` shows the\nvalue bare (for a button). `wide: true` gives a cell the full width of the\nstacked row, for a long description. Pass `ariaLabel` to name the table for\nscreen readers.\n\n### Empty\n\nWith no rows the header stays. `empty` fills one row across all columns; omit\nit and the table shows the header only.\n\n### Scrolling and `minWidth`\n\nThe table never widens the page: it scrolls inside its box. `minWidth`\n(`'40rem'`) keeps columns readable by making the table that wide on a wide\nscreen before it scrolls. A phone ignores it, because rows stack there.\n`width` on a column sets its heading's width, `nowrap` keeps a value on one\nline and `align: 'end'` right-aligns numbers.\n\n### Corners\n\nThe box's corners follow where it sits: `radius.lg` on the page, `md` in a\nCard, `sm` deeper, and a control in a cell sits one level deeper still. See\n[corners](../corners.md).\n\n## Do / don't\n\n- Do use one table per dataset, with the same fields in every row.\n- Do right-align numeric columns with `align: 'end'`.\n- Don't use a table for layout; use `Stack` or `Inline`.",
       "examples": [
         {
           "file": "src/component/table/examples/01-basic.tsx",
@@ -10559,7 +10437,7 @@
         "ThemeSetting"
       ],
       "importLine": "import { GlobalStyles, ThemeProvider, createUseStyles, darkTheme, lightTheme, useTheme, useThemeGlobalStyles, useThemeSetting, type SpaceValue, type Theme, type ThemeMode, type ThemeProviderProps, type ThemeSetting } from '@korzun/design/theme'",
-      "body": "Every visual value comes from the theme. App styles use `createUseStyles` (the\nsame function react-jss exports, re-exported here) with a typed `theme`\nargument. Don't add another CSS-in-JS library, and don't write literal colours,\nspacing, font sizes, or radii.\n\nUse something else for: a ready-made light/dark/auto picker (`ThemeSetting`),\nthe full list of token keys ([tokens](tokens.md)).\n\n## Usage\n\n### Setup\n\n```tsx\n<ThemeProvider identity={userId /* or null when signed out */}>\n  <ToastProvider>{app}</ToastProvider>\n</ThemeProvider>\n```\n\n- `ThemeProvider` renders `GlobalStyles`: the page background, the body font,\n  a 16px input floor on iOS, scroll lock while a `<dialog>` is open, and the\n  `theme-rotation` and `theme-slide-*` keyframes. Don't render\n  `GlobalStyles` yourself, or `useThemeGlobalStyles()`, the hook it calls.\n- `lightTheme` / `darkTheme` are the two concrete themes (for tests).\n\n### `useThemeSetting()`\n\n```ts\nuseThemeSetting(): [ThemeSetting, (setting: ThemeSetting) => void]\n```\n\nReturns `[setting, setSetting]`, where `ThemeSetting` is `'light' | 'dark' |\n'auto'`. `'auto'` follows the OS `prefers-color-scheme` live. The\n`ThemeSetting` component is a ready-made picker for it. Without a\n`ThemeProvider` above it, the setter does nothing.\n\n### `useTheme()`\n\n```ts\nuseTheme(): Theme\n```\n\nReturns the current `Theme` object, for values needed outside a stylesheet.\n`theme.colorScheme` is the mode it resolved to, `'light'` or `'dark'`.\n\n### Writing styles\n\n```ts\n// style.ts, next to the component\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\nimport { applyTransparency } from '@korzun/design';\n\nexport const useStyle = createUseStyles((theme: Theme) => ({\n  root: {\n    padding: theme.space.md,\n    backgroundColor: theme.color.bg.card,\n  },\n  highlight: { backgroundColor: applyTransparency(theme.color.brand.default, 0.12) },\n  [theme.breakpoint.mobile]: { root: { padding: theme.space.sm } },\n}));\n```\n\n- Style files are for padding, borders, backgrounds, and one-offs (borders come from the border tokens). Lay out with\n  `Stack`/`Inline` and set text with `Text`/`Heading`.\n- `applyTransparency(color, alpha)` turns a hex or rgb token into an `rgba()`\n  string. Use it for tints instead of writing an rgba literal.\n- Media queries: use the `theme.breakpoint.mobile` / `.normal` strings as keys.\n\n### Tokens\n\nThe token groups (`color`, `space`, `radius`, `fontSize`, `shadow`, `zIndex`,\n`breakpoint` and the rest) are listed key by key in [tokens](tokens.md). Use the\nsemantic tokens, never the primitive `gray`, `blue` and `red` scales. Radii are\nchosen by nesting depth; see [corners](corners.md).\n\n| Group | Keys | Notes |\n|---|---|---|\n| `color.text` | `primary`, `secondary`, `muted`, `faint`, `description`, `onPrimary`, `onDanger` | `muted` for labels and meta, `faint` for placeholders |\n| `color.bg` | `page`, `card`, `cardHeader`, `track`, `switchOff`, `input`, `footer`, `glass`, `glassFallback`, `glassActive`, `selected`, `hover`, `success`, `placeholder` | `cardHeader` is also the shaded-row and inset-box fill; `hover` is a translucent scrim |\n| `color.border` | `default`, `strong`, `light`, `focus`, `hover`, `danger`, `glass`, `glassActive`, `faint`, `loading`, `success`, `section` | Cards and dividers use `strong`; inputs use `default`; `light` is a hairline rule inside a card |\n| `color.brand` | `default`, `hover`, `active`, `light`, `outline`, `loading*`, `linkHover` | The primary action colour |\n| `color.danger` | `default`, `hover`, `active`, `light`, `outline`, `loading*` | Destructive actions and errors |\n| `color.success` | (a string) | Solid green |\n| `color.warning` | (a string) | Solid amber |\n| `color.info` | (a string) | Solid blue, the mode's `brand.default` |\n| `color.chip.<tone>` | `{ text, bg, border }` for 13 tones. Status tones: `success`, `warning`, `danger`, `info`, `neutral`. Label tones: `status`, `author`, `series`, `subject`, `book`, `entryType`, `user`, `rating` | Used by `Tag`; `neutral` text holds 4.5:1 on its tint |\n| `color.overlay` | `backdrop` | Modal backdrop |\n| `color.gray` / `blue` / `red` | primitive scales | Don't use these in app code; use the semantic tokens above |\n| `space` | `xxxs` 0.1rem, `xxs` 0.125, `xs` 0.25, `sm` 0.375, `md` 0.5, `lg` 0.625, `xl` 0.75, `xxl` 1, `xxxl` 1.25, `xxxxl` 1.5, `xxxxxl` 2rem | `md` is the default gap between stacked fields |\n| `radius` | `sm` 4px, `md` 8px, `lg` 16px, `circle`, `pill` | Chosen by nesting depth; see [corners](corners.md) |\n| `fontSize` | `xxs` 0.6rem, `xs` 0.7, `sm` 0.75, `md` 0.875, `lg` 1, `xl` 1.25, `xxl` 1.75rem | Control text is `'0.80rem'`, the one sanctioned literal (already applied by `recipe.input` and Button) |\n| `fontWeight` | `regular` 400, `medium` 500, `semibold` 600, `bold` 700, `extrabold` 800 | |\n| `lineHeight` | `tight` 1, `body` 1.3 | |\n| `fontFamily` | `body`, `mono` | |\n| `shadow` | `card`, `cardStack`, `hoverLift`, `dangerStack`, `brandStack`, `glass`, `glassActive` | Floating layers use `hoverLift` |\n| `transition` | `fast`, `medium`, `slide`, `slow`, `spring` | Values like `'0.2s ease-in'` |\n| `zIndex` | `behind`, `base`, `stack.{lo,md,hi}`, `header`, `sticky`, `toast` | |\n| `breakpoint` | `mobile` (≤640px), `normal` | Media query strings |\n| `layout` | `navHeightMobile`, `modalWidth`, `controlHeight`, `floatingControlTopBase` | Measured chrome sizes to lay out around |\n| `size` | `metadataValue` | |\n\n### Recipes\n\nRecipes are style fragments that you spread into a rule: `{ ...theme.recipe.input }`.\n\n| Recipe | Gives you |\n|---|---|\n| `recipe.input` | Text-input chrome: font, `md` radius, border, hover and focus colours, iOS 16px floor; `&$danger` turns the border red if your sheet declares a `danger: {}` class |\n| `recipe.label` | Field label: semibold, `md`, muted; `&$danger` |\n| `recipe.focusRing` | Transparent 2px outline; set `outlineColor: theme.color.brand.outline` on `'&:focus'` |\n| `recipe.spinner` | 1em rotating box. `Spinner` is the normal way to show a spinner; use the recipe only for a custom rotating element |\n| `recipe.glass` / `glassHighlight` | Frosted translucent surface (floating chrome) and its active state |\n| `recipe.row` | The shaded field row a control sits in inside a card: `bg.cardHeader`, `md` corners, padding `md lg md sm`. Use it for custom rows next to form fields |\n| `recipe.card.shell` / `header` / `footer` | The Card surface (`lg`), its header bar, and its footer bar |\n| `recipe.modal.dialog` / `header` / `footer` | A `<dialog>` surface (`lg`, shared width, backdrop), its title, and its button bar |\n\nRecipes that use `$name` references need an empty class with that name in the\nsame sheet (`danger: {}`).\n\n## Do / don't\n\n- Do style with `theme.*` tokens and `createUseStyles`.\n- Do use `applyTransparency` for a tint instead of an rgba literal.\n- Don't render `GlobalStyles` yourself; `ThemeProvider` does.\n- Don't use the primitive `gray`, `blue` and `red` scales in app code.",
+      "body": "Every visual value comes from the theme. App styles use `createUseStyles` (the\nsame function react-jss exports, re-exported here) with a typed `theme`\nargument. Don't add another CSS-in-JS library, and don't write literal colours,\nspacing, font sizes, or radii.\n\nUse something else for: a ready-made light/dark/auto picker (`ThemeSetting`),\nthe full list of token keys ([tokens](tokens.md)).\n\n## Usage\n\n### Setup\n\n```tsx\n<ThemeProvider identity={userId /* or null when signed out */}>\n  <ToastProvider>{app}</ToastProvider>\n</ThemeProvider>\n```\n\n- `ThemeProvider` renders `GlobalStyles`: the page background, the body font,\n  a 16px input floor on iOS, scroll lock while a `<dialog>` is open, and the\n  `theme-rotation` and `theme-slide-*` keyframes. Don't render\n  `GlobalStyles` yourself, or `useThemeGlobalStyles()`, the hook it calls.\n- `lightTheme` / `darkTheme` are the two concrete themes (for tests).\n\n### `useThemeSetting()`\n\n```ts\nuseThemeSetting(): [ThemeSetting, (setting: ThemeSetting) => void]\n```\n\nReturns `[setting, setSetting]`, where `ThemeSetting` is `'light' | 'dark' |\n'auto'`. `'auto'` follows the OS `prefers-color-scheme` live. The\n`ThemeSetting` component is a ready-made picker for it. Without a\n`ThemeProvider` above it, the setter does nothing.\n\n### `useTheme()`\n\n```ts\nuseTheme(): Theme\n```\n\nReturns the current `Theme` object, for values needed outside a stylesheet.\n`theme.colorScheme` is the mode it resolved to, `'light'` or `'dark'`.\n\n### Writing styles\n\n```ts\n// style.ts, next to the component\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\nimport { applyTransparency } from '@korzun/design';\n\nexport const useStyle = createUseStyles((theme: Theme) => ({\n  root: {\n    padding: theme.space.md,\n    backgroundColor: theme.color.bg.card,\n  },\n  highlight: { backgroundColor: applyTransparency(theme.color.brand.default, 0.12) },\n  [theme.breakpoint.mobile]: { root: { padding: theme.space.sm } },\n}));\n```\n\n- Style files are for padding, borders, backgrounds, and one-offs (borders come from the border tokens). Lay out with\n  `Stack`/`Inline` and set text with `Text`/`Heading`.\n- `applyTransparency(color, alpha)` turns a hex or rgb token into an `rgba()`\n  string. Use it for tints instead of writing an rgba literal.\n- Media queries: use the `theme.breakpoint.mobile` / `.normal` strings as keys.\n\n### Tokens\n\nThe token groups (`color`, `space`, `radius`, `fontSize`, `shadow`, `zIndex`,\n`breakpoint` and the rest) are listed key by key in [tokens](tokens.md). Use the\nsemantic tokens, never the primitive `gray`, `blue` and `red` scales. Radii are\nchosen by nesting depth; see [corners](corners.md).\n\n| Group | Keys | Notes |\n|---|---|---|\n| `color.text` | `primary`, `secondary`, `muted`, `faint`, `description`, `onPrimary`, `onDanger` | `muted` for labels and meta, `faint` for placeholders |\n| `color.bg` | `page`, `card`, `cardHeader`, `track`, `switchOff`, `input`, `footer`, `glass`, `glassFallback`, `glassActive`, `selected`, `hover`, `success`, `placeholder` | `cardHeader` is also the shaded-row and inset-box fill; `hover` is a translucent scrim |\n| `color.border` | `default`, `strong`, `light`, `focus`, `hover`, `danger`, `glass`, `glassActive`, `faint`, `loading`, `success`, `section` | Cards and dividers use `strong`; inputs use `default`; `light` is a hairline rule inside a card |\n| `color.brand` | `default`, `hover`, `active`, `light`, `outline`, `loading*`, `linkHover` | The primary action colour |\n| `color.danger` | `default`, `hover`, `active`, `light`, `outline`, `loading*` | Destructive actions and errors |\n| `color.success` | (a string) | Solid green |\n| `color.warning` | (a string) | Solid amber |\n| `color.info` | (a string) | Solid blue, the mode's `brand.default` |\n| `color.chip.<tone>` | `{ text, bg, border }` for 13 tones. Status tones: `success`, `warning`, `danger`, `info`, `neutral`. Label tones: `status`, `author`, `series`, `subject`, `book`, `entryType`, `user`, `rating` | Used by `Tag`; `neutral` text holds 4.5:1 on its tint |\n| `color.overlay` | `backdrop` | Modal backdrop |\n| `color.gray` / `blue` / `red` | primitive scales | Don't use these in app code; use the semantic tokens above |\n| `space` | `xxxs` 0.1rem, `xxs` 0.125, `xs` 0.25, `sm` 0.375, `md` 0.5, `lg` 0.625, `xl` 0.75, `xxl` 1, `xxxl` 1.25, `xxxxl` 1.5, `xxxxxl` 2rem | `md` is the default gap between stacked fields |\n| `radius` | `sm` 4px, `md` 8px, `lg` 16px, `circle`, `pill` | Chosen by nesting depth; see [corners](corners.md) |\n| `fontSize` | `xxs` 0.6rem, `xs` 0.7, `sm` 0.75, `md` 0.875, `lg` 1, `xl` 1.25, `xxl` 1.75rem | Control text is `'0.80rem'`, the one sanctioned literal (already applied by `recipe.input` and Button) |\n| `fontWeight` | `regular` 400, `medium` 500, `semibold` 600, `bold` 700, `extrabold` 800 | |\n| `lineHeight` | `tight` 1, `body` 1.3 | |\n| `fontFamily` | `body`, `mono` | |\n| `shadow` | `card`, `cardStack`, `hoverLift`, `dangerStack`, `brandStack`, `glass`, `glassActive` | Floating layers use `hoverLift` |\n| `transition` | `fast`, `medium`, `slide`, `slow`, `spring` | Values like `'0.2s ease-in'` |\n| `zIndex` | `behind`, `base`, `stack.{lo,md,hi}`, `header`, `sticky`, `toast` | |\n| `breakpoint` | `mobile` (≤640px), `normal` | Media query strings |\n| `layout` | `navHeightMobile`, `modalWidth`, `controlHeight`, `floatingControlTopBase` | Measured chrome sizes to lay out around |\n\n### Recipes\n\nRecipes are style fragments that you spread into a rule: `{ ...theme.recipe.input }`.\n\n| Recipe | Gives you |\n|---|---|\n| `recipe.input` | Text-input chrome: font, `md` radius, border, hover and focus colours, iOS 16px floor; `&$danger` turns the border red if your sheet declares a `danger: {}` class |\n| `recipe.label` | Field label: semibold, `md`, muted; `&$danger` |\n| `recipe.focusRing` | Transparent 2px outline; set `outlineColor: theme.color.brand.outline` on `'&:focus'` |\n| `recipe.spinner` | 1em rotating box. `Spinner` is the normal way to show a spinner; use the recipe only for a custom rotating element |\n| `recipe.glass` / `glassHighlight` | Frosted translucent surface (floating chrome) and its active state |\n| `recipe.row` | The shaded field row a control sits in inside a card: `bg.cardHeader`, `md` corners, padding `md lg md sm`. Use it for custom rows next to form fields |\n| `recipe.card.shell` / `header` / `footer` | The Card surface (`lg`), its header bar, and its footer bar |\n| `recipe.modal.dialog` / `header` / `footer` | A `<dialog>` surface (`lg`, shared width, backdrop), its title, and its button bar |\n\nRecipes that use `$name` references need an empty class with that name in the\nsame sheet (`danger: {}`).\n\n## Do / don't\n\n- Do style with `theme.*` tokens and `createUseStyles`.\n- Do use `applyTransparency` for a tint instead of an rgba literal.\n- Don't render `GlobalStyles` yourself; `ThemeProvider` does.\n- Don't use the primitive `gray`, `blue` and `red` scales in app code.",
       "examples": [
         {
           "file": "src/theme/examples/01-styles.tsx",
@@ -10685,12 +10563,6 @@
               "description": ""
             },
             {
-              "name": "size",
-              "type": "{ metadataValue: string; }",
-              "required": true,
-              "description": ""
-            },
-            {
               "name": "space",
               "type": "{ xxxs, xxs, xs, sm, md, lg, xl, xxl, xxxl, xxxxl, xxxxxl }",
               "required": true,
@@ -10734,6 +10606,15 @@
       ],
       "tokens": [],
       "changelog": [
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "lightTheme",
+            "darkTheme"
+          ],
+          "text": "**Breaking:** `size.metadataValue` (and the `size` group) is removed; `MetadataList` was its only user."
+        },
         {
           "version": "0.7.0",
           "date": "2026-11-26",
@@ -11202,7 +11083,7 @@
       "docPath": "docs/tokens.md",
       "title": "Tokens",
       "description": "Every theme token key in detail, group by group.",
-      "body": "Every token lives in `src/theme/theme.ts`. The `Theme` interface declares the groups; `lightTheme` and `darkTheme` are both built by `buildTheme(mode)` and share every key, differing only in values. Consumers read tokens with `useTheme()` or inside `createUseStyles((theme: Theme) => ...)`. The groups below follow the order of the `Theme` type; the key lists are taken from it.\n\nThe top-level `colorScheme` key holds the mode, `'light'` or `'dark'` (type `ThemeMode`), and is also the only non-group key of the type.\n\n## color\n\nSurfaces, text, borders and state colours, mode-aware. Keys are grouped as follows.\n\n- `color.gray`: primitive palette, steps `50 100 150 200 300 400 500 600 700 900`. Identical in both modes.\n- `color.blue`: primitive palette, steps `50 100 200 300 400 500 600 700 800`. Identical in both modes.\n- `color.red`: primitive palette, steps `50 100 300 400 500 600 700`. Identical in both modes.\n- `color.text`: `primary secondary muted faint onPrimary onDanger description`\n- `color.bg`: `page card cardHeader track switchOff input footer glass glassFallback glassActive selected hover success placeholder`. `track` must read against both `page` and `card`; `switchOff` is an unchecked Switch track, 3:1 on `page`, `card` and `cardHeader`; `hover` is a translucent scrim; `glass*` feed `recipe.glass`.\n- `color.border`: `default strong light focus hover danger glass glassActive faint loading success section`. `light` is the hairline rule inside a card or between rows, a step on `page` and `card` in both modes (dark 1.24:1 and 1.39:1, light 1.15:1 and 1.21:1).\n- `color.success`, `color.warning`, `color.info`: a single value each.\n- `color.brand`: `default hover active light outline loading loadingHover loadingActive linkHover`\n- `color.danger`: `default hover active light outline loading loadingHover loadingActive`\n- `color.overlay`: `backdrop`\n- `color.chip`: thirteen tinted colourways, each `{ text, bg, border }`. Status tones: `success warning danger info neutral`. Label tones: `status author series subject book entryType user rating` (the `status` label tone is not a status tone). `neutral` text holds 4.5:1 on its own tint over `page`, `card` and `cardHeader` in both modes. See Slated for curation.\n\n## space\n\nThe spacing scale, in `rem`: `xxxs xxs xs sm md lg xl xxl xxxl xxxxl xxxxxl` (`0.1rem` up to `2rem`).\n\n## radius\n\nCorner radii: `sm md lg circle pill` (`4px`, `8px`, `16px`, `50%`, `999px`).\n\n## size\n\nFixed component sizes that are not part of the spacing scale. One key: `metadataValue`. See Slated for curation.\n\n## layout\n\nIntrinsic sizes of chrome that other elements must lay out around. They are measured, not derived, so they are tuned on a device and kept in one place. Keys: `navHeightMobile` (the floating mobile nav, `96px`), `modalWidth` (the one width for every dialog, `500px`), `formWidth` (a standalone form column such as sign-in, `400px`), `controlHeight` (the shared single-line control height, `2.0625rem`), and `floatingControlTopBase`, a position rather than a size: the `top` at which the mobile back button and actions menu pin, `max(space.xxxl, env(safe-area-inset-top) + space.xxxxl)`.\n\n## fontSize\n\nThe type scale: `xxs xs sm md lg xl xxl` (`0.6rem` up to `1.75rem`).\n\n## fontFamily\n\nTwo stacks: `body` (`system-ui, sans-serif`) and `mono`.\n\n## fontWeight\n\nNumeric weights: `regular medium semibold bold extrabold` (400, 500, 600, 700, 800).\n\n## lineHeight\n\nTwo values: `tight` (1) and `body` (1.3).\n\n## shadow\n\nMode-aware elevation. `card` is a soft one-pixel shadow (defined, with no consumer outside the theme); `cardStack`, `dangerStack` and `brandStack` are the hard `0px 2px 0px` offset shadows for cards and buttons; `hoverLift` is the elevation of floating surfaces (the toast and the select and chips-input dropdowns); `glass` and `glassActive` belong to `recipe.glass` and `recipe.glassHighlight`. Keys: `card cardStack hoverLift dangerStack brandStack glass glassActive`.\n\n## transition\n\nShorthand durations and easings: `fast medium slide slow spring`.\n\n## zIndex\n\nStacking layers: `behind base stack header sticky toast`, where `stack` is a nested `{ lo, md, hi }` (1, 2, 3). Values run from `-1` (`behind`) to `9999` (`toast`).\n\n## breakpoint\n\nMedia-query strings, ready to use as JSS keys: `mobile` (`@media (max-width: 640px)`) and `normal` (`@media (min-width: 641px)`).\n\n## recipe\n\nJSS-spreadable style fragments (`...theme.recipe.x`), not components.\n\n- `recipe.input`: the base text-field look (border, radius, hover and focus colours, 16px font on mobile).\n- `recipe.focusRing`: a transparent 2px outline that controls recolour on focus.\n- `recipe.label`: form label text, with a `$danger` variant.\n- `recipe.spinner`: a 1em rotating indicator using the `theme-rotation` keyframes.\n- `recipe.glass`: frosted, blurred chrome with a solid fallback where backdrop blur is unsupported.\n- `recipe.glassHighlight`: the active or pressed fill that sits on top of glass.\n- `recipe.row`: the shaded field row (`bg.cardHeader` fill, `radius.md`, padding `space.md space.lg space.md space.sm`) that `Switch`'s horizontal layout uses; spread it for any custom row that sits beside form fields in a card.\n- `recipe.modal.dialog`: the shared dialog shell (one width, backdrop, mobile margins and safe-area insets).\n- `recipe.modal.header`: dialog title row.\n- `recipe.modal.footer`: dialog action row.\n- `recipe.card.shell`: card container with border, radius and `shadow.cardStack`.\n- `recipe.card.header`: card title bar.\n- `recipe.card.footer`: card action row.\n\n## Slated for curation\n\nBoth groups below move into the package byte-for-byte in 0.0.1 and are due for a decision before the API settles.\n\n- `color.chip.*`: the eight label colourways (`status author series subject book entryType user rating`) are named after Bookplate's metadata chips, not after a general role.\n- `size.metadataValue`: `15rem`, a width named after Bookplate's metadata display.\n\nNo other token name or comment in `src/theme/theme.ts` is clearly Bookplate-specific. Two comments mention app internals (`floatingControlTopBase` refers to the admin picker and `router/nav-layout-style`), but the tokens themselves are generic."
+      "body": "Every token lives in `src/theme/theme.ts`. The `Theme` interface declares the groups; `lightTheme` and `darkTheme` are both built by `buildTheme(mode)` and share every key, differing only in values. Consumers read tokens with `useTheme()` or inside `createUseStyles((theme: Theme) => ...)`. The groups below follow the order of the `Theme` type; the key lists are taken from it.\n\nThe top-level `colorScheme` key holds the mode, `'light'` or `'dark'` (type `ThemeMode`), and is also the only non-group key of the type.\n\n## color\n\nSurfaces, text, borders and state colours, mode-aware. Keys are grouped as follows.\n\n- `color.gray`: primitive palette, steps `50 100 150 200 300 400 500 600 700 900`. Identical in both modes.\n- `color.blue`: primitive palette, steps `50 100 200 300 400 500 600 700 800`. Identical in both modes.\n- `color.red`: primitive palette, steps `50 100 300 400 500 600 700`. Identical in both modes.\n- `color.text`: `primary secondary muted faint onPrimary onDanger description`\n- `color.bg`: `page card cardHeader track switchOff input footer glass glassFallback glassActive selected hover success placeholder`. `track` must read against both `page` and `card`; `switchOff` is an unchecked Switch track, 3:1 on `page`, `card` and `cardHeader`; `hover` is a translucent scrim; `glass*` feed `recipe.glass`.\n- `color.border`: `default strong light focus hover danger glass glassActive faint loading success section`. `light` is the hairline rule inside a card or between rows, a step on `page` and `card` in both modes (dark 1.24:1 and 1.39:1, light 1.15:1 and 1.21:1).\n- `color.success`, `color.warning`, `color.info`: a single value each.\n- `color.brand`: `default hover active light outline loading loadingHover loadingActive linkHover`\n- `color.danger`: `default hover active light outline loading loadingHover loadingActive`\n- `color.overlay`: `backdrop`\n- `color.chip`: thirteen tinted colourways, each `{ text, bg, border }`. Status tones: `success warning danger info neutral`. Label tones: `status author series subject book entryType user rating` (the `status` label tone is not a status tone). `neutral` text holds 4.5:1 on its own tint over `page`, `card` and `cardHeader` in both modes. See Slated for curation.\n\n## space\n\nThe spacing scale, in `rem`: `xxxs xxs xs sm md lg xl xxl xxxl xxxxl xxxxxl` (`0.1rem` up to `2rem`).\n\n## radius\n\nCorner radii: `sm md lg circle pill` (`4px`, `8px`, `16px`, `50%`, `999px`).\n\n## layout\n\nIntrinsic sizes of chrome that other elements must lay out around. They are measured, not derived, so they are tuned on a device and kept in one place. Keys: `navHeightMobile` (the floating mobile nav, `96px`), `modalWidth` (the one width for every dialog, `500px`), `formWidth` (a standalone form column such as sign-in, `400px`), `controlHeight` (the shared single-line control height, `2.0625rem`), and `floatingControlTopBase`, a position rather than a size: the `top` at which the mobile back button and actions menu pin, `max(space.xxxl, env(safe-area-inset-top) + space.xxxxl)`.\n\n## fontSize\n\nThe type scale: `xxs xs sm md lg xl xxl` (`0.6rem` up to `1.75rem`).\n\n## fontFamily\n\nTwo stacks: `body` (`system-ui, sans-serif`) and `mono`.\n\n## fontWeight\n\nNumeric weights: `regular medium semibold bold extrabold` (400, 500, 600, 700, 800).\n\n## lineHeight\n\nTwo values: `tight` (1) and `body` (1.3).\n\n## shadow\n\nMode-aware elevation. `card` is a soft one-pixel shadow (defined, with no consumer outside the theme); `cardStack`, `dangerStack` and `brandStack` are the hard `0px 2px 0px` offset shadows for cards and buttons; `hoverLift` is the elevation of floating surfaces (the toast and the select and chips-input dropdowns); `glass` and `glassActive` belong to `recipe.glass` and `recipe.glassHighlight`. Keys: `card cardStack hoverLift dangerStack brandStack glass glassActive`.\n\n## transition\n\nShorthand durations and easings: `fast medium slide slow spring`.\n\n## zIndex\n\nStacking layers: `behind base stack header sticky toast`, where `stack` is a nested `{ lo, md, hi }` (1, 2, 3). Values run from `-1` (`behind`) to `9999` (`toast`).\n\n## breakpoint\n\nMedia-query strings, ready to use as JSS keys: `mobile` (`@media (max-width: 640px)`) and `normal` (`@media (min-width: 641px)`).\n\n## recipe\n\nJSS-spreadable style fragments (`...theme.recipe.x`), not components.\n\n- `recipe.input`: the base text-field look (border, radius, hover and focus colours, 16px font on mobile).\n- `recipe.focusRing`: a transparent 2px outline that controls recolour on focus.\n- `recipe.label`: form label text, with a `$danger` variant.\n- `recipe.spinner`: a 1em rotating indicator using the `theme-rotation` keyframes.\n- `recipe.glass`: frosted, blurred chrome with a solid fallback where backdrop blur is unsupported.\n- `recipe.glassHighlight`: the active or pressed fill that sits on top of glass.\n- `recipe.row`: the shaded field row (`bg.cardHeader` fill, `radius.md`, padding `space.md space.lg space.md space.sm`) that `Switch`'s horizontal layout uses; spread it for any custom row that sits beside form fields in a card.\n- `recipe.modal.dialog`: the shared dialog shell (one width, backdrop, mobile margins and safe-area insets).\n- `recipe.modal.header`: dialog title row.\n- `recipe.modal.footer`: dialog action row.\n- `recipe.card.shell`: card container with border, radius and `shadow.cardStack`.\n- `recipe.card.header`: card title bar.\n- `recipe.card.footer`: card action row.\n\n## Slated for curation\n\nThe group below moved into the package byte-for-byte in 0.0.1 and is due for a decision before the API settles.\n\n- `color.chip.*`: the eight label colourways (`status author series subject book entryType user rating`) are named after Bookplate's metadata chips, not after a general role.\n\nNo other token name or comment in `src/theme/theme.ts` is clearly Bookplate-specific. Two comments mention app internals (`floatingControlTopBase` refers to the admin picker and `router/nav-layout-style`), but the tokens themselves are generic."
     }
   ],
   "recipes": [
@@ -11254,6 +11135,23 @@
             "MetaLine"
           ],
           "text": "**Breaking:** without `separator` the items are spaced by gaps (`space.lg`, lines `space.sm`), not dots; pass `separator=\"·\"` for the old look. `separator` takes any one character, drawn by CSS between items. Items can now be labelled pairs, `{ label, value }`, shown with a faint capitalized label, mixed with plain items; a pair whose value is `null`, `undefined` or `false` is skipped. New `MetaLineItem` and `MetaLinePair` types. MetaLine replaces `MetadataList`."
+        },
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "MetaLine"
+          ],
+          "text": "**Breaking:** `MetadataList` (and its `Metadata` and `MetadataListProps` types) is removed; use `MetaLine` with `{ label, value }` items and no `separator` for the same gapped, labelled look. Its 15rem cap on each value is gone, and a pair with an empty value is skipped instead of showing its label alone."
+        },
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "lightTheme",
+            "darkTheme"
+          ],
+          "text": "**Breaking:** `size.metadataValue` (and the `size` group) is removed; `MetadataList` was its only user."
         },
         {
           "version": "0.7.0",
@@ -12164,8 +12062,6 @@
     "MetaLineProps": "meta-line",
     "MetaLinePair": "meta-line",
     "MetaLineItem": "meta-line",
-    "MetadataListProps": "metadata-list",
-    "Metadata": "metadata-list",
     "TableProps": "table",
     "TableColumn": "table",
     "CodeBlockProps": "code-block",

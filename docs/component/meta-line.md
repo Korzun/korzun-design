@@ -305,5 +305,6 @@ type MetaLineItem = ReactNode | MetaLinePair;
 ## Changelog
 
 - **0.7.0** (2026-11-26): **Breaking:** without `separator` the items are spaced by gaps (`space.lg`, lines `space.sm`), not dots; pass `separator="·"` for the old look. `separator` takes any one character, drawn by CSS between items. Items can now be labelled pairs, `{ label, value }`, shown with a faint capitalized label, mixed with plain items; a pair whose value is `null`, `undefined` or `false` is skipped. New `MetaLineItem` and `MetaLinePair` types. MetaLine replaces `MetadataList`.
+- **0.7.0** (2026-11-26): **Breaking:** `MetadataList` (and its `Metadata` and `MetadataListProps` types) is removed; use `MetaLine` with `{ label, value }` items and no `separator` for the same gapped, labelled look. Its 15rem cap on each value is gone, and a pair with an empty value is skipped instead of showing its label alone.
 
 <!-- /generated:changelog -->
