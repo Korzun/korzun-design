@@ -10286,7 +10286,7 @@
           "tags": [
             "General"
           ],
-          "text": "Docs site: the tokens page shows every theme group (`size`, `fontFamily`, `fontWeight` and `lineHeight` were missing), draws one swatch for a single colour (`color.success`), and keeps long token names clear of their values; props and token tables stack each row on a phone instead of scrolling sideways."
+          "text": "Docs site: the tokens page shows every theme group (`size`, `fontFamily`, `fontWeight` and `lineHeight` were missing), draws one swatch for a single colour (`color.success`), and keeps long token names clear of their values; props and token tables stack each row on a phone instead of scrolling sideways; overview thumbnails stay hidden until they load, so nothing flashes white."
         },
         {
           "version": "0.7.0",

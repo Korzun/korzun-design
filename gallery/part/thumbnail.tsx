@@ -42,6 +42,11 @@ const useStyle = createUseStyles((theme: Theme) => ({
     width: `${DESKTOP_WIDTH}px`,
     height: `${(DESKTOP_WIDTH * 9) / 16}px`,
   },
+  // A frame's blank document paints white before the preview loads; keep it
+  // transparent till then. Opacity, not `visibility: hidden` as the example
+  // block uses: Chrome loads a hidden lazy iframe at once, which would fetch
+  // every thumbnail on the overview up front.
+  pending: { opacity: 0 },
 }));
 
 export type ThumbnailProps = {
@@ -53,6 +58,7 @@ export type ThumbnailProps = {
 export const Thumbnail = ({ owner }: ThumbnailProps) => {
   const styles = useStyle();
   const [theme, onLoad] = useFrameTheme();
+  const [loaded, setLoaded] = useState(false);
   const first = owner.preview ?? owner.examples[0];
   const boxRef = useRef<HTMLDivElement>(null);
   const [desktopScale, setDesktopScale] = useState<number | null>(null);
@@ -75,7 +81,8 @@ export const Thumbnail = ({ owner }: ThumbnailProps) => {
         className={cx(
           styles.frame,
           first.viewport === 'mobile' && styles.mobile,
-          desktop && styles.desktop
+          desktop && styles.desktop,
+          !loaded && styles.pending
         )}
         style={desktop ? { transform: `scale(${desktopScale ?? SCALE})` } : undefined}
         data-viewport={first.viewport}
@@ -84,7 +91,10 @@ export const Thumbnail = ({ owner }: ThumbnailProps) => {
         loading="lazy"
         tabIndex={-1}
         aria-hidden
-        onLoad={onLoad}
+        onLoad={() => {
+          setLoaded(true);
+          onLoad();
+        }}
       />
     </div>
   );
