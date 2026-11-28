@@ -39,14 +39,14 @@ export const CopyCodeButton = ({ text, label }: CopyCodeButtonProps) => {
   };
 
   const copy = () => {
-    // The clipboard API is missing outside a secure context (the dev server on a LAN address).
-    const written = navigator.clipboard
-      ? navigator.clipboard.writeText(text)
-      : Promise.reject(new Error('No clipboard'));
-    written.then(
-      () => show('done'),
-      () => show('failed')
-    );
+    // A missing clipboard (outside a secure context, e.g. a dev server on a LAN address) or a
+    // synchronous throw from writeText lands in the same failed path as a rejection.
+    Promise.resolve()
+      .then(() => navigator.clipboard.writeText(text))
+      .then(
+        () => show('done'),
+        () => show('failed')
+      );
   };
 
   const message = state === 'done' ? 'Copied' : state === 'failed' ? 'Could not copy' : '';

@@ -117,6 +117,15 @@ describe('CodeBlock', () => {
     expect(screen.getByRole('button')).toHaveTextContent('Could not copy');
   });
 
+  it('says Could not copy when writeText throws synchronously', async () => {
+    writeText.mockImplementation(() => {
+      throw new Error('blocked');
+    });
+    renderWithProviders(<CodeBlock code="x" copyable />);
+    await press('Copy code');
+    expect(screen.getByRole('button')).toHaveTextContent('Could not copy');
+  });
+
   it('ignores a write that settles after unmount', async () => {
     let resolve!: () => void;
     writeText.mockReturnValue(new Promise<void>((r) => (resolve = r)));

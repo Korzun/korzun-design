@@ -87,6 +87,17 @@ describe('Copy button recipe', () => {
     return renderWithProviders(<Copy />);
   };
 
+  const setClipboard = (value: unknown) =>
+    Object.defineProperty(navigator, 'clipboard', { value, configurable: true });
+  let original: PropertyDescriptor | undefined;
+  beforeEach(() => {
+    original = Object.getOwnPropertyDescriptor(navigator, 'clipboard');
+  });
+  afterEach(() => {
+    if (original) Object.defineProperty(navigator, 'clipboard', original);
+    else Reflect.deleteProperty(navigator, 'clipboard');
+  });
+
   it('is listed as a recipe', () => {
     expect(recipeBySlug('copy-button')?.title).toBe('Copy button');
   });
@@ -102,7 +113,15 @@ describe('Copy button recipe', () => {
   it('shows Could not copy when the clipboard is missing', async () => {
     const user = userEvent.setup();
     mount();
-    Object.defineProperty(navigator, 'clipboard', { value: undefined, configurable: true });
+    setClipboard(undefined);
+    await user.click(screen.getByRole('button', { name: 'Copy' }));
+    expect(await screen.findByRole('button', { name: 'Could not copy' })).toBeInTheDocument();
+  });
+
+  it('shows Could not copy when writeText rejects', async () => {
+    const user = userEvent.setup();
+    mount();
+    setClipboard({ writeText: () => Promise.reject(new Error('denied')) });
     await user.click(screen.getByRole('button', { name: 'Copy' }));
     expect(await screen.findByRole('button', { name: 'Could not copy' })).toBeInTheDocument();
   });
