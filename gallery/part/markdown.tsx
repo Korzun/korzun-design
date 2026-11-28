@@ -5,7 +5,7 @@ import { useMemo, type MouseEvent } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 
 import { anchor } from '../../scripts/docs-gen/slug.mjs';
-import { codeBlock, inlineCode } from '../layout/type.js';
+import { codeBlock, inlineCode, PROSE_WIDTH } from '../layout/type.js';
 import { highlight, useHighlightStyle } from './highlight.js';
 
 // Schemes a rendered link may use; any other (`javascript:`, `data:`) becomes `#`.
@@ -144,6 +144,8 @@ const useStyle = createUseStyles((theme: Theme) => ({
       fontWeight: theme.fontWeight.semibold,
       margin: `${theme.space.xxl} 0 ${theme.space.sm}`,
     },
+    // Lines of prose stop at a readable length; tables and code keep the full width.
+    '& > p, & > ul, & > ol, & > blockquote, & > h2, & > h3, & > h4': { maxWidth: PROSE_WIDTH },
     '& p, & ul, & ol': { margin: `0 0 ${theme.space.lg}` },
     '& ul, & ol': { paddingLeft: theme.space.xxxl },
     '& li + li': { marginTop: theme.space.xs },

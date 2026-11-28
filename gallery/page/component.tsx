@@ -8,7 +8,7 @@ import type { ChangelogEntry, ModuleInfo } from '../../scripts/docs-gen/types.js
 import { moduleBySlug, moduleOwner, typePages } from '../data.js';
 import { siteColumn } from '../layout/column.js';
 import { useScrollToHash } from '../layout/scroll.js';
-import { codeBlock } from '../layout/type.js';
+import { codeBlock, PROSE_WIDTH } from '../layout/type.js';
 import { NotFound } from '../not-found.js';
 import { CopyButton } from '../part/copy-button.js';
 import { ExampleBlock } from '../part/example-block.js';
@@ -49,7 +49,7 @@ const useStyle = createUseStyles((theme: Theme) => ({
     // One column: examples are tall and wide enough that two would squeeze them.
     gridTemplateColumns: 'minmax(0, 1fr)',
   },
-  changes: { margin: 0, paddingLeft: theme.space.xxxl },
+  changes: { margin: 0, paddingLeft: theme.space.xxxl, maxWidth: PROSE_WIDTH },
   change: { '& + &': { marginTop: theme.space.md } },
 }));
 

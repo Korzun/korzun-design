@@ -6,9 +6,12 @@ import type { Theme } from '@korzun/design/theme';
  * - Headings: h2 `fontSize.xl` bold with `space.xxxxxl` above and `space.xl`
  *   below, h3 `fontSize.lg` semibold with `space.xxxl` above and `space.md`
  *   below, in markdown and in page templates alike.
+ * - Prose lines stop at `PROSE_WIDTH` (about 70 characters of body text);
+ *   tables and code blocks keep the column's full width.
  * - Code blocks are mono `fontSize.md` at `CODE_LINE_HEIGHT`; inline code is
  *   `INLINE_CODE_SIZE` of the text around it, so it scales with a heading.
  */
+export const PROSE_WIDTH = '45rem';
 
 /** Line height of a code block: looser than prose's `lineHeight.body`, so lines of code separate. */
 export const CODE_LINE_HEIGHT = 1.5;
