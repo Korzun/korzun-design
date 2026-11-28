@@ -1,5 +1,6 @@
 import { Heading, Stack, Tag, Text } from '@korzun/design/component';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
+import cx from 'classnames';
 import type { MouseEvent, ReactNode } from 'react';
 import { useLocation } from 'react-router';
 
@@ -24,7 +25,7 @@ export const useTableStyle = createUseStyles((theme: Theme) => ({
     // On a phone the table keeps readable columns and scrolls sideways.
     minWidth: `calc(${theme.space.xxxxxl} * 20)`,
     borderCollapse: 'collapse',
-    fontSize: theme.fontSize.sm,
+    fontSize: theme.fontSize.md,
     lineHeight: theme.lineHeight.body,
     '& th, & td': {
       padding: `${theme.space.lg} ${theme.space.xl}`,
@@ -84,6 +85,19 @@ export const useTableStyle = createUseStyles((theme: Theme) => ({
     overflowWrap: 'break-word',
   },
   name: { whiteSpace: 'nowrap' },
+  // Columns sized to their content: a prop name never wraps, a type gets room for a
+  // short union, a default stays narrow, and the description takes the rest.
+  props: {
+    [theme.breakpoint.normal]: {
+      '& th:nth-child(2)': { width: '35%' },
+      '& th:nth-child(3)': { width: '10%' },
+    },
+  },
+  // The prop name is what a reader scans for; the type beside it steps back.
+  propName: { fontWeight: theme.fontWeight.semibold, color: theme.color.text.primary },
+  typeText: { color: theme.color.text.muted },
+  // One member of a union: it wraps inside only when it is wider than the cell.
+  member: { display: 'inline-block', maxWidth: '100%' },
   deprecated: { textDecoration: 'line-through' },
   link: {
     color: theme.color.brand.default,
@@ -107,9 +121,46 @@ const scrollTo = (event: MouseEvent, id: string) => {
   document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 };
 
+const OPEN = new Set(['(', '[', '{', '<']);
+const CLOSE = new Set([')', ']', '}', '>']);
+
+/**
+ * The `[start, end)` ranges of a type's top-level union members: `a | (b | c)`
+ * has two. Brackets, generics and quoted strings nest; the `>` of `=>` does not close.
+ */
+export const unionMembers = (text: string): [number, number][] => {
+  const members: [number, number][] = [];
+  let depth = 0;
+  let quote: string | null = null;
+  let start = 0;
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i]!;
+    if (quote) {
+      if (ch === '\\') i++;
+      else if (ch === quote) quote = null;
+    } else if (ch === "'" || ch === '"' || ch === '`') quote = ch;
+    else if (OPEN.has(ch)) depth++;
+    else if (CLOSE.has(ch) && !(ch === '>' && text[i - 1] === '=')) depth = Math.max(0, depth - 1);
+    else if (ch === '|' && depth === 0) {
+      members.push([start, i]);
+      start = i + 1;
+    }
+  }
+  members.push([start, text.length]);
+  // Keep the spaces around each `|` outside the members, where the line may break.
+  return members
+    .map(([s, e]): [number, number] => {
+      while (s < e && text[s] === ' ') s++;
+      while (e > s && text[e - 1] === ' ') e--;
+      return [s, e];
+    })
+    .filter(([s, e]) => e > s);
+};
+
 /**
  * Type text in code, with each name that has its own table linked to it: on
  * this page (`linkable`) or, failing that, on another module's page (`typePages`).
+ * A union's members each hold together, so a long union wraps between members.
  */
 const TypeText = ({
   text,
@@ -117,6 +168,7 @@ const TypeText = ({
   typePages,
   self,
   bare = false,
+  className,
 }: {
   text: string;
   linkable: Set<string>;
@@ -125,39 +177,63 @@ const TypeText = ({
   self: string;
   /** Inside a `<code>` already: render the parts without a wrapper. */
   bare?: boolean;
+  /** Extra class on the `<code>`. */
+  className?: string;
 }) => {
   const styles = useTableStyle();
   // The route already lives in the hash, so the anchor goes after it.
   const { pathname } = useLocation();
-  const parts: ReactNode[] = [];
-  let last = 0;
-  for (const match of text.matchAll(/[A-Za-z_$][\w$]*/g)) {
-    const here = linkable.has(match[0]);
-    const page = typePages.get(match[0]);
-    if (match[0] === self || (!here && !page)) continue;
-    parts.push(text.slice(last, match.index));
-    const id = tableId(match[0]);
-    parts.push(
-      here ? (
-        <a
-          key={match.index}
-          href={`#${pathname}#${id}`}
-          className={styles.link}
-          onClick={(e) => scrollTo(e, id)}
-        >
-          {match[0]}
-        </a>
-      ) : (
-        // Another page: the router navigates and the page scrolls to the hash.
-        <a key={match.index} href={`#/components/${page}#${id}`} className={styles.link}>
-          {match[0]}
-        </a>
-      )
-    );
-    last = match.index + match[0].length;
+
+  // `text.slice(from, to)` with its linkable names as links.
+  const linked = (from: number, to: number): ReactNode[] => {
+    const parts: ReactNode[] = [];
+    const run = text.slice(from, to);
+    let last = 0;
+    for (const match of run.matchAll(/[A-Za-z_$][\w$]*/g)) {
+      const here = linkable.has(match[0]);
+      const page = typePages.get(match[0]);
+      if (match[0] === self || (!here && !page)) continue;
+      parts.push(run.slice(last, match.index));
+      const id = tableId(match[0]);
+      const key = from + match.index;
+      parts.push(
+        here ? (
+          <a
+            key={key}
+            href={`#${pathname}#${id}`}
+            className={styles.link}
+            onClick={(e) => scrollTo(e, id)}
+          >
+            {match[0]}
+          </a>
+        ) : (
+          // Another page: the router navigates and the page scrolls to the hash.
+          <a key={key} href={`#/components/${page}#${id}`} className={styles.link}>
+            {match[0]}
+          </a>
+        )
+      );
+      last = match.index + match[0].length;
+    }
+    parts.push(run.slice(last));
+    return parts;
+  };
+
+  const members = unionMembers(text);
+  let parts: ReactNode[];
+  if (members.length < 2) parts = linked(0, text.length);
+  else {
+    parts = [text.slice(0, members[0]![0])];
+    members.forEach(([start, end], i) => {
+      parts.push(
+        <span key={`m${start}`} className={styles.member}>
+          {linked(start, end)}
+        </span>,
+        text.slice(end, members[i + 1]?.[0] ?? text.length)
+      );
+    });
   }
-  parts.push(text.slice(last));
-  return bare ? <>{parts}</> : <code className={styles.code}>{parts}</code>;
+  return bare ? <>{parts}</> : <code className={cx(styles.code, className)}>{parts}</code>;
 };
 
 export type PropsTableProps = {
@@ -210,7 +286,7 @@ export const PropsTable = ({ table, tables, typePages = NO_PAGES, from }: PropsT
     <Stack gap="md">
       {caption}
       <div className={styles.scroll}>
-        <table className={styles.table} aria-label={table.name}>
+        <table className={cx(styles.table, styles.props)} aria-label={table.name}>
           <thead>
             <tr>
               <th scope="col">Name</th>
@@ -224,7 +300,13 @@ export const PropsTable = ({ table, tables, typePages = NO_PAGES, from }: PropsT
               <tr key={row.name}>
                 <td className={styles.name}>
                   <Stack gap="xs" align="start">
-                    <code className={row.deprecated ? styles.deprecated : styles.code}>
+                    <code
+                      className={cx(
+                        styles.code,
+                        styles.propName,
+                        row.deprecated && styles.deprecated
+                      )}
+                    >
                       {row.name}
                     </code>
                     {row.required && (
@@ -245,6 +327,7 @@ export const PropsTable = ({ table, tables, typePages = NO_PAGES, from }: PropsT
                     linkable={linkable}
                     typePages={typePages}
                     self={table.name}
+                    className={styles.typeText}
                   />
                 </td>
                 <td data-label="Default">
