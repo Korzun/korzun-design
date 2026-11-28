@@ -29,7 +29,7 @@ To load this guide in a consuming app, add this line to its `CLAUDE.md` or
 | Import                     | Contents                                                                                                                                                                                               |
 | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `@korzun/design/theme`     | `ThemeProvider`, `useTheme`, `useThemeSetting`, `createUseStyles`, `Theme`, `lightTheme`, `darkTheme`                                                                                                  |
-| `@korzun/design/control`   | buttons, inputs, select, switch, segmented control, popover, `ConfirmModal`, `Modal`, `useModal`, page actions, `Anchor`                                                                               |
+| `@korzun/design/control`   | buttons, inputs, select, switch, segmented control, popover, `ConfirmModal`, `Modal`, `useModal`, page actions, `Anchor`, `Slider`                                                                     |
 | `@korzun/design/component` | `Page`, `Alert`, `Card` family, `Space`, `Text`, `Heading`, `Code`, `CodeBlock`, `EmptyState`, `ErrorMessage`, `Spinner`, `Table`, `Chip`, metadata, navs, `ThemeSetting`, `TopFade`                   |
 | `@korzun/design/icon`      | `*Icon` components, `IconProps`                                                                                                                                                                        |
 | `@korzun/design/toast`     | `ToastProvider`, `useToast`                                                                                                                                                                            |
@@ -100,7 +100,7 @@ Before building a whole screen or a common group of parts (sign-in, …), check
 ## Docs index
 
 [docs]|theme.md: ThemeProvider, the light and dark themes, and createUseStyles for writing token-based styles.|corners.md: Corner radius by nesting depth, one radius step per level.|patterns.md: How screens are built: forms in cards, confirmations, menus, modals, toasts and style overrides.|tokens.md: Every theme token key in detail, group by group.|philosophy.md: The design rules the code enforces, and why.|icon.md: Inline SVG icon components that take the surrounding text colour, with the shared IconProps.|toast.md: Short, transient confirmations and errors that slide in from a corner and leave on their own.
-[docs/control]|{anchor,back-button,button,chips-input,confirm-modal,date-time-input,field-list,menu,modal,number-input,page-actions-bar,page-actions-menu,page-footer-actions,popover,segmented-control,select,switch,text-area,text-input,use-modal}.md
+[docs/control]|{anchor,back-button,button,chips-input,confirm-modal,date-time-input,field-list,menu,modal,number-input,page-actions-bar,page-actions-menu,page-footer-actions,popover,segmented-control,select,slider,switch,text-area,text-input,use-modal}.md
 [docs/component]|{alert,card,card-row,chip,code,code-block,collapsible-section,divider,empty-state,error-message,heading,meta-line,nav-desktop,nav-mobile,page,progress-circle,space,spinner,surface,table,text,theme-setting,top-fade}.md
 [docs/hooks]|{use-is-standalone,use-minimize-on-scroll,use-pull-to-refresh}.md
 [docs/recipes]|{copy-button,login,reading-progress}.md

@@ -2,6 +2,7 @@
 
 ## 0.7.0 — 2026-11-26
 
+- [Slider] New `Slider` (control): one value between `min` and `max` on a draggable, keyboard-operable track. It snaps to `step`, or with `step={null}` only to `detents`, which can sit at any positions and draw ticks with optional labels. `startLabel` and `endLabel` go under the ends, `thumb` draws a custom handle from its state, `onChange` reports each snapped value and `onChangeEnd` the final one, `ariaValueText` names the value, and `name` submits it with a form.
 - [Anchor] New `Anchor` (control): a page outline from `items` (`{ id, title, level }`) that highlights the section in view and scrolls to one on click. `variant="list"` is an indented list of titles; `variant="minimap"` is a column of dashes that opens the list in a panel on hover or focus, as in Notion. `offset` allows for sticky chrome; it never changes the URL.
 - [Space] New `Space`: one layout primitive with a `direction` (default `'horizontal'`), `gap`, `align`, `justify`, `wrap`, `as` and a `split` separator drawn between items (hidden from screen readers, an `li` inside a list). Each direction keeps Stack's or Inline's defaults.
 - [Space] **Breaking:** `Stack` and `Inline` (and `StackProps`, `InlineProps`) are removed; use `Space`. `<Stack …>` is `<Space direction="vertical" …>` and `<Inline …>` is `<Space …>`, with every prop and default unchanged.

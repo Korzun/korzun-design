@@ -5905,6 +5905,302 @@
       ]
     },
     {
+      "id": "control/slider",
+      "slug": "slider",
+      "entry": "@korzun/design/control",
+      "docPath": "docs/control/slider.md",
+      "title": "Slider",
+      "description": "A single-value slider with detents at any positions, labels under them and the ends, and an optional custom thumb.",
+      "category": "Inputs",
+      "values": [
+        "Slider"
+      ],
+      "types": [
+        "SliderDetent",
+        "SliderProps",
+        "SliderThumbState"
+      ],
+      "importLine": "import { Slider, type SliderDetent, type SliderProps, type SliderThumbState } from '@korzun/design/control'",
+      "body": "A track with a draggable thumb that picks one number between `min` and `max`.\nIt snaps to multiples of `step`, or with `step={null}` to `detents` only,\nwhich can sit at any positions (chapters in a book, not just even steps).\nDetents draw ticks, filled up to the value, with optional labels under them;\n`startLabel` and `endLabel` sit under the ends. `thumb` draws your own handle.\n\nUse something else for: one of a few named options (`SegmentedControl`), an\nexact number the user types (`NumberInput`), showing progress the user does\nnot set (`ProgressCircle`).\n\n## Usage\n\n### Behaviour\n\n- Controlled: the thumb shows `value`. `onChange` fires with each new snapped\n  value (during a drag, on a track press, on a key press); `onChangeEnd`\n  fires once when the interaction ends (pointer release, or right after\n  `onChange` for a key). Save in `onChangeEnd`.\n- While dragging, the thumb and fill follow the pointer exactly and the ticks\n  colour from the snapped value; on release the thumb slides to the value\n  (instantly under reduced motion).\n- `value` is a position, never a detent index: give each detent the value it\n  stands for, and map the value back yourself (`ariaValueText` names it).\n- A value between snap points is drawn where it is; the next arrow key moves\n  it to the nearest snap point in that direction.\n- A detent at exactly `min` or `max` draws no tick; its label still shows.\n  Detent labels are centred on their tick (lined up with the track end at\n  `min` and `max`) and may overlap when detents crowd.\n- Left to right only.\n\n### Keyboard\n\nOn the focused thumb: ArrowRight/ArrowUp and ArrowLeft/ArrowDown move to the\nnext snap point; Page Up/Page Down move 10% of the range (with `step={null}`,\none detent); Home and End go to the first and last snap point.\n\n### Forms\n\n`name` adds a hidden input, so the value submits with a surrounding `<form>`\nas `name=value`.\n\n### Styling\n\n`className` lands on the outer element; override with `'&&'`. The default\nthumb is an 18px brand circle; a custom `thumb` replaces all of it, while the\nslider keeps a focusable target of at least 24px with the focus ring.\n\n## Do / don't\n\n- Do write an `ariaLabel` that says what the slider sets, and an\n  `ariaValueText` when the number alone means nothing (\"Chapter 3\").\n- Do save in `onChangeEnd`, not `onChange`, to avoid a request per stop.\n- Don't use detent labels for more than a few short words; they do not wrap.\n- Don't make a custom thumb focusable or clickable itself; the slider already is.",
+      "examples": [
+        {
+          "file": "src/control/slider/examples/01-basic.tsx",
+          "slug": "basic",
+          "order": 1,
+          "title": "Basic",
+          "description": "A controlled value from 0 to 100 in steps of 1. Drag the thumb, press anywhere on the track, or focus it and use the arrow keys, Page Up/Down, Home and End. `onChange` gets the new number, not an event.",
+          "code": "import { Space, Text } from '@korzun/design/component';\nimport { Slider } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Basic() {\n  const [volume, setVolume] = useState(40);\n  return (\n    <Space direction=\"vertical\">\n      <Slider value={volume} onChange={setVolume} ariaLabel=\"Volume\" />\n      <Text tone=\"muted\">Volume: {volume}</Text>\n    </Space>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/slider/examples/02-detents.tsx",
+          "slug": "detents",
+          "order": 2,
+          "title": "Detents with labels",
+          "description": "`detents` draw ticks, filled up to the value, each with an optional label under it. With a `step` the thumb still stops between them; `startLabel` and `endLabel` sit under the ends.",
+          "code": "import { Space, Text } from '@korzun/design/component';\nimport { Slider } from '@korzun/design/control';\nimport { useState } from 'react';\n\nconst SIZES = [\n  { value: 12, label: 'S' },\n  { value: 16, label: 'M' },\n  { value: 20, label: 'L' },\n  { value: 24, label: 'XL' },\n];\n\nexport default function Detents() {\n  const [size, setSize] = useState(16);\n  return (\n    <Space direction=\"vertical\">\n      <Slider\n        value={size}\n        onChange={setSize}\n        min={10}\n        max={28}\n        step={1}\n        detents={SIZES}\n        startLabel=\"10px\"\n        endLabel=\"28px\"\n        ariaLabel=\"Text size\"\n        ariaValueText={(v) => `${v} pixels`}\n      />\n      <Text tone=\"muted\">Text size: {size}px</Text>\n    </Space>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/slider/examples/03-detents-only.tsx",
+          "slug": "detents-only",
+          "order": 3,
+          "title": "Detents only: a chapter picker",
+          "description": "`step={null}` stops only at the detents, which can sit anywhere: here each chapter's start in the book. The value is a position (0–100), mapped back to a chapter for the heading and `ariaValueText`. `onChange` updates the chapter as you drag; `onChangeEnd` fires once on release, the place to save.",
+          "code": "import { Space, Text } from '@korzun/design/component';\nimport { Slider } from '@korzun/design/control';\nimport { useState } from 'react';\n\n// Where each chapter starts, as a percentage of the book; 100 is \"finished\".\nconst STARTS = [8, 19, 33, 52, 71];\nconst DETENTS = [{ value: 0 }, ...STARTS.map((value) => ({ value })), { value: 100 }];\n\nconst describe = (v: number) => {\n  if (v <= 0) return 'Not started';\n  if (v >= 100) return 'Completed';\n  return `Chapter ${STARTS.indexOf(v) + 1}`;\n};\n\nexport default function DetentsOnly() {\n  const [position, setPosition] = useState(33);\n  const [saved, setSaved] = useState(33);\n  return (\n    <Space direction=\"vertical\">\n      <Text weight=\"semibold\">{describe(position)}</Text>\n      <Slider\n        value={position}\n        onChange={setPosition}\n        onChangeEnd={setSaved}\n        step={null}\n        detents={DETENTS}\n        startLabel=\"Not started\"\n        endLabel=\"Completed\"\n        ariaLabel=\"Reading progress\"\n        ariaValueText={describe}\n      />\n      <Text tone=\"muted\">Saved: {describe(saved)}</Text>\n    </Space>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/slider/examples/04-custom-thumb.tsx",
+          "slug": "custom-thumb",
+          "order": 4,
+          "title": "Custom thumb",
+          "description": "`thumb` draws the handle from its state (`value`, `dragging`, `focused`, `disabled`). The slider keeps the focusable, 24px target around it and centres it on the value, so the node is only what you see. This one is a pill showing the value, which grows while dragging.",
+          "code": "import { Space } from '@korzun/design/component';\nimport { Slider } from '@korzun/design/control';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\nimport { useState } from 'react';\n\n// In your app this goes in a sibling style.ts.\nconst useStyle = createUseStyles((theme: Theme) => ({\n  pill: {\n    padding: `${theme.space.xxs} ${theme.space.md}`,\n    borderRadius: theme.radius.pill,\n    background: theme.color.brand.default,\n    color: theme.color.text.onPrimary,\n    fontSize: theme.fontSize.xs,\n    fontWeight: theme.fontWeight.semibold,\n    fontVariantNumeric: 'tabular-nums',\n    transition: `transform ${theme.transition.fast}`,\n  },\n  dragging: { transform: 'scale(1.15)' },\n}));\n\nexport default function CustomThumb() {\n  const styles = useStyle();\n  const [value, setValue] = useState(60);\n  return (\n    <Space direction=\"vertical\">\n      <Slider\n        value={value}\n        onChange={setValue}\n        step={5}\n        ariaLabel=\"Brightness\"\n        thumb={(s) => (\n          <span className={`${styles.pill} ${s.dragging ? styles.dragging : ''}`}>{s.value}</span>\n        )}\n      />\n    </Space>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/slider/examples/05-disabled.tsx",
+          "slug": "disabled",
+          "order": 5,
+          "title": "Disabled",
+          "description": "`disabled` ignores the pointer and keys, leaves the tab order and greys the thumb. A switch toggles it.",
+          "code": "import { Space } from '@korzun/design/component';\nimport { Slider, Switch } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Disabled() {\n  const [disabled, setDisabled] = useState(true);\n  const [value, setValue] = useState(30);\n  return (\n    <Space direction=\"vertical\">\n      <Switch name=\"disabled\" label=\"Disabled\" checked={disabled} onChange={setDisabled} />\n      <Slider\n        value={value}\n        onChange={setValue}\n        detents={[{ value: 25 }, { value: 50 }, { value: 75 }]}\n        disabled={disabled}\n        ariaLabel=\"Volume\"\n      />\n    </Space>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/slider/examples/06-in-a-form.tsx",
+          "slug": "in-a-form",
+          "order": 6,
+          "title": "In a form",
+          "description": "`name` submits the value with the form through a hidden input. Submit shows what the form sent.",
+          "code": "import { Card, Space, Text } from '@korzun/design/component';\nimport { Button, Slider } from '@korzun/design/control';\nimport { type FormEvent, useState } from 'react';\n\nexport default function InAForm() {\n  const [goal, setGoal] = useState(20);\n  const [sent, setSent] = useState<string | null>(null);\n  const submit = (e: FormEvent<HTMLFormElement>) => {\n    e.preventDefault();\n    setSent(String(new FormData(e.currentTarget).get('goal')));\n  };\n  return (\n    <Card title=\"Reading goal\">\n      <form onSubmit={submit}>\n        <Space direction=\"vertical\">\n          <Text>Books this year: {goal}</Text>\n          <Slider\n            value={goal}\n            onChange={setGoal}\n            min={0}\n            max={52}\n            name=\"goal\"\n            startLabel=\"0\"\n            endLabel=\"52\"\n            ariaLabel=\"Books this year\"\n          />\n          <Space justify=\"end\">\n            <Button type=\"primary\" submit>\n              Save\n            </Button>\n          </Space>\n          {sent !== null && <Text tone=\"muted\">Sent goal={sent}</Text>}\n        </Space>\n      </form>\n    </Card>\n  );\n}\n"
+        }
+      ],
+      "preview": {
+        "file": "src/control/slider/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { Slider } from '@korzun/design/control';\nimport { createUseStyles } from '@korzun/design/theme';\nimport { useState } from 'react';\n\nconst useStyle = createUseStyles({ box: { width: 280 } });\n\nexport default function Preview() {\n  const styles = useStyle();\n  const [value, setValue] = useState(52);\n  return (\n    <div className={styles.box}>\n      <Slider\n        value={value}\n        onChange={setValue}\n        step={null}\n        detents={[0, 8, 19, 33, 52, 71, 100].map((v) => ({ value: v }))}\n        startLabel=\"Not started\"\n        endLabel=\"Completed\"\n        ariaLabel=\"Reading progress\"\n      />\n    </div>\n  );\n}\n"
+      },
+      "tables": [
+        {
+          "name": "SliderProps",
+          "kind": "props",
+          "rows": [
+            {
+              "name": "ariaLabel",
+              "type": "string",
+              "required": true,
+              "description": "Accessible name of the slider: say what it sets (\"Reading progress for Middlemarch\")."
+            },
+            {
+              "name": "ariaValueText",
+              "type": "(value: number) => string",
+              "required": false,
+              "description": "Turns the value into words for screen readers (`(v) => \\`Chapter ${n}\\``); without it they hear the number."
+            },
+            {
+              "name": "className",
+              "type": "string",
+              "required": false,
+              "description": "On the outer element. Override with `'&&'` specificity, never `!important`."
+            },
+            {
+              "name": "detents",
+              "type": "SliderDetent[]",
+              "required": false,
+              "description": "Stops drawn as ticks, filled up to the value, each with an optional label. A detent at exactly `min` or `max` draws no tick, but its label shows. Labels may overlap when detents crowd; space them yourself.",
+              "default": "[]"
+            },
+            {
+              "name": "disabled",
+              "type": "boolean",
+              "required": false,
+              "description": "Ignores pointer and keys, leaves the tab order, and greys the default thumb.",
+              "default": "false"
+            },
+            {
+              "name": "endLabel",
+              "type": "ReactNode",
+              "required": false,
+              "description": "Under the end of the track (\"Completed\", \"100\")."
+            },
+            {
+              "name": "max",
+              "type": "number",
+              "required": false,
+              "description": "The highest value. A `max` not above `min` is treated as `min + 1`.",
+              "default": "100"
+            },
+            {
+              "name": "min",
+              "type": "number",
+              "required": false,
+              "description": "The lowest value.",
+              "default": "0"
+            },
+            {
+              "name": "name",
+              "type": "string",
+              "required": false,
+              "description": "Submits the value with a surrounding `<form>`, through a hidden input. Not submitted while `disabled`, like a native field."
+            },
+            {
+              "name": "onChange",
+              "type": "(value: number) => void",
+              "required": true,
+              "description": "Receives the new snapped value (not an event) each time it changes: during a drag, on a track press, and on each key press."
+            },
+            {
+              "name": "onChangeEnd",
+              "type": "(value: number) => void",
+              "required": false,
+              "description": "Receives the final value once an interaction ends: on pointer release, and right after `onChange` for a key press. Save here rather than in `onChange` to avoid a request per pixel."
+            },
+            {
+              "name": "ref",
+              "type": "Ref<HTMLDivElement>",
+              "required": false,
+              "description": "The outer element."
+            },
+            {
+              "name": "startLabel",
+              "type": "ReactNode",
+              "required": false,
+              "description": "Under the start of the track (\"Not started\", \"0\")."
+            },
+            {
+              "name": "step",
+              "type": "number | null",
+              "required": false,
+              "description": "A number snaps to `min + k·step` (and to every detent). `null` snaps to the detents only, which suits uneven stops such as chapters; with no detents it then snaps to the two ends.",
+              "default": "1"
+            },
+            {
+              "name": "thumb",
+              "type": "(state: SliderThumbState) => ReactNode",
+              "required": false,
+              "description": "Draws your own thumb in place of the default circle. The slider keeps the focusable, at least 24px target around it, centred on the value, so the node is only the visible part."
+            },
+            {
+              "name": "value",
+              "type": "number",
+              "required": true,
+              "description": "The value, between `min` and `max`. Controlled: the thumb shows this, so update it from `onChange`. Out-of-range values are clamped; a value that is not a finite number shows as `min`."
+            }
+          ]
+        },
+        {
+          "name": "SliderDetent",
+          "kind": "object",
+          "rows": [
+            {
+              "name": "label",
+              "type": "ReactNode",
+              "required": false,
+              "description": "Shown under the tick, centred on it (or lined up with the track end at `min` or `max`)."
+            },
+            {
+              "name": "value",
+              "type": "number",
+              "required": true,
+              "description": "Where the detent sits, between `min` and `max`. Any value: detents need not be evenly spaced."
+            }
+          ],
+          "description": "A stop on the track: a tick at `value`, with an optional label under it."
+        },
+        {
+          "name": "SliderThumbState",
+          "kind": "object",
+          "rows": [
+            {
+              "name": "disabled",
+              "type": "boolean",
+              "required": true,
+              "description": "The slider is disabled."
+            },
+            {
+              "name": "dragging",
+              "type": "boolean",
+              "required": true,
+              "description": "A pointer is dragging the thumb."
+            },
+            {
+              "name": "focused",
+              "type": "boolean",
+              "required": true,
+              "description": "The thumb has keyboard focus."
+            },
+            {
+              "name": "value",
+              "type": "number",
+              "required": true,
+              "description": "The value the thumb shows: the snapped value under the pointer while dragging."
+            }
+          ],
+          "description": "What a custom `thumb` is drawn for."
+        }
+      ],
+      "tokens": [
+        {
+          "path": "color.border.focus",
+          "kind": "color",
+          "light": "#0758d9",
+          "dark": "#3696fe"
+        },
+        {
+          "path": "color.border.strong",
+          "kind": "color",
+          "light": "#DDDDDD",
+          "dark": "#48494F"
+        },
+        {
+          "path": "color.brand.default",
+          "kind": "color",
+          "light": "#1777FF",
+          "dark": "#3696fe"
+        },
+        {
+          "path": "color.text.faint",
+          "kind": "color",
+          "light": "#9ca3af",
+          "dark": "#6E7480"
+        },
+        {
+          "path": "fontSize.xs",
+          "kind": "value",
+          "light": "0.7rem",
+          "dark": "0.7rem"
+        },
+        {
+          "path": "radius.circle",
+          "kind": "value",
+          "light": "50%",
+          "dark": "50%"
+        },
+        {
+          "path": "recipe.focusRing",
+          "kind": "recipe",
+          "light": null,
+          "dark": null
+        },
+        {
+          "path": "space.xs",
+          "kind": "value",
+          "light": "0.25rem",
+          "dark": "0.25rem"
+        }
+      ],
+      "changelog": [
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "Slider"
+          ],
+          "text": "New `Slider` (control): one value between `min` and `max` on a draggable, keyboard-operable track. It snaps to `step`, or with `step={null}` only to `detents`, which can sit at any positions and draw ticks with optional labels. `startLabel` and `endLabel` go under the ends, `thumb` draws a custom handle from its state, `onChange` reports each snapped value and `onChangeEnd` the final one, `ariaValueText` names the value, and `name` submits it with a form."
+        }
+      ]
+    },
+    {
       "id": "control/switch",
       "slug": "switch",
       "entry": "@korzun/design/control",
@@ -11419,6 +11715,14 @@
           "version": "0.7.0",
           "date": "2026-11-26",
           "tags": [
+            "Slider"
+          ],
+          "text": "New `Slider` (control): one value between `min` and `max` on a draggable, keyboard-operable track. It snaps to `step`, or with `step={null}` only to `detents`, which can sit at any positions and draw ticks with optional labels. `startLabel` and `endLabel` go under the ends, `thumb` draws a custom handle from its state, `onChange` reports each snapped value and `onChangeEnd` the final one, `ariaValueText` names the value, and `name` submits it with a form."
+        },
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
             "Anchor"
           ],
           "text": "New `Anchor` (control): a page outline from `items` (`{ id, title, level }`) that highlights the section in view and scrolls to one on click. `variant=\"list\"` is an indented list of titles; `variant=\"minimap\"` is a column of dashes that opens the list in a panel on hover or focus, as in Notion. `offset` allows for sticky chrome; it never changes the URL."
@@ -12473,6 +12777,9 @@
     "SegmentedOption": "segmented-control",
     "SelectProps": "select",
     "SelectOption": "select",
+    "SliderProps": "slider",
+    "SliderDetent": "slider",
+    "SliderThumbState": "slider",
     "SwitchProps": "switch",
     "SwitchRadiusValue": "switch",
     "TextAreaProps": "text-area",

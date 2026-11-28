@@ -33,6 +33,7 @@ export const SECTIONS = Object.freeze([
       'number-input',
       'segmented-control',
       'select',
+      'slider',
       'switch',
       'text-area',
       'text-input',

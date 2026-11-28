@@ -51,6 +51,12 @@ export {
   type SegmentedControlProps,
   type SegmentedOption,
 } from './segmented-control/index.js';
+export {
+  Slider,
+  type SliderDetent,
+  type SliderProps,
+  type SliderThumbState,
+} from './slider/index.js';
 export { Switch, type SwitchProps, type SwitchRadiusValue } from './switch/index.js';
 export { TextArea, type TextAreaProps } from './text-area/index.js';
 export { TextInput, type TextInputAction, type TextInputProps } from './text-input/index.js';
