@@ -2,6 +2,7 @@
 
 ## 0.7.0 — 2026-11-26
 
+- [lightTheme, darkTheme] New `color.code` palette (foreground, keyword, string, function, parameter, constant, punctuation, comment, link) for syntax colours, and `recipe.codeBlock` and `recipe.inlineCode` for code rendered outside `CodeBlock` and `Code`.
 - [Button] **Breaking:** the `success` prop is removed. It only tinted a `default` button green (a `primary` one stayed blue), which read as a fourth kind of button. For a done state such as Copy turning into Copied!, change the label and add a `CheckIcon` prefix. The `color.bg.success` and `color.border.success` tokens stay. The Button examples now show every type, and `danger` on both `default` and `primary`.
 - [Button] A `link` button's spinner and `prefix`/`suffix` icons sit 0.5em from the label and centred on the text, like the other types; before they touched the label and sat high on the baseline. An icon-only link gets no extra space.
 - [ThemeProvider, GlobalStyles] `GlobalStyles` (rendered by `ThemeProvider`) ships the reset the components are drawn against: every element is `box-sizing: border-box` with no default margin or padding, as in Bookplate's and Scribe's `index.html`. Without it a text field was 51px tall instead of `layout.controlHeight` (33px). An app that already carries this reset sees no change; one that relied on browser default margins (`p`, `h1`, `ul`) loses them.

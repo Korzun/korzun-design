@@ -395,3 +395,50 @@ describe('layout.formWidth', () => {
     expect(darkTheme.layout.formWidth).toBe('400px');
   });
 });
+
+describe('code styles', () => {
+  it('code palette maps to the highlight colours', () => {
+    for (const t of [lightTheme, darkTheme]) {
+      const { chip, text, brand } = t.color;
+      expect(t.color.code).toEqual({
+        foreground: text.primary,
+        keyword: chip.status.text,
+        string: chip.author.text,
+        function: chip.series.text,
+        parameter: chip.subject.text,
+        constant: chip.entryType.text,
+        punctuation: text.secondary,
+        comment: text.muted,
+        link: brand.default,
+      });
+    }
+  });
+
+  it('recipe.codeBlock is the in-surface code box', () => {
+    for (const t of [lightTheme, darkTheme]) {
+      expect(t.recipe.codeBlock).toMatchObject({
+        margin: 0,
+        padding: t.space.xl,
+        overflowX: 'auto',
+        fontFamily: t.fontFamily.mono,
+        fontSize: t.fontSize.md,
+        lineHeight: 1.5,
+        borderRadius: t.radius.md,
+        backgroundColor: t.color.bg.cardHeader,
+      });
+    }
+  });
+
+  it('recipe.inlineCode is the code span', () => {
+    for (const t of [lightTheme, darkTheme]) {
+      expect(t.recipe.inlineCode).toMatchObject({
+        fontFamily: t.fontFamily.mono,
+        fontSize: '0.875em',
+        padding: `0 ${t.space.xxs}`,
+        borderRadius: t.radius.sm,
+        backgroundColor: t.color.bg.cardHeader,
+        overflowWrap: 'break-word',
+      });
+    }
+  });
+});
