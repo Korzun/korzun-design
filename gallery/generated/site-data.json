@@ -10492,7 +10492,7 @@
           "tags": [
             "General"
           ],
-          "text": "Docs site: the first Dialog, ConfirmModal, useModalDialog, Popover, Menu and Select example starts open, without taking the page's keyboard focus; readouts sit under their triggers on every page; layout, surface and radius examples share one muted caption style; horizontal-form labels line up; the TextInput and TextArea validation examples open invalid; the Inline wrap, TopFade, ChipsInput chip colours, Divider actions, Inline gaps and Tag tone examples show their point at a glance, and native elements in examples are styled from tokens; an empty overview search offers Clear search; the not-found page uses the site column and link style."
+          "text": "Docs site: the first Dialog, ConfirmModal, useModalDialog, Popover, Menu and Select example starts open, without taking the page's keyboard focus; readouts sit under their triggers on every page; layout, surface and radius examples share one muted caption style; horizontal-form labels line up; the TextInput and TextArea validation examples open invalid; the Inline wrap, TopFade, ChipsInput chip colours, Divider actions, Inline gaps and Tag tone examples show their point at a glance, and native elements in examples are styled from tokens; an empty overview search offers Clear search; the not-found page uses the site column and link style; changelog entries drop their bullets for a hairline between entries."
         }
       ]
     },
