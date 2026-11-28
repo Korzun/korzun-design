@@ -97,7 +97,7 @@ describe('MetaLine', () => {
     const { container, getByText } = renderLine(
       <MetaLine items={[{ label: 'cover fit', value: 'Contain' }]} />
     );
-    expect(metaItems(container)).toEqual(['cover fitContain']);
+    expect(metaItems(container)).toEqual(['cover fit Contain']);
     const label = getComputedStyle(getByText('cover fit'));
     expect(channels(label.color)).toEqual(channels(lightTheme.color.text.faint));
     expect(label.textTransform).toBe('capitalize');
@@ -115,14 +115,14 @@ describe('MetaLine', () => {
         ]}
       />
     );
-    expect(metaItems(container)).toEqual(['d0', 'e']);
+    expect(metaItems(container)).toEqual(['d 0', 'e ']);
   });
 
   it('mixes plain items and pairs in order', () => {
     const { container } = renderLine(
       <MetaLine items={['Frank Herbert', { label: 'format', value: 'EPUB' }, '42%']} />
     );
-    expect(metaItems(container)).toEqual(['Frank Herbert', 'formatEPUB', '42%']);
+    expect(metaItems(container)).toEqual(['Frank Herbert', 'format EPUB', '42%']);
   });
 
   it('pairs sharing a label or holding elements do not warn about keys', () => {

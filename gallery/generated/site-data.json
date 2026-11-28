@@ -8868,12 +8868,6 @@
           "kind": "value",
           "light": "0.375rem",
           "dark": "0.375rem"
-        },
-        {
-          "path": "space.xs",
-          "kind": "value",
-          "light": "0.25rem",
-          "dark": "0.25rem"
         }
       ],
       "changelog": [
@@ -8891,7 +8885,7 @@
           "tags": [
             "MetaLine"
           ],
-          "text": "**Breaking:** `MetadataList` (and its `Metadata` and `MetadataListProps` types) is removed; use `MetaLine` with `{ label, value }` items and no `separator` for the same gapped, labelled look. Its 15rem cap on each value is gone, and a pair with an empty value is skipped instead of showing its label alone."
+          "text": "**Breaking:** `MetadataList` (and its `Metadata` and `MetadataListProps` types) is removed; use `MetaLine` with `{ label, value }` items and no `separator` for its gapped, labelled look, wrapped in `Text size=\"sm\"` for its size (MetaLine inherits font size and colour; MetadataList set `fontSize.sm` and `text.primary`). Its 15rem cap on each value is gone, and a pair with an empty value is skipped instead of showing its label alone."
         }
       ]
     },
@@ -11142,7 +11136,7 @@
           "tags": [
             "MetaLine"
           ],
-          "text": "**Breaking:** `MetadataList` (and its `Metadata` and `MetadataListProps` types) is removed; use `MetaLine` with `{ label, value }` items and no `separator` for the same gapped, labelled look. Its 15rem cap on each value is gone, and a pair with an empty value is skipped instead of showing its label alone."
+          "text": "**Breaking:** `MetadataList` (and its `Metadata` and `MetadataListProps` types) is removed; use `MetaLine` with `{ label, value }` items and no `separator` for its gapped, labelled look, wrapped in `Text size=\"sm\"` for its size (MetaLine inherits font size and colour; MetadataList set `fontSize.sm` and `text.primary`). Its 15rem cap on each value is gone, and a pair with an empty value is skipped instead of showing its label alone."
         },
         {
           "version": "0.7.0",

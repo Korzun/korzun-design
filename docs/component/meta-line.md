@@ -296,7 +296,6 @@ type MetaLineItem = ReactNode | MetaLinePair;
 | `theme.color.text.muted` | `#6E6E6E` | `#9CA1AB` |
 | `theme.space.lg` | `0.625rem` | `0.625rem` |
 | `theme.space.sm` | `0.375rem` | `0.375rem` |
-| `theme.space.xs` | `0.25rem` | `0.25rem` |
 
 <!-- /generated:tokens -->
 
@@ -305,6 +304,6 @@ type MetaLineItem = ReactNode | MetaLinePair;
 ## Changelog
 
 - **0.7.0** (2026-11-26): **Breaking:** without `separator` the items are spaced by gaps (`space.lg`, lines `space.sm`), not dots; pass `separator="·"` for the old look. `separator` takes any one character, drawn by CSS between items. Items can now be labelled pairs, `{ label, value }`, shown with a faint capitalized label, mixed with plain items; a pair whose value is `null`, `undefined` or `false` is skipped. New `MetaLineItem` and `MetaLinePair` types. MetaLine replaces `MetadataList`.
-- **0.7.0** (2026-11-26): **Breaking:** `MetadataList` (and its `Metadata` and `MetadataListProps` types) is removed; use `MetaLine` with `{ label, value }` items and no `separator` for the same gapped, labelled look. Its 15rem cap on each value is gone, and a pair with an empty value is skipped instead of showing its label alone.
+- **0.7.0** (2026-11-26): **Breaking:** `MetadataList` (and its `Metadata` and `MetadataListProps` types) is removed; use `MetaLine` with `{ label, value }` items and no `separator` for its gapped, labelled look, wrapped in `Text size="sm"` for its size (MetaLine inherits font size and colour; MetadataList set `fontSize.sm` and `text.primary`). Its 15rem cap on each value is gone, and a pair with an empty value is skipped instead of showing its label alone.
 
 <!-- /generated:changelog -->

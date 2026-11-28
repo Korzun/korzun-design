@@ -64,8 +64,8 @@ export const MetaLine = ({ items, separator, className }: MetaLineProps) => {
           <span key={i} className={styles.item} data-testid="meta-item">
             {isPair(item) ? (
               <>
-                <span className={styles.label}>{item.label}</span>
-                {item.value}
+                {/* A real space, so copied text and screen readers keep the label and value apart. */}
+                <span className={styles.label}>{item.label}</span> {item.value}
               </>
             ) : (
               item

@@ -43,6 +43,5 @@ export const useStyle = createUseStyles((theme: Theme) => ({
   label: {
     color: theme.color.text.faint,
     textTransform: 'capitalize',
-    marginRight: theme.space.xs,
   },
 }));
