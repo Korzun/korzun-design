@@ -284,3 +284,31 @@ describe('height does not follow inherited line-height', () => {
     }
   });
 });
+
+describe('icons in a link button', () => {
+  it('space the spinner and icons from the label and centre them on the text', () => {
+    renderWithProviders(
+      <>
+        <Button type="link" loading>
+          Saving
+        </Button>
+        <Button type="link" prefix={SearchIcon} suffix={SearchIcon}>
+          Find
+        </Button>
+      </>
+    );
+    const [spinner] = screen.getByRole('button', { name: 'Saving' }).querySelectorAll('svg');
+    expect(getComputedStyle(spinner).marginRight).toBe('0.5em');
+    expect(getComputedStyle(spinner).verticalAlign).toBe('-0.225em');
+    const [prefix, suffix] = screen.getByRole('button', { name: 'Find' }).querySelectorAll('svg');
+    expect(getComputedStyle(prefix).marginRight).toBe('0.5em');
+    expect(getComputedStyle(suffix).marginLeft).toBe('0.5em');
+    expect(getComputedStyle(suffix).marginRight).toBe('0px');
+  });
+
+  it('adds no margin to an icon-only link', () => {
+    renderWithProviders(<Button type="link" prefix={SearchIcon} ariaLabel="Search" />);
+    const [icon] = screen.getByRole('button', { name: 'Search' }).querySelectorAll('svg');
+    expect(getComputedStyle(icon).marginRight).toBe('0px');
+  });
+});

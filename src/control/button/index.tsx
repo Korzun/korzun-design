@@ -121,9 +121,14 @@ export const Button = ({
     classNameProp
   );
 
-  const loadingIcon = busy ? <SpinnerIcon className={styles.spinner} /> : null;
-  const prefixIcon = !busy && Prefix ? <Prefix className={styles.buttonIcon} /> : null;
-  const suffixIcon = !busy && Suffix ? <Suffix className={styles.buttonIcon} /> : null;
+  // `lead` and `trail` mark an icon that has a label beside it, so a `link`
+  // (inline, with no flex gap) can space it from the label.
+  const labelled = children != null && children !== false && children !== '';
+  const lead = labelled && styles.lead;
+  const loadingIcon = busy ? <SpinnerIcon className={cx(styles.spinner, lead)} /> : null;
+  const prefixIcon = !busy && Prefix ? <Prefix className={cx(styles.buttonIcon, lead)} /> : null;
+  const suffixIcon =
+    !busy && Suffix ? <Suffix className={cx(styles.buttonIcon, labelled && styles.trail)} /> : null;
 
   // Hoisted above the `if (submit)` branch (rather than left after the early
   // return, as in the naive version) so hook order never depends on the
