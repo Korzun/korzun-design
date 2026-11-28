@@ -1,6 +1,7 @@
-import { createUseStyles, ThemeProvider, type Theme } from '@korzun/design/theme';
+import { createUseStyles, lightTheme, ThemeProvider, type Theme } from '@korzun/design/theme';
 import { ToastProvider } from '@korzun/design/toast';
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { ThemeProvider as JssThemeProvider } from 'react-jss';
 import { Link, useLocation, useParams, useSearchParams } from 'react-router';
 
 import { useThemeSetting } from '../src/theme/use-theme-setting.js';
@@ -149,6 +150,51 @@ const useKeepPageFocus = () => {
   }, []);
 };
 
+/**
+ * Whether the docs page around this frame is past the phone breakpoint. A frame
+ * in a half-width column is narrower than the breakpoint, but it shows the
+ * desktop look of a desktop page; on a phone the page is narrow too and the
+ * frame keeps its own media queries. False outside an iframe.
+ */
+const useWideHost = (query: string): boolean => {
+  const host = useMemo(
+    () => (window.parent === window ? null : window.parent.matchMedia(query)),
+    [query]
+  );
+  const [wide, setWide] = useState(host?.matches ?? false);
+  useEffect(() => {
+    if (!host) return;
+    const update = () => setWide(host.matches);
+    host.addEventListener('change', update);
+    return () => host.removeEventListener('change', update);
+  }, [host]);
+  return wide;
+};
+
+const NEVER = '@media (max-width: 0px)';
+
+/** `value` with every key named `from` renamed `to`, at any depth. */
+const renameKey = (value: unknown, from: string, to: string): unknown => {
+  if (typeof value !== 'object' || value === null || Array.isArray(value)) return value;
+  return Object.fromEntries(
+    Object.entries(value).map(([k, v]) => [k === from ? to : k, renameKey(v, from, to)])
+  );
+};
+
+/**
+ * Breakpoints for a desktop page whatever the frame width: never mobile, always
+ * normal. Recipes (`recipe.input`) carry the mobile query as a key, built in with
+ * the theme, so those keys are rewritten too.
+ */
+export const desktopBreakpoints = (outer: Theme): Theme => ({
+  ...(renameKey(outer, outer.breakpoint.mobile, NEVER) as Theme),
+  breakpoint: { mobile: NEVER, normal: '@media (min-width: 0px)' },
+});
+
+/** Inside the frame's ThemeProvider: the desktop breakpoints when the host page is wide. */
+const HostBreakpoints = ({ use, children }: { use: boolean; children: ReactNode }) =>
+  use ? <JssThemeProvider theme={desktopBreakpoints}>{children}</JssThemeProvider> : children;
+
 // Renders one docs example on its own: the site embeds it in an iframe so the
 // example gets its own theme provider and cannot leak styles into the page.
 export const Frame = () => {
@@ -171,6 +217,9 @@ export const Frame = () => {
     return () => window.removeEventListener('message', onMessage);
   }, []);
 
+  // `(min-width: 641px)`: the normal breakpoint, without its `@media`.
+  const wideHost = useWideHost(lightTheme.breakpoint.normal.replace(/^@media\s*/, ''));
+
   const owner =
     recipeSlug === undefined ? moduleBySlug(moduleSlug ?? '') : recipeBySlug(recipeSlug);
   const found = owner && exampleFor(owner, exampleSlug);
@@ -180,22 +229,24 @@ export const Frame = () => {
   const { Component, info } = found;
   return (
     <ThemeProvider identity="gallery-frame">
-      <ToastProvider>
-        {theme && <ThemeSync theme={theme} />}
-        {info.viewport === 'screen' ? (
-          // A full-height screen fills the frame itself: no centring padding, and no
-          // height posts, since its height follows the frame's (the page fixes it).
-          <Component />
-        ) : centered ? (
-          <Centered>
+      <HostBreakpoints use={wideHost && info.viewport !== 'mobile'}>
+        <ToastProvider>
+          {theme && <ThemeSync theme={theme} />}
+          {info.viewport === 'screen' ? (
+            // A full-height screen fills the frame itself: no centring padding, and no
+            // height posts, since its height follows the frame's (the page fixes it).
             <Component />
-          </Centered>
-        ) : (
-          <Flow>
-            <Component />
-          </Flow>
-        )}
-      </ToastProvider>
+          ) : centered ? (
+            <Centered>
+              <Component />
+            </Centered>
+          ) : (
+            <Flow>
+              <Component />
+            </Flow>
+          )}
+        </ToastProvider>
+      </HostBreakpoints>
     </ThemeProvider>
   );
 };

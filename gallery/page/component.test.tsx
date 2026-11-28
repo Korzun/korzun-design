@@ -6,7 +6,7 @@ import { MemoryRouter, Route, Routes } from 'react-router';
 
 import type { ModuleInfo } from '../../scripts/docs-gen/types.js';
 import { moduleBySlug, siteData } from '../data.js';
-import { ComponentPage } from './component.js';
+import { ComponentPage, exampleRows } from './component.js';
 
 const mount = (slug: string) =>
   render(
@@ -177,5 +177,33 @@ describe('ComponentPage for the icon module', () => {
   it('renders no icon grid on other pages', () => {
     mount('button');
     expect(screen.queryByRole('list', { name: 'Icons' })).toBeNull();
+  });
+});
+
+describe('exampleRows', () => {
+  const ex = (slug: string, viewport?: 'mobile' | 'screen' | 'desktop') => ({
+    ...button.examples[0]!,
+    slug,
+    ...(viewport ? { viewport } : { viewport: undefined }),
+  });
+  const slugs = (placed: { example: { slug: string } }[]) => placed.map((p) => p.example.slug);
+
+  it('splits a run into two columns, alternately, first on the left', () => {
+    const [row] = exampleRows(['a', 'b', 'c', 'd', 'e'].map((s) => ex(s)));
+    expect(row!.wide).toBe(false);
+    if (row!.wide) return;
+    expect(slugs(row!.left)).toEqual(['a', 'c', 'e']);
+    expect(slugs(row!.right)).toEqual(['b', 'd']);
+  });
+
+  it('gives a screen or desktop example its own full-width row', () => {
+    const rows = exampleRows([ex('a'), ex('b', 'desktop'), ex('c'), ex('d', 'mobile')]);
+    expect(rows.map((r) => (r.wide ? `wide:${r.example.slug}` : 'pair'))).toEqual([
+      'pair',
+      'wide:b',
+      'pair',
+    ]);
+    const last = rows[2]!;
+    if (!last.wide) expect(slugs(last.left)).toEqual(['c']);
   });
 });
