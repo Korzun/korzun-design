@@ -137,6 +137,26 @@ describe('ComponentPage', () => {
     ).toEqual(['CardRow']);
   });
 
+  it('shows the nested modules as cards in a Parts section', () => {
+    mount('page');
+    const parts = screen.getByRole('region', { name: 'Parts' });
+    expect(
+      within(parts)
+        .getAllByRole('heading', { level: 3 })
+        .map((h) => h.textContent)
+    ).toEqual(['PageActionsBar', 'PageActionsMenu', 'PageFooterActions']);
+    expect(within(parts).getByRole('link', { name: /^PageActionsBar/ })).toHaveAttribute(
+      'href',
+      '/components/page-actions-bar'
+    );
+    expect(within(parts).queryByText('Page /')).toBeNull();
+  });
+
+  it('has no Parts section on a module with nothing nested', () => {
+    mount('button');
+    expect(screen.queryByRole('region', { name: 'Parts' })).toBeNull();
+  });
+
   it('renders not-found for an unknown slug', () => {
     mount('nope');
     expect(screen.getByRole('heading', { level: 1, name: 'Not found' })).toBeInTheDocument();

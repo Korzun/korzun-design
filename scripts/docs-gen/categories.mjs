@@ -1,7 +1,8 @@
 // The docs sections, in display order, each with its modules in order. A
 // module is its doc's basename (`docs/control/text-input.md` is `text-input`).
 // `[parent, [children]]` nests modules that only make sense with their parent:
-// the site lists them right after it and their pages link back to it.
+// the overview leaves them out (a search still finds them), the parent's page
+// shows them under Parts, and their pages link back to it.
 //
 // The generator requires every documented module to appear here exactly once,
 // in the section its front matter `category` names, so the tree and the docs
