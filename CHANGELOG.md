@@ -12,6 +12,7 @@
 - [Switch, lightTheme, darkTheme] The unchecked track is the new `color.bg.switchOff` token (`#868686` light, `#6E7480` dark), about 3:1 on `bg.page`, `bg.card` and `bg.cardHeader`; it was `border.default` (1.16:1 on a shaded row). The loading spinner on an unchecked track is now the thumb colour.
 - [Select] The option list matches `Menu`: a 4px inset pad, 4px-rounded options with a 2px gap, 14px text (was 12.8px), the flat `cardStack` shadow (was `hoverLift`) and `bg.hover` on hover (was `bg.cardHeader`). The keyboard highlight is unchanged.
 - [General] Docs site: each module has an `examples/preview.tsx` that shows the component alone; the overview thumbnails render it instead of the first example, and it never appears on the component page or in the doc. `npm run docs:check` fails for a module without one.
+- [General] Docs site: one type scale. Markdown and page headings match at each level (h2 20px bold, h3 16px semibold, same spacing), so example, props and changelog titles are no longer smaller than the text under them; code in a heading takes the heading size; page intros are 18px leads. Code blocks and the import line are 14px with a 1.5 line height, inline code is 0.875em and breaks only between words, and every code span uses the theme mono font.
 
 ## 0.6.0 — 2026-11-26
 

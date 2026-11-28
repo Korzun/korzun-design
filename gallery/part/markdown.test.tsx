@@ -168,3 +168,26 @@ describe('Markdown fenced code', () => {
     expect(code).toHaveTextContent('<b>hi</b>');
   });
 });
+
+describe('Markdown type scale', () => {
+  it('sets an h2 like a page section heading: bold, 20px', () => {
+    const { container } = mount('## Usage\n\nText.');
+    const h2 = getComputedStyle(container.querySelector('h2')!);
+    expect(h2.fontWeight).toBe('700');
+    expect(h2.fontSize).toBe('1.25rem');
+  });
+
+  it('sizes inline code in em, so code in a heading takes the heading size', () => {
+    const { container } = mount('## `isStandalone()`\n\nUse `Stack`.');
+    expect(getComputedStyle(container.querySelector('h2 code')!).fontSize).toBe('0.875em');
+    expect(getComputedStyle(container.querySelector('p code')!).fontSize).toBe('0.875em');
+  });
+
+  it('gives a code block the mono font at the block size', () => {
+    const { container } = mount('```ts\nconst a = 1;\n```');
+    const pre = getComputedStyle(container.querySelector('pre')!);
+    expect(pre.fontFamily).toContain('monospace');
+    expect(pre.fontSize).toBe('0.875rem');
+    expect(getComputedStyle(container.querySelector('pre code')!).fontSize).toBe('0.875rem');
+  });
+});

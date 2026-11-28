@@ -59,7 +59,7 @@ export const ChangelogPage = () => {
         <Stack gap="xxxxl">
           <Heading level={1}>Changelog</Heading>
           {siteData.changelog.map((release) => (
-            <Stack as="section" gap="lg" key={release.version} aria-label={release.version}>
+            <Stack as="section" gap="xl" key={release.version} aria-label={release.version}>
               <Inline gap="md" align="baseline">
                 <Heading level={2}>{release.version}</Heading>
                 <Text size="sm" tone="muted">

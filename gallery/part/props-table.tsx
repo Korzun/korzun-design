@@ -5,6 +5,7 @@ import { useLocation } from 'react-router';
 
 import { anchor } from '../../scripts/docs-gen/slug.mjs';
 import type { TypeTable } from '../../scripts/docs-gen/types.js';
+import { codeBlock } from '../layout/type.js';
 import { Markdown } from './markdown.js';
 
 /** The anchor id of a type's table on its component page: the generator's, so doc links land on it. */
@@ -93,8 +94,7 @@ export const useTableStyle = createUseStyles((theme: Theme) => ({
     margin: 0,
     padding: theme.space.xl,
     overflowX: 'auto',
-    fontFamily: theme.fontFamily.mono,
-    fontSize: theme.fontSize.sm,
+    ...codeBlock(theme),
     border: `1px solid ${theme.color.border.default}`,
     borderRadius: theme.radius.lg,
     backgroundColor: theme.color.bg.cardHeader,
@@ -179,7 +179,7 @@ export const PropsTable = ({ table, tables, typePages = NO_PAGES, from }: PropsT
   const linkable = new Set(tables.filter((t) => t.name !== table.name).map((t) => t.name));
   const caption = (
     <>
-      <Heading level={3} size="md" id={tableId(table.name)}>
+      <Heading level={3} id={tableId(table.name)}>
         <code className={styles.code}>{table.name}</code>
       </Heading>
       {/* The type's own JSDoc, so a note written on the interface is not lost. */}

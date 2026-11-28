@@ -5,6 +5,7 @@ import { useMemo, type MouseEvent } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 
 import { anchor } from '../../scripts/docs-gen/slug.mjs';
+import { codeBlock, inlineCode } from '../layout/type.js';
 import { highlight, useHighlightStyle } from './highlight.js';
 
 // Schemes a rendered link may use; any other (`javascript:`, `data:`) becomes `#`.
@@ -125,21 +126,30 @@ const useStyle = createUseStyles((theme: Theme) => ({
     lineHeight: theme.lineHeight.body,
     '& > :first-child': { marginTop: 0 },
     '& > :last-child': { marginBottom: 0 },
+    // The page templates' scale (layout/type.ts): an h2 here matches a page's
+    // `<Heading level={2}>` section, an h3 an example or props title.
+    '& h2, & h3, & h4': { lineHeight: theme.lineHeight.tight },
     '& h2': {
       fontSize: theme.fontSize.xl,
-      fontWeight: theme.fontWeight.semibold,
-      margin: `${theme.space.xxxxl} 0 ${theme.space.lg}`,
+      fontWeight: theme.fontWeight.bold,
+      margin: `${theme.space.xxxxxl} 0 ${theme.space.xl}`,
     },
     '& h3': {
       fontSize: theme.fontSize.lg,
       fontWeight: theme.fontWeight.semibold,
       margin: `${theme.space.xxxl} 0 ${theme.space.md}`,
     },
+    '& h4': {
+      fontSize: theme.fontSize.md,
+      fontWeight: theme.fontWeight.semibold,
+      margin: `${theme.space.xxl} 0 ${theme.space.sm}`,
+    },
     '& p, & ul, & ol': { margin: `0 0 ${theme.space.lg}` },
     '& ul, & ol': { paddingLeft: theme.space.xxxl },
     '& li + li': { marginTop: theme.space.xs },
     '& li > ul': { margin: `${theme.space.xs} 0 0` },
     '& pre': {
+      ...codeBlock(theme),
       margin: `0 0 ${theme.space.lg}`,
       padding: theme.space.xl,
       overflowX: 'auto',
@@ -147,7 +157,14 @@ const useStyle = createUseStyles((theme: Theme) => ({
       borderRadius: theme.radius.lg,
       backgroundColor: theme.color.bg.cardHeader,
     },
-    '& pre code': { padding: 0, backgroundColor: 'transparent' },
+    // The block sets the size; its code is not an inline span.
+    '& pre code': {
+      fontSize: 'inherit',
+      padding: 0,
+      borderRadius: 0,
+      backgroundColor: 'transparent',
+      overflowWrap: 'normal',
+    },
     // Guides lean on tables (corners, tokens): ruled rows, left-aligned heads.
     '& table': {
       display: 'block',
@@ -167,14 +184,8 @@ const useStyle = createUseStyles((theme: Theme) => ({
   },
   // Inline runs (a prop or example description) share the code and link look.
   text: {
-    '& code': {
-      fontFamily: theme.fontFamily.mono,
-      fontSize: theme.fontSize.sm,
-      padding: `0 ${theme.space.xxs}`,
-      borderRadius: theme.radius.sm,
-      backgroundColor: theme.color.bg.cardHeader,
-      overflowWrap: 'anywhere',
-    },
+    // In em, so code in a heading takes the heading's size.
+    '& code': inlineCode(theme),
     '& a': {
       color: theme.color.brand.default,
       textDecoration: 'none',

@@ -8,6 +8,7 @@ import { anchor } from '../../scripts/docs-gen/slug.mjs';
 import type { ExampleInfo } from '../../scripts/docs-gen/types.js';
 import type { ExampleOwner } from '../data.js';
 import { frameSrc, MOBILE_WIDTH, SCREEN_HEIGHT, useFrameTheme } from '../frame-url.js';
+import { codeBlock } from '../layout/type.js';
 import { isHeightMessage } from '../messages.js';
 import { CopyButton } from './copy-button.js';
 import { highlight, useHighlightStyle } from './highlight.js';
@@ -44,9 +45,7 @@ const useStyle = createUseStyles((theme: Theme) => ({
     overflowX: 'auto',
     borderTop: `1px solid ${theme.color.border.light}`,
     backgroundColor: theme.color.bg.cardHeader,
-    fontFamily: theme.fontFamily.mono,
-    fontSize: theme.fontSize.sm,
-    lineHeight: theme.lineHeight.body,
+    ...codeBlock(theme),
   },
 }));
 
@@ -116,8 +115,8 @@ export const ExampleBlock = ({ owner, example, headingId }: ExampleBlockProps) =
       </div>
       {/* The block is a hand-drawn card on the page: its buttons sit one level in. */}
       <Surface>
-        <Stack gap="sm" className={styles.meta}>
-          <Heading level={3} size="md" id={titleId}>
+        <Stack gap="md" className={styles.meta}>
+          <Heading level={3} id={titleId}>
             {example.title}
           </Heading>
           {example.description && (
