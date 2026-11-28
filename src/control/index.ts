@@ -1,3 +1,4 @@
+export { Anchor, type AnchorItem, type AnchorProps } from './anchor/index.js';
 export { BackButton, type BackButtonProps } from './back-button/index.js';
 export {
   Button,

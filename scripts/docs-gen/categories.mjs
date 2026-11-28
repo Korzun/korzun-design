@@ -21,7 +21,7 @@ export const SECTIONS = Object.freeze([
       'top-fade',
     ],
   },
-  { name: 'Navigation', modules: ['back-button', 'nav-desktop', 'nav-mobile'] },
+  { name: 'Navigation', modules: ['anchor', 'back-button', 'nav-desktop', 'nav-mobile'] },
   { name: 'Typography', modules: ['code', 'heading', 'text'] },
   {
     name: 'Inputs',

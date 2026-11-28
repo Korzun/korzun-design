@@ -1961,6 +1961,248 @@
       "changelog": []
     },
     {
+      "id": "control/anchor",
+      "slug": "anchor",
+      "entry": "@korzun/design/control",
+      "docPath": "docs/control/anchor.md",
+      "title": "Anchor",
+      "description": "A page outline that marks the section in view and scrolls to a section on click, as a list of titles or a minimap of dashes.",
+      "category": "Navigation",
+      "values": [
+        "Anchor"
+      ],
+      "types": [
+        "AnchorItem",
+        "AnchorProps"
+      ],
+      "importLine": "import { Anchor, type AnchorItem, type AnchorProps } from '@korzun/design/control'",
+      "body": "A page outline that marks the section in view and scrolls to a section on\nclick, as a list of titles or a minimap of dashes. You pass the sections as\n`items` (`{ id, title, level }`); it does not read headings from the page. It\nrenders a `nav` with a list of `<a href=\"#id\">` links, so a link can still be\ncopied or opened in a new tab.\n\nUse something else for: moving between screens (`NavDesktop`, `NavMobile`),\ngoing up a level (`BackButton`), actions (`Menu`).\n\n## Usage\n\n### Choosing a look\n\n- `variant=\"list\"`: an indented list of titles, each level past 1 indented a\n  step. The current one is blue with a bar on its left edge. Use it where a\n  side column has room for the titles, as in a docs page.\n- `variant=\"minimap\"`: a slim column of dashes, one per item, 16px, 12px or\n  8px wide by level. The current dash is blue. Hovering the dashes, or moving\n  focus into them, opens the list in a card beside them, on their left, so\n  keyboard users see the titles as they tab. It closes when the pointer and\n  focus have both left; Escape closes one the pointer opened. Use it at the edge of a reading page, where a\n  list would crowd the text, as Notion does. Clicking a dash scrolls to its\n  section too.\n\nBoth looks are the same `nav` and the same links: the minimap only hides the\ntitles until it opens.\n\n### The current section\n\nThe current section is the last item whose element's top is at or above\n`offset + 1` px from the top of the window. Above the first item it is the\nfirst; scrolled to the bottom of the page it is the last, so a short last\nsection can still be current. The link gets `aria-current=\"location\"`. It is\nrecomputed on scroll and resize, at most once a frame.\n\nAn item whose `id` is not on the page is still listed, and clicking it does\nnothing, but it is never current.\n\n### Scrolling and focus\n\nA click scrolls the window so the section's top sits `offset` px below the top\nof the window: smoothly, or at once under `prefers-reduced-motion`. It then\nmoves focus to the section's element, adding `tabindex=\"-1\"` if the element\nhas no `tabindex`, so the next Tab continues from there.\n\nIt never changes the URL: the click is handled in place of the browser's jump\nto `#id`, because an app with hash routing (this docs site) would read the hash\nas a route. A click with Ctrl, Cmd, Shift or Alt is left to the browser.\n\nIt scrolls the window only, not a scrolling element inside the page.\n\n### Offset\n\n`offset` is the height in px of sticky chrome above the content, such as a\nsticky header. It is used both for where a click lands and for when a section\ncounts as current, so a section turns current as it passes under the header.\nMeasure the header rather than guess (the Placement example does).\n\n### Placement and phones\n\nAnchor never positions itself. Place it yourself:\n\n- **Sticky in a side column**, beside the article: wrap it in an element with\n  `position: sticky` and a `top`. This suits the list.\n- **Fixed at the right edge**, vertically centred: wrap it in an element with\n  `position: fixed`. This suits the minimap; its panel opens to the left,\n  toward the page.\n\nOn phones there is usually no room beside the text: hide it with\n`theme.breakpoint.mobile` (`display: 'none'`), as the Placement example does.\n\n### Keyboard\n\nTab moves through the links, in both looks. Enter scrolls to the section and\nmoves focus to it. In the minimap, focus on a link opens the panel, and it\nstays open while focus is inside, so the focused link stays visible: Tab past\nthe last link or Shift+Tab before the first to close it. Escape closes a panel\nthe pointer opened.\n\n### Corners\n\nThe links' focus ring has a fixed `sm` radius, as Menu items do; the\nminimap's panel is a `md` card, as a Popover is (see\n[corners](../corners.md)).\n\n### Styling\n\nTakes `className` on the `nav`.\n\n## Do / don't\n\n- Do give every target element a unique `id` and pass items in page order.\n- Do pass `offset` when a sticky header covers the top of the page, or clicks\n  land under it.\n- Don't put it in an element that scrolls on its own: it tracks and scrolls the\n  window.",
+      "examples": [
+        {
+          "file": "src/control/anchor/examples/01-list.tsx",
+          "slug": "list",
+          "order": 1,
+          "title": "List",
+          "description": "An indented list of titles in a sticky side column. Scroll the article and the section in\nview turns blue, with a bar on its left; click a title to scroll to it. Level 2 and 3 items\nindent under the one before.",
+          "code": "import { Heading, Space, Text } from '@korzun/design/component';\nimport { Anchor, type AnchorItem } from '@korzun/design/control';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\n\nconst useStyle = createUseStyles((theme: Theme) => ({\n  root: { padding: theme.space.xxxxl },\n  article: {\n    flex: 1,\n    minWidth: 0,\n    maxWidth: '36rem',\n    // Room below the last section, so each section can scroll up to the top.\n    paddingBottom: '50vh',\n  },\n  aside: { position: 'sticky', top: theme.space.xxxxl, flex: 'none' },\n}));\n\nconst sections: (AnchorItem & { body: string[] })[] = [\n  {\n    id: 'adding',\n    title: 'Adding books',\n    body: [\n      'Drop an EPUB on the library, or send it by email. Bookplate reads the title, author and cover from the file, and asks only when something is missing.',\n      'A book you already have is matched by its identifier, so adding it twice keeps one copy and the newer file.',\n    ],\n  },\n  {\n    id: 'formats',\n    title: 'Formats',\n    level: 2,\n    body: [\n      'EPUB 2 and 3 open as they are. A PDF is kept as a file you can download, but it has no chapters to track.',\n      'A file that fails validation is still added, with a note on its page saying what is wrong.',\n    ],\n  },\n  {\n    id: 'metadata',\n    title: 'Fixing metadata',\n    level: 2,\n    body: [\n      'Edit the title, series and subjects from the book page. Each change rewrites the file, so a reader that syncs the book later sees it too.',\n      'Suggested fixes wait in a queue until you accept or dismiss them.',\n    ],\n  },\n  {\n    id: 'series',\n    title: 'Series order',\n    level: 3,\n    body: [\n      'A number after the series name sets the book’s place in it. Half numbers, such as 2.5, sit between two books.',\n      'Books with no number sort after the numbered ones, by title.',\n    ],\n  },\n  {\n    id: 'reading',\n    title: 'Reading',\n    body: [\n      'Open a book to read it in the browser, or send it to a reader. Progress is saved per chapter, on every device.',\n      'Finishing the last chapter marks the book as read and asks for a rating.',\n    ],\n  },\n  {\n    id: 'sharing',\n    title: 'Sharing',\n    body: [\n      'Invite someone to your library and they see every book in it. They keep their own progress, ratings and requests.',\n      'A shared library has one owner. Only the owner can delete books or replace their files.',\n      'Removing someone takes the library away from them at once. Their progress stays, in case you invite them back.',\n      'A request for a book you do not have shows on your requests page, with who asked and when.',\n    ],\n  },\n];\n\nexport default function List() {\n  const styles = useStyle();\n  return (\n    <Space align=\"start\" gap=\"xxxxxl\" className={styles.root}>\n      <Space direction=\"vertical\" gap=\"xxxxl\" className={styles.article}>\n        {sections.map(({ id, title, level = 1, body }) => (\n          <Space key={id} direction=\"vertical\" gap=\"md\">\n            <Heading level={(level + 1) as 2 | 3 | 4} id={id}>\n              {title}\n            </Heading>\n            {body.map((paragraph) => (\n              <Text as=\"p\" key={paragraph}>\n                {paragraph}\n              </Text>\n            ))}\n          </Space>\n        ))}\n      </Space>\n      <div className={styles.aside}>\n        <Anchor items={sections} />\n      </div>\n    </Space>\n  );\n}\n",
+          "viewport": "screen"
+        },
+        {
+          "file": "src/control/anchor/examples/02-minimap.tsx",
+          "slug": "minimap",
+          "order": 2,
+          "title": "Minimap",
+          "description": "A column of dashes fixed at the right edge, one per section, shorter for deeper levels. The\ndash of the section in view is blue. Hover the dashes, or Tab to them, and the list opens in\na panel beside them; it closes once the pointer and focus have left, and Escape closes it\nafter a hover.",
+          "code": "import { Heading, Space, Text } from '@korzun/design/component';\nimport { Anchor, type AnchorItem } from '@korzun/design/control';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\n\nconst useStyle = createUseStyles((theme: Theme) => ({\n  article: {\n    maxWidth: '36rem',\n    margin: '0 auto',\n    padding: theme.space.xxxxl,\n    // Room below the last section, so each section can scroll up to the top.\n    paddingBottom: '50vh',\n  },\n  minimap: {\n    position: 'fixed',\n    right: theme.space.md,\n    top: '50%',\n    transform: 'translateY(-50%)',\n  },\n}));\n\nconst sections: (AnchorItem & { body: string[] })[] = [\n  {\n    id: 'arrival',\n    title: 'Arrival',\n    body: [\n      'The train came in after dark, and the station was empty except for a porter asleep on a bench.',\n      'She left her trunk with him anyway and walked into town to look for the inn her aunt had written about.',\n    ],\n  },\n  {\n    id: 'inn',\n    title: 'The inn',\n    level: 2,\n    body: [\n      'It was smaller than the letter made it sound: four rooms over a bar that served soup and nothing else.',\n      'The owner knew her aunt’s name and gave her the room at the back, over the garden.',\n    ],\n  },\n  {\n    id: 'letter',\n    title: 'A letter',\n    level: 3,\n    body: [\n      'Under the pillow was an envelope addressed to her, in her aunt’s hand, dated the week before she died.',\n      'She did not open it that night.',\n    ],\n  },\n  {\n    id: 'morning',\n    title: 'Morning',\n    body: [\n      'The town looked different by day: a market in the square, children on the bridge, smoke from every chimney.',\n      'She went back to the station for her trunk and found the porter awake and very sorry.',\n    ],\n  },\n  {\n    id: 'house',\n    title: 'The house',\n    level: 2,\n    body: [\n      'Her aunt’s house stood at the end of a lane, its shutters closed and its garden gone to seed.',\n      'The key was where the letter said it would be, under the third stone by the door.',\n    ],\n  },\n  {\n    id: 'return',\n    title: 'Return',\n    body: [\n      'She stayed a month. When she left, the shutters were open and the garden was dug over for spring.',\n      'The letter she read on the last night. It said only that the house was hers, and that it always had been.',\n      'On the train home she wrote to the inn to keep the back room for her in April.',\n      'The porter carried her trunk to the platform himself, and waved until the train was out of sight.',\n    ],\n  },\n];\n\nexport default function Minimap() {\n  const styles = useStyle();\n  return (\n    <>\n      <Space direction=\"vertical\" gap=\"xxxxl\" className={styles.article}>\n        {sections.map(({ id, title, level = 1, body }) => (\n          <Space key={id} direction=\"vertical\" gap=\"md\">\n            <Heading level={(level + 1) as 2 | 3 | 4} id={id}>\n              {title}\n            </Heading>\n            {body.map((paragraph) => (\n              <Text as=\"p\" key={paragraph}>\n                {paragraph}\n              </Text>\n            ))}\n          </Space>\n        ))}\n      </Space>\n      <div className={styles.minimap}>\n        <Anchor items={sections} variant=\"minimap\" />\n      </div>\n    </>\n  );\n}\n",
+          "viewport": "screen"
+        },
+        {
+          "file": "src/control/anchor/examples/03-placement.tsx",
+          "slug": "placement",
+          "order": 3,
+          "title": "Placement",
+          "description": "Anchor never positions itself: put it sticky in a side column, or fixed at the right edge,\nand hide it on phones, where there is no room beside the text. This page has a sticky\nheader, so its measured height goes to `offset`: a click lands each section just below the\nheader, and a section turns current as it passes under it.",
+          "code": "import { Heading, Space, Text } from '@korzun/design/component';\nimport { Anchor, SegmentedControl, type AnchorItem } from '@korzun/design/control';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\nimport { useLayoutEffect, useRef, useState } from 'react';\n\nconst useStyle = createUseStyles((theme: Theme) => ({\n  header: {\n    position: 'sticky',\n    top: 0,\n    zIndex: theme.zIndex.header,\n    padding: `${theme.space.xl} ${theme.space.xxxxl}`,\n    backgroundColor: theme.color.bg.page,\n    borderBottom: `1px solid ${theme.color.border.default}`,\n  },\n  body: { padding: theme.space.xxxxl },\n  article: {\n    flex: 1,\n    minWidth: 0,\n    maxWidth: '36rem',\n    // Room below the last section, so each section can scroll up to the top.\n    paddingBottom: '50vh',\n  },\n  column: {\n    position: 'sticky',\n    // Below the sticky header, whose height is measured on mount and resize.\n    top: ({ offset }: { offset: number }) => `calc(${offset}px + ${theme.space.xxxxl})`,\n    flex: 'none',\n  },\n  edge: {\n    position: 'fixed',\n    right: theme.space.md,\n    top: '50%',\n    transform: 'translateY(-50%)',\n  },\n  // No room beside the text on a phone.\n  outline: { [theme.breakpoint.mobile]: { display: 'none' } },\n}));\n\nconst sections: (AnchorItem & { body: string[] })[] = [\n  {\n    id: 'prepare',\n    title: 'Prepare the soil',\n    body: [\n      'Dig the bed over to a spade’s depth and work in a barrow of compost for every square metre.',\n      'Leave it a week to settle before you plant, and pull any weeds that come up in that time.',\n    ],\n  },\n  {\n    id: 'sow',\n    title: 'Sowing',\n    body: [\n      'Sow thinly in drills a finger deep, a hand’s width apart. Cover, firm the soil with the back of a rake and water gently.',\n      'Thin the seedlings once they are big enough to handle, keeping the strongest.',\n    ],\n  },\n  {\n    id: 'indoors',\n    title: 'Starting indoors',\n    level: 2,\n    body: [\n      'Tender crops start on a windowsill six weeks before the last frost.',\n      'Pot them on once they have two true leaves, into compost a little richer than the first.',\n    ],\n  },\n  {\n    id: 'harden',\n    title: 'Hardening off',\n    level: 3,\n    body: [\n      'Set the pots outside for an hour on the first day, and a little longer each day after, for two weeks.',\n      'Bring them in on a cold night; one frost undoes the fortnight.',\n    ],\n  },\n  {\n    id: 'water',\n    title: 'Watering',\n    body: [\n      'Water at the roots in the morning, deeply and less often. A bed that dries out between waterings roots deeper.',\n      'Mulch after a good soaking to keep the water in.',\n    ],\n  },\n  {\n    id: 'harvest',\n    title: 'Harvest',\n    body: [\n      'Pick little and often: most crops keep producing while you keep picking.',\n      'Leave a few plants to go to seed, and save the seed in paper envelopes for next year.',\n      'Clear the bed in autumn and sow a green manure to cover it through the winter.',\n      'Dig the green manure in a month before spring planting, and the cycle starts again.',\n    ],\n  },\n];\n\nexport default function Placement() {\n  const [placement, setPlacement] = useState<'column' | 'edge'>('column');\n  const header = useRef<HTMLDivElement>(null);\n  const [offset, setOffset] = useState(0);\n  useLayoutEffect(() => {\n    const el = header.current;\n    if (!el) return;\n    const measure = () => setOffset(el.offsetHeight);\n    measure();\n    window.addEventListener('resize', measure);\n    return () => window.removeEventListener('resize', measure);\n  }, []);\n\n  const styles = useStyle({ offset });\n  const anchor = (\n    <Anchor\n      items={sections}\n      variant={placement === 'column' ? 'list' : 'minimap'}\n      offset={offset}\n      className={styles.outline}\n    />\n  );\n\n  return (\n    <>\n      <div ref={header} className={styles.header}>\n        <Space justify=\"between\">\n          <Heading level={1} size=\"lg\">\n            Kitchen garden\n          </Heading>\n          <SegmentedControl\n            label=\"Placement\"\n            value={placement}\n            options={[\n              { value: 'column', label: 'Side column' },\n              { value: 'edge', label: 'Right edge' },\n            ]}\n            onChange={setPlacement}\n          />\n        </Space>\n      </div>\n      <Space align=\"start\" gap=\"xxxxxl\" className={styles.body}>\n        <Space direction=\"vertical\" gap=\"xxxxl\" className={styles.article}>\n          {sections.map(({ id, title, level = 1, body }) => (\n            <Space key={id} direction=\"vertical\" gap=\"md\">\n              <Heading level={(level + 1) as 2 | 3 | 4} id={id}>\n                {title}\n              </Heading>\n              {body.map((paragraph) => (\n                <Text as=\"p\" key={paragraph}>\n                  {paragraph}\n                </Text>\n              ))}\n            </Space>\n          ))}\n        </Space>\n        {placement === 'column' && <div className={styles.column}>{anchor}</div>}\n      </Space>\n      {placement === 'edge' && <div className={styles.edge}>{anchor}</div>}\n    </>\n  );\n}\n",
+          "viewport": "screen"
+        }
+      ],
+      "preview": {
+        "file": "src/control/anchor/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { Space } from '@korzun/design/component';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\n\nconst useStyle = createUseStyles((theme: Theme) => ({\n  panel: {\n    width: 150,\n    padding: theme.space.xl,\n    backgroundColor: theme.color.brand.light,\n    border: `1px solid ${theme.color.brand.outline}`,\n    borderRadius: theme.radius.md,\n  },\n  title: {\n    height: 8,\n    backgroundColor: theme.color.brand.outline,\n    borderRadius: theme.radius.pill,\n  },\n  dash: {\n    height: 3,\n    backgroundColor: theme.color.brand.outline,\n    borderRadius: theme.radius.pill,\n  },\n  current: { backgroundColor: theme.color.brand.default },\n  w1: { width: 104 },\n  w2: { width: 84, marginLeft: 16 },\n  w3: { width: 64, marginLeft: 32 },\n  d1: { width: 24 },\n  d2: { width: 18 },\n  d3: { width: 12 },\n}));\n\nconst outline = [1, 2, 3, 2, 1, 2] as const;\nconst CURRENT = 2;\n\n// The open panel of titles beside the column of dashes it opens from.\nexport default function Preview() {\n  const styles = useStyle();\n  return (\n    <Space gap=\"xl\">\n      <Space direction=\"vertical\" gap=\"lg\" className={styles.panel}>\n        {outline.map((level, i) => (\n          <div\n            key={i}\n            className={`${styles.title} ${styles[`w${level}`]} ${i === CURRENT ? styles.current : ''}`}\n          />\n        ))}\n      </Space>\n      <Space direction=\"vertical\" gap=\"md\" align=\"end\">\n        {outline.map((level, i) => (\n          <div\n            key={i}\n            className={`${styles.dash} ${styles[`d${level}`]} ${i === CURRENT ? styles.current : ''}`}\n          />\n        ))}\n      </Space>\n    </Space>\n  );\n}\n"
+      },
+      "tables": [
+        {
+          "name": "AnchorProps",
+          "kind": "props",
+          "rows": [
+            {
+              "name": "ariaLabel",
+              "type": "string",
+              "required": false,
+              "description": "Accessible name of the `nav`.",
+              "default": "'On this page'"
+            },
+            {
+              "name": "className",
+              "type": "string",
+              "required": false,
+              "description": "Extra class on the `nav`. Override with `'&&'` specificity, never `!important`."
+            },
+            {
+              "name": "items",
+              "type": "AnchorItem[]",
+              "required": true,
+              "description": "The sections, in page order. An item whose element is not on the page is listed but never current."
+            },
+            {
+              "name": "offset",
+              "type": "number",
+              "required": false,
+              "description": "Height in px of sticky chrome above the content. A click scrolls the section to this far below the top of the window, and a section counts as current once its top passes it.",
+              "default": "0"
+            },
+            {
+              "name": "variant",
+              "type": "'list' | 'minimap'",
+              "required": false,
+              "description": "`'list'` is an indented list of titles; `'minimap'` is a column of dashes that opens the list in a panel on hover or focus. See [Choosing a look](#choosing-a-look).",
+              "default": "'list'"
+            }
+          ]
+        },
+        {
+          "name": "AnchorItem",
+          "kind": "object",
+          "rows": [
+            {
+              "name": "id",
+              "type": "string",
+              "required": true,
+              "description": "The `id` of the section's element on the page, usually its heading. The link's `href` is `#id`."
+            },
+            {
+              "name": "level",
+              "type": "1 | 2 | 3",
+              "required": false,
+              "description": "Nesting depth: each level past 1 indents the link, and in the minimap shortens its dash.",
+              "default": "1"
+            },
+            {
+              "name": "title",
+              "type": "string",
+              "required": true,
+              "description": "The text of the link."
+            }
+          ],
+          "description": "One section of the page outline."
+        }
+      ],
+      "tokens": [
+        {
+          "path": "color.bg.card",
+          "kind": "color",
+          "light": "#FCFCFC",
+          "dark": "#1A1B1E"
+        },
+        {
+          "path": "color.border.default",
+          "kind": "color",
+          "light": "#D9D9D9",
+          "dark": "#3A3B40"
+        },
+        {
+          "path": "color.border.strong",
+          "kind": "color",
+          "light": "#DDDDDD",
+          "dark": "#48494F"
+        },
+        {
+          "path": "color.brand.default",
+          "kind": "color",
+          "light": "#1777FF",
+          "dark": "#3696fe"
+        },
+        {
+          "path": "color.brand.outline",
+          "kind": "color",
+          "light": "#91CAFF",
+          "dark": "rgba(54, 150, 254, 0.45)"
+        },
+        {
+          "path": "color.text.primary",
+          "kind": "color",
+          "light": "#111",
+          "dark": "#F5F5F7"
+        },
+        {
+          "path": "color.text.secondary",
+          "kind": "color",
+          "light": "#5A6375",
+          "dark": "#C8CBD2"
+        },
+        {
+          "path": "radius.md",
+          "kind": "value",
+          "light": "8px",
+          "dark": "8px"
+        },
+        {
+          "path": "radius.pill",
+          "kind": "value",
+          "light": "999px",
+          "dark": "999px"
+        },
+        {
+          "path": "radius.sm",
+          "kind": "value",
+          "light": "4px",
+          "dark": "4px"
+        },
+        {
+          "path": "recipe.focusRing",
+          "kind": "recipe",
+          "light": null,
+          "dark": null
+        },
+        {
+          "path": "shadow.cardStack",
+          "kind": "value",
+          "light": "0px 2px 0px rgba(217, 217, 217, 0.2)",
+          "dark": "0px 2px 0px rgba(0, 0, 0, 0.4)"
+        },
+        {
+          "path": "space.lg",
+          "kind": "value",
+          "light": "0.625rem",
+          "dark": "0.625rem"
+        },
+        {
+          "path": "space.md",
+          "kind": "value",
+          "light": "0.5rem",
+          "dark": "0.5rem"
+        },
+        {
+          "path": "space.xs",
+          "kind": "value",
+          "light": "0.25rem",
+          "dark": "0.25rem"
+        },
+        {
+          "path": "space.xxs",
+          "kind": "value",
+          "light": "0.125rem",
+          "dark": "0.125rem"
+        },
+        {
+          "path": "transition.fast",
+          "kind": "value",
+          "light": "0.1s ease-in",
+          "dark": "0.1s ease-in"
+        },
+        {
+          "path": "zIndex.header",
+          "kind": "value",
+          "light": "10",
+          "dark": "10"
+        }
+      ],
+      "changelog": [
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "Anchor"
+          ],
+          "text": "New `Anchor` (control): a page outline from `items` (`{ id, title, level }`) that highlights the section in view and scrolls to one on click. `variant=\"list\"` is an indented list of titles; `variant=\"minimap\"` is a column of dashes that opens the list in a panel on hover or focus, as in Notion. `offset` allows for sticky chrome; it never changes the URL."
+        }
+      ]
+    },
+    {
       "id": "control/back-button",
       "slug": "back-button",
       "entry": "@korzun/design/control",
@@ -11025,6 +11267,14 @@
           "version": "0.7.0",
           "date": "2026-11-26",
           "tags": [
+            "Anchor"
+          ],
+          "text": "New `Anchor` (control): a page outline from `items` (`{ id, title, level }`) that highlights the section in view and scrolls to one on click. `variant=\"list\"` is an indented list of titles; `variant=\"minimap\"` is a column of dashes that opens the list in a panel on hover or focus, as in Notion. `offset` allows for sticky chrome; it never changes the URL."
+        },
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
             "Space"
           ],
           "text": "New `Space`: one layout primitive with a `direction` (default `'horizontal'`), `gap`, `align`, `justify`, `wrap`, `as` and a `split` separator drawn between items (hidden from screen readers, an `li` inside a list). Each direction keeps Stack's or Inline's defaults."
@@ -11991,6 +12241,8 @@
     "Gap": "space",
     "SurfaceProps": "surface",
     "TopFadeProps": "top-fade",
+    "AnchorProps": "anchor",
+    "AnchorItem": "anchor",
     "BackButtonProps": "back-button",
     "NavDesktopProps": "nav-desktop",
     "NavItem": "nav-desktop",
