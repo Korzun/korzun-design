@@ -52,6 +52,8 @@ export const useStyle = createUseStyles((theme: Theme) => {
     },
     wrap: { whiteSpace: 'pre-wrap', overflowWrap: 'anywhere' },
     action: { flex: '0 0 auto', padding: theme.space.md },
+    // Reserves the widest label ("Could not copy" and its check) so the button, and so the `pre`, keep their width as the label changes.
+    copy: { minWidth: '10em' },
     status: {
       position: 'absolute',
       width: 1,

@@ -20,10 +20,19 @@ export const CopyCodeButton = ({ text, label }: CopyCodeButtonProps) => {
   const styles = useStyle();
   const [state, setState] = useState<State>('idle');
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const mounted = useRef(true);
 
-  useEffect(() => () => clearTimeout(timer.current), []);
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+      clearTimeout(timer.current);
+    };
+  }, []);
 
   const show = (next: State) => {
+    // A write that settles after unmount must not set state or start a timer.
+    if (!mounted.current) return;
     clearTimeout(timer.current);
     setState(next);
     timer.current = setTimeout(() => setState('idle'), RESET_MS);
@@ -47,6 +56,7 @@ export const CopyCodeButton = ({ text, label }: CopyCodeButtonProps) => {
         type="text"
         ariaLabel={state === 'idle' ? label : undefined}
         prefix={state === 'done' ? CheckIcon : undefined}
+        className={styles.copy}
         onClick={copy}
       >
         {state === 'idle' ? 'Copy' : message}

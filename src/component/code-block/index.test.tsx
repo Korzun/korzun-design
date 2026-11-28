@@ -117,6 +117,27 @@ describe('CodeBlock', () => {
     expect(screen.getByRole('button')).toHaveTextContent('Could not copy');
   });
 
+  it('ignores a write that settles after unmount', async () => {
+    let resolve!: () => void;
+    writeText.mockReturnValue(new Promise<void>((r) => (resolve = r)));
+    const { unmount } = renderWithProviders(<CodeBlock code="x" copyable />);
+    await press('Copy code');
+    unmount();
+    await act(async () => resolve());
+    expect(vi.getTimerCount()).toBe(0);
+  });
+
+  it('keeps the button width steady and exposes one name', async () => {
+    renderWithProviders(<CodeBlock code="x" copyable />);
+    const idle = screen.getByRole('button', { name: 'Copy code' });
+    expect(getComputedStyle(idle).minWidth).toBe('10em');
+    await press('Copy code');
+    const done = screen.getByRole('button', { name: 'Copied' });
+    expect(getComputedStyle(done).minWidth).toBe('10em');
+    expect(screen.getAllByText('Copied').length).toBeGreaterThan(0);
+    expect(screen.queryByRole('button', { name: /Could not copy/ })).toBeNull();
+  });
+
   it('announces the result in a status region', async () => {
     renderWithProviders(<CodeBlock code="x" copyable />);
     expect(screen.getByRole('status')).toHaveTextContent('');
@@ -148,6 +169,17 @@ describe('CodeBlock', () => {
   });
 
   describe('page edge', () => {
+    it('is not added in light mode on a Page', () => {
+      const { container } = renderWithProviders(
+        <Page>
+          <CodeBlock code="x" />
+        </Page>
+      );
+      expect(
+        getComputedStyle(container.querySelector('pre')!.parentElement!).boxShadow
+      ).not.toContain('inset');
+    });
+
     it('is added in dark mode directly on a Page', () => {
       const { container } = renderDark(
         <Page>
