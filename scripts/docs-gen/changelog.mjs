@@ -66,6 +66,7 @@ export const FORMER_NAMES = {
   Stack: 'Space',
   Inline: 'Space',
   Tag: 'Chip',
+  ProgressIndicator: 'ProgressCircle',
 };
 
 /** `versions` with each former-name tag replaced by its current name (deduplicated). */

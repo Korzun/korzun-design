@@ -16,7 +16,7 @@ colour (`currentColor`), and by default the surrounding font size, so it sits
 inline with text without any sizing. Use it for a page, panel or inline load
 that has no progress value.
 
-Use something else for: a load with a known fraction (`ProgressIndicator`).
+Use something else for: a load with a known fraction (`ProgressCircle`).
 `Button` (`loading`), `Select` (`loading`) and `Switch` (`loading`) draw their
 own spinner; do not add one beside them.
 

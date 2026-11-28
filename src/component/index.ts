@@ -19,7 +19,11 @@ export { NavDesktop, type NavDesktopProps } from './nav-desktop/index.js';
 export { NavMobile, type NavMobileProps, type NavPill } from './nav-mobile/index.js';
 export type { NavItem } from './nav-types.js';
 export { Page, type PageProps, type PageTypeValue } from './page/index.js';
-export { ProgressIndicator, type ProgressIndicatorProps } from './progress-indicator/index.js';
+export {
+  ProgressCircle,
+  type ProgressCircleProps,
+  type ProgressCircleTone,
+} from './progress-circle/index.js';
 export { Spinner, type SpinnerProps } from './spinner/index.js';
 export { Space, type SpaceProps, type Gap } from './space/index.js';
 export { Surface, useSurfaceRadius, type SurfaceProps } from './surface/index.js';

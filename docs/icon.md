@@ -49,7 +49,7 @@ Inline SVG icon components, mostly from [Tabler](https://tabler.io/icons) on a
 24×24 view box. Each one paints in `currentColor`, so it takes the text colour
 of wherever it sits, in both themes, including hover and selected states.
 
-Use something else for: a determinate progress mark (`ProgressIndicator`), a
+Use something else for: a determinate progress mark (`ProgressCircle`), a
 loading state on a button (`Button`'s `loading`, which draws the spinner for
 you).
 

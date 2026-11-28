@@ -42,7 +42,7 @@ export const SECTIONS = Object.freeze([
   { name: 'Data display', modules: ['chip', 'code-block', 'meta-line', 'table'] },
   {
     name: 'Feedback',
-    modules: ['alert', 'empty-state', 'error-message', 'progress-indicator', 'spinner', 'toast'],
+    modules: ['alert', 'empty-state', 'error-message', 'progress-circle', 'spinner', 'toast'],
   },
   { name: 'Foundations', modules: ['icon', 'theme', 'theme-setting'] },
   {

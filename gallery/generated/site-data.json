@@ -9909,104 +9909,183 @@
       ]
     },
     {
-      "id": "component/progress-indicator",
-      "slug": "progress-indicator",
+      "id": "component/progress-circle",
+      "slug": "progress-circle",
       "entry": "@korzun/design/component",
-      "docPath": "docs/component/progress-indicator.md",
-      "title": "ProgressIndicator",
-      "description": "A small pie-style progress mark with a \"Not started\", percentage or \"Completed\" label.",
+      "docPath": "docs/component/progress-circle.md",
+      "title": "ProgressCircle",
+      "description": "A progress circle, filled like a pie or border-only, in a tone, with its value beside it, inside it or hidden.",
       "category": "Feedback",
       "values": [
-        "ProgressIndicator"
+        "ProgressCircle"
       ],
       "types": [
-        "ProgressIndicatorProps"
+        "ProgressCircleProps",
+        "ProgressCircleTone"
       ],
-      "importLine": "import { ProgressIndicator, type ProgressIndicatorProps } from '@korzun/design/component'",
-      "body": "A small pie-style progress mark (a brand-coloured sector inside a ring) followed\nby a text label: \"Not started\" at 0, \"N%\" in between, \"Completed\" at 100%. The\nSVG is a `role=\"progressbar\"` with `aria-valuenow` 0–100.\n\nUse something else for: an indeterminate wait (`Spinner`, or `loading` on\na `Button`), a pull-to-refresh indicator (`usePullToRefresh`).\n\n## Usage\n\n### Surprising behaviour\n\n- **No SVG at exactly 0 or 1**: only the text label renders, so there is then\n  no `role=\"progressbar\"` and `ariaLabel` is not used. The visible text\n  (\"Not started\" / \"Completed\") carries the meaning.\n- The label is `Math.round`ed, so values just inside the range show \"0%\" or\n  \"100%\" next to a sliver or near-full pie (e.g. `0.996` shows \"100%\", not\n  \"Completed\").\n- Passing a percentage (`42`) clamps to 1 and shows \"Completed\".\n- A value that is not a finite number (`NaN`, or `undefined` from a cleared\n  field) shows \"Not started\".\n\n### Styling\n\nNo `className`.\n\n## Do / don't\n\n- Do pass a 0–1 fraction.\n- Do write an `ariaLabel` that names the thing in progress.\n- Don't render your own \"42%\" next to it; it already prints the label.\n- Don't use it for indeterminate loading.",
+      "importLine": "import { ProgressCircle, type ProgressCircleProps, type ProgressCircleTone } from '@korzun/design/component'",
+      "body": "A circle that fills as `value` goes from 0 to `max`: a pie inside a thin ring\n(`variant=\"filled\"`) or an arc over a faint track (`variant=\"outline\"`), in a\n`tone`. The value is written beside it, inside it, or not at all (`label`), as\na percentage or with your own `unit`. The whole thing is one\n`role=\"progressbar\"` named by `ariaLabel`, whose `aria-valuetext` is the same\ntext the label shows.\n\nIt shows a number at every value, 0 and `max` included. For words at the ends\n(\"Not started\", \"Completed\"), use the [Reading progress](../recipes/reading-progress.md)\nrecipe.\n\nUse something else for: an indeterminate wait (`Spinner`, or `loading` on\na `Button`), a pull-to-refresh indicator (`usePullToRefresh`).\n\n## Usage\n\n### Surprising behaviour\n\n- `max` defaults to 1, so `value` is a fraction: passing `42` clamps to 1 and\n  shows \"100%\". Pass `max={100}` for a 0–100 value.\n- The percentage is `Math.round`ed, so `0.996` shows \"100%\" next to a\n  near-full circle. Other units show the value to one decimal at most.\n- `unit` is appended verbatim: write `\" pages\"`, with the space, for \"3 pages\".\n- A value that is not a finite number (`NaN`, or `undefined` from a cleared\n  field) counts as 0.\n- An inside label longer than four characters is squeezed to fit, so keep it\n  short (a percentage, or a bare number with `unit=\"\"`), and use `size` 40 or\n  more.\n\n### Styling\n\nNo `className`. Colour comes from `tone`; a filled circle's ring is\n`text.primary` and an outline's track is `border.default`.\n\n## Do / don't\n\n- Do write an `ariaLabel` that names the thing in progress.\n- Do pick `outline` with `label=\"inside\"`; text over a filled pie needs its halo.\n- Don't render your own \"42%\" next to it; set `label` instead.\n- Don't use it for indeterminate loading.",
       "examples": [
         {
-          "file": "src/component/progress-indicator/examples/01-basic.tsx",
+          "file": "src/component/progress-circle/examples/01-basic.tsx",
           "slug": "basic",
           "order": 1,
           "title": "Basic",
-          "description": "`value` is a fraction from 0 to 1, not a percentage: `0.42` shows \"42%\". `ariaLabel` names the progress for assistive tech. The buttons step the value by a tenth.",
-          "code": "import { Space, ProgressIndicator, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Basic() {\n  const [value, setValue] = useState(0.4);\n  return (\n    <Space direction=\"vertical\">\n      <ProgressIndicator value={value} ariaLabel=\"Reading progress for Middlemarch\" />\n      <Space>\n        <Button onClick={() => setValue((v) => Math.max(0, Math.round((v - 0.1) * 10) / 10))}>\n          Less\n        </Button>\n        <Button onClick={() => setValue((v) => Math.min(1, Math.round((v + 0.1) * 10) / 10))}>\n          More\n        </Button>\n      </Space>\n      <Text tone=\"muted\">value: {value}</Text>\n    </Space>\n  );\n}\n"
+          "description": "By default `value` is a fraction from 0 to 1, not a percentage: `0.42` shows \"42%\". The circle shows at 0 and 1 too, as \"0%\" and \"100%\". `ariaLabel` names the progress for assistive tech. The buttons step the value by a tenth.",
+          "code": "import { Space, ProgressCircle, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Basic() {\n  const [value, setValue] = useState(0.4);\n  return (\n    <Space direction=\"vertical\">\n      <ProgressCircle value={value} ariaLabel=\"Reading progress for Middlemarch\" />\n      <Space>\n        <Button onClick={() => setValue((v) => Math.max(0, Math.round((v - 0.1) * 10) / 10))}>\n          Less\n        </Button>\n        <Button onClick={() => setValue((v) => Math.min(1, Math.round((v + 0.1) * 10) / 10))}>\n          More\n        </Button>\n      </Space>\n      <Text tone=\"muted\">value: {value}</Text>\n    </Space>\n  );\n}\n"
         },
         {
-          "file": "src/component/progress-indicator/examples/02-label-states.tsx",
-          "slug": "label-states",
+          "file": "src/component/progress-circle/examples/02-variants.tsx",
+          "slug": "variants",
           "order": 2,
-          "title": "Label states",
-          "description": "The label reads \"Not started\" at 0, \"N%\" in between and \"Completed\" at 1. At exactly 0 or 1 only the label renders, with no pie. The label is rounded, so `0.996` shows \"100%\" next to a near-full pie, not \"Completed\". Each is labelled with its `value`.",
-          "code": "import { Space, ProgressIndicator, Text } from '@korzun/design/component';\n\nexport default function LabelStates() {\n  return (\n    <Space direction=\"vertical\" gap=\"sm\">\n      <Space>\n        <ProgressIndicator value={0} ariaLabel=\"Upload progress\" />\n        <Text tone=\"muted\">value 0</Text>\n      </Space>\n      <Space>\n        <ProgressIndicator value={0.42} ariaLabel=\"Upload progress\" />\n        <Text tone=\"muted\">value 0.42</Text>\n      </Space>\n      <Space>\n        <ProgressIndicator value={0.996} ariaLabel=\"Upload progress\" />\n        <Text tone=\"muted\">value 0.996</Text>\n      </Space>\n      <Space>\n        <ProgressIndicator value={1} ariaLabel=\"Upload progress\" />\n        <Text tone=\"muted\">value 1</Text>\n      </Space>\n    </Space>\n  );\n}\n"
+          "title": "Filled and outline",
+          "description": "`variant=\"filled\"` is a pie inside a ring; `variant=\"outline\"` is border-only, an arc over a faint track. `label` puts the value `'outside'` (the default), `'inside'` the circle, or nowhere (`'none'`, still read by screen readers).",
+          "code": "import { ProgressCircle, Space, Text } from '@korzun/design/component';\n\nconst LABELS = ['outside', 'inside', 'none'] as const;\n\nexport default function Variants() {\n  return (\n    <Space direction=\"vertical\" gap=\"lg\">\n      {(['filled', 'outline'] as const).map((variant) => (\n        <Space key={variant} gap=\"xl\">\n          <Text tone=\"muted\">{variant}</Text>\n          {LABELS.map((label) => (\n            <ProgressCircle\n              key={label}\n              value={0.65}\n              variant={variant}\n              label={label}\n              size={48}\n              ariaLabel={`Upload progress, ${variant}, label ${label}`}\n            />\n          ))}\n        </Space>\n      ))}\n    </Space>\n  );\n}\n"
         },
         {
-          "file": "src/component/progress-indicator/examples/03-sizes.tsx",
-          "slug": "sizes",
+          "file": "src/component/progress-circle/examples/03-tones.tsx",
+          "slug": "tones",
           "order": 3,
-          "title": "Sizes",
-          "description": "`size` is the width and height of the pie in px. The label's font size does not scale with it. Each is labelled with its `size`.",
-          "code": "import { Space, ProgressIndicator, Text } from '@korzun/design/component';\n\nexport default function Sizes() {\n  return (\n    <Space direction=\"vertical\" gap=\"sm\">\n      <Space>\n        <ProgressIndicator value={0.6} ariaLabel=\"Reading progress, 14\" size={14} />\n        <Text tone=\"muted\">size 14</Text>\n      </Space>\n      <Space>\n        <ProgressIndicator value={0.6} ariaLabel=\"Reading progress, 24\" size={24} />\n        <Text tone=\"muted\">size 24</Text>\n      </Space>\n      <Space>\n        <ProgressIndicator value={0.6} ariaLabel=\"Reading progress, 40\" size={40} />\n        <Text tone=\"muted\">size 40</Text>\n      </Space>\n      <Space>\n        <ProgressIndicator value={0.6} ariaLabel=\"Reading progress, 64\" size={64} />\n        <Text tone=\"muted\">size 64</Text>\n      </Space>\n    </Space>\n  );\n}\n"
+          "title": "Tones",
+          "description": "`tone` colours the progress: `brand` (the default), a status colour, or a quiet `neutral` grey. The ring of a filled circle stays in the text colour.",
+          "code": "import { ProgressCircle, Space } from '@korzun/design/component';\n\nconst TONES = ['brand', 'success', 'warning', 'danger', 'info', 'neutral'] as const;\n\nexport default function Tones() {\n  return (\n    <Space direction=\"vertical\" gap=\"lg\">\n      <Space wrap gap=\"lg\">\n        {TONES.map((tone) => (\n          <ProgressCircle\n            key={tone}\n            value={0.6}\n            tone={tone}\n            label=\"none\"\n            ariaLabel={`${tone} progress`}\n          />\n        ))}\n      </Space>\n      <Space wrap gap=\"lg\">\n        {TONES.map((tone) => (\n          <ProgressCircle\n            key={tone}\n            value={0.6}\n            tone={tone}\n            variant=\"outline\"\n            label=\"inside\"\n            size={48}\n            ariaLabel={`${tone} progress`}\n          />\n        ))}\n      </Space>\n    </Space>\n  );\n}\n"
         },
         {
-          "file": "src/component/progress-indicator/examples/04-from-percent.tsx",
-          "slug": "from-percent",
+          "file": "src/component/progress-circle/examples/04-units.tsx",
+          "slug": "units",
           "order": 4,
-          "title": "From a percentage",
-          "description": "A 0–100 API value is divided by 100 before it is passed; passing `42` itself would clamp to 1 and show \"Completed\". Pick a percent and the indicator follows.",
-          "code": "import { Space, ProgressIndicator, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function FromPercent() {\n  const [percent, setPercent] = useState(42);\n  return (\n    <Space direction=\"vertical\">\n      <ProgressIndicator value={percent / 100} ariaLabel=\"Upload progress\" />\n      <Space>\n        <Button onClick={() => setPercent(0)}>0%</Button>\n        <Button onClick={() => setPercent(42)}>42%</Button>\n        <Button onClick={() => setPercent(100)}>100%</Button>\n      </Space>\n      <Text tone=\"muted\">API percent: {percent}</Text>\n    </Space>\n  );\n}\n"
+          "title": "Max and units",
+          "description": "`max` is the value that means done (default 1, a fraction). The default `unit`, `'%'`, shows the percentage of `max`; any other `unit` shows the value itself followed by it, verbatim, so include a leading space when you want one.",
+          "code": "import { ProgressCircle, Space, Text } from '@korzun/design/component';\n\nexport default function Units() {\n  return (\n    <Space direction=\"vertical\" gap=\"sm\">\n      <Space>\n        <ProgressCircle value={42} max={100} ariaLabel=\"Upload progress\" />\n        <Text tone=\"muted\">value 42, max 100</Text>\n      </Space>\n      <Space>\n        <ProgressCircle value={3} max={12} unit=\" of 12\" ariaLabel=\"Chapters read\" />\n        <Text tone=\"muted\">value 3, max 12, unit \" of 12\"</Text>\n      </Space>\n      <Space>\n        <ProgressCircle value={180} max={320} unit=\" pages\" ariaLabel=\"Pages read\" />\n        <Text tone=\"muted\">value 180, max 320, unit \" pages\"</Text>\n      </Space>\n      <Space>\n        <ProgressCircle\n          value={7}\n          max={10}\n          unit=\"\"\n          label=\"inside\"\n          variant=\"outline\"\n          size={48}\n          ariaLabel=\"Steps done\"\n        />\n        <Text tone=\"muted\">value 7, max 10, unit \"\", inside</Text>\n      </Space>\n    </Space>\n  );\n}\n"
         },
         {
-          "file": "src/component/progress-indicator/examples/05-in-a-row.tsx",
-          "slug": "in-a-row",
+          "file": "src/component/progress-circle/examples/05-sizes.tsx",
+          "slug": "sizes",
           "order": 5,
-          "title": "In a row",
-          "description": "A small indicator beside a title in a list row. It prints its own label, so the row adds no \"42%\" next to it, and `ariaLabel` names the book.",
-          "code": "import { Card, Space, ProgressIndicator, Text } from '@korzun/design/component';\n\nexport default function InARow() {\n  return (\n    <Card title=\"Reading\">\n      <Space direction=\"vertical\" gap=\"sm\">\n        <Space justify=\"between\">\n          <Text weight=\"semibold\">Middlemarch</Text>\n          <ProgressIndicator value={0.42} ariaLabel=\"Reading progress for Middlemarch\" size={14} />\n        </Space>\n        <Space justify=\"between\">\n          <Text weight=\"semibold\">Persuasion</Text>\n          <ProgressIndicator value={1} ariaLabel=\"Reading progress for Persuasion\" size={14} />\n        </Space>\n      </Space>\n    </Card>\n  );\n}\n"
+          "title": "Sizes",
+          "description": "`size` is the width and height of the circle in px. An outside label keeps its font size; an inside one scales with the circle. Each is labelled with its `size`.",
+          "code": "import { Space, ProgressCircle, Text } from '@korzun/design/component';\n\nexport default function Sizes() {\n  return (\n    <Space direction=\"vertical\" gap=\"sm\">\n      <Space>\n        <ProgressCircle value={0.6} ariaLabel=\"Reading progress, 14\" size={14} />\n        <Text tone=\"muted\">size 14</Text>\n      </Space>\n      <Space>\n        <ProgressCircle value={0.6} ariaLabel=\"Reading progress, 24\" size={24} />\n        <Text tone=\"muted\">size 24</Text>\n      </Space>\n      <Space>\n        <ProgressCircle value={0.6} ariaLabel=\"Reading progress, 40\" size={40} />\n        <Text tone=\"muted\">size 40</Text>\n      </Space>\n      <Space>\n        <ProgressCircle value={0.6} ariaLabel=\"Reading progress, 64\" size={64} />\n        <Text tone=\"muted\">size 64</Text>\n      </Space>\n    </Space>\n  );\n}\n"
         }
       ],
       "preview": {
-        "file": "src/component/progress-indicator/examples/preview.tsx",
+        "file": "src/component/progress-circle/examples/preview.tsx",
         "slug": "preview",
         "order": 0,
         "title": "Preview",
         "description": "",
-        "code": "import { Space, ProgressIndicator } from '@korzun/design/component';\n\nexport default function Preview() {\n  return (\n    <Space gap=\"lg\">\n      <ProgressIndicator value={0.25} size={40} ariaLabel=\"Reading progress for Persuasion\" />\n      <ProgressIndicator value={0.6} size={40} ariaLabel=\"Reading progress for Middlemarch\" />\n      <ProgressIndicator value={0.9} size={40} ariaLabel=\"Reading progress for Villette\" />\n    </Space>\n  );\n}\n"
+        "code": "import { ProgressCircle, Space } from '@korzun/design/component';\n\nexport default function Preview() {\n  return (\n    <Space gap=\"xl\">\n      <ProgressCircle\n        value={0.6}\n        size={48}\n        label=\"none\"\n        ariaLabel=\"Reading progress for Middlemarch\"\n      />\n      <ProgressCircle\n        value={0.6}\n        size={48}\n        variant=\"outline\"\n        label=\"inside\"\n        ariaLabel=\"Reading progress for Villette\"\n      />\n      <ProgressCircle\n        value={0.9}\n        size={48}\n        variant=\"outline\"\n        tone=\"success\"\n        label=\"none\"\n        ariaLabel=\"Reading progress for Persuasion\"\n      />\n    </Space>\n  );\n}\n"
       },
       "tables": [
         {
-          "name": "ProgressIndicatorProps",
+          "name": "ProgressCircleProps",
           "kind": "props",
           "rows": [
             {
               "name": "ariaLabel",
               "type": "string",
               "required": true,
-              "description": "Accessible name of the progressbar: say what progress it is (`Reading progress for ${title}`), because a bare \"42%\" means nothing out of context. Not used at exactly 0 or 1, where no progressbar renders."
+              "description": "Accessible name of the progressbar: say what progress it is (`Reading progress for ${title}`), because a bare \"42%\" means nothing out of context."
+            },
+            {
+              "name": "label",
+              "type": "'outside' | 'inside' | 'none'",
+              "required": false,
+              "description": "Where the value is written: `'outside'` beside the circle, `'inside'` centred in it (suits `variant=\"outline\"`, and sizes of 40 or more), or `'none'` (screen readers still hear it). The text is never \"Not started\" or \"Completed\"; see the Reading progress recipe for those.",
+              "default": "'outside'"
+            },
+            {
+              "name": "max",
+              "type": "number",
+              "required": false,
+              "description": "The value that means done. The default, 1, takes a fraction (`0.42`); pass `100` for a percentage or `12` for 12 chapters.",
+              "default": "1"
             },
             {
               "name": "size",
               "type": "number",
               "required": false,
-              "description": "Width and height of the SVG in px. The label's font size is fixed (`fontSize.sm`) and does not scale.",
+              "description": "Width and height of the circle in px. An outside label keeps its `fontSize.sm`; an inside one scales with the circle.",
               "default": "40"
+            },
+            {
+              "name": "tone",
+              "type": "'brand' | 'success' | 'warning' | 'danger' | 'info' | 'neutral'",
+              "required": false,
+              "description": "Colour of the progress: `'brand'` (default), a status colour (`'success'`, `'warning'`, `'danger'`, `'info'`) or `'neutral'` grey.",
+              "default": "'brand'"
+            },
+            {
+              "name": "unit",
+              "type": "string",
+              "required": false,
+              "description": "How the value is written. `'%'` (the default) shows the percentage of `max`, rounded to a whole number. Anything else shows the value itself followed by `unit`, verbatim: `unit=\" of 12\"` shows \"3 of 12\", `unit=\"\"` the bare number. Screen readers hear the same text.",
+              "default": "'%'"
             },
             {
               "name": "value",
               "type": "number",
               "required": true,
-              "description": "A **fraction from 0 to 1**, not a percentage (`0.42` shows \"42%\"). Clamped to 0–1, so `42` shows \"Completed\"; a value that is not a finite number (`NaN`, `undefined`, `Infinity`) shows \"Not started\"."
+              "description": "Progress from 0 to `max`. Clamped to that range; a value that is not a finite number (`NaN`, `undefined`, `Infinity`) counts as 0."
+            },
+            {
+              "name": "variant",
+              "type": "'filled' | 'outline'",
+              "required": false,
+              "description": "`'filled'` is a pie: a sector inside a thin ring. `'outline'` is border-only: an arc over a faint track, with the middle empty.",
+              "default": "'filled'"
             }
           ]
+        },
+        {
+          "name": "ProgressCircleTone",
+          "kind": "alias",
+          "rows": [],
+          "text": "'brand' | 'success' | 'warning' | 'danger' | 'info' | 'neutral'",
+          "description": "The colour of the progress: brand, a status colour, or a quiet grey."
         }
       ],
       "tokens": [
+        {
+          "path": "color.bg.card",
+          "kind": "color",
+          "light": "#FCFCFC",
+          "dark": "#1A1B1E"
+        },
+        {
+          "path": "color.border.default",
+          "kind": "color",
+          "light": "#D9D9D9",
+          "dark": "#3A3B40"
+        },
         {
           "path": "color.brand.default",
           "kind": "color",
           "light": "#1777FF",
           "dark": "#3696fe"
+        },
+        {
+          "path": "color.danger.default",
+          "kind": "color",
+          "light": "#FF4D4F",
+          "dark": "#FF4D4F"
+        },
+        {
+          "path": "color.info",
+          "kind": "color",
+          "light": "#1777FF",
+          "dark": "#3696fe"
+        },
+        {
+          "path": "color.success",
+          "kind": "color",
+          "light": "#16a34a",
+          "dark": "#22C55E"
+        },
+        {
+          "path": "color.text.muted",
+          "kind": "color",
+          "light": "#6E6E6E",
+          "dark": "#9CA1AB"
         },
         {
           "path": "color.text.primary",
@@ -10015,10 +10094,22 @@
           "dark": "#F5F5F7"
         },
         {
+          "path": "color.warning",
+          "kind": "color",
+          "light": "#ca8a04",
+          "dark": "#EAB308"
+        },
+        {
           "path": "fontSize.sm",
           "kind": "value",
           "light": "0.75rem",
           "dark": "0.75rem"
+        },
+        {
+          "path": "fontWeight.semibold",
+          "kind": "value",
+          "light": "600",
+          "dark": "600"
         },
         {
           "path": "space.xs",
@@ -10029,10 +10120,26 @@
       ],
       "changelog": [
         {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "ProgressCircle"
+          ],
+          "text": "**Breaking:** `ProgressIndicator` is renamed `ProgressCircle` (`ProgressIndicatorProps` → `ProgressCircleProps`). It always draws the circle and writes a number, 0 and 1 included; \"Not started\" and \"Completed\" are gone from the component and live in the new Reading progress recipe. The whole mark, label included, is now one `progressbar` with `aria-valuetext`."
+        },
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "ProgressCircle"
+          ],
+          "text": "New props: `tone` (`brand`, `success`, `warning`, `danger`, `info`, `neutral`; new `ProgressCircleTone` type), `variant=\"outline\"` for a border-only arc instead of the filled pie, `label` (`outside`, `inside`, `none`) for where the value is written, and `max` and `unit` for values that are not fractions (`value={3} max={12} unit=\" of 12\"` shows \"3 of 12\")."
+        },
+        {
           "version": "0.5.2",
           "date": "2026-11-26",
           "tags": [
-            "ProgressIndicator"
+            "ProgressCircle"
           ],
           "text": "A `value` that is not a finite number (`NaN`, `undefined`, `Infinity`) shows \"Not started\" instead of \"NaN%\"."
         }
@@ -10053,7 +10160,7 @@
         "SpinnerProps"
       ],
       "importLine": "import { Spinner, type SpinnerProps } from '@korzun/design/component'",
-      "body": "A rotating loading indicator. It is `1em` square, takes the surrounding text\ncolour (`currentColor`), and by default the surrounding font size, so it sits\ninline with text without any sizing. Use it for a page, panel or inline load\nthat has no progress value.\n\nUse something else for: a load with a known fraction (`ProgressIndicator`).\n`Button` (`loading`), `Select` (`loading`) and `Switch` (`loading`) draw their\nown spinner; do not add one beside them.\n\n## Usage\n\n### Behaviour\n\n- By default the root is a `span` with `role=\"status\"` and `aria-label={label}`,\n  so a screen reader announces the load. The inner icon is always `aria-hidden`.\n- With `decorative`, the root has no role and is `aria-hidden`.\n- Override with `className` at `'&&'` specificity, never `!important`.\n\n### Styling\n\nThere is no `style` prop and no other attribute passthrough.\n\n## Do / don't\n\n- Do use `decorative` when adjacent text names the load.\n- Do give a specific `label` when the spinner stands alone.\n- Don't hand-write `role=\"status\"` around it; it already has one.\n- Don't add a Spinner inside `Button`, `Select` or `Switch`; they draw their\n  own.",
+      "body": "A rotating loading indicator. It is `1em` square, takes the surrounding text\ncolour (`currentColor`), and by default the surrounding font size, so it sits\ninline with text without any sizing. Use it for a page, panel or inline load\nthat has no progress value.\n\nUse something else for: a load with a known fraction (`ProgressCircle`).\n`Button` (`loading`), `Select` (`loading`) and `Switch` (`loading`) draw their\nown spinner; do not add one beside them.\n\n## Usage\n\n### Behaviour\n\n- By default the root is a `span` with `role=\"status\"` and `aria-label={label}`,\n  so a screen reader announces the load. The inner icon is always `aria-hidden`.\n- With `decorative`, the root has no role and is `aria-hidden`.\n- Override with `className` at `'&&'` specificity, never `!important`.\n\n### Styling\n\nThere is no `style` prop and no other attribute passthrough.\n\n## Do / don't\n\n- Do use `decorative` when adjacent text names the load.\n- Do give a specific `label` when the spinner stands alone.\n- Don't hand-write `role=\"status\"` around it; it already has one.\n- Don't add a Spinner inside `Button`, `Select` or `Switch`; they draw their\n  own.",
       "examples": [
         {
           "file": "src/component/spinner/examples/01-basic.tsx",
@@ -10445,7 +10552,7 @@
         "IconProps"
       ],
       "importLine": "import { AdjustmentsHorizontalIcon, AlertOctagonIcon, BookIcon, BooksIcon, CheckIcon, ChevronCircleIcon, ChevronIcon, CircleXIcon, ClockIcon, DeviceIcon, HandLoveYouIcon, HandOkIcon, HandPeaceIcon, HandsClapIcon, HomeIcon, InfoCircleIcon, KeyIcon, ListCheckIcon, MoreIcon, RowRemoveIcon, SearchIcon, SettingsIcon, SpinnerIcon, ThumbDownIcon, UploadIcon, UserIcon, UsersIcon, XIcon, defaultFilledIconProps, defaultStrokeIconProps, type IconProps } from '@korzun/design/icon'",
-      "body": "Inline SVG icon components, mostly from [Tabler](https://tabler.io/icons) on a\n24×24 view box. Each one paints in `currentColor`, so it takes the text colour\nof wherever it sits, in both themes, including hover and selected states.\n\nUse something else for: a determinate progress mark (`ProgressIndicator`), a\nloading state on a button (`Button`'s `loading`, which draws the spinner for\nyou).\n\n## Usage\n\n### Props\n\nEvery icon takes the same `IconProps`, listed below. `defaultStrokeIconProps`\nand `defaultFilledIconProps` are exported for building your own icon with the\nsame defaults.\n\n### Sizing and colour\n\n- Size with `width`/`height` props (`<HomeIcon width={14} height={14} />`), or\n  with `height: '1em', width: '1em'` in a class so it scales with the text (this\n  is what `Button` does for `prefix`/`suffix`).\n- Colour by setting `color` on the icon or any ancestor. Don't pass `stroke` or\n  `fill` colours; they bypass the theme.\n\n### Passing icons to other components\n\nComponents take the icon **component**, never an element:\n\n```tsx\n<Button prefix={SearchIcon}>Search</Button>                 // ComponentType<IconProps>\n<ConfirmModal icon={AlertOctagonIcon} danger … />\nconst item: NavItem = { to: '/', label: 'Home', Icon: HomeIcon, active };\noptions={[{ value: 'grid', label: 'Grid', Icon: BooksIcon }]} // SegmentedControl\n```\n\n### Kinds of icon\n\nEvery icon is listed in the table below, and the docs site also shows them as a grid. Each is one of three kinds.\n\n- **Stroke** icons draw outlines and take `stroke` and `strokeWidth`.\n- **Filled** icons (`AlertOctagonIcon`, `CheckIcon`, `CircleXIcon`,\n  `InfoCircleIcon`) ignore `stroke` and `strokeWidth`.\n- **Emoji** icons (`HandLoveYouIcon`, `HandOkIcon`, `HandPeaceIcon`,\n  `HandsClapIcon`, `ThumbDownIcon`) draw the platform's colour-emoji glyph as an\n  alpha mask over `currentColor`, so they recolour like the others but their\n  exact shape depends on the OS emoji font. They ignore `fill`, `stroke` and\n  `strokeWidth`.\n\nTwo to know: `ChevronIcon` points right, so rotate it via `className` for other\ndirections. `SpinnerIcon` is a quarter arc that **does not spin by itself**; use\n`Spinner` (component) for a ready-made loader, not a hand-built `SpinnerIcon`:\n\n```tsx\n<Spinner label=\"Loading books\" />\n```\n\n### Every icon\n\n| Export | Kind | Depicts |\n|---|---|---|\n| `AdjustmentsHorizontalIcon` | stroke | Three horizontal sliders (general settings, filters). |\n| `AlertOctagonIcon` | filled | Octagon with `!` (danger/warning; confirm modals). |\n| `BookIcon` | stroke | A single book (Tabler `book-2`). |\n| `BooksIcon` | stroke | Books standing on a shelf. |\n| `CheckIcon` | filled | A check mark (success). |\n| `ChevronCircleIcon` | stroke | Right chevron in a circle (Card's collapse toggle). |\n| `ChevronIcon` | stroke | Right-pointing chevron; rotate it via `className` for other directions. |\n| `CircleXIcon` | filled | X in a filled circle (clear, error). |\n| `ClockIcon` | stroke | Clock face (time, pending). |\n| `DeviceIcon` | stroke | A tablet / e-reader (Tabler `device-tablet`). |\n| `HandLoveYouIcon` | emoji | 🤟 silhouette (rating 5, \"Love\"). |\n| `HandOkIcon` | emoji | 👌 silhouette (rating 2, \"Okay\"). |\n| `HandPeaceIcon` | emoji | ✌️ silhouette (rating 3, \"Nice\"). |\n| `HandsClapIcon` | emoji | 👏 silhouette (rating 4, \"Great\"). |\n| `HomeIcon` | stroke | A house. |\n| `InfoCircleIcon` | filled | `i` in a filled circle (info). |\n| `KeyIcon` | stroke | A key (passwords, credentials). |\n| `ListCheckIcon` | stroke | Checklist (requests, tasks). |\n| `MoreIcon` | stroke | Three horizontal dots (overflow menu). |\n| `RowRemoveIcon` | stroke | A table row with an X under it (remove row). |\n| `SearchIcon` | stroke | Magnifying glass. |\n| `SettingsIcon` | stroke | Gear. |\n| `SpinnerIcon` | stroke | A quarter arc. **Does not spin by itself**; use `Spinner` (component) for a ready-made loader. |\n| `ThumbDownIcon` | emoji | 👎 silhouette (rating 1, \"Bad\"). |\n| `UploadIcon` | stroke | Arrow up out of a tray. |\n| `UserIcon` | stroke | One person. |\n| `UsersIcon` | stroke | Two people. |\n| `XIcon` | stroke | An X (close, dismiss, error toast). |\n\n## Do / don't\n\n- Do pass `aria-hidden` when the icon sits next to a text label.\n- Do give a standalone meaningful icon `role` and `aria-label`.\n- Don't pass `<Icon />` elements where a component is expected.\n- Don't import from icon file paths; only `@korzun/design/icon` is exported.",
+      "body": "Inline SVG icon components, mostly from [Tabler](https://tabler.io/icons) on a\n24×24 view box. Each one paints in `currentColor`, so it takes the text colour\nof wherever it sits, in both themes, including hover and selected states.\n\nUse something else for: a determinate progress mark (`ProgressCircle`), a\nloading state on a button (`Button`'s `loading`, which draws the spinner for\nyou).\n\n## Usage\n\n### Props\n\nEvery icon takes the same `IconProps`, listed below. `defaultStrokeIconProps`\nand `defaultFilledIconProps` are exported for building your own icon with the\nsame defaults.\n\n### Sizing and colour\n\n- Size with `width`/`height` props (`<HomeIcon width={14} height={14} />`), or\n  with `height: '1em', width: '1em'` in a class so it scales with the text (this\n  is what `Button` does for `prefix`/`suffix`).\n- Colour by setting `color` on the icon or any ancestor. Don't pass `stroke` or\n  `fill` colours; they bypass the theme.\n\n### Passing icons to other components\n\nComponents take the icon **component**, never an element:\n\n```tsx\n<Button prefix={SearchIcon}>Search</Button>                 // ComponentType<IconProps>\n<ConfirmModal icon={AlertOctagonIcon} danger … />\nconst item: NavItem = { to: '/', label: 'Home', Icon: HomeIcon, active };\noptions={[{ value: 'grid', label: 'Grid', Icon: BooksIcon }]} // SegmentedControl\n```\n\n### Kinds of icon\n\nEvery icon is listed in the table below, and the docs site also shows them as a grid. Each is one of three kinds.\n\n- **Stroke** icons draw outlines and take `stroke` and `strokeWidth`.\n- **Filled** icons (`AlertOctagonIcon`, `CheckIcon`, `CircleXIcon`,\n  `InfoCircleIcon`) ignore `stroke` and `strokeWidth`.\n- **Emoji** icons (`HandLoveYouIcon`, `HandOkIcon`, `HandPeaceIcon`,\n  `HandsClapIcon`, `ThumbDownIcon`) draw the platform's colour-emoji glyph as an\n  alpha mask over `currentColor`, so they recolour like the others but their\n  exact shape depends on the OS emoji font. They ignore `fill`, `stroke` and\n  `strokeWidth`.\n\nTwo to know: `ChevronIcon` points right, so rotate it via `className` for other\ndirections. `SpinnerIcon` is a quarter arc that **does not spin by itself**; use\n`Spinner` (component) for a ready-made loader, not a hand-built `SpinnerIcon`:\n\n```tsx\n<Spinner label=\"Loading books\" />\n```\n\n### Every icon\n\n| Export | Kind | Depicts |\n|---|---|---|\n| `AdjustmentsHorizontalIcon` | stroke | Three horizontal sliders (general settings, filters). |\n| `AlertOctagonIcon` | filled | Octagon with `!` (danger/warning; confirm modals). |\n| `BookIcon` | stroke | A single book (Tabler `book-2`). |\n| `BooksIcon` | stroke | Books standing on a shelf. |\n| `CheckIcon` | filled | A check mark (success). |\n| `ChevronCircleIcon` | stroke | Right chevron in a circle (Card's collapse toggle). |\n| `ChevronIcon` | stroke | Right-pointing chevron; rotate it via `className` for other directions. |\n| `CircleXIcon` | filled | X in a filled circle (clear, error). |\n| `ClockIcon` | stroke | Clock face (time, pending). |\n| `DeviceIcon` | stroke | A tablet / e-reader (Tabler `device-tablet`). |\n| `HandLoveYouIcon` | emoji | 🤟 silhouette (rating 5, \"Love\"). |\n| `HandOkIcon` | emoji | 👌 silhouette (rating 2, \"Okay\"). |\n| `HandPeaceIcon` | emoji | ✌️ silhouette (rating 3, \"Nice\"). |\n| `HandsClapIcon` | emoji | 👏 silhouette (rating 4, \"Great\"). |\n| `HomeIcon` | stroke | A house. |\n| `InfoCircleIcon` | filled | `i` in a filled circle (info). |\n| `KeyIcon` | stroke | A key (passwords, credentials). |\n| `ListCheckIcon` | stroke | Checklist (requests, tasks). |\n| `MoreIcon` | stroke | Three horizontal dots (overflow menu). |\n| `RowRemoveIcon` | stroke | A table row with an X under it (remove row). |\n| `SearchIcon` | stroke | Magnifying glass. |\n| `SettingsIcon` | stroke | Gear. |\n| `SpinnerIcon` | stroke | A quarter arc. **Does not spin by itself**; use `Spinner` (component) for a ready-made loader. |\n| `ThumbDownIcon` | emoji | 👎 silhouette (rating 1, \"Bad\"). |\n| `UploadIcon` | stroke | Arrow up out of a tray. |\n| `UserIcon` | stroke | One person. |\n| `UsersIcon` | stroke | Two people. |\n| `XIcon` | stroke | An X (close, dismiss, error toast). |\n\n## Do / don't\n\n- Do pass `aria-hidden` when the icon sits next to a text label.\n- Do give a standalone meaningful icon `role` and `aria-label`.\n- Don't pass `<Icon />` elements where a component is expected.\n- Don't import from icon file paths; only `@korzun/design/icon` is exported.",
       "examples": [
         {
           "file": "src/icon/examples/01-basic.tsx",
@@ -11290,6 +11397,23 @@
           "viewport": "screen"
         }
       ]
+    },
+    {
+      "slug": "reading-progress",
+      "docPath": "docs/recipes/reading-progress.md",
+      "title": "Reading progress",
+      "description": "A book's progress as \"Not started\", a ProgressCircle, or \"Completed\".",
+      "body": "Words for the two ends and a circle for everything between: \"Not started\"\nbefore the first page, \"Completed\" after the last, and a `ProgressCircle` with\nits percentage in between. Copy the `ReadingProgress` component into your app\nand pass it a 0–1 `value` and the book's `title`.\n\n## Wiring it up\n\n- `value` is a fraction from 0 to 1. Divide a 0–100 API percentage by 100\n  first, or pass `max={100}` to the circle and change the two checks.\n- The end states are plain text, so screen readers read them as they are; the\n  circle in between is a named progressbar.\n- Change the words or the end states to suit the thing in progress (\"Queued\",\n  \"Done\", or a check icon at the end).",
+      "examples": [
+        {
+          "file": "recipes/reading-progress/01-reading-progress.tsx",
+          "slug": "reading-progress",
+          "order": 1,
+          "title": "Reading progress",
+          "description": "A list of books, each with its progress: \"Not started\" before the first page, \"Completed\" after the last, and a ProgressCircle in between.",
+          "code": "import { Card, ProgressCircle, Space, Text } from '@korzun/design/component';\n\n// Copy this component into your app.\nfunction ReadingProgress({ value, title }: { value: number; title: string }) {\n  // A cleared field or a missing value reads as not started.\n  if (!Number.isFinite(value) || value <= 0) {\n    return <Text tone=\"muted\">Not started</Text>;\n  }\n  if (value >= 1) {\n    return <Text tone=\"muted\">Completed</Text>;\n  }\n  return <ProgressCircle value={value} size={16} ariaLabel={`Reading progress for ${title}`} />;\n}\n\nconst BOOKS = [\n  { title: 'Middlemarch', progress: 0.42 },\n  { title: 'Persuasion', progress: 1 },\n  { title: 'Villette', progress: 0 },\n  { title: 'North and South', progress: 0.08 },\n];\n\nexport default function ReadingProgressRecipe() {\n  return (\n    <Card title=\"Reading\">\n      <Space direction=\"vertical\" gap=\"sm\">\n        {BOOKS.map((book) => (\n          <Space key={book.title} justify=\"between\">\n            <Text weight=\"semibold\">{book.title}</Text>\n            <ReadingProgress value={book.progress} title={book.title} />\n          </Space>\n        ))}\n      </Space>\n    </Card>\n  );\n}\n"
+        }
+      ]
     }
   ],
   "changelog": [
@@ -11328,6 +11452,30 @@
             "Switch"
           ],
           "text": "While loading, an `inset` (squared) switch shows a rounded-square ring with an arc travelling around it in the thumb's place, instead of the round spinner, which clashed with its square corners. A `pill` switch keeps the round spinner."
+        },
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "ProgressCircle"
+          ],
+          "text": "**Breaking:** `ProgressIndicator` is renamed `ProgressCircle` (`ProgressIndicatorProps` → `ProgressCircleProps`). It always draws the circle and writes a number, 0 and 1 included; \"Not started\" and \"Completed\" are gone from the component and live in the new Reading progress recipe. The whole mark, label included, is now one `progressbar` with `aria-valuetext`."
+        },
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "ProgressCircle"
+          ],
+          "text": "New props: `tone` (`brand`, `success`, `warning`, `danger`, `info`, `neutral`; new `ProgressCircleTone` type), `variant=\"outline\"` for a border-only arc instead of the filled pie, `label` (`outside`, `inside`, `none`) for where the value is written, and `max` and `unit` for values that are not fractions (`value={3} max={12} unit=\" of 12\"` shows \"3 of 12\")."
+        },
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "General"
+          ],
+          "text": "New recipe: Reading progress, \"Not started\", a `ProgressCircle` or \"Completed\" for a book."
         },
         {
           "version": "0.7.0",
@@ -11738,7 +11886,7 @@
           "version": "0.5.2",
           "date": "2026-11-26",
           "tags": [
-            "ProgressIndicator"
+            "ProgressCircle"
           ],
           "text": "A `value` that is not a finite number (`NaN`, `undefined`, `Infinity`) shows \"Not started\" instead of \"NaN%\"."
         }
@@ -12360,7 +12508,8 @@
     "AlertTone": "alert",
     "EmptyStateProps": "empty-state",
     "ErrorMessageProps": "error-message",
-    "ProgressIndicatorProps": "progress-indicator",
+    "ProgressCircleProps": "progress-circle",
+    "ProgressCircleTone": "progress-circle",
     "SpinnerProps": "spinner",
     "ToastProviderProps": "toast",
     "IconProps": "icon",
