@@ -11090,6 +11090,23 @@
   ],
   "recipes": [
     {
+      "slug": "copy-button",
+      "docPath": "docs/recipes/copy-button.md",
+      "title": "Copy button",
+      "description": "A button that copies text, turns into Copied or Could not copy for two seconds, and announces the result.",
+      "body": "A button that puts text on the clipboard and says what happened. Copy the\n`CopyButton` component into your app and pass it the `text` to copy.\n\n## Why it's built this way\n\n- **A recipe, not a `Copy` component.** Where the button sits, what it copies\n  and how it looks beside it change from place to place; the state machine is\n  the only shared part, and it is short enough to own. `CodeBlock` carries the\n  same logic for its own `copyable` button.\n- **Three states.** Idle shows `Copy`. A successful write shows `Copied` with a\n  `CheckIcon` prefix, and a failed one shows `Could not copy`; both return to\n  idle after two seconds. Pressing again restarts the two seconds.\n- **No toast.** The answer belongs where the press happened. A toast would\n  appear away from the button and pile up if pressed repeatedly.\n- **A `role=\"status\"` region.** A label that changes in place is not reliably\n  announced, so a visually hidden status region says `Copied` or `Could not\n  copy`. It is always mounted, because a region added together with its text is\n  often missed. The idle `ariaLabel` is dropped while the label shows the\n  result, so the button's name never contradicts the announcement.\n- **A missing clipboard counts as a failure.** `navigator.clipboard` is absent\n  outside a secure context (a dev server on a LAN address), and `writeText` can\n  reject when permission is denied; both show `Could not copy` and throw\n  nothing.\n- **Clean up on unmount.** One timer is cleared on every press and on unmount,\n  and a write that settles after unmount does nothing.\n\n## Keeping the width steady\n\n`Copied` is wider than `Copy`, so a row with the button in the middle would\nshift every time it changed. Either put the button last in its row, or give it a\n`minWidth` in `em` wide enough for the longest label, `Could not copy` (`10em`\nhere; `Copied` with its check is shorter). `em` follows the button's font size, so it stays right if\nthe size changes.\n\n## Wiring it up\n\n- Pass the exact text to copy; the button's label never has to match it.\n- For code, `CodeBlock` with `copyable` already includes this button.",
+      "examples": [
+        {
+          "file": "recipes/copy-button/01-copy-button.tsx",
+          "slug": "copy-button",
+          "order": 1,
+          "title": "Copy button",
+          "description": "A connection URL in Code with a Copy button that turns into Copied, or Could not copy.",
+          "code": "import { Code, Inline } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { CheckIcon } from '@korzun/design/icon';\nimport { createUseStyles } from '@korzun/design/theme';\nimport { useEffect, useRef, useState } from 'react';\n\n// In your app this goes in a sibling style.ts.\nconst useStyle = createUseStyles({\n  // Reserves the widest label (\"Could not copy\"), so the row keeps its width as the label changes.\n  button: { minWidth: '10em' },\n  // Visually hidden, but read aloud by screen readers.\n  status: {\n    position: 'absolute',\n    width: 1,\n    height: 1,\n    overflow: 'hidden',\n    clipPath: 'inset(50%)',\n    whiteSpace: 'nowrap',\n  },\n});\n\ntype State = 'idle' | 'done' | 'failed';\n\nconst RESET_MS = 2000;\n\n// Copy this component into your app.\nfunction CopyButton({ text }: { text: string }) {\n  const styles = useStyle();\n  const [state, setState] = useState<State>('idle');\n  const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);\n  const mounted = useRef(true);\n\n  useEffect(() => {\n    mounted.current = true;\n    return () => {\n      mounted.current = false;\n      clearTimeout(timer.current);\n    };\n  }, []);\n\n  const show = (next: State) => {\n    // A write that settles after unmount must not set state or start a timer.\n    if (!mounted.current) return;\n    // Pressing again restarts the two seconds.\n    clearTimeout(timer.current);\n    setState(next);\n    timer.current = setTimeout(() => setState('idle'), RESET_MS);\n  };\n\n  const copy = () => {\n    // A missing clipboard (outside a secure context, e.g. a dev server on a LAN address) or a\n    // synchronous throw from writeText lands in the same failed path as a rejection.\n    Promise.resolve()\n      .then(() => navigator.clipboard.writeText(text))\n      .then(\n        () => show('done'),\n        () => show('failed')\n      );\n  };\n\n  const message = state === 'done' ? 'Copied' : state === 'failed' ? 'Could not copy' : '';\n  return (\n    <>\n      <Button\n        type=\"text\"\n        // The label is the name while idle; the changing text names it after.\n        ariaLabel={state === 'idle' ? 'Copy' : undefined}\n        prefix={state === 'done' ? CheckIcon : undefined}\n        className={styles.button}\n        onClick={copy}\n      >\n        {state === 'idle' ? 'Copy' : message}\n      </Button>\n      {/* Always mounted, so a screen reader announces the text when it appears. */}\n      <span role=\"status\" className={styles.status}>\n        {message}\n      </span>\n    </>\n  );\n}\n\nexport default function CopyButtonExample() {\n  return (\n    <Inline gap=\"md\">\n      <Code>postgres://app@db.internal:5432/app</Code>\n      <CopyButton text=\"postgres://app@db.internal:5432/app\" />\n    </Inline>\n  );\n}\n"
+        }
+      ]
+    },
+    {
       "slug": "login",
       "docPath": "docs/recipes/login.md",
       "title": "Sign in",
@@ -11252,6 +11269,14 @@
             "Select"
           ],
           "text": "The option list matches `Menu`: a 4px inset pad, 4px-rounded options with a 2px gap, 14px text (was 12.8px), the flat `cardStack` shadow (was `hoverLift`) and `bg.hover` on hover (was `bg.cardHeader`). The keyboard highlight is unchanged."
+        },
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "General"
+          ],
+          "text": "Docs: a Copy button recipe (`docs/recipes/copy-button.md`): a `CopyButton` to copy into your app, with Copy, Copied and Could not copy states, a status region and a steady width."
         },
         {
           "version": "0.7.0",
