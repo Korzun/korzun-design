@@ -2,7 +2,7 @@
  * A positive `badge` number draws a red count on the icon's corner and `0` draws
  * nothing, so a count can be passed as it is. `'dot'` draws a red dot.
  */
-import { Inline, NavDesktop, Stack, type NavItem } from '@korzun/design/component';
+import { Space, NavDesktop, type NavItem } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { BookIcon, SettingsIcon, UploadIcon } from '@korzun/design/icon';
 import { useState } from 'react';
@@ -15,12 +15,12 @@ export default function Badges() {
     { to: '/settings', label: 'Settings', Icon: SettingsIcon, active: false, badge: 'dot' },
   ];
   return (
-    <Stack>
+    <Space direction="vertical">
       <NavDesktop items={items} />
-      <Inline>
+      <Space>
         <Button onClick={() => setPending((n) => n + 1)}>Add a fix</Button>
         <Button onClick={() => setPending(0)}>Clear fixes</Button>
-      </Inline>
-    </Stack>
+      </Space>
+    </Space>
   );
 }

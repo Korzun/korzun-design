@@ -1,7 +1,7 @@
 ---
 title: Icons
 description: Inline SVG icon components that take the surrounding text colour, with the shared IconProps.
-category: Data display
+category: Foundations
 ---
 # Icons
 
@@ -49,7 +49,7 @@ Inline SVG icon components, mostly from [Tabler](https://tabler.io/icons) on a
 24×24 view box. Each one paints in `currentColor`, so it takes the text colour
 of wherever it sits, in both themes, including hover and selected states.
 
-Use something else for: a determinate progress mark (`ProgressIndicator`), a
+Use something else for: a determinate progress mark (`ProgressCircle`), a
 loading state on a button (`Button`'s `loading`, which draws the spinner for
 you).
 
@@ -150,7 +150,7 @@ directions. `SpinnerIcon` is a quarter arc that **does not spin by itself**; use
 An icon next to a text label is decorative, so it takes `aria-hidden`. A standalone icon that carries meaning takes `role="img"` and an `aria-label`. The button flips the state, and both icons follow it.
 
 ```tsx
-import { Inline, Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { AlertOctagonIcon, CheckIcon } from '@korzun/design/icon';
 import { useState } from 'react';
@@ -159,24 +159,24 @@ export default function Basic() {
   const [valid, setValid] = useState(true);
   const Icon = valid ? CheckIcon : AlertOctagonIcon;
   return (
-    <Stack gap="md" align="start">
+    <Space direction="vertical" gap="md" align="start">
       <Text size="sm" tone="muted">
         Decorative, beside a label
       </Text>
-      <Inline gap="xs">
+      <Space gap="xs">
         <Icon width={15} height={15} aria-hidden />
         <Text>{valid ? 'Book is valid' : 'Book has problems'}</Text>
-      </Inline>
+      </Space>
       <Text size="sm" tone="muted">
         Standalone, named for screen readers
       </Text>
       <Icon width={24} height={24} role="img" aria-label={valid ? 'Valid' : 'Has problems'} />
-      <Inline>
+      <Space>
         <Button onClick={() => setValid(!valid)}>
           {valid ? 'Mark as broken' : 'Mark as valid'}
         </Button>
-      </Inline>
-    </Stack>
+      </Space>
+    </Space>
   );
 }
 ```
@@ -186,7 +186,7 @@ export default function Basic() {
 Size an icon with `width` and `height`, or give it `1em` in a class so it scales with the text around it. Colour comes from `color` on the icon or any ancestor; pass no `stroke` or `fill` colour.
 
 ```tsx
-import { Inline, Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { HomeIcon, SearchIcon, SettingsIcon } from '@korzun/design/icon';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
@@ -204,29 +204,29 @@ export default function SizeAndColour() {
   const styles = useStyle();
   const [danger, setDanger] = useState(false);
   return (
-    <Stack gap="lg" align="start">
-      <Inline gap="lg">
+    <Space direction="vertical" gap="lg" align="start">
+      <Space gap="lg">
         {sizes.map((size) => (
-          <Stack key={size} gap="xs" align="center">
+          <Space direction="vertical" key={size} gap="xs" align="center">
             <HomeIcon width={size} height={size} aria-hidden />
             <Text size="sm" tone="muted">
               {size}px
             </Text>
-          </Stack>
+          </Space>
         ))}
-      </Inline>
-      <Inline gap="xs">
+      </Space>
+      <Space gap="xs">
         <SearchIcon className={styles.scaled} aria-hidden />
         <Text size="lg">Scales with this text</Text>
-      </Inline>
-      <Inline gap="xs" className={danger ? styles.danger : styles.brand}>
+      </Space>
+      <Space gap="xs" className={danger ? styles.danger : styles.brand}>
         <SettingsIcon aria-hidden />
         <Text>{danger ? 'Colour set to danger' : 'Colour set to brand'}</Text>
-      </Inline>
-      <Inline>
+      </Space>
+      <Space>
         <Button onClick={() => setDanger(!danger)}>Switch colour</Button>
-      </Inline>
-    </Stack>
+      </Space>
+    </Space>
   );
 }
 ```
@@ -236,7 +236,7 @@ export default function SizeAndColour() {
 `strokeWidth` thickens a stroke icon. Filled icons such as `CheckIcon` and the emoji icons such as `HandOkIcon` ignore it. The button steps the width.
 
 ```tsx
-import { Inline, Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { CheckIcon, HandOkIcon, SearchIcon } from '@korzun/design/icon';
 import { useState } from 'react';
@@ -246,28 +246,28 @@ const widths = [1, 2, 3] as const;
 export default function Stroke() {
   const [strokeWidth, setStrokeWidth] = useState<number>(2);
   return (
-    <Stack gap="lg" align="start">
-      <Inline gap="xl">
-        <Stack gap="xs" align="center">
+    <Space direction="vertical" gap="lg" align="start">
+      <Space gap="xl">
+        <Space direction="vertical" gap="xs" align="center">
           <SearchIcon width={32} height={32} strokeWidth={strokeWidth} aria-hidden />
           <Text size="sm" tone="muted">
             Stroke
           </Text>
-        </Stack>
-        <Stack gap="xs" align="center">
+        </Space>
+        <Space direction="vertical" gap="xs" align="center">
           <CheckIcon width={32} height={32} strokeWidth={strokeWidth} aria-hidden />
           <Text size="sm" tone="muted">
             Filled
           </Text>
-        </Stack>
-        <Stack gap="xs" align="center">
+        </Space>
+        <Space direction="vertical" gap="xs" align="center">
           <HandOkIcon width={32} height={32} strokeWidth={strokeWidth} aria-hidden />
           <Text size="sm" tone="muted">
             Emoji
           </Text>
-        </Stack>
-      </Inline>
-      <Inline>
+        </Space>
+      </Space>
+      <Space>
         {widths.map((width) => (
           <Button
             key={width}
@@ -277,8 +277,8 @@ export default function Stroke() {
             {`strokeWidth ${width}`}
           </Button>
         ))}
-      </Inline>
-    </Stack>
+      </Space>
+    </Space>
   );
 }
 ```
@@ -288,7 +288,7 @@ export default function Stroke() {
 Components take the icon component, never an element: `prefix={SearchIcon}`, not `prefix={<SearchIcon />}`. A Button sizes the icon to its text itself.
 
 ```tsx
-import { Inline, Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { ChevronIcon, SearchIcon } from '@korzun/design/icon';
 import { useState } from 'react';
@@ -297,19 +297,19 @@ export default function InComponents() {
   const [searches, setSearches] = useState(0);
   const [pages, setPages] = useState(1);
   return (
-    <Stack gap="md" align="start">
-      <Inline>
+    <Space direction="vertical" gap="md" align="start">
+      <Space>
         <Button prefix={SearchIcon} onClick={() => setSearches((n) => n + 1)}>
           Search
         </Button>
         <Button suffix={ChevronIcon} onClick={() => setPages((n) => n + 1)}>
           Next page
         </Button>
-      </Inline>
+      </Space>
       <Text tone="muted">
         Searches: {searches}, page {pages}
       </Text>
-    </Stack>
+    </Space>
   );
 }
 ```

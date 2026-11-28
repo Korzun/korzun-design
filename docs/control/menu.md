@@ -71,7 +71,7 @@ An item is either an action or a link. TypeScript rejects an item with both
 
 - Escape and outside presses go to the innermost open layer first: a Select
   list opened over the menu closes before it, and a Menu inside a
-  [`Dialog`](dialog.md) closes before the Dialog.
+  [`Modal`](modal.md) closes before the Modal.
 - Opening another Menu closes the first (the press on its trigger is outside).
 - If the focused item disappears while the menu is open, focus moves to the
   first enabled item. With every item disabled, the menu itself takes focus.
@@ -94,19 +94,32 @@ An item is either an action or a link. TypeScript rejects an item with both
 
 A trigger button and a list of actions. Spread the `trigger` props onto the
 button; choosing an item closes the menu and calls its `onClick`, which takes
-no arguments.
+no arguments. Menu has no `open` prop, so this demo calls the trigger's
+`onClick` once on mount to start open.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
-import { Button, Menu } from '@korzun/design/control';
-import { useState } from 'react';
+import { Space, Text } from '@korzun/design/component';
+import { Button, Menu, type MenuTriggerProps } from '@korzun/design/control';
+import { useEffect, useRef, useState } from 'react';
+
+// Opens the menu once on mount (the ref survives Strict Mode's second effect run).
+function OpenOnMount(props: MenuTriggerProps) {
+  const { onClick } = props;
+  const opened = useRef(false);
+  useEffect(() => {
+    if (opened.current) return;
+    opened.current = true;
+    onClick();
+  }, [onClick]);
+  return <Button {...props}>Sort by</Button>;
+}
 
 export default function Basic() {
   const [chosen, setChosen] = useState('nothing yet');
   return (
-    <Stack>
+    <Space direction="vertical" align="start">
       <Menu
-        trigger={(p) => <Button {...p}>Sort by</Button>}
+        trigger={(p) => <OpenOnMount {...p} />}
         items={[
           { label: 'Title', onClick: () => setChosen('Title') },
           { label: 'Author', onClick: () => setChosen('Author') },
@@ -114,7 +127,7 @@ export default function Basic() {
         ]}
       />
       <Text tone="muted">Chosen: {chosen}</Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -126,7 +139,7 @@ never both. `Icon` takes an icon component (`HomeIcon`), not an element. A link
 item needs a router above the Menu, and middle-click opens it in a new tab.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button, Menu } from '@korzun/design/control';
 import { BooksIcon, HomeIcon, SettingsIcon } from '@korzun/design/icon';
 import { useState } from 'react';
@@ -134,7 +147,7 @@ import { useState } from 'react';
 export default function LinksAndIcons() {
   const [chosen, setChosen] = useState('nothing yet');
   return (
-    <Stack>
+    <Space direction="vertical" align="start">
       <Menu
         trigger={(p) => <Button {...p}>Go to</Button>}
         items={[
@@ -144,7 +157,7 @@ export default function LinksAndIcons() {
         ]}
       />
       <Text tone="muted">Chosen: {chosen}</Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -156,14 +169,14 @@ with no divider. `separatorBefore` draws the divider above an item, so the
 destructive item sits apart from the rest.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button, Menu } from '@korzun/design/control';
 import { useState } from 'react';
 
 export default function DangerAndSeparator() {
   const [chosen, setChosen] = useState('nothing yet');
   return (
-    <Stack>
+    <Space direction="vertical" align="start">
       <Menu
         trigger={(p) => <Button {...p}>Book</Button>}
         items={[
@@ -178,7 +191,7 @@ export default function DangerAndSeparator() {
         ]}
       />
       <Text tone="muted">Chosen: {chosen}</Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -190,7 +203,7 @@ without `href`, so middle-click cannot open it either. For an item that should
 not appear at all, filter the `items` array: the button adds the last item.
 
 ```tsx
-import { Inline, Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button, Menu } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -198,8 +211,8 @@ export default function DisabledAndConditional() {
   const [chosen, setChosen] = useState('nothing yet');
   const [admin, setAdmin] = useState(false);
   return (
-    <Stack>
-      <Inline>
+    <Space direction="vertical">
+      <Space>
         <Menu
           trigger={(p) => <Button {...p}>Devices</Button>}
           items={[
@@ -214,9 +227,9 @@ export default function DisabledAndConditional() {
         <Button onClick={() => setAdmin((value) => !value)}>
           {admin ? 'Remove admin item' : 'Add admin item'}
         </Button>
-      </Inline>
+      </Space>
       <Text tone="muted">Chosen: {chosen}</Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -228,7 +241,7 @@ glass recipe, for a menu over an image or a glass control. Each trigger is
 labelled with its value.
 
 ```tsx
-import { Inline, Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button, Menu } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -239,8 +252,8 @@ export default function Surface() {
     { label: `Reject (${surface})`, danger: true, onClick: () => setChosen(`Reject (${surface})`) },
   ];
   return (
-    <Stack>
-      <Inline>
+    <Space direction="vertical">
+      <Space>
         <Menu
           surface="solid"
           trigger={(p) => <Button {...p}>solid</Button>}
@@ -251,9 +264,9 @@ export default function Surface() {
           trigger={(p) => <Button {...p}>glass</Button>}
           items={items('glass')}
         />
-      </Inline>
+      </Space>
       <Text tone="muted">Chosen: {chosen}</Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -265,7 +278,7 @@ The wide triggers show it: each menu is narrower than its trigger. Use `end` for
 a trigger at the right edge of the screen.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button, Menu } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -276,8 +289,7 @@ export default function Align() {
     { label: 'Close', onClick: () => setChosen(`Close (${align})`) },
   ];
   return (
-    <Stack>
-      <Text tone="muted">Chosen: {chosen}</Text>
+    <Space direction="vertical" align="start">
       <Menu
         align="start"
         trigger={(p) => <Button {...p}>align start: menu at the left edge</Button>}
@@ -293,7 +305,8 @@ export default function Align() {
         trigger={(p) => <Button {...p}>align end: menu at the right edge</Button>}
         items={items('end')}
       />
-    </Stack>
+      <Text tone="muted">Chosen: {chosen}</Text>
+    </Space>
   );
 }
 ```
@@ -304,14 +317,14 @@ export default function Align() {
 there is no room, so the trigger sits below other content here.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button, Menu } from '@korzun/design/control';
 import { useState } from 'react';
 
 export default function Side() {
   const [chosen, setChosen] = useState('nothing yet');
   return (
-    <Stack>
+    <Space direction="vertical" align="start">
       <Text tone="muted">Chosen: {chosen}</Text>
       <Menu
         side="top"
@@ -322,7 +335,7 @@ export default function Side() {
           { label: 'Mark unread', onClick: () => setChosen('Mark unread') },
         ]}
       />
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -333,7 +346,7 @@ The usual full menu: a link item, action items with icons, and a `danger` item
 set apart by `separatorBefore`. `align="end"` fits a trigger at the right edge.
 
 ```tsx
-import { Inline, Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button, Menu } from '@korzun/design/control';
 import { BookIcon, SettingsIcon } from '@korzun/design/icon';
 import { useState } from 'react';
@@ -341,8 +354,8 @@ import { useState } from 'react';
 export default function BookActions() {
   const [chosen, setChosen] = useState('nothing yet');
   return (
-    <Stack>
-      <Inline justify="end">
+    <Space direction="vertical">
+      <Space justify="end">
         <Menu
           align="end"
           trigger={(p) => <Button {...p}>Book</Button>}
@@ -361,9 +374,9 @@ export default function BookActions() {
             },
           ]}
         />
-      </Inline>
+      </Space>
       <Text tone="muted">Chosen: {chosen}</Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -372,23 +385,42 @@ export default function BookActions() {
 
 An icon-only `Button` takes an `ariaLabel` for its name; `ariaLabel` on the Menu
 names the list, which is otherwise labelled by the trigger. For any other
-element, attach `ref` and `onClick` and map the rest to `aria-*` attributes.
+element, attach `ref` and `onClick` and map the rest to `aria-*` attributes: here a
+native `<button>` styled from theme tokens.
 
 ```tsx
-import { Inline, Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button, Menu } from '@korzun/design/control';
 import { MoreIcon } from '@korzun/design/icon';
+import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { useState } from 'react';
 
+// Your own trigger element, drawn with theme tokens.
+const useStyles = createUseStyles((theme: Theme) => ({
+  trigger: {
+    font: 'inherit',
+    fontSize: theme.fontSize.sm,
+    color: theme.color.text.primary,
+    backgroundColor: theme.color.bg.cardHeader,
+    border: `1px dashed ${theme.color.border.strong}`,
+    borderRadius: theme.radius.sm,
+    minHeight: theme.layout.controlHeight,
+    padding: `0 ${theme.space.lg}`,
+    cursor: 'pointer',
+    '&:hover': { borderColor: theme.color.border.hover },
+  },
+}));
+
 export default function CustomTrigger() {
+  const styles = useStyles();
   const [chosen, setChosen] = useState('nothing yet');
   const items = [
     { label: 'Rename', onClick: () => setChosen('Rename') },
     { label: 'Duplicate', onClick: () => setChosen('Duplicate') },
   ];
   return (
-    <Stack>
-      <Inline>
+    <Space direction="vertical" align="start">
+      <Space>
         <Menu
           ariaLabel="Row actions"
           trigger={(p) => <Button {...p} prefix={MoreIcon} ariaLabel="More actions" />}
@@ -399,19 +431,20 @@ export default function CustomTrigger() {
             <button
               ref={p.ref}
               type="button"
+              className={styles.trigger}
               aria-expanded={p.ariaExpanded}
               aria-controls={p.ariaControls}
               aria-haspopup={p.ariaHasPopup}
               onClick={p.onClick}
             >
-              Plain button
+              Your own element
             </button>
           )}
           items={items}
         />
-      </Inline>
+      </Space>
       <Text tone="muted">Chosen: {chosen}</Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -423,7 +456,7 @@ touching “Open reader” counts a prefetch, which is what a router's prefetch
 hook would do.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button, Menu } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -431,7 +464,7 @@ export default function IntentProps() {
   const [prefetches, setPrefetches] = useState(0);
   const count = () => setPrefetches((n) => n + 1);
   return (
-    <Stack>
+    <Space direction="vertical" align="start">
       <Menu
         trigger={(p) => <Button {...p}>Book</Button>}
         items={[
@@ -444,7 +477,7 @@ export default function IntentProps() {
         ]}
       />
       <Text tone="muted">Prefetches: {prefetches}</Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -455,7 +488,7 @@ A Menu in a card's `headerAction`. The list renders in a portal, so the card
 does not clip it, and its corners step down by themselves: no `radius` prop.
 
 ```tsx
-import { Card, Stack, Text } from '@korzun/design/component';
+import { Card, Space, Text } from '@korzun/design/component';
 import { Button, Menu } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -475,33 +508,33 @@ export default function InCard() {
         />
       }
     >
-      <Stack>
+      <Space direction="vertical">
         <Text>Three books queued.</Text>
         <Text tone="muted">Chosen: {chosen}</Text>
-      </Stack>
+      </Space>
     </Card>
   );
 }
 ```
 
-### In a Dialog
+### In a Modal
 
-A Menu inside a Dialog opens into the dialog, so it shows above the dialog's
-backdrop. Escape closes the menu first and the Dialog on the next press.
+A Menu inside a Modal opens into the dialog, so it shows above the dialog's
+backdrop. Escape closes the menu first and the Modal on the next press.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
-import { Button, Dialog, Menu } from '@korzun/design/control';
+import { Space, Text } from '@korzun/design/component';
+import { Button, Modal, Menu } from '@korzun/design/control';
 import { useState } from 'react';
 
 export default function InDialog() {
   const [open, setOpen] = useState(false);
   const [chosen, setChosen] = useState('nothing yet');
   return (
-    <>
+    <Space direction="vertical" align="start">
       <Button onClick={() => setOpen(true)}>Open dialog</Button>
-      <Dialog open={open} onClose={() => setOpen(false)} title="Edit book">
-        <Stack>
+      <Modal open={open} onClose={() => setOpen(false)} title="Edit book">
+        <Space direction="vertical" align="start">
           <Menu
             trigger={(p) => <Button {...p}>Actions</Button>}
             items={[
@@ -511,9 +544,9 @@ export default function InDialog() {
             ]}
           />
           <Text tone="muted">Chosen: {chosen}</Text>
-        </Stack>
-      </Dialog>
-    </>
+        </Space>
+      </Modal>
+    </Space>
   );
 }
 ```

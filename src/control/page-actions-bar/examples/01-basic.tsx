@@ -3,14 +3,14 @@
  * and the rest sit at the right. Everything else collapses into the overflow
  * menu, where `danger` turns Delete red and `separatorBefore` sets it apart.
  */
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { PageActionsBar } from '@korzun/design/control';
 import { useState } from 'react';
 
 export default function Basic() {
   const [chosen, setChosen] = useState('nothing yet');
   return (
-    <Stack>
+    <Space direction="vertical">
       <PageActionsBar
         items={[
           { label: 'Read', onClick: () => setChosen('Read'), primary: true, align: 'leading' },
@@ -25,6 +25,6 @@ export default function Basic() {
         ]}
       />
       <Text tone="muted">Chosen: {chosen}</Text>
-    </Stack>
+    </Space>
   );
 }

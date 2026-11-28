@@ -1,7 +1,7 @@
 ---
 title: PageActionsMenu
 description: The mobile page-actions control: a round glass button that opens a menu of every page action.
-category: Actions
+category: Layout
 ---
 
 # PageActionsMenu
@@ -80,14 +80,14 @@ to the button. Choosing an item closes the menu and calls its `onClick`, which
 takes no arguments.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { PageActionsMenu } from '@korzun/design/control';
 import { useState } from 'react';
 
 export default function Basic() {
   const [chosen, setChosen] = useState('nothing yet');
   return (
-    <Stack>
+    <Space direction="vertical">
       <PageActionsMenu
         items={[
           { label: 'Edit', onClick: () => setChosen('Edit') },
@@ -96,7 +96,7 @@ export default function Basic() {
         ]}
       />
       <Text tone="muted">Chosen: {chosen}</Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -110,7 +110,7 @@ shows a book), `intentProps` runs when the pointer, focus or a touch reaches Dow
 Archive is `disabled`, and Delete is `danger` with a `separatorBefore`.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { PageActionsMenu } from '@korzun/design/control';
 import { BookIcon } from '@korzun/design/icon';
 import { useState } from 'react';
@@ -120,7 +120,7 @@ export default function ItemOptions() {
   const [prefetched, setPrefetched] = useState('nothing yet');
   const prefetch = () => setPrefetched('Download');
   return (
-    <Stack>
+    <Space direction="vertical">
       <PageActionsMenu
         items={[
           { label: 'Edit', onClick: () => setChosen('Edit'), primary: true },
@@ -147,7 +147,7 @@ export default function ItemOptions() {
       />
       <Text tone="muted">Chosen: {chosen}</Text>
       <Text tone="muted">Prefetched: {prefetched}</Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -161,7 +161,7 @@ Read is `primary` and `leading` and Download carries `intentProps`; the menu
 lists them all in order. Delete is `danger`, set apart by `separatorBefore`.
 
 ```tsx
-import { Card, Page, Stack, Text } from '@korzun/design/component';
+import { Card, Page, Space, Text } from '@korzun/design/component';
 import { useState } from 'react';
 
 export default function InPage() {
@@ -193,10 +193,10 @@ export default function InPage() {
       ]}
     >
       <Card title="Dune">
-        <Stack>
+        <Space direction="vertical">
           <Text>{message}</Text>
           <Text tone="muted">Prefetched: {prefetched}</Text>
-        </Stack>
+        </Space>
       </Card>
     </Page>
   );

@@ -74,6 +74,12 @@ export interface Theme {
        * rail invisible on the page.
        */
       track: string;
+      /**
+       * An unchecked Switch's track. Mid-grey rather than a border colour: it
+       * has to hold 3:1 against `page`, `card` and `cardHeader` (the shaded
+       * row a switch usually sits in) in both modes.
+       */
+      switchOff: string;
       input: string;
       footer: string;
       glass: string;
@@ -125,6 +131,27 @@ export interface Theme {
       loadingActive: string;
     };
     overlay: { backdrop: string };
+    /** Syntax colours for highlighted code; each reads on `bg.cardHeader` in its mode. */
+    code: {
+      /** Plain code and anything no token colours. */
+      foreground: string;
+      /** Keywords (`const`, `import`, `return`). */
+      keyword: string;
+      /** String and template literals. */
+      string: string;
+      /** Function and method names. */
+      function: string;
+      /** Parameters and properties. */
+      parameter: string;
+      /** Constants, numbers and booleans. */
+      constant: string;
+      /** Brackets, commas and operators. */
+      punctuation: string;
+      /** Comments. */
+      comment: string;
+      /** Links and URLs. */
+      link: string;
+    };
     chip: {
       status: { text: string; bg: string; border: string };
       author: { text: string; bg: string; border: string };
@@ -134,8 +161,8 @@ export interface Theme {
       entryType: { text: string; bg: string; border: string };
       user: { text: string; bg: string; border: string };
       rating: { text: string; bg: string; border: string };
-      // Quiet grey for states that carry no category (e.g. "no change"), built
-      // from the mode's muted text colour.
+      // Quiet grey for states that carry no category (e.g. "no change"): a tint
+      // of the mode's muted text colour, with text a step stronger for 4.5:1.
       neutral: { text: string; bg: string; border: string };
       // Status tones for state, as opposed to the label tones above.
       success: { text: string; bg: string; border: string };
@@ -158,7 +185,6 @@ export interface Theme {
     xxxxxl: SpaceValue;
   };
   radius: { sm: string; md: string; lg: string; circle: string; pill: string };
-  size: { metadataValue: string };
   // Intrinsic sizes of chrome that other elements must lay out around. These are
   // measured, not derived (the element's real height comes from its content), so
   // they need on-device tuning — keep the single source of truth here.
@@ -225,6 +251,22 @@ export interface Theme {
     glassHighlight: Recipe;
     /** The shaded field row (`bg.cardHeader`, `md` corners) a control sits in inside a card. */
     row: Recipe;
+    /**
+     * A block of code: `bg.cardHeader` box, mono text, scrolls sideways. For HTML not
+     * rendered through `CodeBlock`/`Code`; carries the in-surface look: no dark-mode page edge.
+     */
+    codeBlock: Recipe;
+    /**
+     * A code span in running text. For HTML not rendered through `CodeBlock`/`Code`;
+     * carries the in-surface look: no dark-mode page edge.
+     */
+    inlineCode: Recipe;
+    /**
+     * The `--code-*` CSS variables Shiki's css-variables theme (`variablePrefix: '--code-'`)
+     * reads, set from `color.code`: spread it on a wrapper of highlighted code rendered
+     * outside `CodeBlock` (which sets them itself), such as HTML from markdown.
+     */
+    codeColours: Recipe;
     modal: {
       dialog: Recipe;
       header: Recipe;
@@ -240,7 +282,7 @@ export interface Theme {
 
 // ─── Build defaults ───
 function buildTheme(mode: ThemeMode): Theme {
-  const lightColor: Theme['color'] = {
+  const lightColor: Omit<Theme['color'], 'code'> = {
     gray,
     blue,
     red,
@@ -260,6 +302,8 @@ function buildTheme(mode: ThemeMode): Theme {
       // Unchanged from the `cardHeader` this used to borrow: in light mode the
       // track was already a step darker than the page, so light renders as before.
       track: gray[100],
+      // 3.1:1 on cardHeader, 3.4:1 on page, 3.5:1 on card.
+      switchOff: '#868686',
       input: '#FFFFFF',
       footer: gray[100],
       glass: applyTransparency('#FFFFFF', 0.6),
@@ -326,8 +370,10 @@ function buildTheme(mode: ThemeMode): Theme {
       },
       user: { text: '#a23a95', bg: 'rgba(162,58,149,0.08)', border: 'rgba(162,58,149,0.22)' },
       rating: { text: '#b5451b', bg: 'rgba(181,69,27,0.08)', border: 'rgba(181,69,27,0.22)' },
+      // Text a step darker than the muted grey it is built from: muted itself
+      // was 4.0:1 on its own tint over `cardHeader`, under AA at chip size.
       neutral: {
-        text: gray[600],
+        text: '#5E5E5E',
         bg: applyTransparency(gray[600], 0.08),
         border: applyTransparency(gray[600], 0.22),
       },
@@ -351,7 +397,7 @@ function buildTheme(mode: ThemeMode): Theme {
   };
 
   const darkMuted = '#9CA1AB';
-  const darkColor: Theme['color'] = {
+  const darkColor: Omit<Theme['color'], 'code'> = {
     gray,
     blue,
     red,
@@ -374,6 +420,8 @@ function buildTheme(mode: ThemeMode): Theme {
       // colliding with the lens. Raising it instead keeps the same ~8-per-channel
       // separation light mode has, in the only direction that is still free.
       track: '#2C2D31',
+      // 3.3:1 on page and cardHeader, 3.7:1 on card.
+      switchOff: '#6E7480',
       input: '#1A1B1E',
       footer: '#232427',
       glass: applyTransparency('#1C1C1E', 0.6),
@@ -387,7 +435,9 @@ function buildTheme(mode: ThemeMode): Theme {
     border: {
       default: '#3A3B40',
       strong: '#48494F',
-      light: '#2B2C30',
+      // Lifted from #2B2C30 (1.10:1 on page), at which rules and frames vanished;
+      // now about light mode's step (1.24:1 on page, 1.39:1 on card).
+      light: '#333439',
       faint: '#3A3B40',
       focus: blue[400],
       hover: blue[600],
@@ -438,7 +488,9 @@ function buildTheme(mode: ThemeMode): Theme {
       rating: { text: '#F2A07B', bg: 'rgba(181,69,27,0.18)', border: 'rgba(181,69,27,0.32)' },
       // Dark chips run stronger alphas (0.16 / 0.30) than light (0.08 / 0.22).
       neutral: {
-        text: darkMuted,
+        // `text.description`, a step lighter than muted: muted was 4.47:1 on
+        // its own tint over `page`, under AA at chip size.
+        text: '#A8ADB6',
         bg: applyTransparency(darkMuted, 0.16),
         border: applyTransparency(darkMuted, 0.3),
       },
@@ -461,7 +513,22 @@ function buildTheme(mode: ThemeMode): Theme {
     },
   };
 
-  const color: Theme['color'] = mode === 'dark' ? darkColor : lightColor;
+  const baseColor = mode === 'dark' ? darkColor : lightColor;
+  const { chip, text, brand } = baseColor;
+  const color: Theme['color'] = {
+    ...baseColor,
+    code: {
+      foreground: text.primary,
+      keyword: chip.status.text,
+      string: chip.author.text,
+      function: chip.series.text,
+      parameter: chip.subject.text,
+      constant: chip.entryType.text,
+      punctuation: text.secondary,
+      comment: text.muted,
+      link: brand.default,
+    },
+  };
 
   const space: Theme['space'] = {
     xxxs: '0.1rem',
@@ -484,7 +551,6 @@ function buildTheme(mode: ThemeMode): Theme {
     circle: '50%',
     pill: '999px',
   };
-  const size: Theme['size'] = { metadataValue: '15rem' };
   // The floating mobile nav capsule is ~96px tall on-device (content + padding +
   // the min bottom floor). Tune against the measured height during on-device
   // verification; page padding and bottom-docked toasts both clear it via this token.
@@ -640,6 +706,36 @@ function buildTheme(mode: ThemeMode): Theme {
       borderRadius: radius.md,
       padding: `${space.md} ${space.lg} ${space.md} ${space.sm}`,
     },
+    codeBlock: {
+      margin: 0,
+      padding: space.xl,
+      overflowX: 'auto',
+      fontFamily: fontFamily.mono,
+      fontSize: fontSize.md,
+      lineHeight: 1.5,
+      borderRadius: radius.md,
+      backgroundColor: color.bg.cardHeader,
+    },
+    inlineCode: {
+      fontFamily: fontFamily.mono,
+      fontSize: '0.875em',
+      padding: `0 ${space.xxs}`,
+      borderRadius: radius.sm,
+      backgroundColor: color.bg.cardHeader,
+      overflowWrap: 'break-word',
+    },
+    codeColours: {
+      '--code-foreground': color.code.foreground,
+      '--code-token-keyword': color.code.keyword,
+      '--code-token-string': color.code.string,
+      '--code-token-string-expression': color.code.string,
+      '--code-token-function': color.code.function,
+      '--code-token-parameter': color.code.parameter,
+      '--code-token-constant': color.code.constant,
+      '--code-token-punctuation': color.code.punctuation,
+      '--code-token-comment': color.code.comment,
+      '--code-token-link': color.code.link,
+    },
     modal: {
       dialog: {
         cursor: 'default',
@@ -740,7 +836,6 @@ function buildTheme(mode: ThemeMode): Theme {
     color,
     space,
     radius,
-    size,
     layout,
     fontSize,
     fontFamily,

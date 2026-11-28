@@ -1,13 +1,11 @@
 import cx from 'classnames';
 import { useId, useRef, useState } from 'react';
 
+import type { ChipTone } from '../../component/chip/index.js';
+import { useDepthClassKey } from '../../component/surface/index.js';
 import { XIcon } from '../../icon/index.js';
-import type { Theme } from '../../theme/index.js';
 import { Popover } from '../popover/index.js';
 import { useStyle } from './style.js';
-
-/** A chip colour family: a key of `theme.color.chip` (`'subject'`, `'user'`, `'neutral'`, …). */
-export type ChipColor = keyof Theme['color']['chip'];
 
 export type ChipsInputProps = {
   /** The chips. Controlled: you own the array. */
@@ -20,16 +18,16 @@ export type ChipsInputProps = {
   placeholder?: string;
   /** Enter or Tab adds the typed text as a chip. `false`: only suggestions can be added. */
   allowCustom?: boolean;
-  /** Disables typing and the chip remove buttons. */
+  /** Disables typing and hides the chips' remove buttons, so the chips read as plain values. */
   disabled?: boolean;
   /** Field label. Ignored in the `block` layout; set `layout` to show it. */
   label?: string;
-  /** `'block'` is the bare box, with no label. `'horizontal'` and `'vertical'` add a label on a `bg.cardHeader` row (`radius.md`), like the other fields. */
+  /** `'block'` is the bare box, with no label. `'horizontal'` and `'vertical'` add a label on a `bg.cardHeader` row, like the other fields. Corners follow surface depth ([corners](../corners.md)); chips are a step squarer than the box. */
   layout?: 'horizontal' | 'vertical' | 'block';
   /** Set on the text input only: form data gets the half-typed text, not the chips. */
   name?: string;
-  /** Chip colour family from `theme.color.chip`. Pick the one that tags the same values elsewhere. */
-  chipColor?: ChipColor;
+  /** The chips' colour, a `ChipTone` (as on `Chip`). Pick the one that tags the same values elsewhere. */
+  tone?: ChipTone;
   /** Matches a standard input's height, so the field lines up with `TextInput` and `Select` rows. Leave it off for a roomy standalone tag box. */
   dense?: boolean;
 };
@@ -48,10 +46,11 @@ export const ChipsInput = ({
   label,
   layout = 'block',
   name,
-  chipColor = 'subject',
+  tone = 'subject',
   dense = false,
 }: ChipsInputProps) => {
-  const style = useStyle({ chipColor, dense });
+  const depthKey = useDepthClassKey();
+  const style = useStyle({ tone, dense, onPage: depthKey === 'depth0' });
   // A per-instance DOM id keeps label/input association unique even when two
   // forms with the same `name` mount at once (e.g. the create form plus a row
   // being edited on the device list). `name` stays form-data only.
@@ -109,7 +108,7 @@ export const ChipsInput = ({
   }
 
   const control = (
-    <div className={style.controlRoot}>
+    <div className={cx(style.controlRoot, depthKey && style[depthKey])}>
       <div
         ref={chipsContainerRef}
         className={cx(style.chipsContainer, { [style.disabled]: disabled })}
@@ -117,16 +116,17 @@ export const ChipsInput = ({
         {value.map((chip) => (
           <span key={chip} className={style.chip}>
             {chip}
-            <button
-              type="button"
-              className={style.chipRemove}
-              aria-label={`Remove ${chip}`}
-              disabled={disabled}
-              tabIndex={disabled ? -1 : 0}
-              onClick={disabled ? undefined : () => removeChip(chip)}
-            >
-              <XIcon />
-            </button>
+            {/* Disabled chips are read-only text: no remove button to show or reach. */}
+            {!disabled && (
+              <button
+                type="button"
+                className={style.chipRemove}
+                aria-label={`Remove ${chip}`}
+                onClick={() => removeChip(chip)}
+              >
+                <XIcon />
+              </button>
+            )}
           </span>
         ))}
         <input
@@ -171,7 +171,7 @@ export const ChipsInput = ({
   }
 
   return (
-    <div className={cx(style.root, style[layout])}>
+    <div className={cx(style.root, style[layout], depthKey && style[depthKey])}>
       <label className={style.label} htmlFor={inputId}>
         {label}
       </label>

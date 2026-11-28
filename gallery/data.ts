@@ -26,6 +26,8 @@ export type ExampleOwner = {
   title: string;
   docPath: string;
   examples: ExampleInfo[];
+  /** A module's `examples/preview.tsx`: its overview thumbnail, never listed among `examples`. */
+  preview?: ExampleInfo;
   framePath: string;
 };
 
@@ -33,6 +35,7 @@ export const moduleOwner = (m: ModuleInfo): ExampleOwner => ({
   title: m.title,
   docPath: m.docPath,
   examples: m.examples,
+  ...(m.preview ? { preview: m.preview } : {}),
   framePath: m.slug,
 });
 
@@ -49,11 +52,15 @@ export const recipeBySlug = (slug: string): Recipe | undefined =>
 export const moduleBySlug = (slug: string): ModuleInfo | undefined =>
   siteData.modules.find((m) => m.slug === slug);
 
+/** The modules nested under `mod` in categories.mjs (`page` has the Page action bars), in order. */
+export const childrenOf = (mod: ModuleInfo): ModuleInfo[] =>
+  siteData.modules.filter((m) => m.parent === mod.slug);
+
 export const exampleFor = (
-  mod: { examples: ExampleInfo[] },
+  mod: { examples: ExampleInfo[]; preview?: ExampleInfo },
   slug: string
 ): { info: ExampleInfo; Component: ComponentType } | undefined => {
-  const info = mod.examples.find((e) => e.slug === slug);
+  const info = slug === mod.preview?.slug ? mod.preview : mod.examples.find((e) => e.slug === slug);
   const Component = info && exampleComponents[info.file];
   return info && Component ? { info, Component } : undefined;
 };

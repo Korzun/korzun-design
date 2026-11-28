@@ -3,7 +3,7 @@
  * padding, so the child supplies its own padding and corner. A `CardRow` inside is flush with the
  * card and concentric with it. Clicking anywhere on a row fires `onClick`.
  */
-import { Card, CardRow, Stack, Text } from '@korzun/design/component';
+import { Card, CardRow, Space, Text } from '@korzun/design/component';
 import { useState } from 'react';
 
 const books = ['Middlemarch', 'Persuasion', 'Villette'];
@@ -11,7 +11,7 @@ const books = ['Middlemarch', 'Persuasion', 'Villette'];
 export default function ClickableRows() {
   const [opened, setOpened] = useState<string | undefined>();
   return (
-    <Stack>
+    <Space direction="vertical">
       {books.map((book) => (
         <Card key={book} size="small" onClick={() => setOpened(book)}>
           <CardRow>
@@ -20,6 +20,6 @@ export default function ClickableRows() {
         </Card>
       ))}
       <Text tone="muted">Opened: {opened ?? 'nothing yet'}</Text>
-    </Stack>
+    </Space>
   );
 }

@@ -1,7 +1,10 @@
 import { createUseStyles, type Theme } from '../../theme/index.js';
 
 export const useStyle = createUseStyles((theme: Theme) => {
-  const radius = theme.radius.md;
+  // One radius for the track, lens, segments and the reveal's clip, read from
+  // a custom property so surface depth can set it once on the root (md, the
+  // default, is depth 1).
+  const radius = 'var(--seg-radius)';
   // Shared by the real segments and the reveal's copies (see `reveal`), so
   // the two rows lay out identically and the brand copy covers the muted
   // glyph under it exactly.
@@ -20,6 +23,12 @@ export const useStyle = createUseStyles((theme: Theme) => {
     minWidth: 0,
     boxSizing: 'border-box',
     fontFamily: theme.fontFamily.body,
+    // The segment is a <button>, which the UA gives its own 13.33px font
+    // rather than the page's; the reveal's copies are spans that inherit the
+    // page's. Pin both to the label's size so the segment's own text metrics
+    // (line box, anything sized in em) match the 14px label it holds and the
+    // two rows stay identical whatever the page sets.
+    fontSize: theme.fontSize.md,
     padding: `${theme.space.sm} ${theme.space.xl}`,
   } as const;
   // The lens's window, in the root's own width: one column, starting at the
@@ -37,6 +46,7 @@ export const useStyle = createUseStyles((theme: Theme) => {
     // channel-step from `bg.page` in dark mode.
     root: {
       ...grid,
+      '--seg-radius': theme.radius.md,
       position: 'relative',
       borderRadius: radius,
       '&$card': { backgroundColor: theme.color.bg.track },
@@ -146,5 +156,8 @@ export const useStyle = createUseStyles((theme: Theme) => {
     active: {},
     readOnly: {},
     iconic: {},
+    depth0: { '--seg-radius': theme.radius.lg },
+    depth1: {},
+    depth2: { '--seg-radius': theme.radius.sm },
   };
 });

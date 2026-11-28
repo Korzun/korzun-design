@@ -39,10 +39,10 @@ level default.
   outline (one `h1` per page, no skipped levels), then use `size`, `weight` and
   `tone` to change how it looks. Never pick a level for its size.
 - The margin is reset to 0 and the line height is the theme's `tight` value;
-  space headings with `Stack` `gap`.
+  space headings with `Space` `gap`.
 - `truncate` adds `overflow: hidden`, an ellipsis, `white-space: nowrap` and
   `min-width: 0` and `max-width: 100%`, so a truncated Heading clips inside an
-  `Inline` or `Stack` with any `align`.
+  `Space` with any `align`.
 - Every other HTML attribute (`id`, `aria-*`, `data-*`, event handlers) passes
   through. There is no `style` prop and no `as` prop.
 - Override with `className` at `'&&'` specificity, never `!important`.
@@ -54,7 +54,7 @@ level default.
 - Do put `truncate` on the Heading itself, not on a wrapper.
 - Don't pick a level to get a size; set `size`.
 - Don't use `Heading` for body text; use `Text`.
-- Don't add margins to space headings; use `Stack`.
+- Don't add margins to space headings; use `Space`.
 
 <!-- generated:examples -->
 
@@ -63,27 +63,27 @@ level default.
 ### Basic
 
 A section title with its action on the right. `level` is the outline
-position; `Inline` with `justify="between"` spreads the row.
+position; `Space` with `justify="between"` spreads the row.
 
 ```tsx
-import { Heading, Inline, Stack, Text } from '@korzun/design/component';
+import { Heading, Space, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { useState } from 'react';
 
 export default function Basic() {
   const [books, setBooks] = useState(3);
   return (
-    <Stack gap="md">
-      <Inline justify="between">
+    <Space direction="vertical" gap="md">
+      <Space justify="between">
         <Heading level={2}>Library</Heading>
         <Button type="primary" onClick={() => setBooks((n) => n + 1)}>
           Add book
         </Button>
-      </Inline>
+      </Space>
       <Text as="p" size="sm" tone="muted">
         {books} books, updated yesterday
       </Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -94,16 +94,16 @@ export default function Basic() {
 Keep the outline in order: one `h1` per page, no skipped levels.
 
 ```tsx
-import { Heading, Stack } from '@korzun/design/component';
+import { Heading, Space } from '@korzun/design/component';
 
 export default function Levels() {
   return (
-    <Stack gap="sm">
+    <Space direction="vertical" gap="sm">
       <Heading level={1}>Level 1: h1</Heading>
       <Heading level={2}>Level 2: h2</Heading>
       <Heading level={3}>Level 3: h3</Heading>
       <Heading level={4}>Level 4: h4</Heading>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -114,19 +114,19 @@ export default function Levels() {
 an `h2`.
 
 ```tsx
-import { Heading, Stack } from '@korzun/design/component';
+import { Heading, Space } from '@korzun/design/component';
 
 const sizes = ['xxs', 'xs', 'sm', 'md', 'lg', 'xl', 'xxl'] as const;
 
 export default function Sizes() {
   return (
-    <Stack gap="sm">
+    <Space direction="vertical" gap="sm">
       {sizes.map((size) => (
         <Heading key={size} level={2} size={size}>
           {`size="${size}"`}
         </Heading>
       ))}
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -137,7 +137,7 @@ export default function Sizes() {
 and confirmation text.
 
 ```tsx
-import { Heading, Stack } from '@korzun/design/component';
+import { Heading, Space } from '@korzun/design/component';
 
 const tones = [
   'primary',
@@ -151,13 +151,13 @@ const tones = [
 
 export default function Tones() {
   return (
-    <Stack gap="sm">
+    <Space direction="vertical" gap="sm">
       {tones.map((tone) => (
         <Heading key={tone} level={3} tone={tone}>
           {`tone="${tone}"`}
         </Heading>
       ))}
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -167,19 +167,19 @@ export default function Tones() {
 `weight` sets the font weight, whatever the level.
 
 ```tsx
-import { Heading, Stack } from '@korzun/design/component';
+import { Heading, Space } from '@korzun/design/component';
 
 const weights = ['regular', 'medium', 'semibold', 'bold', 'extrabold'] as const;
 
 export default function Weights() {
   return (
-    <Stack gap="sm">
+    <Space direction="vertical" gap="sm">
       {weights.map((weight) => (
         <Heading key={weight} level={3} weight={weight}>
           {`weight="${weight}"`}
         </Heading>
       ))}
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -190,17 +190,17 @@ A small, muted `h2` inside a `Card`: the level stays 2 for the outline,
 `size`, `weight` and `tone` shrink the look.
 
 ```tsx
-import { Card, Heading, Stack, Text } from '@korzun/design/component';
+import { Card, Heading, Space, Text } from '@korzun/design/component';
 
 export default function InACard() {
   return (
     <Card>
-      <Stack gap="xs">
+      <Space direction="vertical" gap="xs">
         <Heading level={2} size="sm" weight="medium" tone="muted">
           Details
         </Heading>
         <Text>Middlemarch, George Eliot, 1871.</Text>
-      </Stack>
+      </Space>
     </Card>
   );
 }
@@ -209,10 +209,10 @@ export default function InACard() {
 ### Truncate
 
 `truncate` clips a long title to one line with an ellipsis. Beside an
-action in an `Inline`, the title shrinks and the button keeps its width.
+action in a `Space`, the title shrinks and the button keeps its width.
 
 ```tsx
-import { Heading, Inline, Stack, Text } from '@korzun/design/component';
+import { Heading, Space, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -222,30 +222,30 @@ const title =
 export default function Truncate() {
   const [opened, setOpened] = useState(0);
   return (
-    <Stack gap="xl">
-      <Stack gap="xs">
+    <Space direction="vertical" gap="xl">
+      <Space direction="vertical" gap="xs">
         <Text size="sm" tone="muted">
           Without truncate
         </Text>
         <Heading level={3}>{title}</Heading>
-      </Stack>
-      <Stack gap="xs">
+      </Space>
+      <Space direction="vertical" gap="xs">
         <Text size="sm" tone="muted">
           With truncate, beside an action
         </Text>
-        <Inline justify="between">
+        <Space justify="between">
           <Heading level={3} truncate>
             {title}
           </Heading>
           <Button type="primary" onClick={() => setOpened((n) => n + 1)}>
             Open
           </Button>
-        </Inline>
+        </Space>
         <Text size="sm" tone="muted">
           Opened: {opened}
         </Text>
-      </Stack>
-    </Stack>
+      </Space>
+    </Space>
   );
 }
 ```
@@ -264,7 +264,7 @@ export default function Truncate() {
 | `ref` | `Ref<HTMLHeadingElement>` |  | Ref to the root element. |
 | `size` | `'xxs' \| 'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl' \| 'xxl'` |  | Font size, from the theme's `fontSize` tokens. Unset, it follows `level`: 1 `xxl`, 2 `xl`, 3 `lg`, 4 `md`. A size you set wins over the level default. |
 | `tone` | `'primary' \| 'secondary' \| 'muted' \| 'faint' \| 'description' \| 'danger' \| 'success'` | `'primary'` | Text colour. `danger` and `success` are for inline error and confirmation text. |
-| `truncate` | `boolean` | `false` | Clips to one line with an ellipsis. Also sets `min-width: 0` and `max-width: 100%`, so it clips inside an `Inline` or `Stack` with any `align`. |
+| `truncate` | `boolean` | `false` | Clips to one line with an ellipsis. Also sets `min-width: 0` and `max-width: 100%`, so it clips inside a `Space` with any `align`. |
 | `weight` | `'regular' \| 'medium' \| 'semibold' \| 'bold' \| 'extrabold'` |  | Font weight, from the theme's `fontWeight` tokens. Unset, it follows `level`: 1 and 2 `bold`, 3 and 4 `semibold`. A weight you set wins over the level default. |
 
 Also accepts: `HTMLAttributes`.

@@ -16,27 +16,27 @@ prop instead of a style file: a body line, a meta line, a caption, an inline
 error.
 
 **Unset props inherit.** A bare `<Text>` adds no size, tone or weight, so it
-looks exactly like the text around it. This keeps the look inside a `Tag`, a
+looks exactly like the text around it. This keeps the look inside a `Chip`, a
 `Button` or an error block: set only what you want to change.
 
-Use something else for: a heading (`Heading`), a single chip (`Tag`), a line
+Use something else for: a heading (`Heading`), a single chip (`Chip`), a line
 of small metadata (`MetaLine`), a boxed alert (`Alert`).
 
 ## Usage
 
 ### Behaviour
 
-- `tone` is not `Tag`'s `TagTone` union. `primary` to `description` map to the
+- `tone` is not `Chip`'s `ChipTone` union. `primary` to `description` map to the
   theme's `color.text.*`; `danger` and `success` use the chip text colours.
 - `danger` and `success` are for inline error and confirmation text. For a
   boxed message use `Alert`.
 - `truncate` adds `overflow: hidden`, an ellipsis, `white-space: nowrap`,
   `min-width: 0` and `max-width: 100%`, so a truncated Text clips inside an
-  `Inline` or `Stack` with any `align`, and a `Stack` or `Inline` nested in a
-  row shrinks too (both roots have `min-width: 0`).
+  `Space` with any `align`, and a `Space` nested in a row shrinks too (its
+  root has `min-width: 0`).
 - On `span`, `strong`, `em` and `label`, `truncate` also makes the element
   `inline-block`, because inline elements ignore overflow. `p` and `div` keep their block display.
-- `as="p"` has its margin reset to 0; space paragraphs with `Stack` `gap`.
+- `as="p"` has its margin reset to 0; space paragraphs with `Space` `gap`.
 - Every other HTML attribute (`id`, `aria-*`, `data-*`, event handlers) passes
   through. There is no `style` prop.
 - Override with `className` at `'&&'` specificity, never `!important`.
@@ -49,7 +49,7 @@ of small metadata (`MetaLine`), a boxed alert (`Alert`).
 - Do put `truncate` on the Text itself, not on a wrapper.
 - Don't use `Text` for headings; use `Heading`.
 - Don't set `tone="danger"` to build a box; it only colours text.
-- Don't add margins to space text; use `Stack`.
+- Don't add margins to space text; use `Space`.
 
 <!-- generated:examples -->
 
@@ -61,11 +61,11 @@ Body text sets nothing and inherits; a meta line is `size="sm"` with
 `tone="muted"`; a caption is `size="xs"` with `tone="faint"`.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 
 export default function Basic() {
   return (
-    <Stack gap="sm">
+    <Space direction="vertical" gap="sm">
       <Text as="p">Welcome back.</Text>
       <Text as="p" size="sm" tone="muted">
         3 books, updated yesterday
@@ -73,7 +73,7 @@ export default function Basic() {
       <Text as="p" size="xs" tone="faint">
         Cover art by the publisher
       </Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -83,19 +83,19 @@ export default function Basic() {
 `size` takes a key of the theme's `fontSize` scale.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 
 const sizes = ['xxs', 'xs', 'sm', 'md', 'lg', 'xl', 'xxl'] as const;
 
 export default function Sizes() {
   return (
-    <Stack gap="xs">
+    <Space direction="vertical" gap="xs">
       {sizes.map((size) => (
         <Text key={size} as="div" size={size}>
           {`size="${size}"`}
         </Text>
       ))}
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -106,7 +106,7 @@ export default function Sizes() {
 colour inline error and confirmation text.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 
 const tones = [
   'primary',
@@ -120,13 +120,13 @@ const tones = [
 
 export default function Tones() {
   return (
-    <Stack gap="xs">
+    <Space direction="vertical" gap="xs">
       {tones.map((tone) => (
         <Text key={tone} as="div" tone={tone}>
           {`tone="${tone}"`}
         </Text>
       ))}
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -136,19 +136,19 @@ export default function Tones() {
 `weight` takes a key of the theme's `fontWeight` scale.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 
 const weights = ['regular', 'medium', 'semibold', 'bold', 'extrabold'] as const;
 
 export default function Weights() {
   return (
-    <Stack gap="xs">
+    <Space direction="vertical" gap="xs">
       {weights.map((weight) => (
         <Text key={weight} as="div" weight={weight}>
           {`weight="${weight}"`}
         </Text>
       ))}
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -178,19 +178,19 @@ export default function Inherit() {
 blocks, `strong` and `em` for emphasis, `label` for a control.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 
 const elements = ['span', 'p', 'div', 'strong', 'em', 'label'] as const;
 
 export default function Elements() {
   return (
-    <Stack gap="xs">
+    <Space direction="vertical" gap="xs">
       {elements.map((as) => (
         <Text key={as} as={as}>
           {`as="${as}"`}
         </Text>
       ))}
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -198,29 +198,39 @@ export default function Elements() {
 ### Label and error
 
 `as="label"` with `htmlFor` names a native or third-party control. While the field is empty an
-inline error shows: `as="div"` with `tone="danger"` and `aria-live="polite"`.
+inline error shows: `as="div"` with `tone="danger"` and `aria-live="polite"`. The native
+`<input>` takes `theme.recipe.input`, so it matches the library's fields.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
+import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { useState } from 'react';
 
+const useStyles = createUseStyles((theme: Theme) => ({
+  input: { ...theme.recipe.input, height: theme.layout.controlHeight },
+  // Referenced by `theme.recipe.input`: a red border while the field is invalid.
+  danger: {},
+}));
+
 export default function LabelAndError() {
+  const styles = useStyles();
   const [title, setTitle] = useState('');
   return (
-    <Stack gap="xs">
+    <Space direction="vertical" gap="xs">
       <Text as="label" htmlFor="book-title" size="sm" weight="medium">
         Title
       </Text>
       <input
         id="book-title"
         name="title"
+        className={title === '' ? `${styles.input} ${styles.danger}` : styles.input}
         value={title}
         onChange={(event) => setTitle(event.target.value)}
       />
       <Text as="div" size="sm" tone="danger" aria-live="polite">
         {title === '' ? 'Title is required.' : null}
       </Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -228,11 +238,11 @@ export default function LabelAndError() {
 ### Truncate
 
 `truncate` clips to one line with an ellipsis. Beside an action in an
-`Inline`, the title shrinks and the button keeps its width; a title above
-a meta line in a `Stack` shrinks with the row.
+`Space`, the title shrinks and the button keeps its width; a title above
+a meta line in a vertical `Space` shrinks with the row.
 
 ```tsx
-import { Inline, Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -242,29 +252,29 @@ const title =
 export default function Truncate() {
   const [opened, setOpened] = useState(0);
   return (
-    <Stack gap="xl">
-      <Inline justify="between">
+    <Space direction="vertical" gap="xl">
+      <Space justify="between">
         <Text truncate weight="semibold">
           {title}
         </Text>
         <Button type="primary" onClick={() => setOpened((n) => n + 1)}>
           Open
         </Button>
-      </Inline>
-      <Inline justify="between">
-        <Stack gap="none">
+      </Space>
+      <Space justify="between">
+        <Space direction="vertical" gap="none">
           <Text truncate weight="semibold">
             {title}
           </Text>
           <Text size="sm" tone="muted">
             George Eliot. Opened: {opened}
           </Text>
-        </Stack>
+        </Space>
         <Button type="primary" onClick={() => setOpened((n) => n + 1)}>
           Open
         </Button>
-      </Inline>
-    </Stack>
+      </Space>
+    </Space>
   );
 }
 ```
@@ -278,13 +288,13 @@ export default function Truncate() {
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `children` | `ReactNode` |  | The text. |
-| `as` | `'span' \| 'p' \| 'div' \| 'label' \| 'strong' \| 'em'` | `'span'` | The element to render. `p` has its margin reset to 0; space paragraphs with `Stack` `gap`. |
+| `as` | `'span' \| 'p' \| 'div' \| 'label' \| 'strong' \| 'em'` | `'span'` | The element to render. `p` has its margin reset to 0; space paragraphs with `Space` `gap`. |
 | `className` | `string` |  | Extra class on the root. Override with `'&&'` specificity, never `!important`. |
 | `htmlFor` | `string` |  | The id of the control this label describes. Only for `as="label"`. |
 | `ref` | `Ref<HTMLElement>` |  | Ref to the root element. |
 | `size` | `'xxs' \| 'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl' \| 'xxl'` |  | Font size, from the theme's `fontSize` tokens. Unset, it inherits from the parent. |
 | `tone` | `'primary' \| 'secondary' \| 'muted' \| 'faint' \| 'description' \| 'danger' \| 'success'` |  | Text colour. `primary` to `description` use the theme's `color.text` tokens; `danger` and `success` use the chip text colours, for inline error and confirmation text. Unset, it inherits from the parent. |
-| `truncate` | `boolean` | `false` | Clips to one line with an ellipsis. Also sets `min-width: 0` and `max-width: 100%`, so it clips inside an `Inline` or `Stack` with any `align`. On `span`, `strong`, `em` and `label` it also makes the element `inline-block`, because inline elements ignore overflow. |
+| `truncate` | `boolean` | `false` | Clips to one line with an ellipsis. Also sets `min-width: 0` and `max-width: 100%`, so it clips inside a `Space` with any `align`. On `span`, `strong`, `em` and `label` it also makes the element `inline-block`, because inline elements ignore overflow. |
 | `weight` | `'regular' \| 'medium' \| 'semibold' \| 'bold' \| 'extrabold'` |  | Font weight, from the theme's `fontWeight` tokens. Unset, it inherits from the parent. |
 
 Also accepts: `HTMLAttributes`.

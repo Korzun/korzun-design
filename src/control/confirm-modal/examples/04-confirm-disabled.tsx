@@ -2,7 +2,7 @@
  * `confirmDisabled` disables only Confirm, here until the switch in the body is on.
  * Cancel and dismissal keep working.
  */
-import { Inline, Stack } from '@korzun/design/component';
+import { Space } from '@korzun/design/component';
 import { Button, ConfirmModal, Switch } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -14,7 +14,7 @@ export default function ConfirmDisabled() {
     setUnderstood(false);
   };
   return (
-    <Inline>
+    <Space direction="vertical" align="start">
       <Button onClick={() => setIsOpen(true)}>Reset library</Button>
       <ConfirmModal
         isOpen={isOpen}
@@ -25,7 +25,7 @@ export default function ConfirmDisabled() {
         onCancel={close}
         onConfirm={close}
       >
-        <Stack>
+        <Space direction="vertical">
           Every book is removed from this device.
           <Switch
             name="understood"
@@ -33,8 +33,8 @@ export default function ConfirmDisabled() {
             checked={understood}
             onChange={setUnderstood}
           />
-        </Stack>
+        </Space>
       </ConfirmModal>
-    </Inline>
+    </Space>
   );
 }

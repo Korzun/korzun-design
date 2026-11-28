@@ -1,9 +1,9 @@
 /** Basic
  * A Filters button opens a popover under it. The popover paints nothing, so the
  * content brings its own background, border and radius. It does not close on
- * selection: choosing an option calls `setOpen(false)` itself.
+ * selection: choosing an option calls `setOpen(false)` itself. This demo starts open.
  */
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button, Popover } from '@korzun/design/control';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { useRef, useState } from 'react';
@@ -21,20 +21,20 @@ const useStyle = createUseStyles((theme: Theme) => ({
 export default function Basic() {
   const styles = useStyle();
   const anchor = useRef<HTMLElement>(null);
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const [chosen, setChosen] = useState('nothing yet');
   const choose = (label: string) => {
     setChosen(label);
     setOpen(false);
   };
   return (
-    <Stack align="start">
+    <Space direction="vertical" align="start">
       <Button ref={anchor} onClick={() => setOpen((value) => !value)}>
         Filters
       </Button>
       <Popover anchorRef={anchor} open={open} matchWidth={false} onClose={() => setOpen(false)}>
         <div className={styles.panel}>
-          <Stack gap="xxs">
+          <Space direction="vertical" gap="xxs">
             <Button type="text" onClick={() => choose('Unread')}>
               Unread
             </Button>
@@ -44,10 +44,10 @@ export default function Basic() {
             <Button type="text" onClick={() => choose('Favourites')}>
               Favourites
             </Button>
-          </Stack>
+          </Space>
         </div>
       </Popover>
       <Text tone="muted">Chosen: {chosen}</Text>
-    </Stack>
+    </Space>
   );
 }

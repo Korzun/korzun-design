@@ -4,7 +4,7 @@
  * for a submit one (pass an empty function): the form's `action` runs instead. `loading` follows the
  * pending save, and Save is disabled while a field is empty.
  */
-import { Card, Stack, Text } from '@korzun/design/component';
+import { Card, Space, Text } from '@korzun/design/component';
 import { PageFooterActions, TextInput } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -15,7 +15,7 @@ export default function SubmitAForm() {
   const [status, setStatus] = useState('Not saved');
   const hasInvalidFields = !title?.trim() || !author?.trim();
   return (
-    <Stack>
+    <Space direction="vertical">
       <form
         id="book-form"
         action={async (data) => {
@@ -25,14 +25,14 @@ export default function SubmitAForm() {
           setStatus(`Saved ${String(data.get('title'))}`);
         }}
       >
-        <Stack>
+        <Space direction="vertical">
           <Card title="Details">
             <TextInput name="title" label="Title" value={title} onChange={setTitle} />
           </Card>
           <Card title="Identifiers">
             <TextInput name="author" label="Author" value={author} onChange={setAuthor} />
           </Card>
-        </Stack>
+        </Space>
       </form>
       <PageFooterActions
         items={[
@@ -49,6 +49,6 @@ export default function SubmitAForm() {
         ]}
       />
       <Text tone="muted">{status}</Text>
-    </Stack>
+    </Space>
   );
 }

@@ -1,7 +1,7 @@
 /** Size and colour
  * Size an icon with `width` and `height`, or give it `1em` in a class so it scales with the text around it. Colour comes from `color` on the icon or any ancestor; pass no `stroke` or `fill` colour.
  */
-import { Inline, Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { HomeIcon, SearchIcon, SettingsIcon } from '@korzun/design/icon';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
@@ -19,28 +19,28 @@ export default function SizeAndColour() {
   const styles = useStyle();
   const [danger, setDanger] = useState(false);
   return (
-    <Stack gap="lg" align="start">
-      <Inline gap="lg">
+    <Space direction="vertical" gap="lg" align="start">
+      <Space gap="lg">
         {sizes.map((size) => (
-          <Stack key={size} gap="xs" align="center">
+          <Space direction="vertical" key={size} gap="xs" align="center">
             <HomeIcon width={size} height={size} aria-hidden />
             <Text size="sm" tone="muted">
               {size}px
             </Text>
-          </Stack>
+          </Space>
         ))}
-      </Inline>
-      <Inline gap="xs">
+      </Space>
+      <Space gap="xs">
         <SearchIcon className={styles.scaled} aria-hidden />
         <Text size="lg">Scales with this text</Text>
-      </Inline>
-      <Inline gap="xs" className={danger ? styles.danger : styles.brand}>
+      </Space>
+      <Space gap="xs" className={danger ? styles.danger : styles.brand}>
         <SettingsIcon aria-hidden />
         <Text>{danger ? 'Colour set to danger' : 'Colour set to brand'}</Text>
-      </Inline>
-      <Inline>
+      </Space>
+      <Space>
         <Button onClick={() => setDanger(!danger)}>Switch colour</Button>
-      </Inline>
-    </Stack>
+      </Space>
+    </Space>
   );
 }

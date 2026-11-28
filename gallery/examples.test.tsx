@@ -23,14 +23,26 @@ describe('examples', () => {
 
   it('lists every example file in the generated site data', () => {
     const listed = new Set(
-      [...siteData.modules, ...siteData.recipes].flatMap((o) => o.examples.map((e) => e.file))
+      [
+        ...siteData.modules.flatMap((m) => [...m.examples, ...(m.preview ? [m.preview] : [])]),
+        ...siteData.recipes.flatMap((r) => r.examples),
+      ].map((e) => e.file)
     );
     expect(Object.keys(exampleComponents).filter((file) => !listed.has(file))).toEqual([]);
   });
 });
 
+describe('previews', () => {
+  it('every module has one, kept off its examples', () => {
+    for (const mod of siteData.modules) {
+      expect(mod.preview?.file, mod.slug).toMatch(/\/examples\/preview\.tsx$/);
+      expect(mod.examples.map((e) => e.slug)).not.toContain('preview');
+    }
+  });
+});
+
 describe('pilot examples wire every button', () => {
-  // A demo whose button does nothing looks broken; the Stack pilot is copied by
+  // A demo whose button does nothing looks broken; the Button pilot is copied by
   // other modules' examples, so its buttons must change what the demo shows.
   const clickChangesDemo = (file: string, name: RegExp) => {
     const Example = exampleComponents[file];
@@ -43,19 +55,15 @@ describe('pilot examples wire every button', () => {
     }
   };
 
-  it('Stack 03: each "Add a book" counts', () => {
-    clickChangesDemo('src/component/stack/examples/03-align.tsx', /Add a book/);
-  });
-
   it.each([
-    ['02-variants', /^(Primary|Default|Text|Link|Dashed)$/],
-    ['03-danger-and-success', /^(Log out|Delete book|Mark as read)$/],
+    ['02-variants', /^(Primary|Default|Text|Link|Dashed|Danger|Primary danger)$/],
+    ['03-danger', /^(Log out|Delete book)$/],
     ['04-icons', /^(Search|Next|Settings)$/],
   ])('Button %s: each button shows what was pressed', (file, name) => {
     clickChangesDemo(`src/control/button/examples/${file}.tsx`, name);
   });
 
-  it('Stack 05: "See all" shows more tags', () => {
-    clickChangesDemo('src/component/stack/examples/05-nested-with-inline.tsx', /See all/);
+  it('Space 04: "See all" shows more tags', () => {
+    clickChangesDemo('src/component/space/examples/04-wrap-and-justify.tsx', /See all/);
   });
 });

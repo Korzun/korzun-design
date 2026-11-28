@@ -14,14 +14,14 @@ category: Layout
 Marks a hand-made box as one more level of nesting. Every library control
 inside it (`Button`, `Select`, `Card`, `CardRow`, ...) takes its corner radius
 from how deep it sits, following the one-radius-step-per-level rule in
-[corners](../corners.md). `Page` marks its whole area as depth 0, `Dialog` as
+[corners](../corners.md). `Page` marks its whole area as depth 0, `Modal` as
 depth 1, and `Card`, `CardRow` and `Alert` each one level deeper than where
 they sit. `Surface` adds one more level for a box you draw yourself.
 
 Wrap the box's contents, not the box: the box itself takes the surrounding depth.
 
 Use `Surface` when you build your own bordered or filled box that contains
-library controls. Do not use it around a library `Card`, `CardRow` or `Dialog`;
+library controls. Do not use it around a library `Card`, `CardRow` or `Modal`;
 they already count themselves.
 
 ## Usage
@@ -35,7 +35,7 @@ useSurfaceRadius(): string
 Returns the radius string (a theme `radius` token) for the current depth. Call
 it in the component that draws the box, outside its own `Surface`: the box
 then gets the radius for where it sits, and `Surface` steps the controls inside
-it one level deeper. With no `Page`, `Dialog`, `Card`, `CardRow`, `Alert` or
+it one level deeper. With no `Page`, `Modal`, `Card`, `CardRow`, `Alert` or
 `Surface` above it, it returns the depth 0 radius.
 
 ### Depth table
@@ -43,9 +43,9 @@ it one level deeper. With no `Page`, `Dialog`, `Card`, `CardRow`, `Alert` or
 | Depth | Radius                       | Where                                    |
 | ----- | ---------------------------- | ---------------------------------------- |
 | 0     | `radius.lg`                  | on the page background                   |
-| 1     | `radius.md`                  | inside a Card or Dialog                  |
-| 2+    | `radius.sm`                  | inside a surface inside a Card or Dialog |
-| none  | each component's own default | no Page, Dialog, Card, CardRow, Alert or Surface above it |
+| 1     | `radius.md`                  | inside a Card or Modal                  |
+| 2+    | `radius.sm`                  | inside a surface inside a Card or Modal |
+| none  | each component's own default | no Page, Modal, Card, CardRow, Alert or Surface above it |
 
 Depth never goes below `sm`; deeper nesting stays at `sm`. Hand-drawn boxes are invisible to depth, so wrap their contents in `Surface`.
 
@@ -57,7 +57,7 @@ Depth never goes below `sm`; deeper nesting stays at `sm`. Hand-drawn boxes are 
 
 - Do wrap the contents of a hand-made box that holds library controls in `Surface`.
 - Do take the box's own radius from `useSurfaceRadius()`, never a literal.
-- Don't wrap library `Card`, `CardRow` or `Dialog` in `Surface`.
+- Don't wrap library `Card`, `CardRow` or `Modal` in `Surface`.
 
 <!-- generated:examples -->
 
@@ -68,7 +68,7 @@ Depth never goes below `sm`; deeper nesting stays at `sm`. Hand-drawn boxes are 
 A hand-made bordered box inside a `Card`. The box reads its own radius from `useSurfaceRadius()` and wraps its contents in `Surface`, so the Button inside is one corner step smaller than the box.
 
 ```tsx
-import { Card, Inline, Stack, Surface, Text, useSurfaceRadius } from '@korzun/design/component';
+import { Card, Space, Surface, Text, useSurfaceRadius } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { useState, type ReactNode } from 'react';
@@ -95,15 +95,15 @@ export default function Basic() {
   return (
     <Card title="Settings">
       <InsetBox>
-        <Stack gap="sm">
+        <Space direction="vertical" gap="sm">
           <Text>
             Your own box: its corners follow the card, and the button inside is one step smaller.
           </Text>
-          <Inline>
+          <Space>
             <Button onClick={() => setSaves((n) => n + 1)}>Save</Button>
-            <Text tone="muted">Saves: {saves}</Text>
-          </Inline>
-        </Stack>
+          </Space>
+          <Text tone="muted">Saves: {saves}</Text>
+        </Space>
       </InsetBox>
     </Card>
   );
@@ -115,7 +115,7 @@ export default function Basic() {
 Each hand-made box inside another sits one level deeper, so corners step down one radius per level and stop at `sm`. Each box shows the radius `useSurfaceRadius()` returned for where it sits.
 
 ```tsx
-import { Card, Inline, Stack, Surface, Text, useSurfaceRadius } from '@korzun/design/component';
+import { Card, Space, Surface, Text, useSurfaceRadius } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { useState, type ReactNode } from 'react';
@@ -134,15 +134,15 @@ const LevelBox = ({ name, children }: { name: string; children?: ReactNode }) =>
   return (
     <div className={styles.box} style={{ borderRadius }}>
       <Surface>
-        <Stack gap="sm">
-          <Inline>
+        <Space direction="vertical" gap="sm">
+          <Space>
             <Button onClick={() => setTaps((n) => n + 1)}>{name}</Button>
             <Text tone="muted">
               Radius {borderRadius}, taps: {taps}
             </Text>
-          </Inline>
+          </Space>
           {children}
-        </Stack>
+        </Space>
       </Surface>
     </div>
   );

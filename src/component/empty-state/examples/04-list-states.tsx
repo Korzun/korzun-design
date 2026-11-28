@@ -3,7 +3,7 @@
  * load failure with `danger`, an empty list, and the rows once there are any.
  * The buttons switch the state.
  */
-import { Card, EmptyState, Inline, Stack, Text } from '@korzun/design/component';
+import { Card, EmptyState, Space, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -32,18 +32,18 @@ export default function ListStates() {
   }
 
   return (
-    <Stack>
-      <Inline wrap>
+    <Space direction="vertical">
+      <Space wrap>
         {states.map((s) => (
           <Button key={s} type={s === state ? 'primary' : 'default'} onClick={() => setState(s)}>
             {s}
           </Button>
         ))}
-      </Inline>
+      </Space>
       <Card title="New request">
         <Text tone="muted">Title and author go here.</Text>
       </Card>
       {list}
-    </Stack>
+    </Space>
   );
 }

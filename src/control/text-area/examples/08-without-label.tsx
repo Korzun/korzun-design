@@ -2,14 +2,14 @@
  * A textarea with no visible `label` takes `ariaLabel`, so assistive tech can
  * still name it.
  */
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { TextArea } from '@korzun/design/control';
 import { useState } from 'react';
 
 export default function WithoutLabel() {
   const [notes, setNotes] = useState<string | undefined>(undefined);
   return (
-    <Stack>
+    <Space direction="vertical">
       <TextArea
         name="notes"
         layout="inline"
@@ -19,6 +19,6 @@ export default function WithoutLabel() {
         onChange={setNotes}
       />
       <Text tone="muted">Characters: {notes?.length ?? 0}</Text>
-    </Stack>
+    </Space>
   );
 }

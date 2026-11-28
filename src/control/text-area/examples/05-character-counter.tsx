@@ -3,7 +3,7 @@
  * within the last 10% of the limit (at least 50 characters) and turns red at the limit.
  * The first field is inside that window, the second is at the limit.
  */
-import { Stack } from '@korzun/design/component';
+import { Space } from '@korzun/design/component';
 import { TextArea } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -15,7 +15,7 @@ export default function CharacterCounter() {
     'A short summary of the book that fills every one of the characters allowed.'
   );
   return (
-    <Stack>
+    <Space direction="vertical">
       <TextArea
         name="near"
         layout="vertical"
@@ -32,6 +32,6 @@ export default function CharacterCounter() {
         value={full}
         onChange={setFull}
       />
-    </Stack>
+    </Space>
   );
 }

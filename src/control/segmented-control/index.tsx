@@ -1,6 +1,7 @@
 import cx from 'classnames';
 import { type CSSProperties, type KeyboardEvent, useRef } from 'react';
 
+import { useDepthClassKey } from '../../component/surface/index.js';
 import type { IconProps } from '../../icon/index.js';
 import { useStyle } from './style.js';
 
@@ -84,6 +85,7 @@ const ICON_SIZE = 20;
 export const SegmentedControl = <V extends string>(props: SegmentedControlProps<V>) => {
   const { label, options, value, showLabels = true, surface = 'card' } = props;
   const style = useStyle();
+  const depthKey = useDepthClassKey();
   const buttons = useRef<Array<HTMLButtonElement | null>>([]);
   const readOnly = props.onChange === undefined;
   const iconic = options.some((option) => option.Icon !== undefined);
@@ -166,7 +168,7 @@ export const SegmentedControl = <V extends string>(props: SegmentedControlProps<
       aria-disabled={readOnly ? 'true' : undefined}
       // An icon-led control names its value on hover; a text one already shows it.
       title={iconic ? checked?.label : undefined}
-      className={cx(style.root, style[surface], {
+      className={cx(style.root, style[surface], depthKey && style[depthKey], {
         [style.readOnly]: readOnly,
         [style.iconic]: iconic,
       })}

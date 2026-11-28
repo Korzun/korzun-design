@@ -6,7 +6,7 @@
  * label and border red, `onValidChange` fires once, and `onChange` is not called,
  * so the saved number stays at the last valid one. Type `abc` to see it.
  */
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { NumberInput } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -14,7 +14,7 @@ export default function DefaultCheck() {
   const [rating, setRating] = useState<number | undefined>(4.5);
   const [valid, setValid] = useState(true);
   return (
-    <Stack>
+    <Space direction="vertical">
       <NumberInput
         name="rating"
         layout="vertical"
@@ -25,6 +25,6 @@ export default function DefaultCheck() {
       />
       <Text tone={valid ? 'success' : 'danger'}>{valid ? 'Valid' : 'Invalid'}</Text>
       <Text tone="muted">Saved number: {rating === undefined ? 'undefined' : rating}</Text>
-    </Stack>
+    </Space>
   );
 }

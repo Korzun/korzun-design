@@ -3,7 +3,7 @@
  * `onChange(null)`. Once the value is `null` nothing is checked and no lens is
  * drawn. Without `clearable`, `onChange` never receives `null`.
  */
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { SegmentedControl } from '@korzun/design/control';
 import { HandLoveYouIcon, HandOkIcon, ThumbDownIcon } from '@korzun/design/icon';
 import { useState } from 'react';
@@ -17,7 +17,7 @@ const RATINGS = [
 export default function Clearable() {
   const [rating, setRating] = useState<(typeof RATINGS)[number]['value'] | null>('great');
   return (
-    <Stack>
+    <Space direction="vertical" align="start">
       <SegmentedControl
         label="Rating"
         options={RATINGS}
@@ -27,6 +27,6 @@ export default function Clearable() {
         showLabels={false}
       />
       <Text tone="muted">Rating: {rating ?? 'none'}</Text>
-    </Stack>
+    </Space>
   );
 }

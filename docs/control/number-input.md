@@ -50,17 +50,17 @@ A controlled number field. `onChange` receives a number, not an event or the
 text, and `undefined` once the field is emptied.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { NumberInput } from '@korzun/design/control';
 import { useState } from 'react';
 
 export default function Basic() {
   const [pages, setPages] = useState<number | undefined>(42);
   return (
-    <Stack>
+    <Space direction="vertical">
       <NumberInput name="pages" label="Pages" value={pages} onChange={setPages} />
       <Text tone="muted">Value: {pages === undefined ? 'undefined' : pages}</Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -72,38 +72,53 @@ the label above the field on that row, and `inline` paints nothing around the
 pair.
 
 ```tsx
-import { Stack } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { NumberInput } from '@korzun/design/control';
 import { useState } from 'react';
 
 export default function Layouts() {
-  const [horizontal, setHorizontal] = useState<number | undefined>(1);
-  const [vertical, setVertical] = useState<number | undefined>(2);
-  const [inline, setInline] = useState<number | undefined>(3);
+  const [horizontal, setHorizontal] = useState<number | undefined>(412);
+  const [vertical, setVertical] = useState<number | undefined>(880);
+  const [inline, setInline] = useState<number | undefined>(160);
   return (
-    <Stack>
-      <NumberInput
-        name="horizontal"
-        layout="horizontal"
-        label="Horizontal"
-        value={horizontal}
-        onChange={setHorizontal}
-      />
-      <NumberInput
-        name="vertical"
-        layout="vertical"
-        label="Vertical"
-        value={vertical}
-        onChange={setVertical}
-      />
-      <NumberInput
-        name="inline"
-        layout="inline"
-        label="Inline"
-        value={inline}
-        onChange={setInline}
-      />
-    </Stack>
+    <Space direction="vertical" gap="xl">
+      <Space direction="vertical" gap="xs">
+        <Text size="sm" tone="muted">
+          layout="horizontal"
+        </Text>
+        <NumberInput
+          name="horizontal"
+          layout="horizontal"
+          label="Pages"
+          value={horizontal}
+          onChange={setHorizontal}
+        />
+      </Space>
+      <Space direction="vertical" gap="xs">
+        <Text size="sm" tone="muted">
+          layout="vertical"
+        </Text>
+        <NumberInput
+          name="vertical"
+          layout="vertical"
+          label="Pages"
+          value={vertical}
+          onChange={setVertical}
+        />
+      </Space>
+      <Space direction="vertical" gap="xs">
+        <Text size="sm" tone="muted">
+          layout="inline"
+        </Text>
+        <NumberInput
+          name="inline"
+          layout="inline"
+          label="Pages"
+          value={inline}
+          onChange={setInline}
+        />
+      </Space>
+    </Space>
   );
 }
 ```
@@ -118,7 +133,7 @@ label and border red, `onValidChange` fires once, and `onChange` is not called,
 so the saved number stays at the last valid one. Type `abc` to see it.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { NumberInput } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -126,7 +141,7 @@ export default function DefaultCheck() {
   const [rating, setRating] = useState<number | undefined>(4.5);
   const [valid, setValid] = useState(true);
   return (
-    <Stack>
+    <Space direction="vertical">
       <NumberInput
         name="rating"
         layout="vertical"
@@ -137,7 +152,7 @@ export default function DefaultCheck() {
       />
       <Text tone={valid ? 'success' : 'danger'}>{valid ? 'Valid' : 'Invalid'}</Text>
       <Text tone="muted">Saved number: {rating === undefined ? 'undefined' : rating}</Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -145,12 +160,12 @@ export default function DefaultCheck() {
 ### Form in a card
 
 The `horizontal` layout is made for a `Card` body. Index uses the built-in check.
-Width replaces it with a rule that still checks the text is numeric, and both
+Width replaces it with a rule that allows whole numbers up to 4096, and both
 fields report validity through `onValidChange`, so Save stays disabled while
 either is invalid.
 
 ```tsx
-import { Card, Stack, Text } from '@korzun/design/component';
+import { Card, Space, Text } from '@korzun/design/component';
 import { Button, NumberInput } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -174,7 +189,7 @@ export default function FormInCard() {
         </Button>
       }
     >
-      <Stack>
+      <Space direction="vertical">
         <NumberInput
           name="seriesIndex"
           label="Index"
@@ -184,14 +199,14 @@ export default function FormInCard() {
         />
         <NumberInput
           name="coverWidth"
-          label="Width (up to 4096)"
+          label="Width"
           value={coverWidth}
           onChange={setCoverWidth}
           validate={(t) => t === '' || (/^\d+$/.test(t) && Number(t) <= 4096)}
           onValidChange={onValidChange}
         />
         {saved !== null && <Text tone="success">Saved: {saved}</Text>}
-      </Stack>
+      </Space>
     </Card>
   );
 }
@@ -203,14 +218,14 @@ export default function FormInCard() {
 label, name the field with `ariaLabel`, and describe it with a `placeholder`.
 
 ```tsx
-import { Inline, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { NumberInput } from '@korzun/design/control';
 import { useState } from 'react';
 
 export default function WithoutLabel() {
   const [quantity, setQuantity] = useState<number | undefined>(undefined);
   return (
-    <Inline>
+    <Space>
       <NumberInput
         name="quantity"
         layout="inline"
@@ -221,7 +236,7 @@ export default function WithoutLabel() {
         onChange={setQuantity}
       />
       <Text tone="muted">Quantity: {quantity === undefined ? 'none' : quantity}</Text>
-    </Inline>
+    </Space>
   );
 }
 ```
@@ -236,7 +251,7 @@ export default function WithoutLabel() {
 | --- | --- | --- | --- |
 | `ariaLabel` | `string` |  | Accessible name of the input when `label` is `undefined`. With a `label`, the label names it and this is ignored. |
 | `label` (required) | `string \| undefined` |  | Required key: pass `label={undefined}` for none. Linked to the input so it names it. |
-| `layout` | `'horizontal' \| 'vertical' \| 'inline'` | `'horizontal'` | `horizontal` and `vertical` paint a shaded card-header row with `md` corners; `inline` paints nothing. |
+| `layout` | `'horizontal' \| 'vertical' \| 'inline'` | `'horizontal'` | `horizontal` and `vertical` paint a shaded card-header row with corners that follow surface depth ([corners](../corners.md)); `inline` paints nothing. |
 | `name` (required) | `string` |  | The input's `name` and the key passed to `onValidChange`. |
 | `onChange` | `(newValue: number \| undefined) => void` | `() => {}` | Receives `parseFloat(text)`, or `undefined` when emptied; not called while `validate` fails. |
 | `onValidChange` | `(fieldName: string, newValid: boolean) => void` | `() => {}` | Called with `name` and the new validity; fires only when validity flips. |
@@ -254,12 +269,15 @@ export default function WithoutLabel() {
 | --- | --- | --- |
 | `theme.color.bg.cardHeader` | `#EEEEEE` | `#232427` |
 | `theme.layout.controlHeight` | `2.0625rem` | `2.0625rem` |
+| `theme.radius.lg` | `16px` | `16px` |
 | `theme.radius.md` | `8px` | `8px` |
+| `theme.radius.sm` | `4px` | `4px` |
 | `theme.recipe.input` | [recipe](../tokens.md#recipe) | [recipe](../tokens.md#recipe) |
 | `theme.recipe.label` | [recipe](../tokens.md#recipe) | [recipe](../tokens.md#recipe) |
 | `theme.space.md` | `0.5rem` | `0.5rem` |
 | `theme.space.sm` | `0.375rem` | `0.375rem` |
 | `theme.space.xs` | `0.25rem` | `0.25rem` |
+| `theme.space.xxl` | `1rem` | `1rem` |
 
 <!-- /generated:tokens -->
 
@@ -267,6 +285,7 @@ export default function WithoutLabel() {
 
 ## Changelog
 
+- **0.7.0** (2026-11-26): Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.6.0 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px. A text field, `ChipsInput` box or field label directly on a Page also moves its text 16px in from the edge (8px elsewhere), the inset `Button` keeps, so it clears the deeper corner.
 - **0.5.2** (2026-11-26): The visible `label` is linked to its field (`htmlFor` and a generated `id`), so it names the field and clicking it focuses the field. A new `ariaLabel` prop names a field that has no visible `label`; with a `label` it is ignored.
 
 <!-- /generated:changelog -->

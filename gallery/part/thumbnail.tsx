@@ -1,12 +1,16 @@
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import cx from 'classnames';
+import { useLayoutEffect, useRef, useState } from 'react';
 
 import type { ExampleOwner } from '../data.js';
-import { frameSrc, MOBILE_WIDTH, useFrameTheme } from '../frame-url.js';
+import { DESKTOP_WIDTH, frameSrc, MOBILE_WIDTH, useFrameTheme } from '../frame-url.js';
 
 // The frame lays out larger than the box and is scaled down to fit, so the
 // example renders at a realistic width and reads as a miniature.
 const SCALE = 0.6;
+// A compact thumbnail (a list row on a phone) is a small box: a smaller scale
+// lets the frame lay out wide enough for the preview to read as a miniature.
+const COMPACT_SCALE = 0.4;
 
 const useStyle = createUseStyles((theme: Theme) => ({
   box: {
@@ -35,31 +39,82 @@ const useStyle = createUseStyles((theme: Theme) => ({
     transform: `translateX(-50%) scale(${SCALE})`,
     transformOrigin: 'top center',
   },
+  // A `@viewport desktop` preview lays out past the mobile breakpoint and is
+  // scaled by the box's measured width (inline transform), so it fills the box.
+  desktop: {
+    width: `${DESKTOP_WIDTH}px`,
+    height: `${(DESKTOP_WIDTH * 9) / 16}px`,
+  },
+  // A frame's blank document paints white before the preview loads; keep it
+  // transparent till then. Opacity, not `visibility: hidden` as the example
+  // block uses: Chrome loads a hidden lazy iframe at once, which would fetch
+  // every thumbnail on the overview up front.
+  pending: { opacity: 0 },
+  // `compact`: on a phone, a 6rem 4:3 box beside the text, scaled further down.
+  compact: {
+    [theme.breakpoint.mobile]: {
+      flex: 'none',
+      width: '6rem',
+      aspectRatio: '4 / 3',
+      '& $frame': {
+        width: `${100 / COMPACT_SCALE}%`,
+        height: `${100 / COMPACT_SCALE}%`,
+        transform: `scale(${COMPACT_SCALE})`,
+      },
+      '& $mobile': { transform: `translateX(-50%) scale(${COMPACT_SCALE})` },
+    },
+  },
 }));
 
 export type ThumbnailProps = {
-  /** The module or recipe whose first example the thumbnail shows. */
+  /** The module or recipe whose preview (`examples/preview.tsx`, else its first example) the thumbnail shows. */
   owner: ExampleOwner;
+  /** On a phone, a small box for a list row instead of the full-width 16:9 one. */
+  compact?: boolean;
 };
 
-/** A lazy, non-interactive, scaled-down live render of the first example of a module or recipe. */
-export const Thumbnail = ({ owner }: ThumbnailProps) => {
+/** A lazy, non-interactive, scaled-down live render of a module's preview or a recipe's first example. */
+export const Thumbnail = ({ owner, compact = false }: ThumbnailProps) => {
   const styles = useStyle();
   const [theme, onLoad] = useFrameTheme();
-  const first = owner.examples[0];
-  if (!first) return <div className={styles.box} />;
+  const [loaded, setLoaded] = useState(false);
+  const first = owner.preview ?? owner.examples[0];
+  const boxRef = useRef<HTMLDivElement>(null);
+  const [desktopScale, setDesktopScale] = useState<number | null>(null);
+  const desktop = first?.viewport === 'desktop';
+  useLayoutEffect(() => {
+    const box = boxRef.current;
+    if (!desktop || !box) return;
+    const fit = () => setDesktopScale(box.clientWidth / DESKTOP_WIDTH);
+    fit();
+    if (typeof ResizeObserver === 'undefined') return;
+    const observer = new ResizeObserver(fit);
+    observer.observe(box);
+    return () => observer.disconnect();
+  }, [desktop]);
+  const box = cx(styles.box, compact && styles.compact);
+  if (!first) return <div className={box} />;
 
   return (
-    <div className={styles.box}>
+    <div className={box} ref={boxRef}>
       <iframe
-        className={cx(styles.frame, first.viewport === 'mobile' && styles.mobile)}
+        className={cx(
+          styles.frame,
+          first.viewport === 'mobile' && styles.mobile,
+          desktop && styles.desktop,
+          !loaded && styles.pending
+        )}
+        style={desktop ? { transform: `scale(${desktopScale ?? SCALE})` } : undefined}
         data-viewport={first.viewport}
         src={frameSrc(owner.framePath, first.slug, theme, 'center')}
         title={`${owner.title}: ${first.title}`}
         loading="lazy"
         tabIndex={-1}
         aria-hidden
-        onLoad={onLoad}
+        onLoad={() => {
+          setLoaded(true);
+          onLoad();
+        }}
       />
     </div>
   );

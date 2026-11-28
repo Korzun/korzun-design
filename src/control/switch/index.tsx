@@ -1,6 +1,7 @@
 import cx from 'classnames';
 import { ReactNode, useCallback, useEffect, useId, useState } from 'react';
 
+import { useDepthClassKey } from '../../component/surface/index.js';
 import { SpinnerIcon } from '../../icon/index.js';
 import { SwitchRadius, SwitchRadiusValue, useStyle } from './style.js';
 
@@ -58,7 +59,7 @@ export type SwitchProps = {
   label?: string;
   /**
    * `'default'`: track then label, inline. `'horizontal'`: a full-width shaded
-   * row (`bg.cardHeader`, `radius.md`) with label and description on the left and
+   * row (`bg.cardHeader`, corners by surface depth) with label and description on the left and
    * the track on the right; the whole row toggles, description included.
    */
   layout?: 'default' | 'horizontal';
@@ -101,6 +102,7 @@ export const Switch = ({
   radius = SwitchRadius.Inset as SwitchRadiusValue,
 }: SwitchProps) => {
   const style = useStyle();
+  const depthKey = useDepthClassKey();
   const showSpinner = useDelayedFlag(loading, SPINNER_DELAY_MS);
   // Per-instance id so the description's aria target stays unique even when two
   // switches sharing a `name` mount at once (e.g. the device create + edit forms).
@@ -143,9 +145,12 @@ export const Switch = ({
         [style.loading]: showSpinner,
       })}
     >
-      {showSpinner ? (
-        // `aria-hidden` because `aria-busy` on the switch itself already
-        // carries this to assistive tech, and from the undelayed prop.
+      {showSpinner && radius === SwitchRadius.Inset ? (
+        // A squared switch gets a squared ring: the round spinner clashed with
+        // its corners. `aria-hidden` because `aria-busy` on the switch itself
+        // already carries this to assistive tech, and from the undelayed prop.
+        <div aria-hidden className={cx(style.thumb, style.ring)} data-testid="switch-ring" />
+      ) : showSpinner ? (
         <SpinnerIcon aria-hidden={true} className={style.spinner} />
       ) : (
         <div className={style.thumb} />
@@ -181,7 +186,10 @@ export const Switch = ({
   // stacked under the label in the content column, never runs beneath it.
   if (layout === 'horizontal') {
     return (
-      <div {...commonProps} className={cx(style.root, style.horizontal)}>
+      <div
+        {...commonProps}
+        className={cx(style.root, style.horizontal, depthKey && style[depthKey])}
+      >
         <div className={style.content}>
           {label && <span className={style.label}>{label}</span>}
           {descriptionEl}

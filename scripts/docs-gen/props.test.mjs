@@ -144,6 +144,25 @@ test('@default tag fills default, @deprecated sets deprecated, description exclu
   assert.equal('deprecated' in row(t, 'b'), false);
 });
 
+test('a deprecated rename is a one-line alias, not a second table', () => {
+  const [old] = extractTypeTables(
+    '/x/a.d.ts',
+    ['OldProps', 'NewProps'],
+    files({
+      '/x/a.d.ts': `export type NewProps = { a?: string };
+/** @deprecated Renamed \`NewProps\`. */
+export type OldProps = NewProps;`,
+    })
+  );
+  assert.deepEqual(old, {
+    name: 'OldProps',
+    kind: 'alias',
+    rows: [],
+    text: 'NewProps',
+    description: 'Deprecated: use NewProps.',
+  });
+});
+
 test('unflattenable type falls back to declared text', () => {
   const t = table(`export type XProps = SomeGeneric<X>[keyof X];`, 'XProps');
   assert.equal(t.kind, 'alias');
@@ -175,8 +194,7 @@ test(
   () => {
     const [t] = extractTypeTables(realDts, ['ButtonProps']);
     const names = t.rows.map((r) => r.name);
-    for (const n of ['type', 'radius', 'danger', 'success', 'children'])
-      assert.ok(names.includes(n), n);
+    for (const n of ['type', 'radius', 'danger', 'children']) assert.ok(names.includes(n), n);
     assert.equal(names[0], 'children');
     const lower = names.slice(1).map((n) => n.toLowerCase());
     assert.deepEqual(lower, [...lower].sort());
@@ -203,11 +221,11 @@ type Gap = 'sm' | 'lg';`,
 test('external extends are skipped, own rows kept, names recorded', () => {
   const t = table(
     `import type { HTMLAttributes } from 'react';
-export interface StackProps extends Omit<HTMLAttributes<HTMLElement>, 'style'> {
+export interface SpaceProps extends Omit<HTMLAttributes<HTMLElement>, 'style'> {
   /** Space between children. */
   gap?: 'sm';
 }`,
-    'StackProps'
+    'SpaceProps'
   );
   assert.equal(t.kind, 'props');
   assert.deepEqual(
@@ -246,10 +264,10 @@ test('export * barrels are searched when resolving a name', () => {
 });
 
 test(
-  'real StackProps has gap and records HTMLAttributes',
-  { skip: !existsSync('dist/component/stack/index.d.ts') && 'dist missing; run npm run build' },
+  'real SpaceProps has gap and records HTMLAttributes',
+  { skip: !existsSync('dist/component/space/index.d.ts') && 'dist missing; run npm run build' },
   () => {
-    const [t] = extractTypeTables('dist/component/stack/index.d.ts', ['StackProps']);
+    const [t] = extractTypeTables('dist/component/space/index.d.ts', ['SpaceProps']);
     assert.equal(t.kind, 'props');
     assert.ok(row(t, 'gap'));
     assert.ok(t.extends.includes('HTMLAttributes'));
@@ -340,7 +358,7 @@ export type PickerProps<V extends string> = BaseProps<V> & {
 });
 
 test(
-  'real d.ts: Button danger/success stay boolean; SegmentedControl flattens with clearable',
+  'real d.ts: Button danger is boolean and has no success; SegmentedControl flattens with clearable',
   {
     skip: !existsSync('dist/control/index.d.ts') && 'run npm run build first',
   },
@@ -351,8 +369,7 @@ test(
     ]);
     assert.equal(row(button, 'danger').type, 'boolean');
     assert.match(row(button, 'danger').description, /^Red treatment/);
-    assert.equal(row(button, 'success').type, 'boolean');
-    assert.match(row(button, 'success').description, /^Green treatment/);
+    assert.equal(row(button, 'success'), undefined);
     assert.equal(segmented.kind, 'props');
     assert.equal(row(segmented, 'clearable').type, 'boolean');
     assert.equal(row(segmented, 'clearable').required, false);

@@ -5,7 +5,7 @@ import type { Theme } from '../../theme/theme.js';
 
 const SurfaceDepthContext = createContext<number | undefined>(undefined);
 
-/** The surface depth above this point: 0 on the page, 1 in a Card or Dialog, and so on. `undefined` with no Page, Dialog, Card, CardRow, Alert or Surface above it. */
+/** The surface depth above this point: 0 on the page, 1 in a Card or Modal, and so on. `undefined` with no Page, Modal, Card, CardRow, Alert or Surface above it. */
 export const useSurfaceDepth = (): number | undefined => useContext(SurfaceDepthContext);
 
 /** Internal. Marks everything inside as sitting at `depth`. */
@@ -19,6 +19,16 @@ export const radiusForDepth = (radius: Theme['radius'], depth: number): string =
 
 /** Clamps a depth to the 0, 1, 2 range used to look up style classes. */
 export const depthClass = (depth: number): 0 | 1 | 2 => Math.min(depth, 2) as 0 | 1 | 2;
+
+/**
+ * Internal. The style class key for the current depth (`depth0`, `depth1`,
+ * `depth2`), or `undefined` with no surface above, where a component keeps its
+ * own default corners.
+ */
+export const useDepthClassKey = (): 'depth0' | 'depth1' | 'depth2' | undefined => {
+  const depth = useSurfaceDepth();
+  return depth === undefined ? undefined : `depth${depthClass(depth)}`;
+};
 
 export interface SurfaceProps {
   /** The hand-made box's contents, not the box itself. They sit one level deeper than the surface around it, so a Button or Select inside takes the next corner radius down. */

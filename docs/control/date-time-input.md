@@ -57,17 +57,17 @@ box stays disabled until there is a date. `onChange` receives the recomposed ISO
 not an event, and `undefined` once the date is cleared.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { DateTimeInput } from '@korzun/design/control';
 import { useState } from 'react';
 
 export default function Basic() {
   const [value, setValue] = useState<string | undefined>(undefined);
   return (
-    <Stack>
+    <Space direction="vertical">
       <DateTimeInput name="publishDate" label="Publish date" value={value} onChange={setValue} />
       <Text tone="muted">Value: {value ?? 'undefined'}</Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -78,7 +78,7 @@ export default function Basic() {
 above them. `inline` paints no row, for a spot inside your own layout.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { DateTimeInput } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -87,32 +87,44 @@ export default function Layouts() {
   const [vertical, setVertical] = useState<string | undefined>('2023-06-06');
   const [inline, setInline] = useState<string | undefined>(undefined);
   return (
-    <Stack>
-      <Text tone="muted">layout horizontal</Text>
-      <DateTimeInput
-        name="horizontal"
-        label="Published"
-        layout="horizontal"
-        value={horizontal}
-        onChange={setHorizontal}
-      />
-      <Text tone="muted">layout vertical</Text>
-      <DateTimeInput
-        name="vertical"
-        label="Published"
-        layout="vertical"
-        value={vertical}
-        onChange={setVertical}
-      />
-      <Text tone="muted">layout inline</Text>
-      <DateTimeInput
-        name="inline"
-        label="Published"
-        layout="inline"
-        value={inline}
-        onChange={setInline}
-      />
-    </Stack>
+    <Space direction="vertical" gap="xl">
+      <Space direction="vertical" gap="xs">
+        <Text size="sm" tone="muted">
+          layout="horizontal"
+        </Text>
+        <DateTimeInput
+          name="horizontal"
+          label="Published"
+          layout="horizontal"
+          value={horizontal}
+          onChange={setHorizontal}
+        />
+      </Space>
+      <Space direction="vertical" gap="xs">
+        <Text size="sm" tone="muted">
+          layout="vertical"
+        </Text>
+        <DateTimeInput
+          name="vertical"
+          label="Published"
+          layout="vertical"
+          value={vertical}
+          onChange={setVertical}
+        />
+      </Space>
+      <Space direction="vertical" gap="xs">
+        <Text size="sm" tone="muted">
+          layout="inline"
+        </Text>
+        <DateTimeInput
+          name="inline"
+          label="Published"
+          layout="inline"
+          value={inline}
+          onChange={setInline}
+        />
+      </Space>
+    </Space>
   );
 }
 ```
@@ -125,7 +137,7 @@ changes. A year or year-month shows as the 1st of the period, a timestamp shows 
 Pick a sample, then edit the date to see what `onChange` sends back.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { DateTimeInput, SegmentedControl } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -141,16 +153,18 @@ const SAMPLES = [
 export default function StoredValues() {
   const [value, setValue] = useState<string | undefined>('2023-06');
   return (
-    <Stack>
-      <SegmentedControl
-        label="Stored value"
-        options={SAMPLES}
-        value={value ?? null}
-        onChange={setValue}
-      />
+    <Space direction="vertical">
+      <Space>
+        <SegmentedControl
+          label="Stored value"
+          options={SAMPLES}
+          value={value ?? null}
+          onChange={setValue}
+        />
+      </Space>
       <DateTimeInput name="stored" label="Publish date" value={value} onChange={setValue} />
       <Text tone="muted">Value: {value === undefined ? 'undefined' : `'${value}'`}</Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -162,7 +176,7 @@ A form field beside the others in a Card. Keep the composed string from
 two separate fields (`publishDate`, `publishDateTime`).
 
 ```tsx
-import { Card, Stack, Text } from '@korzun/design/component';
+import { Card, Space, Text } from '@korzun/design/component';
 import { Button, DateTimeInput, TextInput } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -182,7 +196,7 @@ export default function InACard() {
         </Button>
       }
     >
-      <Stack>
+      <Space direction="vertical">
         <TextInput name="title" label="Title" value={title} onChange={setTitle} />
         <DateTimeInput
           name="publishDate"
@@ -191,7 +205,7 @@ export default function InACard() {
           onChange={setPublishDate}
         />
         {sent !== null && <Text tone="success">Sent: {sent}</Text>}
-      </Stack>
+      </Space>
     </Card>
   );
 }
@@ -206,7 +220,7 @@ export default function InACard() {
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `label` | `string` |  | Linked to the date input; the time input is labelled `${label} time` (or `Time`). |
-| `layout` | `'horizontal' \| 'vertical' \| 'inline'` | `'horizontal'` | `'horizontal'` and `'vertical'` paint a shaded row (`bg.cardHeader`, `radius.md`); `'inline'` paints none. |
+| `layout` | `'horizontal' \| 'vertical' \| 'inline'` | `'horizontal'` | `'horizontal'` and `'vertical'` paint a shaded row (`bg.cardHeader`) with corners that follow surface depth ([corners](../corners.md)); `'inline'` paints none. |
 | `name` (required) | `string` |  | The date input's `name`; the time input is `${name}Time`. Form data holds two fields, not the composed value. |
 | `onChange` | `(newValue: string \| undefined) => void` | `() => {}` | Receives the recomposed ISO string (time in UTC), or `undefined` when the date is cleared; not an event. |
 | `value` (required) | `string \| undefined` |  | An ISO 8601 date string as the server stores it: a bare date, a timestamp, or a lower-precision year / year-month. `undefined` and `''` both mean "no date". The inputs re-sync when this changes. |
@@ -223,12 +237,15 @@ export default function InACard() {
 | `theme.color.text.faint` | `#9ca3af` | `#6E7480` |
 | `theme.color.text.primary` | `#111` | `#F5F5F7` |
 | `theme.layout.controlHeight` | `2.0625rem` | `2.0625rem` |
+| `theme.radius.lg` | `16px` | `16px` |
 | `theme.radius.md` | `8px` | `8px` |
+| `theme.radius.sm` | `4px` | `4px` |
 | `theme.recipe.input` | [recipe](../tokens.md#recipe) | [recipe](../tokens.md#recipe) |
 | `theme.recipe.label` | [recipe](../tokens.md#recipe) | [recipe](../tokens.md#recipe) |
 | `theme.space.md` | `0.5rem` | `0.5rem` |
 | `theme.space.sm` | `0.375rem` | `0.375rem` |
 | `theme.space.xs` | `0.25rem` | `0.25rem` |
+| `theme.space.xxl` | `1rem` | `1rem` |
 | `theme.zIndex.base` | `1` | `1` |
 
 <!-- /generated:tokens -->
@@ -237,6 +254,6 @@ export default function InACard() {
 
 ## Changelog
 
-No changes yet.
+- **0.7.0** (2026-11-26): Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.6.0 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px. A text field, `ChipsInput` box or field label directly on a Page also moves its text 16px in from the edge (8px elsewhere), the inset `Button` keeps, so it clears the deeper corner.
 
 <!-- /generated:changelog -->

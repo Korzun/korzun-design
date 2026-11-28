@@ -1,18 +1,18 @@
 ---
 name: document-component
-description: Use when documenting or migrating a korzun-design module's doc (docs/control, docs/component, theme, toast, icon) for the docs site, adding or fixing a module's examples/, or refreshing a module's doc, JSDoc and examples after its API was changed elsewhere.
+description: Use when documenting or migrating a korzun-design module's doc (docs/control, docs/component, docs/hooks, theme, toast, icon) for the docs site, adding or fixing a module's examples/, or refreshing a module's doc, JSDoc and examples after its API was changed elsewhere.
 ---
 
 # Document a component
 
 The output is a module doc shaped like the pilots (`docs/control/button.md`,
-`docs/component/alert.md`, `docs/component/stack.md`): hand-written guidance,
+`docs/component/alert.md`, `docs/component/space.md`): hand-written guidance,
 JSDoc that carries every note the old tables had, runnable examples that cover
 every variant and state, and generated regions filled by `npm run docs:gen`.
 It documents the module's current API: component types and runtime code stay
 as they are (step 7 says what to do when they would need to change).
 
-Below, `<area>/<module>` is the module folder (`control/menu`), `<slug>` the
+Below, `<area>/<module>` is the module folder (`control/menu`, `hooks/use-pull-to-refresh`), `<slug>` the
 folder name (`menu`), `<Name>` the main exported value (`Menu`). For an
 entry-point module (`theme`, `toast`, `icon`) the doc is `docs/<area>.md`, the
 source `src/<area>/` and the slug `<area>`.
@@ -23,6 +23,7 @@ earlier runs fail review, and what to do instead.
 ## 0. Branch check
 
 The generator lives on `main`. Run `ls scripts/docs-gen/cli.mjs`.
+
 - It exists: continue.
 - It is missing: your branch predates it; rebase on `main` (or stop and report "branch has no docs generator").
 
@@ -30,14 +31,14 @@ The generator lives on `main`. Run `ls scripts/docs-gen/cli.mjs`.
 
 1. `git show HEAD:docs/<area>/<slug>.md`: the old doc, before you edit anything. Keep it open; steps 2, 3 and 6 check against it.
 2. `src/<area>/<module>/`: `index.tsx` (or `types.ts`), `style.ts`, `index.test.tsx`.
-3. The module's changelog entries. A tag list can name several modules (`- [Popover, Select, ChipsInput, Dialog] …`), so match the name anywhere in it:
+3. The module's changelog entries. A tag list can name several modules (`- [Popover, Select, ChipsInput, Modal] …`), so match the name anywhere in it:
    ```
    grep -nE "^\s*- \[([^]]*, )?<Name>(, [^]]*)?\]" CHANGELOG.md
    ```
    Read each hit and the sub-bullets indented under it (`sed -n '<line>,+12p' CHANGELOG.md`). They say what changed since the old prose was written.
 4. The doc of every module it builds on: each `../<other>/` import in its source has a doc at `docs/<area>/<other>.md` (Select and Menu build on Popover: read `docs/control/popover.md`).
 5. `AGENTS.md` (the styling rules examples must follow).
-6. One pilot doc and its `examples/` as the shape reference: Button for a control, Alert or Stack for a component.
+6. One pilot doc and its `examples/` as the shape reference: Button for a control, Alert or Space for a component.
 
 ## 2. JSDoc audit (REQUIRED, every prop)
 
@@ -50,9 +51,10 @@ row per prop and one row per type (`Type` alone in the first column); it goes
 in your final report:
 
 | Type.prop or Type | Old table note (verbatim, or "none") | JSDoc after | Default column shows ("–" for a type row) |
-|---|---|---|---|
+| ----------------- | ------------------------------------ | ----------- | ----------------------------------------- |
 
 Every rule below applies to type-level comments too. A finished JSDoc line is:
+
 - **On the prop itself.** Each clause of the old note (every behaviour, every "needs X", every "type error when Y", every "so Z works") appears on that prop's own `/** */`. The comment on an interface or type alias renders as a paragraph under that type's table heading; it carries only what is true of the type as a whole ("An item that navigates."). A clause that describes one prop (what it renders, needs or rejects) stays on that prop's JSDoc even when the type comment says it too: a merged union table (`MenuItem`, the one `items` links to) shows no type paragraph. A note about one prop that sits only in a type comment moves onto the prop: that is a comment-only change and allowed.
 - **Inherited member, note for this module only.** When the type is an intersection that inherits the member from another module's type (`PageActionItem = MenuActionItem & { … }` inherits `Icon`) and the note holds only here ("ignored by `PageActionsBar`'s primary Buttons"), put `@member <name> <note>` on this type's own comment. The generator appends the note to that member's row in this doc only; the other module's doc is unchanged. Never park the note on a sibling prop. A `@member` naming no member of the type fails `docs:gen`.
 - **Behaviour only, at most three sentences.** What it does, when it is ignored, what it flips to, what TypeScript rejects. No history ("as it has always looked", "since 0.3"), no naming rationale, no restated union values (the Type column lists them; describe only values that carry extra meaning, as Alert `tone` does for which ones are announced). A longer explanation lives in a Usage subsection and the JSDoc links to it.
@@ -67,20 +69,21 @@ Every rule below applies to type-level comments too. A finished JSDoc line is:
 Rewrite example (the Default column then shows `'medium'`):
 
 ```ts
-/** `'medium'` (default): regular height; `'small'`: compact, `'large'`: tall. */  // before
-/** Height and font size. `'small'` fits a table row. */                          // after
+/** `'medium'` (default): regular height; `'small'`: compact, `'large'`: tall. */ // before
+/** Height and font size. `'small'` fits a table row. */ // after
 ```
 
 ## 3. Doc file
 
 `docs/<area>/<slug>.md` is exactly these parts, in order:
 
-````md
+```md
 ---
 title: <Name>
 description: <one sentence; it becomes the AGENTS.md index note and the overview card>
-category: <one of scripts/docs-gen/categories.mjs, verbatim>
+category: <the section scripts/docs-gen/categories.mjs lists the module under, verbatim>
 ---
+
 # <Name>
 
 <!-- generated:import -->
@@ -110,7 +113,7 @@ Use something else for: <job> (`OtherComponent`), <job> (`Other`).
 
 <!-- generated:changelog -->
 <!-- /generated:changelog -->
-````
+```
 
 - Usage and Do / don't: check every sentence against the code, the changelog lines and the docs of the modules it builds on (step 1). Rewrite each sentence that is now false; keep every other sentence word for word, characters included. List each rewritten sentence, old and new, in your report.
 - Short facts from the old Props section ("No `className`.", "Pass `value` and `onChange` together.") go in Usage, as a sentence in the `###` subsection whose subject they share, or a new subsection named for it (`### Styling`). A fact the generated import region already states ("props type exported as `MenuProps`") is dropped.
@@ -128,20 +131,22 @@ Each example is `src/<area>/<module>/examples/NN-slug.tsx`:
  * One `primary` action for the main step and a `default` button beside it.
  * `onClick` takes no arguments: the button passes no event.
  */
-import { Inline, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { useState } from 'react';
 
 export default function Basic() {
   const [saves, setSaves] = useState(0);
   return (
-    <Inline>
-      <Button onClick={() => setSaves(0)}>Reset</Button>
-      <Button type="primary" onClick={() => setSaves((n) => n + 1)}>
-        Save
-      </Button>
+    <Space direction="vertical" align="start">
+      <Space>
+        <Button onClick={() => setSaves(0)}>Reset</Button>
+        <Button type="primary" onClick={() => setSaves((n) => n + 1)}>
+          Save
+        </Button>
+      </Space>
       <Text tone="muted">Saves: {saves}</Text>
-    </Inline>
+    </Space>
   );
 }
 ```
@@ -157,33 +162,61 @@ A module that only shows on phones (its `style.ts` hides it with `[theme.breakpo
  */
 ```
 
-The component page then renders that demo in a 390px-wide frame (its media queries see a phone), and an `01` with the tag gives a phone-width overview thumbnail. The tag line is left out of the description. `mobile` is the only value. Use it only where the module is hidden or laid out differently at desktop width, never to make a wide example fit. Check `style.ts` before tagging: a module with no breakpoint rule (PageFooterActions) shows at every width and gets no tag, and one hidden on phones (`[theme.breakpoint.mobile]`: PageActionsBar, NavDesktop) never does.
+The component page then renders that demo in a 390px-wide frame (its media queries see a phone), and an `01` with the tag gives a phone-width overview thumbnail. The tag line is left out of the description. The other value, `desktop`, is for a preview only (see "The preview"). Use `mobile` only where the module is hidden or laid out differently at desktop width, never to make a wide example fit. Check `style.ts` before tagging: a module with no breakpoint rule (PageFooterActions) shows at every width and gets no tag, and one hidden on phones (`[theme.breakpoint.mobile]`: PageActionsBar, NavDesktop) never does.
+The component page lays examples out in two columns, as Ant does: each run fills the columns alternately (first left), and a `@viewport screen` or `@viewport desktop` example takes a full row. A column is narrower than the 640px breakpoint, but on a desktop page the frame renders the desktop look (the frame takes its breakpoint from the page around it); on a phone, one column in the authored order. So write each example to read well at about 520px wide, and give a full-width screen `@viewport screen`.
 A phone-width frame is still a browser tab: `env(safe-area-inset-*)` is 0 there, so chrome sized by the installed app's insets (TopFade's band, NavMobile's home-indicator padding) shows at its browser-tab size. That is expected; do not add props or descriptions to fake the inset. Check the page at phone width too: `shoot-page.mjs … --width 390`.
 
 - Imports: entry points only (`@korzun/design/<entry>`), all `@korzun/design/*` first then `react`, one block.
-- Default export, no props. Layout with `Stack`/`Inline`, text with `Text`/`Heading`, no inline styles or literals.
+- Default export, no props. Layout with `Space`, text with `Text`/`Heading`, no inline styles or literals.
 - Text is typed Unicode (`Loading…`, `2–5`), never HTML entities and never ASCII stand-ins; strings match the component's own (`Loading…`, not `Loading...`).
-- Every interactive control is wired to state, so using it visibly changes the demo, including a `Button` that is only there to show layout (Stack 03 counts its "Add a book" clicks): a controlled value with its setter, plus a `Text` readout where the control does not display its own value ("Chosen: Edit"). No handler that does nothing (`() => {}`, `() => undefined`, `() => null`, `noop`, a function with an empty body). Quick check, which must print nothing: `grep -rnE '\(\) => (\{\s*\}|undefined|null)|noop' src/<area>/<module>/examples/`; it does not catch every do-nothing handler, so also read each handler. One exception: a callback the type requires but the component never calls (a `PageFooterActions` `FooterAction` with `submit: true` takes `onClick` and submits the form instead) gets `() => {}`, and that one grep hit is expected; say so in your report. Do not invent wiring for it (a ref that calls `requestSubmit()`). A shared `items` constant becomes a function of the setter, or moves inside the component.
+- Every interactive control is wired to state, so using it visibly changes the demo, including a `Button` that is only there to show layout (Space 04 toggles "See all"): a controlled value with its setter, plus a `Text` readout where the control does not display its own value ("Chosen: Edit"). No handler that does nothing (`() => {}`, `() => undefined`, `() => null`, `noop`, a function with an empty body). Quick check, which must print nothing: `grep -rnE '\(\) => (\{\s*\}|undefined|null)|noop' --exclude=preview.tsx src/<area>/<module>/examples/`; it does not catch every do-nothing handler, so also read each handler. One exception: a callback the type requires but the component never calls (a `PageFooterActions` `FooterAction` with `submit: true` takes `onClick` and submits the form instead) gets `() => {}`, and that one grep hit is expected; say so in your report. Do not invent wiring for it (a ref that calls `requestSubmit()`). A shared `items` constant becomes a function of the setter, or moves inside the component.
 - Titles and descriptions name no defaults: no "(the default)", no "`solid` by default".
 - Each description sentence is shown by the demo. "Set `ariaLabel` when the trigger is an icon" means the demo's trigger is an icon `Button` with `ariaLabel`.
 - Examples follow the Usage and Do / don't of this doc and of every component they use (read `docs/component/surface.md` before using `Surface`). An example never demonstrates a use those docs advise against (a `Surface` with no drawn box around it).
-- `01` is the canonical compact usage: it is the overview thumbnail.
-- A lone trigger (a `Button` that opens a `Dialog`, a fragment root `<>`) goes in an `Inline`: at the root of the frame it stretches to the full width.
-- An example with an overlay places its trigger so the overlay opens on the side the example is about (a `side="top"` trigger sits below other content). The frame adds room above for a `side="top"` overlay, and room below for a list that flipped upward for lack of room, so it opens downward as it would on a page.
+- `01` is the canonical compact usage, the first demo on the component page. The overview thumbnail is the preview below, not `01`.
+- A lone trigger (a `Button` that opens a `Modal`, a fragment root `<>`) goes in a `Space` or a `<Space direction="vertical" align="start">`: at the root of the frame it stretches to the full width.
+- A readout ("Chosen: …", "Saved: …") goes under the trigger or row of buttons, never beside or above it (except over a `side="top"` trigger, below): `<Space direction="vertical" align="start">`, the controls (several in a `Space`), then `<Text tone="muted">`.
+- Groups that show one value each (layouts, surfaces, radii) get a caption naming it: `<Space direction="vertical" gap="xl">` of groups, each a `<Space direction="vertical" gap="xs">` with `<Text size="sm" tone="muted">` (`layout="horizontal"`) above its demo. Labels in a `horizontal` form stay short (under about 6rem, "Index", "Width") so the fields line up.
+- The first example of an overlay module (Modal, ConfirmModal, useModal, Popover, Menu, Select) starts open: `useState(true)` for a controlled `open`, or a trigger that opens once on mount (Menu 01, Select 01). The frame hands back the focus the overlay takes while it loads, so the docs page keeps its keyboard.
+- An example with an overlay places its trigger so the overlay opens on the side the example is about (a `side="top"` trigger sits below other content, its readout included, or the overlay flips down before the frame can make room). The frame adds room above for a `side="top"` overlay, and room below for a list that flipped upward for lack of room, so it opens downward as it would on a page.
 - A description talks about the component, never the demo frame (no "to stay inside the demo"). No prop (`side`, a large `gap`) is set only to fit the frame. When the frame clips an overlay and the example is as it should be, report a gallery defect.
 - Link items and `to` props stay real links. Clicking one in a demo shows the frame's "The example navigated to…" page; that is expected.
 
+### The preview
+
+Every module also has `examples/preview.tsx`, its overview thumbnail. It is rendered alone in a small, centred, non-interactive frame (about 430×240px, scaled to 0.6) and never shown on the component page or in the doc; `docs:check` fails without one.
+
+```tsx
+/** Preview */
+import { Space } from '@korzun/design/component';
+import { Button } from '@korzun/design/control';
+
+export default function Preview() {
+  return (
+    <Space>
+      <Button type="primary">Save</Button>
+      <Button>Cancel</Button>
+    </Space>
+  );
+}
+```
+
+- Show the component and nothing else, like an Ant Design overview card: one instance or a tight row of variants. No `Text` readouts or explanations, no wrapper `Card` unless the module only exists inside one (CardRow), no buttons that drive a demo.
+- An overlay (Modal, Menu, Popover) is shown open. A phone-only module takes `@viewport mobile` as in its `01`. The thumbnail frame is about 430px wide, under the 640px mobile breakpoint, so a module hidden on phones (PageActionsBar, NavDesktop) takes `@viewport desktop`: the thumbnail lays it out at 680px and scales it to fit. Never override a module's own breakpoint styles to show it.
+- It is not interactive, so the wiring rule above does not apply: a required handler may be `() => {}` (the grep check excludes `preview.tsx`).
+- Check it: `http://localhost:<port>/#/frame/<slug>/preview?fit=center&theme=light` at a 430×240 viewport, in both themes.
+
 Coverage checklist (REQUIRED; fill in every row, it goes in your report). Each row names its example file:
 
-| What | Value | Example file |
-|---|---|---|
-| each union-typed prop (`type`, `tone`, `size`, `variant`, `side`, `align`, `surface`, `gap`, …) | every value, each visible on its own and labelled | |
-| each state the module has (`disabled`, `loading`, error, empty, read-only) | each, visible on its own and held: a state reached only briefly (a timer, an in-flight request) gets a toggle that keeps it on, and has its own shot | |
-| the old doc's main `## Example` | list every prop and item kind it uses (Menu: `align="end"`, link item, action item, `Icon`, `danger`, `separatorBefore`); one example contains all of them | |
-| the common composition with its usual neighbours (in a `Card`, `Dialog`, form, row) | one | |
-| every interactive control wired to state with a visible effect | no do-nothing handler (grep above prints nothing, each handler read); each control's effect named | all |
-| each description sentence shown by its demo | checked, sentence by sentence | all |
-| examples follow this doc's and the used components' Usage and Do / don't | checked | all |
+| What                                                                                            | Value                                                                                                                                                      | Example file |
+| ----------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
+| each union-typed prop (`type`, `tone`, `size`, `variant`, `side`, `align`, `surface`, `gap`, …) | every value, each visible on its own and labelled                                                                                                          |              |
+| each state the module has (`disabled`, `loading`, error, empty, read-only)                      | each, visible on its own and held: a state reached only briefly (a timer, an in-flight request) gets a toggle that keeps it on, and has its own shot       |              |
+| the old doc's main `## Example`                                                                 | list every prop and item kind it uses (Menu: `align="end"`, link item, action item, `Icon`, `danger`, `separatorBefore`); one example contains all of them |              |
+| the common composition with its usual neighbours (in a `Card`, `Modal`, form, row)              | one                                                                                                                                                        |              |
+| every interactive control wired to state with a visible effect                                  | no do-nothing handler (grep above prints nothing, each handler read); each control's effect named                                                          | all          |
+| each description sentence shown by its demo                                                     | checked, sentence by sentence                                                                                                                              | all          |
+| examples follow this doc's and the used components' Usage and Do / don't                        | checked                                                                                                                                                    | all          |
 
 A union with many values (a `gap` scale, every `tone`) can be one example
 showing all values side by side, each labelled with its value.
@@ -203,22 +236,30 @@ site). If one turns up in the module, `git rm` it; examples replace it.
 
    Each block below is one Bash call; shell variables do not survive between calls, so the port and process id live in files and every call starts by setting `S` to your scratch directory (the same absolute path each time).
    Start the gallery on a free port, in its own process group:
+
    ```
    S=<scratch>; node -e "const s=require('net').createServer().listen(0,()=>{console.log(s.address().port);s.close()})" > $S/gallery.port
    PORT=$(cat $S/gallery.port); setsid npm run gallery -- --port $PORT --strictPort > $S/gallery.log 2>&1 & echo $! > $S/gallery.pid
    ```
+
    Wait for it:
+
    ```
    S=<scratch>; PORT=$(cat $S/gallery.port); for i in $(seq 1 60); do curl -s -o /dev/null http://localhost:$PORT/ && break; sleep 1; done; echo "gallery on $PORT"
    ```
+
    Shoot the whole page, light and dark (writes `<slug>-light.png` and `<slug>-dark.png`; it waits until every demo frame has loaded and sized itself):
+
    ```
    S=<scratch>; PORT=$(cat $S/gallery.port); node .claude/skills/document-component/shoot-page.mjs http://localhost:$PORT <slug> $S/<slug>.png
    ```
-   Overlay shots (REQUIRED): one for **every** example that contains an overlay control (Menu, Select, Popover, Dialog, ChipsInput, anything that opens a list or layer), each opened the way a reader opens it, light and dark:
+
+   Overlay shots (REQUIRED): one for **every** example that contains an overlay control (Menu, Select, Popover, Modal, ChipsInput, anything that opens a list or layer), each opened the way a reader opens it, light and dark:
+
    ```
    S=<scratch>; PORT=$(cat $S/gallery.port); node .claude/skills/document-component/open-overlay.mjs http://localhost:$PORT <slug> <example-slug> $S/<slug>-<example-slug>-open.png --click "<role>:<name>"
    ```
+
    `<example-slug>` is the example file name without `NN-` and `.tsx`. Steps run in order, one per reader action:
    - `--click "<role>:<name>"`: the element with that ARIA role and exact accessible name; a bare name means role `button`. A Select's trigger is `button:<its shown value or placeholder>`.
    - `--click "Open dialog" --click "Actions"`: a menu inside a dialog.
@@ -227,18 +268,20 @@ site). If one turns up in the module, `git rm` it; examples replace it.
    - `--press <key>`: `ArrowDown`, `Enter`, `Escape`, `Backspace`. It presses on whatever has focus, so a key after `--type` lands in that field.
    - A validity state that only typing reaches (invalid, too long) gets its own shot: the steps that reach it (`--type "textbox:abc"`, then `--press Backspace` if needed) are the held view.
    - `--width <px>` (both scripts) sets the browser width: `--width 390` to see the page as a phone does.
-   An example with several overlays gets one shot per overlay.
+     An example with several overlays gets one shot per overlay.
 
    Fill in this table; it goes in your report:
 
    | Example | Overlay | Steps | Shot paths (light, dark) | Fully visible? |
-   |---|---|---|---|---|
+   | ------- | ------- | ----- | ------------------------ | -------------- |
 
    View every PNG. Each example renders, is not empty, and is legible in dark. Each overlay is fully visible inside its frame. An overlay cut at the frame edge is a defect: fix the example (move the trigger, give the list room), or, when the example is right, report it under generator problems as a gallery defect with the shot path.
    Reshoot check (REQUIRED, last thing before the commit). With `<oldest>` the oldest PNG of your final set of shots:
+
    ```
    find src/<area>/<module> docs/<area>/<slug>.md -newer <oldest>
    ```
+
    (entry-point module: `find src/<area> docs/<area>.md -newer <oldest>`). It prints nothing. Anything it prints means reshoot that example's shots and the full page, then run it again. Run it again after every follow-up commit too (a review fix, a JSDoc tweak), right before you report, and quote its empty output in the report; a commit made after the last shots means reshooting first.
    Stop the server by its process group: `S=<scratch>; kill -- -$(cat $S/gallery.pid)`.
 
@@ -251,6 +294,7 @@ site). If one turns up in the module, `git rm` it; examples replace it.
 ## 8. Report
 
 Your report contains, in order:
+
 1. The JSDoc audit table from step 2 (every old note and where it lives now).
 2. The coverage checklist from step 4.
 3. Every Usage and Do / don't sentence you rewrote (old, new, why), and any you doubt but kept.

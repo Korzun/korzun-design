@@ -2,7 +2,7 @@
  * `type="minimal"` drops the page's width, margin, padding, gap and header row,
  * for a sign-in or splash screen. You lay it out yourself.
  */
-import { Page, Stack, Text } from '@korzun/design/component';
+import { Space, Page, Text } from '@korzun/design/component';
 import { Button, TextInput } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -11,13 +11,15 @@ export default function Minimal() {
   const [signedIn, setSignedIn] = useState(false);
   return (
     <Page type="minimal">
-      <Stack>
+      <Space direction="vertical">
         <TextInput name="username" label="Username" value={name} onChange={setName} />
-        <Button type="primary" onClick={() => setSignedIn(true)}>
-          Sign in
-        </Button>
+        <Space>
+          <Button type="primary" onClick={() => setSignedIn(true)}>
+            Sign in
+          </Button>
+        </Space>
         {signedIn && <Text tone="muted">Signed in as {name || 'nobody'}</Text>}
-      </Stack>
+      </Space>
     </Page>
   );
 }

@@ -3,7 +3,7 @@
  * pixels, a `px` or `rem` string, or a theme space value (`theme.space.xl`).
  * Each button is labelled with the value it passes.
  */
-import { Inline, Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button, Popover } from '@korzun/design/control';
 import { createUseStyles, useTheme, type Theme } from '@korzun/design/theme';
 import { useRef, useState } from 'react';
@@ -36,9 +36,8 @@ export default function Gap() {
     </div>
   );
   return (
-    <Stack>
-      <Text tone="muted">Open: {open ?? 'none'}</Text>
-      <Inline>
+    <Space direction="vertical">
+      <Space>
         <Button ref={pixelsAnchor} onClick={() => toggle('pixels')}>
           {'gap={24}'}
         </Button>
@@ -51,7 +50,8 @@ export default function Gap() {
         <Button ref={themeAnchor} onClick={() => toggle('theme')}>
           {'gap={theme.space.xl}'}
         </Button>
-      </Inline>
+      </Space>
+      <Text tone="muted">Open: {open ?? 'none'}</Text>
       <Popover
         anchorRef={pixelsAnchor}
         open={open === 'pixels'}
@@ -88,6 +88,6 @@ export default function Gap() {
       >
         {panel('theme.space.xl')}
       </Popover>
-    </Stack>
+    </Space>
   );
 }

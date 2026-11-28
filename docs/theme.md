@@ -1,7 +1,7 @@
 ---
 title: Theme
 description: ThemeProvider, the light and dark themes, and createUseStyles for writing token-based styles.
-category: Theme
+category: Foundations
 ---
 # Theme
 
@@ -89,7 +89,7 @@ export const useStyle = createUseStyles((theme: Theme) => ({
 ```
 
 - Style files are for padding, borders, backgrounds, and one-offs (borders come from the border tokens). Lay out with
-  `Stack`/`Inline` and set text with `Text`/`Heading`.
+  `Space` and set text with `Text`/`Heading`.
 - `applyTransparency(color, alpha)` turns a hex or rgb token into an `rgba()`
   string. Use it for tints instead of writing an rgba literal.
 - Media queries: use the `theme.breakpoint.mobile` / `.normal` strings as keys.
@@ -104,14 +104,14 @@ chosen by nesting depth; see [corners](corners.md).
 | Group | Keys | Notes |
 |---|---|---|
 | `color.text` | `primary`, `secondary`, `muted`, `faint`, `description`, `onPrimary`, `onDanger` | `muted` for labels and meta, `faint` for placeholders |
-| `color.bg` | `page`, `card`, `cardHeader`, `track`, `input`, `footer`, `glass`, `glassFallback`, `glassActive`, `selected`, `hover`, `success`, `placeholder` | `cardHeader` is also the shaded-row and inset-box fill; `hover` is a translucent scrim |
-| `color.border` | `default`, `strong`, `light`, `focus`, `hover`, `danger`, `glass`, `glassActive`, `faint`, `loading`, `success`, `section` | Cards and dividers use `strong`; inputs use `default` |
+| `color.bg` | `page`, `card`, `cardHeader`, `track`, `switchOff`, `input`, `footer`, `glass`, `glassFallback`, `glassActive`, `selected`, `hover`, `success`, `placeholder` | `cardHeader` is also the shaded-row and inset-box fill; `hover` is a translucent scrim |
+| `color.border` | `default`, `strong`, `light`, `focus`, `hover`, `danger`, `glass`, `glassActive`, `faint`, `loading`, `success`, `section` | Cards and dividers use `strong`; inputs use `default`; `light` is a hairline rule inside a card |
 | `color.brand` | `default`, `hover`, `active`, `light`, `outline`, `loading*`, `linkHover` | The primary action colour |
 | `color.danger` | `default`, `hover`, `active`, `light`, `outline`, `loading*` | Destructive actions and errors |
 | `color.success` | (a string) | Solid green |
 | `color.warning` | (a string) | Solid amber |
 | `color.info` | (a string) | Solid blue, the mode's `brand.default` |
-| `color.chip.<tone>` | `{ text, bg, border }` for 13 tones. Status tones: `success`, `warning`, `danger`, `info`, `neutral`. Label tones: `status`, `author`, `series`, `subject`, `book`, `entryType`, `user`, `rating` | Used by `Tag` |
+| `color.chip.<tone>` | `{ text, bg, border }` for 13 tones. Status tones: `success`, `warning`, `danger`, `info`, `neutral`. Label tones: `status`, `author`, `series`, `subject`, `book`, `entryType`, `user`, `rating` | Used by `Chip`; `neutral` text holds 4.5:1 on its tint |
 | `color.overlay` | `backdrop` | Modal backdrop |
 | `color.gray` / `blue` / `red` | primitive scales | Don't use these in app code; use the semantic tokens above |
 | `space` | `xxxs` 0.1rem, `xxs` 0.125, `xs` 0.25, `sm` 0.375, `md` 0.5, `lg` 0.625, `xl` 0.75, `xxl` 1, `xxxl` 1.25, `xxxxl` 1.5, `xxxxxl` 2rem | `md` is the default gap between stacked fields |
@@ -125,7 +125,6 @@ chosen by nesting depth; see [corners](corners.md).
 | `zIndex` | `behind`, `base`, `stack.{lo,md,hi}`, `header`, `sticky`, `toast` | |
 | `breakpoint` | `mobile` (≤640px), `normal` | Media query strings |
 | `layout` | `navHeightMobile`, `modalWidth`, `controlHeight`, `floatingControlTopBase` | Measured chrome sizes to lay out around |
-| `size` | `metadataValue` | |
 
 ### Recipes
 
@@ -162,7 +161,7 @@ same sheet (`danger: {}`).
 
 ```tsx
 import { applyTransparency } from '@korzun/design';
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { useState } from 'react';
@@ -187,12 +186,12 @@ export default function Styles() {
   const [picks, setPicks] = useState(0);
   return (
     <div className={styles.panel}>
-      <Stack gap="md" align="start">
+      <Space direction="vertical" gap="md" align="start">
         <div className={styles.highlight}>
           <Text>Picked {picks} times</Text>
         </div>
         <Button onClick={() => setPicks((n) => n + 1)}>Pick</Button>
-      </Stack>
+      </Space>
     </div>
   );
 }
@@ -203,7 +202,7 @@ export default function Styles() {
 `useThemeSetting` returns the choice and its setter; `useTheme().colorScheme` is the mode it resolved to. Pass the app's root `ThemeProvider` an `identity` and the choice is saved for that user and restored when they return; with `null` nothing is saved. Switch the identity below and the choice follows it.
 
 ```tsx
-import { Inline, Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { ThemeProvider, useTheme, useThemeSetting, type ThemeSetting } from '@korzun/design/theme';
 import { useState } from 'react';
@@ -214,12 +213,12 @@ const Picker = ({ identity }: { identity: string | null }) => {
   const [setting, setSetting] = useThemeSetting();
   const theme = useTheme();
   return (
-    <Stack gap="md" align="start">
+    <Space direction="vertical" gap="md" align="start">
       <Text tone="muted">
         {identity === null ? 'Signed out' : `Signed in as ${identity}`}: setting {setting}, mode{' '}
         {theme.colorScheme}
       </Text>
-      <Inline>
+      <Space>
         {settings.map((next) => (
           <Button
             key={next}
@@ -229,8 +228,8 @@ const Picker = ({ identity }: { identity: string | null }) => {
             {next}
           </Button>
         ))}
-      </Inline>
-    </Stack>
+      </Space>
+    </Space>
   );
 };
 
@@ -238,14 +237,14 @@ export default function Setting() {
   const [identity, setIdentity] = useState<string | null>('ada');
   return (
     <ThemeProvider identity={identity}>
-      <Stack gap="lg" align="start">
+      <Space direction="vertical" gap="lg" align="start">
         <Picker identity={identity} />
-        <Inline>
+        <Space>
           <Button onClick={() => setIdentity(identity === null ? 'ada' : null)}>
             {identity === null ? 'Sign in' : 'Sign out'}
           </Button>
-        </Inline>
-      </Stack>
+        </Space>
+      </Space>
     </ThemeProvider>
   );
 }
@@ -256,7 +255,7 @@ export default function Setting() {
 `useTheme` returns the current `Theme` for a value a stylesheet cannot take, such as a label or a chart option. `lightTheme` and `darkTheme` are the two concrete themes, handy in tests. Pick one to read the same tokens from it.
 
 ```tsx
-import { Inline, Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { darkTheme, lightTheme, useTheme } from '@korzun/design/theme';
 import { useState } from 'react';
@@ -266,20 +265,20 @@ export default function Values() {
   const [mode, setMode] = useState<'light' | 'dark'>('light');
   const picked = mode === 'light' ? lightTheme : darkTheme;
   return (
-    <Stack gap="md" align="start">
+    <Space direction="vertical" gap="md" align="start">
       <Text>Page background here: {current.color.bg.page}</Text>
-      <Inline>
+      <Space>
         <Button type={mode === 'light' ? 'primary' : 'default'} onClick={() => setMode('light')}>
           lightTheme
         </Button>
         <Button type={mode === 'dark' ? 'primary' : 'default'} onClick={() => setMode('dark')}>
           darkTheme
         </Button>
-      </Inline>
+      </Space>
       <Text tone="muted">
         {picked.colorScheme}: page {picked.color.bg.page}, text {picked.color.text.primary}
       </Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -302,7 +301,7 @@ The token object that `useTheme` returns and `createUseStyles` passes to a style
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `breakpoint` (required) | `{ mobile: string; normal: string; }` |  |  |
-| `color` (required) | `{ gray, blue, red, text, bg, border, success, warning, info, brand, danger, overlay, chip }` |  |  |
+| `color` (required) | `{ gray, blue, red, text, bg, border, success, warning, info, brand, danger, overlay, code, chip }` |  |  |
 | `colorScheme` (required) | `'light' \| 'dark'` |  |  |
 | `fontFamily` (required) | `{ body: string; mono: string; }` |  |  |
 | `fontSize` (required) | `{ xxs: string; xs: string; sm: string; md: string; lg: string; xl: string; xxl: string; }` |  |  |
@@ -310,9 +309,8 @@ The token object that `useTheme` returns and `createUseStyles` passes to a style
 | `layout` (required) | `{ navHeightMobile, modalWidth, formWidth, controlHeight, floatingControlTopBase }` |  |  |
 | `lineHeight` (required) | `{ tight: number; body: number; }` |  |  |
 | `radius` (required) | `{ sm: string; md: string; lg: string; circle: string; pill: string; }` |  |  |
-| `recipe` (required) | `{ input, focusRing, label, spinner, glass, glassHighlight, row, modal, card }` |  |  |
+| `recipe` (required) | `{ input, focusRing, label, spinner, glass, glassHighlight, row, codeBlock, inlineCode, codeColours, modal, card }` |  |  |
 | `shadow` (required) | `{ card, cardStack, hoverLift, dangerStack, brandStack, glass, glassActive }` |  |  |
-| `size` (required) | `{ metadataValue: string; }` |  |  |
 | `space` (required) | `{ xxxs, xxs, xs, sm, md, lg, xl, xxl, xxxl, xxxxl, xxxxxl }` |  |  |
 | `transition` (required) | `{ fast: string; medium: string; slide: string; slow: string; spring: string; }` |  |  |
 | `zIndex` (required) | `{ behind: number; base: number; stack: { … }; header: number; sticky: number; toast: number; }` |  |  |
@@ -341,6 +339,13 @@ This module has no styles of its own.
 
 ## Changelog
 
+- **0.7.0** (2026-11-26): **Breaking:** `size.metadataValue` (and the `size` group) is removed; `MetadataList` was its only user.
+- **0.7.0** (2026-11-26): New `color.code` palette (foreground, keyword, string, function, parameter, constant, punctuation, comment, link) for syntax colours, and `recipe.codeBlock`, `recipe.inlineCode` and `recipe.codeColours` (the ten `--code-*` variables Shiki's css-variables theme reads, from `color.code`) for code rendered outside `CodeBlock` and `Code`.
+- **0.7.0** (2026-11-26): `GlobalStyles` (rendered by `ThemeProvider`) ships the reset the components are drawn against: every element is `box-sizing: border-box` with no default margin or padding, as in Bookplate's and Scribe's `index.html`. Without it a text field was 51px tall instead of `layout.controlHeight` (33px). An app that already carries this reset sees no change; one that relied on browser default margins (`p`, `h1`, `ul`) loses them.
+- **0.7.0** (2026-11-26): `color-scheme` is set on `html` as well as `body`. With body alone the root's scheme was `normal`, so in dark mode the page scrollbar stayed light and an iframe whose document uses `GlobalStyles` (or is still loading) painted an opaque white box.
+- **0.7.0** (2026-11-26): The unchecked track is the new `color.bg.switchOff` token (`#868686` light, `#6E7480` dark), about 3:1 on `bg.page`, `bg.card` and `bg.cardHeader`; it was `border.default` (1.16:1 on a shaded row). The loading spinner on an unchecked track is now the thumb colour.
+- **0.7.0** (2026-11-26): Dark `color.border.light` is `#333439` (was `#2B2C30`, 1.10:1 on `bg.page` and 1.23:1 on `bg.card`, so hairline rules all but vanished); it is now 1.24:1 and 1.39:1, at or above light mode's step. A loading `Select`'s border in dark is a shade lighter. Light is unchanged.
+- **0.7.0** (2026-11-26): `color.chip.neutral` text is a step stronger, so a neutral Tag or chip holds 4.5:1 on its tint over `bg.page`, `bg.card` and `bg.cardHeader`: light `#5E5E5E` (was `#6E6E6E`, 4.0:1 over `cardHeader`), dark `#A8ADB6`, the mode's `text.description` (was `#9CA1AB`, 4.47:1 over `page`). Fill and border are unchanged.
 - **0.6.0** (2026-11-26): New `theme.layout.formWidth` (`400px`): the width of a standalone form column such as sign-in, narrower than a dialog.
 - **0.2.0** (2026-11-21): New `fontWeight.regular` (400) token.
 - **0.1.0** (2026-11-21): `Tag` status tones: `success`, `warning` (yellow, stronger fill), `danger`, `info` (brand blue). New `color.warning` and `color.info` solid colours. Status tones report state; label tones name things. No visual change to existing tags.

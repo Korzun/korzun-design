@@ -3,11 +3,11 @@ import { createRequire } from 'node:module';
 import { join, posix, sep } from 'node:path';
 
 import { barrelStatements, knownNames } from './barrels.mjs';
-import { CATEGORIES } from './categories.mjs';
-import { parseChangelog, validateTags } from './changelog.mjs';
+import { CATEGORIES, moduleOrder } from './categories.mjs';
+import { currentTags, parseChangelog, validateTags } from './changelog.mjs';
 import { readDefaults } from './defaults.mjs';
 import { docFiles } from './doc-files.mjs';
-import { readExample } from './examples.mjs';
+import { PREVIEW_FILE, readExample } from './examples.mjs';
 import { parseFrontMatter } from './front-matter.mjs';
 import { listModules } from './inventory.mjs';
 import { parseOrThrow } from './parse.mjs';
@@ -98,8 +98,8 @@ function valueImports(file, source) {
  * entry (`index.tsx`/`index.ts`) itself, as through `useTheme()`; and from the
  * style modules the entry imports for a value (Heading renders with Text's
  * `useTypography` from `../text/style.js`). An internal module the entry
- * imports for a value (a folder in no barrel, such as `metadata` under
- * MetadataList) is part of this module, so it is read the same way. The
+ * imports for a value (a folder in no barrel, such as `layer-stack` under
+ * Popover) is part of this module, so it is read the same way. The
  * entry's other imports (exported components, helpers) are not followed: a
  * component it renders lists its own tokens. A module outside src/theme/ does
  * not follow imports into it: they bring the provider and global styles, not
@@ -164,7 +164,7 @@ function readExamplesIn(repo, rel) {
   const dir = join(repo, rel);
   if (!existsSync(dir)) return [];
   return readdirSync(dir)
-    .filter((f) => f.endsWith('.tsx'))
+    .filter((f) => f.endsWith('.tsx') && f !== PREVIEW_FILE)
     .map((f) => readExample(`${rel}/${f}`, readFileSync(join(dir, f), 'utf8')))
     .sort((a, b) => a.order - b.order);
 }
@@ -211,6 +211,13 @@ function collectRecipes(repo, fm, out) {
   return recipes.sort((a, b) => byName(a.slug, b.slug));
 }
 
+/** The module's `examples/preview.tsx`, shown only as its overview thumbnail. */
+function readPreview(repo, mod) {
+  const rel = `${mod.srcDir}/examples/${PREVIEW_FILE}`;
+  const source = readIf(join(repo, rel));
+  return source === null ? undefined : readExample(rel, source);
+}
+
 /**
  * Rebuild only the docs-index lines of AGENTS.md. Docs with front matter list
  * their description on the `[docs]` line; other entries keep their text.
@@ -254,7 +261,7 @@ export function generate(repo, { strict = false, warn = console.warn } = {}) {
   if (!existsSync(join(repo, 'dist'))) throw new Error('dist/ missing: run npm run build');
 
   const pkg = JSON.parse(readFileSync(join(repo, 'package.json'), 'utf8'));
-  const changelog = parseChangelog(readIf(join(repo, 'CHANGELOG.md')) ?? '');
+  const changelog = currentTags(parseChangelog(readIf(join(repo, 'CHANGELOG.md')) ?? ''));
   const errors = validateTags(changelog, knownNames(repo));
   if (errors.length > 0) throw new Error(errors.join('\n'));
 
@@ -270,6 +277,7 @@ export function generate(repo, { strict = false, warn = console.warn } = {}) {
   /** @type {Map<ModuleInfo, Set<string>>} the types each module's own .d.ts files declare */
   const defines = new Map();
   const skeletons = listModules(repo);
+  const order = new Map(moduleOrder().map((m, i) => [m.slug, { ...m, index: i }]));
   const moduleDirs = new Set(skeletons.map((s) => s.srcDir));
   for (const skel of skeletons) {
     const parsed = fm.get(skel.docPath);
@@ -282,9 +290,19 @@ export function generate(repo, { strict = false, warn = console.warn } = {}) {
       if (!parsed.data[k]) throw new Error(`${skel.docPath}: front matter missing ${k}`);
     }
     checkCategory(skel.docPath, category, false);
+    const placed = order.get(skel.slug);
+    if (placed && placed.category !== category) {
+      throw new Error(
+        `${skel.docPath}: category "${category}", but categories.mjs lists ${skel.slug} under "${placed.category}"`
+      );
+    }
 
     const examples = readExamples(repo, skel);
     if (strict && examples.length === 0) throw new Error(`${skel.docPath}: no examples`);
+    const preview = readPreview(repo, skel);
+    if (strict && !preview) {
+      throw new Error(`${skel.docPath}: no preview (examples/${PREVIEW_FILE})`);
+    }
 
     // A component whose props type is not exported would get no table and a
     // "takes no props" line; that is a missing export, so stop.
@@ -323,11 +341,13 @@ export function generate(repo, { strict = false, warn = console.warn } = {}) {
       title,
       description,
       category,
+      ...(order.get(skel.slug)?.parent ? { parent: order.get(skel.slug).parent } : {}),
       values: skel.values,
       types: skel.types,
       importLine: '',
       body: '',
       examples,
+      ...(preview ? { preview } : {}),
       tables: orderTables(tables, skel.values),
       tokens,
       changelog: entries,
@@ -341,6 +361,11 @@ export function generate(repo, { strict = false, warn = console.warn } = {}) {
       new Set([...declared].filter(([, file]) => file.startsWith(dtsRoot)).map(([n]) => n))
     );
   }
+
+  // Display order: as categories.mjs lists them; a module it does not list
+  // goes after the listed ones (the categories test keeps the real repo complete).
+  const rank = (m) => order.get(m.slug)?.index ?? Infinity;
+  modules.sort((a, b) => rank(a) - rank(b));
 
   // The module whose page owns each type's table: the one that declares it
   // when several document it (one re-exports it), else the first; warn then.

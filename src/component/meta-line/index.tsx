@@ -1,39 +1,109 @@
 import cx from 'classnames';
-import type { ReactNode } from 'react';
+import { isValidElement, type CSSProperties, type ReactNode } from 'react';
 
 import { useStyle } from './style.js';
 
+/** A labelled datum: a faint, CSS-capitalized label followed by its value. */
+export type MetaLinePair = {
+  /** Shown faint and capitalized by CSS: `'cover fit'` displays as “Cover Fit”. */
+  label: string;
+  /** The value. When it is `null`, `undefined` or `false` the whole pair is skipped; `''` and `0` are kept. */
+  value: ReactNode;
+};
+
+/** One datum: any node, or a labelled pair. */
+export type MetaLineItem = ReactNode | MetaLinePair;
+
 export type MetaLineProps = {
-  /** The data, in order. `null`, `undefined` and `false` are skipped, and nothing renders when every item is. `''` and `0` are kept and draw a separator, so filter them yourself. */
-  items: ReactNode[];
+  /** The data, in order: nodes and `{ label, value }` pairs, mixed freely. `null`, `undefined` and `false` items (and pairs with such a value) are skipped, and nothing renders when every item is. `''` and `0` are kept, so filter them yourself. */
+  items: MetaLineItem[];
+  /** One character (one grapheme) drawn between items (`'·'`, `'|'`, `'/'`). It never dangles at a line break, works in right-to-left text, and is not read by screen readers. Unset or `''`: items are spaced by gaps instead. A longer string overflows its one-character cell and overlaps the next item; in development it logs a console warning once. */
+  separator?: string;
   /** On the outer element. The font size and colour set here reach every item, and the separators scale with it. Override with `'&&'` specificity, never `!important`. */
   className?: string;
 };
 
+const isPair = (item: MetaLineItem): item is MetaLinePair =>
+  typeof item === 'object' && item !== null && !isValidElement(item) && 'label' in item;
+
+declare const process: { env: { NODE_ENV?: string } };
+
+/** Production build? The literal `process.env.NODE_ENV` stays so bundlers can replace it; where nothing does and `process` is absent it throws, so that counts as not production. */
+const isProduction = () => {
+  try {
+    return process.env.NODE_ENV === 'production';
+  } catch {
+    return false;
+  }
+};
+
+const graphemes = (s: string) =>
+  typeof Intl !== 'undefined' && 'Segmenter' in Intl
+    ? Array.from(new Intl.Segmenter().segment(s)).length
+    : Array.from(s).length;
+
+const warned = new Set<string>();
+
+/** Development only: the separator cell is one character wide, so say so once per separator. */
+const warnLongSeparator = (separator: string) => {
+  if (isProduction() || warned.has(separator)) {
+    return;
+  }
+  if (graphemes(separator) > 1) {
+    warned.add(separator);
+    console.warn(
+      `MetaLine: separator "${separator}" is more than one character and will overflow its cell; use a single character such as "·".`
+    );
+  }
+};
+
+const absent = (value: unknown) => value === null || value === undefined || value === false;
+
+/** `s` as a CSS string literal for `content`: quotes, backslashes and line breaks escaped. */
+const cssString = (s: string) =>
+  `"${s
+    .replace(/\\/g, '\\\\')
+    .replace(/"/g, '\\"')
+    .replace(/\r\n|\r|\n/g, '\\a ')}"`;
+
 /**
- * A row's secondary line: a few short data ("Frank Herbert", "Book 3", "42%")
- * separated by middots. When the line is too narrow for all of them, it wraps
- * between data, never inside one, and no separator is left dangling at the end
- * of a line or leading the next.
+ * A short run of data about one record: a row's secondary line ("Frank
+ * Herbert · Book 3 · 42%") or a card's labelled facts ("Format EPUB   Size
+ * 2.1 MB"). It wraps between data, never inside one.
  *
- * The separators are CSS, not text: each item draws its own leading "·" in a
- * fixed-width cell, the list is shifted left by one cell and the overflow
- * clipped. Whichever item starts a line, its separator is the one hidden —
- * which is exactly the one that should not show. Keeping them out of the DOM
- * also means screen readers read the data, not the punctuation.
+ * With a `separator`, the separators are CSS, not text: each item draws its own
+ * leading separator in a fixed-width cell, the list is shifted left by one cell
+ * and the overflow clipped. Whichever item starts a line, its separator is the
+ * one hidden, which is exactly the one that should not show. Keeping them out
+ * of the DOM also means screen readers read the data, not the punctuation.
  */
-export const MetaLine = ({ items, className }: MetaLineProps) => {
+export const MetaLine = ({ items, separator, className }: MetaLineProps) => {
   const styles = useStyle();
-  const present = items.filter((item) => item !== null && item !== undefined && item !== false);
+  const present = items.filter((item) => !absent(item) && !(isPair(item) && absent(item.value)));
   if (present.length === 0) {
     return null;
   }
+  const separated = separator !== undefined && separator !== '';
+  if (separated) {
+    warnLongSeparator(separator);
+  }
+  const style = separated
+    ? ({ '--meta-separator': cssString(separator!) } as CSSProperties)
+    : undefined;
   return (
     <div className={cx(styles.root, className)}>
-      <div className={styles.list}>
+      <div className={cx(styles.list, separated && styles.separated)} style={style}>
         {present.map((item, i) => (
+          // A positional list: the same data in the same place is the same item.
           <span key={i} className={styles.item} data-testid="meta-item">
-            {item}
+            {isPair(item) ? (
+              <>
+                {/* A real space, so copied text and screen readers keep the label and value apart. */}
+                <span className={styles.label}>{item.label}</span> {item.value}
+              </>
+            ) : (
+              item
+            )}
           </span>
         ))}
       </div>

@@ -3,7 +3,7 @@
  * whenever it changes. It is not restored on unmount, so omit it when the app
  * manages titles itself.
  */
-import { Card, Page, Stack, Text } from '@korzun/design/component';
+import { Card, Page, Space, Text } from '@korzun/design/component';
 import { TextInput } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -12,10 +12,10 @@ export default function DocumentTitle() {
   return (
     <Page documentTitle={title}>
       <Card title="Tab title">
-        <Stack>
+        <Space direction="vertical">
           <TextInput name="title" label="Title" value={title} onChange={setTitle} />
           <Text tone="muted">Tab title: {title}</Text>
-        </Stack>
+        </Space>
       </Card>
     </Page>
   );

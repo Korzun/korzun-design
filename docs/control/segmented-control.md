@@ -40,8 +40,9 @@ Delete clear when `clearable`. Modified keys (Ctrl/Cmd/Alt) are left alone.
 
 ### Choosing a surface
 
-The track and lens are always `radius.md` (see [corners](../corners.md)), so the
-control belongs inside a card or modal.
+The track and lens take the radius of the surface depth they sit at (see
+[corners](../corners.md)): `md` in a card or modal, `lg` directly on a `Page`,
+`sm` two or more levels in.
 
 - Directly in a `Card` body: omit `surface` (`'card'`).
 - Inside a shaded `bg.cardHeader` row you built (label left, control right):
@@ -65,7 +66,7 @@ are typed to the option values. The `label` names the group for assistive tech
 and is not drawn, so put a visible label beside the control yourself.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { SegmentedControl } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -78,11 +79,11 @@ const SORTS = [
 export default function Basic() {
   const [sort, setSort] = useState<(typeof SORTS)[number]['value']>('title');
   return (
-    <Stack>
+    <Space direction="vertical" align="start">
       <Text tone="muted">Sort by</Text>
       <SegmentedControl label="Sort by" options={SORTS} value={sort} onChange={setSort} />
       <Text tone="muted">Sorted by: {sort}</Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -95,7 +96,7 @@ caption. `showLabels={false}` drops the captions and leaves icons only; the
 (`ThumbDownIcon`), not an element.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { SegmentedControl } from '@korzun/design/control';
 import { HandLoveYouIcon, HandOkIcon, ThumbDownIcon } from '@korzun/design/icon';
 import { useState } from 'react';
@@ -109,19 +110,27 @@ const RATINGS = [
 export default function Icons() {
   const [rating, setRating] = useState<(typeof RATINGS)[number]['value']>('ok');
   return (
-    <Stack>
-      <Text tone="muted">With captions</Text>
-      <SegmentedControl label="Rating" options={RATINGS} value={rating} onChange={setRating} />
-      <Text tone="muted">showLabels off</Text>
-      <SegmentedControl
-        label="Rating"
-        options={RATINGS}
-        value={rating}
-        onChange={setRating}
-        showLabels={false}
-      />
+    <Space direction="vertical" gap="xl" align="start">
+      <Space direction="vertical" gap="xs" align="start">
+        <Text size="sm" tone="muted">
+          With captions
+        </Text>
+        <SegmentedControl label="Rating" options={RATINGS} value={rating} onChange={setRating} />
+      </Space>
+      <Space direction="vertical" gap="xs" align="start">
+        <Text size="sm" tone="muted">
+          {'showLabels={false}'}
+        </Text>
+        <SegmentedControl
+          label="Rating"
+          options={RATINGS}
+          value={rating}
+          onChange={setRating}
+          showLabels={false}
+        />
+      </Space>
       <Text tone="muted">Rating: {rating}</Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -133,7 +142,7 @@ With `clearable`, clicking the checked segment, Backspace or Delete calls
 drawn. Without `clearable`, `onChange` never receives `null`.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { SegmentedControl } from '@korzun/design/control';
 import { HandLoveYouIcon, HandOkIcon, ThumbDownIcon } from '@korzun/design/icon';
 import { useState } from 'react';
@@ -147,7 +156,7 @@ const RATINGS = [
 export default function Clearable() {
   const [rating, setRating] = useState<(typeof RATINGS)[number]['value'] | null>('great');
   return (
-    <Stack>
+    <Space direction="vertical" align="start">
       <SegmentedControl
         label="Rating"
         options={RATINGS}
@@ -157,7 +166,7 @@ export default function Clearable() {
         showLabels={false}
       />
       <Text tone="muted">Rating: {rating ?? 'none'}</Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -169,7 +178,7 @@ marked `aria-disabled` and ignore clicks and keys. A `null` value checks
 nothing and draws no lens.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { SegmentedControl } from '@korzun/design/control';
 
 const OPTIONS = [
@@ -180,12 +189,20 @@ const OPTIONS = [
 
 export default function ReadOnly() {
   return (
-    <Stack>
-      <Text tone="muted">Value review</Text>
-      <SegmentedControl label="Status" options={OPTIONS} value="review" />
-      <Text tone="muted">Value null</Text>
-      <SegmentedControl label="Status" options={OPTIONS} value={null} />
-    </Stack>
+    <Space direction="vertical" gap="xl" align="start">
+      <Space direction="vertical" gap="xs" align="start">
+        <Text size="sm" tone="muted">
+          value="review"
+        </Text>
+        <SegmentedControl label="Status" options={OPTIONS} value="review" />
+      </Space>
+      <Space direction="vertical" gap="xs" align="start">
+        <Text size="sm" tone="muted">
+          {'value={null}'}
+        </Text>
+        <SegmentedControl label="Status" options={OPTIONS} value={null} />
+      </Space>
+    </Space>
   );
 }
 ```
@@ -198,7 +215,7 @@ shows. The corner is the same in both: the control belongs inside a card or
 modal.
 
 ```tsx
-import { Card, Stack, Text } from '@korzun/design/component';
+import { Card, Space, Text } from '@korzun/design/component';
 import { SegmentedControl } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -213,7 +230,7 @@ export default function Surfaces() {
   const [body, setBody] = useState<View>('grid');
   const [header, setHeader] = useState<View>('list');
   return (
-    <Stack>
+    <Space direction="vertical">
       <Card title="surface card, in the body">
         <SegmentedControl label="Body view" options={VIEWS} value={body} onChange={setBody} />
       </Card>
@@ -231,7 +248,7 @@ export default function Surfaces() {
       >
         <Text>Showing {header}.</Text>
       </Card>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -282,7 +299,9 @@ One segment of a `SegmentedControl`.
 | `theme.fontSize.md` | `0.875rem` | `0.875rem` |
 | `theme.fontSize.xs` | `0.7rem` | `0.7rem` |
 | `theme.fontWeight.medium` | `500` | `500` |
+| `theme.radius.lg` | `16px` | `16px` |
 | `theme.radius.md` | `8px` | `8px` |
+| `theme.radius.sm` | `4px` | `4px` |
 | `theme.recipe.focusRing` | [recipe](../tokens.md#recipe) | [recipe](../tokens.md#recipe) |
 | `theme.shadow.cardStack` | `0px 2px 0px rgba(217, 217, 217, 0.2)` | `0px 2px 0px rgba(0, 0, 0, 0.4)` |
 | `theme.space.sm` | `0.375rem` | `0.375rem` |
@@ -297,6 +316,7 @@ One segment of a `SegmentedControl`.
 
 ## Changelog
 
-No changes yet.
+- **0.7.0** (2026-11-26): Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.6.0 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px. A text field, `ChipsInput` box or field label directly on a Page also moves its text 16px in from the edge (8px elsewhere), the inset `Button` keeps, so it clears the deeper corner.
+- **0.7.0** (2026-11-26): Segments set their own font size (`fontSize.md`, the 14px of their labels) instead of the browser's 13.33px button default. Labels look the same; the segment's own text metrics no longer depend on the browser or page.
 
 <!-- /generated:changelog -->

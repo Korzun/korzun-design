@@ -6,7 +6,7 @@
  * Archive is `disabled`, and Delete is `danger` with a `separatorBefore`.
  * @viewport mobile
  */
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { PageActionsMenu } from '@korzun/design/control';
 import { BookIcon } from '@korzun/design/icon';
 import { useState } from 'react';
@@ -16,7 +16,7 @@ export default function ItemOptions() {
   const [prefetched, setPrefetched] = useState('nothing yet');
   const prefetch = () => setPrefetched('Download');
   return (
-    <Stack>
+    <Space direction="vertical">
       <PageActionsMenu
         items={[
           { label: 'Edit', onClick: () => setChosen('Edit'), primary: true },
@@ -43,6 +43,6 @@ export default function ItemOptions() {
       />
       <Text tone="muted">Chosen: {chosen}</Text>
       <Text tone="muted">Prefetched: {prefetched}</Text>
-    </Stack>
+    </Space>
   );
 }

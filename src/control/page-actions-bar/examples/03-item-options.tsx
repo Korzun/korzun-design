@@ -4,7 +4,7 @@
  * does: Read online shows its `Icon`, Download runs `intentProps` when the
  * pointer, focus or a touch reaches it, and Archive is `disabled`.
  */
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { PageActionsBar } from '@korzun/design/control';
 import { BookIcon } from '@korzun/design/icon';
 import { useState } from 'react';
@@ -14,7 +14,7 @@ export default function ItemOptions() {
   const [prefetched, setPrefetched] = useState('nothing yet');
   const prefetch = () => setPrefetched('Download');
   return (
-    <Stack>
+    <Space direction="vertical">
       <PageActionsBar
         items={[
           { label: 'Edit', onClick: () => setChosen('Edit'), primary: true },
@@ -31,6 +31,6 @@ export default function ItemOptions() {
       />
       <Text tone="muted">Chosen: {chosen}</Text>
       <Text tone="muted">Prefetched: {prefetched}</Text>
-    </Stack>
+    </Space>
   );
 }

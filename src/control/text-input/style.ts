@@ -1,5 +1,12 @@
 import { createUseStyles, Theme } from '../../theme/index.js';
 
+/** Width and height of a `prefix` icon, in px: the same size as the action's icon. */
+export const PREFIX_SIZE = 20;
+
+/** Input padding that clears a prefix icon sitting `inset` from the field's left edge. */
+const clearPrefix = (theme: Theme, inset: string) =>
+  `calc(${inset} + ${PREFIX_SIZE}px + ${theme.space.sm})`;
+
 export const useStyle = createUseStyles((theme: Theme) => ({
   root: {
     overflow: 'hidden',
@@ -52,6 +59,19 @@ export const useStyle = createUseStyles((theme: Theme) => ({
     flexGrow: 1,
     zIndex: theme.zIndex.base,
     '&$isAction': { paddingRight: theme.space.xxxxxl },
+    '&$isPrefix': { paddingLeft: clearPrefix(theme, theme.space.md) },
+  },
+  // Drawn over the input's left padding (after it in the DOM, so on top);
+  // clicks pass through to the field.
+  prefix: {
+    position: 'absolute',
+    left: theme.space.md,
+    top: '50%',
+    transform: 'translateY(-50%)',
+    display: 'flex',
+    color: theme.color.text.muted,
+    pointerEvents: 'none',
+    zIndex: theme.zIndex.base,
   },
   action: {
     paddingBottom: '2px',
@@ -77,4 +97,20 @@ export const useStyle = createUseStyles((theme: Theme) => ({
   vertical: {},
   inline: {},
   isAction: {},
+  isPrefix: {},
+  // Corners follow surface depth: the shaded row and the field inside it are
+  // flush, so both take the depth radius (md, the default, is depth 1).
+  // On the page (lg) the corner curve is twice as deep, so the text and the
+  // label move in to clear it: the 16px inset a Button keeps at the same radius.
+  depth0: {
+    '&, & $input': { borderRadius: theme.radius.lg },
+    '&& $input': { paddingLeft: theme.space.xxl, paddingRight: theme.space.xxl },
+    '&& $input$isAction': { paddingRight: theme.space.xxxxxl },
+    '&& $input$isPrefix': { paddingLeft: clearPrefix(theme, theme.space.xl) },
+    '& $prefix': { left: theme.space.xl },
+    '&& $label': { marginLeft: theme.space.xxl },
+    '& $action': { right: theme.space.xl },
+  },
+  depth1: {},
+  depth2: { '&, & $input': { borderRadius: theme.radius.sm } },
 }));

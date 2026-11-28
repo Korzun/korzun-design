@@ -2,14 +2,14 @@
  * `align: 'leading'` puts an item on the left, so a destructive action sits
  * away from Save; `danger` gives it the red treatment.
  */
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { PageFooterActions } from '@korzun/design/control';
 import { useState } from 'react';
 
 export default function LeadingAndTrailing() {
   const [last, setLast] = useState('nothing yet');
   return (
-    <Stack>
+    <Space direction="vertical">
       <PageFooterActions
         items={[
           { label: 'Delete', onClick: () => setLast('Delete'), danger: true, align: 'leading' },
@@ -18,6 +18,6 @@ export default function LeadingAndTrailing() {
         ]}
       />
       <Text tone="muted">Last pressed: {last}</Text>
-    </Stack>
+    </Space>
   );
 }

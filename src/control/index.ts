@@ -1,3 +1,4 @@
+export { Anchor, type AnchorItem, type AnchorProps } from './anchor/index.js';
 export { BackButton, type BackButtonProps } from './back-button/index.js';
 export {
   Button,
@@ -5,10 +6,9 @@ export {
   type ButtonRadiusValue,
   type ButtonTypeValue,
 } from './button/index.js';
-export { ChipsInput, type ChipColor, type ChipsInputProps } from './chips-input/index.js';
+export { ChipsInput, type ChipsInputProps } from './chips-input/index.js';
 export { ConfirmModal, type ConfirmModalProps } from './confirm-modal/index.js';
 export { DateTimeInput, type DateTimeInputProps } from './date-time-input/index.js';
-export { Dialog, type DialogProps } from './dialog/index.js';
 export {
   FieldList,
   type ColumnDescriptor,
@@ -24,6 +24,7 @@ export {
   type MenuProps,
   type MenuTriggerProps,
 } from './menu/index.js';
+export { Modal, type ModalProps } from './modal/index.js';
 export { NumberInput, type NumberInputProps } from './number-input/index.js';
 export { PageActionsBar, type PageActionsBarProps } from './page-actions-bar/index.js';
 export {
@@ -50,7 +51,13 @@ export {
   type SegmentedControlProps,
   type SegmentedOption,
 } from './segmented-control/index.js';
+export {
+  Slider,
+  type SliderDetent,
+  type SliderProps,
+  type SliderThumbState,
+} from './slider/index.js';
 export { Switch, type SwitchProps, type SwitchRadiusValue } from './switch/index.js';
 export { TextArea, type TextAreaProps } from './text-area/index.js';
 export { TextInput, type TextInputAction, type TextInputProps } from './text-input/index.js';
-export { useModalDialog } from './use-modal-dialog/index.js';
+export { useModal } from './use-modal/index.js';

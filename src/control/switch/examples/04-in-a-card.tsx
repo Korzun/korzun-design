@@ -3,7 +3,7 @@
  * header, with no nearby corner, takes `radius="pill"`; with no visible label it
  * needs an `ariaLabel`.
  */
-import { Card, Stack, Text } from '@korzun/design/component';
+import { Card, Space, Text } from '@korzun/design/component';
 import { Switch } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -23,7 +23,7 @@ export default function InACard() {
         />
       }
     >
-      <Stack>
+      <Space direction="vertical">
         <Switch
           name="bwCover"
           label="Grayscale"
@@ -33,7 +33,7 @@ export default function InACard() {
           onChange={setBwCover}
         />
         <Text tone="muted">Part of a series: {isSeries ? 'yes' : 'no'}</Text>
-      </Stack>
+      </Space>
     </Card>
   );
 }

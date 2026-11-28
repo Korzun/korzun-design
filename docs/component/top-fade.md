@@ -24,7 +24,7 @@ dimming behind a modal (the modal's own backdrop).
 
 ### When to render it
 
-- **Only in the installed (standalone) app**, gated with `isStandalone()` from
+- **Only in the installed (standalone) app**, gated with `useIsStandalone()` from
   `@korzun/design/hooks`. In a browser tab the OS status bar is not drawn over
   the page, `env(safe-area-inset-top)` is 0, and the band would be a thin
   blurred strip with no purpose.
@@ -34,19 +34,22 @@ dimming behind a modal (the modal's own backdrop).
 
 ```tsx
 // Layout route for nav-bearing pages.
-export const NavLayout = () => (
-  <>
-    <NavDesktop items={items} />
-    <NavMobile main={…} settings={…} expanded={…} />
-    {isStandalone() && (
-      <>
-        <TopFade />
-        <PullToRefreshIndicator /> {/* your own, built on usePullToRefresh */}
-      </>
-    )}
-    <Outlet />
-  </>
-);
+export const NavLayout = () => {
+  const standalone = useIsStandalone();
+  return (
+    <>
+      <NavDesktop items={items} />
+      <NavMobile main={…} settings={…} expanded={…} />
+      {standalone && (
+        <>
+          <TopFade />
+          <PullToRefreshIndicator /> {/* your own, built on usePullToRefresh */}
+        </>
+      )}
+      <Outlet />
+    </>
+  );
+};
 ```
 
 ### Behaviour
@@ -61,7 +64,7 @@ export const NavLayout = () => (
 
 ## Do / don't
 
-- Do gate it on `isStandalone()`.
+- Do gate it on `useIsStandalone()`.
 - Do render it once per app layout.
 - Don't use it as a visual header; it carries no content and ignores clicks.
 
@@ -73,28 +76,53 @@ export const NavLayout = () => (
 
 A frosted band fixed to the top of the viewport that blurs content under the
 device status bar and fades to nothing below it. Render it only in the
-installed app: the switch stands in for the `isStandalone()` check.
+installed app: the switch stands in for the `useIsStandalone()` check. A browser
+has no status-bar inset, so the band is only `space.md` tall here: the striped
+strip pinned to the top stands in for content scrolled up under it, and its top
+edge blurs while the switch is on.
 
 ```tsx
-import { Stack, Text, TopFade } from '@korzun/design/component';
+import { Space, Chip, Text, TopFade } from '@korzun/design/component';
 import { Switch } from '@korzun/design/control';
+import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { useState } from 'react';
 
+const useStyles = createUseStyles((theme: Theme) => ({
+  // Page content that has scrolled up under the status bar, pinned there for the demo.
+  scrolled: {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: theme.zIndex.base,
+    display: 'flex',
+    gap: theme.space.xs,
+    padding: theme.space.xs,
+    backgroundImage: `repeating-linear-gradient(90deg, ${theme.color.brand.default} 0 ${theme.space.xl}, ${theme.color.chip.subject.bg} ${theme.space.xl} ${theme.space.xxxxxl})`,
+  },
+  // Clear of the pinned strip.
+  content: { paddingTop: theme.space.xxxxxl },
+}));
+
 export default function Basic() {
+  const styles = useStyles();
   const [installed, setInstalled] = useState(true);
   return (
     <>
+      <div className={styles.scrolled}>
+        <Chip tone="author">George Eliot</Chip>
+        <Chip tone="subject">Fiction</Chip>
+      </div>
       {installed && <TopFade />}
-      <Stack>
-        <Text>Scroll content under the fade band, line 1.</Text>
-        <Text>Scroll content under the fade band, line 2.</Text>
+      <Space direction="vertical" className={styles.content}>
+        <Text>Scrolled content under the band blurs, then fades to sharp below it.</Text>
         <Switch
           name="installed"
           label="Installed app"
           checked={installed}
           onChange={setInstalled}
         />
-      </Stack>
+      </Space>
     </>
   );
 }

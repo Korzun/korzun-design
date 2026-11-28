@@ -4,7 +4,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { renderWithProviders } from '../../test-utils.js';
 import { lightTheme } from '../../theme/theme.js';
-import { Inline } from '../inline/index.js';
+import { Space } from '../space/index.js';
 import { Text } from './index.js';
 
 const css = (el: HTMLElement) => getComputedStyle(el);
@@ -123,13 +123,13 @@ describe('Text', () => {
     expect(css(getByTestId('t')).maxWidth).toBe('100%');
   });
 
-  it('truncated Text inside Inline can shrink', () => {
+  it('truncated Text inside Space can shrink', () => {
     const { getByTestId } = renderWithProviders(
-      <Inline>
+      <Space>
         <Text data-testid="t" truncate>
           a long title
         </Text>
-      </Inline>
+      </Space>
     );
     expect(css(getByTestId('t')).minWidth).toBe('0px');
   });

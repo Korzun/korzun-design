@@ -26,6 +26,7 @@ When a module disagrees with an AGENTS rule, the rule wins.
 ## 1. Scaffold
 
 `src/<area>/<slug>/index.tsx`:
+
 - `export type <Name>Props = { … }` with a `/** */` JSDoc on **every** prop,
   written to `document-component` §2's rules (behaviour only, no defaults in
   prose, links as markdown). A JSDoc on `<Name>` itself, one or two sentences
@@ -44,6 +45,7 @@ When a module disagrees with an AGENTS rule, the rule wins.
   `control` or `component` barrel.
 
 `src/<area>/<slug>/style.ts`:
+
 - `createUseStyles((theme: Theme) => …)`; every colour, space, font size,
   radius, shadow, z-index and transition from `theme.*`
   (`transitionDuration: theme.transition.fast`), tints via `applyTransparency`.
@@ -55,15 +57,15 @@ When a module disagrees with an AGENTS rule, the rule wins.
   literal. Every literal that remains, with no exception, goes in a comment
   block at the top of the file, one line each with its reason, as Button's
   `style.ts` does.
-- Layout is `Stack`/`Inline` and text is `Text`/`Heading`, composed in
+- Layout is `Space` and text is `Text`/`Heading`, composed in
   `index.tsx`; `style.ts` never sets `gap`, `alignItems`, `fontSize`,
   `fontWeight` or text `color`. Inside a `<label>` or `<button>` root, wrap the
-  children in `<Inline as="span" gap="…">` and set text with
-  `<Text as="span">`, or make the root itself `<Text as="label">`. `Inline`
+  children in `<Space as="span" gap="…">` and set text with
+  `<Text as="span">`, or make the root itself `<Text as="label">`. `Space`
   renders block-level, full-width `flex`, so a root that must hug its content
   (a checkbox row, whose click target would otherwise span the line) keeps
   `display: 'inline-flex'` on the root with a one-line comment saying so; the
-  gap still comes from the inner `Inline`. No other `display` on the root.
+  gap still comes from the inner `Space`. No other `display` on the root.
 - Corners follow depth. Read `useSurfaceDepth()` and pick a class with
   `depthClass(depth)` as Button and Select do, or draw a box with
   `useSurfaceRadius()`. A fixed radius is allowed only for a glyph smaller than
@@ -81,17 +83,17 @@ When a module disagrees with an AGENTS rule, the rule wins.
 `src/<area>/<slug>/index.test.tsx` (`renderWithProviders` from
 `../../test-utils.js`). One test per row, named for the behaviour:
 
-| Case | Assertion |
-|---|---|
-| accessible name | `getByRole('<role>', { name: '<label>' })` finds it |
-| main interaction | click calls the handler with the documented argument |
-| keyboard | `user.tab()` focuses it; Enter/Space (or arrows) acts as the click does |
-| controlled | without a prop change the shown state does not flip |
-| disabled | handler not called on click or key; out of the tab order or `aria-disabled` |
-| form field | inside a `<form>`, `new FormData(form).get('<name>')` has the value |
-| `className` | the class lands on the root |
-| `ref` | `ref.current` is the root element |
-| depth | radius on a `Page`, in `Page > Surface`, two `Surface`s deep (Button's `radius follows surface depth` block) |
+| Case             | Assertion                                                                                                    |
+| ---------------- | ------------------------------------------------------------------------------------------------------------ |
+| accessible name  | `getByRole('<role>', { name: '<label>' })` finds it                                                          |
+| main interaction | click calls the handler with the documented argument                                                         |
+| keyboard         | `user.tab()` focuses it; Enter/Space (or arrows) acts as the click does                                      |
+| controlled       | without a prop change the shown state does not flip                                                          |
+| disabled         | handler not called on click or key; out of the tab order or `aria-disabled`                                  |
+| form field       | inside a `<form>`, `new FormData(form).get('<name>')` has the value                                          |
+| `className`      | the class lands on the root                                                                                  |
+| `ref`            | `ref.current` is the root element                                                                            |
+| depth            | radius on a `Page`, in `Page > Surface`, two `Surface`s deep (Button's `radius follows surface depth` block) |
 
 Drop a row only when the module has no such prop or behaviour (no depth row
 for a fixed-radius glyph), and say which and why in the report.
@@ -101,25 +103,30 @@ Barrel: add `export { <Name>, type <Name>Props } from './<slug>/index.js';` to
 module. `src/index.ts` re-exports each area with `export *`, so it needs
 nothing; check that is still true (`grep "<area>/index" src/index.ts`).
 
-A hook instead: `src/hooks/use-<x>.ts` plus `use-<x>.test.tsx`, exported from
-`src/hooks/index.ts`, documented as a section of `docs/hooks.md`, and named in
-the `@korzun/design/hooks` row of AGENTS.md. §2 then means that section, not a
-module doc.
+A hook instead: `src/hooks/use-<x>/index.ts` plus `index.test.tsx` and `examples/`
+(with `preview.tsx`), exported from `src/hooks/index.ts` with its constants and
+types, documented at `docs/hooks/use-<x>.md` (category `Hooks`, listed in that
+section of `scripts/docs-gen/categories.mjs`), and named in the
+`@korzun/design/hooks` row of AGENTS.md. §2 then means that doc like any module's.
 
 ## 2. Document it (REQUIRED: the `document-component` skill)
 
 Follow `document-component` §1–§4 exactly; verification is §6 below, which
 replaces its §6 (and §7 below replaces its §7). Changes for a module that has
 no old doc:
+
 - Its §1.1 and §5 do not apply (no old doc, no stories). The audit table's Old
   note column says "none"; the coverage row for the old `## Example` says
   "new module".
 - Its §3: create `docs/<area>/<slug>.md` from its template, front matter first
-  (`category` verbatim from `scripts/docs-gen/categories.mjs`). Facts like
+  (`category` is the section you add the slug to in
+  `scripts/docs-gen/categories.mjs`, nested `[parent, [slug]]` if it only works
+  inside another module; the categories test fails until it is listed). Facts like
   "takes `className`", "Space toggles", "submits as `<name>`" are Usage
   sentences under `### Styling`, `### Keyboard`, `### Forms`.
 - Its §4: `examples/01-basic.tsx` first, then one per value and state, each
-  wired to state.
+  wired to state, plus `examples/preview.tsx` (the overview thumbnail: the
+  component alone; see "The preview" there).
 
 ## 3. AGENTS.md
 
@@ -145,8 +152,10 @@ git describe --tags --abbrev=0 --match 'v*'   # latest release, e.g. v0.5.0
 node -p "require('./package.json').version"
 grep -m1 '^## ' CHANGELOG.md                 # top heading
 ```
+
 The release is unreleased when `package.json`'s version or the top
 `## X.Y.Z` heading is above the tag.
+
 - Unreleased: add the bullet under that version's heading; if the version is
   ahead but there is no heading for it, create
   `## X.Y.Z — $(TZ=America/New_York date +%F)` at the top.
@@ -193,7 +202,7 @@ props>.`` The tag is the value name, so the site links it.
 1. Files created and changed.
 2. The checklist, one line each with its evidence (path:line or command
    output): §1 props/JSDoc, `className` last, `ref`, `name`, relative imports,
-   tokens-only `style.ts` (literals listed), layout via Stack/Inline, corner
+   tokens-only `style.ts` (literals listed), layout via Space, corner
    decision, distinct focus; test table rows; barrel line; §2 doc front
    matter, regions, examples; §3 imports row, rule 11; §4 smoke lines; §5 tag,
    version before and after, bullet.
@@ -205,18 +214,18 @@ props>.`` The tag is the value name, so the site links it.
 
 ## 9. Red flags
 
-| Thought | Reality | Do instead |
-|---|---|---|
-| "Every control gets a stories file." | Examples replace stories (CLAUDE.md asks for a test and examples); a stories file is dead code. | Write `examples/`; no `*.stories.tsx`. |
-| "Switch does it this way" (literal px, `display`/`gap`, fixed radius). | Old modules predate the rules; copying them copies the violation. | Follow the AGENTS rule; a needed literal gets a comment with its reason. |
-| "I'll write the doc like `switch.md`." | A doc without front matter fails `docs:gen` (`missing front matter`), and one written by hand misses the template sections reviewers check. | Use `document-component`'s template; check `site-data.json` (§6.2). |
-| "A hand Props table is clearer." | It duplicates the JSDoc and drifts. | JSDoc every prop; the generated region renders it. |
-| "It has no `name`; callers can send it from state." | AGENTS rule 6: every field needs a `name`, and a native input submits for free. | Take `name` and test it with `FormData`. |
-| "Hover and focus can share the ring." | A keyboard user then cannot see where focus is. | Give `:focus-visible` its own look. |
-| "I saw it was faint, but it's the border token Button uses, so I shipped." | Below 3:1 it is invisible to many readers; in dark mode it vanishes, and disabled vanishes in both. | Use `text.muted` for the outline; do not ship until both shots show unchecked and disabled-unchecked boxes. |
-| "I'll write the outline and the 0.1s transition by hand." | `recipe.focusRing` and `transition.fast` exist; a hand copy drifts. | Spread the recipe, use the token; list any remaining literal at the top. |
-| "The imports table is enough." | Rule 11 still tells consumers it does not exist. | Edit rule 11 too. |
-| "Tests and lint pass, so it ships." | Smoke and the page screenshot catch what they cannot. | Run `npm run smoke` and shoot the page. |
-| "The count test broke; bump 41 to 42." | The next module breaks it again, and it rides in your commit. | Assert the invariant, in its own commit. |
-| "A patch bump is fine; it's small." | A new export is a minor change. | Follow §5. |
-| "I'll add it to the docs index line." | `docs:gen` owns those lines. | Leave them; run `docs:gen`. |
+| Thought                                                                    | Reality                                                                                                                                     | Do instead                                                                                                  |
+| -------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| "Every control gets a stories file."                                       | Examples replace stories (CLAUDE.md asks for a test and examples); a stories file is dead code.                                             | Write `examples/`; no `*.stories.tsx`.                                                                      |
+| "Switch does it this way" (literal px, `display`/`gap`, fixed radius).     | Old modules predate the rules; copying them copies the violation.                                                                           | Follow the AGENTS rule; a needed literal gets a comment with its reason.                                    |
+| "I'll write the doc like `switch.md`."                                     | A doc without front matter fails `docs:gen` (`missing front matter`), and one written by hand misses the template sections reviewers check. | Use `document-component`'s template; check `site-data.json` (§6.2).                                         |
+| "A hand Props table is clearer."                                           | It duplicates the JSDoc and drifts.                                                                                                         | JSDoc every prop; the generated region renders it.                                                          |
+| "It has no `name`; callers can send it from state."                        | AGENTS rule 6: every field needs a `name`, and a native input submits for free.                                                             | Take `name` and test it with `FormData`.                                                                    |
+| "Hover and focus can share the ring."                                      | A keyboard user then cannot see where focus is.                                                                                             | Give `:focus-visible` its own look.                                                                         |
+| "I saw it was faint, but it's the border token Button uses, so I shipped." | Below 3:1 it is invisible to many readers; in dark mode it vanishes, and disabled vanishes in both.                                         | Use `text.muted` for the outline; do not ship until both shots show unchecked and disabled-unchecked boxes. |
+| "I'll write the outline and the 0.1s transition by hand."                  | `recipe.focusRing` and `transition.fast` exist; a hand copy drifts.                                                                         | Spread the recipe, use the token; list any remaining literal at the top.                                    |
+| "The imports table is enough."                                             | Rule 11 still tells consumers it does not exist.                                                                                            | Edit rule 11 too.                                                                                           |
+| "Tests and lint pass, so it ships."                                        | Smoke and the page screenshot catch what they cannot.                                                                                       | Run `npm run smoke` and shoot the page.                                                                     |
+| "The count test broke; bump 41 to 42."                                     | The next module breaks it again, and it rides in your commit.                                                                               | Assert the invariant, in its own commit.                                                                    |
+| "A patch bump is fine; it's small."                                        | A new export is a minor change.                                                                                                             | Follow §5.                                                                                                  |
+| "I'll add it to the docs index line."                                      | `docs:gen` owns those lines.                                                                                                                | Leave them; run `docs:gen`.                                                                                 |

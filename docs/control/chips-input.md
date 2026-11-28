@@ -7,7 +7,7 @@ category: Inputs
 
 <!-- generated:import -->
 
-`import { ChipsInput, type ChipColor, type ChipsInputProps } from '@korzun/design/control'`
+`import { ChipsInput, type ChipsInputProps } from '@korzun/design/control'`
 
 <!-- /generated:import -->
 
@@ -39,8 +39,8 @@ No `className`. The label is linked to the input with a generated id.
 
 - Do set `layout="horizontal"` and `dense` when it sits among other form fields
   in a `Card`; otherwise the label silently disappears.
-- Do pick a `chipColor` that matches how the same values are tagged elsewhere.
-- Do use it inside a `Dialog`: the dropdown opens inside the open dialog, so it
+- Do pick a `tone` that matches how the same values are tagged elsewhere.
+- Do use it inside a `Modal`: the dropdown opens inside the open dialog, so it
   is not hidden behind it (see [popover](popover.md)).
 - Don't rely on `name` for form submission.
 
@@ -55,7 +55,7 @@ adds the highlighted one, or the typed text; Backspace on an empty field
 removes the last chip. `onChange` receives the whole new array, not an event.
 
 ```tsx
-import { Card, Stack, Text } from '@korzun/design/component';
+import { Card, Space, Text } from '@korzun/design/component';
 import { ChipsInput } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -65,7 +65,7 @@ export default function Basic() {
   const [subjects, setSubjects] = useState(['History']);
   return (
     <Card title="Subjects">
-      <Stack>
+      <Space direction="vertical">
         <ChipsInput
           value={subjects}
           suggestions={SUBJECTS}
@@ -73,7 +73,7 @@ export default function Basic() {
           placeholder="Add subject…"
         />
         <Text tone="muted">Chosen: {subjects.join(', ') || 'nothing'}</Text>
-      </Stack>
+      </Space>
     </Card>
   );
 }
@@ -86,7 +86,7 @@ Enter or Tab also adds text that matches no suggestion. With
 the field.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { ChipsInput } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -96,23 +96,31 @@ export default function SuggestionsOnly() {
   const [anything, setAnything] = useState<string[]>([]);
   const [listed, setListed] = useState<string[]>([]);
   return (
-    <Stack>
-      <Text>Custom values allowed</Text>
-      <ChipsInput
-        value={anything}
-        suggestions={COLOURS}
-        onChange={setAnything}
-        placeholder="Type any colour…"
-      />
-      <Text>Suggestions only</Text>
-      <ChipsInput
-        value={listed}
-        suggestions={COLOURS}
-        onChange={setListed}
-        allowCustom={false}
-        placeholder="Pick a listed colour…"
-      />
-    </Stack>
+    <Space direction="vertical" gap="xl">
+      <Space direction="vertical" gap="xs">
+        <Text size="sm" tone="muted">
+          Custom values allowed
+        </Text>
+        <ChipsInput
+          value={anything}
+          suggestions={COLOURS}
+          onChange={setAnything}
+          placeholder="Type any colour…"
+        />
+      </Space>
+      <Space direction="vertical" gap="xs">
+        <Text size="sm" tone="muted">
+          {'allowCustom={false}: suggestions only'}
+        </Text>
+        <ChipsInput
+          value={listed}
+          suggestions={COLOURS}
+          onChange={setListed}
+          allowCustom={false}
+          placeholder="Pick a listed colour…"
+        />
+      </Space>
+    </Space>
   );
 }
 ```
@@ -124,7 +132,7 @@ export default function SuggestionsOnly() {
 fields in a form.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { ChipsInput } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -135,42 +143,55 @@ export default function Layouts() {
   const [horizontal, setHorizontal] = useState(['Memoir']);
   const [vertical, setVertical] = useState(['Reference']);
   return (
-    <Stack>
-      <Text>block</Text>
-      <ChipsInput label="Tags" value={block} suggestions={TAGS} onChange={setBlock} />
-      <Text>horizontal</Text>
-      <ChipsInput
-        label="Tags"
-        layout="horizontal"
-        value={horizontal}
-        suggestions={TAGS}
-        onChange={setHorizontal}
-      />
-      <Text>vertical</Text>
-      <ChipsInput
-        label="Tags"
-        layout="vertical"
-        value={vertical}
-        suggestions={TAGS}
-        onChange={setVertical}
-      />
-    </Stack>
+    <Space direction="vertical" gap="xl">
+      <Space direction="vertical" gap="xs">
+        <Text size="sm" tone="muted">
+          layout="block"
+        </Text>
+        <ChipsInput label="Tags" value={block} suggestions={TAGS} onChange={setBlock} />
+      </Space>
+      <Space direction="vertical" gap="xs">
+        <Text size="sm" tone="muted">
+          layout="horizontal"
+        </Text>
+        <ChipsInput
+          label="Tags"
+          layout="horizontal"
+          value={horizontal}
+          suggestions={TAGS}
+          onChange={setHorizontal}
+        />
+      </Space>
+      <Space direction="vertical" gap="xs">
+        <Text size="sm" tone="muted">
+          layout="vertical"
+        </Text>
+        <ChipsInput
+          label="Tags"
+          layout="vertical"
+          value={vertical}
+          suggestions={TAGS}
+          onChange={setVertical}
+        />
+      </Space>
+    </Space>
   );
 }
 ```
 
-### Chip colors
+### Tones
 
-`chipColor` picks the colour family for a field's chips. Use the one that
+`tone` picks the colour family for a field's chips. Use the one that
 tags the same values elsewhere in the app, so a subject looks like a subject
 everywhere.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
-import { ChipsInput, type ChipColor } from '@korzun/design/control';
+import { Space, Text, type ChipTone } from '@korzun/design/component';
+import { ChipsInput } from '@korzun/design/control';
+import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { useState } from 'react';
 
-const COLORS: ChipColor[] = [
+const COLORS: ChipTone[] = [
   'status',
   'author',
   'series',
@@ -186,34 +207,47 @@ const COLORS: ChipColor[] = [
   'info',
 ];
 
-function ColorRow({ chipColor }: { chipColor: ChipColor }) {
-  const [value, setValue] = useState<string[]>([chipColor]);
+// A grid of small fields, as many to a row as fit, instead of one full-width field each.
+const useStyles = createUseStyles((theme: Theme) => ({
+  grid: {
+    display: 'grid',
+    // Columns about ten rem wide: room for a chip and the typing area.
+    gridTemplateColumns: `repeat(auto-fill, minmax(calc(${theme.space.xxxxxl} * 5), 1fr))`,
+    gap: `${theme.space.lg} ${theme.space.md}`,
+  },
+}));
+
+function ColorField({ tone }: { tone: ChipTone }) {
+  const [value, setValue] = useState<string[]>([tone]);
   return (
-    <Stack gap="xs">
-      <Text tone="muted">{chipColor}</Text>
-      <ChipsInput value={value} suggestions={[]} onChange={setValue} chipColor={chipColor} />
-    </Stack>
+    <Space direction="vertical" gap="xs">
+      <Text size="sm" tone="muted">
+        {tone}
+      </Text>
+      <ChipsInput value={value} suggestions={[]} onChange={setValue} tone={tone} />
+    </Space>
   );
 }
 
-export default function ChipColors() {
+export default function ChipTones() {
+  const styles = useStyles();
   return (
-    <Stack>
-      {COLORS.map((chipColor) => (
-        <ColorRow key={chipColor} chipColor={chipColor} />
+    <div className={styles.grid}>
+      {COLORS.map((tone) => (
+        <ColorField key={tone} tone={tone} />
       ))}
-    </Stack>
+    </div>
   );
 }
 ```
 
 ### Disabled
 
-`disabled` blocks typing and turns the chips' remove buttons off. A switch
+`disabled` blocks typing and hides the chips' remove buttons. A switch
 toggles it so both states can be tried.
 
 ```tsx
-import { Stack } from '@korzun/design/component';
+import { Space } from '@korzun/design/component';
 import { ChipsInput, Switch } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -221,7 +255,7 @@ export default function Disabled() {
   const [disabled, setDisabled] = useState(true);
   const [value, setValue] = useState(['Cherry', 'Date']);
   return (
-    <Stack>
+    <Space direction="vertical">
       <Switch name="disabled" label="Disabled" checked={disabled} onChange={setDisabled} />
       <ChipsInput
         value={value}
@@ -230,7 +264,7 @@ export default function Disabled() {
         disabled={disabled}
         placeholder="Add fruit…"
       />
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -239,13 +273,13 @@ export default function Disabled() {
 
 Among other fields in a `Card`, set `layout="horizontal"` and `dense` so the
 label shows and the height matches a `TextInput`. `allowCustom={false}`
-restricts it to known users, `chipColor="user"` matches how users are tagged
+restricts it to known users, `tone="user"` matches how users are tagged
 elsewhere, and `placeholder` and `disabled` follow the loading state. `name`
 is set on the text input only: form data gets the half-typed text, so submit
 the chips from state.
 
 ```tsx
-import { Card, Stack, Text } from '@korzun/design/component';
+import { Card, Space, Text } from '@korzun/design/component';
 import { Button, ChipsInput, TextInput } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -264,7 +298,7 @@ export default function FormRow() {
         </Button>
       }
     >
-      <Stack>
+      <Space direction="vertical">
         <ChipsInput
           name="users"
           label="Users"
@@ -274,7 +308,7 @@ export default function FormRow() {
           suggestions={USERS}
           onChange={setUsers}
           allowCustom={false}
-          chipColor="user"
+          tone="user"
           disabled={loading}
           placeholder={loading ? 'Loading…' : 'Add users…'}
         />
@@ -286,7 +320,7 @@ export default function FormRow() {
           onChange={setTitle}
         />
         <Text tone="muted">Shared with: {users.join(', ') || 'nobody'}</Text>
-      </Stack>
+      </Space>
     </Card>
   );
 }
@@ -294,12 +328,12 @@ export default function FormRow() {
 
 ### In a dialog
 
-The suggestion list opens inside an open `Dialog` that contains the field,
+The suggestion list opens inside an open `Modal` that contains the field,
 so it works in a modal.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
-import { Button, ChipsInput, Dialog } from '@korzun/design/control';
+import { Space, Text } from '@korzun/design/component';
+import { Button, ChipsInput, Modal } from '@korzun/design/control';
 import { useState } from 'react';
 
 const SUBJECTS = ['Astronomy', 'Biology', 'Cooking', 'History', 'Poetry', 'Travel'];
@@ -308,10 +342,10 @@ export default function InDialog() {
   const [open, setOpen] = useState(false);
   const [subjects, setSubjects] = useState<string[]>([]);
   return (
-    <Stack>
+    <Space direction="vertical" align="start">
       <Button onClick={() => setOpen(true)}>Edit subjects</Button>
       <Text tone="muted">Subjects: {subjects.join(', ') || 'none'}</Text>
-      <Dialog
+      <Modal
         open={open}
         onClose={() => setOpen(false)}
         title="Edit subjects"
@@ -327,8 +361,8 @@ export default function InDialog() {
           onChange={setSubjects}
           placeholder="Add subject…"
         />
-      </Dialog>
-    </Stack>
+      </Modal>
+    </Space>
   );
 }
 ```
@@ -342,23 +376,16 @@ export default function InDialog() {
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `allowCustom` | `boolean` | `true` | Enter or Tab adds the typed text as a chip. `false`: only suggestions can be added. |
-| `chipColor` | `'status' \| 'author' \| 'series' \| 'subject' \| 'book' \| 'entryType' \| 'user' \| 'rating' \| 'neutral' \| 'success' \| 'warning' \| 'danger' \| 'info'` | `'subject'` | Chip colour family from `theme.color.chip`. Pick the one that tags the same values elsewhere. |
 | `dense` | `boolean` | `false` | Matches a standard input's height, so the field lines up with `TextInput` and `Select` rows. Leave it off for a roomy standalone tag box. |
-| `disabled` | `boolean` | `false` | Disables typing and the chip remove buttons. |
+| `disabled` | `boolean` | `false` | Disables typing and hides the chips' remove buttons, so the chips read as plain values. |
 | `label` | `string` |  | Field label. Ignored in the `block` layout; set `layout` to show it. |
-| `layout` | `'horizontal' \| 'vertical' \| 'block'` | `'block'` | `'block'` is the bare box, with no label. `'horizontal'` and `'vertical'` add a label on a `bg.cardHeader` row (`radius.md`), like the other fields. |
+| `layout` | `'horizontal' \| 'vertical' \| 'block'` | `'block'` | `'block'` is the bare box, with no label. `'horizontal'` and `'vertical'` add a label on a `bg.cardHeader` row, like the other fields. Corners follow surface depth ([corners](../corners.md)); chips are a step squarer than the box. |
 | `name` | `string` |  | Set on the text input only: form data gets the half-typed text, not the chips. |
 | `onChange` (required) | `(values: string[]) => void` |  | Receives the whole new array, not an event. |
 | `placeholder` | `string` |  | Shown only while there are no chips. |
 | `suggestions` (required) | `string[]` |  | Suggestion pool; pass `[]` for none. Values already chosen are hidden, and matching is a case-insensitive substring. |
+| `tone` | `'status' \| 'author' \| 'series' \| 'subject' \| 'book' \| 'entryType' \| 'user' \| 'rating' \| 'neutral' \| 'success' \| 'warning' \| 'danger' \| 'info'` | `'subject'` | The chips' colour, a `ChipTone` (as on `Chip`). Pick the one that tags the same values elsewhere. |
 | `value` (required) | `string[]` |  | The chips. Controlled: you own the array. |
-
-### Types
-
-```ts
-/** A chip colour family: a key of `theme.color.chip` (`'subject'`, `'user'`, `'neutral'`, …). */
-type ChipColor = 'status' | 'author' | 'series' | 'subject' | 'book' | 'entryType' | 'user' | 'rating' | 'neutral' | 'success' | 'warning' | 'danger' | 'info';
-```
 
 <!-- /generated:props -->
 
@@ -392,7 +419,7 @@ type ChipColor = 'status' | 'author' | 'series' | 'subject' | 'book' | 'entryTyp
 | `theme.color.chip.info.text` | `#0758d9` | `#87BAFF` |
 | `theme.color.chip.neutral.bg` | `rgba(110, 110, 110, 0.08)` | `rgba(156, 161, 171, 0.16)` |
 | `theme.color.chip.neutral.border` | `rgba(110, 110, 110, 0.22)` | `rgba(156, 161, 171, 0.3)` |
-| `theme.color.chip.neutral.text` | `#6E6E6E` | `#9CA1AB` |
+| `theme.color.chip.neutral.text` | `#5E5E5E` | `#A8ADB6` |
 | `theme.color.chip.rating.bg` | `rgba(181,69,27,0.08)` | `rgba(181,69,27,0.18)` |
 | `theme.color.chip.rating.border` | `rgba(181,69,27,0.22)` | `rgba(181,69,27,0.32)` |
 | `theme.color.chip.rating.text` | `#b5451b` | `#F2A07B` |
@@ -422,6 +449,7 @@ type ChipColor = 'status' | 'author' | 'series' | 'subject' | 'book' | 'entryTyp
 | `theme.fontWeight.medium` | `500` | `500` |
 | `theme.layout.controlHeight` | `2.0625rem` | `2.0625rem` |
 | `theme.lineHeight.tight` | `1` | `1` |
+| `theme.radius.lg` | `16px` | `16px` |
 | `theme.radius.md` | `8px` | `8px` |
 | `theme.radius.sm` | `4px` | `4px` |
 | `theme.recipe.label` | [recipe](../tokens.md#recipe) | [recipe](../tokens.md#recipe) |
@@ -430,6 +458,7 @@ type ChipColor = 'status' | 'author' | 'series' | 'subject' | 'book' | 'entryTyp
 | `theme.space.sm` | `0.375rem` | `0.375rem` |
 | `theme.space.xl` | `0.75rem` | `0.75rem` |
 | `theme.space.xs` | `0.25rem` | `0.25rem` |
+| `theme.space.xxl` | `1rem` | `1rem` |
 | `theme.space.xxs` | `0.125rem` | `0.125rem` |
 
 <!-- /generated:tokens -->
@@ -438,6 +467,11 @@ type ChipColor = 'status' | 'author' | 'series' | 'subject' | 'book' | 'entryTyp
 
 ## Changelog
 
+- **0.7.0** (2026-11-26): **Breaking:** `chipColor` is renamed `tone` and takes a `ChipTone`, as `Chip` does; the `ChipColor` type is removed (use `ChipTone` from `@korzun/design/component`).
+- **0.7.0** (2026-11-26): A `disabled` field hides its chips' remove (×) buttons instead of showing them dimmed, so the chips read as plain values.
+- **0.7.0** (2026-11-26): The text field shares a line with the chips whenever 8rem is free. Before, it sized from an input's natural width (about 20 characters, ~200px at the 16px phone size) and dropped to its own empty line, making the box a line taller than its chips need.
+- **0.7.0** (2026-11-26): Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.6.0 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px. A text field, `ChipsInput` box or field label directly on a Page also moves its text 16px in from the edge (8px elsewhere), the inset `Button` keeps, so it clears the deeper corner.
+- **0.7.0** (2026-11-26): `color.chip.neutral` text is a step stronger, so a neutral Tag or chip holds 4.5:1 on its tint over `bg.page`, `bg.card` and `bg.cardHeader`: light `#5E5E5E` (was `#6E6E6E`, 4.0:1 over `cardHeader`), dark `#A8ADB6`, the mode's `text.description` (was `#9CA1AB`, 4.47:1 over `page`). Fill and border are unchanged.
 - **0.3.0** (2026-11-22): `Popover` renders inside an open `<dialog>` that contains its anchor, so `Select` and `ChipsInput` work in modals.
 - **0.1.0** (2026-11-21): `Popover`:
   - `side` (`bottom`/`top`) and `align` (`start`/`center`/`end`).

@@ -61,7 +61,7 @@ No `className`.
   dot if any hidden sibling has a badge.
 - Minimizing only reacts to user-driven scroll (after a touch or wheel on this
   route), so scroll restoration on navigation never minimizes it. Tuning
-  constants live in [hooks](../hooks.md) (`MINIMIZE_SPEED`, `EXPAND_AFTER`).
+  constants live in [`useMinimizeOnScroll`](../hooks/use-minimize-on-scroll.md) (`MINIMIZE_SPEED`, `EXPAND_AFTER`).
 - Hidden shapes are `inert` and `aria-hidden`; only what is on screen is in
   the tab order.
 - A side with `items: []` is a circle for good (Bookplate does this for a
@@ -122,7 +122,7 @@ linking to its `collapsed` destination. In an app you derive it from the route,
 here the buttons stand in for it.
 
 ```tsx
-import { Card, Inline, NavMobile, Page, Stack, Text, type NavItem } from '@korzun/design/component';
+import { Card, Space, NavMobile, Page, Text, type NavItem } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import {
   AdjustmentsHorizontalIcon,
@@ -151,13 +151,13 @@ export default function ExpandedSide() {
     <>
       <Page bottomNav>
         <Card title="Navigation">
-          <Stack>
-            <Inline>
+          <Space direction="vertical">
+            <Space>
               <Button onClick={() => setExpanded('main')}>Main</Button>
               <Button onClick={() => setExpanded('settings')}>Settings</Button>
-            </Inline>
+            </Space>
             <Text tone="muted">Expanded: {expanded}</Text>
-          </Stack>
+          </Space>
         </Card>
       </Page>
       <NavMobile
@@ -183,7 +183,7 @@ only while its side is a circle. An empty `items` makes a side a circle for
 good.
 
 ```tsx
-import { Card, Inline, NavMobile, Page, Stack, Text, type NavItem } from '@korzun/design/component';
+import { Card, Space, NavMobile, Page, Text, type NavItem } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { BookIcon, HomeIcon, ListCheckIcon, SettingsIcon, UploadIcon } from '@korzun/design/icon';
 import { useState } from 'react';
@@ -199,13 +199,13 @@ export default function Badges() {
     <>
       <Page bottomNav>
         <Card title="Navigation">
-          <Stack>
-            <Inline>
+          <Space direction="vertical">
+            <Space>
               <Button onClick={() => setPending((n) => n + 1)}>Add a fix</Button>
               <Button onClick={() => setPending(0)}>Clear fixes</Button>
-            </Inline>
+            </Space>
             <Text tone="muted">Pending fixes: {pending}</Text>
-          </Stack>
+          </Space>
         </Card>
       </Page>
       <NavMobile

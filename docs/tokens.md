@@ -17,13 +17,13 @@ Surfaces, text, borders and state colours, mode-aware. Keys are grouped as follo
 - `color.blue`: primitive palette, steps `50 100 200 300 400 500 600 700 800`. Identical in both modes.
 - `color.red`: primitive palette, steps `50 100 300 400 500 600 700`. Identical in both modes.
 - `color.text`: `primary secondary muted faint onPrimary onDanger description`
-- `color.bg`: `page card cardHeader track input footer glass glassFallback glassActive selected hover success placeholder`. `track` must read against both `page` and `card`; `hover` is a translucent scrim; `glass*` feed `recipe.glass`.
-- `color.border`: `default strong light focus hover danger glass glassActive faint loading success section`
+- `color.bg`: `page card cardHeader track switchOff input footer glass glassFallback glassActive selected hover success placeholder`. `track` must read against both `page` and `card`; `switchOff` is an unchecked Switch track, 3:1 on `page`, `card` and `cardHeader`; `hover` is a translucent scrim; `glass*` feed `recipe.glass`.
+- `color.border`: `default strong light focus hover danger glass glassActive faint loading success section`. `light` is the hairline rule inside a card or between rows, a step on `page` and `card` in both modes (dark 1.24:1 and 1.39:1, light 1.15:1 and 1.21:1).
 - `color.success`, `color.warning`, `color.info`: a single value each.
 - `color.brand`: `default hover active light outline loading loadingHover loadingActive linkHover`
 - `color.danger`: `default hover active light outline loading loadingHover loadingActive`
 - `color.overlay`: `backdrop`
-- `color.chip`: thirteen tinted colourways, each `{ text, bg, border }`. Status tones: `success warning danger info neutral`. Label tones: `status author series subject book entryType user rating` (the `status` label tone is not a status tone). See Slated for curation.
+- `color.chip`: thirteen tinted colourways, each `{ text, bg, border }`. Status tones: `success warning danger info neutral`. Label tones: `status author series subject book entryType user rating` (the `status` label tone is not a status tone). `neutral` text holds 4.5:1 on its own tint over `page`, `card` and `cardHeader` in both modes. See Slated for curation.
 
 ## space
 
@@ -32,10 +32,6 @@ The spacing scale, in `rem`: `xxxs xxs xs sm md lg xl xxl xxxl xxxxl xxxxxl` (`0
 ## radius
 
 Corner radii: `sm md lg circle pill` (`4px`, `8px`, `16px`, `50%`, `999px`).
-
-## size
-
-Fixed component sizes that are not part of the spacing scale. One key: `metadataValue`. See Slated for curation.
 
 ## layout
 
@@ -93,9 +89,8 @@ JSS-spreadable style fragments (`...theme.recipe.x`), not components.
 
 ## Slated for curation
 
-Both groups below move into the package byte-for-byte in 0.0.1 and are due for a decision before the API settles.
+The group below moved into the package byte-for-byte in 0.0.1 and is due for a decision before the API settles.
 
 - `color.chip.*`: the eight label colourways (`status author series subject book entryType user rating`) are named after Bookplate's metadata chips, not after a general role.
-- `size.metadataValue`: `15rem`, a width named after Bookplate's metadata display.
 
 No other token name or comment in `src/theme/theme.ts` is clearly Bookplate-specific. Two comments mention app internals (`floatingControlTopBase` refers to the admin picker and `router/nav-layout-style`), but the tokens themselves are generic.

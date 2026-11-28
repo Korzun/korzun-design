@@ -60,7 +60,9 @@ export const useStyle = createUseStyles((theme: Theme) => ({
     position: 'relative',
     width: '28px',
     height: '16px',
-    backgroundColor: theme.color.border.default,
+    // `bg.switchOff`, not a border grey: the old `border.default` was 1.16:1
+    // on a shaded row, so an unchecked switch all but vanished there.
+    backgroundColor: theme.color.bg.switchOff,
     ...theme.recipe.focusRing,
     transitionProperty: 'background-color, outline-color',
     transitionDuration: '0.1s',
@@ -118,16 +120,50 @@ export const useStyle = createUseStyles((theme: Theme) => ({
     left: '2px',
     '$checked &': { left: '14px' },
   },
+  /**
+   * The inset switch's loading stand-in for the thumb: a rounded-square ring
+   * (the thumb's own box and corners, via `$thumb`) with an arc travelling
+   * around it. Only the `::before` conic arc rotates; the square stays put.
+   * The mask cuts the 2px ring out of the box, so the middle shows the track.
+   */
+  ring: {
+    backgroundColor: 'transparent',
+    padding: '2px',
+    boxSizing: 'border-box',
+    overflow: 'hidden',
+    mask: 'linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)',
+    maskComposite: 'exclude',
+    '-webkit-mask': 'linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)',
+    '-webkit-mask-composite': 'xor',
+    // Base ring, faint, so the path the arc travels reads as a whole square.
+    '&::after': {
+      content: '""',
+      position: 'absolute',
+      inset: 0,
+      backgroundColor: 'currentColor',
+      opacity: 0.35,
+    },
+    '&::before': {
+      content: '""',
+      position: 'absolute',
+      top: '-50%',
+      left: '-50%',
+      width: '200%',
+      height: '200%',
+      background: 'conic-gradient(currentColor 0 25%, transparent 25%)',
+      animation: 'theme-rotation 1s infinite linear',
+      zIndex: 1,
+    },
+  },
   loading: {
     // The track keeps its colour — this is "working", not "unavailable",
     // which `disabled` already says by fading to 40%. Only the cursor and the
     // thumb change.
     cursor: 'progress',
-    // `currentColor` for the spinner: muted against the pale unchecked track,
-    // white against the saturated checked one. A single colour would vanish
-    // into one of the two.
-    color: theme.color.text.muted,
-    '&$checked': { color: theme.color.bg.input },
+    // `currentColor` for the spinner: the thumb's own colour, which both the
+    // mid-grey unchecked track and the saturated checked one are built to
+    // carry.
+    color: theme.color.bg.input,
   },
 
   label: {
@@ -166,4 +202,15 @@ export const useStyle = createUseStyles((theme: Theme) => ({
   checked: {},
   disabled: {},
   danger: {},
+  // The horizontal row's corners follow surface depth (md, from recipe.row, is
+  // depth 1), and an 'inset' track stays one step squarer than its row.
+  depth0: {
+    '&$horizontal': { borderRadius: theme.radius.lg },
+    '&$horizontal $inset': {
+      borderRadius: theme.radius.md,
+      '& $thumb': { borderRadius: `calc(${theme.radius.md} - 2px)` },
+    },
+  },
+  depth1: {},
+  depth2: { '&$horizontal': { borderRadius: theme.radius.sm } },
 }));

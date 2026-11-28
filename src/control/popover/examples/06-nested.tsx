@@ -3,7 +3,7 @@
  * close the innermost open layer first: Escape closes "More" before "Filters",
  * and a press inside "More" closes neither.
  */
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button, Popover } from '@korzun/design/control';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { useRef, useState } from 'react';
@@ -26,7 +26,7 @@ export default function Nested() {
   const [innerOpen, setInnerOpen] = useState(false);
   const [chosen, setChosen] = useState('nothing yet');
   return (
-    <Stack align="start">
+    <Space direction="vertical" align="start">
       <Button ref={outerAnchor} onClick={() => setOuterOpen((value) => !value)}>
         Filters
       </Button>
@@ -37,14 +37,14 @@ export default function Nested() {
         onClose={() => setOuterOpen(false)}
       >
         <div className={styles.panel}>
-          <Stack gap="xxs">
+          <Space direction="vertical" gap="xxs">
             <Button type="text" onClick={() => setChosen('Unread')}>
               Unread
             </Button>
             <Button ref={innerAnchor} type="text" onClick={() => setInnerOpen((value) => !value)}>
               More
             </Button>
-          </Stack>
+          </Space>
           <Popover
             anchorRef={innerAnchor}
             open={innerOpen}
@@ -52,19 +52,19 @@ export default function Nested() {
             onClose={() => setInnerOpen(false)}
           >
             <div className={styles.panel}>
-              <Stack gap="xxs">
+              <Space direction="vertical" gap="xxs">
                 <Button type="text" onClick={() => setChosen('Finished')}>
                   Finished
                 </Button>
                 <Button type="text" onClick={() => setChosen('Favourites')}>
                   Favourites
                 </Button>
-              </Stack>
+              </Space>
             </div>
           </Popover>
         </div>
       </Popover>
       <Text tone="muted">Chosen: {chosen}</Text>
-    </Stack>
+    </Space>
   );
 }

@@ -43,9 +43,10 @@ export type ExampleInfo = {
   code: string;
   /**
    * `mobile`: the demo and its overview thumbnail render at phone width (`@viewport mobile`).
-   * `screen`: a full-height screen; the demo frame has a fixed height instead of sizing to fit (`@viewport screen`).
+   * `screen`: a full-height screen; the demo frame has a fixed height instead of sizing to fit, and takes a full row of the two-column examples (`@viewport screen`).
+   * `desktop`: the overview thumbnail lays out at a desktop width and is scaled to fit, for a module hidden on phones; a desktop demo takes a full row of the two-column examples (`@viewport desktop`).
    */
-  viewport?: 'mobile' | 'screen';
+  viewport?: 'mobile' | 'screen' | 'desktop';
 };
 
 export type ModuleInfo = {
@@ -56,11 +57,15 @@ export type ModuleInfo = {
   title: string;
   description: string;
   category: string;
+  /** Slug of the module this one is nested under in categories.mjs (`page` for `page-actions-bar`). */
+  parent?: string;
   values: string[];
   types: string[];
   importLine: string;
   body: string;
   examples: ExampleInfo[];
+  /** `examples/preview.tsx`: the component alone, for the overview thumbnail; never on the component page or in the doc. */
+  preview?: ExampleInfo;
   tables: TypeTable[];
   tokens: TokenRow[];
   changelog: ChangelogEntry[];

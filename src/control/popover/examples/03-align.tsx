@@ -2,7 +2,7 @@
  * `align` lines the popover up with the anchor's start edge, centre or end
  * edge. The anchors are wider than the popover so each edge shows.
  */
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button, Popover } from '@korzun/design/control';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { useRef, useState } from 'react';
@@ -28,8 +28,7 @@ export default function Align() {
   const toggle = (align: Align) => setOpen((current) => (current === align ? null : align));
   const anchors = { start: startAnchor, center: centerAnchor, end: endAnchor };
   return (
-    <Stack>
-      <Text tone="muted">Open: {open ?? 'none'}</Text>
+    <Space direction="vertical" align="start">
       <Button ref={startAnchor} onClick={() => toggle('start')}>
         align start: popover at the left edge
       </Button>
@@ -39,6 +38,7 @@ export default function Align() {
       <Button ref={endAnchor} onClick={() => toggle('end')}>
         align end: popover at the right edge
       </Button>
+      <Text tone="muted">Open: {open ?? 'none'}</Text>
       {(['start', 'center', 'end'] as const).map((align) => (
         <Popover
           key={align}
@@ -53,6 +53,6 @@ export default function Align() {
           </div>
         </Popover>
       ))}
-    </Stack>
+    </Space>
   );
 }

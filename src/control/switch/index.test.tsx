@@ -5,7 +5,11 @@ import { act } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
 import { renderWithProviders } from '../../test-utils.js';
+import { lightTheme } from '../../theme/theme.js';
 import { Switch } from './index.js';
+
+const rgb = (hex: string) =>
+  `rgb(${[1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16)).join(', ')})`;
 
 describe('Switch', () => {
   it('renders with role="switch" and correct aria-checked', () => {
@@ -54,6 +58,53 @@ describe('Switch', () => {
   describe('loading', () => {
     const hasSpinner = (container: HTMLElement): boolean => container.querySelector('svg') !== null;
 
+    const loadAfterDelay = (props: Partial<React.ComponentProps<typeof Switch>>) => {
+      const result = renderWithProviders(
+        <Switch name="dark-mode" checked={true} onChange={vi.fn()} loading={true} {...props} />
+      );
+      act(() => {
+        vi.advanceTimersByTime(150);
+      });
+      return result;
+    };
+
+    it('an inset switch shows a squared ring, not the round spinner, while loading', () => {
+      vi.useFakeTimers();
+      try {
+        const { container } = loadAfterDelay({});
+        expect(screen.getByTestId('switch-ring')).toBeInTheDocument();
+        expect(hasSpinner(container)).toBe(false);
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+
+    it('a pill switch keeps the round spinner while loading', () => {
+      vi.useFakeTimers();
+      try {
+        const { container } = loadAfterDelay({ radius: 'pill' });
+        expect(hasSpinner(container)).toBe(true);
+        expect(screen.queryByTestId('switch-ring')).toBeNull();
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+
+    it('the ring sits where the thumb would', () => {
+      const idle = renderWithProviders(<Switch name="a" checked={true} onChange={vi.fn()} />);
+      const thumbClass = idle.container.querySelector(
+        '[role="switch"] > div > div > div'
+      )!.className;
+      idle.unmount();
+      vi.useFakeTimers();
+      try {
+        loadAfterDelay({});
+        expect(screen.getByTestId('switch-ring').className).toContain(thumbClass);
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+
     it('shows nothing for the first moments, so a fast save never flashes', () => {
       vi.useFakeTimers();
       try {
@@ -74,7 +125,7 @@ describe('Switch', () => {
       vi.useFakeTimers();
       try {
         const { container } = renderWithProviders(
-          <Switch name="dark-mode" checked={true} onChange={vi.fn()} loading={true} />
+          <Switch name="dark-mode" checked={true} onChange={vi.fn()} loading={true} radius="pill" />
         );
         act(() => {
           vi.advanceTimersByTime(150);
@@ -214,5 +265,27 @@ describe('Switch', () => {
     );
     await user.click(screen.getByText('Helper text explaining the toggle'));
     expect(onChange).toHaveBeenCalledWith(true);
+  });
+});
+
+describe('unchecked track', () => {
+  // The track is the thumb's parent; the thumb is the one childless div.
+  const track = () => {
+    const divs = [...document.querySelectorAll('[role="switch"] div')];
+    const thumb = divs.find((div) => div.children.length === 0);
+    if (thumb?.parentElement == null) throw new Error('no track rendered');
+    return thumb.parentElement;
+  };
+
+  it('is painted bg.switchOff, which holds 3:1 on a shaded row', () => {
+    renderWithProviders(
+      <Switch name="n" checked={false} label="N" layout="horizontal" onChange={vi.fn()} />
+    );
+    expect(getComputedStyle(track()).backgroundColor).toBe(rgb(lightTheme.color.bg.switchOff));
+  });
+
+  it('turns brand when checked', () => {
+    renderWithProviders(<Switch name="n" checked label="N" onChange={vi.fn()} />);
+    expect(getComputedStyle(track()).backgroundColor).toBe(rgb(lightTheme.color.brand.default));
   });
 });

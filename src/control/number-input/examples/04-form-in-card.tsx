@@ -1,10 +1,10 @@
 /** Form in a card
  * The `horizontal` layout is made for a `Card` body. Index uses the built-in check.
- * Width replaces it with a rule that still checks the text is numeric, and both
+ * Width replaces it with a rule that allows whole numbers up to 4096, and both
  * fields report validity through `onValidChange`, so Save stays disabled while
  * either is invalid.
  */
-import { Card, Stack, Text } from '@korzun/design/component';
+import { Card, Space, Text } from '@korzun/design/component';
 import { Button, NumberInput } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -28,7 +28,7 @@ export default function FormInCard() {
         </Button>
       }
     >
-      <Stack>
+      <Space direction="vertical">
         <NumberInput
           name="seriesIndex"
           label="Index"
@@ -38,14 +38,14 @@ export default function FormInCard() {
         />
         <NumberInput
           name="coverWidth"
-          label="Width (up to 4096)"
+          label="Width"
           value={coverWidth}
           onChange={setCoverWidth}
           validate={(t) => t === '' || (/^\d+$/.test(t) && Number(t) <= 4096)}
           onValidChange={onValidChange}
         />
         {saved !== null && <Text tone="success">Saved: {saved}</Text>}
-      </Stack>
+      </Space>
     </Card>
   );
 }

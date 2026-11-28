@@ -4,12 +4,13 @@ import { useState, type ReactElement } from 'react';
 import { HashRouter, Outlet, Route, Routes, useLocation } from 'react-router';
 
 import { Frame, FrameNavigatedAway } from './frame.js';
-import { Header } from './layout/header.js';
+import { Header, MOBILE_HEADER_HEIGHT } from './layout/header.js';
 import { useScrollToTopOnPageChange } from './layout/scroll.js';
 import { NotFound } from './not-found.js';
 import { ChangelogPage } from './page/changelog.js';
 import { ComponentPage } from './page/component.js';
 import { GuidePage } from './page/guide.js';
+import { GuidesPage } from './page/guides.js';
 import { OverviewPage } from './page/overview.js';
 import { RecipePage, RecipesPage } from './page/recipes.js';
 import { TokensPage } from './page/tokens.js';
@@ -22,6 +23,10 @@ const useStyle = createUseStyles((theme: Theme) => ({
     fontFamily: theme.fontFamily.body,
     color: theme.color.text.primary,
     backgroundColor: theme.color.bg.page,
+    // The header sticks on a phone: a heading or table scrolled to stops below it.
+    [theme.breakpoint.mobile]: {
+      '& [id]': { scrollMarginTop: `calc(${MOBILE_HEADER_HEIGHT} + ${theme.space.md})` },
+    },
   },
 }));
 
@@ -65,6 +70,7 @@ export const GalleryRoutes = (): ReactElement => {
       <Route element={<Shell />}>
         <Route index element={<OverviewPage />} />
         <Route path="/components/:slug" element={<ComponentPage />} />
+        <Route path="/guides" element={<GuidesPage />} />
         <Route path="/guides/:slug" element={<GuidePage />} />
         <Route path="/recipes" element={<RecipesPage />} />
         <Route path="/recipes/:slug" element={<RecipePage />} />

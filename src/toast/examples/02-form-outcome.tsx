@@ -1,7 +1,7 @@
 /** Reporting an outcome
  * A form submitted from the Card footer reports its result with the function `useToast` returns. A failed save also puts the message in an `ErrorMessage` beside the field, so the toast is never the only copy of an error the user must fix.
  */
-import { Card, ErrorMessage, Stack } from '@korzun/design/component';
+import { Card, ErrorMessage, Space } from '@korzun/design/component';
 import { Button, TextInput } from '@korzun/design/control';
 import { useToast } from '@korzun/design/toast';
 import { useState } from 'react';
@@ -38,7 +38,7 @@ export default function FormOutcome() {
           save();
         }}
       >
-        <Stack gap="md">
+        <Space direction="vertical" gap="md">
           <TextInput
             name="password"
             label="New password"
@@ -49,7 +49,7 @@ export default function FormOutcome() {
             validate={(next) => next.length >= 8}
           />
           <ErrorMessage>{error}</ErrorMessage>
-        </Stack>
+        </Space>
       </form>
     </Card>
   );

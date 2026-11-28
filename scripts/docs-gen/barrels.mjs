@@ -48,7 +48,7 @@ export const barrelStatements = (text) => {
 export const BARREL_AREAS = ['control', 'component', 'theme', 'toast', 'icon', 'hooks'];
 
 // Every runtime value the package barrels export: the valid changelog tags
-// besides `General`. Type names (ButtonProps, TagTone) are not tags.
+// besides `General`. Type names (ButtonProps, ChipTone) are not tags.
 export const knownNames = (repo) => {
   const names = new Set();
   for (const area of BARREL_AREAS) {

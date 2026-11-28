@@ -1,6 +1,7 @@
 import cx from 'classnames';
 import { useCallback, useEffect, useId, useRef, useState } from 'react';
 
+import { useDepthClassKey } from '../../component/surface/index.js';
 import { useStyle } from './style.js';
 
 export type TextAreaProps = {
@@ -10,7 +11,7 @@ export type TextAreaProps = {
   ariaLabel?: string;
   /** Visible label, linked to the textarea so it names it. */
   label?: string;
-  /** `horizontal` and `vertical` paint a shaded card-header row with `md` corners; `inline` paints nothing. */
+  /** `horizontal` and `vertical` paint a shaded card-header row with corners that follow surface depth ([corners](../corners.md)); `inline` paints nothing. */
   layout?: 'horizontal' | 'vertical' | 'inline';
   /** Native limit, plus an `n/max` counter once within `max(10% of max, 50)` characters; the counter turns red at the limit. */
   maxLength?: number;
@@ -26,7 +27,7 @@ export type TextAreaProps = {
   validate?: (newValue: string) => boolean;
   /** Typed as required (pass `undefined` for empty). Re-syncs into the field only when the prop changes. */
   value: string | undefined;
-  /** `'outlined'` has a border and the input background; `'borderless'` drops both and keeps its `md` corners, so the browser's default textarea background shows (check it in dark mode). */
+  /** `'outlined'` has a border and the input background; `'borderless'` drops both and keeps its depth corners, so the browser's default textarea background shows (check it in dark mode). */
   variant?: 'outlined' | 'borderless';
 };
 
@@ -49,6 +50,7 @@ export const TextArea = ({
   variant = 'outlined',
 }: TextAreaProps) => {
   const style = useStyle();
+  const depthKey = useDepthClassKey();
   const id = useId();
   const ref = useRef<HTMLTextAreaElement>(null);
 
@@ -94,7 +96,7 @@ export const TextArea = ({
     remaining !== undefined && remaining <= Math.max(Math.floor((maxLength ?? 0) * 0.1), 50);
 
   return (
-    <div className={cx(style.root, style[layout])}>
+    <div className={cx(style.root, style[layout], depthKey && style[depthKey])}>
       {label && (
         <label htmlFor={id} className={cx(style.label, { [`${style.danger}`]: !isValid })}>
           {label}

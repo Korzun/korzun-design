@@ -3,7 +3,7 @@
  * never both. `Icon` takes an icon component (`HomeIcon`), not an element. A link
  * item needs a router above the Menu, and middle-click opens it in a new tab.
  */
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button, Menu } from '@korzun/design/control';
 import { BooksIcon, HomeIcon, SettingsIcon } from '@korzun/design/icon';
 import { useState } from 'react';
@@ -11,7 +11,7 @@ import { useState } from 'react';
 export default function LinksAndIcons() {
   const [chosen, setChosen] = useState('nothing yet');
   return (
-    <Stack>
+    <Space direction="vertical" align="start">
       <Menu
         trigger={(p) => <Button {...p}>Go to</Button>}
         items={[
@@ -21,6 +21,6 @@ export default function LinksAndIcons() {
         ]}
       />
       <Text tone="muted">Chosen: {chosen}</Text>
-    </Stack>
+    </Space>
   );
 }

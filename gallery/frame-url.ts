@@ -9,6 +9,9 @@ export const MOBILE_WIDTH = 390;
 /** Height in px of a `@viewport screen` example's frame: a full-height screen at a laptop-ish height. */
 export const SCREEN_HEIGHT = 640;
 
+/** Width in px a `@viewport desktop` thumbnail lays out at: past the 640px mobile breakpoint. */
+export const DESKTOP_WIDTH = 680;
+
 /**
  * The URL of one example frame. `framePath` is its owner's (`ExampleOwner.framePath`:
  * `button`, `recipe/login`). `fit: 'center'` centres a small example in the

@@ -1,11 +1,11 @@
 import { ThemeProvider } from '@korzun/design/theme';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router';
 
 import { CATEGORIES } from '../../scripts/docs-gen/categories.mjs';
 import { moduleOwner, siteData } from '../data.js';
-import { MOBILE_WIDTH } from '../frame-url.js';
+import { DESKTOP_WIDTH, MOBILE_WIDTH } from '../frame-url.js';
 import { Thumbnail } from '../part/thumbnail.js';
 import { OverviewPage } from './overview.js';
 
@@ -32,7 +32,26 @@ describe('OverviewPage', () => {
     expect(headings.length).toBeGreaterThan(1);
   });
 
-  it('gives each card a lazy, inert thumbnail of the first example', () => {
+  it('lists Hooks last and leaves nested modules to the parent page', () => {
+    mount();
+    const headings = screen.getAllByRole('heading', { level: 2 }).map((h) => h.textContent);
+    expect(headings.at(-1)).toBe('Hooks');
+    const cards = screen.getAllByRole('heading', { level: 3 }).map((h) => h.textContent);
+    expect(cards).toContain('Page');
+    expect(cards).not.toContain('PageActionsBar');
+    expect(cards).not.toContain('CardRow');
+    expect(screen.queryByText('Page /')).toBeNull();
+  });
+
+  it('still finds a nested module by search, naming its parent', async () => {
+    mount();
+    await userEvent.type(screen.getByRole('textbox', { name: 'Search components' }), 'PageActions');
+    const cards = screen.getAllByRole('heading', { level: 3 }).map((h) => h.textContent);
+    expect(cards).toEqual(['PageActionsBar', 'PageActionsMenu']);
+    expect(screen.getAllByText('Page /')).toHaveLength(2);
+  });
+
+  it('gives each card a lazy, inert thumbnail of its preview', () => {
     mount();
     const link = screen.getByRole('link', { name: /^Button\b/ });
     const frame = link.querySelector('iframe')!;
@@ -40,19 +59,49 @@ describe('OverviewPage', () => {
     expect(frame).toHaveAttribute('aria-hidden', 'true');
     expect(frame).toHaveAttribute('tabindex', '-1');
     expect(frame.getAttribute('src')).toMatch(
-      /^\/#\/frame\/button\/basic\?theme=(light|dark|auto)&fit=center$/
+      /^\/#\/frame\/button\/preview\?theme=(light|dark|auto)&fit=center$/
     );
   });
 
-  it('lays a @viewport mobile first example out at phone width in its thumbnail', () => {
+  it('renders card descriptions as inline markdown, with no block or link inside the card link', () => {
+    mount();
+    const link = screen.getByRole('link', { name: /^TextInput\b/ });
+    expect(link.textContent).not.toContain('`');
+    expect(link.querySelector('code')).toHaveTextContent('maxLength');
+    expect(link.querySelector('a, p, div div p, ul, pre')).toBeNull();
+  });
+
+  it('keeps a thumbnail transparent until its frame loads, so a blank frame never flashes', () => {
+    const button = siteData.modules.find((m) => m.slug === 'button')!;
+    const { container } = render(
+      <ThemeProvider identity="test">
+        <Thumbnail owner={moduleOwner(button)} />
+      </ThemeProvider>
+    );
+    const frame = container.querySelector('iframe')!;
+    expect(getComputedStyle(frame).opacity).toBe('0');
+    fireEvent.load(frame);
+    expect(getComputedStyle(frame).opacity).toBe('1');
+  });
+
+  it('falls back to the first example for a module with no preview', () => {
+    const button = siteData.modules.find((m) => m.slug === 'button')!;
+    const { container } = render(
+      <ThemeProvider identity="test">
+        <Thumbnail owner={moduleOwner({ ...button, preview: undefined })} />
+      </ThemeProvider>
+    );
+    expect(container.querySelector('iframe')!.getAttribute('src')).toMatch(
+      /\/frame\/button\/basic\?/
+    );
+  });
+
+  it('lays a @viewport mobile preview out at phone width in its thumbnail', () => {
     const button = siteData.modules.find((m) => m.slug === 'button')!;
     const { container } = render(
       <ThemeProvider identity="test">
         <Thumbnail
-          owner={moduleOwner({
-            ...button,
-            examples: [{ ...button.examples[0]!, viewport: 'mobile' }],
-          })}
+          owner={moduleOwner({ ...button, preview: { ...button.preview!, viewport: 'mobile' } })}
         />
         <Thumbnail owner={moduleOwner(button)} />
       </ThemeProvider>
@@ -61,6 +110,20 @@ describe('OverviewPage', () => {
     expect(phone).toHaveAttribute('data-viewport', 'mobile');
     expect(getComputedStyle(phone).width).toBe(`${MOBILE_WIDTH}px`);
     expect(wide).not.toHaveAttribute('data-viewport');
+  });
+
+  it('lays a @viewport desktop preview out past the mobile breakpoint, scaled to fit', () => {
+    const bar = siteData.modules.find((m) => m.slug === 'page-actions-bar')!;
+    expect(bar.preview?.viewport).toBe('desktop');
+    const { container } = render(
+      <ThemeProvider identity="test">
+        <Thumbnail owner={moduleOwner(bar)} />
+      </ThemeProvider>
+    );
+    const frame = container.querySelector('iframe')!;
+    expect(frame).toHaveAttribute('data-viewport', 'desktop');
+    expect(getComputedStyle(frame).width).toBe(`${DESKTOP_WIDTH}px`);
+    expect(frame.style.transform).toMatch(/^scale\(/);
   });
 
   it('filters by the search box and says when nothing matches', async () => {
@@ -74,6 +137,37 @@ describe('OverviewPage', () => {
     await userEvent.type(search, 'zzz');
     expect(screen.queryAllByRole('heading', { level: 2 })).toEqual([]);
     expect(screen.getByText('No components match “zzz”.')).toBeInTheDocument();
+  });
+
+  it('clears an empty search from its Clear search button', async () => {
+    mount();
+    await userEvent.type(screen.getByRole('textbox', { name: 'Search components' }), 'zzz');
+    await userEvent.click(screen.getAllByRole('button', { name: 'Clear search' }).at(-1)!);
+    expect(screen.queryByText('No components match “zzz”.')).not.toBeInTheDocument();
+    expect(screen.getAllByRole('heading', { level: 2 }).length).toBeGreaterThan(0);
+    expect(screen.getByRole('textbox', { name: 'Search components' })).toHaveValue('');
+  });
+
+  it('shows a decorative search icon in the search box', () => {
+    mount();
+    const search = screen.getByRole('textbox', { name: 'Search components' });
+    const icon = search.closest('[data-search]')!.querySelector('svg')!;
+    // TextInput's `prefix` hides the icon's holder from screen readers.
+    expect(icon.closest('[aria-hidden="true"]')).not.toBeNull();
+  });
+
+  it('shows the clear button only while there is text, and it empties the search and refocuses it', async () => {
+    mount();
+    const search = screen.getByRole('textbox', { name: 'Search components' });
+    const before = screen.getAllByRole('heading', { level: 3 }).length;
+    expect(screen.queryByRole('button', { name: 'Clear search' })).toBeNull();
+    await userEvent.type(search, 'tinted');
+    expect(screen.getAllByRole('heading', { level: 3 }).length).toBeLessThan(before);
+    await userEvent.click(screen.getByRole('button', { name: 'Clear search' }));
+    expect(search).toHaveValue('');
+    expect(search).toHaveFocus();
+    expect(screen.getAllByRole('heading', { level: 3 })).toHaveLength(before);
+    expect(screen.queryByRole('button', { name: 'Clear search' })).toBeNull();
   });
 
   it('navigates to the component page when a card is clicked', async () => {

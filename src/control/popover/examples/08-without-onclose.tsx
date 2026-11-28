@@ -2,7 +2,7 @@
  * With no `onClose`, Escape and a press outside do nothing: the popover stays
  * open until your code sets `open` to `false`, here the Show and Hide button.
  */
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Button, Popover } from '@korzun/design/control';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { useRef, useState } from 'react';
@@ -22,7 +22,7 @@ export default function WithoutOnClose() {
   const anchor = useRef<HTMLElement>(null);
   const [open, setOpen] = useState(true);
   return (
-    <Stack align="start">
+    <Space direction="vertical" align="start">
       <Button ref={anchor} onClick={() => setOpen((value) => !value)}>
         {open ? 'Hide' : 'Show'}
       </Button>
@@ -32,6 +32,6 @@ export default function WithoutOnClose() {
         </div>
       </Popover>
       <Text tone="muted">Open: {open ? 'yes' : 'no'}</Text>
-    </Stack>
+    </Space>
   );
 }

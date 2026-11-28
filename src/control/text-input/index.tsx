@@ -1,9 +1,10 @@
 import cx from 'classnames';
 import { useCallback, useId, useState } from 'react';
 
+import { useDepthClassKey } from '../../component/surface/index.js';
 import { IconProps } from '../../icon/index.js';
 import { Button } from '../button/index.js';
-import { useStyle } from './style.js';
+import { PREFIX_SIZE, useStyle } from './style.js';
 
 /** Trailing icon button of a `TextInput`. */
 type Action = {
@@ -30,7 +31,7 @@ export type TextInputProps = {
   autoComplete?: React.HTMLInputAutoCompleteAttribute | undefined;
   /** Visible label, linked to the input so it names it. */
   label?: string;
-  /** `horizontal` and `vertical` paint a shaded card-header row with `md` corners; `inline` paints nothing. */
+  /** `horizontal` and `vertical` paint a shaded card-header row with corners that follow surface depth ([corners](../corners.md)); `inline` paints nothing. */
   layout?: 'horizontal' | 'vertical' | 'inline';
   /** Native limit, plus an `n/max` counter once within `max(10% of max, 10)` characters; the counter turns red at the limit. */
   maxLength?: number;
@@ -46,6 +47,8 @@ export type TextInputProps = {
   password?: boolean;
   /** Placeholder text for the input. */
   placeholder?: string;
+  /** A decorative icon inside the field's left end (`prefix={SearchIcon}`), an icon component, not an element. It is hidden from screen readers and lets clicks through to the field, so name the field with `label` or `ariaLabel`. */
+  prefix?: React.ComponentType<IconProps>;
   /** Receives the raw text on each keystroke; `false` turns label and border red. */
   validate?: (newValue: string) => boolean;
   /** Typed as required: pass it, even as `undefined` for empty. Re-syncs into the field only when the prop changes; see [Controlled-ish](#controlled-ish). */
@@ -70,10 +73,12 @@ export const TextInput = ({
   onValidChange = () => {},
   password = false,
   placeholder,
+  prefix: Prefix,
   validate = () => true,
   value = '',
 }: TextInputProps) => {
   const style = useStyle();
+  const depthKey = useDepthClassKey();
   const id = useId();
 
   const [isValid, setIsValid] = useState<boolean>(true);
@@ -114,7 +119,7 @@ export const TextInput = ({
     remaining !== undefined && remaining <= Math.max(Math.floor((maxLength ?? 0) * 0.1), 10);
 
   return (
-    <div className={cx(style.root, style[layout])}>
+    <div className={cx(style.root, style[layout], depthKey && style[depthKey])}>
       {label && (
         <label htmlFor={id} className={cx(style.label, { [style.danger]: !isValid })}>
           {label}
@@ -128,6 +133,7 @@ export const TextInput = ({
           className={cx(style.input, {
             [style.danger]: !isValid,
             [style.isAction]: action !== undefined,
+            [style.isPrefix]: Prefix !== undefined,
           })}
           id={id}
           maxLength={maxLength}
@@ -138,6 +144,11 @@ export const TextInput = ({
           type={password ? 'password' : 'text'}
           value={internalValue}
         />
+        {Prefix && (
+          <span className={style.prefix} aria-hidden="true">
+            <Prefix height={PREFIX_SIZE} width={PREFIX_SIZE} strokeWidth={2} />
+          </span>
+        )}
         {action && (
           <div className={cx(style.action)}>
             <Button

@@ -1,7 +1,7 @@
 ---
 title: ThemeSetting
 description: A ready-made "Appearance" card with a Light, Dark and Auto switch bound to the theme.
-category: Theme
+category: Foundations
 ---
 # ThemeSetting
 

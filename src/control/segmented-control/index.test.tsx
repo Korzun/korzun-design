@@ -204,3 +204,19 @@ describe('SegmentedControl', () => {
     expect(transparent(screen.getByRole('radiogroup'))).toBe(true);
   });
 });
+
+describe('font size', () => {
+  // A <button> takes the UA's 13.33px, not the page's, so without its own
+  // size the segment disagreed with the 14px label it holds.
+  it('sets the segments and the reveal copies to fontSize.md', () => {
+    renderWithProviders(
+      <SegmentedControl label="theme" value="dark" options={options} onChange={vi.fn()} />
+    );
+    for (const radio of screen.getAllByRole('radio')) {
+      expect(getComputedStyle(radio).fontSize).toBe('0.875rem');
+    }
+    for (const copy of screen.getByTestId('segmented-reveal').children) {
+      expect(getComputedStyle(copy).fontSize).toBe('0.875rem');
+    }
+  });
+});

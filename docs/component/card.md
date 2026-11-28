@@ -18,7 +18,7 @@ also be a whole clickable list row (`size="small"` with `onClick`).
 
 Use something else for: a "nothing here" block on the bare page (`EmptyState`),
 a disclosure section with no card chrome (`CollapsibleSection`), a modal
-(`Dialog` / `ConfirmModal` in `@korzun/design/control`).
+(`Modal` / `ConfirmModal` in `@korzun/design/control`).
 
 ## Usage
 
@@ -49,7 +49,7 @@ automatically (8px in a Card on a Page). See [corners](../corners.md).
 - Do give each feature on a screen its own Card, stacked directly in `<Page>`.
 - Do put row actions that must not fire by accident in `footer` of a
   collapsible card; they are unreachable while it is collapsed.
-- Don't nest Cards just to group content; use `CardDivider`. When you do nest, corners step down automatically.
+- Don't nest Cards just to group content; use `Divider`. When you do nest, corners step down automatically.
 - Don't set `radius` on Buttons inside a Card: it follows depth, and an explicit `radius="card"` would stay 8px inside a nested Card, breaking the concentric corners.
 - Don't expect `isCollapsible` cards to start open; pass `defaultCollapsed={false}`.
 - Do use the exported `CardProps` type when wrapping Card.
@@ -64,7 +64,7 @@ A feature on a screen: `title`, a `subTitle`, a `headerAction`, a form in the bo
 submit button in the `footer`. The footer button reaches the form by `form` id, so it submits it.
 
 ```tsx
-import { Card, Stack, Text } from '@korzun/design/component';
+import { Card, Space, Text } from '@korzun/design/component';
 import { Button, TextInput } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -94,10 +94,10 @@ export default function Basic() {
           setSaved(name ?? '');
         }}
       >
-        <Stack>
+        <Space direction="vertical">
           <TextInput name="name" label="Name" value={name} onChange={setName} />
           <Text tone="muted">Saved name: {saved}</Text>
-        </Stack>
+        </Space>
       </form>
     </Card>
   );
@@ -111,14 +111,14 @@ one is closed; pass `defaultCollapsed={false}` to start open, as the second one 
 footer's destructive action is only reachable while the card is open.
 
 ```tsx
-import { Card, Stack, Text } from '@korzun/design/component';
+import { Card, Space, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { useState } from 'react';
 
 export default function Collapsible() {
   const [removed, setRemoved] = useState<string | undefined>();
   return (
-    <Stack>
+    <Space direction="vertical">
       <Card isCollapsible title="ada" subTitle="Starts collapsed">
         <Text>ada@example.com</Text>
       </Card>
@@ -136,7 +136,7 @@ export default function Collapsible() {
         <Text>grace@example.com</Text>
       </Card>
       <Text tone="muted">Deleted: {removed ?? 'nobody'}</Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -148,7 +148,7 @@ padding, so the child supplies its own padding and corner. A `CardRow` inside is
 card and concentric with it. Clicking anywhere on a row fires `onClick`.
 
 ```tsx
-import { Card, CardRow, Stack, Text } from '@korzun/design/component';
+import { Card, CardRow, Space, Text } from '@korzun/design/component';
 import { useState } from 'react';
 
 const books = ['Middlemarch', 'Persuasion', 'Villette'];
@@ -156,7 +156,7 @@ const books = ['Middlemarch', 'Persuasion', 'Villette'];
 export default function ClickableRows() {
   const [opened, setOpened] = useState<string | undefined>();
   return (
-    <Stack>
+    <Space direction="vertical">
       {books.map((book) => (
         <Card key={book} size="small" onClick={() => setOpened(book)}>
           <CardRow>
@@ -165,7 +165,7 @@ export default function ClickableRows() {
         </Card>
       ))}
       <Text tone="muted">Opened: {opened ?? 'nothing yet'}</Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -175,14 +175,14 @@ export default function ClickableRows() {
 `onClickHeader` makes the header clickable. A click in `headerAction` does not reach it.
 
 ```tsx
-import { Card, Stack, Text } from '@korzun/design/component';
+import { Card, Space, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { useState } from 'react';
 
 export default function HeaderClick() {
   const [event, setEvent] = useState('none yet');
   return (
-    <Stack>
+    <Space direction="vertical">
       <Card
         title="Library"
         onClickHeader={() => setEvent('header clicked')}
@@ -195,7 +195,7 @@ export default function HeaderClick() {
         <Text>42 books</Text>
       </Card>
       <Text tone="muted">Last event: {event}</Text>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -204,10 +204,10 @@ export default function HeaderClick() {
 
 A Card inside a Card steps its corner down one level: `lg` on the page, `md` inside a Card,
 `sm` one level deeper. Each Card's Button follows the same depth, so pass no `radius`. Nest
-for a group that is itself a feature; to split one body into sections use `CardDivider`.
+for a group that is itself a feature; to split one body into sections use `Divider`.
 
 ```tsx
-import { Card, Stack, Text } from '@korzun/design/component';
+import { Card, Space, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -218,21 +218,21 @@ export default function Nested() {
       title="Library (16px)"
       footer={<Button onClick={() => setPressed('Sync library')}>Sync library</Button>}
     >
-      <Stack>
+      <Space direction="vertical">
         <Text>The feature sits on the page.</Text>
         <Card
           title="Devices (8px)"
           footer={<Button onClick={() => setPressed('Pair device')}>Pair device</Button>}
         >
-          <Stack>
+          <Space direction="vertical">
             <Text>A group inside the feature, one level in.</Text>
             <Card title="Kitchen frame (4px)">
               <Text>Deeper Cards stay at the smallest step.</Text>
             </Card>
-          </Stack>
+          </Space>
         </Card>
         <Text tone="muted">Pressed: {pressed ?? 'nothing yet'}</Text>
-      </Stack>
+      </Space>
     </Card>
   );
 }
@@ -288,6 +288,7 @@ export default function Nested() {
 
 ## Changelog
 
+- **0.7.0** (2026-11-26): `CardDivider` is now `Divider` and works anywhere: directly in a Card or Dialog body it reaches the edges as before (cancelling `space.xl` in a large Card, 1px in a small one, `space.xxl` in a Dialog, where it used to overhang everything but a large Card), and on the page, in a `CardRow`, `Alert`, `Surface` or nested Card it spans its container. The new `bleed` prop overrides that. **Breaking:** the old names `CardDivider`, `CardDividerProps` and `CardDividerAlign` are removed; import `Divider`, `DividerProps` and `DividerAlign`.
 - **0.5.0** (2026-11-24): Surface depth: corners are concentric site-wide with no radius props. `Page` provides depth 0, `Dialog` 1, and `Card`, `CardRow` and `Alert` each provide one level deeper than where they sit; `Popover` (so `Menu` and the `Select` list) provides a fixed 2. Depth 0 is `radius.lg`, 1 is `md`, 2 and deeper is `sm`. `Button`, `Select`, `Card`, `CardRow` and `Alert` follow it; an explicit `Button radius` or `Select surface` still wins. With no `Page`, `Dialog`, `Card`, `CardRow`, `Alert` or `Surface` above it, a component keeps its 0.4.0 look; a bare `Card` (no `Page`) still counts as depth 0 and gives its contents depth 1, so its Buttons and nested Cards change as below.
 - **0.5.0** (2026-11-24): **Visible changes:**
   - Buttons in a Card default to 8px (they were 16px unless `radius="card"` was set), and Buttons in a Dialog body are 8px.

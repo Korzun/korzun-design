@@ -8,7 +8,7 @@ import { HomeIcon } from '../../icon/index.js';
 import { renderWithProviders } from '../../test-utils.js';
 import { ThemeProvider } from '../../theme/provider.js';
 import { Button } from '../button/index.js';
-import { Dialog } from '../dialog/index.js';
+import { Modal } from '../modal/index.js';
 import { Popover } from '../popover/index.js';
 import { Menu, type MenuItem, type MenuProps } from './index.js';
 
@@ -192,7 +192,7 @@ describe('Menu', () => {
     expect(screen.getByRole('button', { name: 'Next' })).toHaveFocus();
   });
 
-  describe('inside a modal Dialog', () => {
+  describe('inside a Modal', () => {
     beforeEach(() => {
       HTMLDialogElement.prototype.showModal = vi.fn(function (this: HTMLDialogElement) {
         this.setAttribute('open', '');
@@ -205,13 +205,13 @@ describe('Menu', () => {
     const InDialog = () => (
       <>
         <button type="button">Page before</button>
-        <Dialog open onClose={() => {}} title="Book">
+        <Modal open onClose={() => {}} title="Book">
           <Menu trigger={trigger} items={actions()} />
           <div inert>
             <button type="button">Inert</button>
           </div>
           <button type="button">In dialog</button>
-        </Dialog>
+        </Modal>
         <button type="button">Page after</button>
       </>
     );

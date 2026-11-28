@@ -1,12 +1,12 @@
 /** Form row
  * Among other fields in a `Card`, set `layout="horizontal"` and `dense` so the
  * label shows and the height matches a `TextInput`. `allowCustom={false}`
- * restricts it to known users, `chipColor="user"` matches how users are tagged
+ * restricts it to known users, `tone="user"` matches how users are tagged
  * elsewhere, and `placeholder` and `disabled` follow the loading state. `name`
  * is set on the text input only: form data gets the half-typed text, so submit
  * the chips from state.
  */
-import { Card, Stack, Text } from '@korzun/design/component';
+import { Card, Space, Text } from '@korzun/design/component';
 import { Button, ChipsInput, TextInput } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -25,7 +25,7 @@ export default function FormRow() {
         </Button>
       }
     >
-      <Stack>
+      <Space direction="vertical">
         <ChipsInput
           name="users"
           label="Users"
@@ -35,7 +35,7 @@ export default function FormRow() {
           suggestions={USERS}
           onChange={setUsers}
           allowCustom={false}
-          chipColor="user"
+          tone="user"
           disabled={loading}
           placeholder={loading ? 'Loading…' : 'Add users…'}
         />
@@ -47,7 +47,7 @@ export default function FormRow() {
           onChange={setTitle}
         />
         <Text tone="muted">Shared with: {users.join(', ') || 'nobody'}</Text>
-      </Stack>
+      </Space>
     </Card>
   );
 }

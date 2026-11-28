@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 
 import type { TypeTable } from '../../scripts/docs-gen/types.js';
-import { PropsTable } from './props-table.js';
+import { PropsTable, unionMembers } from './props-table.js';
 
 const mount = (table: TypeTable) =>
   render(
@@ -15,6 +15,38 @@ const mount = (table: TypeTable) =>
   );
 
 describe('PropsTable', () => {
+  it('puts the required and deprecated tags in a stack the phone lays out as a row', () => {
+    const { container } = mount({
+      name: 'ButtonProps',
+      kind: 'props',
+      rows: [
+        { name: 'old', type: 'string', required: true, deprecated: true, description: 'Old.' },
+      ],
+    });
+    const stack = container.querySelector('tbody td')!.firstElementChild!;
+    expect(stack.className).toMatch(/nameStack/);
+    expect(stack).toHaveTextContent('required');
+    expect(stack).toHaveTextContent('deprecated');
+  });
+
+  it('labels the type and default cells and marks the description wide, for the stacked phone layout', () => {
+    const { container } = mount({
+      name: 'ButtonProps',
+      kind: 'props',
+      rows: [
+        { name: 'size', type: 'string', required: false, default: "'m'", description: 'Size.' },
+      ],
+    });
+    const cells = Array.from(container.querySelectorAll('tbody td'));
+    expect(cells.map((td) => td.getAttribute('data-label'))).toEqual([
+      null,
+      'Type',
+      'Default',
+      null,
+    ]);
+    expect(cells[3]!.className).toMatch(/wide/);
+  });
+
   it('shows the type description under the heading, with markdown', () => {
     mount({
       name: 'MenuLinkItem',
@@ -140,5 +172,60 @@ describe('PropsTable links to types documented on other pages', () => {
       'href',
       '#/components/page-actions-bar#pageactionitem'
     );
+  });
+});
+
+describe('unionMembers', () => {
+  const members = (text: string) => unionMembers(text).map(([s, e]) => text.slice(s, e));
+
+  it('splits a union at its top level only', () => {
+    expect(members("'menu' | 'listbox' | boolean")).toEqual(["'menu'", "'listbox'", 'boolean']);
+    expect(members('Array<A | B> | (() => void) | { a: C | D }')).toEqual([
+      'Array<A | B>',
+      '(() => void)',
+      '{ a: C | D }',
+    ]);
+  });
+
+  it('does not close a generic on an arrow or split inside a string', () => {
+    expect(members("(e: Event) => void | 'a|b'")).toEqual(['(e: Event) => void', "'a|b'"]);
+  });
+
+  it('returns one member for a type that is not a union', () => {
+    expect(members('string')).toEqual(['string']);
+  });
+});
+
+describe('PropsTable type cells', () => {
+  it('holds each union member together, so a long union wraps between members', () => {
+    const { container } = mount({
+      name: 'ButtonProps',
+      kind: 'props',
+      rows: [
+        { name: 'kind', type: "'a' | 'b' | boolean", required: false, description: '' },
+        { name: 'label', type: 'string', required: false, description: '' },
+      ],
+    });
+    const [union, plain] = Array.from(container.querySelectorAll('td[data-label="Type"] code'));
+    expect(union!.textContent).toBe("'a' | 'b' | boolean");
+    expect(Array.from(union!.children).map((m) => m.textContent)).toEqual([
+      "'a'",
+      "'b'",
+      'boolean',
+    ]);
+    expect(getComputedStyle(union!.children[0]!).display).toBe('inline-block');
+    expect(plain!.children).toHaveLength(0);
+  });
+
+  it('sets prop names in semibold, apart from their types', () => {
+    const { container } = mount({
+      name: 'ButtonProps',
+      kind: 'props',
+      rows: [{ name: 'label', type: 'string', required: false, description: '' }],
+    });
+    const name = container.querySelector('tbody td:first-child code')!;
+    const type = container.querySelector('td[data-label="Type"] code')!;
+    expect(getComputedStyle(name).fontWeight).toBe('600');
+    expect(getComputedStyle(type).color).not.toBe(getComputedStyle(name).color);
   });
 });

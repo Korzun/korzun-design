@@ -7,7 +7,7 @@ import { useStyle, useTypography, type TextSize, type TextTone, type TextWeight 
 const INLINE_TAGS = ['span', 'strong', 'em', 'label'];
 
 export interface TextProps extends Omit<HTMLAttributes<HTMLElement>, 'style'> {
-  /** The element to render. `p` has its margin reset to 0; space paragraphs with `Stack` `gap`. */
+  /** The element to render. `p` has its margin reset to 0; space paragraphs with `Space` `gap`. */
   as?: 'span' | 'p' | 'div' | 'label' | 'strong' | 'em';
   /** Font size, from the theme's `fontSize` tokens. Unset, it inherits from the parent. */
   size?: TextSize;
@@ -15,7 +15,7 @@ export interface TextProps extends Omit<HTMLAttributes<HTMLElement>, 'style'> {
   tone?: TextTone;
   /** Font weight, from the theme's `fontWeight` tokens. Unset, it inherits from the parent. */
   weight?: TextWeight;
-  /** Clips to one line with an ellipsis. Also sets `min-width: 0` and `max-width: 100%`, so it clips inside an `Inline` or `Stack` with any `align`. On `span`, `strong`, `em` and `label` it also makes the element `inline-block`, because inline elements ignore overflow. */
+  /** Clips to one line with an ellipsis. Also sets `min-width: 0` and `max-width: 100%`, so it clips inside a `Space` with any `align`. On `span`, `strong`, `em` and `label` it also makes the element `inline-block`, because inline elements ignore overflow. */
   truncate?: boolean;
   /** The id of the control this label describes. Only for `as="label"`. */
   htmlFor?: string;

@@ -4,7 +4,7 @@
  * `allowCreate` and shows `loading` while its options arrive. The selections are
  * state, so submit `value`: native form data never carries it.
  */
-import { Card, Page, Stack, Text } from '@korzun/design/component';
+import { Card, Page, Space, Text } from '@korzun/design/component';
 import { Button, Select } from '@korzun/design/control';
 import { useEffect, useState } from 'react';
 
@@ -26,7 +26,7 @@ export default function FormInCard() {
   }, []);
   return (
     <Page type="minimal">
-      <Stack>
+      <Space direction="vertical">
         <Select
           name="library"
           placeholder="Select library…"
@@ -45,7 +45,7 @@ export default function FormInCard() {
             </Button>
           }
         >
-          <Stack>
+          <Space direction="vertical">
             <Select
               name="coverFit"
               label="Fit"
@@ -68,9 +68,9 @@ export default function FormInCard() {
               onChange={setSeries}
             />
             {saved !== null && <Text tone="success">Saved: {saved}</Text>}
-          </Stack>
+          </Space>
         </Card>
-      </Stack>
+      </Space>
     </Page>
   );
 }

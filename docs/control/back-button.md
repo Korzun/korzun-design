@@ -60,14 +60,14 @@ where the desktop navigation takes over. It does not position itself, so you
 place it in your own row.
 
 ```tsx
-import { Inline } from '@korzun/design/component';
+import { Space } from '@korzun/design/component';
 import { BackButton } from '@korzun/design/control';
 
 export default function Basic() {
   return (
-    <Inline>
+    <Space>
       <BackButton to="/library" />
-    </Inline>
+    </Space>
   );
 }
 ```
@@ -79,7 +79,7 @@ button in its sticky controls row on mobile, beside the page's actions menu
 (`headerActions`).
 
 ```tsx
-import { Card, Page, Stack, Text } from '@korzun/design/component';
+import { Card, Page, Space, Text } from '@korzun/design/component';
 import { useState } from 'react';
 
 export default function InPage() {
@@ -93,10 +93,10 @@ export default function InPage() {
       ]}
     >
       <Card title="Dune">
-        <Stack>
+        <Space direction="vertical">
           <Text>Frank Herbert, 1965.</Text>
           <Text tone="muted">Status: {status}</Text>
-        </Stack>
+        </Space>
       </Card>
     </Page>
   );

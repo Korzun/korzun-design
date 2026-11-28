@@ -3,7 +3,7 @@
  * `onChange` in state and send that: native form data holds the date and the time as
  * two separate fields (`publishDate`, `publishDateTime`).
  */
-import { Card, Stack, Text } from '@korzun/design/component';
+import { Card, Space, Text } from '@korzun/design/component';
 import { Button, DateTimeInput, TextInput } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -23,7 +23,7 @@ export default function InACard() {
         </Button>
       }
     >
-      <Stack>
+      <Space direction="vertical">
         <TextInput name="title" label="Title" value={title} onChange={setTitle} />
         <DateTimeInput
           name="publishDate"
@@ -32,7 +32,7 @@ export default function InACard() {
           onChange={setPublishDate}
         />
         {sent !== null && <Text tone="success">Sent: {sent}</Text>}
-      </Stack>
+      </Space>
     </Card>
   );
 }

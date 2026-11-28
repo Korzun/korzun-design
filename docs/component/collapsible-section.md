@@ -35,7 +35,7 @@ state.
 
 - Actions are rendered inside the header button, but clicks and key presses
   inside an action stay with it: any action (a `Button`, a native `<button>`, a
-  link, a `Tag` with `onClick`) works without toggling the section, and Enter or
+  link, a `Chip` with `onClick`) works without toggling the section, and Enter or
   Space on it activates the action, not the header.
 - Actions in the array need their own `key`s (they are rendered as a bare
   array).
@@ -64,16 +64,16 @@ is faint text after the title, such as a count; the header toggles on click,
 Enter or Space.
 
 ```tsx
-import { CollapsibleSection, Stack, Text } from '@korzun/design/component';
+import { CollapsibleSection, Space, Text } from '@korzun/design/component';
 
 export default function Basic() {
   return (
     <CollapsibleSection title="Archived" subTitle="3 items">
-      <Stack gap="xs">
+      <Space direction="vertical" gap="xs">
         <Text>Middlemarch</Text>
         <Text>Bleak House</Text>
         <Text>Persuasion</Text>
-      </Stack>
+      </Space>
     </CollapsibleSection>
   );
 }
@@ -85,24 +85,24 @@ Pass `open` and flip your own state in `onOpenToggle`, which receives no
 value. The button outside the section sets the same state.
 
 ```tsx
-import { CollapsibleSection, Inline, Stack, Text } from '@korzun/design/component';
+import { CollapsibleSection, Space, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { useState } from 'react';
 
 export default function Controlled() {
   const [open, setOpen] = useState(true);
   return (
-    <Stack>
-      <Inline>
+    <Space direction="vertical">
+      <Space>
         <Button onClick={() => setOpen((o) => !o)}>
           {open ? 'Collapse' : 'Expand'} from outside
         </Button>
-        <Text tone="muted">Open: {open ? 'yes' : 'no'}</Text>
-      </Inline>
+      </Space>
+      <Text tone="muted">Open: {open ? 'yes' : 'no'}</Text>
       <CollapsibleSection title="Advanced" open={open} onOpenToggle={() => setOpen((o) => !o)}>
         <Text>Extra settings go here.</Text>
       </CollapsibleSection>
-    </Stack>
+    </Space>
   );
 }
 ```
@@ -114,7 +114,7 @@ and key presses inside an action stay with it, so Add does not toggle the
 section.
 
 ```tsx
-import { CollapsibleSection, Stack, Text } from '@korzun/design/component';
+import { CollapsibleSection, Space, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -133,11 +133,11 @@ export default function Actions() {
         </Button>,
       ]}
     >
-      <Stack gap="xs">
+      <Space direction="vertical" gap="xs">
         {Array.from({ length: count }, (_, i) => (
           <Text key={i}>Book {i + 1}</Text>
         ))}
-      </Stack>
+      </Space>
     </CollapsibleSection>
   );
 }

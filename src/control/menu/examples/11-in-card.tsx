@@ -2,7 +2,7 @@
  * A Menu in a card's `headerAction`. The list renders in a portal, so the card
  * does not clip it, and its corners step down by themselves: no `radius` prop.
  */
-import { Card, Stack, Text } from '@korzun/design/component';
+import { Card, Space, Text } from '@korzun/design/component';
 import { Button, Menu } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -22,10 +22,10 @@ export default function InCard() {
         />
       }
     >
-      <Stack>
+      <Space direction="vertical">
         <Text>Three books queued.</Text>
         <Text tone="muted">Chosen: {chosen}</Text>
-      </Stack>
+      </Space>
     </Card>
   );
 }

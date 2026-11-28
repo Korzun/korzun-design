@@ -2,14 +2,14 @@
  * `searchable={false}` opens a plain list driven by the arrow keys. Options can
  * be plain strings or `{ label, value, description }` objects, mixed in one list.
  */
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { Select } from '@korzun/design/control';
 import { useState } from 'react';
 
 export default function PlainList() {
   const [fit, setFit] = useState<string | undefined>('contain');
   return (
-    <Stack>
+    <Space direction="vertical">
       <Select
         name="fit"
         label="Cover fit"
@@ -23,6 +23,6 @@ export default function PlainList() {
         onChange={setFit}
       />
       <Text tone="muted">Value: {fit ?? 'nothing'}</Text>
-    </Stack>
+    </Space>
   );
 }

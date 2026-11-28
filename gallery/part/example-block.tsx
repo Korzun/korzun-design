@@ -1,4 +1,4 @@
-import { Heading, Inline, Stack } from '@korzun/design/component';
+import { CodeBlock, Heading, Space, Surface } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import cx from 'classnames';
@@ -8,9 +8,11 @@ import { anchor } from '../../scripts/docs-gen/slug.mjs';
 import type { ExampleInfo } from '../../scripts/docs-gen/types.js';
 import type { ExampleOwner } from '../data.js';
 import { frameSrc, MOBILE_WIDTH, SCREEN_HEIGHT, useFrameTheme } from '../frame-url.js';
+import { tapTarget } from '../layout/tap-target.js';
+import { PROSE_WIDTH } from '../layout/type.js';
 import { isHeightMessage } from '../messages.js';
 import { CopyButton } from './copy-button.js';
-import { highlight, useHighlightStyle } from './highlight.js';
+import { highlight } from './highlight.js';
 import { Markdown } from './markdown.js';
 
 const useStyle = createUseStyles((theme: Theme) => ({
@@ -38,16 +40,17 @@ const useStyle = createUseStyles((theme: Theme) => ({
   // A frame's blank document paints white before the example loads; hide it till then.
   pending: { visibility: 'hidden' },
   meta: { padding: `${theme.space.xl} ${theme.space.xxl}` },
+  // A long description stops at a readable line length.
+  description: { maxWidth: PROSE_WIDTH },
+  // The code sits flush at the card's bottom: square, ruled off from the meta above.
   code: {
-    margin: 0,
-    padding: theme.space.xxl,
-    overflowX: 'auto',
-    borderTop: `1px solid ${theme.color.border.light}`,
-    backgroundColor: theme.color.bg.cardHeader,
-    fontFamily: theme.fontFamily.mono,
-    fontSize: theme.fontSize.sm,
-    lineHeight: theme.lineHeight.body,
+    '&&': {
+      borderRadius: 0,
+      borderTop: `1px solid ${theme.color.border.light}`,
+    },
   },
+  // "Show code" is a text-height link: on a phone its hit area grows to 44px.
+  toggle: tapTarget(theme),
 }));
 
 export type ExampleBlockProps = {
@@ -62,7 +65,6 @@ export type ExampleBlockProps = {
 /** One example: its live demo in a frame sized to fit, title, description and copyable code. */
 export const ExampleBlock = ({ owner, example, headingId }: ExampleBlockProps) => {
   const styles = useStyle();
-  const tokens = useHighlightStyle();
   const [theme, onLoad] = useFrameTheme();
   const [height, setHeight] = useState<number | null>(null);
   // A full-height screen sizes itself to the frame, so the frame gets a fixed height.
@@ -114,30 +116,44 @@ export const ExampleBlock = ({ owner, example, headingId }: ExampleBlockProps) =
           }}
         />
       </div>
-      <Stack gap="sm" className={styles.meta}>
-        <Heading level={3} size="md" id={titleId}>
-          {example.title}
-        </Heading>
-        {example.description && (
-          <Markdown source={example.description} from={owner.docPath} inline />
-        )}
-        <Inline gap="md" wrap>
-          <Button
-            type="link"
-            ariaExpanded={showCode}
-            ariaControls={codeId}
-            onClick={() => setShowCode((s) => !s)}
-          >
-            {showCode ? 'Hide code' : 'Show code'}
-          </Button>
-          <CopyButton text={example.code} label={`Copy ${example.title} code`} />
-        </Inline>
-      </Stack>
+      {/* The block is a hand-drawn card on the page: its buttons sit one level in. */}
+      <Surface>
+        <Space direction="vertical" gap="md" className={styles.meta}>
+          <Heading level={3} id={titleId}>
+            {example.title}
+          </Heading>
+          {example.description && (
+            <Markdown
+              source={example.description}
+              from={owner.docPath}
+              inline
+              className={styles.description}
+            />
+          )}
+          <Space gap="md" wrap>
+            <Button
+              type="link"
+              className={styles.toggle}
+              ariaExpanded={showCode}
+              ariaControls={codeId}
+              onClick={() => setShowCode((s) => !s)}
+            >
+              {showCode ? 'Hide code' : 'Show code'}
+            </Button>
+            <CopyButton text={example.code} label={`Copy ${example.title} code`} />
+          </Space>
+        </Space>
+      </Surface>
       {showCode && (
-        <pre className={cx(styles.code, tokens.tokens)} id={codeId}>
-          {/* highlight.js escapes the source; the spans are its own. */}
-          <code dangerouslySetInnerHTML={{ __html: highlight(example.code) }} />
-        </pre>
+        // Inside the hand-drawn card: one level in, so the box draws no page edge.
+        <Surface>
+          <div id={codeId}>
+            <CodeBlock code={example.code} className={styles.code}>
+              {/* highlight() escapes the source; the spans are its own. */}
+              <code dangerouslySetInnerHTML={{ __html: highlight(example.code) }} />
+            </CodeBlock>
+          </div>
+        </Surface>
       )}
     </section>
   );

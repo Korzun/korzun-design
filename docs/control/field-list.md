@@ -36,12 +36,12 @@ only if it is a `number`; a numeric string displays as empty.
 ### Corners
 
 The add button follows surface depth: 16px directly on a Page, 8px in a Card
-or Dialog, 4px deeper (8px with no Page, Dialog, Card, CardRow, Alert or Surface above it).
+or Modal, 4px deeper (8px with no Page, Modal, Card, CardRow, Alert or Surface above it).
 
 ### Behaviour to know
 
 - The add button is 8px outside any surface and follows surface depth inside
-  one (a Card body, a Dialog, a Popover).
+  one (a Card body, a Modal, a Popover).
 - Inputs have no labels; use `placeholder` to say what each column is.
 - Every remove button is titled "Remove row" (its accessible name); they are not
   distinguished per row.
@@ -103,7 +103,7 @@ A `number` column renders a `NumberInput` and reports a `number`, or
 and `onValidChange` reports that field once, when validity flips.
 
 ```tsx
-import { Card, Stack, Text } from '@korzun/design/component';
+import { Card, Space, Text } from '@korzun/design/component';
 import { FieldList, type FieldRow } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -114,7 +114,7 @@ export default function NumberAndValidation() {
   const [invalid, setInvalid] = useState<string[]>([]);
   return (
     <Card title="Order">
-      <Stack>
+      <Space direction="vertical">
         <FieldList
           addLabel="Add item"
           columns={[
@@ -144,7 +144,7 @@ export default function NumberAndValidation() {
             ? `Invalid: ${invalid.map((name) => name.split('.')[1]).join(', ')}`
             : 'All fields valid'}
         </Text>
-      </Stack>
+      </Space>
     </Card>
   );
 }

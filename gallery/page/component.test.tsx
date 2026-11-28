@@ -1,23 +1,20 @@
 import { ThemeProvider } from '@korzun/design/theme';
-import { ToastProvider } from '@korzun/design/toast';
 import { act, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes } from 'react-router';
 
 import type { ModuleInfo } from '../../scripts/docs-gen/types.js';
 import { moduleBySlug, siteData } from '../data.js';
-import { ComponentPage } from './component.js';
+import { ComponentPage, exampleRows } from './component.js';
 
 const mount = (slug: string) =>
   render(
     <ThemeProvider identity="test">
-      <ToastProvider>
-        <MemoryRouter initialEntries={[`/components/${slug}`]}>
-          <Routes>
-            <Route path="/components/:slug" element={<ComponentPage />} />
-          </Routes>
-        </MemoryRouter>
-      </ToastProvider>
+      <MemoryRouter initialEntries={[`/components/${slug}`]}>
+        <Routes>
+          <Route path="/components/:slug" element={<ComponentPage />} />
+        </Routes>
+      </MemoryRouter>
     </ThemeProvider>
   );
 
@@ -51,7 +48,9 @@ describe('ComponentPage', () => {
     mount('button');
     await user.click(screen.getByRole('button', { name: 'Copy import' }));
     expect(write).toHaveBeenCalledWith(button.importLine);
-    expect(await screen.findByText('Copied')).toBeInTheDocument();
+    // The feedback is in the button and its status region, not a toast.
+    expect(await screen.findByRole('button', { name: 'Copied' })).toBeInTheDocument();
+    expect(screen.getAllByRole('status').some((s) => s.textContent === 'Copied')).toBe(true);
   });
 
   it('links the LLM doc to the raw markdown', () => {
@@ -117,8 +116,44 @@ describe('ComponentPage', () => {
   });
 
   it('notes the external types a props table also accepts', () => {
-    mount('stack');
+    mount('space');
     expect(screen.getByText(/Also accepts:/)).toHaveTextContent('HTMLAttributes');
+  });
+
+  it('links a nested module to its parent, and a parent to its nested modules', () => {
+    mount('page-actions-bar');
+    expect(screen.getByText(/^Part of/)).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Page' })).toHaveAttribute('href', '/components/page');
+  });
+
+  it('lists the modules nested under a parent', () => {
+    mount('card');
+    const line = screen.getByText(/^Goes with/);
+    expect(
+      within(line)
+        .getAllByRole('link')
+        .map((a) => a.textContent)
+    ).toEqual(['CardRow']);
+  });
+
+  it('shows the nested modules as cards in a Parts section', () => {
+    mount('page');
+    const parts = screen.getByRole('region', { name: 'Parts' });
+    expect(
+      within(parts)
+        .getAllByRole('heading', { level: 3 })
+        .map((h) => h.textContent)
+    ).toEqual(['PageActionsBar', 'PageActionsMenu', 'PageFooterActions']);
+    expect(within(parts).getByRole('link', { name: /^PageActionsBar/ })).toHaveAttribute(
+      'href',
+      '/components/page-actions-bar'
+    );
+    expect(within(parts).queryByText('Page /')).toBeNull();
+  });
+
+  it('has no Parts section on a module with nothing nested', () => {
+    mount('button');
+    expect(screen.queryByRole('region', { name: 'Parts' })).toBeNull();
   });
 
   it('renders not-found for an unknown slug', () => {
@@ -161,5 +196,33 @@ describe('ComponentPage for the icon module', () => {
   it('renders no icon grid on other pages', () => {
     mount('button');
     expect(screen.queryByRole('list', { name: 'Icons' })).toBeNull();
+  });
+});
+
+describe('exampleRows', () => {
+  const ex = (slug: string, viewport?: 'mobile' | 'screen' | 'desktop') => ({
+    ...button.examples[0]!,
+    slug,
+    ...(viewport ? { viewport } : { viewport: undefined }),
+  });
+  const slugs = (placed: { example: { slug: string } }[]) => placed.map((p) => p.example.slug);
+
+  it('splits a run into two columns, alternately, first on the left', () => {
+    const [row] = exampleRows(['a', 'b', 'c', 'd', 'e'].map((s) => ex(s)));
+    expect(row!.wide).toBe(false);
+    if (row!.wide) return;
+    expect(slugs(row!.left)).toEqual(['a', 'c', 'e']);
+    expect(slugs(row!.right)).toEqual(['b', 'd']);
+  });
+
+  it('gives a screen or desktop example its own full-width row', () => {
+    const rows = exampleRows([ex('a'), ex('b', 'desktop'), ex('c'), ex('d', 'mobile')]);
+    expect(rows.map((r) => (r.wide ? `wide:${r.example.slug}` : 'pair'))).toEqual([
+      'pair',
+      'wide:b',
+      'pair',
+    ]);
+    const last = rows[2]!;
+    if (!last.wide) expect(slugs(last.left)).toEqual(['c']);
   });
 });

@@ -4,7 +4,7 @@
  * shows. The corner is the same in both: the control belongs inside a card or
  * modal.
  */
-import { Card, Stack, Text } from '@korzun/design/component';
+import { Card, Space, Text } from '@korzun/design/component';
 import { SegmentedControl } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -19,7 +19,7 @@ export default function Surfaces() {
   const [body, setBody] = useState<View>('grid');
   const [header, setHeader] = useState<View>('list');
   return (
-    <Stack>
+    <Space direction="vertical">
       <Card title="surface card, in the body">
         <SegmentedControl label="Body view" options={VIEWS} value={body} onChange={setBody} />
       </Card>
@@ -37,6 +37,6 @@ export default function Surfaces() {
       >
         <Text>Showing {header}.</Text>
       </Card>
-    </Stack>
+    </Space>
   );
 }

@@ -2,6 +2,8 @@ import cx from 'classnames';
 import { ReactNode, ReactElement, useCallback, useState } from 'react';
 
 import { ChevronCircleIcon } from '../../icon/index.js';
+import { useTheme } from '../../theme/index.js';
+import { DividerBodyProvider } from '../divider/index.js';
 import { depthClass, SurfaceDepthProvider, useSurfaceDepth } from '../surface/index.js';
 import { useStyle } from './style.js';
 
@@ -45,6 +47,7 @@ export const Card = ({
   title,
 }: CardProps) => {
   const style = useStyle();
+  const theme = useTheme();
   const depth = useSurfaceDepth() ?? 0;
   const [isExpanded, setIsExpanded] = useState<boolean>(!defaultCollapsed);
   const handleToggle = useCallback(() => setIsExpanded((prev) => !prev), []);
@@ -125,7 +128,16 @@ export const Card = ({
             )}
           </div>
         )}
-        {visibleChildren && <div className={cx(style.content, style[size])}>{visibleChildren}</div>}
+        {visibleChildren && (
+          <div className={cx(style.content, style[size])}>
+            <DividerBodyProvider
+              padding={size === 'large' ? theme.space.xl : '1px'}
+              depth={depth + 1}
+            >
+              {visibleChildren}
+            </DividerBodyProvider>
+          </div>
+        )}
         {footer && (!isCollapsible || isExpanded) && (
           <div
             className={style.footer}

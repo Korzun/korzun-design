@@ -3,7 +3,7 @@
  * validity through `onValidChange`, so Save stays disabled while any is
  * invalid.
  */
-import { Card, Stack, Text } from '@korzun/design/component';
+import { Card, Space, Text } from '@korzun/design/component';
 import { Button, TextInput } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -22,7 +22,7 @@ export default function FormInCard() {
         </Button>
       }
     >
-      <Stack>
+      <Space direction="vertical">
         <TextInput
           name="name"
           label="Name"
@@ -41,7 +41,7 @@ export default function FormInCard() {
           onChange={(v) => setPassword(v ?? '')}
         />
         {saved !== null && <Text tone="success">Saved: {saved}</Text>}
-      </Stack>
+      </Space>
     </Card>
   );
 }

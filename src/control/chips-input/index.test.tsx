@@ -119,24 +119,20 @@ it('disabled: the input is disabled and typing does nothing', async () => {
   expect(onChange).not.toHaveBeenCalled();
 });
 
-it('disabled: chip remove buttons are inert and clicking does not call onChange', async () => {
-  const user = userEvent.setup();
-  const onChange = vi.fn();
+it('disabled: chips show no remove button, only their text', () => {
   renderWithProviders(
-    <ChipsInput value={['Fiction']} suggestions={[]} onChange={onChange} disabled />
+    <ChipsInput value={['Fiction', 'History']} suggestions={[]} onChange={vi.fn()} disabled />
   );
-  const removeButton = screen.getByRole('button', { name: 'Remove Fiction' });
-  expect(removeButton).toBeDisabled();
-  expect(removeButton).toHaveAttribute('tabindex', '-1');
-  await user.click(removeButton);
-  expect(onChange).not.toHaveBeenCalled();
+  expect(screen.getByText('Fiction')).toBeInTheDocument();
+  expect(screen.getByText('History')).toBeInTheDocument();
+  expect(screen.queryByRole('button')).not.toBeInTheDocument();
 });
 
-it('chipColor="user": still renders chip text and a working remove button', async () => {
+it('tone="user": still renders chip text and a working remove button', async () => {
   const user = userEvent.setup();
   const onChange = vi.fn();
   renderWithProviders(
-    <ChipsInput value={['alice']} suggestions={[]} onChange={onChange} chipColor="user" />
+    <ChipsInput value={['alice']} suggestions={[]} onChange={onChange} tone="user" />
   );
   expect(screen.getByText('alice')).toBeInTheDocument();
   const removeButton = screen.getByRole('button', { name: 'Remove alice' });
@@ -157,4 +153,15 @@ it('label + layout="horizontal": renders a label associated with the input', () 
     />
   );
   expect(screen.getByLabelText('Users')).toBeInTheDocument();
+});
+
+it('sizes the text field from its 8rem floor, not its ~20-character natural width', () => {
+  // An <input> is about 20 characters wide by default (~200px at the 16px
+  // phone size), so with flex-basis auto it wrapped onto its own empty line
+  // beside chips even when 8rem was free.
+  renderWithProviders(<ChipsInput value={['History']} suggestions={[]} onChange={vi.fn()} />);
+  const style = getComputedStyle(screen.getByRole('textbox'));
+  expect(style.flexBasis).toBe('8rem');
+  expect(style.minWidth).toBe('8rem');
+  expect(style.flexGrow).toBe('1');
 });

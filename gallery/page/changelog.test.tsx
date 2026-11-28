@@ -1,4 +1,3 @@
-import * as hooks from '@korzun/design/hooks';
 import { ThemeProvider } from '@korzun/design/theme';
 import { render, screen, within } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
@@ -32,21 +31,21 @@ describe('ChangelogPage', () => {
     for (const link of links) expect(link.getAttribute('href')).toBe('/components/button');
   });
 
-  it('links a hook tag to the hooks guide', () => {
+  it("links a hook tag to that hook's page", () => {
     mount();
     const [link] = screen.getAllByRole('link', { name: 'usePullToRefresh' });
-    expect(link!.getAttribute('href')).toBe('/guides/hooks');
+    expect(link!.getAttribute('href')).toBe('/components/use-pull-to-refresh');
   });
 
   it('renders General and names with no page as plain chips', () => {
     mount();
     expect(screen.getAllByText('General').length).toBeGreaterThan(0);
     expect(screen.queryByRole('link', { name: 'General' })).toBeNull();
-    // Any tag that is neither a module value nor a hook (none once every module has a page).
+    // Any tag that is not a module value (none once every module has a page).
     const paged = new Set(siteData.modules.flatMap((m) => m.values));
     const plain = siteData.changelog
       .flatMap((v) => v.entries.flatMap((e) => e.tags))
-      .find((t) => t !== 'General' && !paged.has(t) && !(t in hooks));
+      .find((t) => t !== 'General' && !paged.has(t));
     if (plain) {
       expect(screen.getAllByText(plain).length).toBeGreaterThan(0);
       expect(screen.queryByRole('link', { name: plain })).toBeNull();

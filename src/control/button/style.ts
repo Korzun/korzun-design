@@ -52,6 +52,16 @@ export const useStyle = createUseStyles((theme: Theme) => ({
     padding: `${theme.space.md} ${theme.space.xxl}`,
     cursor: 'pointer',
     fontSize: '0.80rem', // button-specific size; not on the global fontSize scale
+    // Pinned, so the height does not follow an inherited line-height: a Modal
+    // sets 1.3 for its prose, which made footer buttons 35px. 0.875rem is the
+    // 14px the UA's `normal` gave at this size, so a text button stays
+    // 1px + 8px + 14px + 8px + 1px = 32px.
+    lineHeight: '0.875rem',
+    // An icon-only button has no line box, only its 1em (12.8px) icon, and
+    // came out 31px beside 32px siblings. The floor makes it the same height.
+    // The `link` variant drops it: it is text-sized, with no padding to match.
+    boxSizing: 'border-box',
+    minHeight: '2rem',
     userSelect: 'none',
     '-webkit-user-select': 'none',
     '-webkit-tap-highlight-color': 'transparent',
@@ -155,25 +165,6 @@ export const useStyle = createUseStyles((theme: Theme) => ({
         },
       },
       '&$disabled': { cursor: 'not-allowed', filter: 'saturate(0)' },
-    },
-    '&$success': {
-      color: theme.color.success,
-      borderColor: theme.color.border.success,
-      backgroundColor: theme.color.bg.success,
-      boxShadow: 'none',
-      cursor: 'default',
-      '&:hover': {
-        color: theme.color.success,
-        borderColor: theme.color.border.success,
-        outlineColor: 'transparent',
-      },
-      '&:focus': {
-        color: theme.color.success,
-        borderColor: theme.color.border.success,
-        outlineColor: 'transparent',
-        boxShadow: 'none',
-      },
-      '&:active': { color: theme.color.success, borderColor: theme.color.border.success },
     },
   },
 
@@ -317,8 +308,15 @@ export const useStyle = createUseStyles((theme: Theme) => ({
     },
   },
 
+  // `text` and `link` have no border to turn white and no tinted surface, so
+  // the pale `brand.outline` halo the other variants use (1.7:1 on white)
+  // would be their only cue. Keyboard focus gets a solid ring in
+  // `border.focus`, the colour an input's border takes on focus, which meets
+  // 3:1 on every surface in both themes. `:focus-visible` only, so a click
+  // leaves no ring.
   [ButtonType.Text]: {
     cursor: 'pointer',
+    '&:focus-visible': { outlineColor: theme.color.border.focus },
     '&:hover': { backgroundColor: theme.color.bg.hover },
     '&:active': { backgroundColor: theme.color.border.default },
     '&$disabled': {
@@ -348,9 +346,22 @@ export const useStyle = createUseStyles((theme: Theme) => ({
     borderStyle: 'none',
     outlineStyle: 'none',
     padding: '0',
+    minHeight: 0,
     color: theme.color.brand.default,
+    '&:focus-visible': {
+      outlineStyle: 'solid',
+      outlineColor: theme.color.border.focus,
+      // Clear of the glyphs, since the link has no padding of its own.
+      outlineOffset: '2px',
+    },
     '&:hover': { color: theme.color.brand.hover },
     '&:active': { color: theme.color.brand.active },
+    // Inline, so the root's flex gap does not apply and an icon would sit on
+    // the text baseline, high and touching the label. Centre it on the text
+    // and space it with a margin of the same 0.5em instead.
+    '& $buttonIcon, & $spinner': { verticalAlign: '-0.225em' },
+    '& $lead': { marginRight: '0.5em' },
+    '& $trail': { marginLeft: '0.5em' },
     '&$disabled': {
       cursor: 'default',
       color: theme.color.text.muted,
@@ -382,8 +393,9 @@ export const useStyle = createUseStyles((theme: Theme) => ({
   danger: {},
   disabled: { opacity: 0.5 },
   loading: {},
-  success: {},
   spinner: {
     ...theme.recipe.spinner,
   },
+  lead: {},
+  trail: {},
 }));

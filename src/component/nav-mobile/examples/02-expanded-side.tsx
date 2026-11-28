@@ -4,7 +4,7 @@
  * here the buttons stand in for it.
  * @viewport mobile
  */
-import { Card, Inline, NavMobile, Page, Stack, Text, type NavItem } from '@korzun/design/component';
+import { Card, Space, NavMobile, Page, Text, type NavItem } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import {
   AdjustmentsHorizontalIcon,
@@ -33,13 +33,13 @@ export default function ExpandedSide() {
     <>
       <Page bottomNav>
         <Card title="Navigation">
-          <Stack>
-            <Inline>
+          <Space direction="vertical">
+            <Space>
               <Button onClick={() => setExpanded('main')}>Main</Button>
               <Button onClick={() => setExpanded('settings')}>Settings</Button>
-            </Inline>
+            </Space>
             <Text tone="muted">Expanded: {expanded}</Text>
-          </Stack>
+          </Space>
         </Card>
       </Page>
       <NavMobile

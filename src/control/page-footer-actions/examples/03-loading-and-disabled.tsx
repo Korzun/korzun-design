@@ -3,7 +3,7 @@
  * The label can change between renders (`Save` to `Saving…`) without
  * remounting the button. Both switches hold their state on.
  */
-import { Stack, Text } from '@korzun/design/component';
+import { Space, Text } from '@korzun/design/component';
 import { PageFooterActions, Switch } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -12,7 +12,7 @@ export default function LoadingAndDisabled() {
   const [invalid, setInvalid] = useState(true);
   const [last, setLast] = useState('nothing yet');
   return (
-    <Stack>
+    <Space direction="vertical">
       <Switch name="saving" label="Saving" checked={saving} onChange={setSaving} />
       <Switch name="invalid" label="Form invalid" checked={invalid} onChange={setInvalid} />
       <PageFooterActions
@@ -28,6 +28,6 @@ export default function LoadingAndDisabled() {
         ]}
       />
       <Text tone="muted">Last pressed: {last}</Text>
-    </Stack>
+    </Space>
   );
 }

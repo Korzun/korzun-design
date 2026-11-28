@@ -1,5 +1,5 @@
-import { Inline, Text } from '@korzun/design/component';
-import { createUseStyles, darkTheme, lightTheme, type Theme } from '@korzun/design/theme';
+import { Space, Table, type TableColumn, Text } from '@korzun/design/component';
+import { createUseStyles, darkTheme, lightTheme, type Theme, useTheme } from '@korzun/design/theme';
 import cx from 'classnames';
 
 import type { TokenRow } from '../../scripts/docs-gen/types.js';
@@ -36,9 +36,9 @@ const Value = ({
 }) => {
   const styles = useStyle();
   const table = useTableStyle();
-  if (value === null) return <Text tone="faint">–</Text>;
+  if (value === null) return <Text tone="muted">–</Text>;
   return (
-    <Inline gap="sm" align="center" wrap={false}>
+    <Space gap="sm" align="center" wrap={false}>
       {color && (
         <span className={cx(styles.backdrop, mode === 'light' ? styles.onLight : styles.onDark)}>
           {/* The token's value is data, so it is the one inline style. */}
@@ -46,7 +46,7 @@ const Value = ({
         </span>
       )}
       <code className={table.code}>{value}</code>
-    </Inline>
+    </Space>
   );
 };
 
@@ -91,40 +91,60 @@ export type TokensTableProps = {
 /** The design tokens a component uses: path, light value and dark value, swatches for colours. */
 export const TokensTable = ({ tokens }: TokensTableProps) => {
   const table = useTableStyle();
+  const theme = useTheme();
+  const minWidth = `calc(${theme.space.xxxxxl} * 20)`;
+  const values = tokens.filter((token) => token.kind !== 'recipe');
+  const recipes = tokens.filter((token) => token.kind === 'recipe');
+  const name: TableColumn<TokenRow> = {
+    key: 'path',
+    title: 'Token',
+    label: false,
+    wide: true,
+    render: (token) => <code className={table.code}>{`theme.${token.path}`}</code>,
+  };
+  const valueColumns: TableColumn<TokenRow>[] = [
+    name,
+    {
+      key: 'light',
+      title: 'Light',
+      render: (token) => <Value value={token.light} color={token.kind === 'color'} mode="light" />,
+    },
+    {
+      key: 'dark',
+      title: 'Dark',
+      render: (token) => <Value value={token.dark} color={token.kind === 'color'} mode="dark" />,
+    },
+  ];
+  const recipeColumns: TableColumn<TokenRow>[] = [
+    name,
+    {
+      key: 'properties',
+      title: 'Properties',
+      label: false,
+      wide: true,
+      render: (token) => <Recipe path={token.path} />,
+    },
+  ];
   return (
-    <div className={table.scroll}>
-      <table className={table.table} aria-label="Tokens">
-        <thead>
-          <tr>
-            <th scope="col">Token</th>
-            <th scope="col">Light</th>
-            <th scope="col">Dark</th>
-          </tr>
-        </thead>
-        <tbody>
-          {tokens.map((token) => (
-            <tr key={token.path}>
-              <td>
-                <code className={table.code}>{`theme.${token.path}`}</code>
-              </td>
-              {token.kind === 'recipe' ? (
-                <td colSpan={2}>
-                  <Recipe path={token.path} />
-                </td>
-              ) : (
-                <>
-                  <td>
-                    <Value value={token.light} color={token.kind === 'color'} mode="light" />
-                  </td>
-                  <td>
-                    <Value value={token.dark} color={token.kind === 'color'} mode="dark" />
-                  </td>
-                </>
-              )}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <Space direction="vertical" gap="lg">
+      {(values.length > 0 || recipes.length === 0) && (
+        <Table
+          ariaLabel="Tokens"
+          rowKey="path"
+          columns={valueColumns}
+          rows={values}
+          minWidth={minWidth}
+        />
+      )}
+      {recipes.length > 0 && (
+        <Table
+          ariaLabel="Recipe tokens"
+          rowKey="path"
+          columns={recipeColumns}
+          rows={recipes}
+          minWidth={minWidth}
+        />
+      )}
+    </Space>
   );
 };

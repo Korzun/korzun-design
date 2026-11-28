@@ -1,4 +1,4 @@
-import { Heading, Page, Stack, Text } from '@korzun/design/component';
+import { Heading, Page, Space } from '@korzun/design/component';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { useParams } from 'react-router';
 
@@ -6,6 +6,7 @@ import { siteData } from '../data.js';
 import { siteColumn } from '../layout/column.js';
 import { useScrollToHash } from '../layout/scroll.js';
 import { NotFound } from '../not-found.js';
+import { Lead } from '../part/lead.js';
 import { Markdown } from '../part/markdown.js';
 
 const useStyle = createUseStyles((theme: Theme) => ({
@@ -27,15 +28,13 @@ export const GuidePage = () => {
   return (
     <div className={styles.column}>
       <Page type="minimal" documentTitle={`${guide.title} · @korzun/design`}>
-        <Stack gap="xxxl">
-          <Stack gap="sm">
+        <Space direction="vertical" gap="xxxl">
+          <Space direction="vertical" gap="sm">
             <Heading level={1}>{guide.title}</Heading>
-            <Text as="p" size="lg" tone="description">
-              {guide.description}
-            </Text>
-          </Stack>
+            <Lead>{guide.description}</Lead>
+          </Space>
           <Markdown source={guide.body} from={guide.docPath} />
-        </Stack>
+        </Space>
       </Page>
     </div>
   );

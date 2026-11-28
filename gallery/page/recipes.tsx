@@ -1,4 +1,4 @@
-import { Card, Heading, Page, Stack, Text } from '@korzun/design/component';
+import { Card, Heading, Page, Space, Text } from '@korzun/design/component';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { Link, useParams } from 'react-router';
 
@@ -8,6 +8,7 @@ import { siteColumn } from '../layout/column.js';
 import { useScrollToHash } from '../layout/scroll.js';
 import { NotFound } from '../not-found.js';
 import { ExampleBlock } from '../part/example-block.js';
+import { Lead } from '../part/lead.js';
 import { Markdown } from '../part/markdown.js';
 import { Thumbnail } from '../part/thumbnail.js';
 
@@ -40,17 +41,18 @@ const RecipeCard = ({ recipe }: { recipe: Recipe }) => {
   return (
     <Link to={`/recipes/${recipe.slug}`} className={styles.card}>
       <Card>
-        <Stack gap="md">
+        <Space direction="vertical" gap="md">
           <Thumbnail owner={recipeOwner(recipe)} />
-          <Stack gap="xs">
+          <Space direction="vertical" gap="xs">
             <Heading level={2} size="md">
               {recipe.title}
             </Heading>
+            {/* Inline markdown (code spans), with links as text: the card is a link already. */}
             <Text size="sm" tone="description">
-              {recipe.description}
+              <Markdown source={recipe.description} from={recipe.docPath} inline links={false} />
             </Text>
-          </Stack>
-        </Stack>
+          </Space>
+        </Space>
       </Card>
     </Link>
   );
@@ -62,20 +64,20 @@ export const RecipesPage = () => {
   return (
     <div className={styles.column}>
       <Page type="minimal" documentTitle="Recipes · @korzun/design">
-        <Stack gap="xxxl">
-          <Stack gap="sm">
+        <Space direction="vertical" gap="xxxl">
+          <Space direction="vertical" gap="sm">
             <Heading level={1}>Recipes</Heading>
-            <Text as="p" size="lg" tone="description">
+            <Lead>
               Library parts put together for one job: a whole screen or a common group, live and
               ready to copy.
-            </Text>
-          </Stack>
+            </Lead>
+          </Space>
           <div className={styles.grid}>
             {siteData.recipes.map((recipe) => (
               <RecipeCard key={recipe.slug} recipe={recipe} />
             ))}
           </div>
-        </Stack>
+        </Space>
       </Page>
     </div>
   );
@@ -92,18 +94,16 @@ export const RecipePage = () => {
   return (
     <div className={styles.column}>
       <Page type="minimal" documentTitle={`${recipe.title} · @korzun/design`}>
-        <Stack gap="xxxl">
-          <Stack gap="sm">
+        <Space direction="vertical" gap="xxxl">
+          <Space direction="vertical" gap="sm">
             <Heading level={1}>{recipe.title}</Heading>
-            <Text as="p" size="lg" tone="description">
-              {recipe.description}
-            </Text>
-          </Stack>
+            <Lead>{recipe.description}</Lead>
+          </Space>
           {recipe.examples.map((example) => (
             <ExampleBlock key={example.slug} owner={owner} example={example} />
           ))}
           <Markdown source={recipe.body} from={recipe.docPath} />
-        </Stack>
+        </Space>
       </Page>
     </div>
   );
