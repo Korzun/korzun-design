@@ -28,6 +28,15 @@ const isPair = (item: MetaLineItem): item is MetaLinePair =>
 
 declare const process: { env: { NODE_ENV?: string } };
 
+/** Production build? The literal `process.env.NODE_ENV` stays so bundlers can replace it; where nothing does and `process` is absent it throws, so that counts as not production. */
+const isProduction = () => {
+  try {
+    return process.env.NODE_ENV === 'production';
+  } catch {
+    return false;
+  }
+};
+
 const graphemes = (s: string) =>
   typeof Intl !== 'undefined' && 'Segmenter' in Intl
     ? Array.from(new Intl.Segmenter().segment(s)).length
@@ -37,7 +46,7 @@ const warned = new Set<string>();
 
 /** Development only: the separator cell is one character wide, so say so once per separator. */
 const warnLongSeparator = (separator: string) => {
-  if (process.env.NODE_ENV === 'production' || warned.has(separator)) {
+  if (isProduction() || warned.has(separator)) {
     return;
   }
   if (graphemes(separator) > 1) {

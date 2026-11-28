@@ -177,6 +177,17 @@ describe('MetaLine', () => {
       expect(warn.mock.calls[0][0]).toContain('"->"');
     });
 
+    it('never throws when there is no process global', () => {
+      const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      vi.stubGlobal('process', undefined);
+      try {
+        expect(() => renderLine(<MetaLine items={['a', 'b']} separator="=>" />)).not.toThrow();
+      } finally {
+        vi.unstubAllGlobals();
+      }
+      expect(warn).toHaveBeenCalledTimes(1);
+    });
+
     it.each(['·', '👍🏽', ''])('does not warn for %j', (separator) => {
       const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
       renderLine(<MetaLine items={['a', 'b']} separator={separator} />);
