@@ -260,6 +260,19 @@ const contrast = (a: string, b: string) => {
   return (x + 0.05) / (y + 0.05);
 };
 
+describe('border.light, the hairline divider', () => {
+  it('in dark mode is a visible step on page and card, at least light mode’s', () => {
+    const step = (theme: typeof lightTheme, surface: 'page' | 'card') =>
+      contrast(theme.color.border.light, theme.color.bg[surface]);
+    expect(darkTheme.color.border.light).toBe('#333439');
+    expect(step(darkTheme, 'page')).toBeGreaterThanOrEqual(step(lightTheme, 'page'));
+    expect(step(darkTheme, 'card')).toBeGreaterThanOrEqual(step(lightTheme, 'card'));
+    expect(step(darkTheme, 'page')).toBeLessThan(
+      contrast(darkTheme.color.border.default, darkTheme.color.bg.page)
+    );
+  });
+});
+
 describe('non-text contrast (3:1) on every surface', () => {
   const surfaces = ['page', 'card', 'cardHeader'] as const;
 

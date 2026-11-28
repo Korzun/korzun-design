@@ -105,7 +105,7 @@ chosen by nesting depth; see [corners](corners.md).
 |---|---|---|
 | `color.text` | `primary`, `secondary`, `muted`, `faint`, `description`, `onPrimary`, `onDanger` | `muted` for labels and meta, `faint` for placeholders |
 | `color.bg` | `page`, `card`, `cardHeader`, `track`, `switchOff`, `input`, `footer`, `glass`, `glassFallback`, `glassActive`, `selected`, `hover`, `success`, `placeholder` | `cardHeader` is also the shaded-row and inset-box fill; `hover` is a translucent scrim |
-| `color.border` | `default`, `strong`, `light`, `focus`, `hover`, `danger`, `glass`, `glassActive`, `faint`, `loading`, `success`, `section` | Cards and dividers use `strong`; inputs use `default` |
+| `color.border` | `default`, `strong`, `light`, `focus`, `hover`, `danger`, `glass`, `glassActive`, `faint`, `loading`, `success`, `section` | Cards and dividers use `strong`; inputs use `default`; `light` is a hairline rule inside a card |
 | `color.brand` | `default`, `hover`, `active`, `light`, `outline`, `loading*`, `linkHover` | The primary action colour |
 | `color.danger` | `default`, `hover`, `active`, `light`, `outline`, `loading*` | Destructive actions and errors |
 | `color.success` | (a string) | Solid green |
@@ -344,6 +344,7 @@ This module has no styles of its own.
 - **0.7.0** (2026-11-26): `GlobalStyles` (rendered by `ThemeProvider`) ships the reset the components are drawn against: every element is `box-sizing: border-box` with no default margin or padding, as in Bookplate's and Scribe's `index.html`. Without it a text field was 51px tall instead of `layout.controlHeight` (33px). An app that already carries this reset sees no change; one that relied on browser default margins (`p`, `h1`, `ul`) loses them.
 - **0.7.0** (2026-11-26): `color-scheme` is set on `html` as well as `body`. With body alone the root's scheme was `normal`, so in dark mode the page scrollbar stayed light and an iframe whose document uses `GlobalStyles` (or is still loading) painted an opaque white box.
 - **0.7.0** (2026-11-26): The unchecked track is the new `color.bg.switchOff` token (`#868686` light, `#6E7480` dark), about 3:1 on `bg.page`, `bg.card` and `bg.cardHeader`; it was `border.default` (1.16:1 on a shaded row). The loading spinner on an unchecked track is now the thumb colour.
+- **0.7.0** (2026-11-26): Dark `color.border.light` is `#333439` (was `#2B2C30`, 1.10:1 on `bg.page` and 1.23:1 on `bg.card`, so hairline rules all but vanished); it is now 1.24:1 and 1.39:1, at or above light mode's step. A loading `Select`'s border in dark is a shade lighter. Light is unchanged.
 - **0.6.0** (2026-11-26): New `theme.layout.formWidth` (`400px`): the width of a standalone form column such as sign-in, narrower than a dialog.
 - **0.2.0** (2026-11-21): New `fontWeight.regular` (400) token.
 - **0.1.0** (2026-11-21): `Tag` status tones: `success`, `warning` (yellow, stronger fill), `danger`, `info` (brand blue). New `color.warning` and `color.info` solid colours. Status tones report state; label tones name things. No visual change to existing tags.

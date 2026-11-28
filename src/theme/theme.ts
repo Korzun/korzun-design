@@ -397,7 +397,9 @@ function buildTheme(mode: ThemeMode): Theme {
     border: {
       default: '#3A3B40',
       strong: '#48494F',
-      light: '#2B2C30',
+      // Lifted from #2B2C30 (1.10:1 on page), at which rules and frames vanished;
+      // now about light mode's step (1.24:1 on page, 1.39:1 on card).
+      light: '#333439',
       faint: '#3A3B40',
       focus: blue[400],
       hover: blue[600],

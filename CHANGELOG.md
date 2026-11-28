@@ -13,6 +13,7 @@
 - [Select] The option list matches `Menu`: a 4px inset pad, 4px-rounded options with a 2px gap, 14px text (was 12.8px), the flat `cardStack` shadow (was `hoverLift`) and `bg.hover` on hover (was `bg.cardHeader`). The keyboard highlight is unchanged.
 - [General] Docs site: each module has an `examples/preview.tsx` that shows the component alone; the overview thumbnails render it instead of the first example, and it never appears on the component page or in the doc. `npm run docs:check` fails for a module without one.
 - [General] Docs site: one type scale. Markdown and page headings match at each level (h2 20px bold, h3 16px semibold, same spacing), so example, props and changelog titles are no longer smaller than the text under them; code in a heading takes the heading size; page intros are 18px leads. Code blocks and the import line are 14px with a 1.5 line height, inline code is 0.875em and breaks only between words, and every code span uses the theme mono font. Guide, changelog and usage prose stops at 720px while tables and code blocks keep the full width. Props tables are 14px with semibold prop names, muted types, sized columns, and unions that wrap between members.
+- [lightTheme, darkTheme, Select] Dark `color.border.light` is `#333439` (was `#2B2C30`, 1.10:1 on `bg.page` and 1.23:1 on `bg.card`, so hairline rules all but vanished); it is now 1.24:1 and 1.39:1, at or above light mode's step. A loading `Select`'s border in dark is a shade lighter. Light is unchanged.
 
 ## 0.6.0 — 2026-11-26
 
