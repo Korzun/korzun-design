@@ -1,7 +1,7 @@
 ---
 title: useModal
 description: A hook that drives a native dialog element from an open flag and routes Escape and backdrop clicks to a dismiss callback.
-category: Overlays
+category: Hooks
 ---
 # useModal
 

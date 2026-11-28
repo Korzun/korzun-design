@@ -46,8 +46,6 @@ test('single-module areas', () => {
   assert.ok(byId('theme').values.includes('createUseStyles'));
   assert.equal(byId('toast').docPath, 'docs/toast.md');
   assert.equal(byId('icon').dtsDir, 'dist/icon');
-  assert.equal(byId('hooks').docPath, 'docs/hooks.md');
-  assert.ok(byId('hooks').values.includes('usePullToRefresh'));
 });
 
 test('internal folders are excluded', () => {
@@ -61,4 +59,27 @@ test('control+component module count equals their doc files', () => {
   );
   const n = modules.filter((m) => /^(control|component)\//.test(m.id)).length;
   assert.equal(n, docs.length);
+});
+
+test('hooks are one module per folder, each with its constants and types', () => {
+  const pull = byId('hooks/use-pull-to-refresh');
+  assert.deepEqual(pull.values, ['PULL_THRESHOLD', 'usePullToRefresh']);
+  assert.deepEqual(pull.types, ['PullPhase', 'PullState']);
+  assert.equal(pull.slug, 'use-pull-to-refresh');
+  assert.equal(pull.entry, '@korzun/design/hooks');
+  assert.equal(pull.docPath, 'docs/hooks/use-pull-to-refresh.md');
+  assert.equal(pull.dtsDir, 'dist/hooks/use-pull-to-refresh');
+  assert.deepEqual(byId('hooks/use-minimize-on-scroll').values, [
+    'EXPAND_AFTER',
+    'MINIMIZE_SPEED',
+    'useMinimizeOnScroll',
+  ]);
+  assert.deepEqual(byId('hooks/use-minimize-on-scroll').types, ['MinimizeOnScroll']);
+  assert.deepEqual(byId('hooks/is-standalone').values, ['isStandalone']);
+  assert.equal(byId('hooks'), undefined);
+});
+
+test('hooks module count equals their doc files', () => {
+  const docs = readdirSync(join(repo, 'docs', 'hooks')).filter((f) => f.endsWith('.md'));
+  assert.equal(modules.filter((m) => m.id.startsWith('hooks/')).length, docs.length);
 });

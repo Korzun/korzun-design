@@ -2328,7 +2328,7 @@
         "NavPill"
       ],
       "importLine": "import { NavMobile, type NavMobileProps, type NavPill } from '@korzun/design/component'",
-      "body": "The app's bottom navigation on phones: a `position: fixed` bar floating above\nthe bottom edge, holding two frosted-glass pills. The **expanded** side is a\ncapsule of tabs with a glass lens sliding to the active one; the other side is\na circle that links to a single destination. Scrolling down fast minimizes the\nexpanded side to a circle too (iOS-tab-bar style); scrolling up, reaching the\ntop, tapping the circle, or a route change brings it back. Hidden at\n`min-width: 641px`, so render it alongside `NavDesktop`. Uses react-router\n`Link` and `useLocation`, so it **must render inside a router**.\n\nUse something else for: desktop navigation (`NavDesktop`), page actions\n(`Page` `headerActions` / `footerActions`).\n\n## Usage\n\n### Sides and items\n\nEach side is a `NavPill`: `items` are its tabs while it is the `expanded` side,\nand `collapsed` is the one destination its circle links to. A tab is a\n`NavItem`, documented with [NavDesktop](nav-desktop.md#navitem); tab icons are\ndrawn at 14px. Derive `expanded` and every `active` from the route in one place (`main` and `settingsItems` are `NavItem[]` lists as in [Expanded side](#expanded-side)):\n\n```tsx\nconst { pathname } = useLocation();\nconst inSettings = pathname === '/settings' || pathname === '/users';\n\n<NavMobile\n  main={{ items: main, collapsed: { to: '/library', label: 'Back to library', Icon: HomeIcon, active: false } }}\n  settings={{ items: settingsItems, collapsed: { to: '/settings', label: 'Settings', Icon: SettingsIcon, active: pathname === '/settings' } }}\n  expanded={inSettings ? 'settings' : 'main'}\n/>\n```\n\n### Styling\n\nNo `className`.\n\n### Behaviour to know\n\n- **The page must make room for it:** pass `bottomNav` to every `<Page>` that\n  shows this bar, or the last rows sit under it. Toasts already clear it on\n  mobile.\n- Tabs are equal-width columns sized to the widest label. Five short labels fit\n  at 320px; six do not (Bookplate measured \"Library\"/\"Settings\" clipping), so\n  move extra destinations into the other side.\n- The minimized circle is a `<button aria-label=\"Show navigation\">`, not a\n  link: tapping it only re-expands the bar. It shows the active tab's icon (or\n  `collapsed.Icon` when no tab is active) and the active tab's badge, else a\n  dot if any hidden sibling has a badge.\n- Minimizing only reacts to user-driven scroll (after a touch or wheel on this\n  route), so scroll restoration on navigation never minimizes it. Tuning\n  constants live in [hooks](../hooks.md) (`MINIMIZE_SPEED`, `EXPAND_AFTER`).\n- Hidden shapes are `inert` and `aria-hidden`; only what is on screen is in\n  the tab order.\n- A side with `items: []` is a circle for good (Bookplate does this for a\n  non-admin's settings side).\n\n## Do / don't\n\n- Do render it once, in the layout route, next to `NavDesktop`.\n- Do set `bottomNav` on each `Page` under that layout.\n- Do drive `expanded` from the URL so Back behaves.\n- Don't keep more than about five tabs on one side.\n- Don't also call `useMinimizeOnScroll` for the same bar; NavMobile owns it.",
+      "body": "The app's bottom navigation on phones: a `position: fixed` bar floating above\nthe bottom edge, holding two frosted-glass pills. The **expanded** side is a\ncapsule of tabs with a glass lens sliding to the active one; the other side is\na circle that links to a single destination. Scrolling down fast minimizes the\nexpanded side to a circle too (iOS-tab-bar style); scrolling up, reaching the\ntop, tapping the circle, or a route change brings it back. Hidden at\n`min-width: 641px`, so render it alongside `NavDesktop`. Uses react-router\n`Link` and `useLocation`, so it **must render inside a router**.\n\nUse something else for: desktop navigation (`NavDesktop`), page actions\n(`Page` `headerActions` / `footerActions`).\n\n## Usage\n\n### Sides and items\n\nEach side is a `NavPill`: `items` are its tabs while it is the `expanded` side,\nand `collapsed` is the one destination its circle links to. A tab is a\n`NavItem`, documented with [NavDesktop](nav-desktop.md#navitem); tab icons are\ndrawn at 14px. Derive `expanded` and every `active` from the route in one place (`main` and `settingsItems` are `NavItem[]` lists as in [Expanded side](#expanded-side)):\n\n```tsx\nconst { pathname } = useLocation();\nconst inSettings = pathname === '/settings' || pathname === '/users';\n\n<NavMobile\n  main={{ items: main, collapsed: { to: '/library', label: 'Back to library', Icon: HomeIcon, active: false } }}\n  settings={{ items: settingsItems, collapsed: { to: '/settings', label: 'Settings', Icon: SettingsIcon, active: pathname === '/settings' } }}\n  expanded={inSettings ? 'settings' : 'main'}\n/>\n```\n\n### Styling\n\nNo `className`.\n\n### Behaviour to know\n\n- **The page must make room for it:** pass `bottomNav` to every `<Page>` that\n  shows this bar, or the last rows sit under it. Toasts already clear it on\n  mobile.\n- Tabs are equal-width columns sized to the widest label. Five short labels fit\n  at 320px; six do not (Bookplate measured \"Library\"/\"Settings\" clipping), so\n  move extra destinations into the other side.\n- The minimized circle is a `<button aria-label=\"Show navigation\">`, not a\n  link: tapping it only re-expands the bar. It shows the active tab's icon (or\n  `collapsed.Icon` when no tab is active) and the active tab's badge, else a\n  dot if any hidden sibling has a badge.\n- Minimizing only reacts to user-driven scroll (after a touch or wheel on this\n  route), so scroll restoration on navigation never minimizes it. Tuning\n  constants live in [`useMinimizeOnScroll`](../hooks/use-minimize-on-scroll.md) (`MINIMIZE_SPEED`, `EXPAND_AFTER`).\n- Hidden shapes are `inert` and `aria-hidden`; only what is on screen is in\n  the tab order.\n- A side with `items: []` is a circle for good (Bookplate does this for a\n  non-admin's settings side).\n\n## Do / don't\n\n- Do render it once, in the layout route, next to `NavDesktop`.\n- Do set `bottomNav` on each `Page` under that layout.\n- Do drive `expanded` from the URL so Back behaves.\n- Don't keep more than about five tabs on one side.\n- Don't also call `useMinimizeOnScroll` for the same bar; NavMobile owns it.",
       "examples": [
         {
           "file": "src/component/nav-mobile/examples/01-basic.tsx",
@@ -8136,99 +8136,6 @@
       ]
     },
     {
-      "id": "control/use-modal",
-      "slug": "use-modal",
-      "entry": "@korzun/design/control",
-      "docPath": "docs/control/use-modal.md",
-      "title": "useModal",
-      "description": "A hook that drives a native dialog element from an open flag and routes Escape and backdrop clicks to a dismiss callback.",
-      "category": "Overlays",
-      "values": [
-        "useModal"
-      ],
-      "types": [],
-      "importLine": "import { useModal } from '@korzun/design/control'",
-      "body": "A hook that drives a native `<dialog>` from an `isOpen` boolean: it calls\n`showModal()` / `close()` for you and routes Escape and backdrop clicks to\n`onDismiss`. It is the base under [`Modal`](modal.md) (and so `ConfirmModal`).\nReach for `Modal` first; this hook remains for modals `Modal` cannot express,\nbuilt from this hook plus the `theme.recipe.modal.*` styles.\n\nUse something else for: a plain yes/no confirmation (`ConfirmModal`), or a\ndropdown or non-modal floating layer (`Popover`).\n\n## Usage\n\n### Signature\n\n```ts\nfunction useModal(\n  isOpen: boolean,\n  onDismiss: () => void,\n  canDismiss?: boolean, // default true\n): RefObject<HTMLDialogElement | null>;\n```\n\n| Argument | Type | Default | Notes |\n|---|---|---|---|\n| `isOpen` | `boolean` | (required) | The single source of truth. `true` calls `showModal()`, `false` calls `close()`. |\n| `onDismiss` | `() => void` | (required) | Called on Escape and on a backdrop click. **It does not close anything itself**: set your `isOpen` state to `false` in it. Receives no event. |\n| `canDismiss` | `boolean` | `true` | When `false`, Escape and backdrop clicks are swallowed. Pass `!loading` (or `countdown === 0`) so an in-flight request can't be escaped. |\n\nReturns a ref to attach to the `<dialog>`.\n\n### Behaviour to know\n\n- Escape fires the dialog's `cancel` event; the hook always calls\n  `preventDefault()` so the browser never closes the dialog behind React's back.\n- While open, the dialog joins the layer stack shared with `Popover`s. A\n  popover left open beneath it neither takes its Escape (the dialog's own\n  `cancel` runs) nor closes on a press inside the dialog. A popover opened\n  inside the dialog takes Escape before the dialog does.\n- A backdrop click counts only when **both** mousedown and mouseup land on the\n  `<dialog>` element itself (its content lives in a child). Dragging a text\n  selection out of an input onto the backdrop does not dismiss.\n- The `<dialog>` must stay mounted. Rendering it conditionally (`{isOpen && <dialog…>}`)\n  breaks `showModal()`; its children also stay mounted while closed, so reset\n  any form state yourself when reopening.\n- A `Select` or `ChipsInput` works inside the modal: their dropdowns render\n  inside the open `<dialog>` that contains their anchor (see\n  [popover](popover.md)).\n- Never call `showModal()` / `close()` yourself.\n\n### Styling\n\nBuild the dialog from the recipe styles: `dialog: { ...theme.recipe.modal.dialog }`\n(`radius.lg`: the dialog sits on the page), `header`, `body` and `footer` from\n`theme.recipe.modal.*`, and pad the body with `theme.space.xxl`. The examples\nshow it in full.\n\n## Do / don't\n\n- Do pass `canDismiss={!loading}` and also disable the Cancel button while\n  loading, so every exit is gated the same way.\n- Do keep the `onClick={(e) => e.stopPropagation()}` on the `<dialog>` when it\n  is rendered inside a clickable ancestor (a card row); it only stops bubbling,\n  dismissal is the hook's job.\n- Do wrap the dialog's contents (header, body, footer) in\n  [`Surface`](../component/surface.md): hand-drawn boxes are invisible to depth,\n  so the Buttons and Selects inside then get the same `md` corners as in a\n  `Modal`, with no `radius` or `surface` override.",
-      "examples": [
-        {
-          "file": "src/control/use-modal/examples/01-basic.tsx",
-          "slug": "basic",
-          "order": 1,
-          "title": "Basic",
-          "description": "The hook returns a ref for a `<dialog>` that stays mounted. `isOpen` drives\n`showModal()` and `close()`; Escape and a click on the backdrop call `onDismiss`,\nwhich closes nothing itself, so it sets `isOpen` to `false`. The `<dialog>` takes\nthe `theme.recipe.modal.*` styles, and its contents are wrapped in `Surface` so the\nButtons get the corners they would have in a `Modal`. This demo starts open.",
-          "code": "import { Stack, Surface, Text } from '@korzun/design/component';\nimport { Button, useModal } from '@korzun/design/control';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\nimport { useState } from 'react';\n\nconst useStyles = createUseStyles((theme: Theme) => ({\n  dialog: { ...theme.recipe.modal.dialog, backgroundColor: theme.color.bg.card },\n  header: { ...theme.recipe.modal.header },\n  body: {\n    padding: `0 ${theme.space.xxl} ${theme.space.xxl}`,\n    color: theme.color.text.secondary,\n  },\n  footer: { ...theme.recipe.modal.footer },\n}));\n\nexport default function Basic() {\n  const styles = useStyles();\n  const [isOpen, setIsOpen] = useState(true);\n  const [saves, setSaves] = useState(0);\n  const close = () => setIsOpen(false);\n  const ref = useModal(isOpen, close);\n  return (\n    <Stack align=\"start\">\n      <Button onClick={() => setIsOpen(true)}>Edit progress</Button>\n      <Text tone=\"muted\">Saved: {saves}</Text>\n      <dialog ref={ref} className={styles.dialog}>\n        <Surface>\n          <div className={styles.header}>Edit progress</div>\n          <div className={styles.body}>You are on page 42 of 310.</div>\n          <div className={styles.footer}>\n            <Button type=\"text\" onClick={close}>\n              Cancel\n            </Button>\n            <Button\n              type=\"primary\"\n              onClick={() => {\n                setSaves((n) => n + 1);\n                close();\n              }}\n            >\n              Save\n            </Button>\n          </div>\n        </Surface>\n      </dialog>\n    </Stack>\n  );\n}\n"
-        },
-        {
-          "file": "src/control/use-modal/examples/02-gated-dismissal.tsx",
-          "slug": "gated-dismissal",
-          "order": 2,
-          "title": "Gated dismissal",
-          "description": "`canDismiss` is `!saving`, so Escape and backdrop clicks do nothing while a request\nruns, and the Cancel button is disabled to match so every exit is gated the same.\nThe switch holds the busy state on. The `onClick` that stops propagation keeps a\nclick in the dialog from reaching a clickable ancestor; dismissal is the hook's job.",
-          "code": "import { Stack, Surface } from '@korzun/design/component';\nimport { Button, Switch, useModal } from '@korzun/design/control';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\nimport { useState } from 'react';\n\nconst useStyles = createUseStyles((theme: Theme) => ({\n  dialog: { ...theme.recipe.modal.dialog, backgroundColor: theme.color.bg.card },\n  header: { ...theme.recipe.modal.header },\n  body: {\n    padding: `0 ${theme.space.xxl} ${theme.space.xxl}`,\n    color: theme.color.text.secondary,\n  },\n  footer: { ...theme.recipe.modal.footer },\n}));\n\nexport default function GatedDismissal() {\n  const styles = useStyles();\n  const [isOpen, setIsOpen] = useState(false);\n  const [saving, setSaving] = useState(true);\n  const close = () => setIsOpen(false);\n  const ref = useModal(isOpen, close, !saving);\n  return (\n    <Stack align=\"start\">\n      <Button onClick={() => setIsOpen(true)}>Open busy modal</Button>\n      <dialog ref={ref} className={styles.dialog} onClick={(event) => event.stopPropagation()}>\n        <Surface>\n          <div className={styles.header}>Saving progress</div>\n          <div className={styles.body}>\n            <Stack>\n              Escape and the backdrop are ignored while the request is in flight.\n              <Switch\n                name=\"saving\"\n                label=\"Request in flight\"\n                checked={saving}\n                onChange={setSaving}\n              />\n            </Stack>\n          </div>\n          <div className={styles.footer}>\n            <Button type=\"text\" disabled={saving} onClick={close}>\n              Cancel\n            </Button>\n            <Button type=\"primary\" loading={saving} onClick={close}>\n              Save\n            </Button>\n          </div>\n        </Surface>\n      </dialog>\n    </Stack>\n  );\n}\n"
-        },
-        {
-          "file": "src/control/use-modal/examples/03-select-inside.tsx",
-          "slug": "select-inside",
-          "order": 3,
-          "title": "Select inside",
-          "description": "A `Select` list opens inside the modal and takes Escape before the modal does. The\nhook gives no surface depth, so the contents are wrapped in `Surface` and the\n`Select` gets card corners.",
-          "code": "import { Stack, Surface, Text } from '@korzun/design/component';\nimport { Button, Select, useModal } from '@korzun/design/control';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\nimport { useState } from 'react';\n\nconst SHELVES = ['Reading', 'To read', 'Finished', 'Abandoned'];\n\nconst useStyles = createUseStyles((theme: Theme) => ({\n  dialog: { ...theme.recipe.modal.dialog, backgroundColor: theme.color.bg.card },\n  header: { ...theme.recipe.modal.header },\n  body: {\n    padding: `0 ${theme.space.xxl} ${theme.space.xxl}`,\n  },\n  footer: { ...theme.recipe.modal.footer },\n}));\n\nexport default function SelectInside() {\n  const styles = useStyles();\n  const [isOpen, setIsOpen] = useState(false);\n  const [shelf, setShelf] = useState<string | undefined>('Reading');\n  const close = () => setIsOpen(false);\n  const ref = useModal(isOpen, close);\n  return (\n    <Stack align=\"start\">\n      <Button onClick={() => setIsOpen(true)}>Move book</Button>\n      <Text tone=\"muted\">Shelf: {shelf ?? 'none'}</Text>\n      <dialog ref={ref} className={styles.dialog}>\n        <Surface>\n          <div className={styles.header}>Move book</div>\n          <div className={styles.body}>\n            <Select\n              name=\"shelf\"\n              label=\"Shelf\"\n              layout=\"vertical\"\n              options={SHELVES}\n              value={shelf}\n              onChange={setShelf}\n            />\n          </div>\n          <div className={styles.footer}>\n            <Button type=\"primary\" onClick={close}>\n              Done\n            </Button>\n          </div>\n        </Surface>\n      </dialog>\n    </Stack>\n  );\n}\n"
-        }
-      ],
-      "preview": {
-        "file": "src/control/use-modal/examples/preview.tsx",
-        "slug": "preview",
-        "order": 0,
-        "title": "Preview",
-        "description": "",
-        "code": "import { Surface } from '@korzun/design/component';\nimport { Button, useModal } from '@korzun/design/control';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\n\nconst useStyles = createUseStyles((theme: Theme) => ({\n  dialog: { ...theme.recipe.modal.dialog, backgroundColor: theme.color.bg.card },\n  header: { ...theme.recipe.modal.header },\n  body: {\n    padding: `0 ${theme.space.xxl} ${theme.space.xxl}`,\n    color: theme.color.text.secondary,\n  },\n  footer: { ...theme.recipe.modal.footer },\n}));\n\nexport default function Preview() {\n  const styles = useStyles();\n  const ref = useModal(true, () => {});\n  return (\n    <dialog ref={ref} className={styles.dialog}>\n      <Surface>\n        <div className={styles.header}>Edit progress</div>\n        <div className={styles.body}>You are on page 42 of 310.</div>\n        <div className={styles.footer}>\n          <Button type=\"text\" onClick={() => {}}>\n            Cancel\n          </Button>\n          <Button type=\"primary\" onClick={() => {}}>\n            Save\n          </Button>\n        </div>\n      </Surface>\n    </dialog>\n  );\n}\n"
-      },
-      "tables": [],
-      "tokens": [],
-      "changelog": [
-        {
-          "version": "0.7.0",
-          "date": "2026-11-26",
-          "tags": [
-            "Modal",
-            "useModal"
-          ],
-          "text": "**Breaking:** `Dialog` is renamed `Modal` and `useModalDialog` is renamed `useModal`, matching `ConfirmModal`; behaviour is unchanged. The old names `Dialog`, `DialogProps` and `useModalDialog` are removed. The footer marker attribute is now `data-modal-footer`."
-        },
-        {
-          "version": "0.4.0",
-          "date": "2026-11-23",
-          "tags": [
-            "Popover",
-            "Modal",
-            "useModal"
-          ],
-          "text": "Layer stack: popovers and dialogs now close innermost-first. Escape and an outside press only affect the topmost layer, so a popover inside a popover closes one level at a time. **Behaviour change:** a popover beneath an open dialog no longer takes its Escape or closes on a press inside the dialog."
-        },
-        {
-          "version": "0.3.0",
-          "date": "2026-11-22",
-          "tags": [
-            "Popover",
-            "Select",
-            "ChipsInput",
-            "Modal",
-            "useModal"
-          ],
-          "text": "`Popover` renders inside an open `<dialog>` that contains its anchor, so `Select` and `ChipsInput` work in modals."
-        },
-        {
-          "version": "0.0.5",
-          "date": "2026-11-21",
-          "tags": [
-            "General",
-            "useModal"
-          ],
-          "text": "Every prop has a JSDoc comment, so editors and coding agents see the guidance in the `.d.ts`. `useModalDialog` declares its return type."
-        }
-      ]
-    },
-    {
       "id": "component/tag",
       "slug": "tag",
       "entry": "@korzun/design/component",
@@ -10934,63 +10841,88 @@
       "changelog": []
     },
     {
-      "id": "hooks",
-      "slug": "hooks",
+      "id": "hooks/is-standalone",
+      "slug": "is-standalone",
       "entry": "@korzun/design/hooks",
-      "docPath": "docs/hooks.md",
-      "title": "Hooks",
-      "description": "Mobile-chrome hooks: standalone detection, minimize on scroll, pull to refresh.",
+      "docPath": "docs/hooks/is-standalone.md",
+      "title": "isStandalone",
+      "description": "True when running as the installed app (added to the home screen); gates install-only chrome.",
       "category": "Hooks",
       "values": [
-        "EXPAND_AFTER",
-        "MINIMIZE_SPEED",
-        "PULL_THRESHOLD",
-        "isStandalone",
-        "useMinimizeOnScroll",
-        "usePullToRefresh"
+        "isStandalone"
       ],
-      "types": [
-        "MinimizeOnScroll",
-        "PullPhase",
-        "PullState"
-      ],
-      "importLine": "import { EXPAND_AFTER, MINIMIZE_SPEED, PULL_THRESHOLD, isStandalone, useMinimizeOnScroll, usePullToRefresh, type MinimizeOnScroll, type PullPhase, type PullState } from '@korzun/design/hooks'",
-      "body": "Mobile-chrome behaviour shared by the layout components: detecting the\ninstalled app, minimizing bottom chrome on scroll, and pull-to-refresh. All\nthree read the **window** scroller; they do nothing for content scrolling in an\ninner `overflow: auto` element.\n\n## Usage\n\n### `isStandalone()`\n\n```ts\nisStandalone(): boolean\n```\n\nTrue when running as an installed PWA (added to the home screen):\n`(display-mode: standalone)` matches, or iOS Safari's\n`navigator.standalone === true`. Not a hook; a plain function, safe to call\nduring render because the status can't change within a session. It touches\n`window`, so don't call it during server rendering.\n\nUse it to gate chrome that only makes sense when installed: `TopFade` and a\npull-to-refresh indicator.\n\n### `useMinimizeOnScroll({ resetKey })`\n\n```ts\nuseMinimizeOnScroll({ resetKey }: { resetKey: string }): MinimizeOnScroll\ntype MinimizeOnScroll = { minimized: boolean; expand: () => void }\n```\n\niOS-tab-bar behaviour for bottom chrome. `NavMobile` already uses it; call it\nyourself only for other chrome.\n\n- Minimizes when one scroll frame moves **down** at `>= MINIMIZE_SPEED`\n  (`0.8` px/ms). Speed, not distance: slow reading never minimizes.\n- Expands after scrolling **up** `EXPAND_AFTER` (`12`) px back from the furthest-down point\n  reached since minimizing, on reaching the top, or when you call `expand()`.\n- Only user-driven scrolls count: it ignores scrolling until a `touchstart` or\n  `wheel` is seen after `resetKey` last changed (so scroll restoration doesn't\n  minimize it). Changing `resetKey` also expands. Pass the route's\n  `useLocation().key`.\n- iOS rubber-band overscroll (top and bottom) is clamped out.\n\n### `usePullToRefresh(onRefresh, { enabled })`\n\n```ts\nusePullToRefresh(onRefresh: () => Promise<unknown>, options?: { enabled?: boolean }): PullState\ntype PullPhase = 'idle' | 'pulling' | 'armed' | 'refreshing'\ntype PullState = { phase: PullPhase; offset: number }\n```\n\nPull-down-to-refresh for the standalone app, which has no browser gesture. It\n**draws nothing**; you render an indicator from the returned state.\n\n- Measures the page's own rubber-band overscroll past the top while a finger is\n  down (`-window.scrollY`), so it works only where the browser rubber-bands\n  (iOS). It never cancels a touch.\n- `offset`: px of pull, capped at `PULL_THRESHOLD * 1.5` (105). `pulling` below\n  `PULL_THRESHOLD` (`70`), `armed` at or above it.\n- Releasing while armed calls `onRefresh` and holds `refreshing` with `offset`\n  pinned at `PULL_THRESHOLD` until the promise settles (resolve **or** reject),\n  then returns to `idle`. Release short of the threshold returns to `idle`.\n- Ignored: touches starting inside an open `<dialog>`, overscroll with no finger\n  down, new pulls while refreshing, and everything when `enabled: false`\n  (default `true`).\n- `onRefresh` is read through a ref; an inline closure is fine.\n- **`onRefresh` must return a promise.** A function returning `undefined`\n  throws on `.then` and leaves the phase stuck at `refreshing`. Use an `async`\n  function.\n\n### A pull-to-refresh indicator\n\n```tsx\n// An indicator for the installed app, mounted once in the layout.\nexport const PullToRefreshIndicator = () => {\n  const client = useApolloClient();\n  const refresh = useCallback(\n    () => client.refetchQueries({ include: 'active' }).then(() => undefined, () => undefined),\n    [client]\n  );\n  const { phase, offset } = usePullToRefresh(refresh);\n  const style = {\n    transform: `translateY(${offset}px)`,\n    opacity: Math.min(1, offset / PULL_THRESHOLD),\n  };\n  return (\n    <div style={style}>\n      {phase === 'refreshing'\n        ? <Spinner label=\"Refreshing\" />\n        : <ChevronIcon aria-hidden className={phase === 'armed' ? styles.up : styles.down} />}\n    </div>\n  );\n};\n\n{isStandalone() && <PullToRefreshIndicator />}\n```\n\n## Do / don't\n\n- Do gate pull-to-refresh UI on `isStandalone()`; browser tabs have their own.\n- Do return a promise from `onRefresh` that settles even on failure.\n- Don't call `useMinimizeOnScroll` for the bar `NavMobile` already manages.\n- Don't expect any of these to track a nested scroll container.",
+      "types": [],
+      "importLine": "import { isStandalone } from '@korzun/design/hooks'",
+      "body": "True when running as the installed app (added to the home screen). Part of the\nmobile-chrome behaviour shared by the layout components, with\n[`useMinimizeOnScroll`](use-minimize-on-scroll.md) and\n[`usePullToRefresh`](use-pull-to-refresh.md).\n\n## Usage\n\n### `isStandalone()`\n\n```ts\nisStandalone(): boolean\n```\n\nTrue when running as an installed PWA (added to the home screen):\n`(display-mode: standalone)` matches, or iOS Safari's\n`navigator.standalone === true`. Not a hook; a plain function, safe to call\nduring render because the status can't change within a session. It touches\n`window`, so don't call it during server rendering.\n\nUse it to gate chrome that only makes sense when installed: `TopFade` and a\npull-to-refresh indicator ([`usePullToRefresh`](use-pull-to-refresh.md#a-pull-to-refresh-indicator)).\n\n## Do / don't\n\n- Do gate pull-to-refresh UI on `isStandalone()`; browser tabs have their own.",
       "examples": [
         {
-          "file": "src/hooks/examples/01-is-standalone.tsx",
+          "file": "src/hooks/is-standalone/examples/01-is-standalone.tsx",
           "slug": "is-standalone",
           "order": 1,
           "title": "isStandalone",
           "description": "True only in the installed app (added to the home screen). Here, in a browser tab, it is\nfalse. Gate install-only chrome such as `TopFade` and a pull-to-refresh indicator on it.",
           "code": "import { Card, Text } from '@korzun/design/component';\nimport { isStandalone } from '@korzun/design/hooks';\n\nexport default function IsStandalone() {\n  return (\n    <Card title=\"Installed app\">\n      <Text>\n        <code>isStandalone()</code> is {String(isStandalone())}\n      </Text>\n    </Card>\n  );\n}\n"
-        },
-        {
-          "file": "src/hooks/examples/02-minimize-on-scroll.tsx",
-          "slug": "minimize-on-scroll",
-          "order": 2,
-          "title": "useMinimizeOnScroll",
-          "description": "Scroll this frame down quickly and the bottom bar minimizes; scroll back up a little, reach\nthe top or press Expand and it comes back. A slow scroll leaves it alone. `NavMobile` already\ndoes this; call the hook for other bottom chrome.",
-          "code": "import { Card, Inline, Page, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { useMinimizeOnScroll } from '@korzun/design/hooks';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\nimport cx from 'classnames';\n\nconst useStyle = createUseStyles((theme: Theme) => ({\n  bar: {\n    position: 'fixed',\n    left: theme.space.xl,\n    right: theme.space.xl,\n    bottom: theme.space.xl,\n    padding: theme.space.lg,\n    borderRadius: theme.radius.lg,\n    border: `1px solid ${theme.color.border.default}`,\n    backgroundColor: theme.color.bg.card,\n    boxShadow: theme.shadow.hoverLift,\n    transition: 'padding 200ms ease',\n  },\n  minimized: { paddingTop: theme.space.xs, paddingBottom: theme.space.xs },\n}));\n\nconst chapters = Array.from({ length: 12 }, (_, i) => `Chapter ${i + 1}`);\n\nexport default function MinimizeOnScroll() {\n  const styles = useStyle();\n  const { minimized, expand } = useMinimizeOnScroll({ resetKey: 'reader' });\n  return (\n    <>\n      <Page>\n        {chapters.map((title) => (\n          <Card key={title} title={title}>\n            <Text>Scroll quickly to minimize the bar below.</Text>\n          </Card>\n        ))}\n      </Page>\n      <div className={cx(styles.bar, minimized && styles.minimized)}>\n        <Inline justify=\"between\">\n          <Text tone=\"muted\">{minimized ? 'Minimized' : 'Expanded'}</Text>\n          {minimized && (\n            <Button type=\"link\" onClick={expand}>\n              Expand\n            </Button>\n          )}\n        </Inline>\n      </div>\n    </>\n  );\n}\n",
-          "viewport": "screen"
-        },
-        {
-          "file": "src/hooks/examples/03-pull-to-refresh.tsx",
-          "slug": "pull-to-refresh",
-          "order": 3,
-          "title": "usePullToRefresh",
-          "description": "The hook draws nothing: it reports a phase and an offset, and you draw the indicator. It reads\nthe page's rubber-band overscroll, so only a touch pull on iOS moves it; with a mouse the\nphase stays `idle`. Releasing while `armed` runs `onRefresh` until its promise settles.",
-          "code": "import { Card, Spinner, Stack, Text } from '@korzun/design/component';\nimport { usePullToRefresh } from '@korzun/design/hooks';\nimport { useState } from 'react';\n\nexport default function PullToRefresh() {\n  const [refreshes, setRefreshes] = useState(0);\n  const { phase, offset } = usePullToRefresh(async () => {\n    await new Promise((resolve) => setTimeout(resolve, 800));\n    setRefreshes((n) => n + 1);\n  });\n  return (\n    <Card title=\"Library\">\n      <Stack gap=\"sm\">\n        {phase === 'refreshing' ? <Spinner label=\"Refreshing\" /> : null}\n        <Text>\n          Phase: {phase}, offset: {Math.round(offset)}px\n        </Text>\n        <Text tone=\"muted\">Refreshed {refreshes} times</Text>\n      </Stack>\n    </Card>\n  );\n}\n",
-          "viewport": "mobile"
         }
       ],
       "preview": {
-        "file": "src/hooks/examples/preview.tsx",
+        "file": "src/hooks/is-standalone/examples/preview.tsx",
         "slug": "preview",
         "order": 0,
         "title": "Preview",
         "description": "",
         "code": "import { Card, Text } from '@korzun/design/component';\nimport { isStandalone } from '@korzun/design/hooks';\n\nexport default function Preview() {\n  return (\n    <Card title=\"Installed app\">\n      <Text>\n        <code>isStandalone()</code> is {String(isStandalone())}\n      </Text>\n    </Card>\n  );\n}\n"
+      },
+      "tables": [],
+      "tokens": [],
+      "changelog": [
+        {
+          "version": "0.0.1",
+          "date": "2026-11-15",
+          "tags": [
+            "useMinimizeOnScroll",
+            "usePullToRefresh",
+            "isStandalone"
+          ],
+          "text": "Hooks: `useMinimizeOnScroll`, `usePullToRefresh`, `isStandalone`."
+        }
+      ]
+    },
+    {
+      "id": "hooks/use-minimize-on-scroll",
+      "slug": "use-minimize-on-scroll",
+      "entry": "@korzun/design/hooks",
+      "docPath": "docs/hooks/use-minimize-on-scroll.md",
+      "title": "useMinimizeOnScroll",
+      "description": "Minimizes bottom chrome on a fast scroll down and expands it on the way back up, like the iOS tab bar.",
+      "category": "Hooks",
+      "values": [
+        "EXPAND_AFTER",
+        "MINIMIZE_SPEED",
+        "useMinimizeOnScroll"
+      ],
+      "types": [
+        "MinimizeOnScroll"
+      ],
+      "importLine": "import { EXPAND_AFTER, MINIMIZE_SPEED, useMinimizeOnScroll, type MinimizeOnScroll } from '@korzun/design/hooks'",
+      "body": "Minimizes bottom chrome on a fast scroll down and expands it on the way back\nup, like the iOS tab bar. Part of the mobile-chrome behaviour shared by the\nlayout components, with [`isStandalone`](is-standalone.md) and\n[`usePullToRefresh`](use-pull-to-refresh.md). It reads the **window**\nscroller; it does nothing for content scrolling in an inner `overflow: auto`\nelement.\n\n## Usage\n\n### `useMinimizeOnScroll({ resetKey })`\n\n```ts\nuseMinimizeOnScroll({ resetKey }: { resetKey: string }): MinimizeOnScroll\ntype MinimizeOnScroll = { minimized: boolean; expand: () => void }\n```\n\niOS-tab-bar behaviour for bottom chrome. `NavMobile` already uses it; call it\nyourself only for other chrome.\n\n- Minimizes when one scroll frame moves **down** at `>= MINIMIZE_SPEED`\n  (`0.8` px/ms). Speed, not distance: slow reading never minimizes.\n- Expands after scrolling **up** `EXPAND_AFTER` (`12`) px back from the furthest-down point\n  reached since minimizing, on reaching the top, or when you call `expand()`.\n- Only user-driven scrolls count: it ignores scrolling until a `touchstart` or\n  `wheel` is seen after `resetKey` last changed (so scroll restoration doesn't\n  minimize it). Changing `resetKey` also expands. Pass the route's\n  `useLocation().key`.\n- iOS rubber-band overscroll (top and bottom) is clamped out.\n\n## Do / don't\n\n- Don't call `useMinimizeOnScroll` for the bar `NavMobile` already manages.\n- Don't expect it to track a nested scroll container.",
+      "examples": [
+        {
+          "file": "src/hooks/use-minimize-on-scroll/examples/01-minimize-on-scroll.tsx",
+          "slug": "minimize-on-scroll",
+          "order": 1,
+          "title": "useMinimizeOnScroll",
+          "description": "Scroll this frame down quickly and the bottom bar minimizes; scroll back up a little, reach\nthe top or press Expand and it comes back. A slow scroll leaves it alone. `NavMobile` already\ndoes this; call the hook for other bottom chrome.",
+          "code": "import { Card, Inline, Page, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { useMinimizeOnScroll } from '@korzun/design/hooks';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\nimport cx from 'classnames';\n\nconst useStyle = createUseStyles((theme: Theme) => ({\n  bar: {\n    position: 'fixed',\n    left: theme.space.xl,\n    right: theme.space.xl,\n    bottom: theme.space.xl,\n    padding: theme.space.lg,\n    borderRadius: theme.radius.lg,\n    border: `1px solid ${theme.color.border.default}`,\n    backgroundColor: theme.color.bg.card,\n    boxShadow: theme.shadow.hoverLift,\n    transition: 'padding 200ms ease',\n  },\n  minimized: { paddingTop: theme.space.xs, paddingBottom: theme.space.xs },\n}));\n\nconst chapters = Array.from({ length: 12 }, (_, i) => `Chapter ${i + 1}`);\n\nexport default function MinimizeOnScroll() {\n  const styles = useStyle();\n  const { minimized, expand } = useMinimizeOnScroll({ resetKey: 'reader' });\n  return (\n    <>\n      <Page>\n        {chapters.map((title) => (\n          <Card key={title} title={title}>\n            <Text>Scroll quickly to minimize the bar below.</Text>\n          </Card>\n        ))}\n      </Page>\n      <div className={cx(styles.bar, minimized && styles.minimized)}>\n        <Inline justify=\"between\">\n          <Text tone=\"muted\">{minimized ? 'Minimized' : 'Expanded'}</Text>\n          {minimized && (\n            <Button type=\"link\" onClick={expand}>\n              Expand\n            </Button>\n          )}\n        </Inline>\n      </div>\n    </>\n  );\n}\n",
+          "viewport": "screen"
+        }
+      ],
+      "preview": {
+        "file": "src/hooks/use-minimize-on-scroll/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { Card, Text } from '@korzun/design/component';\nimport { useMinimizeOnScroll } from '@korzun/design/hooks';\n\nexport default function Preview() {\n  const { minimized } = useMinimizeOnScroll({ resetKey: 'preview' });\n  return (\n    <Card title=\"Bottom bar\">\n      <Text>\n        <code>minimized</code> is {String(minimized)}\n      </Text>\n    </Card>\n  );\n}\n"
       },
       "tables": [
         {
@@ -11010,7 +10942,60 @@
               "description": "Whether the bar is currently minimized."
             }
           ]
-        },
+        }
+      ],
+      "tokens": [],
+      "changelog": [
+        {
+          "version": "0.0.1",
+          "date": "2026-11-15",
+          "tags": [
+            "useMinimizeOnScroll",
+            "usePullToRefresh",
+            "isStandalone"
+          ],
+          "text": "Hooks: `useMinimizeOnScroll`, `usePullToRefresh`, `isStandalone`."
+        }
+      ]
+    },
+    {
+      "id": "hooks/use-pull-to-refresh",
+      "slug": "use-pull-to-refresh",
+      "entry": "@korzun/design/hooks",
+      "docPath": "docs/hooks/use-pull-to-refresh.md",
+      "title": "usePullToRefresh",
+      "description": "Pull-down-to-refresh for the installed app; it reports a phase and an offset, and you draw the indicator.",
+      "category": "Hooks",
+      "values": [
+        "PULL_THRESHOLD",
+        "usePullToRefresh"
+      ],
+      "types": [
+        "PullPhase",
+        "PullState"
+      ],
+      "importLine": "import { PULL_THRESHOLD, usePullToRefresh, type PullPhase, type PullState } from '@korzun/design/hooks'",
+      "body": "Pull-down-to-refresh for the installed app; it reports a phase and an offset,\nand you draw the indicator. Part of the mobile-chrome behaviour shared by the\nlayout components, with [`isStandalone`](is-standalone.md) and\n[`useMinimizeOnScroll`](use-minimize-on-scroll.md). It reads the **window**\nscroller; it does nothing for content scrolling in an inner `overflow: auto`\nelement.\n\n## Usage\n\n### `usePullToRefresh(onRefresh, { enabled })`\n\n```ts\nusePullToRefresh(onRefresh: () => Promise<unknown>, options?: { enabled?: boolean }): PullState\ntype PullPhase = 'idle' | 'pulling' | 'armed' | 'refreshing'\ntype PullState = { phase: PullPhase; offset: number }\n```\n\nPull-down-to-refresh for the standalone app, which has no browser gesture. It\n**draws nothing**; you render an indicator from the returned state.\n\n- Measures the page's own rubber-band overscroll past the top while a finger is\n  down (`-window.scrollY`), so it works only where the browser rubber-bands\n  (iOS). It never cancels a touch.\n- `offset`: px of pull, capped at `PULL_THRESHOLD * 1.5` (105). `pulling` below\n  `PULL_THRESHOLD` (`70`), `armed` at or above it.\n- Releasing while armed calls `onRefresh` and holds `refreshing` with `offset`\n  pinned at `PULL_THRESHOLD` until the promise settles (resolve **or** reject),\n  then returns to `idle`. Release short of the threshold returns to `idle`.\n- Ignored: touches starting inside an open `<dialog>`, overscroll with no finger\n  down, new pulls while refreshing, and everything when `enabled: false`\n  (default `true`).\n- `onRefresh` is read through a ref; an inline closure is fine.\n- **`onRefresh` must return a promise.** A function returning `undefined`\n  throws on `.then` and leaves the phase stuck at `refreshing`. Use an `async`\n  function.\n\n### A pull-to-refresh indicator\n\n```tsx\n// An indicator for the installed app, mounted once in the layout.\nexport const PullToRefreshIndicator = () => {\n  const client = useApolloClient();\n  const refresh = useCallback(\n    () => client.refetchQueries({ include: 'active' }).then(() => undefined, () => undefined),\n    [client]\n  );\n  const { phase, offset } = usePullToRefresh(refresh);\n  const style = {\n    transform: `translateY(${offset}px)`,\n    opacity: Math.min(1, offset / PULL_THRESHOLD),\n  };\n  return (\n    <div style={style}>\n      {phase === 'refreshing'\n        ? <Spinner label=\"Refreshing\" />\n        : <ChevronIcon aria-hidden className={phase === 'armed' ? styles.up : styles.down} />}\n    </div>\n  );\n};\n\n{isStandalone() && <PullToRefreshIndicator />}\n```\n\n## Do / don't\n\n- Do gate pull-to-refresh UI on [`isStandalone()`](is-standalone.md); browser tabs have their own.\n- Do return a promise from `onRefresh` that settles even on failure.\n- Don't expect it to track a nested scroll container.",
+      "examples": [
+        {
+          "file": "src/hooks/use-pull-to-refresh/examples/01-pull-to-refresh.tsx",
+          "slug": "pull-to-refresh",
+          "order": 1,
+          "title": "usePullToRefresh",
+          "description": "The hook draws nothing: it reports a phase and an offset, and you draw the indicator. It reads\nthe page's rubber-band overscroll, so only a touch pull on iOS moves it; with a mouse the\nphase stays `idle`. Releasing while `armed` runs `onRefresh` until its promise settles.",
+          "code": "import { Card, Spinner, Stack, Text } from '@korzun/design/component';\nimport { usePullToRefresh } from '@korzun/design/hooks';\nimport { useState } from 'react';\n\nexport default function PullToRefresh() {\n  const [refreshes, setRefreshes] = useState(0);\n  const { phase, offset } = usePullToRefresh(async () => {\n    await new Promise((resolve) => setTimeout(resolve, 800));\n    setRefreshes((n) => n + 1);\n  });\n  return (\n    <Card title=\"Library\">\n      <Stack gap=\"sm\">\n        {phase === 'refreshing' ? <Spinner label=\"Refreshing\" /> : null}\n        <Text>\n          Phase: {phase}, offset: {Math.round(offset)}px\n        </Text>\n        <Text tone=\"muted\">Refreshed {refreshes} times</Text>\n      </Stack>\n    </Card>\n  );\n}\n",
+          "viewport": "mobile"
+        }
+      ],
+      "preview": {
+        "file": "src/hooks/use-pull-to-refresh/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { Card, Text } from '@korzun/design/component';\nimport { usePullToRefresh } from '@korzun/design/hooks';\n\nexport default function Preview() {\n  const { phase } = usePullToRefresh(async () => {});\n  return (\n    <Card title=\"Pull to refresh\">\n      <Text>\n        <code>phase</code> is {phase}\n      </Text>\n    </Card>\n  );\n}\n"
+      },
+      "tables": [
         {
           "name": "PullState",
           "kind": "object",
@@ -11048,6 +11033,99 @@
             "isStandalone"
           ],
           "text": "Hooks: `useMinimizeOnScroll`, `usePullToRefresh`, `isStandalone`."
+        }
+      ]
+    },
+    {
+      "id": "control/use-modal",
+      "slug": "use-modal",
+      "entry": "@korzun/design/control",
+      "docPath": "docs/control/use-modal.md",
+      "title": "useModal",
+      "description": "A hook that drives a native dialog element from an open flag and routes Escape and backdrop clicks to a dismiss callback.",
+      "category": "Hooks",
+      "values": [
+        "useModal"
+      ],
+      "types": [],
+      "importLine": "import { useModal } from '@korzun/design/control'",
+      "body": "A hook that drives a native `<dialog>` from an `isOpen` boolean: it calls\n`showModal()` / `close()` for you and routes Escape and backdrop clicks to\n`onDismiss`. It is the base under [`Modal`](modal.md) (and so `ConfirmModal`).\nReach for `Modal` first; this hook remains for modals `Modal` cannot express,\nbuilt from this hook plus the `theme.recipe.modal.*` styles.\n\nUse something else for: a plain yes/no confirmation (`ConfirmModal`), or a\ndropdown or non-modal floating layer (`Popover`).\n\n## Usage\n\n### Signature\n\n```ts\nfunction useModal(\n  isOpen: boolean,\n  onDismiss: () => void,\n  canDismiss?: boolean, // default true\n): RefObject<HTMLDialogElement | null>;\n```\n\n| Argument | Type | Default | Notes |\n|---|---|---|---|\n| `isOpen` | `boolean` | (required) | The single source of truth. `true` calls `showModal()`, `false` calls `close()`. |\n| `onDismiss` | `() => void` | (required) | Called on Escape and on a backdrop click. **It does not close anything itself**: set your `isOpen` state to `false` in it. Receives no event. |\n| `canDismiss` | `boolean` | `true` | When `false`, Escape and backdrop clicks are swallowed. Pass `!loading` (or `countdown === 0`) so an in-flight request can't be escaped. |\n\nReturns a ref to attach to the `<dialog>`.\n\n### Behaviour to know\n\n- Escape fires the dialog's `cancel` event; the hook always calls\n  `preventDefault()` so the browser never closes the dialog behind React's back.\n- While open, the dialog joins the layer stack shared with `Popover`s. A\n  popover left open beneath it neither takes its Escape (the dialog's own\n  `cancel` runs) nor closes on a press inside the dialog. A popover opened\n  inside the dialog takes Escape before the dialog does.\n- A backdrop click counts only when **both** mousedown and mouseup land on the\n  `<dialog>` element itself (its content lives in a child). Dragging a text\n  selection out of an input onto the backdrop does not dismiss.\n- The `<dialog>` must stay mounted. Rendering it conditionally (`{isOpen && <dialog…>}`)\n  breaks `showModal()`; its children also stay mounted while closed, so reset\n  any form state yourself when reopening.\n- A `Select` or `ChipsInput` works inside the modal: their dropdowns render\n  inside the open `<dialog>` that contains their anchor (see\n  [popover](popover.md)).\n- Never call `showModal()` / `close()` yourself.\n\n### Styling\n\nBuild the dialog from the recipe styles: `dialog: { ...theme.recipe.modal.dialog }`\n(`radius.lg`: the dialog sits on the page), `header`, `body` and `footer` from\n`theme.recipe.modal.*`, and pad the body with `theme.space.xxl`. The examples\nshow it in full.\n\n## Do / don't\n\n- Do pass `canDismiss={!loading}` and also disable the Cancel button while\n  loading, so every exit is gated the same way.\n- Do keep the `onClick={(e) => e.stopPropagation()}` on the `<dialog>` when it\n  is rendered inside a clickable ancestor (a card row); it only stops bubbling,\n  dismissal is the hook's job.\n- Do wrap the dialog's contents (header, body, footer) in\n  [`Surface`](../component/surface.md): hand-drawn boxes are invisible to depth,\n  so the Buttons and Selects inside then get the same `md` corners as in a\n  `Modal`, with no `radius` or `surface` override.",
+      "examples": [
+        {
+          "file": "src/control/use-modal/examples/01-basic.tsx",
+          "slug": "basic",
+          "order": 1,
+          "title": "Basic",
+          "description": "The hook returns a ref for a `<dialog>` that stays mounted. `isOpen` drives\n`showModal()` and `close()`; Escape and a click on the backdrop call `onDismiss`,\nwhich closes nothing itself, so it sets `isOpen` to `false`. The `<dialog>` takes\nthe `theme.recipe.modal.*` styles, and its contents are wrapped in `Surface` so the\nButtons get the corners they would have in a `Modal`. This demo starts open.",
+          "code": "import { Stack, Surface, Text } from '@korzun/design/component';\nimport { Button, useModal } from '@korzun/design/control';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\nimport { useState } from 'react';\n\nconst useStyles = createUseStyles((theme: Theme) => ({\n  dialog: { ...theme.recipe.modal.dialog, backgroundColor: theme.color.bg.card },\n  header: { ...theme.recipe.modal.header },\n  body: {\n    padding: `0 ${theme.space.xxl} ${theme.space.xxl}`,\n    color: theme.color.text.secondary,\n  },\n  footer: { ...theme.recipe.modal.footer },\n}));\n\nexport default function Basic() {\n  const styles = useStyles();\n  const [isOpen, setIsOpen] = useState(true);\n  const [saves, setSaves] = useState(0);\n  const close = () => setIsOpen(false);\n  const ref = useModal(isOpen, close);\n  return (\n    <Stack align=\"start\">\n      <Button onClick={() => setIsOpen(true)}>Edit progress</Button>\n      <Text tone=\"muted\">Saved: {saves}</Text>\n      <dialog ref={ref} className={styles.dialog}>\n        <Surface>\n          <div className={styles.header}>Edit progress</div>\n          <div className={styles.body}>You are on page 42 of 310.</div>\n          <div className={styles.footer}>\n            <Button type=\"text\" onClick={close}>\n              Cancel\n            </Button>\n            <Button\n              type=\"primary\"\n              onClick={() => {\n                setSaves((n) => n + 1);\n                close();\n              }}\n            >\n              Save\n            </Button>\n          </div>\n        </Surface>\n      </dialog>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/use-modal/examples/02-gated-dismissal.tsx",
+          "slug": "gated-dismissal",
+          "order": 2,
+          "title": "Gated dismissal",
+          "description": "`canDismiss` is `!saving`, so Escape and backdrop clicks do nothing while a request\nruns, and the Cancel button is disabled to match so every exit is gated the same.\nThe switch holds the busy state on. The `onClick` that stops propagation keeps a\nclick in the dialog from reaching a clickable ancestor; dismissal is the hook's job.",
+          "code": "import { Stack, Surface } from '@korzun/design/component';\nimport { Button, Switch, useModal } from '@korzun/design/control';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\nimport { useState } from 'react';\n\nconst useStyles = createUseStyles((theme: Theme) => ({\n  dialog: { ...theme.recipe.modal.dialog, backgroundColor: theme.color.bg.card },\n  header: { ...theme.recipe.modal.header },\n  body: {\n    padding: `0 ${theme.space.xxl} ${theme.space.xxl}`,\n    color: theme.color.text.secondary,\n  },\n  footer: { ...theme.recipe.modal.footer },\n}));\n\nexport default function GatedDismissal() {\n  const styles = useStyles();\n  const [isOpen, setIsOpen] = useState(false);\n  const [saving, setSaving] = useState(true);\n  const close = () => setIsOpen(false);\n  const ref = useModal(isOpen, close, !saving);\n  return (\n    <Stack align=\"start\">\n      <Button onClick={() => setIsOpen(true)}>Open busy modal</Button>\n      <dialog ref={ref} className={styles.dialog} onClick={(event) => event.stopPropagation()}>\n        <Surface>\n          <div className={styles.header}>Saving progress</div>\n          <div className={styles.body}>\n            <Stack>\n              Escape and the backdrop are ignored while the request is in flight.\n              <Switch\n                name=\"saving\"\n                label=\"Request in flight\"\n                checked={saving}\n                onChange={setSaving}\n              />\n            </Stack>\n          </div>\n          <div className={styles.footer}>\n            <Button type=\"text\" disabled={saving} onClick={close}>\n              Cancel\n            </Button>\n            <Button type=\"primary\" loading={saving} onClick={close}>\n              Save\n            </Button>\n          </div>\n        </Surface>\n      </dialog>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/use-modal/examples/03-select-inside.tsx",
+          "slug": "select-inside",
+          "order": 3,
+          "title": "Select inside",
+          "description": "A `Select` list opens inside the modal and takes Escape before the modal does. The\nhook gives no surface depth, so the contents are wrapped in `Surface` and the\n`Select` gets card corners.",
+          "code": "import { Stack, Surface, Text } from '@korzun/design/component';\nimport { Button, Select, useModal } from '@korzun/design/control';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\nimport { useState } from 'react';\n\nconst SHELVES = ['Reading', 'To read', 'Finished', 'Abandoned'];\n\nconst useStyles = createUseStyles((theme: Theme) => ({\n  dialog: { ...theme.recipe.modal.dialog, backgroundColor: theme.color.bg.card },\n  header: { ...theme.recipe.modal.header },\n  body: {\n    padding: `0 ${theme.space.xxl} ${theme.space.xxl}`,\n  },\n  footer: { ...theme.recipe.modal.footer },\n}));\n\nexport default function SelectInside() {\n  const styles = useStyles();\n  const [isOpen, setIsOpen] = useState(false);\n  const [shelf, setShelf] = useState<string | undefined>('Reading');\n  const close = () => setIsOpen(false);\n  const ref = useModal(isOpen, close);\n  return (\n    <Stack align=\"start\">\n      <Button onClick={() => setIsOpen(true)}>Move book</Button>\n      <Text tone=\"muted\">Shelf: {shelf ?? 'none'}</Text>\n      <dialog ref={ref} className={styles.dialog}>\n        <Surface>\n          <div className={styles.header}>Move book</div>\n          <div className={styles.body}>\n            <Select\n              name=\"shelf\"\n              label=\"Shelf\"\n              layout=\"vertical\"\n              options={SHELVES}\n              value={shelf}\n              onChange={setShelf}\n            />\n          </div>\n          <div className={styles.footer}>\n            <Button type=\"primary\" onClick={close}>\n              Done\n            </Button>\n          </div>\n        </Surface>\n      </dialog>\n    </Stack>\n  );\n}\n"
+        }
+      ],
+      "preview": {
+        "file": "src/control/use-modal/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { Surface } from '@korzun/design/component';\nimport { Button, useModal } from '@korzun/design/control';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\n\nconst useStyles = createUseStyles((theme: Theme) => ({\n  dialog: { ...theme.recipe.modal.dialog, backgroundColor: theme.color.bg.card },\n  header: { ...theme.recipe.modal.header },\n  body: {\n    padding: `0 ${theme.space.xxl} ${theme.space.xxl}`,\n    color: theme.color.text.secondary,\n  },\n  footer: { ...theme.recipe.modal.footer },\n}));\n\nexport default function Preview() {\n  const styles = useStyles();\n  const ref = useModal(true, () => {});\n  return (\n    <dialog ref={ref} className={styles.dialog}>\n      <Surface>\n        <div className={styles.header}>Edit progress</div>\n        <div className={styles.body}>You are on page 42 of 310.</div>\n        <div className={styles.footer}>\n          <Button type=\"text\" onClick={() => {}}>\n            Cancel\n          </Button>\n          <Button type=\"primary\" onClick={() => {}}>\n            Save\n          </Button>\n        </div>\n      </Surface>\n    </dialog>\n  );\n}\n"
+      },
+      "tables": [],
+      "tokens": [],
+      "changelog": [
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "Modal",
+            "useModal"
+          ],
+          "text": "**Breaking:** `Dialog` is renamed `Modal` and `useModalDialog` is renamed `useModal`, matching `ConfirmModal`; behaviour is unchanged. The old names `Dialog`, `DialogProps` and `useModalDialog` are removed. The footer marker attribute is now `data-modal-footer`."
+        },
+        {
+          "version": "0.4.0",
+          "date": "2026-11-23",
+          "tags": [
+            "Popover",
+            "Modal",
+            "useModal"
+          ],
+          "text": "Layer stack: popovers and dialogs now close innermost-first. Escape and an outside press only affect the topmost layer, so a popover inside a popover closes one level at a time. **Behaviour change:** a popover beneath an open dialog no longer takes its Escape or closes on a press inside the dialog."
+        },
+        {
+          "version": "0.3.0",
+          "date": "2026-11-22",
+          "tags": [
+            "Popover",
+            "Select",
+            "ChipsInput",
+            "Modal",
+            "useModal"
+          ],
+          "text": "`Popover` renders inside an open `<dialog>` that contains its anchor, so `Select` and `ChipsInput` work in modals."
+        },
+        {
+          "version": "0.0.5",
+          "date": "2026-11-21",
+          "tags": [
+            "General",
+            "useModal"
+          ],
+          "text": "Every prop has a JSDoc comment, so editors and coding agents see the guidance in the `.d.ts`. `useModalDialog` declares its return type."
         }
       ]
     }
@@ -11399,7 +11477,7 @@
           "tags": [
             "General"
           ],
-          "text": "Docs: modules are grouped into Layout, Navigation, Typography, Inputs, Overlays, Data display, Feedback, Foundations and Hooks. Actions is gone (`Button` is in Inputs, the Page action bars are in Layout under `Page`), Theme and the icons are Foundations, and the hooks have a page of their own with runnable examples (they were a guide). `PageActionsBar`, `PageActionsMenu` and `PageFooterActions` are listed under `Page` and `CardRow` under `Card`; their pages link to the parent. The overview shows only top-level modules; a nested one appears under Parts on its parent's page, and the overview's search still finds it. The order lives in `scripts/docs-gen/categories.mjs`."
+          "text": "Docs: modules are grouped into Layout, Navigation, Typography, Inputs, Overlays, Data display, Feedback, Foundations and Hooks. Actions is gone (`Button` is in Inputs, the Page action bars are in Layout under `Page`), Theme and the icons are Foundations, and the hooks have pages of their own with runnable examples (they were a guide). `PageActionsBar`, `PageActionsMenu` and `PageFooterActions` are listed under `Page` and `CardRow` under `Card`; their pages link to the parent. The overview shows only top-level modules; a nested one appears under Parts on its parent's page, and the overview's search still finds it. The order lives in `scripts/docs-gen/categories.mjs`."
         },
         {
           "version": "0.7.0",
@@ -11408,6 +11486,14 @@
             "General"
           ],
           "text": "Docs site: props, token and recipe tables render through `Table`, and code through the library: example code, the import line and alias types are `CodeBlock`s, and markdown code blocks and inline code use `recipe.codeBlock` and `recipe.inlineCode` with `color.code` highlighting. Code blocks are padded `space.xl` everywhere (example code was `space.xxl`). Copy buttons on the site show Copied with a check, or Could not copy, in the button for 2 seconds and announce it in a status region, instead of a toast."
+        },
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "General"
+          ],
+          "text": "Docs: each hook has its own page in the Hooks section, `isStandalone` (`docs/hooks/is-standalone.md`), `useMinimizeOnScroll` (`docs/hooks/use-minimize-on-scroll.md`, with `EXPAND_AFTER`, `MINIMIZE_SPEED` and `MinimizeOnScroll`) and `usePullToRefresh` (`docs/hooks/use-pull-to-refresh.md`, with `PULL_THRESHOLD`, `PullPhase`, `PullState` and the indicator recipe), each with its own examples, types and changelog; `docs/hooks.md` and the `#/components/hooks` page are gone. Imports from `@korzun/design/hooks` are unchanged. `useModal` is listed under Hooks too, though it is still imported from `@korzun/design/control`."
         }
       ]
     },
@@ -12101,8 +12187,8 @@
     "ThemeSetting": "theme",
     "ThemeSettingProps": "theme-setting",
     "IconProps": "icon",
-    "MinimizeOnScroll": "hooks",
-    "PullState": "hooks",
-    "PullPhase": "hooks"
+    "MinimizeOnScroll": "use-minimize-on-scroll",
+    "PullState": "use-pull-to-refresh",
+    "PullPhase": "use-pull-to-refresh"
   }
 }

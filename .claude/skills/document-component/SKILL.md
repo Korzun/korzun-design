@@ -1,6 +1,6 @@
 ---
 name: document-component
-description: Use when documenting or migrating a korzun-design module's doc (docs/control, docs/component, theme, toast, icon) for the docs site, adding or fixing a module's examples/, or refreshing a module's doc, JSDoc and examples after its API was changed elsewhere.
+description: Use when documenting or migrating a korzun-design module's doc (docs/control, docs/component, docs/hooks, theme, toast, icon) for the docs site, adding or fixing a module's examples/, or refreshing a module's doc, JSDoc and examples after its API was changed elsewhere.
 ---
 
 # Document a component
@@ -12,7 +12,7 @@ every variant and state, and generated regions filled by `npm run docs:gen`.
 It documents the module's current API: component types and runtime code stay
 as they are (step 7 says what to do when they would need to change).
 
-Below, `<area>/<module>` is the module folder (`control/menu`), `<slug>` the
+Below, `<area>/<module>` is the module folder (`control/menu`, `hooks/use-pull-to-refresh`), `<slug>` the
 folder name (`menu`), `<Name>` the main exported value (`Menu`). For an
 entry-point module (`theme`, `toast`, `icon`) the doc is `docs/<area>.md`, the
 source `src/<area>/` and the slug `<area>`.
@@ -23,6 +23,7 @@ earlier runs fail review, and what to do instead.
 ## 0. Branch check
 
 The generator lives on `main`. Run `ls scripts/docs-gen/cli.mjs`.
+
 - It exists: continue.
 - It is missing: your branch predates it; rebase on `main` (or stop and report "branch has no docs generator").
 
@@ -50,9 +51,10 @@ row per prop and one row per type (`Type` alone in the first column); it goes
 in your final report:
 
 | Type.prop or Type | Old table note (verbatim, or "none") | JSDoc after | Default column shows ("–" for a type row) |
-|---|---|---|---|
+| ----------------- | ------------------------------------ | ----------- | ----------------------------------------- |
 
 Every rule below applies to type-level comments too. A finished JSDoc line is:
+
 - **On the prop itself.** Each clause of the old note (every behaviour, every "needs X", every "type error when Y", every "so Z works") appears on that prop's own `/** */`. The comment on an interface or type alias renders as a paragraph under that type's table heading; it carries only what is true of the type as a whole ("An item that navigates."). A clause that describes one prop (what it renders, needs or rejects) stays on that prop's JSDoc even when the type comment says it too: a merged union table (`MenuItem`, the one `items` links to) shows no type paragraph. A note about one prop that sits only in a type comment moves onto the prop: that is a comment-only change and allowed.
 - **Inherited member, note for this module only.** When the type is an intersection that inherits the member from another module's type (`PageActionItem = MenuActionItem & { … }` inherits `Icon`) and the note holds only here ("ignored by `PageActionsBar`'s primary Buttons"), put `@member <name> <note>` on this type's own comment. The generator appends the note to that member's row in this doc only; the other module's doc is unchanged. Never park the note on a sibling prop. A `@member` naming no member of the type fails `docs:gen`.
 - **Behaviour only, at most three sentences.** What it does, when it is ignored, what it flips to, what TypeScript rejects. No history ("as it has always looked", "since 0.3"), no naming rationale, no restated union values (the Type column lists them; describe only values that carry extra meaning, as Alert `tone` does for which ones are announced). A longer explanation lives in a Usage subsection and the JSDoc links to it.
@@ -67,20 +69,21 @@ Every rule below applies to type-level comments too. A finished JSDoc line is:
 Rewrite example (the Default column then shows `'medium'`):
 
 ```ts
-/** `'medium'` (default): regular height; `'small'`: compact, `'large'`: tall. */  // before
-/** Height and font size. `'small'` fits a table row. */                          // after
+/** `'medium'` (default): regular height; `'small'`: compact, `'large'`: tall. */ // before
+/** Height and font size. `'small'` fits a table row. */ // after
 ```
 
 ## 3. Doc file
 
 `docs/<area>/<slug>.md` is exactly these parts, in order:
 
-````md
+```md
 ---
 title: <Name>
 description: <one sentence; it becomes the AGENTS.md index note and the overview card>
 category: <the section scripts/docs-gen/categories.mjs lists the module under, verbatim>
 ---
+
 # <Name>
 
 <!-- generated:import -->
@@ -110,7 +113,7 @@ Use something else for: <job> (`OtherComponent`), <job> (`Other`).
 
 <!-- generated:changelog -->
 <!-- /generated:changelog -->
-````
+```
 
 - Usage and Do / don't: check every sentence against the code, the changelog lines and the docs of the modules it builds on (step 1). Rewrite each sentence that is now false; keep every other sentence word for word, characters included. List each rewritten sentence, old and new, in your report.
 - Short facts from the old Props section ("No `className`.", "Pass `value` and `onChange` together.") go in Usage, as a sentence in the `###` subsection whose subject they share, or a new subsection named for it (`### Styling`). A fact the generated import region already states ("props type exported as `MenuProps`") is dropped.
@@ -205,15 +208,15 @@ export default function Preview() {
 
 Coverage checklist (REQUIRED; fill in every row, it goes in your report). Each row names its example file:
 
-| What | Value | Example file |
-|---|---|---|
-| each union-typed prop (`type`, `tone`, `size`, `variant`, `side`, `align`, `surface`, `gap`, …) | every value, each visible on its own and labelled | |
-| each state the module has (`disabled`, `loading`, error, empty, read-only) | each, visible on its own and held: a state reached only briefly (a timer, an in-flight request) gets a toggle that keeps it on, and has its own shot | |
-| the old doc's main `## Example` | list every prop and item kind it uses (Menu: `align="end"`, link item, action item, `Icon`, `danger`, `separatorBefore`); one example contains all of them | |
-| the common composition with its usual neighbours (in a `Card`, `Modal`, form, row) | one | |
-| every interactive control wired to state with a visible effect | no do-nothing handler (grep above prints nothing, each handler read); each control's effect named | all |
-| each description sentence shown by its demo | checked, sentence by sentence | all |
-| examples follow this doc's and the used components' Usage and Do / don't | checked | all |
+| What                                                                                            | Value                                                                                                                                                      | Example file |
+| ----------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
+| each union-typed prop (`type`, `tone`, `size`, `variant`, `side`, `align`, `surface`, `gap`, …) | every value, each visible on its own and labelled                                                                                                          |              |
+| each state the module has (`disabled`, `loading`, error, empty, read-only)                      | each, visible on its own and held: a state reached only briefly (a timer, an in-flight request) gets a toggle that keeps it on, and has its own shot       |              |
+| the old doc's main `## Example`                                                                 | list every prop and item kind it uses (Menu: `align="end"`, link item, action item, `Icon`, `danger`, `separatorBefore`); one example contains all of them |              |
+| the common composition with its usual neighbours (in a `Card`, `Modal`, form, row)              | one                                                                                                                                                        |              |
+| every interactive control wired to state with a visible effect                                  | no do-nothing handler (grep above prints nothing, each handler read); each control's effect named                                                          | all          |
+| each description sentence shown by its demo                                                     | checked, sentence by sentence                                                                                                                              | all          |
+| examples follow this doc's and the used components' Usage and Do / don't                        | checked                                                                                                                                                    | all          |
 
 A union with many values (a `gap` scale, every `tone`) can be one example
 showing all values side by side, each labelled with its value.
@@ -233,22 +236,30 @@ site). If one turns up in the module, `git rm` it; examples replace it.
 
    Each block below is one Bash call; shell variables do not survive between calls, so the port and process id live in files and every call starts by setting `S` to your scratch directory (the same absolute path each time).
    Start the gallery on a free port, in its own process group:
+
    ```
    S=<scratch>; node -e "const s=require('net').createServer().listen(0,()=>{console.log(s.address().port);s.close()})" > $S/gallery.port
    PORT=$(cat $S/gallery.port); setsid npm run gallery -- --port $PORT --strictPort > $S/gallery.log 2>&1 & echo $! > $S/gallery.pid
    ```
+
    Wait for it:
+
    ```
    S=<scratch>; PORT=$(cat $S/gallery.port); for i in $(seq 1 60); do curl -s -o /dev/null http://localhost:$PORT/ && break; sleep 1; done; echo "gallery on $PORT"
    ```
+
    Shoot the whole page, light and dark (writes `<slug>-light.png` and `<slug>-dark.png`; it waits until every demo frame has loaded and sized itself):
+
    ```
    S=<scratch>; PORT=$(cat $S/gallery.port); node .claude/skills/document-component/shoot-page.mjs http://localhost:$PORT <slug> $S/<slug>.png
    ```
+
    Overlay shots (REQUIRED): one for **every** example that contains an overlay control (Menu, Select, Popover, Modal, ChipsInput, anything that opens a list or layer), each opened the way a reader opens it, light and dark:
+
    ```
    S=<scratch>; PORT=$(cat $S/gallery.port); node .claude/skills/document-component/open-overlay.mjs http://localhost:$PORT <slug> <example-slug> $S/<slug>-<example-slug>-open.png --click "<role>:<name>"
    ```
+
    `<example-slug>` is the example file name without `NN-` and `.tsx`. Steps run in order, one per reader action:
    - `--click "<role>:<name>"`: the element with that ARIA role and exact accessible name; a bare name means role `button`. A Select's trigger is `button:<its shown value or placeholder>`.
    - `--click "Open dialog" --click "Actions"`: a menu inside a dialog.
@@ -257,18 +268,20 @@ site). If one turns up in the module, `git rm` it; examples replace it.
    - `--press <key>`: `ArrowDown`, `Enter`, `Escape`, `Backspace`. It presses on whatever has focus, so a key after `--type` lands in that field.
    - A validity state that only typing reaches (invalid, too long) gets its own shot: the steps that reach it (`--type "textbox:abc"`, then `--press Backspace` if needed) are the held view.
    - `--width <px>` (both scripts) sets the browser width: `--width 390` to see the page as a phone does.
-   An example with several overlays gets one shot per overlay.
+     An example with several overlays gets one shot per overlay.
 
    Fill in this table; it goes in your report:
 
    | Example | Overlay | Steps | Shot paths (light, dark) | Fully visible? |
-   |---|---|---|---|---|
+   | ------- | ------- | ----- | ------------------------ | -------------- |
 
    View every PNG. Each example renders, is not empty, and is legible in dark. Each overlay is fully visible inside its frame. An overlay cut at the frame edge is a defect: fix the example (move the trigger, give the list room), or, when the example is right, report it under generator problems as a gallery defect with the shot path.
    Reshoot check (REQUIRED, last thing before the commit). With `<oldest>` the oldest PNG of your final set of shots:
+
    ```
    find src/<area>/<module> docs/<area>/<slug>.md -newer <oldest>
    ```
+
    (entry-point module: `find src/<area> docs/<area>.md -newer <oldest>`). It prints nothing. Anything it prints means reshoot that example's shots and the full page, then run it again. Run it again after every follow-up commit too (a review fix, a JSDoc tweak), right before you report, and quote its empty output in the report; a commit made after the last shots means reshooting first.
    Stop the server by its process group: `S=<scratch>; kill -- -$(cat $S/gallery.pid)`.
 
@@ -281,6 +294,7 @@ site). If one turns up in the module, `git rm` it; examples replace it.
 ## 8. Report
 
 Your report contains, in order:
+
 1. The JSDoc audit table from step 2 (every old note and where it lives now).
 2. The coverage checklist from step 4.
 3. Every Usage and Do / don't sentence you rewrote (old, new, why), and any you doubt but kept.

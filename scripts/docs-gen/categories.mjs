@@ -38,14 +38,14 @@ export const SECTIONS = Object.freeze([
       'field-list',
     ],
   },
-  { name: 'Overlays', modules: ['popover', 'menu', 'modal', 'confirm-modal', 'use-modal'] },
+  { name: 'Overlays', modules: ['popover', 'menu', 'modal', 'confirm-modal'] },
   { name: 'Data display', modules: ['tag', 'meta-line', 'table', 'code-block'] },
   {
     name: 'Feedback',
     modules: ['alert', 'error-message', 'toast', 'empty-state', 'progress-indicator', 'spinner'],
   },
   { name: 'Foundations', modules: ['theme', 'theme-setting', 'icon'] },
-  { name: 'Hooks', modules: ['hooks'] },
+  { name: 'Hooks', modules: ['is-standalone', 'use-minimize-on-scroll', 'use-pull-to-refresh', 'use-modal'] },
 ]);
 
 /** The section names, in display order. */

@@ -61,8 +61,8 @@ const grouped = (repo, area) => {
 export const listModules = (repo) => [
   ...grouped(repo, 'control'),
   ...grouped(repo, 'component'),
+  ...grouped(repo, 'hooks'),
   single(repo, 'theme'),
   single(repo, 'toast'),
   single(repo, 'icon'),
-  single(repo, 'hooks'),
 ];

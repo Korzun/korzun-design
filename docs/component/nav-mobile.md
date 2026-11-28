@@ -61,7 +61,7 @@ No `className`.
   dot if any hidden sibling has a badge.
 - Minimizing only reacts to user-driven scroll (after a touch or wheel on this
   route), so scroll restoration on navigation never minimizes it. Tuning
-  constants live in [hooks](../hooks.md) (`MINIMIZE_SPEED`, `EXPAND_AFTER`).
+  constants live in [`useMinimizeOnScroll`](../hooks/use-minimize-on-scroll.md) (`MINIMIZE_SPEED`, `EXPAND_AFTER`).
 - Hidden shapes are `inert` and `aria-hidden`; only what is on screen is in
   the tab order.
 - A side with `items: []` is a circle for good (Bookplate does this for a

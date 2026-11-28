@@ -31,10 +31,10 @@ describe('ChangelogPage', () => {
     for (const link of links) expect(link.getAttribute('href')).toBe('/components/button');
   });
 
-  it('links a hook tag to the Hooks page', () => {
+  it("links a hook tag to that hook's page", () => {
     mount();
     const [link] = screen.getAllByRole('link', { name: 'usePullToRefresh' });
-    expect(link!.getAttribute('href')).toBe('/components/hooks');
+    expect(link!.getAttribute('href')).toBe('/components/use-pull-to-refresh');
   });
 
   it('renders General and names with no page as plain chips', () => {
