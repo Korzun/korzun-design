@@ -45,7 +45,7 @@ export const SECTIONS = Object.freeze([
     modules: ['alert', 'error-message', 'toast', 'empty-state', 'progress-indicator', 'spinner'],
   },
   { name: 'Foundations', modules: ['theme', 'theme-setting', 'icon'] },
-  { name: 'Hooks', modules: ['is-standalone', 'use-minimize-on-scroll', 'use-pull-to-refresh', 'use-modal'] },
+  { name: 'Hooks', modules: ['use-is-standalone', 'use-minimize-on-scroll', 'use-pull-to-refresh', 'use-modal'] },
 ]);
 
 /** The section names, in display order. */

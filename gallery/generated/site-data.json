@@ -2089,14 +2089,14 @@
         "TopFadeProps"
       ],
       "importLine": "import { TopFade, type TopFadeProps } from '@korzun/design/component'",
-      "body": "A decorative, mobile-only scrim: a `position: fixed` frosted-glass band at the\ntop of the viewport, as tall as the status-bar safe-area inset plus\n`space.md`, that blurs content scrolling under the device status bar and fades\nto nothing below it (Safari style). It is `aria-hidden`,\n`pointer-events: none`, and hidden at `min-width: 641px`.\n\nUse something else for: a header or toolbar (`Page` header row / actions),\ndimming behind a modal (the modal's own backdrop).\n\n## Usage\n\n### When to render it\n\n- **Only in the installed (standalone) app**, gated with `isStandalone()` from\n  `@korzun/design/hooks`. In a browser tab the OS status bar is not drawn over\n  the page, `env(safe-area-inset-top)` is 0, and the band would be a thin\n  blurred strip with no purpose.\n- Once, in the layout route, not per page.\n- It sits at `theme.zIndex.header`: above page content, below the floating\n  controls and nav (`zIndex.sticky`).\n\n```tsx\n// Layout route for nav-bearing pages.\nexport const NavLayout = () => (\n  <>\n    <NavDesktop items={items} />\n    <NavMobile main={…} settings={…} expanded={…} />\n    {isStandalone() && (\n      <>\n        <TopFade />\n        <PullToRefreshIndicator /> {/* your own, built on usePullToRefresh */}\n      </>\n    )}\n    <Outlet />\n  </>\n);\n```\n\n### Behaviour\n\n- It takes no props and no `className`.\n- Its height comes from `env(safe-area-inset-top)`, which is non-zero only when\n  the page opts into the safe area (`<meta name=\"viewport\"\n  content=\"…, viewport-fit=cover\">`). Without that it is `space.md` tall.\n- The tail is deliberately short so chrome resting near the top edge\n  (`theme.layout.floatingControlTopBase`) is never drawn through the blur.\n  Don't place your own content in the first `space.md` below the inset.\n\n## Do / don't\n\n- Do gate it on `isStandalone()`.\n- Do render it once per app layout.\n- Don't use it as a visual header; it carries no content and ignores clicks.",
+      "body": "A decorative, mobile-only scrim: a `position: fixed` frosted-glass band at the\ntop of the viewport, as tall as the status-bar safe-area inset plus\n`space.md`, that blurs content scrolling under the device status bar and fades\nto nothing below it (Safari style). It is `aria-hidden`,\n`pointer-events: none`, and hidden at `min-width: 641px`.\n\nUse something else for: a header or toolbar (`Page` header row / actions),\ndimming behind a modal (the modal's own backdrop).\n\n## Usage\n\n### When to render it\n\n- **Only in the installed (standalone) app**, gated with `useIsStandalone()` from\n  `@korzun/design/hooks`. In a browser tab the OS status bar is not drawn over\n  the page, `env(safe-area-inset-top)` is 0, and the band would be a thin\n  blurred strip with no purpose.\n- Once, in the layout route, not per page.\n- It sits at `theme.zIndex.header`: above page content, below the floating\n  controls and nav (`zIndex.sticky`).\n\n```tsx\n// Layout route for nav-bearing pages.\nexport const NavLayout = () => {\n  const standalone = useIsStandalone();\n  return (\n    <>\n      <NavDesktop items={items} />\n      <NavMobile main={…} settings={…} expanded={…} />\n      {standalone && (\n        <>\n          <TopFade />\n          <PullToRefreshIndicator /> {/* your own, built on usePullToRefresh */}\n        </>\n      )}\n      <Outlet />\n    </>\n  );\n};\n```\n\n### Behaviour\n\n- It takes no props and no `className`.\n- Its height comes from `env(safe-area-inset-top)`, which is non-zero only when\n  the page opts into the safe area (`<meta name=\"viewport\"\n  content=\"…, viewport-fit=cover\">`). Without that it is `space.md` tall.\n- The tail is deliberately short so chrome resting near the top edge\n  (`theme.layout.floatingControlTopBase`) is never drawn through the blur.\n  Don't place your own content in the first `space.md` below the inset.\n\n## Do / don't\n\n- Do gate it on `useIsStandalone()`.\n- Do render it once per app layout.\n- Don't use it as a visual header; it carries no content and ignores clicks.",
       "examples": [
         {
           "file": "src/component/top-fade/examples/01-basic.tsx",
           "slug": "basic",
           "order": 1,
           "title": "Basic",
-          "description": "A frosted band fixed to the top of the viewport that blurs content under the\ndevice status bar and fades to nothing below it. Render it only in the\ninstalled app: the switch stands in for the `isStandalone()` check. A browser\nhas no status-bar inset, so the band is only `space.md` tall here: the striped\nstrip pinned to the top stands in for content scrolled up under it, and its top\nedge blurs while the switch is on.",
+          "description": "A frosted band fixed to the top of the viewport that blurs content under the\ndevice status bar and fades to nothing below it. Render it only in the\ninstalled app: the switch stands in for the `useIsStandalone()` check. A browser\nhas no status-bar inset, so the band is only `space.md` tall here: the striped\nstrip pinned to the top stands in for content scrolled up under it, and its top\nedge blurs while the switch is on.",
           "code": "import { Stack, Tag, Text, TopFade } from '@korzun/design/component';\nimport { Switch } from '@korzun/design/control';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\nimport { useState } from 'react';\n\nconst useStyles = createUseStyles((theme: Theme) => ({\n  // Page content that has scrolled up under the status bar, pinned there for the demo.\n  scrolled: {\n    position: 'fixed',\n    top: 0,\n    left: 0,\n    right: 0,\n    zIndex: theme.zIndex.base,\n    display: 'flex',\n    gap: theme.space.xs,\n    padding: theme.space.xs,\n    backgroundImage: `repeating-linear-gradient(90deg, ${theme.color.brand.default} 0 ${theme.space.xl}, ${theme.color.chip.subject.bg} ${theme.space.xl} ${theme.space.xxxxxl})`,\n  },\n  // Clear of the pinned strip.\n  content: { paddingTop: theme.space.xxxxxl },\n}));\n\nexport default function Basic() {\n  const styles = useStyles();\n  const [installed, setInstalled] = useState(true);\n  return (\n    <>\n      <div className={styles.scrolled}>\n        <Tag tone=\"author\">George Eliot</Tag>\n        <Tag tone=\"subject\">Fiction</Tag>\n      </div>\n      {installed && <TopFade />}\n      <Stack className={styles.content}>\n        <Text>Scrolled content under the band blurs, then fades to sharp below it.</Text>\n        <Switch\n          name=\"installed\"\n          label=\"Installed app\"\n          checked={installed}\n          onChange={setInstalled}\n        />\n      </Stack>\n    </>\n  );\n}\n",
           "viewport": "mobile"
         }
@@ -10841,47 +10841,55 @@
       "changelog": []
     },
     {
-      "id": "hooks/is-standalone",
-      "slug": "is-standalone",
+      "id": "hooks/use-is-standalone",
+      "slug": "use-is-standalone",
       "entry": "@korzun/design/hooks",
-      "docPath": "docs/hooks/is-standalone.md",
-      "title": "isStandalone",
+      "docPath": "docs/hooks/use-is-standalone.md",
+      "title": "useIsStandalone",
       "description": "True when running as the installed app (added to the home screen); gates install-only chrome.",
       "category": "Hooks",
       "values": [
-        "isStandalone"
+        "useIsStandalone"
       ],
       "types": [],
-      "importLine": "import { isStandalone } from '@korzun/design/hooks'",
-      "body": "True when running as the installed app (added to the home screen). Part of the\nmobile-chrome behaviour shared by the layout components, with\n[`useMinimizeOnScroll`](use-minimize-on-scroll.md) and\n[`usePullToRefresh`](use-pull-to-refresh.md).\n\n## Usage\n\n### `isStandalone()`\n\n```ts\nisStandalone(): boolean\n```\n\nTrue when running as an installed PWA (added to the home screen):\n`(display-mode: standalone)` matches, or iOS Safari's\n`navigator.standalone === true`. Not a hook; a plain function, safe to call\nduring render because the status can't change within a session. It touches\n`window`, so don't call it during server rendering.\n\nUse it to gate chrome that only makes sense when installed: `TopFade` and a\npull-to-refresh indicator ([`usePullToRefresh`](use-pull-to-refresh.md#a-pull-to-refresh-indicator)).\n\n## Do / don't\n\n- Do gate pull-to-refresh UI on `isStandalone()`; browser tabs have their own.",
+      "importLine": "import { useIsStandalone } from '@korzun/design/hooks'",
+      "body": "True when running as the installed app (added to the home screen). Part of the\nmobile-chrome behaviour shared by the layout components, with\n[`useMinimizeOnScroll`](use-minimize-on-scroll.md) and\n[`usePullToRefresh`](use-pull-to-refresh.md).\n\n## Usage\n\n### `useIsStandalone()`\n\n```ts\nuseIsStandalone(): boolean\n```\n\nTrue when running as an installed PWA (added to the home screen):\n`(display-mode: standalone)` matches, or iOS Safari's\n`navigator.standalone === true`. A hook: call it at the top of a component,\nnot inside a condition, loop or event handler, and pass the result down. It\nsubscribes to the display-mode query, so the component re-renders if the mode\nchanges. During server rendering it returns `false` without touching `window`;\non the client it corrects itself after hydration.\n\n```tsx\nconst standalone = useIsStandalone();\nreturn standalone ? <TopFade /> : null;\n```\n\nUse it to gate chrome that only makes sense when installed: `TopFade` and a\npull-to-refresh indicator ([`usePullToRefresh`](use-pull-to-refresh.md#a-pull-to-refresh-indicator)).\n\n## Do / don't\n\n- Do gate pull-to-refresh UI on `useIsStandalone()`; browser tabs have their own.\n- Don't call it inside `&&` or an `if`: read it once at the top, then branch on the value.",
       "examples": [
         {
-          "file": "src/hooks/is-standalone/examples/01-is-standalone.tsx",
-          "slug": "is-standalone",
+          "file": "src/hooks/use-is-standalone/examples/01-use-is-standalone.tsx",
+          "slug": "use-is-standalone",
           "order": 1,
-          "title": "isStandalone",
+          "title": "useIsStandalone",
           "description": "True only in the installed app (added to the home screen). Here, in a browser tab, it is\nfalse. Gate install-only chrome such as `TopFade` and a pull-to-refresh indicator on it.",
-          "code": "import { Card, Text } from '@korzun/design/component';\nimport { isStandalone } from '@korzun/design/hooks';\n\nexport default function IsStandalone() {\n  return (\n    <Card title=\"Installed app\">\n      <Text>\n        <code>isStandalone()</code> is {String(isStandalone())}\n      </Text>\n    </Card>\n  );\n}\n"
+          "code": "import { Card, Text } from '@korzun/design/component';\nimport { useIsStandalone } from '@korzun/design/hooks';\n\nexport default function IsStandalone() {\n  const standalone = useIsStandalone();\n  return (\n    <Card title=\"Installed app\">\n      <Text>\n        <code>useIsStandalone()</code> is {String(standalone)}\n      </Text>\n    </Card>\n  );\n}\n"
         }
       ],
       "preview": {
-        "file": "src/hooks/is-standalone/examples/preview.tsx",
+        "file": "src/hooks/use-is-standalone/examples/preview.tsx",
         "slug": "preview",
         "order": 0,
         "title": "Preview",
         "description": "",
-        "code": "import { Card, Text } from '@korzun/design/component';\nimport { isStandalone } from '@korzun/design/hooks';\n\nexport default function Preview() {\n  return (\n    <Card title=\"Installed app\">\n      <Text>\n        <code>isStandalone()</code> is {String(isStandalone())}\n      </Text>\n    </Card>\n  );\n}\n"
+        "code": "import { Card, Text } from '@korzun/design/component';\nimport { useIsStandalone } from '@korzun/design/hooks';\n\nexport default function Preview() {\n  const standalone = useIsStandalone();\n  return (\n    <Card title=\"Installed app\">\n      <Text>\n        <code>useIsStandalone()</code> is {String(standalone)}\n      </Text>\n    </Card>\n  );\n}\n"
       },
       "tables": [],
       "tokens": [],
       "changelog": [
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "useIsStandalone"
+          ],
+          "text": "**Breaking:** `isStandalone()` is now the hook `useIsStandalone()`, built on `useSyncExternalStore`. Call it at the top of a component and branch on its value (`const standalone = useIsStandalone();` then `{standalone && <TopFade />}`), not inside a condition or callback. It re-renders when the display mode changes and returns `false` during server rendering instead of throwing on `window`."
+        },
         {
           "version": "0.0.1",
           "date": "2026-11-15",
           "tags": [
             "useMinimizeOnScroll",
             "usePullToRefresh",
-            "isStandalone"
+            "useIsStandalone"
           ],
           "text": "Hooks: `useMinimizeOnScroll`, `usePullToRefresh`, `isStandalone`."
         }
@@ -10904,7 +10912,7 @@
         "MinimizeOnScroll"
       ],
       "importLine": "import { EXPAND_AFTER, MINIMIZE_SPEED, useMinimizeOnScroll, type MinimizeOnScroll } from '@korzun/design/hooks'",
-      "body": "Minimizes bottom chrome on a fast scroll down and expands it on the way back\nup, like the iOS tab bar. Part of the mobile-chrome behaviour shared by the\nlayout components, with [`isStandalone`](is-standalone.md) and\n[`usePullToRefresh`](use-pull-to-refresh.md). It reads the **window**\nscroller; it does nothing for content scrolling in an inner `overflow: auto`\nelement.\n\n## Usage\n\n### `useMinimizeOnScroll({ resetKey })`\n\n```ts\nuseMinimizeOnScroll({ resetKey }: { resetKey: string }): MinimizeOnScroll\ntype MinimizeOnScroll = { minimized: boolean; expand: () => void }\n```\n\niOS-tab-bar behaviour for bottom chrome. `NavMobile` already uses it; call it\nyourself only for other chrome.\n\n- Minimizes when one scroll frame moves **down** at `>= MINIMIZE_SPEED`\n  (`0.8` px/ms). Speed, not distance: slow reading never minimizes.\n- Expands after scrolling **up** `EXPAND_AFTER` (`12`) px back from the furthest-down point\n  reached since minimizing, on reaching the top, or when you call `expand()`.\n- Only user-driven scrolls count: it ignores scrolling until a `touchstart` or\n  `wheel` is seen after `resetKey` last changed (so scroll restoration doesn't\n  minimize it). Changing `resetKey` also expands. Pass the route's\n  `useLocation().key`.\n- iOS rubber-band overscroll (top and bottom) is clamped out.\n\n## Do / don't\n\n- Don't call `useMinimizeOnScroll` for the bar `NavMobile` already manages.\n- Don't expect it to track a nested scroll container.",
+      "body": "Minimizes bottom chrome on a fast scroll down and expands it on the way back\nup, like the iOS tab bar. Part of the mobile-chrome behaviour shared by the\nlayout components, with [`useIsStandalone`](use-is-standalone.md) and\n[`usePullToRefresh`](use-pull-to-refresh.md). It reads the **window**\nscroller; it does nothing for content scrolling in an inner `overflow: auto`\nelement.\n\n## Usage\n\n### `useMinimizeOnScroll({ resetKey })`\n\n```ts\nuseMinimizeOnScroll({ resetKey }: { resetKey: string }): MinimizeOnScroll\ntype MinimizeOnScroll = { minimized: boolean; expand: () => void }\n```\n\niOS-tab-bar behaviour for bottom chrome. `NavMobile` already uses it; call it\nyourself only for other chrome.\n\n- Minimizes when one scroll frame moves **down** at `>= MINIMIZE_SPEED`\n  (`0.8` px/ms). Speed, not distance: slow reading never minimizes.\n- Expands after scrolling **up** `EXPAND_AFTER` (`12`) px back from the furthest-down point\n  reached since minimizing, on reaching the top, or when you call `expand()`.\n- Only user-driven scrolls count: it ignores scrolling until a `touchstart` or\n  `wheel` is seen after `resetKey` last changed (so scroll restoration doesn't\n  minimize it). Changing `resetKey` also expands. Pass the route's\n  `useLocation().key`.\n- iOS rubber-band overscroll (top and bottom) is clamped out.\n\n## Do / don't\n\n- Don't call `useMinimizeOnScroll` for the bar `NavMobile` already manages.\n- Don't expect it to track a nested scroll container.",
       "examples": [
         {
           "file": "src/hooks/use-minimize-on-scroll/examples/01-minimize-on-scroll.tsx",
@@ -10952,7 +10960,7 @@
           "tags": [
             "useMinimizeOnScroll",
             "usePullToRefresh",
-            "isStandalone"
+            "useIsStandalone"
           ],
           "text": "Hooks: `useMinimizeOnScroll`, `usePullToRefresh`, `isStandalone`."
         }
@@ -10975,7 +10983,7 @@
         "PullState"
       ],
       "importLine": "import { PULL_THRESHOLD, usePullToRefresh, type PullPhase, type PullState } from '@korzun/design/hooks'",
-      "body": "Pull-down-to-refresh for the installed app; it reports a phase and an offset,\nand you draw the indicator. Part of the mobile-chrome behaviour shared by the\nlayout components, with [`isStandalone`](is-standalone.md) and\n[`useMinimizeOnScroll`](use-minimize-on-scroll.md). It reads the **window**\nscroller; it does nothing for content scrolling in an inner `overflow: auto`\nelement.\n\n## Usage\n\n### `usePullToRefresh(onRefresh, { enabled })`\n\n```ts\nusePullToRefresh(onRefresh: () => Promise<unknown>, options?: { enabled?: boolean }): PullState\ntype PullPhase = 'idle' | 'pulling' | 'armed' | 'refreshing'\ntype PullState = { phase: PullPhase; offset: number }\n```\n\nPull-down-to-refresh for the standalone app, which has no browser gesture. It\n**draws nothing**; you render an indicator from the returned state.\n\n- Measures the page's own rubber-band overscroll past the top while a finger is\n  down (`-window.scrollY`), so it works only where the browser rubber-bands\n  (iOS). It never cancels a touch.\n- `offset`: px of pull, capped at `PULL_THRESHOLD * 1.5` (105). `pulling` below\n  `PULL_THRESHOLD` (`70`), `armed` at or above it.\n- Releasing while armed calls `onRefresh` and holds `refreshing` with `offset`\n  pinned at `PULL_THRESHOLD` until the promise settles (resolve **or** reject),\n  then returns to `idle`. Release short of the threshold returns to `idle`.\n- Ignored: touches starting inside an open `<dialog>`, overscroll with no finger\n  down, new pulls while refreshing, and everything when `enabled: false`\n  (default `true`).\n- `onRefresh` is read through a ref; an inline closure is fine.\n- **`onRefresh` must return a promise.** A function returning `undefined`\n  throws on `.then` and leaves the phase stuck at `refreshing`. Use an `async`\n  function.\n\n### A pull-to-refresh indicator\n\n```tsx\n// An indicator for the installed app, mounted once in the layout.\nexport const PullToRefreshIndicator = () => {\n  const client = useApolloClient();\n  const refresh = useCallback(\n    () => client.refetchQueries({ include: 'active' }).then(() => undefined, () => undefined),\n    [client]\n  );\n  const { phase, offset } = usePullToRefresh(refresh);\n  const style = {\n    transform: `translateY(${offset}px)`,\n    opacity: Math.min(1, offset / PULL_THRESHOLD),\n  };\n  return (\n    <div style={style}>\n      {phase === 'refreshing'\n        ? <Spinner label=\"Refreshing\" />\n        : <ChevronIcon aria-hidden className={phase === 'armed' ? styles.up : styles.down} />}\n    </div>\n  );\n};\n\n{isStandalone() && <PullToRefreshIndicator />}\n```\n\n## Do / don't\n\n- Do gate pull-to-refresh UI on [`isStandalone()`](is-standalone.md); browser tabs have their own.\n- Do return a promise from `onRefresh` that settles even on failure.\n- Don't expect it to track a nested scroll container.",
+      "body": "Pull-down-to-refresh for the installed app; it reports a phase and an offset,\nand you draw the indicator. Part of the mobile-chrome behaviour shared by the\nlayout components, with [`useIsStandalone`](use-is-standalone.md) and\n[`useMinimizeOnScroll`](use-minimize-on-scroll.md). It reads the **window**\nscroller; it does nothing for content scrolling in an inner `overflow: auto`\nelement.\n\n## Usage\n\n### `usePullToRefresh(onRefresh, { enabled })`\n\n```ts\nusePullToRefresh(onRefresh: () => Promise<unknown>, options?: { enabled?: boolean }): PullState\ntype PullPhase = 'idle' | 'pulling' | 'armed' | 'refreshing'\ntype PullState = { phase: PullPhase; offset: number }\n```\n\nPull-down-to-refresh for the standalone app, which has no browser gesture. It\n**draws nothing**; you render an indicator from the returned state.\n\n- Measures the page's own rubber-band overscroll past the top while a finger is\n  down (`-window.scrollY`), so it works only where the browser rubber-bands\n  (iOS). It never cancels a touch.\n- `offset`: px of pull, capped at `PULL_THRESHOLD * 1.5` (105). `pulling` below\n  `PULL_THRESHOLD` (`70`), `armed` at or above it.\n- Releasing while armed calls `onRefresh` and holds `refreshing` with `offset`\n  pinned at `PULL_THRESHOLD` until the promise settles (resolve **or** reject),\n  then returns to `idle`. Release short of the threshold returns to `idle`.\n- Ignored: touches starting inside an open `<dialog>`, overscroll with no finger\n  down, new pulls while refreshing, and everything when `enabled: false`\n  (default `true`).\n- `onRefresh` is read through a ref; an inline closure is fine.\n- **`onRefresh` must return a promise.** A function returning `undefined`\n  throws on `.then` and leaves the phase stuck at `refreshing`. Use an `async`\n  function.\n\n### A pull-to-refresh indicator\n\n```tsx\n// An indicator for the installed app, mounted once in the layout.\nexport const PullToRefreshIndicator = () => {\n  const client = useApolloClient();\n  const refresh = useCallback(\n    () => client.refetchQueries({ include: 'active' }).then(() => undefined, () => undefined),\n    [client]\n  );\n  const { phase, offset } = usePullToRefresh(refresh);\n  const style = {\n    transform: `translateY(${offset}px)`,\n    opacity: Math.min(1, offset / PULL_THRESHOLD),\n  };\n  return (\n    <div style={style}>\n      {phase === 'refreshing'\n        ? <Spinner label=\"Refreshing\" />\n        : <ChevronIcon aria-hidden className={phase === 'armed' ? styles.up : styles.down} />}\n    </div>\n  );\n};\n\n// In the layout: const standalone = useIsStandalone();\n{standalone && <PullToRefreshIndicator />}\n```\n\n## Do / don't\n\n- Do gate pull-to-refresh UI on [`useIsStandalone()`](use-is-standalone.md); browser tabs have their own.\n- Do return a promise from `onRefresh` that settles even on failure.\n- Don't expect it to track a nested scroll container.",
       "examples": [
         {
           "file": "src/hooks/use-pull-to-refresh/examples/01-pull-to-refresh.tsx",
@@ -11030,7 +11038,7 @@
           "tags": [
             "useMinimizeOnScroll",
             "usePullToRefresh",
-            "isStandalone"
+            "useIsStandalone"
           ],
           "text": "Hooks: `useMinimizeOnScroll`, `usePullToRefresh`, `isStandalone`."
         }
@@ -11202,6 +11210,14 @@
       "version": "0.7.0",
       "date": "2026-11-26",
       "entries": [
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "useIsStandalone"
+          ],
+          "text": "**Breaking:** `isStandalone()` is now the hook `useIsStandalone()`, built on `useSyncExternalStore`. Call it at the top of a component and branch on its value (`const standalone = useIsStandalone();` then `{standalone && <TopFade />}`), not inside a condition or callback. It re-renders when the display mode changes and returns `false` during server rendering instead of throwing on `window`."
+        },
         {
           "version": "0.7.0",
           "date": "2026-11-26",
@@ -12085,7 +12101,7 @@
           "tags": [
             "useMinimizeOnScroll",
             "usePullToRefresh",
-            "isStandalone"
+            "useIsStandalone"
           ],
           "text": "Hooks: `useMinimizeOnScroll`, `usePullToRefresh`, `isStandalone`."
         },

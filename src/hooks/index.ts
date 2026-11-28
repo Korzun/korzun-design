@@ -1,4 +1,4 @@
-export { isStandalone } from './is-standalone/index.js';
+export { useIsStandalone } from './use-is-standalone/index.js';
 export {
   EXPAND_AFTER,
   MINIMIZE_SPEED,

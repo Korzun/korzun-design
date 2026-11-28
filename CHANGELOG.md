@@ -2,6 +2,7 @@
 
 ## 0.7.0 — 2026-11-26
 
+- [useIsStandalone] **Breaking:** `isStandalone()` is now the hook `useIsStandalone()`, built on `useSyncExternalStore`. Call it at the top of a component and branch on its value (`const standalone = useIsStandalone();` then `{standalone && <TopFade />}`), not inside a condition or callback. It re-renders when the display mode changes and returns `false` during server rendering instead of throwing on `window`.
 - [General] Docs generator: CHANGELOG tags that name a removed former name (`CardDivider`, `Dialog`, `useModalDialog`) resolve to the current name, so that history stays on the renamed module's page.
 - [TextInput] New `prefix`: a decorative icon component drawn inside the field's left end (`prefix={SearchIcon}`) in `text.muted`, with the text moved clear of it. It is hidden from screen readers and lets clicks through. With a clearing `action` it makes a search box (new Search field example).
 - [MetaLine] `separator=""` now counts as unset (gaps, no empty cells); a separator longer than one character logs a development-only console warning once, since it overflows its cell; the separator clip uses logical properties, so right-to-left lines clip and place the separator correctly.

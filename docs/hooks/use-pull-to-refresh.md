@@ -20,7 +20,7 @@ import {
 
 Pull-down-to-refresh for the installed app; it reports a phase and an offset,
 and you draw the indicator. Part of the mobile-chrome behaviour shared by the
-layout components, with [`isStandalone`](is-standalone.md) and
+layout components, with [`useIsStandalone`](use-is-standalone.md) and
 [`useMinimizeOnScroll`](use-minimize-on-scroll.md). It reads the **window**
 scroller; it does nothing for content scrolling in an inner `overflow: auto`
 element.
@@ -78,12 +78,13 @@ export const PullToRefreshIndicator = () => {
   );
 };
 
-{isStandalone() && <PullToRefreshIndicator />}
+// In the layout: const standalone = useIsStandalone();
+{standalone && <PullToRefreshIndicator />}
 ```
 
 ## Do / don't
 
-- Do gate pull-to-refresh UI on [`isStandalone()`](is-standalone.md); browser tabs have their own.
+- Do gate pull-to-refresh UI on [`useIsStandalone()`](use-is-standalone.md); browser tabs have their own.
 - Do return a promise from `onRefresh` that settles even on failure.
 - Don't expect it to track a nested scroll container.
 

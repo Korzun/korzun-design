@@ -75,7 +75,7 @@ test('hooks are one module per folder, each with its constants and types', () =>
     'useMinimizeOnScroll',
   ]);
   assert.deepEqual(byId('hooks/use-minimize-on-scroll').types, ['MinimizeOnScroll']);
-  assert.deepEqual(byId('hooks/is-standalone').values, ['isStandalone']);
+  assert.deepEqual(byId('hooks/use-is-standalone').values, ['useIsStandalone']);
   assert.equal(byId('hooks'), undefined);
 });
 

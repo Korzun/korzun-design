@@ -1,7 +1,7 @@
 /** Basic
  * A frosted band fixed to the top of the viewport that blurs content under the
  * device status bar and fades to nothing below it. Render it only in the
- * installed app: the switch stands in for the `isStandalone()` check. A browser
+ * installed app: the switch stands in for the `useIsStandalone()` check. A browser
  * has no status-bar inset, so the band is only `space.md` tall here: the striped
  * strip pinned to the top stands in for content scrolled up under it, and its top
  * edge blurs while the switch is on.

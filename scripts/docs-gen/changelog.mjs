@@ -62,6 +62,7 @@ export const FORMER_NAMES = {
   CardDivider: 'Divider',
   Dialog: 'Modal',
   useModalDialog: 'useModal',
+  isStandalone: 'useIsStandalone',
 };
 
 /** `versions` with each former-name tag replaced by its current name (deduplicated). */

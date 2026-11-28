@@ -1,12 +1,13 @@
 /** Preview */
 import { Card, Text } from '@korzun/design/component';
-import { isStandalone } from '@korzun/design/hooks';
+import { useIsStandalone } from '@korzun/design/hooks';
 
 export default function Preview() {
+  const standalone = useIsStandalone();
   return (
     <Card title="Installed app">
       <Text>
-        <code>isStandalone()</code> is {String(isStandalone())}
+        <code>useIsStandalone()</code> is {String(standalone)}
       </Text>
     </Card>
   );

@@ -18,9 +18,11 @@ const EXACT = {
   '~/icon': 'src/icon',
   '~/utils': 'src/utils',
   '~/test-utils': 'src/test-utils',
+  // Bookplate's plain function became the hook `useIsStandalone` here.
+  '~/lib/is-standalone': 'src/hooks/use-is-standalone',
 };
 
-const HOOKS = ['use-minimize-on-scroll', 'use-pull-to-refresh', 'is-standalone'];
+const HOOKS = ['use-minimize-on-scroll', 'use-pull-to-refresh'];
 
 // Returns the repo-root-relative target for a Bookplate alias, or null when it is not mapped.
 const resolveAlias = (specifier) => {

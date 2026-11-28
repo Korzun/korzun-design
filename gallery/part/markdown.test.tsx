@@ -178,7 +178,7 @@ describe('Markdown type scale', () => {
   });
 
   it('sizes inline code in em, so code in a heading takes the heading size', () => {
-    const { container } = mount('## `isStandalone()`\n\nUse `Stack`.');
+    const { container } = mount('## `useIsStandalone()`\n\nUse `Stack`.');
     expect(getComputedStyle(container.querySelector('h2 code')!).fontSize).toBe('0.875em');
     expect(getComputedStyle(container.querySelector('p code')!).fontSize).toBe('0.875em');
   });

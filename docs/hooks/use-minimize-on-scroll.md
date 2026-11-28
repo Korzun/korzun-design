@@ -20,7 +20,7 @@ import {
 
 Minimizes bottom chrome on a fast scroll down and expands it on the way back
 up, like the iOS tab bar. Part of the mobile-chrome behaviour shared by the
-layout components, with [`isStandalone`](is-standalone.md) and
+layout components, with [`useIsStandalone`](use-is-standalone.md) and
 [`usePullToRefresh`](use-pull-to-refresh.md). It reads the **window**
 scroller; it does nothing for content scrolling in an inner `overflow: auto`
 element.
