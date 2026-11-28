@@ -140,8 +140,8 @@ export interface Theme {
       entryType: { text: string; bg: string; border: string };
       user: { text: string; bg: string; border: string };
       rating: { text: string; bg: string; border: string };
-      // Quiet grey for states that carry no category (e.g. "no change"), built
-      // from the mode's muted text colour.
+      // Quiet grey for states that carry no category (e.g. "no change"): a tint
+      // of the mode's muted text colour, with text a step stronger for 4.5:1.
       neutral: { text: string; bg: string; border: string };
       // Status tones for state, as opposed to the label tones above.
       success: { text: string; bg: string; border: string };
@@ -334,8 +334,10 @@ function buildTheme(mode: ThemeMode): Theme {
       },
       user: { text: '#a23a95', bg: 'rgba(162,58,149,0.08)', border: 'rgba(162,58,149,0.22)' },
       rating: { text: '#b5451b', bg: 'rgba(181,69,27,0.08)', border: 'rgba(181,69,27,0.22)' },
+      // Text a step darker than the muted grey it is built from: muted itself
+      // was 4.0:1 on its own tint over `cardHeader`, under AA at chip size.
       neutral: {
-        text: gray[600],
+        text: '#5E5E5E',
         bg: applyTransparency(gray[600], 0.08),
         border: applyTransparency(gray[600], 0.22),
       },
@@ -450,7 +452,9 @@ function buildTheme(mode: ThemeMode): Theme {
       rating: { text: '#F2A07B', bg: 'rgba(181,69,27,0.18)', border: 'rgba(181,69,27,0.32)' },
       // Dark chips run stronger alphas (0.16 / 0.30) than light (0.08 / 0.22).
       neutral: {
-        text: darkMuted,
+        // `text.description`, a step lighter than muted: muted was 4.47:1 on
+        // its own tint over `page`, under AA at chip size.
+        text: '#A8ADB6',
         bg: applyTransparency(darkMuted, 0.16),
         border: applyTransparency(darkMuted, 0.3),
       },

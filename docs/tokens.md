@@ -23,7 +23,7 @@ Surfaces, text, borders and state colours, mode-aware. Keys are grouped as follo
 - `color.brand`: `default hover active light outline loading loadingHover loadingActive linkHover`
 - `color.danger`: `default hover active light outline loading loadingHover loadingActive`
 - `color.overlay`: `backdrop`
-- `color.chip`: thirteen tinted colourways, each `{ text, bg, border }`. Status tones: `success warning danger info neutral`. Label tones: `status author series subject book entryType user rating` (the `status` label tone is not a status tone). See Slated for curation.
+- `color.chip`: thirteen tinted colourways, each `{ text, bg, border }`. Status tones: `success warning danger info neutral`. Label tones: `status author series subject book entryType user rating` (the `status` label tone is not a status tone). `neutral` text holds 4.5:1 on its own tint over `page`, `card` and `cardHeader` in both modes. See Slated for curation.
 
 ## space
 
