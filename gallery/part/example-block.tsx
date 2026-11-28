@@ -8,6 +8,7 @@ import { anchor } from '../../scripts/docs-gen/slug.mjs';
 import type { ExampleInfo } from '../../scripts/docs-gen/types.js';
 import type { ExampleOwner } from '../data.js';
 import { frameSrc, MOBILE_WIDTH, SCREEN_HEIGHT, useFrameTheme } from '../frame-url.js';
+import { tapTarget } from '../layout/tap-target.js';
 import { codeBlock, PROSE_WIDTH } from '../layout/type.js';
 import { isHeightMessage } from '../messages.js';
 import { CopyButton } from './copy-button.js';
@@ -49,6 +50,8 @@ const useStyle = createUseStyles((theme: Theme) => ({
     backgroundColor: theme.color.bg.cardHeader,
     ...codeBlock(theme),
   },
+  // "Show code" is a text-height link: on a phone its hit area grows to 44px.
+  toggle: tapTarget(theme),
 }));
 
 export type ExampleBlockProps = {
@@ -132,6 +135,7 @@ export const ExampleBlock = ({ owner, example, headingId }: ExampleBlockProps) =
           <Inline gap="md" wrap>
             <Button
               type="link"
+              className={styles.toggle}
               ariaExpanded={showCode}
               ariaControls={codeId}
               onClick={() => setShowCode((s) => !s)}
