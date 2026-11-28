@@ -17,7 +17,7 @@ Surfaces, text, borders and state colours, mode-aware. Keys are grouped as follo
 - `color.blue`: primitive palette, steps `50 100 200 300 400 500 600 700 800`. Identical in both modes.
 - `color.red`: primitive palette, steps `50 100 300 400 500 600 700`. Identical in both modes.
 - `color.text`: `primary secondary muted faint onPrimary onDanger description`
-- `color.bg`: `page card cardHeader track input footer glass glassFallback glassActive selected hover success placeholder`. `track` must read against both `page` and `card`; `hover` is a translucent scrim; `glass*` feed `recipe.glass`.
+- `color.bg`: `page card cardHeader track switchOff input footer glass glassFallback glassActive selected hover success placeholder`. `track` must read against both `page` and `card`; `switchOff` is an unchecked Switch track, 3:1 on `page`, `card` and `cardHeader`; `hover` is a translucent scrim; `glass*` feed `recipe.glass`.
 - `color.border`: `default strong light focus hover danger glass glassActive faint loading success section`
 - `color.success`, `color.warning`, `color.info`: a single value each.
 - `color.brand`: `default hover active light outline loading loadingHover loadingActive linkHover`

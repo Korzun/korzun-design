@@ -74,6 +74,12 @@ export interface Theme {
        * rail invisible on the page.
        */
       track: string;
+      /**
+       * An unchecked Switch's track. Mid-grey rather than a border colour: it
+       * has to hold 3:1 against `page`, `card` and `cardHeader` (the shaded
+       * row a switch usually sits in) in both modes.
+       */
+      switchOff: string;
       input: string;
       footer: string;
       glass: string;
@@ -260,6 +266,8 @@ function buildTheme(mode: ThemeMode): Theme {
       // Unchanged from the `cardHeader` this used to borrow: in light mode the
       // track was already a step darker than the page, so light renders as before.
       track: gray[100],
+      // 3.1:1 on cardHeader, 3.4:1 on page, 3.5:1 on card.
+      switchOff: '#868686',
       input: '#FFFFFF',
       footer: gray[100],
       glass: applyTransparency('#FFFFFF', 0.6),
@@ -374,6 +382,8 @@ function buildTheme(mode: ThemeMode): Theme {
       // colliding with the lens. Raising it instead keeps the same ~8-per-channel
       // separation light mode has, in the only direction that is still free.
       track: '#2C2D31',
+      // 3.3:1 on page and cardHeader, 3.7:1 on card.
+      switchOff: '#6E7480',
       input: '#1A1B1E',
       footer: '#232427',
       glass: applyTransparency('#1C1C1E', 0.6),

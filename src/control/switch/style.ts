@@ -60,7 +60,9 @@ export const useStyle = createUseStyles((theme: Theme) => ({
     position: 'relative',
     width: '28px',
     height: '16px',
-    backgroundColor: theme.color.border.default,
+    // `bg.switchOff`, not a border grey: the old `border.default` was 1.16:1
+    // on a shaded row, so an unchecked switch all but vanished there.
+    backgroundColor: theme.color.bg.switchOff,
     ...theme.recipe.focusRing,
     transitionProperty: 'background-color, outline-color',
     transitionDuration: '0.1s',
@@ -123,11 +125,10 @@ export const useStyle = createUseStyles((theme: Theme) => ({
     // which `disabled` already says by fading to 40%. Only the cursor and the
     // thumb change.
     cursor: 'progress',
-    // `currentColor` for the spinner: muted against the pale unchecked track,
-    // white against the saturated checked one. A single colour would vanish
-    // into one of the two.
-    color: theme.color.text.muted,
-    '&$checked': { color: theme.color.bg.input },
+    // `currentColor` for the spinner: the thumb's own colour, which both the
+    // mid-grey unchecked track and the saturated checked one are built to
+    // carry.
+    color: theme.color.bg.input,
   },
 
   label: {
