@@ -2,9 +2,9 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** `MetaLine` draws both the dotted line and the labelled-pairs look; `MetadataList` becomes a deprecated alias of it.
+**Goal:** `MetaLine` draws both the dotted line and the labelled-pairs look; `MetadataList` is removed.
 
-**Architecture:** `src/component/meta-line` gains labelled items and an optional `separator` character (gap look when unset). The `metadata` and `metadata-list` folders go; their alias lives in `meta-line`.
+**Architecture:** `src/component/meta-line` gains labelled items and an optional `separator` character (gap look when unset). The `metadata` and `metadata-list` folders and `theme.size.metadataValue` go, with no alias.
 
 **Tech Stack:** React 19, react-jss, Vitest + Testing Library, docs generator `scripts/docs-gen`, oxfmt.
 
@@ -18,14 +18,13 @@
 - After API/JSDoc/example/CHANGELOG changes: `npx oxfmt <files>`, `npm run docs:gen`. Before each commit: focused tests and `npm run lint`.
 - Separator: one character, drawn by CSS in a `1em` cell, never in DOM text; any string (including `"`, `\`, newline) is escaped for CSS `content`.
 - No separator: `columnGap: theme.space.lg`, `rowGap: theme.space.sm`, no `::before`.
-- Deprecated names follow the `CardDivider` → `Divider` pattern (`src/component/divider/index.tsx`): `/** @deprecated … */` JSDoc on alias exports.
 
 ## Review Focus
 
 1. A pair whose `value` is `null`/`undefined`/`false` is skipped; `0` and `''` are kept (Task 1 test).
 2. A separator of `'"'` or `'\\'` renders as that character and does not break the stylesheet (Task 1 test).
 3. Mixed plain items and pairs in one line, with and without a separator (Task 1 test).
-4. `MetadataList` alias keeps its old look: labels, gaps, `sm` text (Task 2 test).
+4. Nothing in `src`, `docs`, `gallery`, `scripts` or `AGENTS.md` still names `MetadataList`, `Metadata` (the type) or `metadataValue`, except CHANGELOG history (Task 2 grep).
 5. React keys: two pairs sharing a label or holding elements don't warn (Task 1 test, spy `console.error`).
 
 ---
@@ -55,16 +54,14 @@ JSDoc on every field. A pair is detected as a non-null, non-element object with 
 - [ ] **Step 4:** Examples: update `01-basic`… to pass `separator="·"` where they show the dotted line; add `05-labelled-pairs.tsx` (Bookplate device: Slug, Cover size, Grayscale cover, Status `Tag`) and `06-separator-choices.tsx` (`·`, `|`, `/`). Preview: one dotted line and one labelled line. Doc: Usage covers both looks, `separator`, pairs, skipping, wrapping/ellipsis; Do/don't (use a `Table` for many fields). CHANGELOG: `- [MetaLine] **Breaking:** without \`separator\` the items are spaced by gaps, not dots; pass \`separator="·"\` for the old look. New labelled items (\`{ label, value }\`), shown with a faint capitalized label, and \`separator\` takes any one character. Absorbs \`MetadataList\`.`
 - [ ] **Step 5:** oxfmt, docs:gen, `npx vitest run src/component/meta-line gallery/examples.test.tsx`, `npm run test:scripts`, lint; commit `feat(meta-line): labelled items and an optional separator character`.
 
-### Task 2: MetadataList becomes a deprecated alias of MetaLine
+### Task 2: Remove MetadataList
 
-**Files:** Delete `src/component/metadata/`, `src/component/metadata-list/` (move any example worth keeping into meta-line examples first), `docs/component/metadata-list.md`. Modify `src/component/meta-line/index.tsx` (alias), `src/component/index.ts`, `scripts/docs-gen/categories.mjs` (drop `metadata-list`), `scripts/docs-gen/inventory.test.mjs:54-55` (no `metadata-list` module), `AGENTS.md`, `scripts/smoke-exports.sh`, `src/theme/theme.ts` (`size.metadataValue` JSDoc `@deprecated`), `CHANGELOG.md`, any `docs/**/*.md` non-generated text linking `metadata-list.md` (grep).
+**Files:** Delete `src/component/metadata/`, `src/component/metadata-list/`, `docs/component/metadata-list.md`. Modify `src/component/index.ts`, `scripts/docs-gen/categories.mjs` (drop `metadata-list`), `scripts/docs-gen/inventory.test.mjs:54-55` (no `metadata-list` module; keep the check that no internal folder is listed), `AGENTS.md`, `scripts/smoke-exports.sh`, `src/theme/theme.ts` (remove `size.metadataValue`, and the `size` group if empty; its tests), `CHANGELOG.md`, any non-generated `docs/**/*.md` text or gallery code naming them (grep).
 
-**Interfaces — Consumes:** `MetaLine`, `MetaLineItem` (Task 1). **Produces:** deprecated `MetadataList({ metadata }: MetadataListProps)`, `type Metadata = { title: string; value: ReactNode }`, `MetadataListProps = { metadata: Metadata[] }`, exported from `meta-line` and the barrel.
-
-- [ ] **Step 1: Failing test** in `src/component/meta-line/index.test.tsx`: `MetadataList (deprecated) renders MetaLine pairs in the old look` — `metaItems` equals label+value texts; no separator; root computed `fontSize` = `lightTheme.fontSize.sm`, color `lightTheme.color.text.primary`; a pair with `value: null` is skipped.
-- [ ] **Step 2:** run, fails.
-- [ ] **Step 3:** Implement the alias with `@deprecated` JSDoc pointing at `MetaLine`; delete the old folders; update barrel, categories, inventory test, AGENTS.md (index line and imports row), smoke probe, theme JSDoc, links. CHANGELOG: `- [MetadataList] Deprecated: use \`MetaLine\` with \`{ label, value }\` items. It now renders \`MetaLine\`: the 15rem cap on each value is gone, and a pair with an empty value is skipped.`
-- [ ] **Step 4:** oxfmt, docs:gen, `npm test`, `npm run lint`, `npm run smoke`; screenshot `#/components/meta-line` at 1440 and 390 (light, dark) on the dev server at 5207 and check both looks. Commit `feat(meta-line): MetadataList is a deprecated alias of MetaLine`.
+- [ ] **Step 1:** Delete and update the files above; the theme tests change only where they asserted `size`.
+- [ ] **Step 2:** `grep -rn "MetadataList\|metadataValue\|metadata-list" src docs gallery scripts AGENTS.md` finds nothing outside `CHANGELOG.md`, `docs/superpowers/` and generated changelog regions.
+- [ ] **Step 3:** CHANGELOG: `- [MetadataList] **Breaking:** removed; use \`MetaLine\` with \`{ label, value }\` items (no \`separator\` for the gap look).` and `- [lightTheme, darkTheme] **Breaking:** \`size.metadataValue\` is removed (MetadataList was its only user).`
+- [ ] **Step 4:** oxfmt, docs:gen, `npm test`, `npm run lint`, `npm run smoke`; screenshot `#/components/meta-line` at 1440 and 390 (light, dark) on the dev server at 5207 and check both looks. Commit `feat!: remove MetadataList; MetaLine covers labelled pairs`.
 
 ### Task 3: PR
 

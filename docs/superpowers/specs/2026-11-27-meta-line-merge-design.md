@@ -43,26 +43,27 @@ them).
   MetadataList's 15rem cap on each value goes.
 - `className` on the root, as today.
 
-## Removed / deprecated
+## Removed
 
-- `MetadataList` and its `Metadata` item type and `MetadataListProps` stay as
-  deprecated aliases exported from the meta-line module: `MetadataList`
-  renders `MetaLine` with `{ label: title, value }` items, no separator, and
-  `fontSize.sm` + `text.primary` (its old look, minus the 15rem cap).
+The owner: "Drop MetadataList completely. We are still pre 1.0." So:
+
+- `MetadataList`, `MetadataListProps` and the `Metadata` item type are removed,
+  with no deprecated alias.
 - The `metadata` and `metadata-list` folders and `docs/component/metadata-list.md`
-  are removed; `metadata-list` leaves `categories.mjs`; the MetadataList
-  examples move into MetaLine's examples (as labelled-pair examples).
-- `theme.size.metadataValue` becomes unused; keep the token, mark its JSDoc
-  `@deprecated` (removing a theme key is a separate breaking change nobody
-  asked for).
+  are removed; `metadata-list` leaves `categories.mjs`; its examples become
+  MetaLine labelled-pair examples.
+- `theme.size.metadataValue` (used only by MetadataList) is removed, and with it
+  the `size` group if it is then empty.
 
 ## Breaking
 
 - `MetaLine` without `separator` now shows gaps, not dots. Callers that want
   dots pass `separator="·"` (Bookplate's five rows on migration).
 - A labelled pair with an empty value no longer renders its label.
-- CHANGELOG under 0.7.0: `[MetaLine] **Breaking:** …` and
-  `[MetadataList] Deprecated: …`.
+- `MetadataList` is gone: use `MetaLine` with `{ label, value }` items.
+- `theme.size.metadataValue` is gone.
+- CHANGELOG under 0.7.0: `[MetaLine] **Breaking:** …`, `[MetadataList] **Breaking:** removed …`,
+  `[lightTheme, darkTheme] **Breaking:** …`.
 
 ## Left to the builder
 
