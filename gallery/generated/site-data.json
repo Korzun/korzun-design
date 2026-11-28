@@ -9934,7 +9934,7 @@
             },
             {
               "name": "color",
-              "type": "{ gray, blue, red, text, bg, border, success, warning, info, brand, danger, overlay, chip }",
+              "type": "{ gray, blue, red, text, bg, border, success, warning, info, brand, danger, overlay, code, chip }",
               "required": true,
               "description": ""
             },
@@ -9982,7 +9982,7 @@
             },
             {
               "name": "recipe",
-              "type": "{ input, focusRing, label, spinner, glass, glassHighlight, row, modal, card }",
+              "type": "{ input, focusRing, label, spinner, glass, glassHighlight, row, codeBlock, inlineCode, codeColours, modal, card }",
               "required": true,
               "description": ""
             },
@@ -10042,6 +10042,15 @@
       ],
       "tokens": [],
       "changelog": [
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "lightTheme",
+            "darkTheme"
+          ],
+          "text": "New `color.code` palette (foreground, keyword, string, function, parameter, constant, punctuation, comment, link) for syntax colours, and `recipe.codeBlock`, `recipe.inlineCode` and `recipe.codeColours` (the ten `--code-*` variables Shiki's css-variables theme reads, from `color.code`) for code rendered outside `CodeBlock` and `Code`."
+        },
         {
           "version": "0.7.0",
           "date": "2026-11-26",
@@ -10536,6 +10545,15 @@
             "General"
           ],
           "text": "Docs generator: CHANGELOG tags that name a removed former name (`CardDivider`, `Dialog`, `useModalDialog`) resolve to the current name, so that history stays on the renamed module's page."
+        },
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "lightTheme",
+            "darkTheme"
+          ],
+          "text": "New `color.code` palette (foreground, keyword, string, function, parameter, constant, punctuation, comment, link) for syntax colours, and `recipe.codeBlock`, `recipe.inlineCode` and `recipe.codeColours` (the ten `--code-*` variables Shiki's css-variables theme reads, from `color.code`) for code rendered outside `CodeBlock` and `Code`."
         },
         {
           "version": "0.7.0",

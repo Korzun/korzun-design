@@ -131,6 +131,27 @@ export interface Theme {
       loadingActive: string;
     };
     overlay: { backdrop: string };
+    /** Syntax colours for highlighted code; each reads on `bg.cardHeader` in its mode. */
+    code: {
+      /** Plain code and anything no token colours. */
+      foreground: string;
+      /** Keywords (`const`, `import`, `return`). */
+      keyword: string;
+      /** String and template literals. */
+      string: string;
+      /** Function and method names. */
+      function: string;
+      /** Parameters and properties. */
+      parameter: string;
+      /** Constants, numbers and booleans. */
+      constant: string;
+      /** Brackets, commas and operators. */
+      punctuation: string;
+      /** Comments. */
+      comment: string;
+      /** Links and URLs. */
+      link: string;
+    };
     chip: {
       status: { text: string; bg: string; border: string };
       author: { text: string; bg: string; border: string };
@@ -231,6 +252,22 @@ export interface Theme {
     glassHighlight: Recipe;
     /** The shaded field row (`bg.cardHeader`, `md` corners) a control sits in inside a card. */
     row: Recipe;
+    /**
+     * A block of code: `bg.cardHeader` box, mono text, scrolls sideways. For HTML not
+     * rendered through `CodeBlock`/`Code`; carries the in-surface look: no dark-mode page edge.
+     */
+    codeBlock: Recipe;
+    /**
+     * A code span in running text. For HTML not rendered through `CodeBlock`/`Code`;
+     * carries the in-surface look: no dark-mode page edge.
+     */
+    inlineCode: Recipe;
+    /**
+     * The `--code-*` CSS variables Shiki's css-variables theme (`variablePrefix: '--code-'`)
+     * reads, set from `color.code`: spread it on a wrapper of highlighted code rendered
+     * outside `CodeBlock` (which sets them itself), such as HTML from markdown.
+     */
+    codeColours: Recipe;
     modal: {
       dialog: Recipe;
       header: Recipe;
@@ -246,7 +283,7 @@ export interface Theme {
 
 // ─── Build defaults ───
 function buildTheme(mode: ThemeMode): Theme {
-  const lightColor: Theme['color'] = {
+  const lightColor: Omit<Theme['color'], 'code'> = {
     gray,
     blue,
     red,
@@ -361,7 +398,7 @@ function buildTheme(mode: ThemeMode): Theme {
   };
 
   const darkMuted = '#9CA1AB';
-  const darkColor: Theme['color'] = {
+  const darkColor: Omit<Theme['color'], 'code'> = {
     gray,
     blue,
     red,
@@ -477,7 +514,22 @@ function buildTheme(mode: ThemeMode): Theme {
     },
   };
 
-  const color: Theme['color'] = mode === 'dark' ? darkColor : lightColor;
+  const baseColor = mode === 'dark' ? darkColor : lightColor;
+  const { chip, text, brand } = baseColor;
+  const color: Theme['color'] = {
+    ...baseColor,
+    code: {
+      foreground: text.primary,
+      keyword: chip.status.text,
+      string: chip.author.text,
+      function: chip.series.text,
+      parameter: chip.subject.text,
+      constant: chip.entryType.text,
+      punctuation: text.secondary,
+      comment: text.muted,
+      link: brand.default,
+    },
+  };
 
   const space: Theme['space'] = {
     xxxs: '0.1rem',
@@ -655,6 +707,36 @@ function buildTheme(mode: ThemeMode): Theme {
       backgroundColor: color.bg.cardHeader,
       borderRadius: radius.md,
       padding: `${space.md} ${space.lg} ${space.md} ${space.sm}`,
+    },
+    codeBlock: {
+      margin: 0,
+      padding: space.xl,
+      overflowX: 'auto',
+      fontFamily: fontFamily.mono,
+      fontSize: fontSize.md,
+      lineHeight: 1.5,
+      borderRadius: radius.md,
+      backgroundColor: color.bg.cardHeader,
+    },
+    inlineCode: {
+      fontFamily: fontFamily.mono,
+      fontSize: '0.875em',
+      padding: `0 ${space.xxs}`,
+      borderRadius: radius.sm,
+      backgroundColor: color.bg.cardHeader,
+      overflowWrap: 'break-word',
+    },
+    codeColours: {
+      '--code-foreground': color.code.foreground,
+      '--code-token-keyword': color.code.keyword,
+      '--code-token-string': color.code.string,
+      '--code-token-string-expression': color.code.string,
+      '--code-token-function': color.code.function,
+      '--code-token-parameter': color.code.parameter,
+      '--code-token-constant': color.code.constant,
+      '--code-token-punctuation': color.code.punctuation,
+      '--code-token-comment': color.code.comment,
+      '--code-token-link': color.code.link,
     },
     modal: {
       dialog: {
