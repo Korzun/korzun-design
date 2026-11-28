@@ -5,7 +5,7 @@ import { useMemo, type MouseEvent } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 
 import { anchor } from '../../scripts/docs-gen/slug.mjs';
-import { codeBlock, inlineCode, PROSE_WIDTH } from '../layout/type.js';
+import { codeBlock, inlineCode, pageCodeEdge, PROSE_WIDTH } from '../layout/type.js';
 import { highlight, useHighlightStyle } from './highlight.js';
 
 // Schemes a rendered link may use; any other (`javascript:`, `data:`) becomes `#`.
@@ -158,7 +158,10 @@ const useStyle = createUseStyles((theme: Theme) => ({
       // A box on the page background.
       borderRadius: theme.radius.lg,
       backgroundColor: theme.color.bg.cardHeader,
+      ...pageCodeEdge(theme),
     },
+    // Inline code here sits on the page too, so it takes the same edge.
+    '& :not(pre) > code': pageCodeEdge(theme),
     // The block sets the size; its code is not an inline span.
     '& pre code': {
       fontSize: 'inherit',

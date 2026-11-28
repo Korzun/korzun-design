@@ -35,3 +35,13 @@ export const inlineCode = (theme: Theme) => ({
   backgroundColor: theme.color.bg.cardHeader,
   overflowWrap: 'break-word' as const,
 });
+
+/**
+ * The edge of a code box on the page. In dark, `bg.cardHeader` is 1.01:1 on
+ * `bg.page`, so the box draws a `border.default` hairline; inset, so the box
+ * keeps light mode's size, where the fill alone is a visible step.
+ */
+export const pageCodeEdge = (theme: Theme) =>
+  theme.colorScheme === 'dark'
+    ? { boxShadow: `inset 0 0 0 1px ${theme.color.border.default}` }
+    : {};

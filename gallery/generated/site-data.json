@@ -10477,6 +10477,14 @@
             "darkTheme"
           ],
           "text": "`color.chip.neutral` text is a step stronger, so a neutral Tag or chip holds 4.5:1 on its tint over `bg.page`, `bg.card` and `bg.cardHeader`: light `#5E5E5E` (was `#6E6E6E`, 4.0:1 over `cardHeader`), dark `#A8ADB6`, the mode's `text.description` (was `#9CA1AB`, 4.47:1 over `page`). Fill and border are unchanged."
+        },
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "General"
+          ],
+          "text": "Docs site, dark and phones: code blocks and inline code on the page draw a `border.default` edge in dark, where their fill was 1.01:1 on the page; the \"–\" for an empty props or token cell is muted, not faint (3.7:1)."
         }
       ]
     },
