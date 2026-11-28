@@ -1,10 +1,10 @@
-/** In a Dialog
- * A popover whose anchor is inside an open Dialog renders into that dialog, so
- * it shows above the backdrop. Escape closes the popover first and the Dialog
+/** In a Modal
+ * A popover whose anchor is inside an open Modal renders into that dialog, so
+ * it shows above the backdrop. Escape closes the popover first and the Modal
  * on the next press.
  */
 import { Stack, Text } from '@korzun/design/component';
-import { Button, Dialog, Popover } from '@korzun/design/control';
+import { Button, Modal, Popover } from '@korzun/design/control';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { useRef, useState } from 'react';
 
@@ -31,7 +31,7 @@ export default function InDialog() {
   return (
     <Stack align="start">
       <Button onClick={() => setDialogOpen(true)}>Open dialog</Button>
-      <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} title="Edit book">
+      <Modal open={dialogOpen} onClose={() => setDialogOpen(false)} title="Edit book">
         <Stack align="start">
           <Button ref={anchor} onClick={() => setOpen((value) => !value)}>
             Status
@@ -50,7 +50,7 @@ export default function InDialog() {
           </Popover>
           <Text tone="muted">Chosen: {chosen}</Text>
         </Stack>
-      </Dialog>
+      </Modal>
     </Stack>
   );
 }

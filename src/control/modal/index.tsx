@@ -4,11 +4,11 @@ import { type ReactNode, useCallback, useId } from 'react';
 import { DividerBodyProvider } from '../../component/divider/index.js';
 import { SurfaceDepthProvider } from '../../component/surface/index.js';
 import { useTheme } from '../../theme/index.js';
-import { useModalDialog } from '../use-modal-dialog/index.js';
+import { useModal } from '../use-modal/index.js';
 import { useStyle } from './style.js';
 
-export type DialogProps = {
-  /** Controls visibility. Keep the Dialog mounted and toggle this. */
+export type ModalProps = {
+  /** Controls visibility. Keep the Modal mounted and toggle this. */
   open: boolean;
   /** Called on Escape and a backdrop click (unless `canDismiss` is false); receives no event. Close the dialog here. */
   onClose: () => void;
@@ -28,7 +28,7 @@ export type DialogProps = {
  * Modal dialog on a native `<dialog>`: title, body, optional footer. Always
  * mounted; controlled by `open`. Everything inside is one surface level in, so Buttons are 8px.
  */
-export function Dialog({
+export function Modal({
   open,
   onClose,
   title,
@@ -36,11 +36,11 @@ export function Dialog({
   footer,
   canDismiss = true,
   className,
-}: DialogProps) {
+}: ModalProps) {
   const styles = useStyle();
   const theme = useTheme();
   const titleId = useId();
-  const ref = useModalDialog(open, onClose, canDismiss);
+  const ref = useModal(open, onClose, canDismiss);
   const stopClick = useCallback((event: React.MouseEvent) => {
     event.stopPropagation();
   }, []);
@@ -63,7 +63,7 @@ export function Dialog({
             </DividerBodyProvider>
           </div>
           {footer != null && footer !== false && footer !== '' && (
-            <div className={styles.footer} data-dialog-footer="">
+            <div className={styles.footer} data-modal-footer="">
               {footer}
             </div>
           )}

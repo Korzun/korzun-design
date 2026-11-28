@@ -3,10 +3,10 @@
  * `showModal()` and `close()`; Escape and a click on the backdrop call `onDismiss`,
  * which closes nothing itself, so it sets `isOpen` to `false`. The `<dialog>` takes
  * the `theme.recipe.modal.*` styles, and its contents are wrapped in `Surface` so the
- * Buttons get the corners they would have in a `Dialog`. This demo starts open.
+ * Buttons get the corners they would have in a `Modal`. This demo starts open.
  */
 import { Stack, Surface, Text } from '@korzun/design/component';
-import { Button, useModalDialog } from '@korzun/design/control';
+import { Button, useModal } from '@korzun/design/control';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { useState } from 'react';
 
@@ -25,7 +25,7 @@ export default function Basic() {
   const [isOpen, setIsOpen] = useState(true);
   const [saves, setSaves] = useState(0);
   const close = () => setIsOpen(false);
-  const ref = useModalDialog(isOpen, close);
+  const ref = useModal(isOpen, close);
   return (
     <Stack align="start">
       <Button onClick={() => setIsOpen(true)}>Edit progress</Button>

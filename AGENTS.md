@@ -29,7 +29,7 @@ To load this guide in a consuming app, add this line to its `CLAUDE.md` or
 | Import                     | Contents                                                                                                                                                        |
 | -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `@korzun/design/theme`     | `ThemeProvider`, `useTheme`, `useThemeSetting`, `createUseStyles`, `Theme`, `lightTheme`, `darkTheme`                                                           |
-| `@korzun/design/control`   | buttons, inputs, select, switch, segmented control, popover, `ConfirmModal`, `Dialog`, `useModalDialog`, page actions                                           |
+| `@korzun/design/control`   | buttons, inputs, select, switch, segmented control, popover, `ConfirmModal`, `Modal`, `useModal`, page actions                                           |
 | `@korzun/design/component` | `Page`, `Alert`, `Card` family, `Stack`, `Inline`, `Text`, `Heading`, `EmptyState`, `ErrorMessage`, `Spinner`, `Tag`, metadata, navs, `ThemeSetting`, `TopFade` |
 | `@korzun/design/icon`      | `*Icon` components, `IconProps`                                                                                                                                 |
 | `@korzun/design/toast`     | `ToastProvider`, `useToast`                                                                                                                                     |
@@ -63,7 +63,7 @@ Every component exports its props type as `<Name>Props` (`ButtonProps`,
    [corners](docs/corners.md).
 3. **Don't pass `radius` or `surface` by default.** `Button`, `Select`, `Card`,
    `CardRow` and `Alert` take their corners from where they sit (`Page` 0,
-   `Card`/`Dialog` 1, `Popover` 2). Pass `radius`/`surface` only to override. For a
+   `Card`/`Modal` 1, `Popover` 2). Pass `radius`/`surface` only to override. For a
    hand-made box with controls inside, wrap them in `Surface`.
 4. **Button `type` is a visual variant** (`default`, `primary`, `text`, `link`,
    `dashed`), not the HTML attribute. For a submit button use `submit` (and
@@ -74,9 +74,9 @@ Every component exports its props type as `<Name>Props` (`ButtonProps`,
 6. **Screens are a `Page` holding a stack of `Card`s,** one per feature. Form
    fields keep their default `horizontal` layout, and every field needs a
    `name`. See [patterns](docs/patterns.md).
-7. **Modals:** use `ConfirmModal` for yes/no and `Dialog` for anything else
+7. **Modals:** use `ConfirmModal` for yes/no and `Modal` for anything else
    (title, body, optional footer; pass `canDismiss={!loading}`). Reach for
-   `useModalDialog` only for a custom native `<dialog>`.
+   `useModal` only for a custom native `<dialog>`.
 8. **Menus:** a list of actions or links behind a button is a `Menu` (`items`
    array; `to` for links, `onClick` for actions). Never hand-build
    `role="menu"` or a dropdown of buttons.
@@ -99,6 +99,6 @@ Before building a whole screen or a common group of parts (sign-in, …), check
 ## Docs index
 
 [docs]|theme.md: ThemeProvider, the light and dark themes, and createUseStyles for writing token-based styles.|corners.md: Corner radius by nesting depth, one radius step per level.|patterns.md: How screens are built: forms in cards, confirmations, menus, modals, toasts and style overrides.|tokens.md: Every theme token key in detail, group by group.|philosophy.md: The design rules the code enforces, and why.|icon.md: Inline SVG icon components that take the surrounding text colour, with the shared IconProps.|toast.md: Short, transient confirmations and errors that slide in from a corner and leave on their own.|hooks.md: Mobile-chrome hooks: standalone detection, minimize on scroll, pull to refresh.
-[docs/control]|{back-button,button,chips-input,confirm-modal,date-time-input,dialog,field-list,menu,number-input,page-actions-bar,page-actions-menu,page-footer-actions,popover,segmented-control,select,switch,text-area,text-input,use-modal-dialog}.md
+[docs/control]|{back-button,button,chips-input,confirm-modal,date-time-input,field-list,menu,modal,number-input,page-actions-bar,page-actions-menu,page-footer-actions,popover,segmented-control,select,switch,text-area,text-input,use-modal}.md
 [docs/component]|{alert,card,card-row,collapsible-section,divider,empty-state,error-message,heading,inline,meta-line,metadata-list,nav-desktop,nav-mobile,page,progress-indicator,spinner,stack,surface,tag,text,theme-setting,top-fade}.md
 [docs/recipes]|{login}.md

@@ -71,7 +71,7 @@ An item is either an action or a link. TypeScript rejects an item with both
 
 - Escape and outside presses go to the innermost open layer first: a Select
   list opened over the menu closes before it, and a Menu inside a
-  [`Dialog`](dialog.md) closes before the Dialog.
+  [`Modal`](modal.md) closes before the Modal.
 - Opening another Menu closes the first (the press on its trigger is outside).
 - If the focused item disappears while the menu is open, focus moves to the
   first enabled item. With every item disabled, the menu itself takes focus.
@@ -517,14 +517,14 @@ export default function InCard() {
 }
 ```
 
-### In a Dialog
+### In a Modal
 
-A Menu inside a Dialog opens into the dialog, so it shows above the dialog's
-backdrop. Escape closes the menu first and the Dialog on the next press.
+A Menu inside a Modal opens into the dialog, so it shows above the dialog's
+backdrop. Escape closes the menu first and the Modal on the next press.
 
 ```tsx
 import { Stack, Text } from '@korzun/design/component';
-import { Button, Dialog, Menu } from '@korzun/design/control';
+import { Button, Modal, Menu } from '@korzun/design/control';
 import { useState } from 'react';
 
 export default function InDialog() {
@@ -533,7 +533,7 @@ export default function InDialog() {
   return (
     <Stack align="start">
       <Button onClick={() => setOpen(true)}>Open dialog</Button>
-      <Dialog open={open} onClose={() => setOpen(false)} title="Edit book">
+      <Modal open={open} onClose={() => setOpen(false)} title="Edit book">
         <Stack align="start">
           <Menu
             trigger={(p) => <Button {...p}>Actions</Button>}
@@ -545,7 +545,7 @@ export default function InDialog() {
           />
           <Text tone="muted">Chosen: {chosen}</Text>
         </Stack>
-      </Dialog>
+      </Modal>
     </Stack>
   );
 }

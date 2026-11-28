@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react';
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import { Dialog } from '../../control/dialog/index.js';
+import { Modal } from '../../control/modal/index.js';
 import { renderWithProviders } from '../../test-utils.js';
 import { lightTheme } from '../../theme/index.js';
 import { CardRow } from '../card-row/index.js';
@@ -59,7 +59,7 @@ describe('Divider bleed', () => {
     HTMLDialogElement.prototype.close = () => {};
   });
 
-  it('spans its container outside a Card or Dialog', () => {
+  it('spans its container outside a Card or Modal', () => {
     renderWithProviders(<Divider />);
     expect(margin(screen.getByRole('separator'))).toBe('0px');
   });
@@ -82,11 +82,11 @@ describe('Divider bleed', () => {
     expect(margin(screen.getByRole('separator'))).toBe('-1px');
   });
 
-  it('cancels a Dialog body padding (space.xxl)', () => {
+  it('cancels a Modal body padding (space.xxl)', () => {
     renderWithProviders(
-      <Dialog open title="T" onClose={() => {}}>
+      <Modal open title="T" onClose={() => {}}>
         <Divider />
-      </Dialog>
+      </Modal>
     );
     expect(margin(screen.getByRole('separator', { hidden: true }))).toBe(
       `-${lightTheme.space.xxl}`

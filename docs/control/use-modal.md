@@ -1,20 +1,20 @@
 ---
-title: useModalDialog
+title: useModal
 description: A hook that drives a native dialog element from an open flag and routes Escape and backdrop clicks to a dismiss callback.
 category: Overlays
 ---
-# useModalDialog
+# useModal
 
 <!-- generated:import -->
 
-`import { useModalDialog } from '@korzun/design/control'`
+`import { useModal } from '@korzun/design/control'`
 
 <!-- /generated:import -->
 
 A hook that drives a native `<dialog>` from an `isOpen` boolean: it calls
 `showModal()` / `close()` for you and routes Escape and backdrop clicks to
-`onDismiss`. It is the base under [`Dialog`](dialog.md) (and so `ConfirmModal`).
-Reach for `Dialog` first; this hook remains for modals `Dialog` cannot express,
+`onDismiss`. It is the base under [`Modal`](modal.md) (and so `ConfirmModal`).
+Reach for `Modal` first; this hook remains for modals `Modal` cannot express,
 built from this hook plus the `theme.recipe.modal.*` styles.
 
 Use something else for: a plain yes/no confirmation (`ConfirmModal`), or a
@@ -25,7 +25,7 @@ dropdown or non-modal floating layer (`Popover`).
 ### Signature
 
 ```ts
-function useModalDialog(
+function useModal(
   isOpen: boolean,
   onDismiss: () => void,
   canDismiss?: boolean, // default true
@@ -76,7 +76,7 @@ show it in full.
 - Do wrap the dialog's contents (header, body, footer) in
   [`Surface`](../component/surface.md): hand-drawn boxes are invisible to depth,
   so the Buttons and Selects inside then get the same `md` corners as in a
-  `Dialog`, with no `radius` or `surface` override.
+  `Modal`, with no `radius` or `surface` override.
 
 <!-- generated:examples -->
 
@@ -88,11 +88,11 @@ The hook returns a ref for a `<dialog>` that stays mounted. `isOpen` drives
 `showModal()` and `close()`; Escape and a click on the backdrop call `onDismiss`,
 which closes nothing itself, so it sets `isOpen` to `false`. The `<dialog>` takes
 the `theme.recipe.modal.*` styles, and its contents are wrapped in `Surface` so the
-Buttons get the corners they would have in a `Dialog`. This demo starts open.
+Buttons get the corners they would have in a `Modal`. This demo starts open.
 
 ```tsx
 import { Stack, Surface, Text } from '@korzun/design/component';
-import { Button, useModalDialog } from '@korzun/design/control';
+import { Button, useModal } from '@korzun/design/control';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { useState } from 'react';
 
@@ -111,7 +111,7 @@ export default function Basic() {
   const [isOpen, setIsOpen] = useState(true);
   const [saves, setSaves] = useState(0);
   const close = () => setIsOpen(false);
-  const ref = useModalDialog(isOpen, close);
+  const ref = useModal(isOpen, close);
   return (
     <Stack align="start">
       <Button onClick={() => setIsOpen(true)}>Edit progress</Button>
@@ -150,7 +150,7 @@ click in the dialog from reaching a clickable ancestor; dismissal is the hook's 
 
 ```tsx
 import { Stack, Surface } from '@korzun/design/component';
-import { Button, Switch, useModalDialog } from '@korzun/design/control';
+import { Button, Switch, useModal } from '@korzun/design/control';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { useState } from 'react';
 
@@ -169,7 +169,7 @@ export default function GatedDismissal() {
   const [isOpen, setIsOpen] = useState(false);
   const [saving, setSaving] = useState(true);
   const close = () => setIsOpen(false);
-  const ref = useModalDialog(isOpen, close, !saving);
+  const ref = useModal(isOpen, close, !saving);
   return (
     <Stack align="start">
       <Button onClick={() => setIsOpen(true)}>Open busy modal</Button>
@@ -210,7 +210,7 @@ hook gives no surface depth, so the contents are wrapped in `Surface` and the
 
 ```tsx
 import { Stack, Surface, Text } from '@korzun/design/component';
-import { Button, Select, useModalDialog } from '@korzun/design/control';
+import { Button, Select, useModal } from '@korzun/design/control';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { useState } from 'react';
 
@@ -230,7 +230,7 @@ export default function SelectInside() {
   const [isOpen, setIsOpen] = useState(false);
   const [shelf, setShelf] = useState<string | undefined>('Reading');
   const close = () => setIsOpen(false);
-  const ref = useModalDialog(isOpen, close);
+  const ref = useModal(isOpen, close);
   return (
     <Stack align="start">
       <Button onClick={() => setIsOpen(true)}>Move book</Button>
@@ -282,6 +282,7 @@ This module has no styles of its own.
 
 ## Changelog
 
+- **0.7.0** (2026-11-26): **Breaking:** `Dialog` is renamed `Modal` and `useModalDialog` is renamed `useModal`, matching `ConfirmModal`; behaviour is unchanged. The old names `Dialog`, `DialogProps` and `useModalDialog` are removed. The footer marker attribute is now `data-modal-footer`.
 - **0.4.0** (2026-11-23): Layer stack: popovers and dialogs now close innermost-first. Escape and an outside press only affect the topmost layer, so a popover inside a popover closes one level at a time. **Behaviour change:** a popover beneath an open dialog no longer takes its Escape or closes on a press inside the dialog.
 - **0.3.0** (2026-11-22): `Popover` renders inside an open `<dialog>` that contains its anchor, so `Select` and `ChipsInput` work in modals.
 - **0.0.5** (2026-11-21): Every prop has a JSDoc comment, so editors and coding agents see the guidance in the `.d.ts`. `useModalDialog` declares its return type.

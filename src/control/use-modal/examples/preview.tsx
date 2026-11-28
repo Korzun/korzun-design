@@ -1,6 +1,6 @@
 /** Preview */
 import { Surface } from '@korzun/design/component';
-import { Button, useModalDialog } from '@korzun/design/control';
+import { Button, useModal } from '@korzun/design/control';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 
 const useStyles = createUseStyles((theme: Theme) => ({
@@ -15,7 +15,7 @@ const useStyles = createUseStyles((theme: Theme) => ({
 
 export default function Preview() {
   const styles = useStyles();
-  const ref = useModalDialog(true, () => {});
+  const ref = useModal(true, () => {});
   return (
     <dialog ref={ref} className={styles.dialog}>
       <Surface>

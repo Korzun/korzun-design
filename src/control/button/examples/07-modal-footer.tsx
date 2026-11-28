@@ -1,11 +1,11 @@
 /** Confirm dialog footer
  * A `text` Cancel beside a `primary danger` action. `loading` shows the spinner
  * and blocks a second click while the deletion runs; `canDismiss={!deleting}`
- * keeps the dialog open until it finishes. Inside a Dialog the corners step down
+ * keeps the dialog open until it finishes. Inside a Modal the corners step down
  * by themselves: no `radius` prop.
  */
 import { Stack } from '@korzun/design/component';
-import { Button, Dialog } from '@korzun/design/control';
+import { Button, Modal } from '@korzun/design/control';
 import { useState } from 'react';
 
 export default function DialogFooter() {
@@ -24,7 +24,7 @@ export default function DialogFooter() {
       <Button danger onClick={() => setOpen(true)}>
         Delete book
       </Button>
-      <Dialog
+      <Modal
         open={open}
         onClose={close}
         canDismiss={!deleting}
@@ -41,7 +41,7 @@ export default function DialogFooter() {
         }
       >
         It is removed from every device. This cannot be undone.
-      </Dialog>
+      </Modal>
     </Stack>
   );
 }

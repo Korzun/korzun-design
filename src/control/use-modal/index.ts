@@ -32,7 +32,7 @@ import { useLayer } from '../layer-stack/index.js';
  * @param canDismiss When `false`, Escape and backdrop clicks are swallowed; pass `!loading`.
  * @returns A ref to attach to a `<dialog>` that stays mounted.
  */
-export function useModalDialog(
+export function useModal(
   isOpen: boolean,
   onDismiss: () => void,
   canDismiss = true

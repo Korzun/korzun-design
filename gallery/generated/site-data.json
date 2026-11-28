@@ -105,7 +105,7 @@
         "ButtonTypeValue"
       ],
       "importLine": "import { Button, type ButtonProps, type ButtonRadiusValue, type ButtonTypeValue } from '@korzun/design/control'",
-      "body": "A clickable action with a visual variant, optional icons, and a loading state.\nRenders a `<div role=\"button\">` (keyboard: Enter and Space, which it\npreventDefaults, so Space does not scroll the page) unless `submit` is\nset, in which case it renders a native `<button type=\"submit\">`.\n\nUse something else for: navigating back (`BackButton`), page-level actions in\nthe header (`PageActionsBar`, `PageActionsMenu`), sticky footer actions\n(`PageFooterActions`), picking one of several options (`SegmentedControl`).\n\nEvery button but `link` is 32px tall: it pins its own line-height, so a\nparent's (a Dialog's 1.3) does not stretch it, and an icon-only button matches\na text one. Keyboard focus (`:focus-visible`) on `text` and `link` draws a solid\n`border.focus` ring, since they have no border or fill of their own.\n\n## Usage\n\n### Choosing a variant\n\n- `primary`: the one main action of a card, modal, or page (Save, Confirm).\n- `default`: secondary actions; bordered.\n- `text`: Cancel in a modal footer.\n- `link`: inline row actions (Remove, Load more). It has no padding, so `radius`\n  doesn't matter for it.\n- `dashed`: an \"add a row\" affordance (as in `FieldList`).\n- Add `danger` for destructive actions (Delete, Log out), on `primary` in a\n  confirm or on `default` otherwise.\n\n### Corners\n\nThe radius follows where the button sits (16px on a page, 8px in a `Card` or\n`Dialog`, 4px in a `Popover` or nested Card), so pass no `radius`; see\n[corners](../corners.md). Pass it only to override.\n\n### Submitting a form\n\n`submit` renders a native submit button and `onClick` is then ignored: handle\nthe form's `action` or `onSubmit`. For a button outside its form (a `Card`\nfooter), pass the form's id as `form`. While the form action is pending the\nbutton shows its spinner by itself.\n\n## Do / don't\n\n- Don't set `radius` to match the surface; it follows depth. Pass it only to\n  override.\n- Do give repeated row actions a distinguishing `ariaLabel` (\"Remove Kindle\").\n- Don't pass `type=\"submit\"`: it is not a valid variant. Use `submit`.\n- Don't pass `onClick` to a submit button and expect it to run.\n- Don't pass an element to `prefix`/`suffix` (`prefix={<SearchIcon />}`); pass\n  the component.\n- Don't wrap Button in a `<button>` or `<a>`: it is already interactive.",
+      "body": "A clickable action with a visual variant, optional icons, and a loading state.\nRenders a `<div role=\"button\">` (keyboard: Enter and Space, which it\npreventDefaults, so Space does not scroll the page) unless `submit` is\nset, in which case it renders a native `<button type=\"submit\">`.\n\nUse something else for: navigating back (`BackButton`), page-level actions in\nthe header (`PageActionsBar`, `PageActionsMenu`), sticky footer actions\n(`PageFooterActions`), picking one of several options (`SegmentedControl`).\n\nEvery button but `link` is 32px tall: it pins its own line-height, so a\nparent's (a Modal's 1.3) does not stretch it, and an icon-only button matches\na text one. Keyboard focus (`:focus-visible`) on `text` and `link` draws a solid\n`border.focus` ring, since they have no border or fill of their own.\n\n## Usage\n\n### Choosing a variant\n\n- `primary`: the one main action of a card, modal, or page (Save, Confirm).\n- `default`: secondary actions; bordered.\n- `text`: Cancel in a modal footer.\n- `link`: inline row actions (Remove, Load more). It has no padding, so `radius`\n  doesn't matter for it.\n- `dashed`: an \"add a row\" affordance (as in `FieldList`).\n- Add `danger` for destructive actions (Delete, Log out), on `primary` in a\n  confirm or on `default` otherwise.\n\n### Corners\n\nThe radius follows where the button sits (16px on a page, 8px in a `Card` or\n`Modal`, 4px in a `Popover` or nested Card), so pass no `radius`; see\n[corners](../corners.md). Pass it only to override.\n\n### Submitting a form\n\n`submit` renders a native submit button and `onClick` is then ignored: handle\nthe form's `action` or `onSubmit`. For a button outside its form (a `Card`\nfooter), pass the form's id as `form`. While the form action is pending the\nbutton shows its spinner by itself.\n\n## Do / don't\n\n- Don't set `radius` to match the surface; it follows depth. Pass it only to\n  override.\n- Do give repeated row actions a distinguishing `ariaLabel` (\"Remove Kindle\").\n- Don't pass `type=\"submit\"`: it is not a valid variant. Use `submit`.\n- Don't pass `onClick` to a submit button and expect it to run.\n- Don't pass an element to `prefix`/`suffix` (`prefix={<SearchIcon />}`); pass\n  the component.\n- Don't wrap Button in a `<button>` or `<a>`: it is already interactive.",
       "examples": [
         {
           "file": "src/control/button/examples/01-basic.tsx",
@@ -156,12 +156,12 @@
           "code": "import { Card, Stack, Text } from '@korzun/design/component';\nimport { Button, TextInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function SubmitInCard() {\n  const [name, setName] = useState<string | undefined>('Ada');\n  const [saved, setSaved] = useState<string | null>(null);\n  return (\n    <Card\n      title=\"Profile\"\n      footer={\n        <Button type=\"primary\" submit form=\"profile-form\">\n          Save\n        </Button>\n      }\n    >\n      <form id=\"profile-form\" action={(data) => setSaved(String(data.get('name') ?? ''))}>\n        <Stack>\n          <TextInput name=\"name\" label=\"Name\" value={name} onChange={setName} />\n          {saved !== null && <Text tone=\"success\">Saved as {saved}</Text>}\n        </Stack>\n      </form>\n    </Card>\n  );\n}\n"
         },
         {
-          "file": "src/control/button/examples/07-dialog-footer.tsx",
-          "slug": "dialog-footer",
+          "file": "src/control/button/examples/07-modal-footer.tsx",
+          "slug": "modal-footer",
           "order": 7,
           "title": "Confirm dialog footer",
-          "description": "A `text` Cancel beside a `primary danger` action. `loading` shows the spinner\nand blocks a second click while the deletion runs; `canDismiss={!deleting}`\nkeeps the dialog open until it finishes. Inside a Dialog the corners step down\nby themselves: no `radius` prop.",
-          "code": "import { Stack } from '@korzun/design/component';\nimport { Button, Dialog } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function DialogFooter() {\n  const [open, setOpen] = useState(false);\n  const [deleting, setDeleting] = useState(false);\n  const close = () => {\n    setDeleting(false);\n    setOpen(false);\n  };\n  const confirm = () => {\n    setDeleting(true);\n    setTimeout(close, 1000);\n  };\n  return (\n    <Stack align=\"start\">\n      <Button danger onClick={() => setOpen(true)}>\n        Delete book\n      </Button>\n      <Dialog\n        open={open}\n        onClose={close}\n        canDismiss={!deleting}\n        title=\"Delete this book?\"\n        footer={\n          <>\n            <Button type=\"text\" disabled={deleting} onClick={close}>\n              Cancel\n            </Button>\n            <Button type=\"primary\" danger loading={deleting} onClick={confirm}>\n              Delete\n            </Button>\n          </>\n        }\n      >\n        It is removed from every device. This cannot be undone.\n      </Dialog>\n    </Stack>\n  );\n}\n"
+          "description": "A `text` Cancel beside a `primary danger` action. `loading` shows the spinner\nand blocks a second click while the deletion runs; `canDismiss={!deleting}`\nkeeps the dialog open until it finishes. Inside a Modal the corners step down\nby themselves: no `radius` prop.",
+          "code": "import { Stack } from '@korzun/design/component';\nimport { Button, Modal } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function DialogFooter() {\n  const [open, setOpen] = useState(false);\n  const [deleting, setDeleting] = useState(false);\n  const close = () => {\n    setDeleting(false);\n    setOpen(false);\n  };\n  const confirm = () => {\n    setDeleting(true);\n    setTimeout(close, 1000);\n  };\n  return (\n    <Stack align=\"start\">\n      <Button danger onClick={() => setOpen(true)}>\n        Delete book\n      </Button>\n      <Modal\n        open={open}\n        onClose={close}\n        canDismiss={!deleting}\n        title=\"Delete this book?\"\n        footer={\n          <>\n            <Button type=\"text\" disabled={deleting} onClick={close}>\n              Cancel\n            </Button>\n            <Button type=\"primary\" danger loading={deleting} onClick={confirm}>\n              Delete\n            </Button>\n          </>\n        }\n      >\n        It is removed from every device. This cannot be undone.\n      </Modal>\n    </Stack>\n  );\n}\n"
         }
       ],
       "preview": {
@@ -257,7 +257,7 @@
               "name": "radius",
               "type": "'background' | 'card' | 'inset' | 'modal'",
               "required": false,
-              "description": "Unset, it follows surface depth: 16px on a page or outside any surface, 8px in a Card or Dialog, 4px in a Popover or nested Card. Set, it names the surface the button sits on, which sets its corner radius. Pass it only to override; see [corners](../corners.md)."
+              "description": "Unset, it follows surface depth: 16px on a page or outside any surface, 8px in a Card or Modal, 4px in a Popover or nested Card. Set, it names the surface the button sits on, which sets its corner radius. Pass it only to override; see [corners](../corners.md)."
             },
             {
               "name": "ref",
@@ -572,7 +572,7 @@
           "date": "2026-11-24",
           "tags": [
             "Page",
-            "Dialog",
+            "Modal",
             "Card",
             "CardRow",
             "Alert",
@@ -594,7 +594,7 @@
             "CardRow",
             "Popover",
             "Menu",
-            "Dialog",
+            "Modal",
             "Page"
           ],
           "text": "**Visible changes:**\n  - Buttons in a Card default to 8px (they were 16px unless `radius=\"card\"` was set), and Buttons in a Dialog body are 8px.\n  - Selects directly on a Page get the page look (16px and the card shadow); in a Card or Dialog they stay 8px. This includes Selects in your own boxes on a Page (a `useModalDialog` modal, a `recipe.card.shell` or `recipe.row` box), because depth cannot see hand-drawn boxes: wrap their contents in `Surface`, or pass `surface=\"card\"`.\n  - Without a Page, a bare `Card` counts as depth 0: its Buttons go from 16px to 8px, a Card nested in it steps down, and a `CardRow` in it is 8px.\n  - A Card nested in a Card or Dialog steps down (8px, then 4px), and so do its Buttons and Selects; `size=\"small\"` keeps its extra 1px.\n  - `CardRow` is 16px on a Page and 8px inside a Card (it was always 16px).\n  - Buttons and Selects inside a Popover or Menu are 4px."
@@ -603,7 +603,7 @@
           "version": "0.5.0",
           "date": "2026-11-24",
           "tags": [
-            "Dialog",
+            "Modal",
             "Button"
           ],
           "text": "The internal `ButtonRadiusContext` is removed; Dialog footer Buttons are unchanged (8px)."
@@ -621,7 +621,7 @@
           "date": "2026-11-22",
           "tags": [
             "Button",
-            "Dialog"
+            "Modal"
           ],
           "text": "Buttons in a `Dialog` footer default to `radius=\"modal\"`; an explicit `radius` still wins. The radius applies to the footer only (a Dialog nested in a footer is unaffected), and `footer={false}`, `''` and `null` render no footer bar."
         }
@@ -643,7 +643,7 @@
         "ChipsInputProps"
       ],
       "importLine": "import { ChipsInput, type ChipColor, type ChipsInputProps } from '@korzun/design/control'",
-      "body": "A tag field: the current values render as coloured chips inside an input box,\ntyping filters a suggestion dropdown (a `Popover`), and Enter adds a chip. Fully\ncontrolled: you own the `string[]`.\n\nUse something else for: one value from a list (`Select`), one of a few fixed\noptions (`SegmentedControl`), free text (`TextInput`).\n\n## Usage\n\n### Keyboard\n\n- ArrowDown / ArrowUp move the highlight; Enter or Tab adds the highlighted\n  suggestion, else (with `allowCustom`) the trimmed typed text.\n- **Tab with text typed adds a chip and keeps focus in the field** (it calls\n  `preventDefault`); Tab on an empty field moves focus normally.\n- Enter never submits the surrounding form while text is typed, even when\n  nothing could be added.\n- Backspace on an empty field removes the last chip.\n- A value that matches an existing chip case-insensitively is not added.\n\n### Styling\n\nNo `className`. The label is linked to the input with a generated id.\n\n## Do / don't\n\n- Do set `layout=\"horizontal\"` and `dense` when it sits among other form fields\n  in a `Card`; otherwise the label silently disappears.\n- Do pick a `chipColor` that matches how the same values are tagged elsewhere.\n- Do use it inside a `Dialog`: the dropdown opens inside the open dialog, so it\n  is not hidden behind it (see [popover](popover.md)).\n- Don't rely on `name` for form submission.",
+      "body": "A tag field: the current values render as coloured chips inside an input box,\ntyping filters a suggestion dropdown (a `Popover`), and Enter adds a chip. Fully\ncontrolled: you own the `string[]`.\n\nUse something else for: one value from a list (`Select`), one of a few fixed\noptions (`SegmentedControl`), free text (`TextInput`).\n\n## Usage\n\n### Keyboard\n\n- ArrowDown / ArrowUp move the highlight; Enter or Tab adds the highlighted\n  suggestion, else (with `allowCustom`) the trimmed typed text.\n- **Tab with text typed adds a chip and keeps focus in the field** (it calls\n  `preventDefault`); Tab on an empty field moves focus normally.\n- Enter never submits the surrounding form while text is typed, even when\n  nothing could be added.\n- Backspace on an empty field removes the last chip.\n- A value that matches an existing chip case-insensitively is not added.\n\n### Styling\n\nNo `className`. The label is linked to the input with a generated id.\n\n## Do / don't\n\n- Do set `layout=\"horizontal\"` and `dense` when it sits among other form fields\n  in a `Card`; otherwise the label silently disappears.\n- Do pick a `chipColor` that matches how the same values are tagged elsewhere.\n- Do use it inside a `Modal`: the dropdown opens inside the open dialog, so it\n  is not hidden behind it (see [popover](popover.md)).\n- Don't rely on `name` for form submission.",
       "examples": [
         {
           "file": "src/control/chips-input/examples/01-basic.tsx",
@@ -694,12 +694,12 @@
           "code": "import { Card, Stack, Text } from '@korzun/design/component';\nimport { Button, ChipsInput, TextInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nconst USERS = ['Ada', 'Grace', 'Linus', 'Margaret'];\n\nexport default function FormRow() {\n  const [title, setTitle] = useState<string | undefined>('Reading group');\n  const [users, setUsers] = useState(['Ada']);\n  const [loading, setLoading] = useState(true);\n  return (\n    <Card\n      title=\"Share\"\n      footer={\n        <Button type=\"text\" onClick={() => setLoading((l) => !l)}>\n          {loading ? 'Finish loading' : 'Reload users'}\n        </Button>\n      }\n    >\n      <Stack>\n        <ChipsInput\n          name=\"users\"\n          label=\"Users\"\n          layout=\"horizontal\"\n          dense\n          value={users}\n          suggestions={USERS}\n          onChange={setUsers}\n          allowCustom={false}\n          chipColor=\"user\"\n          disabled={loading}\n          placeholder={loading ? 'Loading…' : 'Add users…'}\n        />\n        <TextInput\n          name=\"title\"\n          label=\"Title\"\n          layout=\"horizontal\"\n          value={title}\n          onChange={setTitle}\n        />\n        <Text tone=\"muted\">Shared with: {users.join(', ') || 'nobody'}</Text>\n      </Stack>\n    </Card>\n  );\n}\n"
         },
         {
-          "file": "src/control/chips-input/examples/07-in-dialog.tsx",
-          "slug": "in-dialog",
+          "file": "src/control/chips-input/examples/07-in-modal.tsx",
+          "slug": "in-modal",
           "order": 7,
           "title": "In a dialog",
-          "description": "The suggestion list opens inside an open `Dialog` that contains the field,\nso it works in a modal.",
-          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button, ChipsInput, Dialog } from '@korzun/design/control';\nimport { useState } from 'react';\n\nconst SUBJECTS = ['Astronomy', 'Biology', 'Cooking', 'History', 'Poetry', 'Travel'];\n\nexport default function InDialog() {\n  const [open, setOpen] = useState(false);\n  const [subjects, setSubjects] = useState<string[]>([]);\n  return (\n    <Stack align=\"start\">\n      <Button onClick={() => setOpen(true)}>Edit subjects</Button>\n      <Text tone=\"muted\">Subjects: {subjects.join(', ') || 'none'}</Text>\n      <Dialog\n        open={open}\n        onClose={() => setOpen(false)}\n        title=\"Edit subjects\"\n        footer={\n          <Button type=\"primary\" onClick={() => setOpen(false)}>\n            Done\n          </Button>\n        }\n      >\n        <ChipsInput\n          value={subjects}\n          suggestions={SUBJECTS}\n          onChange={setSubjects}\n          placeholder=\"Add subject…\"\n        />\n      </Dialog>\n    </Stack>\n  );\n}\n"
+          "description": "The suggestion list opens inside an open `Modal` that contains the field,\nso it works in a modal.",
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button, ChipsInput, Modal } from '@korzun/design/control';\nimport { useState } from 'react';\n\nconst SUBJECTS = ['Astronomy', 'Biology', 'Cooking', 'History', 'Poetry', 'Travel'];\n\nexport default function InDialog() {\n  const [open, setOpen] = useState(false);\n  const [subjects, setSubjects] = useState<string[]>([]);\n  return (\n    <Stack align=\"start\">\n      <Button onClick={() => setOpen(true)}>Edit subjects</Button>\n      <Text tone=\"muted\">Subjects: {subjects.join(', ') || 'none'}</Text>\n      <Modal\n        open={open}\n        onClose={() => setOpen(false)}\n        title=\"Edit subjects\"\n        footer={\n          <Button type=\"primary\" onClick={() => setOpen(false)}>\n            Done\n          </Button>\n        }\n      >\n        <ChipsInput\n          value={subjects}\n          suggestions={SUBJECTS}\n          onChange={setSubjects}\n          placeholder=\"Add subject…\"\n        />\n      </Modal>\n    </Stack>\n  );\n}\n"
         }
       ],
       "preview": {
@@ -1222,8 +1222,8 @@
             "Popover",
             "Select",
             "ChipsInput",
-            "Dialog",
-            "useModalDialog"
+            "Modal",
+            "useModal"
           ],
           "text": "`Popover` renders inside an open `<dialog>` that contains its anchor, so `Select` and `ChipsInput` work in modals."
         },
@@ -1254,7 +1254,7 @@
         "ConfirmModalProps"
       ],
       "importLine": "import { ConfirmModal, type ConfirmModalProps } from '@korzun/design/control'",
-      "body": "A ready-made yes/no modal built on [`Dialog`](dialog.md): a title, a body\n(`children`), and a footer with a text Cancel and a primary Confirm button. It\nis always mounted and fully controlled by `isOpen`.\n\nUse something else for: a modal with its own form or more than two actions\n(use [`Dialog`](dialog.md) for anything that is not yes/no), or a non-blocking\nnotice (toast).\n\n## Usage\n\n### Behaviour to know\n\n- Footer buttons already get `md` corners from `Dialog`'s depth; the dialog uses\n  `recipe.modal.dialog` (`radius.lg`, it sits on the page). See\n  [corners](../corners.md).\n- `onCancel` is the single dismissal path, so whatever you do there runs for\n  Escape and backdrop clicks too.\n\n### Styling\n\nNo `className`.\n\n## Do / don't\n\n- Do pass `loading` while the request runs, so the user can't dismiss mid-flight.\n- Do close the modal in both `onCancel` and (after success) `onConfirm`.\n- Don't render it conditionally (`{open && <ConfirmModal …/>}`); toggle `isOpen`.\n- Don't pass `icon={<AlertOctagonIcon />}`; pass the component.",
+      "body": "A ready-made yes/no modal built on [`Modal`](modal.md): a title, a body\n(`children`), and a footer with a text Cancel and a primary Confirm button. It\nis always mounted and fully controlled by `isOpen`.\n\nUse something else for: a modal with its own form or more than two actions\n(use [`Modal`](modal.md) for anything that is not yes/no), or a non-blocking\nnotice (toast).\n\n## Usage\n\n### Behaviour to know\n\n- Footer buttons already get `md` corners from `Modal`'s depth; the dialog uses\n  `recipe.modal.dialog` (`radius.lg`, it sits on the page). See\n  [corners](../corners.md).\n- `onCancel` is the single dismissal path, so whatever you do there runs for\n  Escape and backdrop clicks too.\n\n### Styling\n\nNo `className`.\n\n## Do / don't\n\n- Do pass `loading` while the request runs, so the user can't dismiss mid-flight.\n- Do close the modal in both `onCancel` and (after success) `onConfirm`.\n- Don't render it conditionally (`{open && <ConfirmModal …/>}`); toggle `isOpen`.\n- Don't pass `icon={<AlertOctagonIcon />}`; pass the component.",
       "examples": [
         {
           "file": "src/control/confirm-modal/examples/01-basic.tsx",
@@ -1400,7 +1400,7 @@
           "date": "2026-11-22",
           "tags": [
             "ConfirmModal",
-            "Dialog"
+            "Modal"
           ],
           "text": "`ConfirmModal` is rebuilt on `Dialog`. No API or visual change; it is now named by its title (`aria-labelledby`)."
         }
@@ -1609,261 +1609,6 @@
       ]
     },
     {
-      "id": "control/dialog",
-      "slug": "dialog",
-      "entry": "@korzun/design/control",
-      "docPath": "docs/control/dialog.md",
-      "title": "Dialog",
-      "description": "A modal on a native dialog element with a title, a body and an optional footer of actions.",
-      "category": "Overlays",
-      "values": [
-        "Dialog"
-      ],
-      "types": [
-        "DialogProps"
-      ],
-      "importLine": "import { Dialog, type DialogProps } from '@korzun/design/control'",
-      "body": "A modal on a native `<dialog>` (via `useModalDialog`): a title, a body\n(`children`), and an optional `footer` for actions. It is always mounted and\nfully controlled by `open`. The title names the dialog for assistive tech.\n\nUse something else for: a yes/no question ([`ConfirmModal`](confirm-modal.md)),\na non-blocking notice (toast).\n\n## Usage\n\n### Behaviour to know\n\n- Escape and a backdrop press-and-release both call `onClose`; it is the\n  single dismissal path. `canDismiss={false}` blocks both.\n- Escape goes to the innermost open layer first: a `Select` list or other\n  popover open inside the dialog closes before the dialog, and a dialog opened\n  over a still-open popover closes before that popover.\n- Always mounted: toggle `open`, don't render it conditionally.\n- Focus is native: `showModal()` moves focus into the dialog and restores it\n  on close.\n- Clicks inside the dialog do not bubble to clickable ancestors.\n- Content is one surface level in: Buttons in the body, header and `footer`\n  (including nested ones inside an `Inline`) default to 8px. An explicit\n  `radius` on a Button still wins.\n\n## Do / don't\n\n- Do use [`ConfirmModal`](confirm-modal.md) for yes/no questions.\n- Do pass `canDismiss={!loading}` while a request runs.\n- Don't set `radius` on Buttons inside a Dialog by hand; the depth does it.\n- Don't write your own modal style files; build on `Dialog`.\n- Don't render it conditionally (`{open && <Dialog …/>}`); toggle `open`.",
-      "examples": [
-        {
-          "file": "src/control/dialog/examples/01-basic.tsx",
-          "slug": "basic",
-          "order": 1,
-          "title": "Basic",
-          "description": "A title, a body and a footer with a `text` Cancel and a `primary` Save. `open` is\ncontrolled and `onClose` takes no arguments: it runs for Escape and a click on the\nbackdrop, and closes nothing by itself, so it sets `open` to `false`. This demo\nstarts open; Review fixes opens it again.",
-          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button, Dialog } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Basic() {\n  const [open, setOpen] = useState(true);\n  const [saves, setSaves] = useState(0);\n  const save = () => {\n    setSaves((n) => n + 1);\n    setOpen(false);\n  };\n  return (\n    <Stack align=\"start\">\n      <Button onClick={() => setOpen(true)}>Review fixes</Button>\n      <Text tone=\"muted\">Saved: {saves}</Text>\n      <Dialog\n        open={open}\n        onClose={() => setOpen(false)}\n        title=\"Fixes waiting\"\n        footer={\n          <>\n            <Button type=\"text\" onClick={() => setOpen(false)}>\n              Cancel\n            </Button>\n            <Button type=\"primary\" onClick={save}>\n              Save\n            </Button>\n          </>\n        }\n      >\n        Three metadata fixes are waiting for review.\n      </Dialog>\n    </Stack>\n  );\n}\n"
-        },
-        {
-          "file": "src/control/dialog/examples/02-no-footer.tsx",
-          "slug": "no-footer",
-          "order": 2,
-          "title": "Without a footer",
-          "description": "With no `footer` no action bar is drawn. The dialog is dismissed with Escape or a\nclick on the backdrop, both of which call `onClose`.",
-          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button, Dialog } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function NoFooter() {\n  const [open, setOpen] = useState(false);\n  const [dismissals, setDismissals] = useState(0);\n  const dismiss = () => {\n    setDismissals((n) => n + 1);\n    setOpen(false);\n  };\n  return (\n    <Stack align=\"start\">\n      <Button onClick={() => setOpen(true)}>Show notice</Button>\n      <Text tone=\"muted\">Dismissed: {dismissals}</Text>\n      <Dialog open={open} onClose={dismiss} title=\"Sync finished\">\n        Press Escape or click outside the dialog to close it.\n      </Dialog>\n    </Stack>\n  );\n}\n"
-        },
-        {
-          "file": "src/control/dialog/examples/03-not-dismissable.tsx",
-          "slug": "not-dismissable",
-          "order": 3,
-          "title": "Not dismissable while busy",
-          "description": "`canDismiss={!saving}` makes Escape and backdrop clicks do nothing while a request\nruns. The switch holds the busy state on so you can try both; the footer buttons\nare disabled or loading to match, so every way out is gated the same.",
-          "code": "import { Stack } from '@korzun/design/component';\nimport { Button, Dialog, Switch } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function NotDismissable() {\n  const [open, setOpen] = useState(false);\n  const [saving, setSaving] = useState(true);\n  return (\n    <Stack align=\"start\">\n      <Button onClick={() => setOpen(true)}>Open busy dialog</Button>\n      <Dialog\n        open={open}\n        onClose={() => setOpen(false)}\n        canDismiss={!saving}\n        title=\"Saving changes\"\n        footer={\n          <>\n            <Button type=\"text\" disabled={saving} onClick={() => setOpen(false)}>\n              Cancel\n            </Button>\n            <Button type=\"primary\" loading={saving} onClick={() => setOpen(false)}>\n              Save\n            </Button>\n          </>\n        }\n      >\n        <Stack>\n          Escape and the backdrop are ignored while the request is in flight.\n          <Switch name=\"saving\" label=\"Request in flight\" checked={saving} onChange={setSaving} />\n        </Stack>\n      </Dialog>\n    </Stack>\n  );\n}\n"
-        },
-        {
-          "file": "src/control/dialog/examples/04-form.tsx",
-          "slug": "form",
-          "order": 4,
-          "title": "Form in a dialog",
-          "description": "Controls in the body and a footer that saves. `Select` lists open inside the dialog\nand Escape closes the list before the dialog. `canDismiss={!saving}` and a\n`loading` Save keep it open until the request finishes.",
-          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button, Dialog, Select, TextInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nconst SHELVES = ['Reading', 'To read', 'Finished', 'Abandoned'];\n\nexport default function Form() {\n  const [open, setOpen] = useState(false);\n  const [saving, setSaving] = useState(false);\n  const [note, setNote] = useState<string | undefined>('');\n  const [shelf, setShelf] = useState<string | undefined>('Reading');\n  const [saved, setSaved] = useState('nothing yet');\n  const save = () => {\n    setSaving(true);\n    setTimeout(() => {\n      setSaved(`${shelf ?? 'no shelf'}, note “${note ?? ''}”`);\n      setSaving(false);\n      setOpen(false);\n    }, 1000);\n  };\n  return (\n    <Stack align=\"start\">\n      <Button onClick={() => setOpen(true)}>Edit book</Button>\n      <Text tone=\"muted\">Saved: {saved}</Text>\n      <Dialog\n        open={open}\n        onClose={() => setOpen(false)}\n        canDismiss={!saving}\n        title=\"Edit book\"\n        footer={\n          <>\n            <Button type=\"text\" disabled={saving} onClick={() => setOpen(false)}>\n              Cancel\n            </Button>\n            <Button type=\"primary\" loading={saving} onClick={save}>\n              Save\n            </Button>\n          </>\n        }\n      >\n        <Stack>\n          <TextInput name=\"note\" label=\"Note\" layout=\"vertical\" value={note} onChange={setNote} />\n          <Select\n            name=\"shelf\"\n            label=\"Shelf\"\n            layout=\"vertical\"\n            options={SHELVES}\n            value={shelf}\n            onChange={setShelf}\n          />\n        </Stack>\n      </Dialog>\n    </Stack>\n  );\n}\n"
-        }
-      ],
-      "preview": {
-        "file": "src/control/dialog/examples/preview.tsx",
-        "slug": "preview",
-        "order": 0,
-        "title": "Preview",
-        "description": "",
-        "code": "import { Button, Dialog } from '@korzun/design/control';\n\nexport default function Preview() {\n  return (\n    <Dialog\n      open\n      onClose={() => {}}\n      title=\"Fixes waiting\"\n      footer={\n        <>\n          <Button type=\"text\" onClick={() => {}}>\n            Cancel\n          </Button>\n          <Button type=\"primary\" onClick={() => {}}>\n            Save\n          </Button>\n        </>\n      }\n    >\n      Three metadata fixes are waiting for review.\n    </Dialog>\n  );\n}\n"
-      },
-      "tables": [
-        {
-          "name": "DialogProps",
-          "kind": "props",
-          "rows": [
-            {
-              "name": "children",
-              "type": "ReactNode",
-              "required": false,
-              "description": "Body content, in secondary text colour."
-            },
-            {
-              "name": "canDismiss",
-              "type": "boolean",
-              "required": false,
-              "description": "When `false`, Escape and backdrop clicks are ignored; pass `!loading` while a request runs.",
-              "default": "true"
-            },
-            {
-              "name": "className",
-              "type": "string",
-              "required": false,
-              "description": "Extra class on the `<dialog>` element. Win specificity with `'&&'`, never `!important`."
-            },
-            {
-              "name": "footer",
-              "type": "ReactNode",
-              "required": false,
-              "description": "Action row. No footer bar is drawn when omitted."
-            },
-            {
-              "name": "onClose",
-              "type": "() => void",
-              "required": true,
-              "description": "Called on Escape and a backdrop click (unless `canDismiss` is false); receives no event. Close the dialog here."
-            },
-            {
-              "name": "open",
-              "type": "boolean",
-              "required": true,
-              "description": "Controls visibility. Keep the Dialog mounted and toggle this."
-            },
-            {
-              "name": "title",
-              "type": "ReactNode",
-              "required": true,
-              "description": "Header content; also the dialog's accessible name."
-            }
-          ]
-        }
-      ],
-      "tokens": [
-        {
-          "path": "color.bg.card",
-          "kind": "color",
-          "light": "#FCFCFC",
-          "dark": "#1A1B1E"
-        },
-        {
-          "path": "color.text.secondary",
-          "kind": "color",
-          "light": "#5A6375",
-          "dark": "#C8CBD2"
-        },
-        {
-          "path": "recipe.modal.dialog",
-          "kind": "recipe",
-          "light": null,
-          "dark": null
-        },
-        {
-          "path": "recipe.modal.footer",
-          "kind": "recipe",
-          "light": null,
-          "dark": null
-        },
-        {
-          "path": "recipe.modal.header",
-          "kind": "recipe",
-          "light": null,
-          "dark": null
-        },
-        {
-          "path": "space.xxl",
-          "kind": "value",
-          "light": "1rem",
-          "dark": "1rem"
-        },
-        {
-          "path": "space.xxxxl",
-          "kind": "value",
-          "light": "1.5rem",
-          "dark": "1.5rem"
-        }
-      ],
-      "changelog": [
-        {
-          "version": "0.7.0",
-          "date": "2026-11-26",
-          "tags": [
-            "Divider",
-            "Card",
-            "Dialog"
-          ],
-          "text": "`CardDivider` is now `Divider` and works anywhere: directly in a Card or Dialog body it reaches the edges as before (cancelling `space.xl` in a large Card, 1px in a small one, `space.xxl` in a Dialog, where it used to overhang everything but a large Card), and on the page, in a `CardRow`, `Alert`, `Surface` or nested Card it spans its container. The new `bleed` prop overrides that. **Breaking:** the old names `CardDivider`, `CardDividerProps` and `CardDividerAlign` are removed; import `Divider`, `DividerProps` and `DividerAlign`."
-        },
-        {
-          "version": "0.5.0",
-          "date": "2026-11-24",
-          "tags": [
-            "Page",
-            "Dialog",
-            "Card",
-            "CardRow",
-            "Alert",
-            "Surface",
-            "Popover",
-            "Menu",
-            "Select",
-            "Button"
-          ],
-          "text": "Surface depth: corners are concentric site-wide with no radius props. `Page` provides depth 0, `Dialog` 1, and `Card`, `CardRow` and `Alert` each provide one level deeper than where they sit; `Popover` (so `Menu` and the `Select` list) provides a fixed 2. Depth 0 is `radius.lg`, 1 is `md`, 2 and deeper is `sm`. `Button`, `Select`, `Card`, `CardRow` and `Alert` follow it; an explicit `Button radius` or `Select surface` still wins. With no `Page`, `Dialog`, `Card`, `CardRow`, `Alert` or `Surface` above it, a component keeps its 0.4.0 look; a bare `Card` (no `Page`) still counts as depth 0 and gives its contents depth 1, so its Buttons and nested Cards change as below."
-        },
-        {
-          "version": "0.5.0",
-          "date": "2026-11-24",
-          "tags": [
-            "Button",
-            "Select",
-            "Card",
-            "CardRow",
-            "Popover",
-            "Menu",
-            "Dialog",
-            "Page"
-          ],
-          "text": "**Visible changes:**\n  - Buttons in a Card default to 8px (they were 16px unless `radius=\"card\"` was set), and Buttons in a Dialog body are 8px.\n  - Selects directly on a Page get the page look (16px and the card shadow); in a Card or Dialog they stay 8px. This includes Selects in your own boxes on a Page (a `useModalDialog` modal, a `recipe.card.shell` or `recipe.row` box), because depth cannot see hand-drawn boxes: wrap their contents in `Surface`, or pass `surface=\"card\"`.\n  - Without a Page, a bare `Card` counts as depth 0: its Buttons go from 16px to 8px, a Card nested in it steps down, and a `CardRow` in it is 8px.\n  - A Card nested in a Card or Dialog steps down (8px, then 4px), and so do its Buttons and Selects; `size=\"small\"` keeps its extra 1px.\n  - `CardRow` is 16px on a Page and 8px inside a Card (it was always 16px).\n  - Buttons and Selects inside a Popover or Menu are 4px."
-        },
-        {
-          "version": "0.5.0",
-          "date": "2026-11-24",
-          "tags": [
-            "Dialog",
-            "Button"
-          ],
-          "text": "The internal `ButtonRadiusContext` is removed; Dialog footer Buttons are unchanged (8px)."
-        },
-        {
-          "version": "0.4.0",
-          "date": "2026-11-23",
-          "tags": [
-            "Popover",
-            "Dialog",
-            "useModalDialog"
-          ],
-          "text": "Layer stack: popovers and dialogs now close innermost-first. Escape and an outside press only affect the topmost layer, so a popover inside a popover closes one level at a time. **Behaviour change:** a popover beneath an open dialog no longer takes its Escape or closes on a press inside the dialog."
-        },
-        {
-          "version": "0.3.0",
-          "date": "2026-11-22",
-          "tags": [
-            "Dialog"
-          ],
-          "text": "New `Dialog` (control): a modal with a title, body and optional footer on a native `<dialog>`; `canDismiss` blocks Escape and backdrop dismissal while busy."
-        },
-        {
-          "version": "0.3.0",
-          "date": "2026-11-22",
-          "tags": [
-            "ConfirmModal",
-            "Dialog"
-          ],
-          "text": "`ConfirmModal` is rebuilt on `Dialog`. No API or visual change; it is now named by its title (`aria-labelledby`)."
-        },
-        {
-          "version": "0.3.0",
-          "date": "2026-11-22",
-          "tags": [
-            "Popover",
-            "Select",
-            "ChipsInput",
-            "Dialog",
-            "useModalDialog"
-          ],
-          "text": "`Popover` renders inside an open `<dialog>` that contains its anchor, so `Select` and `ChipsInput` work in modals."
-        },
-        {
-          "version": "0.3.0",
-          "date": "2026-11-22",
-          "tags": [
-            "Button",
-            "Dialog"
-          ],
-          "text": "Buttons in a `Dialog` footer default to `radius=\"modal\"`; an explicit `radius` still wins. The radius applies to the footer only (a Dialog nested in a footer is unaffected), and `footer={false}`, `''` and `null` render no footer bar."
-        }
-      ]
-    },
-    {
       "id": "control/field-list",
       "slug": "field-list",
       "entry": "@korzun/design/control",
@@ -1880,7 +1625,7 @@
         "FieldRow"
       ],
       "importLine": "import { FieldList, type ColumnDescriptor, type FieldListProps, type FieldRow } from '@korzun/design/control'",
-      "body": "An editable list of rows, each with one or more text/number inputs and a\nremove button, plus a dashed \"add\" button underneath. Fully controlled: you own\nthe rows and apply every change. On phones a row's columns stack.\n\nUse something else for: a list of single words or tags (`ChipsInput`), a fixed\nset of fields (`TextInput` / `NumberInput` directly).\n\n## Usage\n\n### Columns\n\nA text column renders a `TextInput`, a number column a `NumberInput` (see\nthose docs for the controlled-ish behaviour). A number column shows a row value\nonly if it is a `number`; a numeric string displays as empty.\n\n### Corners\n\nThe add button follows surface depth: 16px directly on a Page, 8px in a Card\nor Dialog, 4px deeper (8px with no Page, Dialog, Card, CardRow, Alert or Surface above it).\n\n### Behaviour to know\n\n- The add button is 8px outside any surface and follows surface depth inside\n  one (a Card body, a Dialog, a Popover).\n- Inputs have no labels; use `placeholder` to say what each column is.\n- Every remove button is titled \"Remove row\" (its accessible name); they are not\n  distinguished per row.\n- No `className`.\n\n## Do / don't\n\n- Do generate `_key` once per row (`crypto.randomUUID()`), never from the index.\n- Do strip `_key` before sending rows to the server.\n- Don't store numeric columns as strings; they won't display.",
+      "body": "An editable list of rows, each with one or more text/number inputs and a\nremove button, plus a dashed \"add\" button underneath. Fully controlled: you own\nthe rows and apply every change. On phones a row's columns stack.\n\nUse something else for: a list of single words or tags (`ChipsInput`), a fixed\nset of fields (`TextInput` / `NumberInput` directly).\n\n## Usage\n\n### Columns\n\nA text column renders a `TextInput`, a number column a `NumberInput` (see\nthose docs for the controlled-ish behaviour). A number column shows a row value\nonly if it is a `number`; a numeric string displays as empty.\n\n### Corners\n\nThe add button follows surface depth: 16px directly on a Page, 8px in a Card\nor Modal, 4px deeper (8px with no Page, Modal, Card, CardRow, Alert or Surface above it).\n\n### Behaviour to know\n\n- The add button is 8px outside any surface and follows surface depth inside\n  one (a Card body, a Modal, a Popover).\n- Inputs have no labels; use `placeholder` to say what each column is.\n- Every remove button is titled \"Remove row\" (its accessible name); they are not\n  distinguished per row.\n- No `className`.\n\n## Do / don't\n\n- Do generate `_key` once per row (`crypto.randomUUID()`), never from the index.\n- Do strip `_key` before sending rows to the server.\n- Don't store numeric columns as strings; they won't display.",
       "examples": [
         {
           "file": "src/control/field-list/examples/01-basic.tsx",
@@ -2052,7 +1797,7 @@
         "MenuTriggerProps"
       ],
       "importLine": "import { Menu, type MenuActionItem, type MenuIntentProps, type MenuItem, type MenuLinkItem, type MenuProps, type MenuTriggerProps } from '@korzun/design/control'",
-      "body": "A button that opens a list of actions and links, described as data, with keyboard\nhandling built in. It follows the WAI-ARIA menu button pattern. You render the\ntrigger; Menu gives it the props it needs, draws the\nlist in a [`Popover`](popover.md) anchored to it, and handles focus and the\nkeyboard. Pass the items in `items`. There are no child\ncomponents and no style file to write.\n\n[`PageActionsBar`](page-actions-bar.md) and [`PageActionsMenu`](page-actions-menu.md)\nare built on Menu.\n\nUse something else for: choosing a value ([`Select`](select.md)), page-header\nactions ([`PageActionsBar`](page-actions-bar.md) on desktop,\n[`PageActionsMenu`](page-actions-menu.md) on mobile).\n\n## Usage\n\n### The trigger\n\n`MenuTriggerProps` is `{ ref, onClick, ariaExpanded, ariaControls, ariaHasPopup: 'menu' }`,\nshaped for [`Button`](button.md), so `{...p}` needs no glue. `ref` is a\ncallback ref (`(node: HTMLElement | null) => void`), so it attaches to any\nelement without a cast. `ariaControls` is the menu's id while open and\n`undefined` while closed. For any other element, pass `ref={p.ref}`, call\n`onClick` on click, and map the rest to `aria-expanded`, `aria-controls` and\n`aria-haspopup`; the \"Other triggers\" example shows it.\n\n### Items\n\nAn item is either an action or a link. TypeScript rejects an item with both\n`onClick` and `to`, or with neither. Every item takes `label`, `Icon`, `danger`,\n`disabled`, `separatorBefore` and `intentProps`; actions add `onClick`, links add\n`to`. The tables under Props list each field.\n\n### Keyboard\n\n| Key                                  | Does                                                                                                                                                                                                                     |\n| ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |\n| Click, Enter or Space on the trigger | Opens the menu and focuses the first enabled item.                                                                                                                                                                       |\n| Down / Up                            | Next / previous enabled item, wrapping.                                                                                                                                                                                  |\n| Home / End                           | First / last enabled item.                                                                                                                                                                                               |\n| Enter, Space (or a click)            | Activates the item: the menu closes, focus returns to the trigger, then the action runs or the link navigates.                                                                                                           |\n| Escape                               | Closes the menu and returns focus to the trigger.                                                                                                                                                                        |\n| Tab / Shift+Tab                      | Closes the menu; focus moves to the tabbable element after / before the trigger, skipping inert and hidden ones. Inside an open `<dialog>` it stays within the dialog; with nothing there, focus returns to the trigger. |\n| Pointer-down outside                 | Closes the menu without moving focus.                                                                                                                                                                                    |\n\n### Behaviour to know\n\n- Escape and outside presses go to the innermost open layer first: a Select\n  list opened over the menu closes before it, and a Menu inside a\n  [`Dialog`](dialog.md) closes before the Dialog.\n- Opening another Menu closes the first (the press on its trigger is outside).\n- If the focused item disappears while the menu is open, focus moves to the\n  first enabled item. With every item disabled, the menu itself takes focus.\n- The menu sits `space.sm` from the trigger and portals out of clipping\n  ancestors (into an open `<dialog>` when inside one).\n\n## Do / don't\n\n- Do use Menu for any list of actions or links behind a button.\n- Do pass icon components (`Icon: BookIcon`), not elements.\n- Don't hand-build `role=\"menu\"`, or wire a Popover and buttons yourself.\n- Don't wrap the trigger in another `<button>`; spread the props onto it.\n- Don't use a Menu to pick a value that stays shown; that is a `Select`.",
+      "body": "A button that opens a list of actions and links, described as data, with keyboard\nhandling built in. It follows the WAI-ARIA menu button pattern. You render the\ntrigger; Menu gives it the props it needs, draws the\nlist in a [`Popover`](popover.md) anchored to it, and handles focus and the\nkeyboard. Pass the items in `items`. There are no child\ncomponents and no style file to write.\n\n[`PageActionsBar`](page-actions-bar.md) and [`PageActionsMenu`](page-actions-menu.md)\nare built on Menu.\n\nUse something else for: choosing a value ([`Select`](select.md)), page-header\nactions ([`PageActionsBar`](page-actions-bar.md) on desktop,\n[`PageActionsMenu`](page-actions-menu.md) on mobile).\n\n## Usage\n\n### The trigger\n\n`MenuTriggerProps` is `{ ref, onClick, ariaExpanded, ariaControls, ariaHasPopup: 'menu' }`,\nshaped for [`Button`](button.md), so `{...p}` needs no glue. `ref` is a\ncallback ref (`(node: HTMLElement | null) => void`), so it attaches to any\nelement without a cast. `ariaControls` is the menu's id while open and\n`undefined` while closed. For any other element, pass `ref={p.ref}`, call\n`onClick` on click, and map the rest to `aria-expanded`, `aria-controls` and\n`aria-haspopup`; the \"Other triggers\" example shows it.\n\n### Items\n\nAn item is either an action or a link. TypeScript rejects an item with both\n`onClick` and `to`, or with neither. Every item takes `label`, `Icon`, `danger`,\n`disabled`, `separatorBefore` and `intentProps`; actions add `onClick`, links add\n`to`. The tables under Props list each field.\n\n### Keyboard\n\n| Key                                  | Does                                                                                                                                                                                                                     |\n| ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |\n| Click, Enter or Space on the trigger | Opens the menu and focuses the first enabled item.                                                                                                                                                                       |\n| Down / Up                            | Next / previous enabled item, wrapping.                                                                                                                                                                                  |\n| Home / End                           | First / last enabled item.                                                                                                                                                                                               |\n| Enter, Space (or a click)            | Activates the item: the menu closes, focus returns to the trigger, then the action runs or the link navigates.                                                                                                           |\n| Escape                               | Closes the menu and returns focus to the trigger.                                                                                                                                                                        |\n| Tab / Shift+Tab                      | Closes the menu; focus moves to the tabbable element after / before the trigger, skipping inert and hidden ones. Inside an open `<dialog>` it stays within the dialog; with nothing there, focus returns to the trigger. |\n| Pointer-down outside                 | Closes the menu without moving focus.                                                                                                                                                                                    |\n\n### Behaviour to know\n\n- Escape and outside presses go to the innermost open layer first: a Select\n  list opened over the menu closes before it, and a Menu inside a\n  [`Modal`](modal.md) closes before the Modal.\n- Opening another Menu closes the first (the press on its trigger is outside).\n- If the focused item disappears while the menu is open, focus moves to the\n  first enabled item. With every item disabled, the menu itself takes focus.\n- The menu sits `space.sm` from the trigger and portals out of clipping\n  ancestors (into an open `<dialog>` when inside one).\n\n## Do / don't\n\n- Do use Menu for any list of actions or links behind a button.\n- Do pass icon components (`Icon: BookIcon`), not elements.\n- Don't hand-build `role=\"menu\"`, or wire a Popover and buttons yourself.\n- Don't wrap the trigger in another `<button>`; spread the props onto it.\n- Don't use a Menu to pick a value that stays shown; that is a `Select`.",
       "examples": [
         {
           "file": "src/control/menu/examples/01-basic.tsx",
@@ -2143,12 +1888,12 @@
           "code": "import { Card, Stack, Text } from '@korzun/design/component';\nimport { Button, Menu } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function InCard() {\n  const [chosen, setChosen] = useState('nothing yet');\n  return (\n    <Card\n      title=\"Reading list\"\n      headerAction={\n        <Menu\n          align=\"end\"\n          trigger={(p) => <Button {...p}>Manage</Button>}\n          items={[\n            { label: 'Rename list', onClick: () => setChosen('Rename list') },\n            { label: 'Clear list', danger: true, onClick: () => setChosen('Clear list') },\n          ]}\n        />\n      }\n    >\n      <Stack>\n        <Text>Three books queued.</Text>\n        <Text tone=\"muted\">Chosen: {chosen}</Text>\n      </Stack>\n    </Card>\n  );\n}\n"
         },
         {
-          "file": "src/control/menu/examples/12-in-dialog.tsx",
-          "slug": "in-dialog",
+          "file": "src/control/menu/examples/12-in-modal.tsx",
+          "slug": "in-modal",
           "order": 12,
-          "title": "In a Dialog",
-          "description": "A Menu inside a Dialog opens into the dialog, so it shows above the dialog's\nbackdrop. Escape closes the menu first and the Dialog on the next press.",
-          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button, Dialog, Menu } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function InDialog() {\n  const [open, setOpen] = useState(false);\n  const [chosen, setChosen] = useState('nothing yet');\n  return (\n    <Stack align=\"start\">\n      <Button onClick={() => setOpen(true)}>Open dialog</Button>\n      <Dialog open={open} onClose={() => setOpen(false)} title=\"Edit book\">\n        <Stack align=\"start\">\n          <Menu\n            trigger={(p) => <Button {...p}>Actions</Button>}\n            items={[\n              { label: 'Rename', onClick: () => setChosen('Rename') },\n              { label: 'Duplicate', onClick: () => setChosen('Duplicate') },\n              { label: 'Delete', danger: true, onClick: () => setChosen('Delete') },\n            ]}\n          />\n          <Text tone=\"muted\">Chosen: {chosen}</Text>\n        </Stack>\n      </Dialog>\n    </Stack>\n  );\n}\n"
+          "title": "In a Modal",
+          "description": "A Menu inside a Modal opens into the dialog, so it shows above the dialog's\nbackdrop. Escape closes the menu first and the Modal on the next press.",
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button, Modal, Menu } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function InDialog() {\n  const [open, setOpen] = useState(false);\n  const [chosen, setChosen] = useState('nothing yet');\n  return (\n    <Stack align=\"start\">\n      <Button onClick={() => setOpen(true)}>Open dialog</Button>\n      <Modal open={open} onClose={() => setOpen(false)} title=\"Edit book\">\n        <Stack align=\"start\">\n          <Menu\n            trigger={(p) => <Button {...p}>Actions</Button>}\n            items={[\n              { label: 'Rename', onClick: () => setChosen('Rename') },\n              { label: 'Duplicate', onClick: () => setChosen('Duplicate') },\n              { label: 'Delete', danger: true, onClick: () => setChosen('Delete') },\n            ]}\n          />\n          <Text tone=\"muted\">Chosen: {chosen}</Text>\n        </Stack>\n      </Modal>\n    </Stack>\n  );\n}\n"
         }
       ],
       "preview": {
@@ -2537,7 +2282,7 @@
           "date": "2026-11-24",
           "tags": [
             "Page",
-            "Dialog",
+            "Modal",
             "Card",
             "CardRow",
             "Alert",
@@ -2559,7 +2304,7 @@
             "CardRow",
             "Popover",
             "Menu",
-            "Dialog",
+            "Modal",
             "Page"
           ],
           "text": "**Visible changes:**\n  - Buttons in a Card default to 8px (they were 16px unless `radius=\"card\"` was set), and Buttons in a Dialog body are 8px.\n  - Selects directly on a Page get the page look (16px and the card shadow); in a Card or Dialog they stay 8px. This includes Selects in your own boxes on a Page (a `useModalDialog` modal, a `recipe.card.shell` or `recipe.row` box), because depth cannot see hand-drawn boxes: wrap their contents in `Surface`, or pass `surface=\"card\"`.\n  - Without a Page, a bare `Card` counts as depth 0: its Buttons go from 16px to 8px, a Card nested in it steps down, and a `CardRow` in it is 8px.\n  - A Card nested in a Card or Dialog steps down (8px, then 4px), and so do its Buttons and Selects; `size=\"small\"` keeps its extra 1px.\n  - `CardRow` is 16px on a Page and 8px inside a Card (it was always 16px).\n  - Buttons and Selects inside a Popover or Menu are 4px."
@@ -2598,6 +2343,270 @@
             "Menu"
           ],
           "text": "`PageActionsMenu` and `PageActionsBar` are rebuilt on `Menu`: arrow keys, Home and End move between actions, and Escape returns focus to the trigger. `PageActionItem` is now `MenuActionItem & { primary?, align? }`: it gains an optional `Icon` (shown in the menus, ignored by the bar's primary Buttons), and `to` is not allowed."
+        }
+      ]
+    },
+    {
+      "id": "control/modal",
+      "slug": "modal",
+      "entry": "@korzun/design/control",
+      "docPath": "docs/control/modal.md",
+      "title": "Modal",
+      "description": "A modal on a native dialog element with a title, a body and an optional footer of actions.",
+      "category": "Overlays",
+      "values": [
+        "Modal"
+      ],
+      "types": [
+        "ModalProps"
+      ],
+      "importLine": "import { Modal, type ModalProps } from '@korzun/design/control'",
+      "body": "A modal on a native `<dialog>` (via `useModal`): a title, a body\n(`children`), and an optional `footer` for actions. It is always mounted and\nfully controlled by `open`. The title names the dialog for assistive tech.\n\nUse something else for: a yes/no question ([`ConfirmModal`](confirm-modal.md)),\na non-blocking notice (toast).\n\n## Usage\n\n### Behaviour to know\n\n- Escape and a backdrop press-and-release both call `onClose`; it is the\n  single dismissal path. `canDismiss={false}` blocks both.\n- Escape goes to the innermost open layer first: a `Select` list or other\n  popover open inside the dialog closes before the dialog, and a dialog opened\n  over a still-open popover closes before that popover.\n- Always mounted: toggle `open`, don't render it conditionally.\n- Focus is native: `showModal()` moves focus into the dialog and restores it\n  on close.\n- Clicks inside the dialog do not bubble to clickable ancestors.\n- Content is one surface level in: Buttons in the body, header and `footer`\n  (including nested ones inside an `Inline`) default to 8px. An explicit\n  `radius` on a Button still wins.\n\n## Do / don't\n\n- Do use [`ConfirmModal`](confirm-modal.md) for yes/no questions.\n- Do pass `canDismiss={!loading}` while a request runs.\n- Don't set `radius` on Buttons inside a Modal by hand; the depth does it.\n- Don't write your own modal style files; build on `Modal`.\n- Don't render it conditionally (`{open && <Modal …/>}`); toggle `open`.",
+      "examples": [
+        {
+          "file": "src/control/modal/examples/01-basic.tsx",
+          "slug": "basic",
+          "order": 1,
+          "title": "Basic",
+          "description": "A title, a body and a footer with a `text` Cancel and a `primary` Save. `open` is\ncontrolled and `onClose` takes no arguments: it runs for Escape and a click on the\nbackdrop, and closes nothing by itself, so it sets `open` to `false`. This demo\nstarts open; Review fixes opens it again.",
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button, Modal } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Basic() {\n  const [open, setOpen] = useState(true);\n  const [saves, setSaves] = useState(0);\n  const save = () => {\n    setSaves((n) => n + 1);\n    setOpen(false);\n  };\n  return (\n    <Stack align=\"start\">\n      <Button onClick={() => setOpen(true)}>Review fixes</Button>\n      <Text tone=\"muted\">Saved: {saves}</Text>\n      <Modal\n        open={open}\n        onClose={() => setOpen(false)}\n        title=\"Fixes waiting\"\n        footer={\n          <>\n            <Button type=\"text\" onClick={() => setOpen(false)}>\n              Cancel\n            </Button>\n            <Button type=\"primary\" onClick={save}>\n              Save\n            </Button>\n          </>\n        }\n      >\n        Three metadata fixes are waiting for review.\n      </Modal>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/modal/examples/02-no-footer.tsx",
+          "slug": "no-footer",
+          "order": 2,
+          "title": "Without a footer",
+          "description": "With no `footer` no action bar is drawn. The dialog is dismissed with Escape or a\nclick on the backdrop, both of which call `onClose`.",
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button, Modal } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function NoFooter() {\n  const [open, setOpen] = useState(false);\n  const [dismissals, setDismissals] = useState(0);\n  const dismiss = () => {\n    setDismissals((n) => n + 1);\n    setOpen(false);\n  };\n  return (\n    <Stack align=\"start\">\n      <Button onClick={() => setOpen(true)}>Show notice</Button>\n      <Text tone=\"muted\">Dismissed: {dismissals}</Text>\n      <Modal open={open} onClose={dismiss} title=\"Sync finished\">\n        Press Escape or click outside the dialog to close it.\n      </Modal>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/modal/examples/03-not-dismissable.tsx",
+          "slug": "not-dismissable",
+          "order": 3,
+          "title": "Not dismissable while busy",
+          "description": "`canDismiss={!saving}` makes Escape and backdrop clicks do nothing while a request\nruns. The switch holds the busy state on so you can try both; the footer buttons\nare disabled or loading to match, so every way out is gated the same.",
+          "code": "import { Stack } from '@korzun/design/component';\nimport { Button, Modal, Switch } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function NotDismissable() {\n  const [open, setOpen] = useState(false);\n  const [saving, setSaving] = useState(true);\n  return (\n    <Stack align=\"start\">\n      <Button onClick={() => setOpen(true)}>Open busy dialog</Button>\n      <Modal\n        open={open}\n        onClose={() => setOpen(false)}\n        canDismiss={!saving}\n        title=\"Saving changes\"\n        footer={\n          <>\n            <Button type=\"text\" disabled={saving} onClick={() => setOpen(false)}>\n              Cancel\n            </Button>\n            <Button type=\"primary\" loading={saving} onClick={() => setOpen(false)}>\n              Save\n            </Button>\n          </>\n        }\n      >\n        <Stack>\n          Escape and the backdrop are ignored while the request is in flight.\n          <Switch name=\"saving\" label=\"Request in flight\" checked={saving} onChange={setSaving} />\n        </Stack>\n      </Modal>\n    </Stack>\n  );\n}\n"
+        },
+        {
+          "file": "src/control/modal/examples/04-form.tsx",
+          "slug": "form",
+          "order": 4,
+          "title": "Form in a dialog",
+          "description": "Controls in the body and a footer that saves. `Select` lists open inside the dialog\nand Escape closes the list before the dialog. `canDismiss={!saving}` and a\n`loading` Save keep it open until the request finishes.",
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button, Modal, Select, TextInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nconst SHELVES = ['Reading', 'To read', 'Finished', 'Abandoned'];\n\nexport default function Form() {\n  const [open, setOpen] = useState(false);\n  const [saving, setSaving] = useState(false);\n  const [note, setNote] = useState<string | undefined>('');\n  const [shelf, setShelf] = useState<string | undefined>('Reading');\n  const [saved, setSaved] = useState('nothing yet');\n  const save = () => {\n    setSaving(true);\n    setTimeout(() => {\n      setSaved(`${shelf ?? 'no shelf'}, note “${note ?? ''}”`);\n      setSaving(false);\n      setOpen(false);\n    }, 1000);\n  };\n  return (\n    <Stack align=\"start\">\n      <Button onClick={() => setOpen(true)}>Edit book</Button>\n      <Text tone=\"muted\">Saved: {saved}</Text>\n      <Modal\n        open={open}\n        onClose={() => setOpen(false)}\n        canDismiss={!saving}\n        title=\"Edit book\"\n        footer={\n          <>\n            <Button type=\"text\" disabled={saving} onClick={() => setOpen(false)}>\n              Cancel\n            </Button>\n            <Button type=\"primary\" loading={saving} onClick={save}>\n              Save\n            </Button>\n          </>\n        }\n      >\n        <Stack>\n          <TextInput name=\"note\" label=\"Note\" layout=\"vertical\" value={note} onChange={setNote} />\n          <Select\n            name=\"shelf\"\n            label=\"Shelf\"\n            layout=\"vertical\"\n            options={SHELVES}\n            value={shelf}\n            onChange={setShelf}\n          />\n        </Stack>\n      </Modal>\n    </Stack>\n  );\n}\n"
+        }
+      ],
+      "preview": {
+        "file": "src/control/modal/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { Button, Modal } from '@korzun/design/control';\n\nexport default function Preview() {\n  return (\n    <Modal\n      open\n      onClose={() => {}}\n      title=\"Fixes waiting\"\n      footer={\n        <>\n          <Button type=\"text\" onClick={() => {}}>\n            Cancel\n          </Button>\n          <Button type=\"primary\" onClick={() => {}}>\n            Save\n          </Button>\n        </>\n      }\n    >\n      Three metadata fixes are waiting for review.\n    </Modal>\n  );\n}\n"
+      },
+      "tables": [
+        {
+          "name": "ModalProps",
+          "kind": "props",
+          "rows": [
+            {
+              "name": "children",
+              "type": "ReactNode",
+              "required": false,
+              "description": "Body content, in secondary text colour."
+            },
+            {
+              "name": "canDismiss",
+              "type": "boolean",
+              "required": false,
+              "description": "When `false`, Escape and backdrop clicks are ignored; pass `!loading` while a request runs.",
+              "default": "true"
+            },
+            {
+              "name": "className",
+              "type": "string",
+              "required": false,
+              "description": "Extra class on the `<dialog>` element. Win specificity with `'&&'`, never `!important`."
+            },
+            {
+              "name": "footer",
+              "type": "ReactNode",
+              "required": false,
+              "description": "Action row. No footer bar is drawn when omitted."
+            },
+            {
+              "name": "onClose",
+              "type": "() => void",
+              "required": true,
+              "description": "Called on Escape and a backdrop click (unless `canDismiss` is false); receives no event. Close the dialog here."
+            },
+            {
+              "name": "open",
+              "type": "boolean",
+              "required": true,
+              "description": "Controls visibility. Keep the Modal mounted and toggle this."
+            },
+            {
+              "name": "title",
+              "type": "ReactNode",
+              "required": true,
+              "description": "Header content; also the dialog's accessible name."
+            }
+          ]
+        }
+      ],
+      "tokens": [
+        {
+          "path": "color.bg.card",
+          "kind": "color",
+          "light": "#FCFCFC",
+          "dark": "#1A1B1E"
+        },
+        {
+          "path": "color.text.secondary",
+          "kind": "color",
+          "light": "#5A6375",
+          "dark": "#C8CBD2"
+        },
+        {
+          "path": "recipe.modal.dialog",
+          "kind": "recipe",
+          "light": null,
+          "dark": null
+        },
+        {
+          "path": "recipe.modal.footer",
+          "kind": "recipe",
+          "light": null,
+          "dark": null
+        },
+        {
+          "path": "recipe.modal.header",
+          "kind": "recipe",
+          "light": null,
+          "dark": null
+        },
+        {
+          "path": "space.xxl",
+          "kind": "value",
+          "light": "1rem",
+          "dark": "1rem"
+        },
+        {
+          "path": "space.xxxxl",
+          "kind": "value",
+          "light": "1.5rem",
+          "dark": "1.5rem"
+        }
+      ],
+      "changelog": [
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "Divider",
+            "Card",
+            "Modal"
+          ],
+          "text": "`CardDivider` is now `Divider` and works anywhere: directly in a Card or Dialog body it reaches the edges as before (cancelling `space.xl` in a large Card, 1px in a small one, `space.xxl` in a Dialog, where it used to overhang everything but a large Card), and on the page, in a `CardRow`, `Alert`, `Surface` or nested Card it spans its container. The new `bleed` prop overrides that. **Breaking:** the old names `CardDivider`, `CardDividerProps` and `CardDividerAlign` are removed; import `Divider`, `DividerProps` and `DividerAlign`."
+        },
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "Modal",
+            "useModal"
+          ],
+          "text": "**Breaking:** `Dialog` is renamed `Modal` and `useModalDialog` is renamed `useModal`, matching `ConfirmModal`; behaviour is unchanged. The old names `Dialog`, `DialogProps` and `useModalDialog` are removed. The footer marker attribute is now `data-modal-footer`."
+        },
+        {
+          "version": "0.5.0",
+          "date": "2026-11-24",
+          "tags": [
+            "Page",
+            "Modal",
+            "Card",
+            "CardRow",
+            "Alert",
+            "Surface",
+            "Popover",
+            "Menu",
+            "Select",
+            "Button"
+          ],
+          "text": "Surface depth: corners are concentric site-wide with no radius props. `Page` provides depth 0, `Dialog` 1, and `Card`, `CardRow` and `Alert` each provide one level deeper than where they sit; `Popover` (so `Menu` and the `Select` list) provides a fixed 2. Depth 0 is `radius.lg`, 1 is `md`, 2 and deeper is `sm`. `Button`, `Select`, `Card`, `CardRow` and `Alert` follow it; an explicit `Button radius` or `Select surface` still wins. With no `Page`, `Dialog`, `Card`, `CardRow`, `Alert` or `Surface` above it, a component keeps its 0.4.0 look; a bare `Card` (no `Page`) still counts as depth 0 and gives its contents depth 1, so its Buttons and nested Cards change as below."
+        },
+        {
+          "version": "0.5.0",
+          "date": "2026-11-24",
+          "tags": [
+            "Button",
+            "Select",
+            "Card",
+            "CardRow",
+            "Popover",
+            "Menu",
+            "Modal",
+            "Page"
+          ],
+          "text": "**Visible changes:**\n  - Buttons in a Card default to 8px (they were 16px unless `radius=\"card\"` was set), and Buttons in a Dialog body are 8px.\n  - Selects directly on a Page get the page look (16px and the card shadow); in a Card or Dialog they stay 8px. This includes Selects in your own boxes on a Page (a `useModalDialog` modal, a `recipe.card.shell` or `recipe.row` box), because depth cannot see hand-drawn boxes: wrap their contents in `Surface`, or pass `surface=\"card\"`.\n  - Without a Page, a bare `Card` counts as depth 0: its Buttons go from 16px to 8px, a Card nested in it steps down, and a `CardRow` in it is 8px.\n  - A Card nested in a Card or Dialog steps down (8px, then 4px), and so do its Buttons and Selects; `size=\"small\"` keeps its extra 1px.\n  - `CardRow` is 16px on a Page and 8px inside a Card (it was always 16px).\n  - Buttons and Selects inside a Popover or Menu are 4px."
+        },
+        {
+          "version": "0.5.0",
+          "date": "2026-11-24",
+          "tags": [
+            "Modal",
+            "Button"
+          ],
+          "text": "The internal `ButtonRadiusContext` is removed; Dialog footer Buttons are unchanged (8px)."
+        },
+        {
+          "version": "0.4.0",
+          "date": "2026-11-23",
+          "tags": [
+            "Popover",
+            "Modal",
+            "useModal"
+          ],
+          "text": "Layer stack: popovers and dialogs now close innermost-first. Escape and an outside press only affect the topmost layer, so a popover inside a popover closes one level at a time. **Behaviour change:** a popover beneath an open dialog no longer takes its Escape or closes on a press inside the dialog."
+        },
+        {
+          "version": "0.3.0",
+          "date": "2026-11-22",
+          "tags": [
+            "Modal"
+          ],
+          "text": "New `Dialog` (control): a modal with a title, body and optional footer on a native `<dialog>`; `canDismiss` blocks Escape and backdrop dismissal while busy."
+        },
+        {
+          "version": "0.3.0",
+          "date": "2026-11-22",
+          "tags": [
+            "ConfirmModal",
+            "Modal"
+          ],
+          "text": "`ConfirmModal` is rebuilt on `Dialog`. No API or visual change; it is now named by its title (`aria-labelledby`)."
+        },
+        {
+          "version": "0.3.0",
+          "date": "2026-11-22",
+          "tags": [
+            "Popover",
+            "Select",
+            "ChipsInput",
+            "Modal",
+            "useModal"
+          ],
+          "text": "`Popover` renders inside an open `<dialog>` that contains its anchor, so `Select` and `ChipsInput` work in modals."
+        },
+        {
+          "version": "0.3.0",
+          "date": "2026-11-22",
+          "tags": [
+            "Button",
+            "Modal"
+          ],
+          "text": "Buttons in a `Dialog` footer default to `radius=\"modal\"`; an explicit `radius` still wins. The radius applies to the footer only (a Dialog nested in a footer is unaffected), and `footer={false}`, `''` and `null` render no footer bar."
         }
       ]
     },
@@ -3220,7 +3229,7 @@
         "PageFooterActionsProps"
       ],
       "importLine": "import { PageFooterActions, type FooterAction, type PageFooterActionsProps } from '@korzun/design/control'",
-      "body": "A row of Buttons for the bottom of a page, split into leading and trailing\nsides: typically Cancel / Save for a form that spans several cards. Leading\nitems sit left, trailing items right. It is a plain flex row (not sticky, shown\nat every width). `Page` renders it after its children when you pass\n`footerActions`; you can also render it directly after your form.\n\nUse something else for: header actions (`PageActionsBar` / `PageActionsMenu`\nvia `Page headerActions`), a Card's own submit (`Button` in the Card `footer`),\nmodal buttons (`Dialog` footer).\n\n## Usage\n\n### Submitting a form\n\nThe row sits outside the form, below the cards, so a submit item needs `form`\n(the id of the `<form>`) as well as `submit`. `onClick` is required on every\nitem but is never called for a submit one; the form's `action` or `onSubmit`\nruns instead. Drive `loading` and `disabled` from your own pending and\nvalidation state.\n\n### Corners\n\nThe Buttons follow surface depth: the row sits on the page background below the\ncards, so on a `Page` they get the page's 16px corners; see\n[corners](../corners.md). No `className`.\n\n## Do / don't\n\n- Do give exactly one item `emphasis`.\n- Do pair `submit` with `form` when the row is outside the `<form>`.\n- Don't put a destructive action beside Save without `danger` and\n  `align: 'leading'`.\n- Don't put PageFooterActions inside a `Card`; a Card's own submit goes in its\n  `footer`.",
+      "body": "A row of Buttons for the bottom of a page, split into leading and trailing\nsides: typically Cancel / Save for a form that spans several cards. Leading\nitems sit left, trailing items right. It is a plain flex row (not sticky, shown\nat every width). `Page` renders it after its children when you pass\n`footerActions`; you can also render it directly after your form.\n\nUse something else for: header actions (`PageActionsBar` / `PageActionsMenu`\nvia `Page headerActions`), a Card's own submit (`Button` in the Card `footer`),\nmodal buttons (`Modal` footer).\n\n## Usage\n\n### Submitting a form\n\nThe row sits outside the form, below the cards, so a submit item needs `form`\n(the id of the `<form>`) as well as `submit`. `onClick` is required on every\nitem but is never called for a submit one; the form's `action` or `onSubmit`\nruns instead. Drive `loading` and `disabled` from your own pending and\nvalidation state.\n\n### Corners\n\nThe Buttons follow surface depth: the row sits on the page background below the\ncards, so on a `Page` they get the page's 16px corners; see\n[corners](../corners.md). No `className`.\n\n## Do / don't\n\n- Do give exactly one item `emphasis`.\n- Do pair `submit` with `form` when the row is outside the `<form>`.\n- Don't put a destructive action beside Save without `danger` and\n  `align: 'leading'`.\n- Don't put PageFooterActions inside a `Card`; a Card's own submit goes in its\n  `footer`.",
       "examples": [
         {
           "file": "src/control/page-footer-actions/examples/01-basic.tsx",
@@ -3367,7 +3376,7 @@
         "PopoverSide"
       ],
       "importLine": "import { Popover, type PopoverAlign, type PopoverGap, type PopoverProps, type PopoverSide } from '@korzun/design/control'",
-      "body": "A positioning primitive: renders `children` in a portal on `document.body`,\n`position: fixed` below or above an anchor element, so a dropdown can escape\nancestors that clip overflow (rounded cards). It paints **nothing** itself: no\nbackground, border, shadow, or radius. `Menu`, `Select` and `ChipsInput` build\ntheir dropdowns on it.\n\nUse something else for: a modal (`Dialog`), page action menus\n(`PageActionsMenu`, `PageActionsBar`), choosing from a list (`Select`).\n\n## Usage\n\n### Behaviour to know\n\n- **Content mounts one commit after `open` flips.** An effect keyed on `open`\n  that reaches into the content must wait for it: use a ref callback or\n  `autoFocus` instead.\n- **Flip.** It opens on `side`. If the content does not fit on that side and\n  the other side has more room, it opens on the other side. When neither side\n  fits it keeps whichever has more room.\n- **Clamp.** Only when `matchWidth` is false: `left` is clamped so the\n  content stays `gap` pixels inside the viewport's left and right edges;\n  content wider than the viewport pins to `gap`. With `matchWidth` it lines up\n  with the anchor exactly, edge margin or not. There is no vertical clamp.\n- **Align.** `align` sets the edge it lines up with: `start`, `center` or `end`. Use `end` for an anchor at the right edge of the screen, so the content grows leftwards.\n- **Top side is anchored by its bottom edge** (CSS `bottom`), so a popover\n  above its anchor stays attached when its content grows or shrinks.\n- **`data-side`.** The wrapper carries `data-side=\"bottom\"` or `\"top\"`: the side\n  actually used after flipping. It also carries `data-preferred-side`, the\n  `side` prop, so a flip can be told from a choice. Style against these (an\n  arrow, an animation origin) rather than against the `side` prop.\n- It re-measures, flip decision included, on window resize, on any scroll\n  (capture phase), and when its content resizes (`ResizeObserver`, where the\n  browser has it), so it stays attached to a scrolled anchor and to content\n  that changes size.\n- Its first render is transparent (`opacity: 0`) and is measured in a layout\n  effect before paint, so it never flashes at 0,0 or on the wrong side. It is\n  not `visibility: hidden`, so an `autoFocus` child takes focus on mount.\n- **No focus management.** Focus stays where it was; return it yourself if\n  closing should move it.\n- z-index is `theme.zIndex.sticky` (1000). Inside an open `<dialog>` it portals\n  into that dialog, so it shows in the top layer; this also matches a non-modal\n  `show()` dialog. The target is resolved each time the popover opens, so it\n  also works when it mounts already open.\n- Clicking the anchor does not count as \"outside\", so a toggle button on the\n  anchor works without racing `onClose`.\n\n### Layers\n\nEscape and outside pointer-down close the innermost open layer first. With\n`onClose`, an open popover joins a layer stack shared with other popovers and\nopen `Dialog`s, in the order they opened. A popover registers once its portal\ntarget resolves, one commit after each opening, so a `Dialog` that mounts\nalready open together with an already-open popover inside it still sits below\nthat popover.\n\n- An Escape keydown anywhere in the document goes to the top layer only,\n  unless the event is already `defaultPrevented` (a control such as\n  `Select` handled it first). A popover on top calls `onClose` and\n  `preventDefault()`s the key, so an enclosing native `<dialog>` does not\n  also fire `cancel` and close. A `Dialog` on top keeps the key: its own\n  `cancel` closes it, and the popover beneath stays open.\n- A mousedown closes every layer above the one it lands in (every layer,\n  when it lands outside them all), top first. A press in a nested popover\n  closes neither it nor its parent; a press inside a `Dialog` opened over a\n  popover does not close that popover.\n\n### Styling the surface\n\nContent is two surface levels in: Buttons and Selects inside a popover are 4px,\nwherever the anchor sits.\n\nA popover is a floating layer: corners `radius.md` with `shadow.hoverLift` (or\n`recipe.glass`), and the items inside it `radius.sm`. See\n[corners](../corners.md). The \"Basic\" example draws such a surface.\n\n```ts\nmenu: {\n  backgroundColor: theme.color.bg.card,\n  border: `1px solid ${theme.color.border.strong}`,\n  borderRadius: theme.radius.md,\n  boxShadow: theme.shadow.hoverLift,\n  padding: theme.space.xs,\n},\nitem: { borderRadius: theme.radius.sm, padding: theme.space.md },\n```\n\n## Do / don't\n\n- Do anchor to a `Button` through its `ref`, or wrap any element in a `<div ref>`.\n- Do give the content its own surface and radius; the wrapper is transparent.\n- Do call `preventDefault()` in your own Escape handler if you close the\n  popover yourself, so `onClose` is not called a second time.\n- Don't expect it to close on selection; that is your code.",
+      "body": "A positioning primitive: renders `children` in a portal on `document.body`,\n`position: fixed` below or above an anchor element, so a dropdown can escape\nancestors that clip overflow (rounded cards). It paints **nothing** itself: no\nbackground, border, shadow, or radius. `Menu`, `Select` and `ChipsInput` build\ntheir dropdowns on it.\n\nUse something else for: a modal (`Modal`), page action menus\n(`PageActionsMenu`, `PageActionsBar`), choosing from a list (`Select`).\n\n## Usage\n\n### Behaviour to know\n\n- **Content mounts one commit after `open` flips.** An effect keyed on `open`\n  that reaches into the content must wait for it: use a ref callback or\n  `autoFocus` instead.\n- **Flip.** It opens on `side`. If the content does not fit on that side and\n  the other side has more room, it opens on the other side. When neither side\n  fits it keeps whichever has more room.\n- **Clamp.** Only when `matchWidth` is false: `left` is clamped so the\n  content stays `gap` pixels inside the viewport's left and right edges;\n  content wider than the viewport pins to `gap`. With `matchWidth` it lines up\n  with the anchor exactly, edge margin or not. There is no vertical clamp.\n- **Align.** `align` sets the edge it lines up with: `start`, `center` or `end`. Use `end` for an anchor at the right edge of the screen, so the content grows leftwards.\n- **Top side is anchored by its bottom edge** (CSS `bottom`), so a popover\n  above its anchor stays attached when its content grows or shrinks.\n- **`data-side`.** The wrapper carries `data-side=\"bottom\"` or `\"top\"`: the side\n  actually used after flipping. It also carries `data-preferred-side`, the\n  `side` prop, so a flip can be told from a choice. Style against these (an\n  arrow, an animation origin) rather than against the `side` prop.\n- It re-measures, flip decision included, on window resize, on any scroll\n  (capture phase), and when its content resizes (`ResizeObserver`, where the\n  browser has it), so it stays attached to a scrolled anchor and to content\n  that changes size.\n- Its first render is transparent (`opacity: 0`) and is measured in a layout\n  effect before paint, so it never flashes at 0,0 or on the wrong side. It is\n  not `visibility: hidden`, so an `autoFocus` child takes focus on mount.\n- **No focus management.** Focus stays where it was; return it yourself if\n  closing should move it.\n- z-index is `theme.zIndex.sticky` (1000). Inside an open `<dialog>` it portals\n  into that dialog, so it shows in the top layer; this also matches a non-modal\n  `show()` dialog. The target is resolved each time the popover opens, so it\n  also works when it mounts already open.\n- Clicking the anchor does not count as \"outside\", so a toggle button on the\n  anchor works without racing `onClose`.\n\n### Layers\n\nEscape and outside pointer-down close the innermost open layer first. With\n`onClose`, an open popover joins a layer stack shared with other popovers and\nopen `Modal`s, in the order they opened. A popover registers once its portal\ntarget resolves, one commit after each opening, so a `Modal` that mounts\nalready open together with an already-open popover inside it still sits below\nthat popover.\n\n- An Escape keydown anywhere in the document goes to the top layer only,\n  unless the event is already `defaultPrevented` (a control such as\n  `Select` handled it first). A popover on top calls `onClose` and\n  `preventDefault()`s the key, so an enclosing native `<dialog>` does not\n  also fire `cancel` and close. A `Modal` on top keeps the key: its own\n  `cancel` closes it, and the popover beneath stays open.\n- A mousedown closes every layer above the one it lands in (every layer,\n  when it lands outside them all), top first. A press in a nested popover\n  closes neither it nor its parent; a press inside a `Modal` opened over a\n  popover does not close that popover.\n\n### Styling the surface\n\nContent is two surface levels in: Buttons and Selects inside a popover are 4px,\nwherever the anchor sits.\n\nA popover is a floating layer: corners `radius.md` with `shadow.hoverLift` (or\n`recipe.glass`), and the items inside it `radius.sm`. See\n[corners](../corners.md). The \"Basic\" example draws such a surface.\n\n```ts\nmenu: {\n  backgroundColor: theme.color.bg.card,\n  border: `1px solid ${theme.color.border.strong}`,\n  borderRadius: theme.radius.md,\n  boxShadow: theme.shadow.hoverLift,\n  padding: theme.space.xs,\n},\nitem: { borderRadius: theme.radius.sm, padding: theme.space.md },\n```\n\n## Do / don't\n\n- Do anchor to a `Button` through its `ref`, or wrap any element in a `<div ref>`.\n- Do give the content its own surface and radius; the wrapper is transparent.\n- Do call `preventDefault()` in your own Escape handler if you close the\n  popover yourself, so `onClose` is not called a second time.\n- Don't expect it to close on selection; that is your code.",
       "examples": [
         {
           "file": "src/control/popover/examples/01-basic.tsx",
@@ -3418,12 +3427,12 @@
           "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button, Popover } from '@korzun/design/control';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\nimport { useRef, useState } from 'react';\n\nconst useStyle = createUseStyles((theme: Theme) => ({\n  panel: {\n    backgroundColor: theme.color.bg.card,\n    border: `1px solid ${theme.color.border.strong}`,\n    borderRadius: theme.radius.md,\n    boxShadow: theme.shadow.hoverLift,\n    padding: theme.space.xs,\n  },\n}));\n\nexport default function Nested() {\n  const styles = useStyle();\n  const outerAnchor = useRef<HTMLElement>(null);\n  const innerAnchor = useRef<HTMLElement>(null);\n  const [outerOpen, setOuterOpen] = useState(false);\n  const [innerOpen, setInnerOpen] = useState(false);\n  const [chosen, setChosen] = useState('nothing yet');\n  return (\n    <Stack align=\"start\">\n      <Button ref={outerAnchor} onClick={() => setOuterOpen((value) => !value)}>\n        Filters\n      </Button>\n      <Popover\n        anchorRef={outerAnchor}\n        open={outerOpen}\n        matchWidth={false}\n        onClose={() => setOuterOpen(false)}\n      >\n        <div className={styles.panel}>\n          <Stack gap=\"xxs\">\n            <Button type=\"text\" onClick={() => setChosen('Unread')}>\n              Unread\n            </Button>\n            <Button ref={innerAnchor} type=\"text\" onClick={() => setInnerOpen((value) => !value)}>\n              More\n            </Button>\n          </Stack>\n          <Popover\n            anchorRef={innerAnchor}\n            open={innerOpen}\n            matchWidth={false}\n            onClose={() => setInnerOpen(false)}\n          >\n            <div className={styles.panel}>\n              <Stack gap=\"xxs\">\n                <Button type=\"text\" onClick={() => setChosen('Finished')}>\n                  Finished\n                </Button>\n                <Button type=\"text\" onClick={() => setChosen('Favourites')}>\n                  Favourites\n                </Button>\n              </Stack>\n            </div>\n          </Popover>\n        </div>\n      </Popover>\n      <Text tone=\"muted\">Chosen: {chosen}</Text>\n    </Stack>\n  );\n}\n"
         },
         {
-          "file": "src/control/popover/examples/07-in-dialog.tsx",
-          "slug": "in-dialog",
+          "file": "src/control/popover/examples/07-in-modal.tsx",
+          "slug": "in-modal",
           "order": 7,
-          "title": "In a Dialog",
-          "description": "A popover whose anchor is inside an open Dialog renders into that dialog, so\nit shows above the backdrop. Escape closes the popover first and the Dialog\non the next press.",
-          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button, Dialog, Popover } from '@korzun/design/control';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\nimport { useRef, useState } from 'react';\n\nconst useStyle = createUseStyles((theme: Theme) => ({\n  panel: {\n    backgroundColor: theme.color.bg.card,\n    border: `1px solid ${theme.color.border.strong}`,\n    borderRadius: theme.radius.md,\n    boxShadow: theme.shadow.hoverLift,\n    padding: theme.space.xs,\n  },\n}));\n\nexport default function InDialog() {\n  const styles = useStyle();\n  const anchor = useRef<HTMLElement>(null);\n  const [dialogOpen, setDialogOpen] = useState(false);\n  const [open, setOpen] = useState(false);\n  const [chosen, setChosen] = useState('nothing yet');\n  const choose = (label: string) => {\n    setChosen(label);\n    setOpen(false);\n  };\n  return (\n    <Stack align=\"start\">\n      <Button onClick={() => setDialogOpen(true)}>Open dialog</Button>\n      <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} title=\"Edit book\">\n        <Stack align=\"start\">\n          <Button ref={anchor} onClick={() => setOpen((value) => !value)}>\n            Status\n          </Button>\n          <Popover anchorRef={anchor} open={open} matchWidth={false} onClose={() => setOpen(false)}>\n            <div className={styles.panel}>\n              <Stack gap=\"xxs\">\n                <Button type=\"text\" onClick={() => choose('Reading')}>\n                  Reading\n                </Button>\n                <Button type=\"text\" onClick={() => choose('Finished')}>\n                  Finished\n                </Button>\n              </Stack>\n            </div>\n          </Popover>\n          <Text tone=\"muted\">Chosen: {chosen}</Text>\n        </Stack>\n      </Dialog>\n    </Stack>\n  );\n}\n"
+          "title": "In a Modal",
+          "description": "A popover whose anchor is inside an open Modal renders into that dialog, so\nit shows above the backdrop. Escape closes the popover first and the Modal\non the next press.",
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button, Modal, Popover } from '@korzun/design/control';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\nimport { useRef, useState } from 'react';\n\nconst useStyle = createUseStyles((theme: Theme) => ({\n  panel: {\n    backgroundColor: theme.color.bg.card,\n    border: `1px solid ${theme.color.border.strong}`,\n    borderRadius: theme.radius.md,\n    boxShadow: theme.shadow.hoverLift,\n    padding: theme.space.xs,\n  },\n}));\n\nexport default function InDialog() {\n  const styles = useStyle();\n  const anchor = useRef<HTMLElement>(null);\n  const [dialogOpen, setDialogOpen] = useState(false);\n  const [open, setOpen] = useState(false);\n  const [chosen, setChosen] = useState('nothing yet');\n  const choose = (label: string) => {\n    setChosen(label);\n    setOpen(false);\n  };\n  return (\n    <Stack align=\"start\">\n      <Button onClick={() => setDialogOpen(true)}>Open dialog</Button>\n      <Modal open={dialogOpen} onClose={() => setDialogOpen(false)} title=\"Edit book\">\n        <Stack align=\"start\">\n          <Button ref={anchor} onClick={() => setOpen((value) => !value)}>\n            Status\n          </Button>\n          <Popover anchorRef={anchor} open={open} matchWidth={false} onClose={() => setOpen(false)}>\n            <div className={styles.panel}>\n              <Stack gap=\"xxs\">\n                <Button type=\"text\" onClick={() => choose('Reading')}>\n                  Reading\n                </Button>\n                <Button type=\"text\" onClick={() => choose('Finished')}>\n                  Finished\n                </Button>\n              </Stack>\n            </div>\n          </Popover>\n          <Text tone=\"muted\">Chosen: {chosen}</Text>\n        </Stack>\n      </Modal>\n    </Stack>\n  );\n}\n"
         },
         {
           "file": "src/control/popover/examples/08-without-onclose.tsx",
@@ -3551,7 +3560,7 @@
           "date": "2026-11-24",
           "tags": [
             "Page",
-            "Dialog",
+            "Modal",
             "Card",
             "CardRow",
             "Alert",
@@ -3573,7 +3582,7 @@
             "CardRow",
             "Popover",
             "Menu",
-            "Dialog",
+            "Modal",
             "Page"
           ],
           "text": "**Visible changes:**\n  - Buttons in a Card default to 8px (they were 16px unless `radius=\"card\"` was set), and Buttons in a Dialog body are 8px.\n  - Selects directly on a Page get the page look (16px and the card shadow); in a Card or Dialog they stay 8px. This includes Selects in your own boxes on a Page (a `useModalDialog` modal, a `recipe.card.shell` or `recipe.row` box), because depth cannot see hand-drawn boxes: wrap their contents in `Surface`, or pass `surface=\"card\"`.\n  - Without a Page, a bare `Card` counts as depth 0: its Buttons go from 16px to 8px, a Card nested in it steps down, and a `CardRow` in it is 8px.\n  - A Card nested in a Card or Dialog steps down (8px, then 4px), and so do its Buttons and Selects; `size=\"small\"` keeps its extra 1px.\n  - `CardRow` is 16px on a Page and 8px inside a Card (it was always 16px).\n  - Buttons and Selects inside a Popover or Menu are 4px."
@@ -3592,8 +3601,8 @@
           "date": "2026-11-23",
           "tags": [
             "Popover",
-            "Dialog",
-            "useModalDialog"
+            "Modal",
+            "useModal"
           ],
           "text": "Layer stack: popovers and dialogs now close innermost-first. Escape and an outside press only affect the topmost layer, so a popover inside a popover closes one level at a time. **Behaviour change:** a popover beneath an open dialog no longer takes its Escape or closes on a press inside the dialog."
         },
@@ -3612,8 +3621,8 @@
             "Popover",
             "Select",
             "ChipsInput",
-            "Dialog",
-            "useModalDialog"
+            "Modal",
+            "useModal"
           ],
           "text": "`Popover` renders inside an open `<dialog>` that contains its anchor, so `Select` and `ChipsInput` work in modals."
         },
@@ -3653,7 +3662,7 @@
         "SelectProps"
       ],
       "importLine": "import { Select, type SelectOption, type SelectProps } from '@korzun/design/control'",
-      "body": "A single-value dropdown with type-to-search (on by default), an optional \"Add:\n…\" entry for new values, a clear button, and a loading state. The dropdown is a\n`Popover`, so it escapes clipping cards. Its list is drawn like a `Menu`: a\n4px inset pad, `sm`-rounded 14px options, the `cardStack` shadow, `bg.hover` on\nhover and `brand.light` on the keyboard-highlighted option.\n\nUse something else for: 2–5 options that fit in one row (`SegmentedControl`),\nseveral values (`ChipsInput`), on/off (`Switch`).\n\n## Usage\n\n### Choosing a surface\n\nFollow [corners](../corners.md):\n\n- Usually omit it: the default follows where the select sits. Directly on a\n  `Page` it is `'page'`; in a card or dialog (and outside any surface) it is\n  `'card'`; two or more surfaces deep it is `'inset'`.\n- `'card'`: `radius.md`, no shadow.\n- `'page'`: `radius.lg` + `shadow.cardStack`, like a card.\n- `'inset'`: `radius.sm`, no shadow, for a select nested inside an inset box.\n- Pass `surface` only to override the depth.\n\n### Forms\n\nThere is no hidden input carrying `value`: native `FormData` will not contain\nthe selection (only the search text while open). Keep `value` in state and\nsubmit that. The `<label>` targets the search box, so it is not the closed\ntrigger's accessible name; the trigger announces the selected label or\nplaceholder.\n\n### Keyboard\n\nClosed: Enter, Space or ArrowDown open it. Open: ArrowUp/ArrowDown move (and\nwrap), Enter selects, Escape or Tab close. The highlight starts on the first\noption, not the current value.\n\n### Inside a dialog\n\nIt works inside a `Dialog` or a modal `<dialog>`: the list opens inside the\nopen dialog (see [popover](popover.md)).\n\n### Styling\n\nNo `className`.\n\n## Do / don't\n\n- Do pass `clearable={false}` when an empty value is invalid.\n- Don't pass `surface=\"page\"` inside a card; let the depth decide.",
+      "body": "A single-value dropdown with type-to-search (on by default), an optional \"Add:\n…\" entry for new values, a clear button, and a loading state. The dropdown is a\n`Popover`, so it escapes clipping cards. Its list is drawn like a `Menu`: a\n4px inset pad, `sm`-rounded 14px options, the `cardStack` shadow, `bg.hover` on\nhover and `brand.light` on the keyboard-highlighted option.\n\nUse something else for: 2–5 options that fit in one row (`SegmentedControl`),\nseveral values (`ChipsInput`), on/off (`Switch`).\n\n## Usage\n\n### Choosing a surface\n\nFollow [corners](../corners.md):\n\n- Usually omit it: the default follows where the select sits. Directly on a\n  `Page` it is `'page'`; in a card or dialog (and outside any surface) it is\n  `'card'`; two or more surfaces deep it is `'inset'`.\n- `'card'`: `radius.md`, no shadow.\n- `'page'`: `radius.lg` + `shadow.cardStack`, like a card.\n- `'inset'`: `radius.sm`, no shadow, for a select nested inside an inset box.\n- Pass `surface` only to override the depth.\n\n### Forms\n\nThere is no hidden input carrying `value`: native `FormData` will not contain\nthe selection (only the search text while open). Keep `value` in state and\nsubmit that. The `<label>` targets the search box, so it is not the closed\ntrigger's accessible name; the trigger announces the selected label or\nplaceholder.\n\n### Keyboard\n\nClosed: Enter, Space or ArrowDown open it. Open: ArrowUp/ArrowDown move (and\nwrap), Enter selects, Escape or Tab close. The highlight starts on the first\noption, not the current value.\n\n### Inside a dialog\n\nIt works inside a `Modal` or a modal `<dialog>`: the list opens inside the\nopen dialog (see [popover](popover.md)).\n\n### Styling\n\nNo `className`.\n\n## Do / don't\n\n- Do pass `clearable={false}` when an empty value is invalid.\n- Don't pass `surface=\"page\"` inside a card; let the depth decide.",
       "examples": [
         {
           "file": "src/control/select/examples/01-basic.tsx",
@@ -3720,12 +3729,12 @@
           "code": "import { Card, Page, Stack, Text } from '@korzun/design/component';\nimport { Button, Select } from '@korzun/design/control';\nimport { useEffect, useState } from 'react';\n\nconst LIBRARIES = ['Home library', 'Work library'];\n\nexport default function FormInCard() {\n  const [library, setLibrary] = useState<string | undefined>();\n  const [fit, setFit] = useState<string | undefined>('contain');\n  const [series, setSeries] = useState<string | undefined>();\n  const [seriesNames, setSeriesNames] = useState<string[]>([]);\n  const [loading, setLoading] = useState(true);\n  const [saved, setSaved] = useState<string | null>(null);\n  useEffect(() => {\n    const timer = setTimeout(() => {\n      setSeriesNames(['Discworld', 'The Expanse']);\n      setLoading(false);\n    }, 1200);\n    return () => clearTimeout(timer);\n  }, []);\n  return (\n    <Page type=\"minimal\">\n      <Stack>\n        <Select\n          name=\"library\"\n          placeholder=\"Select library…\"\n          value={library}\n          options={LIBRARIES}\n          onChange={setLibrary}\n        />\n        <Card\n          title=\"Cover\"\n          footer={\n            <Button\n              type=\"primary\"\n              onClick={() => setSaved(`${fit ?? ''} / ${series ?? 'no series'}`)}\n            >\n              Save\n            </Button>\n          }\n        >\n          <Stack>\n            <Select\n              name=\"coverFit\"\n              label=\"Fit\"\n              value={fit}\n              options={[\n                { label: 'Contain', value: 'contain', description: 'Letterbox the cover' },\n                { label: 'Cover', value: 'cover' },\n              ]}\n              searchable={false}\n              clearable={false}\n              onChange={setFit}\n            />\n            <Select\n              name=\"seriesName\"\n              label=\"Series\"\n              value={series}\n              options={seriesNames}\n              loading={loading}\n              allowCreate\n              onChange={setSeries}\n            />\n            {saved !== null && <Text tone=\"success\">Saved: {saved}</Text>}\n          </Stack>\n        </Card>\n      </Stack>\n    </Page>\n  );\n}\n"
         },
         {
-          "file": "src/control/select/examples/09-in-dialog.tsx",
-          "slug": "in-dialog",
+          "file": "src/control/select/examples/09-in-modal.tsx",
+          "slug": "in-modal",
           "order": 9,
           "title": "In a dialog",
           "description": "The list opens inside the open dialog, so a `Select` works in a modal. Escape\ncloses the list first and a second Escape closes the dialog.",
-          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button, Dialog, Select } from '@korzun/design/control';\nimport { useState } from 'react';\n\nconst SHELVES = ['To read', 'Reading', 'Finished'];\n\nexport default function InDialog() {\n  const [open, setOpen] = useState(false);\n  const [shelf, setShelf] = useState<string | undefined>('To read');\n  return (\n    <Stack align=\"start\">\n      <Button onClick={() => setOpen(true)}>Move book</Button>\n      <Text tone=\"muted\">Shelf: {shelf ?? 'none'}</Text>\n      <Dialog\n        open={open}\n        onClose={() => setOpen(false)}\n        title=\"Move to shelf\"\n        footer={\n          <Button type=\"primary\" onClick={() => setOpen(false)}>\n            Done\n          </Button>\n        }\n      >\n        <Select name=\"shelf\" label=\"Shelf\" value={shelf} options={SHELVES} onChange={setShelf} />\n      </Dialog>\n    </Stack>\n  );\n}\n"
+          "code": "import { Stack, Text } from '@korzun/design/component';\nimport { Button, Modal, Select } from '@korzun/design/control';\nimport { useState } from 'react';\n\nconst SHELVES = ['To read', 'Reading', 'Finished'];\n\nexport default function InDialog() {\n  const [open, setOpen] = useState(false);\n  const [shelf, setShelf] = useState<string | undefined>('To read');\n  return (\n    <Stack align=\"start\">\n      <Button onClick={() => setOpen(true)}>Move book</Button>\n      <Text tone=\"muted\">Shelf: {shelf ?? 'none'}</Text>\n      <Modal\n        open={open}\n        onClose={() => setOpen(false)}\n        title=\"Move to shelf\"\n        footer={\n          <Button type=\"primary\" onClick={() => setOpen(false)}>\n            Done\n          </Button>\n        }\n      >\n        <Select name=\"shelf\" label=\"Shelf\" value={shelf} options={SHELVES} onChange={setShelf} />\n      </Modal>\n    </Stack>\n  );\n}\n"
         }
       ],
       "preview": {
@@ -4055,7 +4064,7 @@
           "date": "2026-11-24",
           "tags": [
             "Page",
-            "Dialog",
+            "Modal",
             "Card",
             "CardRow",
             "Alert",
@@ -4077,7 +4086,7 @@
             "CardRow",
             "Popover",
             "Menu",
-            "Dialog",
+            "Modal",
             "Page"
           ],
           "text": "**Visible changes:**\n  - Buttons in a Card default to 8px (they were 16px unless `radius=\"card\"` was set), and Buttons in a Dialog body are 8px.\n  - Selects directly on a Page get the page look (16px and the card shadow); in a Card or Dialog they stay 8px. This includes Selects in your own boxes on a Page (a `useModalDialog` modal, a `recipe.card.shell` or `recipe.row` box), because depth cannot see hand-drawn boxes: wrap their contents in `Surface`, or pass `surface=\"card\"`.\n  - Without a Page, a bare `Card` counts as depth 0: its Buttons go from 16px to 8px, a Card nested in it steps down, and a `CardRow` in it is 8px.\n  - A Card nested in a Card or Dialog steps down (8px, then 4px), and so do its Buttons and Selects; `size=\"small\"` keeps its extra 1px.\n  - `CardRow` is 16px on a Page and 8px inside a Card (it was always 16px).\n  - Buttons and Selects inside a Popover or Menu are 4px."
@@ -4097,8 +4106,8 @@
             "Popover",
             "Select",
             "ChipsInput",
-            "Dialog",
-            "useModalDialog"
+            "Modal",
+            "useModal"
           ],
           "text": "`Popover` renders inside an open `<dialog>` that contains its anchor, so `Select` and `ChipsInput` work in modals."
         },
@@ -5397,63 +5406,72 @@
       ]
     },
     {
-      "id": "control/use-modal-dialog",
-      "slug": "use-modal-dialog",
+      "id": "control/use-modal",
+      "slug": "use-modal",
       "entry": "@korzun/design/control",
-      "docPath": "docs/control/use-modal-dialog.md",
-      "title": "useModalDialog",
+      "docPath": "docs/control/use-modal.md",
+      "title": "useModal",
       "description": "A hook that drives a native dialog element from an open flag and routes Escape and backdrop clicks to a dismiss callback.",
       "category": "Overlays",
       "values": [
-        "useModalDialog"
+        "useModal"
       ],
       "types": [],
-      "importLine": "import { useModalDialog } from '@korzun/design/control'",
-      "body": "A hook that drives a native `<dialog>` from an `isOpen` boolean: it calls\n`showModal()` / `close()` for you and routes Escape and backdrop clicks to\n`onDismiss`. It is the base under [`Dialog`](dialog.md) (and so `ConfirmModal`).\nReach for `Dialog` first; this hook remains for modals `Dialog` cannot express,\nbuilt from this hook plus the `theme.recipe.modal.*` styles.\n\nUse something else for: a plain yes/no confirmation (`ConfirmModal`), or a\ndropdown or non-modal floating layer (`Popover`).\n\n## Usage\n\n### Signature\n\n```ts\nfunction useModalDialog(\n  isOpen: boolean,\n  onDismiss: () => void,\n  canDismiss?: boolean, // default true\n): RefObject<HTMLDialogElement | null>;\n```\n\n| Argument | Type | Default | Notes |\n|---|---|---|---|\n| `isOpen` | `boolean` | (required) | The single source of truth. `true` calls `showModal()`, `false` calls `close()`. |\n| `onDismiss` | `() => void` | (required) | Called on Escape and on a backdrop click. **It does not close anything itself**: set your `isOpen` state to `false` in it. Receives no event. |\n| `canDismiss` | `boolean` | `true` | When `false`, Escape and backdrop clicks are swallowed. Pass `!loading` (or `countdown === 0`) so an in-flight request can't be escaped. |\n\nReturns a ref to attach to the `<dialog>`.\n\n### Behaviour to know\n\n- Escape fires the dialog's `cancel` event; the hook always calls\n  `preventDefault()` so the browser never closes the dialog behind React's back.\n- While open, the dialog joins the layer stack shared with `Popover`s. A\n  popover left open beneath it neither takes its Escape (the dialog's own\n  `cancel` runs) nor closes on a press inside the dialog. A popover opened\n  inside the dialog takes Escape before the dialog does.\n- A backdrop click counts only when **both** mousedown and mouseup land on the\n  `<dialog>` element itself (its content lives in a child). Dragging a text\n  selection out of an input onto the backdrop does not dismiss.\n- The `<dialog>` must stay mounted. Rendering it conditionally (`{isOpen && <dialog…>}`)\n  breaks `showModal()`; its children also stay mounted while closed, so reset\n  any form state yourself when reopening.\n- A `Select` or `ChipsInput` works inside the modal: their dropdowns render\n  inside the open `<dialog>` that contains their anchor (see\n  [popover](popover.md)).\n- Never call `showModal()` / `close()` yourself.\n\n### Styling\n\nBuild the dialog from the recipe styles: `dialog: { ...theme.recipe.modal.dialog }`\n(`radius.lg`: the dialog sits on the page), `header`, `body` and `footer` from\n`theme.recipe.modal.*`, and pad the body with `theme.space.xxl`. The examples\nshow it in full.\n\n## Do / don't\n\n- Do pass `canDismiss={!loading}` and also disable the Cancel button while\n  loading, so every exit is gated the same way.\n- Do keep the `onClick={(e) => e.stopPropagation()}` on the `<dialog>` when it\n  is rendered inside a clickable ancestor (a card row); it only stops bubbling,\n  dismissal is the hook's job.\n- Do wrap the dialog's contents (header, body, footer) in\n  [`Surface`](../component/surface.md): hand-drawn boxes are invisible to depth,\n  so the Buttons and Selects inside then get the same `md` corners as in a\n  `Dialog`, with no `radius` or `surface` override.",
+      "importLine": "import { useModal } from '@korzun/design/control'",
+      "body": "A hook that drives a native `<dialog>` from an `isOpen` boolean: it calls\n`showModal()` / `close()` for you and routes Escape and backdrop clicks to\n`onDismiss`. It is the base under [`Modal`](modal.md) (and so `ConfirmModal`).\nReach for `Modal` first; this hook remains for modals `Modal` cannot express,\nbuilt from this hook plus the `theme.recipe.modal.*` styles.\n\nUse something else for: a plain yes/no confirmation (`ConfirmModal`), or a\ndropdown or non-modal floating layer (`Popover`).\n\n## Usage\n\n### Signature\n\n```ts\nfunction useModal(\n  isOpen: boolean,\n  onDismiss: () => void,\n  canDismiss?: boolean, // default true\n): RefObject<HTMLDialogElement | null>;\n```\n\n| Argument | Type | Default | Notes |\n|---|---|---|---|\n| `isOpen` | `boolean` | (required) | The single source of truth. `true` calls `showModal()`, `false` calls `close()`. |\n| `onDismiss` | `() => void` | (required) | Called on Escape and on a backdrop click. **It does not close anything itself**: set your `isOpen` state to `false` in it. Receives no event. |\n| `canDismiss` | `boolean` | `true` | When `false`, Escape and backdrop clicks are swallowed. Pass `!loading` (or `countdown === 0`) so an in-flight request can't be escaped. |\n\nReturns a ref to attach to the `<dialog>`.\n\n### Behaviour to know\n\n- Escape fires the dialog's `cancel` event; the hook always calls\n  `preventDefault()` so the browser never closes the dialog behind React's back.\n- While open, the dialog joins the layer stack shared with `Popover`s. A\n  popover left open beneath it neither takes its Escape (the dialog's own\n  `cancel` runs) nor closes on a press inside the dialog. A popover opened\n  inside the dialog takes Escape before the dialog does.\n- A backdrop click counts only when **both** mousedown and mouseup land on the\n  `<dialog>` element itself (its content lives in a child). Dragging a text\n  selection out of an input onto the backdrop does not dismiss.\n- The `<dialog>` must stay mounted. Rendering it conditionally (`{isOpen && <dialog…>}`)\n  breaks `showModal()`; its children also stay mounted while closed, so reset\n  any form state yourself when reopening.\n- A `Select` or `ChipsInput` works inside the modal: their dropdowns render\n  inside the open `<dialog>` that contains their anchor (see\n  [popover](popover.md)).\n- Never call `showModal()` / `close()` yourself.\n\n### Styling\n\nBuild the dialog from the recipe styles: `dialog: { ...theme.recipe.modal.dialog }`\n(`radius.lg`: the dialog sits on the page), `header`, `body` and `footer` from\n`theme.recipe.modal.*`, and pad the body with `theme.space.xxl`. The examples\nshow it in full.\n\n## Do / don't\n\n- Do pass `canDismiss={!loading}` and also disable the Cancel button while\n  loading, so every exit is gated the same way.\n- Do keep the `onClick={(e) => e.stopPropagation()}` on the `<dialog>` when it\n  is rendered inside a clickable ancestor (a card row); it only stops bubbling,\n  dismissal is the hook's job.\n- Do wrap the dialog's contents (header, body, footer) in\n  [`Surface`](../component/surface.md): hand-drawn boxes are invisible to depth,\n  so the Buttons and Selects inside then get the same `md` corners as in a\n  `Modal`, with no `radius` or `surface` override.",
       "examples": [
         {
-          "file": "src/control/use-modal-dialog/examples/01-basic.tsx",
+          "file": "src/control/use-modal/examples/01-basic.tsx",
           "slug": "basic",
           "order": 1,
           "title": "Basic",
-          "description": "The hook returns a ref for a `<dialog>` that stays mounted. `isOpen` drives\n`showModal()` and `close()`; Escape and a click on the backdrop call `onDismiss`,\nwhich closes nothing itself, so it sets `isOpen` to `false`. The `<dialog>` takes\nthe `theme.recipe.modal.*` styles, and its contents are wrapped in `Surface` so the\nButtons get the corners they would have in a `Dialog`. This demo starts open.",
-          "code": "import { Stack, Surface, Text } from '@korzun/design/component';\nimport { Button, useModalDialog } from '@korzun/design/control';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\nimport { useState } from 'react';\n\nconst useStyles = createUseStyles((theme: Theme) => ({\n  dialog: { ...theme.recipe.modal.dialog, backgroundColor: theme.color.bg.card },\n  header: { ...theme.recipe.modal.header },\n  body: {\n    padding: `0 ${theme.space.xxl} ${theme.space.xxl}`,\n    color: theme.color.text.secondary,\n  },\n  footer: { ...theme.recipe.modal.footer },\n}));\n\nexport default function Basic() {\n  const styles = useStyles();\n  const [isOpen, setIsOpen] = useState(true);\n  const [saves, setSaves] = useState(0);\n  const close = () => setIsOpen(false);\n  const ref = useModalDialog(isOpen, close);\n  return (\n    <Stack align=\"start\">\n      <Button onClick={() => setIsOpen(true)}>Edit progress</Button>\n      <Text tone=\"muted\">Saved: {saves}</Text>\n      <dialog ref={ref} className={styles.dialog}>\n        <Surface>\n          <div className={styles.header}>Edit progress</div>\n          <div className={styles.body}>You are on page 42 of 310.</div>\n          <div className={styles.footer}>\n            <Button type=\"text\" onClick={close}>\n              Cancel\n            </Button>\n            <Button\n              type=\"primary\"\n              onClick={() => {\n                setSaves((n) => n + 1);\n                close();\n              }}\n            >\n              Save\n            </Button>\n          </div>\n        </Surface>\n      </dialog>\n    </Stack>\n  );\n}\n"
+          "description": "The hook returns a ref for a `<dialog>` that stays mounted. `isOpen` drives\n`showModal()` and `close()`; Escape and a click on the backdrop call `onDismiss`,\nwhich closes nothing itself, so it sets `isOpen` to `false`. The `<dialog>` takes\nthe `theme.recipe.modal.*` styles, and its contents are wrapped in `Surface` so the\nButtons get the corners they would have in a `Modal`. This demo starts open.",
+          "code": "import { Stack, Surface, Text } from '@korzun/design/component';\nimport { Button, useModal } from '@korzun/design/control';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\nimport { useState } from 'react';\n\nconst useStyles = createUseStyles((theme: Theme) => ({\n  dialog: { ...theme.recipe.modal.dialog, backgroundColor: theme.color.bg.card },\n  header: { ...theme.recipe.modal.header },\n  body: {\n    padding: `0 ${theme.space.xxl} ${theme.space.xxl}`,\n    color: theme.color.text.secondary,\n  },\n  footer: { ...theme.recipe.modal.footer },\n}));\n\nexport default function Basic() {\n  const styles = useStyles();\n  const [isOpen, setIsOpen] = useState(true);\n  const [saves, setSaves] = useState(0);\n  const close = () => setIsOpen(false);\n  const ref = useModal(isOpen, close);\n  return (\n    <Stack align=\"start\">\n      <Button onClick={() => setIsOpen(true)}>Edit progress</Button>\n      <Text tone=\"muted\">Saved: {saves}</Text>\n      <dialog ref={ref} className={styles.dialog}>\n        <Surface>\n          <div className={styles.header}>Edit progress</div>\n          <div className={styles.body}>You are on page 42 of 310.</div>\n          <div className={styles.footer}>\n            <Button type=\"text\" onClick={close}>\n              Cancel\n            </Button>\n            <Button\n              type=\"primary\"\n              onClick={() => {\n                setSaves((n) => n + 1);\n                close();\n              }}\n            >\n              Save\n            </Button>\n          </div>\n        </Surface>\n      </dialog>\n    </Stack>\n  );\n}\n"
         },
         {
-          "file": "src/control/use-modal-dialog/examples/02-gated-dismissal.tsx",
+          "file": "src/control/use-modal/examples/02-gated-dismissal.tsx",
           "slug": "gated-dismissal",
           "order": 2,
           "title": "Gated dismissal",
           "description": "`canDismiss` is `!saving`, so Escape and backdrop clicks do nothing while a request\nruns, and the Cancel button is disabled to match so every exit is gated the same.\nThe switch holds the busy state on. The `onClick` that stops propagation keeps a\nclick in the dialog from reaching a clickable ancestor; dismissal is the hook's job.",
-          "code": "import { Stack, Surface } from '@korzun/design/component';\nimport { Button, Switch, useModalDialog } from '@korzun/design/control';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\nimport { useState } from 'react';\n\nconst useStyles = createUseStyles((theme: Theme) => ({\n  dialog: { ...theme.recipe.modal.dialog, backgroundColor: theme.color.bg.card },\n  header: { ...theme.recipe.modal.header },\n  body: {\n    padding: `0 ${theme.space.xxl} ${theme.space.xxl}`,\n    color: theme.color.text.secondary,\n  },\n  footer: { ...theme.recipe.modal.footer },\n}));\n\nexport default function GatedDismissal() {\n  const styles = useStyles();\n  const [isOpen, setIsOpen] = useState(false);\n  const [saving, setSaving] = useState(true);\n  const close = () => setIsOpen(false);\n  const ref = useModalDialog(isOpen, close, !saving);\n  return (\n    <Stack align=\"start\">\n      <Button onClick={() => setIsOpen(true)}>Open busy modal</Button>\n      <dialog ref={ref} className={styles.dialog} onClick={(event) => event.stopPropagation()}>\n        <Surface>\n          <div className={styles.header}>Saving progress</div>\n          <div className={styles.body}>\n            <Stack>\n              Escape and the backdrop are ignored while the request is in flight.\n              <Switch\n                name=\"saving\"\n                label=\"Request in flight\"\n                checked={saving}\n                onChange={setSaving}\n              />\n            </Stack>\n          </div>\n          <div className={styles.footer}>\n            <Button type=\"text\" disabled={saving} onClick={close}>\n              Cancel\n            </Button>\n            <Button type=\"primary\" loading={saving} onClick={close}>\n              Save\n            </Button>\n          </div>\n        </Surface>\n      </dialog>\n    </Stack>\n  );\n}\n"
+          "code": "import { Stack, Surface } from '@korzun/design/component';\nimport { Button, Switch, useModal } from '@korzun/design/control';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\nimport { useState } from 'react';\n\nconst useStyles = createUseStyles((theme: Theme) => ({\n  dialog: { ...theme.recipe.modal.dialog, backgroundColor: theme.color.bg.card },\n  header: { ...theme.recipe.modal.header },\n  body: {\n    padding: `0 ${theme.space.xxl} ${theme.space.xxl}`,\n    color: theme.color.text.secondary,\n  },\n  footer: { ...theme.recipe.modal.footer },\n}));\n\nexport default function GatedDismissal() {\n  const styles = useStyles();\n  const [isOpen, setIsOpen] = useState(false);\n  const [saving, setSaving] = useState(true);\n  const close = () => setIsOpen(false);\n  const ref = useModal(isOpen, close, !saving);\n  return (\n    <Stack align=\"start\">\n      <Button onClick={() => setIsOpen(true)}>Open busy modal</Button>\n      <dialog ref={ref} className={styles.dialog} onClick={(event) => event.stopPropagation()}>\n        <Surface>\n          <div className={styles.header}>Saving progress</div>\n          <div className={styles.body}>\n            <Stack>\n              Escape and the backdrop are ignored while the request is in flight.\n              <Switch\n                name=\"saving\"\n                label=\"Request in flight\"\n                checked={saving}\n                onChange={setSaving}\n              />\n            </Stack>\n          </div>\n          <div className={styles.footer}>\n            <Button type=\"text\" disabled={saving} onClick={close}>\n              Cancel\n            </Button>\n            <Button type=\"primary\" loading={saving} onClick={close}>\n              Save\n            </Button>\n          </div>\n        </Surface>\n      </dialog>\n    </Stack>\n  );\n}\n"
         },
         {
-          "file": "src/control/use-modal-dialog/examples/03-select-inside.tsx",
+          "file": "src/control/use-modal/examples/03-select-inside.tsx",
           "slug": "select-inside",
           "order": 3,
           "title": "Select inside",
           "description": "A `Select` list opens inside the modal and takes Escape before the modal does. The\nhook gives no surface depth, so the contents are wrapped in `Surface` and the\n`Select` gets card corners.",
-          "code": "import { Stack, Surface, Text } from '@korzun/design/component';\nimport { Button, Select, useModalDialog } from '@korzun/design/control';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\nimport { useState } from 'react';\n\nconst SHELVES = ['Reading', 'To read', 'Finished', 'Abandoned'];\n\nconst useStyles = createUseStyles((theme: Theme) => ({\n  dialog: { ...theme.recipe.modal.dialog, backgroundColor: theme.color.bg.card },\n  header: { ...theme.recipe.modal.header },\n  body: {\n    padding: `0 ${theme.space.xxl} ${theme.space.xxl}`,\n  },\n  footer: { ...theme.recipe.modal.footer },\n}));\n\nexport default function SelectInside() {\n  const styles = useStyles();\n  const [isOpen, setIsOpen] = useState(false);\n  const [shelf, setShelf] = useState<string | undefined>('Reading');\n  const close = () => setIsOpen(false);\n  const ref = useModalDialog(isOpen, close);\n  return (\n    <Stack align=\"start\">\n      <Button onClick={() => setIsOpen(true)}>Move book</Button>\n      <Text tone=\"muted\">Shelf: {shelf ?? 'none'}</Text>\n      <dialog ref={ref} className={styles.dialog}>\n        <Surface>\n          <div className={styles.header}>Move book</div>\n          <div className={styles.body}>\n            <Select\n              name=\"shelf\"\n              label=\"Shelf\"\n              layout=\"vertical\"\n              options={SHELVES}\n              value={shelf}\n              onChange={setShelf}\n            />\n          </div>\n          <div className={styles.footer}>\n            <Button type=\"primary\" onClick={close}>\n              Done\n            </Button>\n          </div>\n        </Surface>\n      </dialog>\n    </Stack>\n  );\n}\n"
+          "code": "import { Stack, Surface, Text } from '@korzun/design/component';\nimport { Button, Select, useModal } from '@korzun/design/control';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\nimport { useState } from 'react';\n\nconst SHELVES = ['Reading', 'To read', 'Finished', 'Abandoned'];\n\nconst useStyles = createUseStyles((theme: Theme) => ({\n  dialog: { ...theme.recipe.modal.dialog, backgroundColor: theme.color.bg.card },\n  header: { ...theme.recipe.modal.header },\n  body: {\n    padding: `0 ${theme.space.xxl} ${theme.space.xxl}`,\n  },\n  footer: { ...theme.recipe.modal.footer },\n}));\n\nexport default function SelectInside() {\n  const styles = useStyles();\n  const [isOpen, setIsOpen] = useState(false);\n  const [shelf, setShelf] = useState<string | undefined>('Reading');\n  const close = () => setIsOpen(false);\n  const ref = useModal(isOpen, close);\n  return (\n    <Stack align=\"start\">\n      <Button onClick={() => setIsOpen(true)}>Move book</Button>\n      <Text tone=\"muted\">Shelf: {shelf ?? 'none'}</Text>\n      <dialog ref={ref} className={styles.dialog}>\n        <Surface>\n          <div className={styles.header}>Move book</div>\n          <div className={styles.body}>\n            <Select\n              name=\"shelf\"\n              label=\"Shelf\"\n              layout=\"vertical\"\n              options={SHELVES}\n              value={shelf}\n              onChange={setShelf}\n            />\n          </div>\n          <div className={styles.footer}>\n            <Button type=\"primary\" onClick={close}>\n              Done\n            </Button>\n          </div>\n        </Surface>\n      </dialog>\n    </Stack>\n  );\n}\n"
         }
       ],
       "preview": {
-        "file": "src/control/use-modal-dialog/examples/preview.tsx",
+        "file": "src/control/use-modal/examples/preview.tsx",
         "slug": "preview",
         "order": 0,
         "title": "Preview",
         "description": "",
-        "code": "import { Surface } from '@korzun/design/component';\nimport { Button, useModalDialog } from '@korzun/design/control';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\n\nconst useStyles = createUseStyles((theme: Theme) => ({\n  dialog: { ...theme.recipe.modal.dialog, backgroundColor: theme.color.bg.card },\n  header: { ...theme.recipe.modal.header },\n  body: {\n    padding: `0 ${theme.space.xxl} ${theme.space.xxl}`,\n    color: theme.color.text.secondary,\n  },\n  footer: { ...theme.recipe.modal.footer },\n}));\n\nexport default function Preview() {\n  const styles = useStyles();\n  const ref = useModalDialog(true, () => {});\n  return (\n    <dialog ref={ref} className={styles.dialog}>\n      <Surface>\n        <div className={styles.header}>Edit progress</div>\n        <div className={styles.body}>You are on page 42 of 310.</div>\n        <div className={styles.footer}>\n          <Button type=\"text\" onClick={() => {}}>\n            Cancel\n          </Button>\n          <Button type=\"primary\" onClick={() => {}}>\n            Save\n          </Button>\n        </div>\n      </Surface>\n    </dialog>\n  );\n}\n"
+        "code": "import { Surface } from '@korzun/design/component';\nimport { Button, useModal } from '@korzun/design/control';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\n\nconst useStyles = createUseStyles((theme: Theme) => ({\n  dialog: { ...theme.recipe.modal.dialog, backgroundColor: theme.color.bg.card },\n  header: { ...theme.recipe.modal.header },\n  body: {\n    padding: `0 ${theme.space.xxl} ${theme.space.xxl}`,\n    color: theme.color.text.secondary,\n  },\n  footer: { ...theme.recipe.modal.footer },\n}));\n\nexport default function Preview() {\n  const styles = useStyles();\n  const ref = useModal(true, () => {});\n  return (\n    <dialog ref={ref} className={styles.dialog}>\n      <Surface>\n        <div className={styles.header}>Edit progress</div>\n        <div className={styles.body}>You are on page 42 of 310.</div>\n        <div className={styles.footer}>\n          <Button type=\"text\" onClick={() => {}}>\n            Cancel\n          </Button>\n          <Button type=\"primary\" onClick={() => {}}>\n            Save\n          </Button>\n        </div>\n      </Surface>\n    </dialog>\n  );\n}\n"
       },
       "tables": [],
       "tokens": [],
       "changelog": [
         {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "Modal",
+            "useModal"
+          ],
+          "text": "**Breaking:** `Dialog` is renamed `Modal` and `useModalDialog` is renamed `useModal`, matching `ConfirmModal`; behaviour is unchanged. The old names `Dialog`, `DialogProps` and `useModalDialog` are removed. The footer marker attribute is now `data-modal-footer`."
+        },
+        {
           "version": "0.4.0",
           "date": "2026-11-23",
           "tags": [
             "Popover",
-            "Dialog",
-            "useModalDialog"
+            "Modal",
+            "useModal"
           ],
           "text": "Layer stack: popovers and dialogs now close innermost-first. Escape and an outside press only affect the topmost layer, so a popover inside a popover closes one level at a time. **Behaviour change:** a popover beneath an open dialog no longer takes its Escape or closes on a press inside the dialog."
         },
@@ -5464,8 +5482,8 @@
             "Popover",
             "Select",
             "ChipsInput",
-            "Dialog",
-            "useModalDialog"
+            "Modal",
+            "useModal"
           ],
           "text": "`Popover` renders inside an open `<dialog>` that contains its anchor, so `Select` and `ChipsInput` work in modals."
         },
@@ -5474,7 +5492,7 @@
           "date": "2026-11-21",
           "tags": [
             "General",
-            "useModalDialog"
+            "useModal"
           ],
           "text": "Every prop has a JSDoc comment, so editors and coding agents see the guidance in the `.d.ts`. `useModalDialog` declares its return type."
         }
@@ -5743,7 +5761,7 @@
           "date": "2026-11-24",
           "tags": [
             "Page",
-            "Dialog",
+            "Modal",
             "Card",
             "CardRow",
             "Alert",
@@ -5780,7 +5798,7 @@
         "CardProps"
       ],
       "importLine": "import { Card, type CardProps } from '@korzun/design/component'",
-      "body": "The bordered surface every feature on a screen lives in: an optional header\n(title, subtitle, header actions), a padded body, and an optional footer. A\nscreen is a `<Page>` holding a vertical stack of Cards, one per feature. It can\nalso be a whole clickable list row (`size=\"small\"` with `onClick`).\n\nUse something else for: a \"nothing here\" block on the bare page (`EmptyState`),\na disclosure section with no card chrome (`CollapsibleSection`), a modal\n(`Dialog` / `ConfirmModal` in `@korzun/design/control`).\n\n## Usage\n\nThe header renders only if one of `title`, `subTitle`, `headerAction`,\n`onClickHeader`, or `isCollapsible` is set.\n\n### Surprising behaviour\n\n- **Keyboard on `onClick` is incomplete.** The root gets no `role` or\n  `tabIndex`, so it is not focusable; its `onKeyDown` fires `onClick` on\n  Enter/Space bubbling up from *any* focused child (an input inside a clickable\n  card triggers it). Don't put form fields inside a clickable card.\n- A header click on a collapsible card bubbles to the root, so `isCollapsible`\n  together with `onClick` fires both.\n- Collapsed content is unmounted, not hidden: child state resets on reopen.\n\n### Corners\n\nThe corner follows depth: `radius.lg` on the page, `md` for a Card inside a\nCard, `sm` deeper. A Card provides the next depth to its header, body and\nfooter, so nested Cards step down and Buttons inside take the matching radius\nautomatically (8px in a Card on a Page). See [corners](../corners.md).\n`size=\"small\"` insets its body by only 1px, so its corner is `calc(radius.md + 1px)`\n(9px) on a page and `calc(radius.sm + 1px)` (5px) inside a Card: concentric with the `md`-cornered covers and rows flush inside it.\n\n## Do / don't\n\n- Do give each feature on a screen its own Card, stacked directly in `<Page>`.\n- Do put row actions that must not fire by accident in `footer` of a\n  collapsible card; they are unreachable while it is collapsed.\n- Don't nest Cards just to group content; use `Divider`. When you do nest, corners step down automatically.\n- Don't set `radius` on Buttons inside a Card: it follows depth, and an explicit `radius=\"card\"` would stay 8px inside a nested Card, breaking the concentric corners.\n- Don't expect `isCollapsible` cards to start open; pass `defaultCollapsed={false}`.\n- Do use the exported `CardProps` type when wrapping Card.",
+      "body": "The bordered surface every feature on a screen lives in: an optional header\n(title, subtitle, header actions), a padded body, and an optional footer. A\nscreen is a `<Page>` holding a vertical stack of Cards, one per feature. It can\nalso be a whole clickable list row (`size=\"small\"` with `onClick`).\n\nUse something else for: a \"nothing here\" block on the bare page (`EmptyState`),\na disclosure section with no card chrome (`CollapsibleSection`), a modal\n(`Modal` / `ConfirmModal` in `@korzun/design/control`).\n\n## Usage\n\nThe header renders only if one of `title`, `subTitle`, `headerAction`,\n`onClickHeader`, or `isCollapsible` is set.\n\n### Surprising behaviour\n\n- **Keyboard on `onClick` is incomplete.** The root gets no `role` or\n  `tabIndex`, so it is not focusable; its `onKeyDown` fires `onClick` on\n  Enter/Space bubbling up from *any* focused child (an input inside a clickable\n  card triggers it). Don't put form fields inside a clickable card.\n- A header click on a collapsible card bubbles to the root, so `isCollapsible`\n  together with `onClick` fires both.\n- Collapsed content is unmounted, not hidden: child state resets on reopen.\n\n### Corners\n\nThe corner follows depth: `radius.lg` on the page, `md` for a Card inside a\nCard, `sm` deeper. A Card provides the next depth to its header, body and\nfooter, so nested Cards step down and Buttons inside take the matching radius\nautomatically (8px in a Card on a Page). See [corners](../corners.md).\n`size=\"small\"` insets its body by only 1px, so its corner is `calc(radius.md + 1px)`\n(9px) on a page and `calc(radius.sm + 1px)` (5px) inside a Card: concentric with the `md`-cornered covers and rows flush inside it.\n\n## Do / don't\n\n- Do give each feature on a screen its own Card, stacked directly in `<Page>`.\n- Do put row actions that must not fire by accident in `footer` of a\n  collapsible card; they are unreachable while it is collapsed.\n- Don't nest Cards just to group content; use `Divider`. When you do nest, corners step down automatically.\n- Don't set `radius` on Buttons inside a Card: it follows depth, and an explicit `radius=\"card\"` would stay 8px inside a nested Card, breaking the concentric corners.\n- Don't expect `isCollapsible` cards to start open; pass `defaultCollapsed={false}`.\n- Do use the exported `CardProps` type when wrapping Card.",
       "examples": [
         {
           "file": "src/component/card/examples/01-basic.tsx",
@@ -6007,7 +6025,7 @@
           "tags": [
             "Divider",
             "Card",
-            "Dialog"
+            "Modal"
           ],
           "text": "`CardDivider` is now `Divider` and works anywhere: directly in a Card or Dialog body it reaches the edges as before (cancelling `space.xl` in a large Card, 1px in a small one, `space.xxl` in a Dialog, where it used to overhang everything but a large Card), and on the page, in a `CardRow`, `Alert`, `Surface` or nested Card it spans its container. The new `bleed` prop overrides that. **Breaking:** the old names `CardDivider`, `CardDividerProps` and `CardDividerAlign` are removed; import `Divider`, `DividerProps` and `DividerAlign`."
         },
@@ -6016,7 +6034,7 @@
           "date": "2026-11-24",
           "tags": [
             "Page",
-            "Dialog",
+            "Modal",
             "Card",
             "CardRow",
             "Alert",
@@ -6038,7 +6056,7 @@
             "CardRow",
             "Popover",
             "Menu",
-            "Dialog",
+            "Modal",
             "Page"
           ],
           "text": "**Visible changes:**\n  - Buttons in a Card default to 8px (they were 16px unless `radius=\"card\"` was set), and Buttons in a Dialog body are 8px.\n  - Selects directly on a Page get the page look (16px and the card shadow); in a Card or Dialog they stay 8px. This includes Selects in your own boxes on a Page (a `useModalDialog` modal, a `recipe.card.shell` or `recipe.row` box), because depth cannot see hand-drawn boxes: wrap their contents in `Surface`, or pass `surface=\"card\"`.\n  - Without a Page, a bare `Card` counts as depth 0: its Buttons go from 16px to 8px, a Card nested in it steps down, and a `CardRow` in it is 8px.\n  - A Card nested in a Card or Dialog steps down (8px, then 4px), and so do its Buttons and Selects; `size=\"small\"` keeps its extra 1px.\n  - `CardRow` is 16px on a Page and 8px inside a Card (it was always 16px).\n  - Buttons and Selects inside a Popover or Menu are 4px."
@@ -6068,7 +6086,7 @@
       "entry": "@korzun/design/component",
       "docPath": "docs/component/divider.md",
       "title": "Divider",
-      "description": "A horizontal rule that splits content into sections, optionally labelled and with actions; in a Card or Dialog body it reaches the edges.",
+      "description": "A horizontal rule that splits content into sections, optionally labelled and with actions; in a Card or Modal body it reaches the edges.",
       "category": "Layout",
       "values": [
         "Divider"
@@ -6078,7 +6096,7 @@
         "DividerProps"
       ],
       "importLine": "import { Divider, type DividerAlign, type DividerProps } from '@korzun/design/component'",
-      "body": "A horizontal rule that splits content into sections, optionally with a label\n(\"Devices\", \"Validation\") and/or actions sitting on the line. Directly inside a\n`Card` or `Dialog` body it cancels the body's padding, so the line meets the\nbox's edges; anywhere else it spans its container. Renders `role=\"separator\"`.\n\nUse something else for: separating whole features (use separate `Card`s),\nseparating menu items (`PageActionItem.separatorBefore`).\n\n## Usage\n\n### Styling\n\nNo `className`.\n\n### Surprising behaviour\n\n- **The bleed only reaches the nearest body.** A divider bleeds when the Card\n  or Dialog body is the nearest box around it. Inside a `CardRow`, `Alert`,\n  `Surface` or nested `Card` it spans that box instead. `bleed={false}` opts\n  out in a body; `bleed` does nothing outside one.\n- **A padded wrapper defeats it.** In a Card body but inside your own padded\n  `div`, the divider still cancels the Card's padding, not yours. Wrap the\n  box's contents in `Surface`, or pass `bleed={false}`.\n- It always reserves one label line of height, labelled or not, so swapping a\n  plain divider for a labelled one does not shift the layout.\n- The label does not wrap (`white-space: nowrap`); keep it to a word or two.\n\n## Do / don't\n\n- Do put it straight in a Card body, or in a `Stack` there, not in a padded\n  `div`.\n- Do use `type=\"link\"` Buttons or small `Tag`s as `actions`; the line is one\n  text line tall.\n- Don't use it for the gap between Cards on a page; `Page` already spaces them.",
+      "body": "A horizontal rule that splits content into sections, optionally with a label\n(\"Devices\", \"Validation\") and/or actions sitting on the line. Directly inside a\n`Card` or `Modal` body it cancels the body's padding, so the line meets the\nbox's edges; anywhere else it spans its container. Renders `role=\"separator\"`.\n\nUse something else for: separating whole features (use separate `Card`s),\nseparating menu items (`PageActionItem.separatorBefore`).\n\n## Usage\n\n### Styling\n\nNo `className`.\n\n### Surprising behaviour\n\n- **The bleed only reaches the nearest body.** A divider bleeds when the Card\n  or Modal body is the nearest box around it. Inside a `CardRow`, `Alert`,\n  `Surface` or nested `Card` it spans that box instead. `bleed={false}` opts\n  out in a body; `bleed` does nothing outside one.\n- **A padded wrapper defeats it.** In a Card body but inside your own padded\n  `div`, the divider still cancels the Card's padding, not yours. Wrap the\n  box's contents in `Surface`, or pass `bleed={false}`.\n- It always reserves one label line of height, labelled or not, so swapping a\n  plain divider for a labelled one does not shift the layout.\n- The label does not wrap (`white-space: nowrap`); keep it to a word or two.\n\n## Do / don't\n\n- Do put it straight in a Card body, or in a `Stack` there, not in a padded\n  `div`.\n- Do use `type=\"link\"` Buttons or small `Tag`s as `actions`; the line is one\n  text line tall.\n- Don't use it for the gap between Cards on a page; `Page` already spaces them.",
       "examples": [
         {
           "file": "src/component/divider/examples/01-basic.tsx",
@@ -6109,7 +6127,7 @@
           "slug": "anywhere",
           "order": 4,
           "title": "Outside a Card",
-          "description": "Anywhere but directly in a Card or Dialog body (on the page, in a CardRow, a hand-made\n`Surface` box or a Popover) the line spans its container. In a Card body it reaches the\nborders; `bleed={false}` keeps it inside the padding there.",
+          "description": "Anywhere but directly in a Card or Modal body (on the page, in a CardRow, a hand-made\n`Surface` box or a Popover) the line spans its container. In a Card body it reaches the\nborders; `bleed={false}` keeps it inside the padding there.",
           "code": "import { Card, CardRow, Divider, Stack, Text } from '@korzun/design/component';\n\nexport default function Anywhere() {\n  return (\n    <Stack gap=\"xl\">\n      <Stack gap=\"xs\">\n        <Text size=\"sm\" tone=\"muted\">\n          On the page: spans the column\n        </Text>\n        <Divider>Devices</Divider>\n        <Text>Kitchen frame, Hallway frame</Text>\n      </Stack>\n      <Card title=\"Notifications\">\n        <Stack>\n          <Text size=\"sm\" tone=\"muted\">\n            In the Card body: meets the borders\n          </Text>\n          <Divider />\n          <Text size=\"sm\" tone=\"muted\">\n            {'bleed={false}: inside the padding'}\n          </Text>\n          <Divider bleed={false} />\n          <CardRow>\n            <Stack gap=\"xs\">\n              <Text size=\"sm\" tone=\"muted\">\n                In a CardRow: spans the row\n              </Text>\n              <Divider />\n              <Text>Keep notifications for 30 days.</Text>\n            </Stack>\n          </CardRow>\n        </Stack>\n      </Card>\n    </Stack>\n  );\n}\n"
         }
       ],
@@ -6156,7 +6174,7 @@
               "name": "bleed",
               "type": "boolean",
               "required": false,
-              "description": "Reach the edges of the Card or Dialog body the divider sits in, cancelling the body's padding. Defaults to `true` directly inside a Card or Dialog body and `false` anywhere else, where the line spans its container. `true` does nothing outside a Card or Dialog."
+              "description": "Reach the edges of the Card or Modal body the divider sits in, cancelling the body's padding. Defaults to `true` directly inside a Card or Modal body and `false` anywhere else, where the line spans its container. `true` does nothing outside a Card or Modal."
             }
           ]
         },
@@ -6207,7 +6225,7 @@
           "tags": [
             "Divider",
             "Card",
-            "Dialog"
+            "Modal"
           ],
           "text": "`CardDivider` is now `Divider` and works anywhere: directly in a Card or Dialog body it reaches the edges as before (cancelling `space.xl` in a large Card, 1px in a small one, `space.xxl` in a Dialog, where it used to overhang everything but a large Card), and on the page, in a `CardRow`, `Alert`, `Surface` or nested Card it spans its container. The new `bleed` prop overrides that. **Breaking:** the old names `CardDivider`, `CardDividerProps` and `CardDividerAlign` are removed; import `Divider`, `DividerProps` and `DividerAlign`."
         }
@@ -6307,7 +6325,7 @@
           "date": "2026-11-24",
           "tags": [
             "Page",
-            "Dialog",
+            "Modal",
             "Card",
             "CardRow",
             "Alert",
@@ -6329,7 +6347,7 @@
             "CardRow",
             "Popover",
             "Menu",
-            "Dialog",
+            "Modal",
             "Page"
           ],
           "text": "**Visible changes:**\n  - Buttons in a Card default to 8px (they were 16px unless `radius=\"card\"` was set), and Buttons in a Dialog body are 8px.\n  - Selects directly on a Page get the page look (16px and the card shadow); in a Card or Dialog they stay 8px. This includes Selects in your own boxes on a Page (a `useModalDialog` modal, a `recipe.card.shell` or `recipe.row` box), because depth cannot see hand-drawn boxes: wrap their contents in `Surface`, or pass `surface=\"card\"`.\n  - Without a Page, a bare `Card` counts as depth 0: its Buttons go from 16px to 8px, a Card nested in it steps down, and a `CardRow` in it is 8px.\n  - A Card nested in a Card or Dialog steps down (8px, then 4px), and so do its Buttons and Selects; `size=\"small\"` keeps its extra 1px.\n  - `CardRow` is 16px on a Page and 8px inside a Card (it was always 16px).\n  - Buttons and Selects inside a Popover or Menu are 4px."
@@ -8112,7 +8130,7 @@
           "date": "2026-11-24",
           "tags": [
             "Page",
-            "Dialog",
+            "Modal",
             "Card",
             "CardRow",
             "Alert",
@@ -8134,7 +8152,7 @@
             "CardRow",
             "Popover",
             "Menu",
-            "Dialog",
+            "Modal",
             "Page"
           ],
           "text": "**Visible changes:**\n  - Buttons in a Card default to 8px (they were 16px unless `radius=\"card\"` was set), and Buttons in a Dialog body are 8px.\n  - Selects directly on a Page get the page look (16px and the card shadow); in a Card or Dialog they stay 8px. This includes Selects in your own boxes on a Page (a `useModalDialog` modal, a `recipe.card.shell` or `recipe.row` box), because depth cannot see hand-drawn boxes: wrap their contents in `Surface`, or pass `surface=\"card\"`.\n  - Without a Page, a bare `Card` counts as depth 0: its Buttons go from 16px to 8px, a Card nested in it steps down, and a `CardRow` in it is 8px.\n  - A Card nested in a Card or Dialog steps down (8px, then 4px), and so do its Buttons and Selects; `size=\"small\"` keeps its extra 1px.\n  - `CardRow` is 16px on a Page and 8px inside a Card (it was always 16px).\n  - Buttons and Selects inside a Popover or Menu are 4px."
@@ -8657,7 +8675,7 @@
         "SurfaceProps"
       ],
       "importLine": "import { Surface, useSurfaceRadius, type SurfaceProps } from '@korzun/design/component'",
-      "body": "Marks a hand-made box as one more level of nesting. Every library control\ninside it (`Button`, `Select`, `Card`, `CardRow`, ...) takes its corner radius\nfrom how deep it sits, following the one-radius-step-per-level rule in\n[corners](../corners.md). `Page` marks its whole area as depth 0, `Dialog` as\ndepth 1, and `Card`, `CardRow` and `Alert` each one level deeper than where\nthey sit. `Surface` adds one more level for a box you draw yourself.\n\nWrap the box's contents, not the box: the box itself takes the surrounding depth.\n\nUse `Surface` when you build your own bordered or filled box that contains\nlibrary controls. Do not use it around a library `Card`, `CardRow` or `Dialog`;\nthey already count themselves.\n\n## Usage\n\n### `useSurfaceRadius()`\n\n```ts\nuseSurfaceRadius(): string\n```\n\nReturns the radius string (a theme `radius` token) for the current depth. Call\nit in the component that draws the box, outside its own `Surface`: the box\nthen gets the radius for where it sits, and `Surface` steps the controls inside\nit one level deeper. With no `Page`, `Dialog`, `Card`, `CardRow`, `Alert` or\n`Surface` above it, it returns the depth 0 radius.\n\n### Depth table\n\n| Depth | Radius                       | Where                                    |\n| ----- | ---------------------------- | ---------------------------------------- |\n| 0     | `radius.lg`                  | on the page background                   |\n| 1     | `radius.md`                  | inside a Card or Dialog                  |\n| 2+    | `radius.sm`                  | inside a surface inside a Card or Dialog |\n| none  | each component's own default | no Page, Dialog, Card, CardRow, Alert or Surface above it |\n\nDepth never goes below `sm`; deeper nesting stays at `sm`. Hand-drawn boxes are invisible to depth, so wrap their contents in `Surface`.\n\n### Styling\n\n`Surface` renders no element of its own, so it has no `className`.\n\n## Do / don't\n\n- Do wrap the contents of a hand-made box that holds library controls in `Surface`.\n- Do take the box's own radius from `useSurfaceRadius()`, never a literal.\n- Don't wrap library `Card`, `CardRow` or `Dialog` in `Surface`.",
+      "body": "Marks a hand-made box as one more level of nesting. Every library control\ninside it (`Button`, `Select`, `Card`, `CardRow`, ...) takes its corner radius\nfrom how deep it sits, following the one-radius-step-per-level rule in\n[corners](../corners.md). `Page` marks its whole area as depth 0, `Modal` as\ndepth 1, and `Card`, `CardRow` and `Alert` each one level deeper than where\nthey sit. `Surface` adds one more level for a box you draw yourself.\n\nWrap the box's contents, not the box: the box itself takes the surrounding depth.\n\nUse `Surface` when you build your own bordered or filled box that contains\nlibrary controls. Do not use it around a library `Card`, `CardRow` or `Modal`;\nthey already count themselves.\n\n## Usage\n\n### `useSurfaceRadius()`\n\n```ts\nuseSurfaceRadius(): string\n```\n\nReturns the radius string (a theme `radius` token) for the current depth. Call\nit in the component that draws the box, outside its own `Surface`: the box\nthen gets the radius for where it sits, and `Surface` steps the controls inside\nit one level deeper. With no `Page`, `Modal`, `Card`, `CardRow`, `Alert` or\n`Surface` above it, it returns the depth 0 radius.\n\n### Depth table\n\n| Depth | Radius                       | Where                                    |\n| ----- | ---------------------------- | ---------------------------------------- |\n| 0     | `radius.lg`                  | on the page background                   |\n| 1     | `radius.md`                  | inside a Card or Modal                  |\n| 2+    | `radius.sm`                  | inside a surface inside a Card or Modal |\n| none  | each component's own default | no Page, Modal, Card, CardRow, Alert or Surface above it |\n\nDepth never goes below `sm`; deeper nesting stays at `sm`. Hand-drawn boxes are invisible to depth, so wrap their contents in `Surface`.\n\n### Styling\n\n`Surface` renders no element of its own, so it has no `className`.\n\n## Do / don't\n\n- Do wrap the contents of a hand-made box that holds library controls in `Surface`.\n- Do take the box's own radius from `useSurfaceRadius()`, never a literal.\n- Don't wrap library `Card`, `CardRow` or `Modal` in `Surface`.",
       "examples": [
         {
           "file": "src/component/surface/examples/01-basic.tsx",
@@ -8724,7 +8742,7 @@
           "date": "2026-11-24",
           "tags": [
             "Page",
-            "Dialog",
+            "Modal",
             "Card",
             "CardRow",
             "Alert",
@@ -10341,7 +10359,7 @@
       "docPath": "docs/corners.md",
       "title": "Corners",
       "description": "Corner radius by nesting depth, one radius step per level.",
-      "body": "Corner radius tracks **depth**, not size. Surfaces on the page background have\nthe roundest corners. Each surface nested inside another gets a squarer,\nconcentric corner, so the inner curve follows the outer one.\n\n## Tokens\n\n| Token | Value | Use |\n|---|---|---|\n| `theme.radius.lg` | 16px | Surfaces on the page background |\n| `theme.radius.md` | 8px | One level in: inside a card or modal; also floating layers |\n| `theme.radius.sm` | 4px | Two levels in: inside an input, inset box, row, or menu |\n| `theme.radius.pill` | 999px | Capsules: nav bar, a Switch with no nearby corner |\n| `theme.radius.circle` | 50% | Round glass buttons |\n\n## The rule\n\nFind where the element sits, then read its radius from this table:\n\n| Where the element sits | Radius | Examples |\n|---|---|---|\n| On the page background | `lg` | `Card`, modal dialog (`recipe.modal.dialog`), and any control directly on a `Page`: `Button`, `Select`, `CardRow`, text fields, `Tag` (automatic) |\n| Inside a card or modal | `md` | inputs and their shaded rows, Buttons, Selects, Tags and SegmentedControls in a Card or Dialog (automatic), shaded rows (`recipe.row`), inset boxes |\n| Inside one of those | `sm` | a chip inside an input, controls in a nested Card, CardRow, inset box (`Surface`) or Popover (automatic), a menu item, a Switch track in a shaded row |\n| Flush with its parent (zero inset, edges touch) | the parent's radius | an unlabelled Select's trigger, an input filling its row |\n| Inset 4px or less from its parent | `calc(parent − inset)` | a Switch thumb 2px inside a 4px track is 2px |\n| A small control with no nearby corner | `pill` / `circle` | a Switch in a full-width card header |\n| A floating layer (popover, menu, dropdown, toast) | `md`, plus `shadow.hoverLift` or `recipe.glass` | its items are `sm` |\n\n**Step down one token per level** (`lg` → `md` → `sm`). Do not subtract the\npadding: a Card has 13px of inset, but the inputs inside it are `md` (8px), not\n16 − 13 = 3px. Exact subtraction applies only to tight insets of 4px or less.\n\n## It's automatic\n\nComponents read their corners from the **surface depth** they sit at, so you\npass no radius prop:\n\n| Depth | Radius | Where |\n|---|---|---|\n| 0 | `lg` (16px) | On the page background, inside a `Page` |\n| 1 | `md` (8px) | Inside a `Card`, `CardRow`, `Alert` or `Dialog` on the page |\n| 2+ | `sm` (4px) | One more level in; deeper levels stay `sm` |\n| none | each component's old default | No `Page`, `Dialog`, `Card`, `CardRow`, `Alert` or `Surface` above it (tests, a component rendered on its own) |\n\nWho provides depth:\n\n- `Page` provides 0, to its header, content and footer actions.\n- `Dialog` provides 1 to its header, body and footer.\n- `Card`, `CardRow` and `Alert` each provide one level deeper than where\n  they sit, so a Card in a Card steps down.\n- `Popover` (and so `Menu` and the `Select` list) provides a fixed 2: a\n  floating layer is `md` and its items `sm`, whatever opened it.\n\nWhat follows depth with no prop: `Button`, `Select`, `Card`, `CardRow`,\n`Alert`, `TextInput`, `TextArea`, `NumberInput`, `DateTimeInput`,\n`ChipsInput` (its chips a step further in), `SegmentedControl`, `Tag`, and a\n`Switch` row (`layout=\"horizontal\"`, its `inset` track a step further in). A\nfield's shaded row and the field in it are flush, so both take the depth\nradius. For a hand-made box that holds Buttons or Selects, wrap its contents\nin `<Surface>` and read its own radius with `useSurfaceRadius()`; see\n[surface](component/surface.md).\n\nHand-drawn boxes (your own `recipe.card.shell` or `recipe.row` styles, a `useModalDialog` modal) are invisible to depth: wrap their contents in `Surface`.\n\nAn explicit prop (`Button radius`, `Select surface`) is an **override** and\nalways wins over depth. It pins that radius even where depth would step down,\nwhich breaks concentricity, so set it only when the surface really is different\n(`radius=\"background\"` on a Button that must stay round inside a Card).\n\n`Switch` still takes `radius` (`inset` or `pill`) by hand for its track;\n`inset` follows the row as above, `pill` stays a capsule. `type=\"link\"`\nbuttons have no padding or background, so radius doesn't apply. Floating\nlayers (`Toast`, a `Popover` surface, the `ChipsInput` suggestion list) stay\n`md` wherever they open.\n\n## In your own styles\n\n```ts\nconst useStyles = createUseStyles((theme: Theme) => ({\n  panel: { ...theme.recipe.card.shell },  // already lg\n  inset: {\n    backgroundColor: theme.color.bg.cardHeader,\n    borderRadius: theme.radius.md,        // one level in\n    padding: theme.space.md,\n  },\n  chip: { borderRadius: theme.radius.sm }, // two levels in\n  knob: { borderRadius: `calc(${theme.radius.sm} - 2px)` }, // 2px inset\n}));\n```\n\n- Never write a literal `borderRadius` (`'12px'`, `'50%'`). The only\n  non-token form allowed is `calc(theme.radius.X ± Npx)` for tight insets.\n- A 1px inset works the other way too: `Card size=\"small\"` is\n  `calc(radius.md + 1px)` so its flush `md` children stay concentric."
+      "body": "Corner radius tracks **depth**, not size. Surfaces on the page background have\nthe roundest corners. Each surface nested inside another gets a squarer,\nconcentric corner, so the inner curve follows the outer one.\n\n## Tokens\n\n| Token | Value | Use |\n|---|---|---|\n| `theme.radius.lg` | 16px | Surfaces on the page background |\n| `theme.radius.md` | 8px | One level in: inside a card or modal; also floating layers |\n| `theme.radius.sm` | 4px | Two levels in: inside an input, inset box, row, or menu |\n| `theme.radius.pill` | 999px | Capsules: nav bar, a Switch with no nearby corner |\n| `theme.radius.circle` | 50% | Round glass buttons |\n\n## The rule\n\nFind where the element sits, then read its radius from this table:\n\n| Where the element sits | Radius | Examples |\n|---|---|---|\n| On the page background | `lg` | `Card`, modal dialog (`recipe.modal.dialog`), and any control directly on a `Page`: `Button`, `Select`, `CardRow`, text fields, `Tag` (automatic) |\n| Inside a card or modal | `md` | inputs and their shaded rows, Buttons, Selects, Tags and SegmentedControls in a Card or Modal (automatic), shaded rows (`recipe.row`), inset boxes |\n| Inside one of those | `sm` | a chip inside an input, controls in a nested Card, CardRow, inset box (`Surface`) or Popover (automatic), a menu item, a Switch track in a shaded row |\n| Flush with its parent (zero inset, edges touch) | the parent's radius | an unlabelled Select's trigger, an input filling its row |\n| Inset 4px or less from its parent | `calc(parent − inset)` | a Switch thumb 2px inside a 4px track is 2px |\n| A small control with no nearby corner | `pill` / `circle` | a Switch in a full-width card header |\n| A floating layer (popover, menu, dropdown, toast) | `md`, plus `shadow.hoverLift` or `recipe.glass` | its items are `sm` |\n\n**Step down one token per level** (`lg` → `md` → `sm`). Do not subtract the\npadding: a Card has 13px of inset, but the inputs inside it are `md` (8px), not\n16 − 13 = 3px. Exact subtraction applies only to tight insets of 4px or less.\n\n## It's automatic\n\nComponents read their corners from the **surface depth** they sit at, so you\npass no radius prop:\n\n| Depth | Radius | Where |\n|---|---|---|\n| 0 | `lg` (16px) | On the page background, inside a `Page` |\n| 1 | `md` (8px) | Inside a `Card`, `CardRow`, `Alert` or `Modal` on the page |\n| 2+ | `sm` (4px) | One more level in; deeper levels stay `sm` |\n| none | each component's old default | No `Page`, `Modal`, `Card`, `CardRow`, `Alert` or `Surface` above it (tests, a component rendered on its own) |\n\nWho provides depth:\n\n- `Page` provides 0, to its header, content and footer actions.\n- `Modal` provides 1 to its header, body and footer.\n- `Card`, `CardRow` and `Alert` each provide one level deeper than where\n  they sit, so a Card in a Card steps down.\n- `Popover` (and so `Menu` and the `Select` list) provides a fixed 2: a\n  floating layer is `md` and its items `sm`, whatever opened it.\n\nWhat follows depth with no prop: `Button`, `Select`, `Card`, `CardRow`,\n`Alert`, `TextInput`, `TextArea`, `NumberInput`, `DateTimeInput`,\n`ChipsInput` (its chips a step further in), `SegmentedControl`, `Tag`, and a\n`Switch` row (`layout=\"horizontal\"`, its `inset` track a step further in). A\nfield's shaded row and the field in it are flush, so both take the depth\nradius. For a hand-made box that holds Buttons or Selects, wrap its contents\nin `<Surface>` and read its own radius with `useSurfaceRadius()`; see\n[surface](component/surface.md).\n\nHand-drawn boxes (your own `recipe.card.shell` or `recipe.row` styles, a `useModal` modal) are invisible to depth: wrap their contents in `Surface`.\n\nAn explicit prop (`Button radius`, `Select surface`) is an **override** and\nalways wins over depth. It pins that radius even where depth would step down,\nwhich breaks concentricity, so set it only when the surface really is different\n(`radius=\"background\"` on a Button that must stay round inside a Card).\n\n`Switch` still takes `radius` (`inset` or `pill`) by hand for its track;\n`inset` follows the row as above, `pill` stays a capsule. `type=\"link\"`\nbuttons have no padding or background, so radius doesn't apply. Floating\nlayers (`Toast`, a `Popover` surface, the `ChipsInput` suggestion list) stay\n`md` wherever they open.\n\n## In your own styles\n\n```ts\nconst useStyles = createUseStyles((theme: Theme) => ({\n  panel: { ...theme.recipe.card.shell },  // already lg\n  inset: {\n    backgroundColor: theme.color.bg.cardHeader,\n    borderRadius: theme.radius.md,        // one level in\n    padding: theme.space.md,\n  },\n  chip: { borderRadius: theme.radius.sm }, // two levels in\n  knob: { borderRadius: `calc(${theme.radius.sm} - 2px)` }, // 2px inset\n}));\n```\n\n- Never write a literal `borderRadius` (`'12px'`, `'50%'`). The only\n  non-token form allowed is `calc(theme.radius.X ± Npx)` for tight insets.\n- A 1px inset works the other way too: `Card size=\"small\"` is\n  `calc(radius.md + 1px)` so its flush `md` children stay concentric."
     },
     {
       "slug": "hooks",
@@ -10355,7 +10373,7 @@
       "docPath": "docs/patterns.md",
       "title": "Patterns",
       "description": "How screens are built: forms in cards, confirmations, menus, modals, toasts and style overrides.",
-      "body": "How screens are put together from the library, as Bookplate does it.\n\n## A screen\n\nA screen is a `Page` holding a vertical stack of `Card`s, one card per feature.\nPage-level buttons sit between the cards with no `radius` prop, because they are\non the page background.\n\n```tsx\nimport { Page, Card, ThemeSetting } from '@korzun/design/component';\nimport { Button, Switch } from '@korzun/design/control';\n\nexport const SettingsPage = () => (\n  <Page back=\"/\" documentTitle=\"Settings\">\n    <ThemeSetting />\n    <Card title=\"Notifications\">\n      <Switch name=\"digest\" label=\"Email digests\" checked={digest} onChange={setDigest} />\n    </Card>\n    <Button danger onClick={logOut}>Log out</Button>\n  </Page>\n);\n```\n\n## A form in a card\n\n- Fields go in the card body, in a `<Stack gap=\"md\">`. Keep each\n  input's default `horizontal` layout (label and control on one shaded row).\n- Every field needs a `name`. It is required, and it is the key passed to\n  `onValidChange`.\n- The submit button goes in the `footer`: `type=\"primary\"`, `submit`, and `form` set to the id of the `<form>` in the body.\n\n```tsx\n<Card\n  title=\"Change password\"\n  footer={\n    <Button type=\"primary\" submit form=\"change-password\">Save</Button>\n  }\n>\n  <form id=\"change-password\" action={save}>\n    <Stack gap=\"md\">\n      <TextInput name=\"current\" label=\"Current\" password value={current} onChange={setCurrent} />\n      <TextInput name=\"next\" label=\"New\" password value={next} onChange={setNext} />\n    </Stack>\n  </form>\n</Card>\n```\n\n## A confirmation\n\nUse `ConfirmModal` for yes/no confirmations. Pass `loading` while the request\nis in flight; it disables Cancel and blocks Escape and backdrop dismissal.\n\n```tsx\n<ConfirmModal\n  isOpen={confirming}\n  title=\"Delete book?\"\n  confirmText=\"Delete\"\n  danger\n  loading={deleting}\n  onCancel={() => setConfirming(false)}\n  onConfirm={remove}\n>\n  This can't be undone.\n</ConfirmModal>\n```\n\n## Status banner in a card\n\nAn `Alert` inside a `Card` is one step squarer than the Card, and its action\nButton one step squarer again. No radius props anywhere.\n\n```tsx\n<Card title=\"Frame\">\n  <Alert tone=\"warning\" title=\"Frame is overdue\" action={<Button onClick={retry}>Retry</Button>}>\n    No check-in for 2h 14m.\n  </Alert>\n</Card>\n```\n\n## Row or card actions menu\n\nUse `Menu` for a list of actions or links behind a button. Spread the trigger\nprops onto a `Button`; put a link first, and a destructive action last behind\na separator.\n\n```tsx\n<Menu\n  align=\"end\"\n  items={[\n    { label: 'Open reader', to: `/books/${id}/read`, Icon: BookIcon },\n    { label: 'Delete', onClick: () => setConfirming(true), danger: true, separatorBefore: true },\n  ]}\n  trigger={(p) => <Button {...p} ariaLabel=\"Book actions\">Actions</Button>}\n/>\n```\n\n## A custom modal\n\nUse `Dialog` for anything that is not a yes/no question: a title, a body, and\nan optional footer. Put form errors in the form's `Stack` with `ErrorMessage`,\nand show loading with `Spinner` (or `loading` on the Button).\n\n```tsx\nconst [open, setOpen] = useState(false);\nconst [saving, setSaving] = useState(false);\nconst [error, setError] = useState<string>();\n\nasync function save(formData: FormData) {\n  setSaving(true);\n  setError(undefined);\n  try {\n    await updateProgress(Number(formData.get('page')));\n    setOpen(false);\n  } catch {\n    setError('Could not save. Try again.');\n  } finally {\n    setSaving(false);\n  }\n}\n\n<Dialog\n  open={open}\n  onClose={() => setOpen(false)}\n  title=\"Edit progress\"\n  canDismiss={!saving}\n  footer={\n    <>\n      <Button type=\"text\" onClick={() => setOpen(false)} disabled={saving}>Cancel</Button>\n      <Button type=\"primary\" submit form=\"edit-progress\" loading={saving}>Save</Button>\n    </>\n  }\n>\n  <form id=\"edit-progress\" action={save}>\n    <Stack gap=\"md\">\n      <NumberInput name=\"page\" label=\"Page\" value={page} onChange={setPage} />\n      <ErrorMessage>{error}</ErrorMessage>\n    </Stack>\n  </form>\n</Dialog>\n```\n\n- A panel that loads on its own shows a `Spinner`:\n  `<Stack align=\"center\"><Spinner label=\"Loading books\" /></Stack>`.\n- Buttons in the footer get Dialog's corners from depth; don't set `radius`.\n- `Dialog` stays mounted: toggle `open`, never render it conditionally.\n- Escape and backdrop clicks call `onClose`, unless `canDismiss` is false.\n- `Select` and `ChipsInput` work inside a `Dialog`.\n- Only for a custom native `<dialog>` that `Dialog` can't express, build on\n  `useModalDialog` (see [use-modal-dialog](control/use-modal-dialog.md)).\n\n## Notifications\n\n`const toast = useToast()` inside `ToastProvider`. See [toast](toast.md).\n\n## Overriding a library style\n\nPass `className` (only some components accept it; each module doc says so) and\nwin specificity with `'&&'`:\n\n```ts\nsearchButton: { '&&': { borderRadius: theme.radius.md } },\n```\n\nNever use `!important`, and never target the library's internal class names.\n\n## Layout and text\n\nUse `Stack` and `Inline` for layout and `Text` and `Heading` for text, not\nstyle files. Recipes:\n\n- Body text: a bare `<Text>`; it takes the surrounding look.\n- Meta line: `<Text size=\"sm\" tone=\"muted\">`.\n- Caption: `<Text size=\"xs\" tone=\"faint\">`.\n- Section title: `<Heading level={2}>`.\n- Spread row: `<Inline justify=\"between\">`.\n\n```tsx\n<Stack gap=\"md\">\n  <Heading level={2}>Devices</Heading>\n  <Inline justify=\"between\">\n    <Text>Kindle</Text>\n    <Text size=\"sm\" tone=\"muted\">Synced today</Text>\n  </Inline>\n  <Text size=\"xs\" tone=\"faint\">Up to five devices.</Text>\n</Stack>\n```\n\nSee [stack](component/stack.md), [inline](component/inline.md),\n[text](component/text.md), and [heading](component/heading.md)."
+      "body": "How screens are put together from the library, as Bookplate does it.\n\n## A screen\n\nA screen is a `Page` holding a vertical stack of `Card`s, one card per feature.\nPage-level buttons sit between the cards with no `radius` prop, because they are\non the page background.\n\n```tsx\nimport { Page, Card, ThemeSetting } from '@korzun/design/component';\nimport { Button, Switch } from '@korzun/design/control';\n\nexport const SettingsPage = () => (\n  <Page back=\"/\" documentTitle=\"Settings\">\n    <ThemeSetting />\n    <Card title=\"Notifications\">\n      <Switch name=\"digest\" label=\"Email digests\" checked={digest} onChange={setDigest} />\n    </Card>\n    <Button danger onClick={logOut}>Log out</Button>\n  </Page>\n);\n```\n\n## A form in a card\n\n- Fields go in the card body, in a `<Stack gap=\"md\">`. Keep each\n  input's default `horizontal` layout (label and control on one shaded row).\n- Every field needs a `name`. It is required, and it is the key passed to\n  `onValidChange`.\n- The submit button goes in the `footer`: `type=\"primary\"`, `submit`, and `form` set to the id of the `<form>` in the body.\n\n```tsx\n<Card\n  title=\"Change password\"\n  footer={\n    <Button type=\"primary\" submit form=\"change-password\">Save</Button>\n  }\n>\n  <form id=\"change-password\" action={save}>\n    <Stack gap=\"md\">\n      <TextInput name=\"current\" label=\"Current\" password value={current} onChange={setCurrent} />\n      <TextInput name=\"next\" label=\"New\" password value={next} onChange={setNext} />\n    </Stack>\n  </form>\n</Card>\n```\n\n## A confirmation\n\nUse `ConfirmModal` for yes/no confirmations. Pass `loading` while the request\nis in flight; it disables Cancel and blocks Escape and backdrop dismissal.\n\n```tsx\n<ConfirmModal\n  isOpen={confirming}\n  title=\"Delete book?\"\n  confirmText=\"Delete\"\n  danger\n  loading={deleting}\n  onCancel={() => setConfirming(false)}\n  onConfirm={remove}\n>\n  This can't be undone.\n</ConfirmModal>\n```\n\n## Status banner in a card\n\nAn `Alert` inside a `Card` is one step squarer than the Card, and its action\nButton one step squarer again. No radius props anywhere.\n\n```tsx\n<Card title=\"Frame\">\n  <Alert tone=\"warning\" title=\"Frame is overdue\" action={<Button onClick={retry}>Retry</Button>}>\n    No check-in for 2h 14m.\n  </Alert>\n</Card>\n```\n\n## Row or card actions menu\n\nUse `Menu` for a list of actions or links behind a button. Spread the trigger\nprops onto a `Button`; put a link first, and a destructive action last behind\na separator.\n\n```tsx\n<Menu\n  align=\"end\"\n  items={[\n    { label: 'Open reader', to: `/books/${id}/read`, Icon: BookIcon },\n    { label: 'Delete', onClick: () => setConfirming(true), danger: true, separatorBefore: true },\n  ]}\n  trigger={(p) => <Button {...p} ariaLabel=\"Book actions\">Actions</Button>}\n/>\n```\n\n## A custom modal\n\nUse `Modal` for anything that is not a yes/no question: a title, a body, and\nan optional footer. Put form errors in the form's `Stack` with `ErrorMessage`,\nand show loading with `Spinner` (or `loading` on the Button).\n\n```tsx\nconst [open, setOpen] = useState(false);\nconst [saving, setSaving] = useState(false);\nconst [error, setError] = useState<string>();\n\nasync function save(formData: FormData) {\n  setSaving(true);\n  setError(undefined);\n  try {\n    await updateProgress(Number(formData.get('page')));\n    setOpen(false);\n  } catch {\n    setError('Could not save. Try again.');\n  } finally {\n    setSaving(false);\n  }\n}\n\n<Modal\n  open={open}\n  onClose={() => setOpen(false)}\n  title=\"Edit progress\"\n  canDismiss={!saving}\n  footer={\n    <>\n      <Button type=\"text\" onClick={() => setOpen(false)} disabled={saving}>Cancel</Button>\n      <Button type=\"primary\" submit form=\"edit-progress\" loading={saving}>Save</Button>\n    </>\n  }\n>\n  <form id=\"edit-progress\" action={save}>\n    <Stack gap=\"md\">\n      <NumberInput name=\"page\" label=\"Page\" value={page} onChange={setPage} />\n      <ErrorMessage>{error}</ErrorMessage>\n    </Stack>\n  </form>\n</Modal>\n```\n\n- A panel that loads on its own shows a `Spinner`:\n  `<Stack align=\"center\"><Spinner label=\"Loading books\" /></Stack>`.\n- Buttons in the footer get Modal's corners from depth; don't set `radius`.\n- `Modal` stays mounted: toggle `open`, never render it conditionally.\n- Escape and backdrop clicks call `onClose`, unless `canDismiss` is false.\n- `Select` and `ChipsInput` work inside a `Modal`.\n- Only for a custom native `<dialog>` that `Modal` can't express, build on\n  `useModal` (see [use-modal](control/use-modal.md)).\n\n## Notifications\n\n`const toast = useToast()` inside `ToastProvider`. See [toast](toast.md).\n\n## Overriding a library style\n\nPass `className` (only some components accept it; each module doc says so) and\nwin specificity with `'&&'`:\n\n```ts\nsearchButton: { '&&': { borderRadius: theme.radius.md } },\n```\n\nNever use `!important`, and never target the library's internal class names.\n\n## Layout and text\n\nUse `Stack` and `Inline` for layout and `Text` and `Heading` for text, not\nstyle files. Recipes:\n\n- Body text: a bare `<Text>`; it takes the surrounding look.\n- Meta line: `<Text size=\"sm\" tone=\"muted\">`.\n- Caption: `<Text size=\"xs\" tone=\"faint\">`.\n- Section title: `<Heading level={2}>`.\n- Spread row: `<Inline justify=\"between\">`.\n\n```tsx\n<Stack gap=\"md\">\n  <Heading level={2}>Devices</Heading>\n  <Inline justify=\"between\">\n    <Text>Kindle</Text>\n    <Text size=\"sm\" tone=\"muted\">Synced today</Text>\n  </Inline>\n  <Text size=\"xs\" tone=\"faint\">Up to five devices.</Text>\n</Stack>\n```\n\nSee [stack](component/stack.md), [inline](component/inline.md),\n[text](component/text.md), and [heading](component/heading.md)."
     },
     {
       "slug": "philosophy",
@@ -10397,6 +10415,14 @@
       "version": "0.7.0",
       "date": "2026-11-26",
       "entries": [
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "General"
+          ],
+          "text": "Docs generator: CHANGELOG tags that name a removed former name (`CardDivider`, `Dialog`, `useModalDialog`) resolve to the current name, so that history stays on the renamed module's page."
+        },
         {
           "version": "0.7.0",
           "date": "2026-11-26",
@@ -10539,9 +10565,18 @@
           "tags": [
             "Divider",
             "Card",
-            "Dialog"
+            "Modal"
           ],
           "text": "`CardDivider` is now `Divider` and works anywhere: directly in a Card or Dialog body it reaches the edges as before (cancelling `space.xl` in a large Card, 1px in a small one, `space.xxl` in a Dialog, where it used to overhang everything but a large Card), and on the page, in a `CardRow`, `Alert`, `Surface` or nested Card it spans its container. The new `bleed` prop overrides that. **Breaking:** the old names `CardDivider`, `CardDividerProps` and `CardDividerAlign` are removed; import `Divider`, `DividerProps` and `DividerAlign`."
+        },
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "Modal",
+            "useModal"
+          ],
+          "text": "**Breaking:** `Dialog` is renamed `Modal` and `useModalDialog` is renamed `useModal`, matching `ConfirmModal`; behaviour is unchanged. The old names `Dialog`, `DialogProps` and `useModalDialog` are removed. The footer marker attribute is now `data-modal-footer`."
         }
       ]
     },
@@ -10647,7 +10682,7 @@
           "date": "2026-11-24",
           "tags": [
             "Page",
-            "Dialog",
+            "Modal",
             "Card",
             "CardRow",
             "Alert",
@@ -10669,7 +10704,7 @@
             "CardRow",
             "Popover",
             "Menu",
-            "Dialog",
+            "Modal",
             "Page"
           ],
           "text": "**Visible changes:**\n  - Buttons in a Card default to 8px (they were 16px unless `radius=\"card\"` was set), and Buttons in a Dialog body are 8px.\n  - Selects directly on a Page get the page look (16px and the card shadow); in a Card or Dialog they stay 8px. This includes Selects in your own boxes on a Page (a `useModalDialog` modal, a `recipe.card.shell` or `recipe.row` box), because depth cannot see hand-drawn boxes: wrap their contents in `Surface`, or pass `surface=\"card\"`.\n  - Without a Page, a bare `Card` counts as depth 0: its Buttons go from 16px to 8px, a Card nested in it steps down, and a `CardRow` in it is 8px.\n  - A Card nested in a Card or Dialog steps down (8px, then 4px), and so do its Buttons and Selects; `size=\"small\"` keeps its extra 1px.\n  - `CardRow` is 16px on a Page and 8px inside a Card (it was always 16px).\n  - Buttons and Selects inside a Popover or Menu are 4px."
@@ -10712,7 +10747,7 @@
           "version": "0.5.0",
           "date": "2026-11-24",
           "tags": [
-            "Dialog",
+            "Modal",
             "Button"
           ],
           "text": "The internal `ButtonRadiusContext` is removed; Dialog footer Buttons are unchanged (8px)."
@@ -10752,8 +10787,8 @@
           "date": "2026-11-23",
           "tags": [
             "Popover",
-            "Dialog",
-            "useModalDialog"
+            "Modal",
+            "useModal"
           ],
           "text": "Layer stack: popovers and dialogs now close innermost-first. Escape and an outside press only affect the topmost layer, so a popover inside a popover closes one level at a time. **Behaviour change:** a popover beneath an open dialog no longer takes its Escape or closes on a press inside the dialog."
         },
@@ -10801,7 +10836,7 @@
           "version": "0.3.0",
           "date": "2026-11-22",
           "tags": [
-            "Dialog"
+            "Modal"
           ],
           "text": "New `Dialog` (control): a modal with a title, body and optional footer on a native `<dialog>`; `canDismiss` blocks Escape and backdrop dismissal while busy."
         },
@@ -10826,7 +10861,7 @@
           "date": "2026-11-22",
           "tags": [
             "ConfirmModal",
-            "Dialog"
+            "Modal"
           ],
           "text": "`ConfirmModal` is rebuilt on `Dialog`. No API or visual change; it is now named by its title (`aria-labelledby`)."
         },
@@ -10837,8 +10872,8 @@
             "Popover",
             "Select",
             "ChipsInput",
-            "Dialog",
-            "useModalDialog"
+            "Modal",
+            "useModal"
           ],
           "text": "`Popover` renders inside an open `<dialog>` that contains its anchor, so `Select` and `ChipsInput` work in modals."
         },
@@ -10847,7 +10882,7 @@
           "date": "2026-11-22",
           "tags": [
             "Button",
-            "Dialog"
+            "Modal"
           ],
           "text": "Buttons in a `Dialog` footer default to `radius=\"modal\"`; an explicit `radius` still wins. The radius applies to the footer only (a Dialog nested in a footer is unaffected), and `footer={false}`, `''` and `null` render no footer bar."
         },
@@ -11006,7 +11041,7 @@
           "date": "2026-11-21",
           "tags": [
             "General",
-            "useModalDialog"
+            "useModal"
           ],
           "text": "Every prop has a JSDoc comment, so editors and coding agents see the guidance in the `.d.ts`. `useModalDialog` declares its return type."
         }
@@ -11165,7 +11200,6 @@
     "ChipColor": "chips-input",
     "ConfirmModalProps": "confirm-modal",
     "DateTimeInputProps": "date-time-input",
-    "DialogProps": "dialog",
     "FieldListProps": "field-list",
     "ColumnDescriptor": "field-list",
     "FieldRow": "field-list",
@@ -11175,6 +11209,7 @@
     "MenuActionItem": "menu",
     "MenuItem": "menu",
     "MenuLinkItem": "menu",
+    "ModalProps": "modal",
     "NumberInputProps": "number-input",
     "PageActionsBarProps": "page-actions-bar",
     "PageActionsMenuProps": "page-actions-menu",

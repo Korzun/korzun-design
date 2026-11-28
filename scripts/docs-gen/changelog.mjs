@@ -52,3 +52,24 @@ export const validateTags = (versions, knownNames) => {
   }
   return errors;
 };
+
+/**
+ * Exported names that were renamed and then removed, mapped to their current
+ * name. History bullets keep their original tags; this resolves them so they
+ * validate and still appear on the renamed module's page.
+ */
+export const FORMER_NAMES = {
+  CardDivider: 'Divider',
+  Dialog: 'Modal',
+  useModalDialog: 'useModal',
+};
+
+/** `versions` with each former-name tag replaced by its current name (deduplicated). */
+export const currentTags = (versions) =>
+  versions.map((v) => ({
+    ...v,
+    entries: v.entries.map((e) => ({
+      ...e,
+      tags: [...new Set(e.tags.map((t) => FORMER_NAMES[t] ?? t))],
+    })),
+  }));

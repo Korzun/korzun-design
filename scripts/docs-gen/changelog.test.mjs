@@ -5,7 +5,7 @@ import { test } from 'node:test';
 import { fileURLToPath } from 'node:url';
 
 import { knownNames } from './barrels.mjs';
-import { parseChangelog, validateTags } from './changelog.mjs';
+import { currentTags, parseChangelog, validateTags } from './changelog.mjs';
 
 const repo = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 
@@ -65,8 +65,21 @@ test('validateTags accepts known names and General', () => {
 });
 
 test('the real CHANGELOG.md validates against the barrels', () => {
-  const versions = parseChangelog(readFileSync(join(repo, 'CHANGELOG.md'), 'utf8'));
+  const versions = currentTags(parseChangelog(readFileSync(join(repo, 'CHANGELOG.md'), 'utf8')));
   assert.ok(versions.length > 0);
   for (const v of versions) for (const e of v.entries) assert.ok(e.tags.length >= 1, v.version);
   assert.deepEqual(validateTags(versions, knownNames(repo)), []);
+});
+
+test('currentTags maps a removed former name to its current name, once', () => {
+  const versions = currentTags(
+    parseChangelog(
+      '## 0.3.0 — 2026-11-22\n\n- [Dialog] New Dialog.\n- [Modal, Dialog, useModalDialog] Renamed.\n- [CardDivider] Old.\n- [Button] Kept.\n'
+    )
+  );
+  assert.deepEqual(
+    versions[0].entries.map((e) => e.tags),
+    [['Modal'], ['Modal', 'useModal'], ['Divider'], ['Button']]
+  );
+  assert.deepEqual(validateTags(versions, new Set(['Modal', 'useModal', 'Divider', 'Button'])), []);
 });

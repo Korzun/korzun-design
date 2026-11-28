@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Page } from '../../component/page/index.js';
 import { renderWithProviders } from '../../test-utils.js';
 import { Button } from '../button/index.js';
-import { Dialog } from '../dialog/index.js';
+import { Modal } from '../modal/index.js';
 import { Popover, type PopoverProps } from './index.js';
 
 type RectInit = { top: number; bottom: number; left: number; right: number; width: number };
@@ -390,7 +390,7 @@ describe('Popover', () => {
       expect(wrapper().parentElement).toBe(document.body);
     });
 
-    describe('inside a Dialog', () => {
+    describe('inside a Modal', () => {
       beforeEach(() => {
         HTMLDialogElement.prototype.showModal = vi.fn(function (this: HTMLDialogElement) {
           this.setAttribute('open', '');
@@ -409,12 +409,12 @@ describe('Popover', () => {
       }) => {
         const anchor = useRef<HTMLDivElement>(null);
         return (
-          <Dialog open onClose={onDialogClose} title="T">
+          <Modal open onClose={onDialogClose} title="T">
             <div ref={anchor} data-testid="anchor" />
             <Popover anchorRef={anchor} open={open} onClose={onClose}>
               <div>content</div>
             </Popover>
-          </Dialog>
+          </Modal>
         );
       };
 
@@ -428,7 +428,7 @@ describe('Popover', () => {
         return { onDialogClose, onClose };
       };
 
-      it('Escape closes the popover and not the Dialog', () => {
+      it('Escape closes the popover and not the Modal', () => {
         const { onDialogClose, onClose } = setup();
         expect(screen.getByText('content').closest('dialog')).toHaveAttribute('open');
         const event = escape(document);
@@ -441,7 +441,7 @@ describe('Popover', () => {
 
       // jsdom does not model the backdrop path (the dialog's own mousedown+click
       // target); this checks only that content events do not reach onClose.
-      it('clicking popover content does not close the Dialog', () => {
+      it('clicking popover content does not close the Modal', () => {
         const { onDialogClose, onClose } = setup();
         fireEvent.mouseDown(screen.getByText('content'));
         fireEvent.click(screen.getByText('content'));
@@ -449,7 +449,7 @@ describe('Popover', () => {
         expect(onClose).not.toHaveBeenCalled();
       });
 
-      it('mounted open together with its Dialog, Escape still closes the popover first', () => {
+      it('mounted open together with its Modal, Escape still closes the popover first', () => {
         const onDialogClose = vi.fn();
         const onClose = vi.fn();
         renderWithProviders(<InModal open onDialogClose={onDialogClose} onClose={onClose} />);

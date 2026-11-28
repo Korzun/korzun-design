@@ -145,7 +145,7 @@ export const Popover = ({
   }, [open, target, updatePosition]);
 
   // Gated on `target`, so it registers one commit after each opening: a
-  // Dialog opening in the same commit as a popover inside it still sits below it.
+  // Modal opening in the same commit as a popover inside it still sits below it.
   useLayer(open && !!onClose && !!target, {
     onEscape: onClose,
     contains: (node) => !!(anchorRef.current?.contains(node) || contentRef.current?.contains(node)),

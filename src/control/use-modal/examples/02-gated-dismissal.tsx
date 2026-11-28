@@ -5,7 +5,7 @@
  * click in the dialog from reaching a clickable ancestor; dismissal is the hook's job.
  */
 import { Stack, Surface } from '@korzun/design/component';
-import { Button, Switch, useModalDialog } from '@korzun/design/control';
+import { Button, Switch, useModal } from '@korzun/design/control';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { useState } from 'react';
 
@@ -24,7 +24,7 @@ export default function GatedDismissal() {
   const [isOpen, setIsOpen] = useState(false);
   const [saving, setSaving] = useState(true);
   const close = () => setIsOpen(false);
-  const ref = useModalDialog(isOpen, close, !saving);
+  const ref = useModal(isOpen, close, !saving);
   return (
     <Stack align="start">
       <Button onClick={() => setIsOpen(true)}>Open busy modal</Button>

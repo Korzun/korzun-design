@@ -1,17 +1,17 @@
 ---
-title: Dialog
+title: Modal
 description: A modal on a native dialog element with a title, a body and an optional footer of actions.
 category: Overlays
 ---
-# Dialog
+# Modal
 
 <!-- generated:import -->
 
-`import { Dialog, type DialogProps } from '@korzun/design/control'`
+`import { Modal, type ModalProps } from '@korzun/design/control'`
 
 <!-- /generated:import -->
 
-A modal on a native `<dialog>` (via `useModalDialog`): a title, a body
+A modal on a native `<dialog>` (via `useModal`): a title, a body
 (`children`), and an optional `footer` for actions. It is always mounted and
 fully controlled by `open`. The title names the dialog for assistive tech.
 
@@ -39,9 +39,9 @@ a non-blocking notice (toast).
 
 - Do use [`ConfirmModal`](confirm-modal.md) for yes/no questions.
 - Do pass `canDismiss={!loading}` while a request runs.
-- Don't set `radius` on Buttons inside a Dialog by hand; the depth does it.
-- Don't write your own modal style files; build on `Dialog`.
-- Don't render it conditionally (`{open && <Dialog …/>}`); toggle `open`.
+- Don't set `radius` on Buttons inside a Modal by hand; the depth does it.
+- Don't write your own modal style files; build on `Modal`.
+- Don't render it conditionally (`{open && <Modal …/>}`); toggle `open`.
 
 <!-- generated:examples -->
 
@@ -56,7 +56,7 @@ starts open; Review fixes opens it again.
 
 ```tsx
 import { Stack, Text } from '@korzun/design/component';
-import { Button, Dialog } from '@korzun/design/control';
+import { Button, Modal } from '@korzun/design/control';
 import { useState } from 'react';
 
 export default function Basic() {
@@ -70,7 +70,7 @@ export default function Basic() {
     <Stack align="start">
       <Button onClick={() => setOpen(true)}>Review fixes</Button>
       <Text tone="muted">Saved: {saves}</Text>
-      <Dialog
+      <Modal
         open={open}
         onClose={() => setOpen(false)}
         title="Fixes waiting"
@@ -86,7 +86,7 @@ export default function Basic() {
         }
       >
         Three metadata fixes are waiting for review.
-      </Dialog>
+      </Modal>
     </Stack>
   );
 }
@@ -99,7 +99,7 @@ click on the backdrop, both of which call `onClose`.
 
 ```tsx
 import { Stack, Text } from '@korzun/design/component';
-import { Button, Dialog } from '@korzun/design/control';
+import { Button, Modal } from '@korzun/design/control';
 import { useState } from 'react';
 
 export default function NoFooter() {
@@ -113,9 +113,9 @@ export default function NoFooter() {
     <Stack align="start">
       <Button onClick={() => setOpen(true)}>Show notice</Button>
       <Text tone="muted">Dismissed: {dismissals}</Text>
-      <Dialog open={open} onClose={dismiss} title="Sync finished">
+      <Modal open={open} onClose={dismiss} title="Sync finished">
         Press Escape or click outside the dialog to close it.
-      </Dialog>
+      </Modal>
     </Stack>
   );
 }
@@ -129,7 +129,7 @@ are disabled or loading to match, so every way out is gated the same.
 
 ```tsx
 import { Stack } from '@korzun/design/component';
-import { Button, Dialog, Switch } from '@korzun/design/control';
+import { Button, Modal, Switch } from '@korzun/design/control';
 import { useState } from 'react';
 
 export default function NotDismissable() {
@@ -138,7 +138,7 @@ export default function NotDismissable() {
   return (
     <Stack align="start">
       <Button onClick={() => setOpen(true)}>Open busy dialog</Button>
-      <Dialog
+      <Modal
         open={open}
         onClose={() => setOpen(false)}
         canDismiss={!saving}
@@ -158,7 +158,7 @@ export default function NotDismissable() {
           Escape and the backdrop are ignored while the request is in flight.
           <Switch name="saving" label="Request in flight" checked={saving} onChange={setSaving} />
         </Stack>
-      </Dialog>
+      </Modal>
     </Stack>
   );
 }
@@ -172,7 +172,7 @@ and Escape closes the list before the dialog. `canDismiss={!saving}` and a
 
 ```tsx
 import { Stack, Text } from '@korzun/design/component';
-import { Button, Dialog, Select, TextInput } from '@korzun/design/control';
+import { Button, Modal, Select, TextInput } from '@korzun/design/control';
 import { useState } from 'react';
 
 const SHELVES = ['Reading', 'To read', 'Finished', 'Abandoned'];
@@ -195,7 +195,7 @@ export default function Form() {
     <Stack align="start">
       <Button onClick={() => setOpen(true)}>Edit book</Button>
       <Text tone="muted">Saved: {saved}</Text>
-      <Dialog
+      <Modal
         open={open}
         onClose={() => setOpen(false)}
         canDismiss={!saving}
@@ -222,7 +222,7 @@ export default function Form() {
             onChange={setShelf}
           />
         </Stack>
-      </Dialog>
+      </Modal>
     </Stack>
   );
 }
@@ -241,7 +241,7 @@ export default function Form() {
 | `className` | `string` |  | Extra class on the `<dialog>` element. Win specificity with `'&&'`, never `!important`. |
 | `footer` | `ReactNode` |  | Action row. No footer bar is drawn when omitted. |
 | `onClose` (required) | `() => void` |  | Called on Escape and a backdrop click (unless `canDismiss` is false); receives no event. Close the dialog here. |
-| `open` (required) | `boolean` |  | Controls visibility. Keep the Dialog mounted and toggle this. |
+| `open` (required) | `boolean` |  | Controls visibility. Keep the Modal mounted and toggle this. |
 | `title` (required) | `ReactNode` |  | Header content; also the dialog's accessible name. |
 
 <!-- /generated:props -->
@@ -267,6 +267,7 @@ export default function Form() {
 ## Changelog
 
 - **0.7.0** (2026-11-26): `CardDivider` is now `Divider` and works anywhere: directly in a Card or Dialog body it reaches the edges as before (cancelling `space.xl` in a large Card, 1px in a small one, `space.xxl` in a Dialog, where it used to overhang everything but a large Card), and on the page, in a `CardRow`, `Alert`, `Surface` or nested Card it spans its container. The new `bleed` prop overrides that. **Breaking:** the old names `CardDivider`, `CardDividerProps` and `CardDividerAlign` are removed; import `Divider`, `DividerProps` and `DividerAlign`.
+- **0.7.0** (2026-11-26): **Breaking:** `Dialog` is renamed `Modal` and `useModalDialog` is renamed `useModal`, matching `ConfirmModal`; behaviour is unchanged. The old names `Dialog`, `DialogProps` and `useModalDialog` are removed. The footer marker attribute is now `data-modal-footer`.
 - **0.5.0** (2026-11-24): Surface depth: corners are concentric site-wide with no radius props. `Page` provides depth 0, `Dialog` 1, and `Card`, `CardRow` and `Alert` each provide one level deeper than where they sit; `Popover` (so `Menu` and the `Select` list) provides a fixed 2. Depth 0 is `radius.lg`, 1 is `md`, 2 and deeper is `sm`. `Button`, `Select`, `Card`, `CardRow` and `Alert` follow it; an explicit `Button radius` or `Select surface` still wins. With no `Page`, `Dialog`, `Card`, `CardRow`, `Alert` or `Surface` above it, a component keeps its 0.4.0 look; a bare `Card` (no `Page`) still counts as depth 0 and gives its contents depth 1, so its Buttons and nested Cards change as below.
 - **0.5.0** (2026-11-24): **Visible changes:**
   - Buttons in a Card default to 8px (they were 16px unless `radius="card"` was set), and Buttons in a Dialog body are 8px.

@@ -52,7 +52,7 @@ export const useStyle = createUseStyles((theme: Theme) => ({
     padding: `${theme.space.md} ${theme.space.xxl}`,
     cursor: 'pointer',
     fontSize: '0.80rem', // button-specific size; not on the global fontSize scale
-    // Pinned, so the height does not follow an inherited line-height: a Dialog
+    // Pinned, so the height does not follow an inherited line-height: a Modal
     // sets 1.3 for its prose, which made footer buttons 35px. 0.875rem is the
     // 14px the UA's `normal` gave at this size, so a text button stays
     // 1px + 8px + 14px + 8px + 1px = 32px.
