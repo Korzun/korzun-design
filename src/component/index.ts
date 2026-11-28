@@ -15,7 +15,6 @@ export {
   type MetaLinePair,
   type MetaLineProps,
 } from './meta-line/index.js';
-export { MetadataList, type Metadata, type MetadataListProps } from './metadata-list/index.js';
 export { NavDesktop, type NavDesktopProps } from './nav-desktop/index.js';
 export { NavMobile, type NavMobileProps, type NavPill } from './nav-mobile/index.js';
 export type { NavItem } from './nav-types.js';

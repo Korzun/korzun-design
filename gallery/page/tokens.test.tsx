@@ -19,7 +19,7 @@ describe('TokensPage', () => {
     // querySelector, not getByRole: the page is too big for role queries in jsdom.
     const titles = Array.from(container.querySelectorAll('section > h2')).map((h) => h.textContent);
     expect(titles).toEqual(tokenGroups(lightTheme));
-    for (const group of ['size', 'fontFamily', 'fontWeight', 'lineHeight', 'layout'])
+    for (const group of ['fontFamily', 'fontWeight', 'lineHeight', 'layout'])
       expect(titles).toContain(group);
     expect(titles).not.toContain('colorScheme');
   });

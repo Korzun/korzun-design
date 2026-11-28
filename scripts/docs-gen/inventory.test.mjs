@@ -51,8 +51,8 @@ test('single-module areas', () => {
 });
 
 test('internal folders are excluded', () => {
-  for (const m of modules) assert.ok(!/layer-stack|metadata$/.test(m.id), m.id);
-  assert.ok(byId('component/metadata-list'));
+  for (const m of modules) assert.ok(!/layer-stack/.test(m.id), m.id);
+  assert.ok(byId('component/meta-line'));
 });
 
 test('control+component module count equals their doc files', () => {
