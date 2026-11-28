@@ -30,3 +30,37 @@ describe('TokensTable', () => {
     }
   });
 });
+
+describe('TokensTable recipe table', () => {
+  const recipe = { path: 'recipe.glass', kind: 'recipe', light: null, dark: null } as const;
+
+  it('leaves the properties cell unlabelled and wide, for the stacked phone layout', () => {
+    const { container } = render(
+      <ThemeProvider identity="test">
+        <TokensTable tokens={[recipe]} />
+      </ThemeProvider>
+    );
+    const cells = Array.from(container.querySelectorAll('tbody td'));
+    expect(cells.map((td) => td.getAttribute('data-label'))).toEqual([null, null]);
+    expect(cells[1]!.className).toMatch(/wide/);
+  });
+
+  it('shows no empty value table when there are only recipes', () => {
+    render(
+      <ThemeProvider identity="test">
+        <TokensTable tokens={[recipe]} />
+      </ThemeProvider>
+    );
+    expect(screen.queryByRole('table', { name: 'Tokens' })).toBeNull();
+    expect(screen.getByRole('table', { name: 'Recipe tokens' })).toBeInTheDocument();
+  });
+
+  it('still shows the value table when there are no tokens at all', () => {
+    render(
+      <ThemeProvider identity="test">
+        <TokensTable tokens={[]} />
+      </ThemeProvider>
+    );
+    expect(screen.getByRole('table', { name: 'Tokens' })).toBeInTheDocument();
+  });
+});

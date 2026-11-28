@@ -1,11 +1,11 @@
-import { Heading, Stack, Tag, Text } from '@korzun/design/component';
-import { createUseStyles, type Theme } from '@korzun/design/theme';
+import { Heading, Stack, Table, type TableColumn, Tag, Text } from '@korzun/design/component';
+import { createUseStyles, type Theme, useTheme } from '@korzun/design/theme';
 import cx from 'classnames';
 import type { MouseEvent, ReactNode } from 'react';
 import { useLocation } from 'react-router';
 
 import { anchor } from '../../scripts/docs-gen/slug.mjs';
-import type { TypeTable } from '../../scripts/docs-gen/types.js';
+import type { PropRow, TypeTable } from '../../scripts/docs-gen/types.js';
 import { codeBlock } from '../layout/type.js';
 import { Markdown } from './markdown.js';
 
@@ -13,88 +13,18 @@ import { Markdown } from './markdown.js';
 export const tableId = (name: string): string => anchor(name);
 
 export const useTableStyle = createUseStyles((theme: Theme) => ({
-  // A wide table scrolls inside its own box instead of widening the page.
-  scroll: {
-    overflowX: 'auto',
-    border: `1px solid ${theme.color.border.default}`,
-    borderRadius: theme.radius.lg,
-    backgroundColor: theme.color.bg.card,
-  },
-  table: {
-    width: '100%',
-    // On a phone the table keeps readable columns and scrolls sideways.
-    minWidth: `calc(${theme.space.xxxxxl} * 20)`,
-    borderCollapse: 'collapse',
-    fontSize: theme.fontSize.md,
-    lineHeight: theme.lineHeight.body,
-    '& th, & td': {
-      padding: `${theme.space.lg} ${theme.space.xl}`,
-      textAlign: 'left',
-      verticalAlign: 'top',
-      borderBottom: `1px solid ${theme.color.border.light}`,
-    },
-    '& tr:last-child td': { borderBottom: 0 },
-    '& th': {
-      fontWeight: theme.fontWeight.semibold,
-      color: theme.color.text.secondary,
-      backgroundColor: theme.color.bg.cardHeader,
-      whiteSpace: 'nowrap',
-    },
-    // On a phone each row stacks instead of scrolling: the short cells (name,
-    // type, default) share a line and the `wide` cell (the description) takes
-    // the full width below. The headings stay for screen readers only, and a
-    // cell's `data-label` names it in their place.
-    [theme.breakpoint.mobile]: {
-      minWidth: 0,
-      '& thead': {
-        position: 'absolute',
-        width: 1,
-        height: 1,
-        overflow: 'hidden',
-        clipPath: 'inset(50%)',
-        whiteSpace: 'nowrap',
-      },
-      '& tbody': { display: 'block' },
-      '& tr': {
-        display: 'flex',
-        flexWrap: 'wrap',
-        alignItems: 'baseline',
-        columnGap: theme.space.xl,
-        rowGap: theme.space.sm,
-        padding: `${theme.space.lg} ${theme.space.xl}`,
-        borderBottom: `1px solid ${theme.color.border.light}`,
-      },
-      '& tr:last-child': { borderBottom: 0 },
-      '& th, & td': { display: 'block', padding: 0, borderBottom: 0, minWidth: 0 },
-      // The label is a flex item, so it stays beside a value that is a box itself (a swatch).
-      '& td[data-label]': { display: 'flex', alignItems: 'baseline', gap: theme.space.xs },
-      '& td[data-label]::before': {
-        content: 'attr(data-label) ":"',
-        flexShrink: 0,
-        color: theme.color.text.faint,
-      },
-      '& td$wide': { flexBasis: '100%' },
-      // The name's required and deprecated tags sit beside it on the shared line.
-      '&& td$name > *': { flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap' },
-    },
-  },
-  /** The cell that takes the full width of a stacked row on a phone. */
-  wide: {},
   code: {
     fontFamily: theme.fontFamily.mono,
     overflowWrap: 'break-word',
   },
-  name: { whiteSpace: 'nowrap' },
-  // Columns sized to their content: a prop name never wraps, a type gets room for a
-  // short union, a default stays narrow, and the description takes the rest.
-  props: {
-    [theme.breakpoint.normal]: {
-      '& th:nth-child(2)': { width: '35%' },
-      '& th:nth-child(3)': { width: '10%' },
-    },
-  },
   // The prop name is what a reader scans for; the type beside it steps back.
   propName: { fontWeight: theme.fontWeight.semibold, color: theme.color.text.primary },
+  // On a phone the required and deprecated tags sit beside the name on the shared line.
+  nameStack: {
+    [theme.breakpoint.mobile]: {
+      '&&': { flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap' },
+    },
+  },
   typeText: { color: theme.color.text.muted },
   // One member of a union: it wraps inside only when it is wider than the cell.
   member: { display: 'inline-block', maxWidth: '100%' },
@@ -253,6 +183,68 @@ const NO_PAGES: ReadonlyMap<string, string> = new Map();
 export const PropsTable = ({ table, tables, typePages = NO_PAGES, from }: PropsTableProps) => {
   const styles = useTableStyle();
   const linkable = new Set(tables.filter((t) => t.name !== table.name).map((t) => t.name));
+  const theme = useTheme();
+  // On a wide screen the table keeps readable columns and scrolls sideways.
+  const minWidth = `calc(${theme.space.xxxxxl} * 20)`;
+  const columns: TableColumn<PropRow>[] = [
+    {
+      key: 'name',
+      title: 'Name',
+      label: false,
+      nowrap: true,
+      render: (row) => (
+        <Stack gap="xs" align="start" className={styles.nameStack}>
+          <code className={cx(styles.code, styles.propName, row.deprecated && styles.deprecated)}>
+            {row.name}
+          </code>
+          {row.required && (
+            <Tag tone="warning" size="sm">
+              required
+            </Tag>
+          )}
+          {row.deprecated && (
+            <Tag tone="neutral" size="sm">
+              deprecated
+            </Tag>
+          )}
+        </Stack>
+      ),
+    },
+    {
+      key: 'type',
+      title: 'Type',
+      width: '35%',
+      render: (row) => (
+        <TypeText
+          text={row.type}
+          linkable={linkable}
+          typePages={typePages}
+          self={table.name}
+          className={styles.typeText}
+        />
+      ),
+    },
+    {
+      key: 'default',
+      title: 'Default',
+      width: '10%',
+      render: (row) =>
+        row.default && row.defaultProse ? (
+          <Text>{row.default}</Text>
+        ) : row.default ? (
+          <code className={styles.code}>{row.default}</code>
+        ) : (
+          <Text tone="muted">–</Text>
+        ),
+    },
+    {
+      key: 'description',
+      title: 'Description',
+      label: false,
+      wide: true,
+      render: (row) => <Markdown source={row.description} from={from} inline />,
+    },
+  ];
   const caption = (
     <>
       <Heading level={3} id={tableId(table.name)}>
@@ -285,68 +277,13 @@ export const PropsTable = ({ table, tables, typePages = NO_PAGES, from }: PropsT
   return (
     <Stack gap="md">
       {caption}
-      <div className={styles.scroll}>
-        <table className={cx(styles.table, styles.props)} aria-label={table.name}>
-          <thead>
-            <tr>
-              <th scope="col">Name</th>
-              <th scope="col">Type</th>
-              <th scope="col">Default</th>
-              <th scope="col">Description</th>
-            </tr>
-          </thead>
-          <tbody>
-            {table.rows.map((row) => (
-              <tr key={row.name}>
-                <td className={styles.name}>
-                  <Stack gap="xs" align="start">
-                    <code
-                      className={cx(
-                        styles.code,
-                        styles.propName,
-                        row.deprecated && styles.deprecated
-                      )}
-                    >
-                      {row.name}
-                    </code>
-                    {row.required && (
-                      <Tag tone="warning" size="sm">
-                        required
-                      </Tag>
-                    )}
-                    {row.deprecated && (
-                      <Tag tone="neutral" size="sm">
-                        deprecated
-                      </Tag>
-                    )}
-                  </Stack>
-                </td>
-                <td data-label="Type">
-                  <TypeText
-                    text={row.type}
-                    linkable={linkable}
-                    typePages={typePages}
-                    self={table.name}
-                    className={styles.typeText}
-                  />
-                </td>
-                <td data-label="Default">
-                  {row.default && row.defaultProse ? (
-                    <Text>{row.default}</Text>
-                  ) : row.default ? (
-                    <code className={styles.code}>{row.default}</code>
-                  ) : (
-                    <Text tone="muted">–</Text>
-                  )}
-                </td>
-                <td className={styles.wide}>
-                  <Markdown source={row.description} from={from} inline />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <Table
+        ariaLabel={table.name}
+        rowKey="name"
+        columns={columns}
+        rows={table.rows}
+        minWidth={minWidth}
+      />
       {table.extends && table.extends.length > 0 && (
         <Text as="p" size="sm" tone="description">
           {'Also accepts: '}

@@ -11357,6 +11357,14 @@
             "General"
           ],
           "text": "Docs: modules are grouped into Layout, Navigation, Typography, Inputs, Overlays, Data display, Feedback, Foundations and Hooks. Actions is gone (`Button` is in Inputs, the Page action bars are in Layout under `Page`), Theme and the icons are Foundations, and the hooks have a page of their own with runnable examples (they were a guide). `PageActionsBar`, `PageActionsMenu` and `PageFooterActions` are listed under `Page` and `CardRow` under `Card`; their pages link to the parent. The overview shows only top-level modules; a nested one appears under Parts on its parent's page, and the overview's search still finds it. The order lives in `scripts/docs-gen/categories.mjs`."
+        },
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "General"
+          ],
+          "text": "Docs site: props, token and recipe tables render through `Table`."
         }
       ]
     },

@@ -15,6 +15,20 @@ const mount = (table: TypeTable) =>
   );
 
 describe('PropsTable', () => {
+  it('puts the required and deprecated tags in a stack the phone lays out as a row', () => {
+    const { container } = mount({
+      name: 'ButtonProps',
+      kind: 'props',
+      rows: [
+        { name: 'old', type: 'string', required: true, deprecated: true, description: 'Old.' },
+      ],
+    });
+    const stack = container.querySelector('tbody td')!.firstElementChild!;
+    expect(stack.className).toMatch(/nameStack/);
+    expect(stack).toHaveTextContent('required');
+    expect(stack).toHaveTextContent('deprecated');
+  });
+
   it('labels the type and default cells and marks the description wide, for the stacked phone layout', () => {
     const { container } = mount({
       name: 'ButtonProps',
