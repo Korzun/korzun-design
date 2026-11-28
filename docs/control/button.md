@@ -44,6 +44,8 @@ a text one. Keyboard focus (`:focus-visible`) on `text` and `link` draws a solid
 - `dashed`: an "add a row" affordance (as in `FieldList`).
 - Add `danger` for destructive actions (Delete, Log out), on `primary` in a
   confirm or on `default` otherwise.
+- To show an action is done (Copy turning into Copied!), change the label and
+  add a `CheckIcon` prefix; there is no green button.
 
 ### Corners
 
@@ -103,7 +105,8 @@ export default function Basic() {
 
 `type` picks the look, not the HTML attribute. `primary` is the one main action,
 `default` a secondary one, `text` a Cancel in a modal footer, `link` an inline
-row action, and `dashed` an "add a row" affordance.
+row action, and `dashed` an "add a row" affordance. The second row adds
+`danger`, on `default` and on `primary`.
 
 ```tsx
 import { Inline, Stack, Text } from '@korzun/design/component';
@@ -129,24 +132,31 @@ export default function Variants() {
           Dashed
         </Button>
       </Inline>
+      <Inline wrap>
+        <Button danger onClick={() => setPressed('Danger')}>
+          Danger
+        </Button>
+        <Button type="primary" danger onClick={() => setPressed('Primary danger')}>
+          Primary danger
+        </Button>
+      </Inline>
       <Text tone="muted">Pressed: {pressed}</Text>
     </Stack>
   );
 }
 ```
 
-### Danger and success
+### Danger
 
 Add `danger` to a destructive action: on `primary` when it confirms the
-deletion, on `default` otherwise. `success` is the green treatment. The two
-cannot both be set; TypeScript rejects it.
+deletion, on `default` otherwise.
 
 ```tsx
 import { Inline, Stack, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { useState } from 'react';
 
-export default function DangerAndSuccess() {
+export default function Danger() {
   const [pressed, setPressed] = useState('nothing yet');
   return (
     <Stack align="start">
@@ -156,9 +166,6 @@ export default function DangerAndSuccess() {
         </Button>
         <Button type="primary" danger onClick={() => setPressed('Delete book')}>
           Delete book
-        </Button>
-        <Button type="primary" success onClick={() => setPressed('Mark as read')}>
-          Mark as read
         </Button>
       </Inline>
       <Text tone="muted">Pressed: {pressed}</Text>
@@ -197,36 +204,109 @@ export default function Icons() {
 }
 ```
 
-### Loading and disabled
+### Loading
 
-`loading` swaps the icons for a spinner and blocks clicks; `disabled` greys the
-button out. Both take the button out of the tab order.
+`loading` swaps the icons for a spinner, softens the colour and blocks clicks;
+the button leaves the tab order until it finishes. Every type has a loading
+look, `danger` included. Press Upload to watch one go through it.
 
 ```tsx
-import { Inline } from '@korzun/design/component';
+import { Inline, Stack, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { UploadIcon } from '@korzun/design/icon';
 import { useState } from 'react';
 
-export default function LoadingAndDisabled() {
+export default function Loading() {
   const [uploading, setUploading] = useState(false);
+  const [uploads, setUploads] = useState(0);
+  const upload = () => {
+    setUploading(true);
+    setTimeout(() => {
+      setUploading(false);
+      setUploads((n) => n + 1);
+    }, 1500);
+  };
   return (
-    <Inline wrap>
-      <Button
-        type="primary"
-        prefix={UploadIcon}
-        loading={uploading}
-        onClick={() => setUploading(true)}
-      >
-        {uploading ? 'Uploading' : 'Upload'}
-      </Button>
-      <Button type="text" disabled={!uploading} onClick={() => setUploading(false)}>
-        Cancel upload
-      </Button>
-      <Button disabled onClick={() => setUploading(true)}>
-        Disabled
-      </Button>
-    </Inline>
+    <Stack align="start">
+      <Inline wrap>
+        <Button type="primary" loading>
+          Primary
+        </Button>
+        <Button loading>Default</Button>
+        <Button type="dashed" loading>
+          Dashed
+        </Button>
+        <Button type="text" loading>
+          Text
+        </Button>
+        <Button type="link" loading>
+          Link
+        </Button>
+      </Inline>
+      <Inline wrap>
+        <Button danger loading>
+          Danger
+        </Button>
+        <Button type="primary" danger loading>
+          Primary danger
+        </Button>
+      </Inline>
+      <Inline wrap>
+        <Button type="primary" prefix={UploadIcon} loading={uploading} onClick={upload}>
+          {uploading ? 'Uploading' : 'Upload'}
+        </Button>
+        <Text tone="muted">Uploaded {uploads} times</Text>
+      </Inline>
+    </Stack>
+  );
+}
+```
+
+### Disabled
+
+`disabled` greys the button out, shows a not-allowed cursor, blocks clicks and
+takes it out of the tab order. Every type has a disabled look, `danger`
+included. The switch enables Save.
+
+```tsx
+import { Inline, Stack } from '@korzun/design/component';
+import { Button, Switch } from '@korzun/design/control';
+import { useState } from 'react';
+
+export default function Disabled() {
+  const [changed, setChanged] = useState(false);
+  return (
+    <Stack align="start">
+      <Inline wrap>
+        <Button type="primary" disabled>
+          Primary
+        </Button>
+        <Button disabled>Default</Button>
+        <Button type="dashed" disabled>
+          Dashed
+        </Button>
+        <Button type="text" disabled>
+          Text
+        </Button>
+        <Button type="link" disabled>
+          Link
+        </Button>
+      </Inline>
+      <Inline wrap>
+        <Button danger disabled>
+          Danger
+        </Button>
+        <Button type="primary" danger disabled>
+          Primary danger
+        </Button>
+      </Inline>
+      <Inline wrap>
+        <Switch name="changed" label="Has changes" checked={changed} onChange={setChanged} />
+        <Button type="primary" disabled={!changed} onClick={() => setChanged(false)}>
+          Save
+        </Button>
+      </Inline>
+    </Stack>
   );
 }
 ```
@@ -330,7 +410,7 @@ export default function DialogFooter() {
 | `ariaHasPopup` | `'menu' \| 'listbox' \| 'dialog' \| boolean` |  | Announces that the button opens a popup of this kind (`'menu'` for a menu trigger). Rendered in both modes. |
 | `ariaLabel` | `string` |  | Accessible name when the visible children are not distinguishing enough on their own — several "Remove" buttons in a list, each belonging to a different row. |
 | `className` | `string` |  | Extra class; win specificity with `'&&'` in your sheet, never `!important`. |
-| `danger` | `boolean` | `false` | Red treatment for destructive actions. Mutually exclusive with `success` (setting both is a type error). |
+| `danger` | `boolean` | `false` | Red treatment for destructive actions, on `default` or `primary`. |
 | `disabled` | `boolean` | `false` | Greys the button out and blocks clicks. |
 | `form` | `string` |  | Id of the `<form>` to submit, for a `submit` button outside its form (e.g. in a `Card` footer). |
 | `loading` | `boolean` | `false` | Shows a spinner in place of the icons and blocks clicks. |
@@ -339,7 +419,6 @@ export default function DialogFooter() {
 | `radius` | `'background' \| 'card' \| 'inset' \| 'modal'` |  | Unset, it follows surface depth: 16px on a page or outside any surface, 8px in a Card or Modal, 4px in a Popover or nested Card. Set, it names the surface the button sits on, which sets its corner radius. Pass it only to override; see [corners](../corners.md). |
 | `ref` | `Ref<HTMLElement>` |  | Ref to the root element (the `<div role="button">`, or the `<button>` in submit mode), e.g. to `.focus()` it. A plain prop; no `forwardRef`. |
 | `submit` | `boolean` | `false` | Render a native `<button type="submit">`. Also shows the spinner while the enclosing form action is pending (`useFormStatus`). `onClick` is then ignored. |
-| `success` | `boolean` | `false` | Green treatment. Mutually exclusive with `danger` (setting both is a type error). |
 | `suffix` | `ComponentType<IconProps>` |  | Icon component shown after the label (`suffix={ChevronIcon}`), not an element. |
 | `tabIndex` | `number` | `0` | In div mode the button is keyboard-focusable by default; an explicit value wins, except it is forced to `-1` while `disabled` or `loading`. Submit mode passes it through to the native `<button>`, which is focusable anyway. |
 | `title` | `string` |  | Native tooltip; passed through. |
@@ -362,11 +441,9 @@ type ButtonTypeValue = 'default' | 'primary' | 'text' | 'link' | 'dashed';
 | --- | --- | --- |
 | `theme.color.bg.hover` | `rgba(0, 0, 0, 0.07)` | `rgba(255, 255, 255, 0.12)` |
 | `theme.color.bg.input` | `#FFFFFF` | `#1A1B1E` |
-| `theme.color.bg.success` | `#f0fdf4` | `rgba(34, 197, 94, 0.14)` |
 | `theme.color.border.default` | `#D9D9D9` | `#3A3B40` |
 | `theme.color.border.focus` | `#0758d9` | `#3696fe` |
 | `theme.color.border.loading` | `#e6e6e6` | `#34353A` |
-| `theme.color.border.success` | `#bbf7d0` | `rgba(34, 197, 94, 0.4)` |
 | `theme.color.brand.active` | `#0758d9` | `#91CAFF` |
 | `theme.color.brand.default` | `#1777FF` | `#3696fe` |
 | `theme.color.brand.hover` | `#3696fe` | `#87BAFF` |
@@ -383,7 +460,6 @@ type ButtonTypeValue = 'default' | 'primary' | 'text' | 'link' | 'dashed';
 | `theme.color.danger.loadingActive` | `#e98182` | `#D9373e` |
 | `theme.color.danger.loadingHover` | `#FFA8A6` | `#e98182` |
 | `theme.color.danger.outline` | `rgba(255, 120, 116, 0.5)` | `rgba(255, 120, 116, 0.5)` |
-| `theme.color.success` | `#16a34a` | `#22C55E` |
 | `theme.color.text.muted` | `#6E6E6E` | `#9CA1AB` |
 | `theme.color.text.onPrimary` | `#FFFFFF` | `#FFFFFF` |
 | `theme.color.text.primary` | `#111` | `#F5F5F7` |
@@ -405,6 +481,7 @@ type ButtonTypeValue = 'default' | 'primary' | 'text' | 'link' | 'dashed';
 
 ## Changelog
 
+- **0.7.0** (2026-11-26): **Breaking:** the `success` prop is removed. It only tinted a `default` button green (a `primary` one stayed blue), which read as a fourth kind of button. For a done state such as Copy turning into Copied!, change the label and add a `CheckIcon` prefix. The `color.bg.success` and `color.border.success` tokens stay. The Button examples now show every type, and `danger` on both `default` and `primary`.
 - **0.7.0** (2026-11-26): `text` and `link` buttons show a solid 2px `border.focus` ring on keyboard focus (`:focus-visible`); before they showed nothing. Mouse clicks still leave no ring.
 - **0.7.0** (2026-11-26): Height no longer follows an inherited line-height: Buttons in a Dialog footer are 32px, not 35px, and an icon-only Button is 32px (was 31px, sitting 1px low) beside text Buttons. The label's line-height is pinned to 14px; `link` stays text-sized.
 - **0.5.0** (2026-11-24): Surface depth: corners are concentric site-wide with no radius props. `Page` provides depth 0, `Dialog` 1, and `Card`, `CardRow` and `Alert` each provide one level deeper than where they sit; `Popover` (so `Menu` and the `Select` list) provides a fixed 2. Depth 0 is `radius.lg`, 1 is `md`, 2 and deeper is `sm`. `Button`, `Select`, `Card`, `CardRow` and `Alert` follow it; an explicit `Button radius` or `Select surface` still wins. With no `Page`, `Dialog`, `Card`, `CardRow`, `Alert` or `Surface` above it, a component keeps its 0.4.0 look; a bare `Card` (no `Page`) still counts as depth 0 and gives its contents depth 1, so its Buttons and nested Cards change as below.

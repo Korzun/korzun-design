@@ -68,7 +68,8 @@ Every component exports its props type as `<Name>Props` (`ButtonProps`,
 4. **Button `type` is a visual variant** (`default`, `primary`, `text`, `link`,
    `dashed`), not the HTML attribute. For a submit button use `submit` (and
    `form="id"` when the button is outside its form). `onClick` is ignored on a
-   submit button. `danger` and `success` can't both be set.
+   submit button. `danger` (on `default` or `primary`) is the only modifier;
+   there is no `success`.
 5. **Icon props take components:** `prefix={SearchIcon}`, not
    `prefix={<SearchIcon />}`.
 6. **Screens are a `Page` holding a stack of `Card`s,** one per feature. Form
