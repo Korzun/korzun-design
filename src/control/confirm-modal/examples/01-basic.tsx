@@ -2,14 +2,14 @@
  * A yes/no question with a `title`, a body and custom `confirmText` and `cancelText`.
  * `onConfirm` and `onCancel` take no arguments, and `onConfirm` does not close the
  * modal: it sets `isOpen` to `false` itself. `onCancel` also runs for Escape and a
- * click on the backdrop.
+ * click on the backdrop. This demo starts open; Sync library opens it again.
  */
 import { Stack, Text } from '@korzun/design/component';
 import { Button, ConfirmModal } from '@korzun/design/control';
 import { useState } from 'react';
 
 export default function Basic() {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
   const [answer, setAnswer] = useState('none yet');
   const answerWith = (value: string) => {
     setAnswer(value);

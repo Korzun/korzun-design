@@ -108,9 +108,51 @@ const Flow = ({ children }: { children: ReactNode }) => {
   );
 };
 
+// How long after the frame mounts an example may still be opening an overlay.
+const LOAD_FOCUS_WINDOW_MS = 1500;
+
+/**
+ * An example that starts with an overlay open (a dialog's `showModal()`, a menu
+ * focusing its first item, a Select's search box) moves focus into the frame,
+ * and with it the docs page's keyboard: Space and the arrow keys would act on
+ * the demo instead of scrolling the page. Focus that arrives while the frame
+ * loads, before anyone presses or types in it, is handed back to the page. A
+ * Tab into the frame arrives later, so keyboard users still reach the demo.
+ */
+const useKeepPageFocus = () => {
+  useEffect(() => {
+    // The host iframe belongs to the page's realm, so `instanceof` here fails.
+    const host = window.frameElement as HTMLElement | null;
+    if (!host) return;
+    let loading = true;
+    const settle = () => {
+      loading = false;
+    };
+    const giveBack = () => {
+      if (!loading) return;
+      const active = document.activeElement;
+      if (active instanceof HTMLElement && active !== document.body) active.blur();
+      host.blur();
+    };
+    const timer = setTimeout(settle, LOAD_FOCUS_WINDOW_MS);
+    document.addEventListener('pointerdown', settle, true);
+    document.addEventListener('keydown', settle, true);
+    document.addEventListener('focusin', giveBack);
+    // An overlay may have opened before this effect ran.
+    if (document.activeElement !== document.body) giveBack();
+    return () => {
+      clearTimeout(timer);
+      document.removeEventListener('pointerdown', settle, true);
+      document.removeEventListener('keydown', settle, true);
+      document.removeEventListener('focusin', giveBack);
+    };
+  }, []);
+};
+
 // Renders one docs example on its own: the site embeds it in an iframe so the
 // example gets its own theme provider and cannot leak styles into the page.
 export const Frame = () => {
+  useKeepPageFocus();
   // `/frame/recipe/:recipe/:example` or `/frame/:module/:example`: a recipe is looked
   // up among recipes only, so a recipe and a module may share a slug.
   const { module: moduleSlug, recipe: recipeSlug, example: exampleSlug = '' } = useParams();

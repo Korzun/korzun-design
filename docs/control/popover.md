@@ -122,7 +122,7 @@ item: { borderRadius: theme.radius.sm, padding: theme.space.md },
 
 A Filters button opens a popover under it. The popover paints nothing, so the
 content brings its own background, border and radius. It does not close on
-selection: choosing an option calls `setOpen(false)` itself.
+selection: choosing an option calls `setOpen(false)` itself. This demo starts open.
 
 ```tsx
 import { Stack, Text } from '@korzun/design/component';
@@ -143,7 +143,7 @@ const useStyle = createUseStyles((theme: Theme) => ({
 export default function Basic() {
   const styles = useStyle();
   const anchor = useRef<HTMLElement>(null);
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const [chosen, setChosen] = useState('nothing yet');
   const choose = (label: string) => {
     setChosen(label);
