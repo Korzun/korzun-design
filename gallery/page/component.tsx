@@ -27,10 +27,13 @@ const useStyle = createUseStyles((theme: Theme) => ({
   },
   // The import line keeps its hairline in both modes (it stands in for the
   // dark page edge) and centres Copy on a line that wraps on a phone.
+  // `&&` wins over CodeBlock's own rules by specificity, not sheet order.
   importBox: {
-    alignItems: 'center',
-    border: `1px solid ${theme.color.border.default}`,
-    boxShadow: 'none',
+    '&&': {
+      alignItems: 'center',
+      border: `1px solid ${theme.color.border.default}`,
+      boxShadow: 'none',
+    },
   },
   link: {
     color: theme.color.brand.default,

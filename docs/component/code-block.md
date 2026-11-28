@@ -24,7 +24,8 @@ data in rows and columns (`Table`).
 
 Pass `code` alone for plain text. To colour it, pass highlighted spans as
 `children`: they replace what shows, and Copy still copies `code`, so keep the
-two the same text.
+two the same text. Pass the inner `<code>` content (or its spans), not Shiki's whole
+`<pre>`: `CodeBlock` renders its own `pre`.
 
 ### Code colours
 
@@ -45,6 +46,12 @@ colour work.
 | `--code-token-punctuation` | `color.code.punctuation` |
 | `--code-token-comment` | `color.code.comment` |
 | `--code-token-link` | `color.code.link` |
+
+Shiki's other variables (`--code-background`, `--code-token-inserted`,
+`--code-token-deleted`, `--code-token-changed`, `--code-ansi-*`) are not set,
+so those tokens fall back to the inherited colour. For highlighted HTML rendered
+outside `CodeBlock`, such as markdown, spread `theme.recipe.codeColours` on its
+wrapper to set the same ten variables.
 
 ### Copy
 
@@ -174,22 +181,16 @@ export default function Wrap() {
 
 | Token | Light | Dark |
 | --- | --- | --- |
+| `theme.breakpoint.mobile` | `@media (max-width: 640px)` | `@media (max-width: 640px)` |
 | `theme.color.bg.cardHeader` | `#EEEEEE` | `#232427` |
 | `theme.color.border.default` | `#D9D9D9` | `#3A3B40` |
-| `theme.color.code.comment` | `#6E6E6E` | `#9CA1AB` |
-| `theme.color.code.constant` | `#c0415e` | `#E89BAC` |
 | `theme.color.code.foreground` | `#111` | `#F5F5F7` |
-| `theme.color.code.function` | `#1a5fa8` | `#8EC3F5` |
-| `theme.color.code.keyword` | `#6d3fc0` | `#C9B0F2` |
-| `theme.color.code.link` | `#1777FF` | `#3696fe` |
-| `theme.color.code.parameter` | `#8a5e00` | `#E8C879` |
-| `theme.color.code.punctuation` | `#5A6375` | `#C8CBD2` |
-| `theme.color.code.string` | `#1a7a52` | `#7EE6B4` |
 | `theme.colorScheme` | `light` | `dark` |
 | `theme.radius.lg` | `16px` | `16px` |
 | `theme.radius.md` | `8px` | `8px` |
 | `theme.radius.sm` | `4px` | `4px` |
 | `theme.recipe.codeBlock` | [recipe](../tokens.md#recipe) | [recipe](../tokens.md#recipe) |
+| `theme.recipe.codeColours` | [recipe](../tokens.md#recipe) | [recipe](../tokens.md#recipe) |
 | `theme.space.md` | `0.5rem` | `0.5rem` |
 
 <!-- /generated:tokens -->

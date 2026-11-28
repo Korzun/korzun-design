@@ -43,8 +43,10 @@ export const useTableStyle = createUseStyles((theme: Theme) => ({
   },
   // An alias box keeps its hairline in both modes, as the import line does.
   alias: {
-    border: `1px solid ${theme.color.border.default}`,
-    boxShadow: 'none',
+    '&&': {
+      border: `1px solid ${theme.color.border.default}`,
+      boxShadow: 'none',
+    },
   },
 }));
 

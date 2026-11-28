@@ -170,6 +170,42 @@ describe('CodeBlock', () => {
     expect(getComputedStyle(container.querySelector('pre')!).whiteSpace).toBe('pre-wrap');
   });
 
+  it('long lines scroll inside the pre, which may shrink below its content', () => {
+    const { container } = renderWithProviders(<CodeBlock code={'x'.repeat(500)} />);
+    const pre = getComputedStyle(container.querySelector('pre')!);
+    expect(pre.overflowX).toBe('auto');
+    expect(pre.minWidth).toBe('0px');
+  });
+
+  it('Copy has a 44px hit area on a phone only', () => {
+    renderWithProviders(<CodeBlock code="x" copyable />);
+    const css = Array.from(document.querySelectorAll('style'))
+      .map((style) => style.textContent ?? '')
+      .join('\n');
+    const at = css.indexOf('max(100%, 44px)');
+    expect(at).toBeGreaterThan(-1);
+    expect(css.lastIndexOf(lightTheme.breakpoint.mobile, at)).toBeGreaterThan(-1);
+  });
+
+  it('does not recheck the scroll hint when it re-renders with the same code', () => {
+    const toggle = vi.spyOn(HTMLElement.prototype, 'toggleAttribute');
+    const { rerender } = renderWithProviders(
+      <CodeBlock code="x">
+        <span>x</span>
+      </CodeBlock>
+    );
+    const calls = toggle.mock.calls.length;
+    rerender(
+      <CodeBlock code="x">
+        <span>x</span>
+      </CodeBlock>
+    );
+    expect(toggle.mock.calls.length).toBe(calls);
+    rerender(<CodeBlock code="xy" />);
+    expect(toggle.mock.calls.length).toBeGreaterThan(calls);
+    toggle.mockRestore();
+  });
+
   it('puts className on the root', () => {
     const { container } = renderWithProviders(<CodeBlock code="x" className="mine" />);
     expect(container.firstElementChild).toHaveClass('mine');

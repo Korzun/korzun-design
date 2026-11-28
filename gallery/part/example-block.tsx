@@ -44,8 +44,10 @@ const useStyle = createUseStyles((theme: Theme) => ({
   description: { maxWidth: PROSE_WIDTH },
   // The code sits flush at the card's bottom: square, ruled off from the meta above.
   code: {
-    borderRadius: 0,
-    borderTop: `1px solid ${theme.color.border.light}`,
+    '&&': {
+      borderRadius: 0,
+      borderTop: `1px solid ${theme.color.border.light}`,
+    },
   },
   // "Show code" is a text-height link: on a phone its hit area grows to 44px.
   toggle: tapTarget(theme),

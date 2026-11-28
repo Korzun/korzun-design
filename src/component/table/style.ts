@@ -9,7 +9,6 @@ export const useStyle = createUseStyles((theme: Theme) => ({
   root: {
     overflowX: 'auto',
     border: `1px solid ${theme.color.border.default}`,
-    borderRadius: theme.radius.lg,
     backgroundColor: theme.color.bg.card,
   },
   // Corners follow the depth the table sits at (lg, md, sm).

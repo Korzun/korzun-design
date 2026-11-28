@@ -26,7 +26,7 @@ import { useEffect, useRef, useState } from 'react';
 
 // In your app this goes in a sibling style.ts.
 const useStyle = createUseStyles({
-  // Reserves the widest label ("Could not copy" and its check), so the row keeps its width as the label changes.
+  // Reserves the widest label ("Could not copy"), so the row keeps its width as the label changes.
   button: { minWidth: '10em' },
   // Visually hidden, but read aloud by screen readers.
   status: {
@@ -138,8 +138,8 @@ export default function CopyButtonExample() {
 
 `Copied` is wider than `Copy`, so a row with the button in the middle would
 shift every time it changed. Either put the button last in its row, or give it a
-`minWidth` in `em` wide enough for the longest label, `Could not copy` with its
-check (`10em` here). `em` follows the button's font size, so it stays right if
+`minWidth` in `em` wide enough for the longest label, `Could not copy` (`10em`
+here; `Copied` with its check is shorter). `em` follows the button's font size, so it stays right if
 the size changes.
 
 ## Wiring it up

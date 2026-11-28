@@ -262,6 +262,12 @@ export interface Theme {
      * carries the in-surface look: no dark-mode page edge.
      */
     inlineCode: Recipe;
+    /**
+     * The `--code-*` CSS variables Shiki's css-variables theme (`variablePrefix: '--code-'`)
+     * reads, set from `color.code`: spread it on a wrapper of highlighted code rendered
+     * outside `CodeBlock` (which sets them itself), such as HTML from markdown.
+     */
+    codeColours: Recipe;
     modal: {
       dialog: Recipe;
       header: Recipe;
@@ -719,6 +725,18 @@ function buildTheme(mode: ThemeMode): Theme {
       borderRadius: radius.sm,
       backgroundColor: color.bg.cardHeader,
       overflowWrap: 'break-word',
+    },
+    codeColours: {
+      '--code-foreground': color.code.foreground,
+      '--code-token-keyword': color.code.keyword,
+      '--code-token-string': color.code.string,
+      '--code-token-string-expression': color.code.string,
+      '--code-token-function': color.code.function,
+      '--code-token-parameter': color.code.parameter,
+      '--code-token-constant': color.code.constant,
+      '--code-token-punctuation': color.code.punctuation,
+      '--code-token-comment': color.code.comment,
+      '--code-token-link': color.code.link,
     },
     modal: {
       dialog: {

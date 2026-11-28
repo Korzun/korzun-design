@@ -36,7 +36,7 @@ export const CodeBlock = ({
   const styles = useStyle();
   const depth = useSurfaceDepth() ?? 0;
   const preRef = useRef<HTMLPreElement>(null);
-  useScrollHint(preRef, children ?? code);
+  useScrollHint(preRef, `${wrap}\n${code}`);
   return (
     <div
       className={cx(

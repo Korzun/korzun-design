@@ -441,4 +441,22 @@ describe('code styles', () => {
       });
     }
   });
+
+  it('recipe.codeColours is the --code-* variable map from color.code', () => {
+    for (const t of [lightTheme, darkTheme]) {
+      const c = t.color.code;
+      expect(t.recipe.codeColours).toEqual({
+        '--code-foreground': c.foreground,
+        '--code-token-keyword': c.keyword,
+        '--code-token-string': c.string,
+        '--code-token-string-expression': c.string,
+        '--code-token-function': c.function,
+        '--code-token-parameter': c.parameter,
+        '--code-token-constant': c.constant,
+        '--code-token-punctuation': c.punctuation,
+        '--code-token-comment': c.comment,
+        '--code-token-link': c.link,
+      });
+    }
+  });
 });

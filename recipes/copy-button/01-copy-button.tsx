@@ -11,7 +11,7 @@ import { useEffect, useRef, useState } from 'react';
 
 // In your app this goes in a sibling style.ts.
 const useStyle = createUseStyles({
-  // Reserves the widest label ("Could not copy" and its check), so the row keeps its width as the label changes.
+  // Reserves the widest label ("Could not copy"), so the row keeps its width as the label changes.
   button: { minWidth: '10em' },
   // Visually hidden, but read aloud by screen readers.
   status: {

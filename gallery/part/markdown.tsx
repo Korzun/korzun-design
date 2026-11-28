@@ -196,19 +196,8 @@ const useStyle = createUseStyles((theme: Theme) => {
       '& th': { fontWeight: theme.fontWeight.semibold, color: theme.color.text.secondary },
     },
     // Highlighted code's colours: the `--code-*` variables Shiki's css-variables
-    // theme reads, from `theme.color.code`, as CodeBlock sets them.
-    codeColours: {
-      '--code-foreground': theme.color.code.foreground,
-      '--code-token-keyword': theme.color.code.keyword,
-      '--code-token-string': theme.color.code.string,
-      '--code-token-string-expression': theme.color.code.string,
-      '--code-token-function': theme.color.code.function,
-      '--code-token-parameter': theme.color.code.parameter,
-      '--code-token-constant': theme.color.code.constant,
-      '--code-token-punctuation': theme.color.code.punctuation,
-      '--code-token-comment': theme.color.code.comment,
-      '--code-token-link': theme.color.code.link,
-    },
+    // theme reads, as CodeBlock sets them.
+    codeColours: theme.recipe.codeColours,
     // Inline runs (a prop or example description) share the code and link look.
     text: {
       // In em, so code in a heading takes the heading's size.
