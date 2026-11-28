@@ -10286,6 +10286,14 @@
           "tags": [
             "General"
           ],
+          "text": "Docs site: the tokens page shows every theme group (`size`, `fontFamily`, `fontWeight` and `lineHeight` were missing), draws one swatch for a single colour (`color.success`), and keeps long token names clear of their values."
+        },
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "General"
+          ],
           "text": "Docs site: each module has an `examples/preview.tsx` that shows the component alone; the overview thumbnails render it instead of the first example, and it never appears on the component page or in the doc. `npm run docs:check` fails for a module without one."
         }
       ]
