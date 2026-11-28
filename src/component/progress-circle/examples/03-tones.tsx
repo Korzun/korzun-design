@@ -3,7 +3,7 @@
  */
 import { ProgressCircle, Space } from '@korzun/design/component';
 
-const TONES = ['brand', 'success', 'warning', 'danger', 'info', 'neutral'] as const;
+const TONES = ['brand', 'success', 'warning', 'danger', 'neutral'] as const;
 
 export default function Tones() {
   return (

@@ -130,7 +130,6 @@ describe('ProgressCircle', () => {
     ['success', lightTheme.color.success],
     ['warning', lightTheme.color.warning],
     ['danger', lightTheme.color.danger.default],
-    ['info', lightTheme.color.info],
     ['neutral', lightTheme.color.text.muted],
   ] as [ProgressCircleTone, string][])('tone %s colours the progress', (tone, colour) => {
     const { getByTestId } = renderWithProviders(
@@ -139,6 +138,12 @@ describe('ProgressCircle', () => {
     expect(channels(getComputedStyle(getByTestId('progress-sector')).fill)).toEqual(
       channels(colour)
     );
+  });
+
+  it('has no info tone: it would look the same as brand', () => {
+    // @ts-expect-error `info` is the brand blue, so it is not offered.
+    const tone: ProgressCircleTone = 'info';
+    expect(tone).toBe('info');
   });
 
   it('size sets the SVG width and height', () => {

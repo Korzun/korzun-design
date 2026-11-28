@@ -17,7 +17,7 @@ export type ProgressCircleProps = {
   label?: 'outside' | 'inside' | 'none';
   /** `'filled'` is a pie: a sector inside a thin ring. `'outline'` is border-only: an arc over a faint track, with the middle empty. */
   variant?: 'filled' | 'outline';
-  /** Colour of the progress: `'brand'` (default), a status colour (`'success'`, `'warning'`, `'danger'`, `'info'`) or `'neutral'` grey. */
+  /** Colour of the progress: `'brand'` (default), a status colour (`'success'`, `'warning'`, `'danger'`) or `'neutral'` grey. No `'info'`: it would be the same blue as `'brand'`. */
   tone?: ProgressCircleTone;
   /** Width and height of the circle in px. An outside label keeps its `fontSize.sm`; an inside one scales with the circle. */
   size?: number;

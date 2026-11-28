@@ -129,7 +129,7 @@ export default function Variants() {
 ```tsx
 import { ProgressCircle, Space } from '@korzun/design/component';
 
-const TONES = ['brand', 'success', 'warning', 'danger', 'info', 'neutral'] as const;
+const TONES = ['brand', 'success', 'warning', 'danger', 'neutral'] as const;
 
 export default function Tones() {
   return (
@@ -245,7 +245,7 @@ export default function Sizes() {
 | `label` | `'outside' \| 'inside' \| 'none'` | `'outside'` | Where the value is written: `'outside'` beside the circle, `'inside'` centred in it (suits `variant="outline"`, and sizes of 40 or more), or `'none'` (screen readers still hear it). The text is never "Not started" or "Completed"; see the Reading progress recipe for those. |
 | `max` | `number` | `1` | The value that means done. The default, 1, takes a fraction (`0.42`); pass `100` for a percentage or `12` for 12 chapters. |
 | `size` | `number` | `40` | Width and height of the circle in px. An outside label keeps its `fontSize.sm`; an inside one scales with the circle. |
-| `tone` | `'brand' \| 'success' \| 'warning' \| 'danger' \| 'info' \| 'neutral'` | `'brand'` | Colour of the progress: `'brand'` (default), a status colour (`'success'`, `'warning'`, `'danger'`, `'info'`) or `'neutral'` grey. |
+| `tone` | `'brand' \| 'success' \| 'warning' \| 'danger' \| 'neutral'` | `'brand'` | Colour of the progress: `'brand'` (default), a status colour (`'success'`, `'warning'`, `'danger'`) or `'neutral'` grey. No `'info'`: it would be the same blue as `'brand'`. |
 | `unit` | `string` | `'%'` | How the value is written. `'%'` (the default) shows the percentage of `max`, rounded to a whole number. Anything else shows the value itself followed by `unit`, verbatim: `unit=" of 12"` shows "3 of 12", `unit=""` the bare number. Screen readers hear the same text. |
 | `value` (required) | `number` |  | Progress from 0 to `max`. Clamped to that range; a value that is not a finite number (`NaN`, `undefined`, `Infinity`) counts as 0. |
 | `variant` | `'filled' \| 'outline'` | `'filled'` | `'filled'` is a pie: a sector inside a thin ring. `'outline'` is border-only: an arc over a faint track, with the middle empty. |
@@ -253,8 +253,8 @@ export default function Sizes() {
 ### Types
 
 ```ts
-/** The colour of the progress: brand, a status colour, or a quiet grey. */
-type ProgressCircleTone = 'brand' | 'success' | 'warning' | 'danger' | 'info' | 'neutral';
+/** The colour of the progress: brand, a status colour, or a quiet grey. There is no `info`: it is the brand blue. */
+type ProgressCircleTone = 'brand' | 'success' | 'warning' | 'danger' | 'neutral';
 ```
 
 <!-- /generated:props -->
@@ -269,7 +269,6 @@ type ProgressCircleTone = 'brand' | 'success' | 'warning' | 'danger' | 'info' | 
 | `theme.color.border.default` | `#D9D9D9` | `#3A3B40` |
 | `theme.color.brand.default` | `#1777FF` | `#3696fe` |
 | `theme.color.danger.default` | `#FF4D4F` | `#FF4D4F` |
-| `theme.color.info` | `#1777FF` | `#3696fe` |
 | `theme.color.success` | `#16a34a` | `#22C55E` |
 | `theme.color.text.muted` | `#6E6E6E` | `#9CA1AB` |
 | `theme.color.text.primary` | `#111` | `#F5F5F7` |
@@ -285,7 +284,7 @@ type ProgressCircleTone = 'brand' | 'success' | 'warning' | 'danger' | 'info' | 
 ## Changelog
 
 - **0.7.0** (2026-11-26): **Breaking:** `ProgressIndicator` is renamed `ProgressCircle` (`ProgressIndicatorProps` → `ProgressCircleProps`). It always draws the circle and writes a number, 0 and 1 included; "Not started" and "Completed" are gone from the component and live in the new Reading progress recipe. The whole mark, label included, is now one `progressbar` with `aria-valuetext`.
-- **0.7.0** (2026-11-26): New props: `tone` (`brand`, `success`, `warning`, `danger`, `info`, `neutral`; new `ProgressCircleTone` type), `variant="outline"` for a border-only arc instead of the filled pie, `label` (`outside`, `inside`, `none`) for where the value is written, and `max` and `unit` for values that are not fractions (`value={3} max={12} unit=" of 12"` shows "3 of 12").
+- **0.7.0** (2026-11-26): New props: `tone` (`brand`, `success`, `warning`, `danger`, `neutral`; new `ProgressCircleTone` type; no `info`, which is the brand blue), `variant="outline"` for a border-only arc instead of the filled pie, `label` (`outside`, `inside`, `none`) for where the value is written, and `max` and `unit` for values that are not fractions (`value={3} max={12} unit=" of 12"` shows "3 of 12").
 - **0.5.2** (2026-11-26): A `value` that is not a finite number (`NaN`, `undefined`, `Infinity`) shows "Not started" instead of "NaN%".
 
 <!-- /generated:changelog -->

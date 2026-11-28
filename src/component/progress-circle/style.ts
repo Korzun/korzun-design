@@ -1,14 +1,13 @@
 import { createUseStyles, type Theme } from '../../theme/index.js';
 
-/** The colour of the progress: brand, a status colour, or a quiet grey. */
-export type ProgressCircleTone = 'brand' | 'success' | 'warning' | 'danger' | 'info' | 'neutral';
+/** The colour of the progress: brand, a status colour, or a quiet grey. There is no `info`: it is the brand blue. */
+export type ProgressCircleTone = 'brand' | 'success' | 'warning' | 'danger' | 'neutral';
 
 const toneColour = (theme: Theme): Record<ProgressCircleTone, string> => ({
   brand: theme.color.brand.default,
   success: theme.color.success,
   warning: theme.color.warning,
   danger: theme.color.danger.default,
-  info: theme.color.info,
   neutral: theme.color.text.muted,
 });
 
