@@ -52,6 +52,16 @@ export const useStyle = createUseStyles((theme: Theme) => ({
     padding: `${theme.space.md} ${theme.space.xxl}`,
     cursor: 'pointer',
     fontSize: '0.80rem', // button-specific size; not on the global fontSize scale
+    // Pinned, so the height does not follow an inherited line-height: a Dialog
+    // sets 1.3 for its prose, which made footer buttons 35px. 0.875rem is the
+    // 14px the UA's `normal` gave at this size, so a text button stays
+    // 1px + 8px + 14px + 8px + 1px = 32px.
+    lineHeight: '0.875rem',
+    // An icon-only button has no line box, only its 1em (12.8px) icon, and
+    // came out 31px beside 32px siblings. The floor makes it the same height.
+    // The `link` variant drops it: it is text-sized, with no padding to match.
+    boxSizing: 'border-box',
+    minHeight: '2rem',
     userSelect: 'none',
     '-webkit-user-select': 'none',
     '-webkit-tap-highlight-color': 'transparent',
@@ -355,6 +365,7 @@ export const useStyle = createUseStyles((theme: Theme) => ({
     borderStyle: 'none',
     outlineStyle: 'none',
     padding: '0',
+    minHeight: 0,
     color: theme.color.brand.default,
     '&:focus-visible': {
       outlineStyle: 'solid',

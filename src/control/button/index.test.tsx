@@ -5,6 +5,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { Page } from '../../component/page/index.js';
 import { Surface } from '../../component/surface/index.js';
+import { SearchIcon } from '../../icon/index.js';
 import { renderWithProviders } from '../../test-utils.js';
 import { lightTheme } from '../../theme/theme.js';
 import { Button } from './index.js';
@@ -265,4 +266,21 @@ describe('keyboard focus on borderless variants', () => {
       if (type === 'link') expect(rules[0]).toContain('outline-style: solid');
     }
   );
+});
+
+describe('height does not follow inherited line-height', () => {
+  it('pins its own line-height and a 32px floor, even under a 1.3 line-height', () => {
+    renderWithProviders(
+      <div style={{ lineHeight: 1.3, fontSize: '16px' }}>
+        <Button>Go</Button>
+        <Button prefix={SearchIcon} ariaLabel="Search" />
+      </div>
+    );
+    for (const name of ['Go', 'Search']) {
+      const style = getComputedStyle(screen.getByRole('button', { name }));
+      expect(style.lineHeight).toBe('0.875rem');
+      expect(style.minHeight).toBe('2rem');
+      expect(style.boxSizing).toBe('border-box');
+    }
+  });
 });

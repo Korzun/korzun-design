@@ -105,7 +105,7 @@
         "ButtonTypeValue"
       ],
       "importLine": "import { Button, type ButtonProps, type ButtonRadiusValue, type ButtonTypeValue } from '@korzun/design/control'",
-      "body": "A clickable action with a visual variant, optional icons, and a loading state.\nRenders a `<div role=\"button\">` (keyboard: Enter and Space, which it\npreventDefaults, so Space does not scroll the page) unless `submit` is\nset, in which case it renders a native `<button type=\"submit\">`.\n\nUse something else for: navigating back (`BackButton`), page-level actions in\nthe header (`PageActionsBar`, `PageActionsMenu`), sticky footer actions\n(`PageFooterActions`), picking one of several options (`SegmentedControl`).\n\nKeyboard focus (`:focus-visible`) on `text` and `link` draws a solid\n`border.focus` ring, since they have no border or fill of their own.\n\n## Usage\n\n### Choosing a variant\n\n- `primary`: the one main action of a card, modal, or page (Save, Confirm).\n- `default`: secondary actions; bordered.\n- `text`: Cancel in a modal footer.\n- `link`: inline row actions (Remove, Load more). It has no padding, so `radius`\n  doesn't matter for it.\n- `dashed`: an \"add a row\" affordance (as in `FieldList`).\n- Add `danger` for destructive actions (Delete, Log out), on `primary` in a\n  confirm or on `default` otherwise.\n\n### Corners\n\nThe radius follows where the button sits (16px on a page, 8px in a `Card` or\n`Dialog`, 4px in a `Popover` or nested Card), so pass no `radius`; see\n[corners](../corners.md). Pass it only to override.\n\n### Submitting a form\n\n`submit` renders a native submit button and `onClick` is then ignored: handle\nthe form's `action` or `onSubmit`. For a button outside its form (a `Card`\nfooter), pass the form's id as `form`. While the form action is pending the\nbutton shows its spinner by itself.\n\n## Do / don't\n\n- Don't set `radius` to match the surface; it follows depth. Pass it only to\n  override.\n- Do give repeated row actions a distinguishing `ariaLabel` (\"Remove Kindle\").\n- Don't pass `type=\"submit\"`: it is not a valid variant. Use `submit`.\n- Don't pass `onClick` to a submit button and expect it to run.\n- Don't pass an element to `prefix`/`suffix` (`prefix={<SearchIcon />}`); pass\n  the component.\n- Don't wrap Button in a `<button>` or `<a>`: it is already interactive.",
+      "body": "A clickable action with a visual variant, optional icons, and a loading state.\nRenders a `<div role=\"button\">` (keyboard: Enter and Space, which it\npreventDefaults, so Space does not scroll the page) unless `submit` is\nset, in which case it renders a native `<button type=\"submit\">`.\n\nUse something else for: navigating back (`BackButton`), page-level actions in\nthe header (`PageActionsBar`, `PageActionsMenu`), sticky footer actions\n(`PageFooterActions`), picking one of several options (`SegmentedControl`).\n\nEvery button but `link` is 32px tall: it pins its own line-height, so a\nparent's (a Dialog's 1.3) does not stretch it, and an icon-only button matches\na text one. Keyboard focus (`:focus-visible`) on `text` and `link` draws a solid\n`border.focus` ring, since they have no border or fill of their own.\n\n## Usage\n\n### Choosing a variant\n\n- `primary`: the one main action of a card, modal, or page (Save, Confirm).\n- `default`: secondary actions; bordered.\n- `text`: Cancel in a modal footer.\n- `link`: inline row actions (Remove, Load more). It has no padding, so `radius`\n  doesn't matter for it.\n- `dashed`: an \"add a row\" affordance (as in `FieldList`).\n- Add `danger` for destructive actions (Delete, Log out), on `primary` in a\n  confirm or on `default` otherwise.\n\n### Corners\n\nThe radius follows where the button sits (16px on a page, 8px in a `Card` or\n`Dialog`, 4px in a `Popover` or nested Card), so pass no `radius`; see\n[corners](../corners.md). Pass it only to override.\n\n### Submitting a form\n\n`submit` renders a native submit button and `onClick` is then ignored: handle\nthe form's `action` or `onSubmit`. For a button outside its form (a `Card`\nfooter), pass the form's id as `form`. While the form action is pending the\nbutton shows its spinner by itself.\n\n## Do / don't\n\n- Don't set `radius` to match the surface; it follows depth. Pass it only to\n  override.\n- Do give repeated row actions a distinguishing `ariaLabel` (\"Remove Kindle\").\n- Don't pass `type=\"submit\"`: it is not a valid variant. Use `submit`.\n- Don't pass `onClick` to a submit button and expect it to run.\n- Don't pass an element to `prefix`/`suffix` (`prefix={<SearchIcon />}`); pass\n  the component.\n- Don't wrap Button in a `<button>` or `<a>`: it is already interactive.",
       "examples": [
         {
           "file": "src/control/button/examples/01-basic.tsx",
@@ -558,6 +558,14 @@
             "Button"
           ],
           "text": "`text` and `link` buttons show a solid 2px `border.focus` ring on keyboard focus (`:focus-visible`); before they showed nothing. Mouse clicks still leave no ring."
+        },
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "Button"
+          ],
+          "text": "Height no longer follows an inherited line-height: Buttons in a Dialog footer are 32px, not 35px, and an icon-only Button is 32px (was 31px, sitting 1px low) beside text Buttons. The label's line-height is pinned to 14px; `link` stays text-sized."
         },
         {
           "version": "0.5.0",
@@ -10325,6 +10333,14 @@
             "Button"
           ],
           "text": "`text` and `link` buttons show a solid 2px `border.focus` ring on keyboard focus (`:focus-visible`); before they showed nothing. Mouse clicks still leave no ring."
+        },
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "Button"
+          ],
+          "text": "Height no longer follows an inherited line-height: Buttons in a Dialog footer are 32px, not 35px, and an icon-only Button is 32px (was 31px, sitting 1px low) beside text Buttons. The label's line-height is pinned to 14px; `link` stays text-sized."
         },
         {
           "version": "0.7.0",
