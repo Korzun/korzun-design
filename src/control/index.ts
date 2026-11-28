@@ -6,7 +6,7 @@ export {
   type ButtonRadiusValue,
   type ButtonTypeValue,
 } from './button/index.js';
-export { ChipsInput, type ChipColor, type ChipsInputProps } from './chips-input/index.js';
+export { ChipsInput, type ChipsInputProps } from './chips-input/index.js';
 export { ConfirmModal, type ConfirmModalProps } from './confirm-modal/index.js';
 export { DateTimeInput, type DateTimeInputProps } from './date-time-input/index.js';
 export {

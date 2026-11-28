@@ -17,7 +17,7 @@ of the text around it, so it scales in a heading, on a tinted chip with
 `space.xxs` side padding.
 
 Use something else for: a block of several lines or a snippet to copy
-(`CodeBlock`), a keyboard key or a status chip (`Tag`).
+(`CodeBlock`), a keyboard key or a status chip (`Chip`).
 
 ## Usage
 

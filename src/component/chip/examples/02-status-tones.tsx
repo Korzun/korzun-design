@@ -1,7 +1,7 @@
 /** Status tones
  * Status tones report a state: `success`, `warning`, `danger`, `info`, and `neutral` for a state with no meaning to signal. Each tag is labelled with its tone.
  */
-import { Tag, Text } from '@korzun/design/component';
+import { Chip, Text } from '@korzun/design/component';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { Fragment } from 'react';
 
@@ -29,7 +29,7 @@ export default function StatusTones() {
     <div className={styles.grid}>
       {TONES.map(({ tone, label, note }) => (
         <Fragment key={tone}>
-          <Tag tone={tone}>{label}</Tag>
+          <Chip tone={tone}>{label}</Chip>
           <Text tone="muted">
             {tone}: {note}
           </Text>

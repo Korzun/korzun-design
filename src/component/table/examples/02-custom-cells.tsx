@@ -1,7 +1,7 @@
 /** Custom cells
- * `render` draws a cell from its row. A `Tag` shows a status, and a link `Button` in a cell sits one surface level deeper than the table, so its corners step down.
+ * `render` draws a cell from its row. A `Chip` shows a status, and a link `Button` in a cell sits one surface level deeper than the table, so its corners step down.
  */
-import { Table, Tag } from '@korzun/design/component';
+import { Table, Chip } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 
 type Book = { id: number; title: string; status: 'reading' | 'finished' | 'unread' };
@@ -24,9 +24,9 @@ export default function CustomCells() {
           key: 'status',
           title: 'Status',
           render: (book) => (
-            <Tag tone={book.status === 'finished' ? 'success' : 'neutral'} size="sm">
+            <Chip tone={book.status === 'finished' ? 'success' : 'neutral'} size="sm">
               {book.status}
-            </Tag>
+            </Chip>
           ),
         },
         {

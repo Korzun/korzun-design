@@ -166,10 +166,10 @@ export default function Wrapping() {
 
 ### Elements as items
 
-An item can be any node, such as a `time` element or a `Tag`.
+An item can be any node, such as a `time` element or a `Chip`.
 
 ```tsx
-import { MetaLine, Tag, Text } from '@korzun/design/component';
+import { MetaLine, Chip, Text } from '@korzun/design/component';
 
 export default function ElementItems() {
   return (
@@ -181,9 +181,9 @@ export default function ElementItems() {
             12 March 2026
           </time>,
           'Kindle Scribe',
-          <Tag key="sync" size="sm" tone="success">
+          <Chip key="sync" size="sm" tone="success">
             Synced
-          </Tag>,
+          </Chip>,
         ]}
       />
     </Text>
@@ -193,10 +193,10 @@ export default function ElementItems() {
 
 ### Labelled pairs
 
-A card describing one record: `{ label, value }` items with no `separator` are spaced by gaps, each label faint and capitalized by CSS (“cover size” shows as “Cover Size”). A value can be any node, such as a `Tag`. A pair whose value is `undefined` is skipped, so “Last sync” appears only once there is one.
+A card describing one record: `{ label, value }` items with no `separator` are spaced by gaps, each label faint and capitalized by CSS (“cover size” shows as “Cover Size”). A value can be any node, such as a `Chip`. A pair whose value is `undefined` is skipped, so “Last sync” appears only once there is one.
 
 ```tsx
-import { Card, MetaLine, Tag, Text } from '@korzun/design/component';
+import { Card, MetaLine, Chip, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -220,9 +220,9 @@ export default function LabelledPairs() {
             {
               label: 'status',
               value: (
-                <Tag size="sm" tone="success">
+                <Chip size="sm" tone="success">
                   Active
-                </Tag>
+                </Chip>
               ),
             },
           ]}

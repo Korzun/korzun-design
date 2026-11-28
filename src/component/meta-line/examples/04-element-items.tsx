@@ -1,7 +1,7 @@
 /** Elements as items
- * An item can be any node, such as a `time` element or a `Tag`.
+ * An item can be any node, such as a `time` element or a `Chip`.
  */
-import { MetaLine, Tag, Text } from '@korzun/design/component';
+import { MetaLine, Chip, Text } from '@korzun/design/component';
 
 export default function ElementItems() {
   return (
@@ -13,9 +13,9 @@ export default function ElementItems() {
             12 March 2026
           </time>,
           'Kindle Scribe',
-          <Tag key="sync" size="sm" tone="success">
+          <Chip key="sync" size="sm" tone="success">
             Synced
-          </Tag>,
+          </Chip>,
         ]}
       />
     </Text>

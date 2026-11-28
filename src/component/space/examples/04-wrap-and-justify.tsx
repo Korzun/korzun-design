@@ -3,7 +3,7 @@
  * a title with an action. `wrap` lets a row of chips flow onto further lines
  * instead of overflowing.
  */
-import { Heading, Space, Tag } from '@korzun/design/component';
+import { Heading, Space, Chip } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -18,10 +18,10 @@ export default function WrapAndJustify() {
         </Button>
       </Space>
       <Space wrap gap="xs">
-        <Tag>Fiction</Tag>
-        <Tag tone="author">George Eliot</Tag>
-        {all && <Tag>Classic</Tag>}
-        {all && <Tag>1871</Tag>}
+        <Chip>Fiction</Chip>
+        <Chip tone="author">George Eliot</Chip>
+        {all && <Chip>Classic</Chip>}
+        {all && <Chip>1871</Chip>}
       </Space>
     </Space>
   );

@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { SurfaceDepthProvider } from '../../component/surface/index.js';
 import { renderWithProviders } from '../../test-utils.js';
-import { Tag } from './index.js';
+import { Chip } from './index.js';
 
 // md (8px) with no surface, as before; lg on the page, sm two or more levels in.
 const cases: [string, number | undefined, string][] = [
@@ -18,9 +18,9 @@ const atDepth = (depth: number | undefined, ui: React.ReactElement) =>
   );
 const radius = (el: Element) => getComputedStyle(el).borderRadius;
 
-describe('Tag corners follow surface depth', () => {
+describe('Chip corners follow surface depth', () => {
   it.each(cases)('%s', (_, depth, px) => {
-    const { getByText } = atDepth(depth, <Tag>Fiction</Tag>);
+    const { getByText } = atDepth(depth, <Chip>Fiction</Chip>);
     expect(radius(getByText('Fiction'))).toBe(px);
   });
 });

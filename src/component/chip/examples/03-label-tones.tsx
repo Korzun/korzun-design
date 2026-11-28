@@ -1,7 +1,7 @@
 /** Label tones
  * Label tones name a kind of thing, so the same kind of thing is the same colour everywhere. `status` is a legacy label tone despite its name: it is listed for completeness, and a new state tag uses a status tone. Each tag is labelled with its tone.
  */
-import { Tag, Text } from '@korzun/design/component';
+import { Chip, Text } from '@korzun/design/component';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { Fragment } from 'react';
 
@@ -32,7 +32,7 @@ export default function LabelTones() {
     <div className={styles.grid}>
       {TONES.map(({ tone, label, note }) => (
         <Fragment key={tone}>
-          <Tag tone={tone}>{label}</Tag>
+          <Chip tone={tone}>{label}</Chip>
           <Text tone="muted">
             {tone}: {note}
           </Text>

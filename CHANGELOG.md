@@ -6,6 +6,8 @@
 - [Space] New `Space`: one layout primitive with a `direction` (default `'horizontal'`), `gap`, `align`, `justify`, `wrap`, `as` and a `split` separator drawn between items (hidden from screen readers, an `li` inside a list). Each direction keeps Stack's or Inline's defaults.
 - [Space] **Breaking:** `Stack` and `Inline` (and `StackProps`, `InlineProps`) are removed; use `Space`. `<Stack …>` is `<Space direction="vertical" …>` and `<Inline …>` is `<Space …>`, with every prop and default unchanged.
 - [Switch] While loading, an `inset` (squared) switch shows a rounded-square ring with an arc travelling around it in the thumb's place, instead of the round spinner, which clashed with its square corners. A `pill` switch keeps the round spinner.
+- [Chip] **Breaking:** `Tag` is renamed `Chip` (`TagProps` → `ChipProps`, `TagTone` → `ChipTone`), so it shares a name with `ChipsInput` and the `color.chip` tokens it draws from. Props and look are unchanged.
+- [ChipsInput, Chip] **Breaking:** `chipColor` is renamed `tone` and takes a `ChipTone`, as `Chip` does; the `ChipColor` type is removed (use `ChipTone` from `@korzun/design/component`).
 - [ChipsInput] A `disabled` field hides its chips' remove (×) buttons instead of showing them dimmed, so the chips read as plain values.
 - [ChipsInput] The text field shares a line with the chips whenever 8rem is free. Before, it sized from an input's natural width (about 20 characters, ~200px at the 16px phone size) and dropped to its own empty line, making the box a line taller than its chips need.
 - [General] Docs site: the overview thumbnails for `Page`, `Surface`, `TopFade`, `Modal`, `ConfirmModal` and every hook are drawn with plain blocks, like `Space`, instead of sample content.

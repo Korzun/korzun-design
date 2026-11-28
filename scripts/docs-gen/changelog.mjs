@@ -65,6 +65,7 @@ export const FORMER_NAMES = {
   isStandalone: 'useIsStandalone',
   Stack: 'Space',
   Inline: 'Space',
+  Tag: 'Chip',
 };
 
 /** `versions` with each former-name tag replaced by its current name (deduplicated). */

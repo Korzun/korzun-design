@@ -24,7 +24,7 @@ list of name and value pairs (`MetaLine`), a layout grid (`Space`). A table is f
 ### Columns and rows
 
 Each column has a `key` and a `title`. By default a cell shows the row's field
-named by `key`; `render(row, index)` draws it instead, for a `Tag` or a
+named by `key`; `render(row, index)` draws it instead, for a `Chip` or a
 `Button`. A missing value (`null` or `undefined`) shows a dash; `0`, `false`
 and `''` show as themselves. Type the table with its row type
 (`<Table<Book> … />`) to check `render` and `rowKey`.
@@ -105,10 +105,10 @@ export default function Basic() {
 
 ### Custom cells
 
-`render` draws a cell from its row. A `Tag` shows a status, and a link `Button` in a cell sits one surface level deeper than the table, so its corners step down.
+`render` draws a cell from its row. A `Chip` shows a status, and a link `Button` in a cell sits one surface level deeper than the table, so its corners step down.
 
 ```tsx
-import { Table, Tag } from '@korzun/design/component';
+import { Table, Chip } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 
 type Book = { id: number; title: string; status: 'reading' | 'finished' | 'unread' };
@@ -131,9 +131,9 @@ export default function CustomCells() {
           key: 'status',
           title: 'Status',
           render: (book) => (
-            <Tag tone={book.status === 'finished' ? 'success' : 'neutral'} size="sm">
+            <Chip tone={book.status === 'finished' ? 'success' : 'neutral'} size="sm">
               {book.status}
-            </Tag>
+            </Chip>
           ),
         },
         {

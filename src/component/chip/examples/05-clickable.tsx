@@ -1,7 +1,7 @@
 /** Clickable
  * `onClick` makes a tag a button: focusable, Enter and Space activate it, and hover deepens the tone. It receives no event. Here an author chip filters the list, and clearing the filter is an action, so it is a link `Button`.
  */
-import { Space, Tag, Text } from '@korzun/design/component';
+import { Space, Chip, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -13,9 +13,9 @@ export default function Clickable() {
     <Space direction="vertical" gap="sm" align="start">
       <Space wrap>
         {authors.map((name) => (
-          <Tag key={name} tone="author" onClick={() => setAuthor(name)}>
+          <Chip key={name} tone="author" onClick={() => setAuthor(name)}>
             {name}
-          </Tag>
+          </Chip>
         ))}
         <Button type="link" onClick={() => setAuthor(undefined)}>
           Clear

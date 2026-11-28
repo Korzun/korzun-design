@@ -25,7 +25,7 @@ Find where the element sits, then read its radius from this table:
 
 | Where the element sits | Radius | Examples |
 |---|---|---|
-| On the page background | `lg` | `Card`, modal dialog (`recipe.modal.dialog`), and any control directly on a `Page`: `Button`, `Select`, `CardRow`, text fields, `Tag` (automatic) |
+| On the page background | `lg` | `Card`, modal dialog (`recipe.modal.dialog`), and any control directly on a `Page`: `Button`, `Select`, `CardRow`, text fields, `Chip` (automatic) |
 | Inside a card or modal | `md` | inputs and their shaded rows, Buttons, Selects, Tags and SegmentedControls in a Card or Modal (automatic), shaded rows (`recipe.row`), inset boxes |
 | Inside one of those | `sm` | a chip inside an input, controls in a nested Card, CardRow, inset box (`Surface`) or Popover (automatic), a menu item, a Switch track in a shaded row |
 | Flush with its parent (zero inset, edges touch) | the parent's radius | an unlabelled Select's trigger, an input filling its row |
@@ -60,7 +60,7 @@ Who provides depth:
 
 What follows depth with no prop: `Button`, `Select`, `Card`, `CardRow`,
 `Alert`, `TextInput`, `TextArea`, `NumberInput`, `DateTimeInput`,
-`ChipsInput` (its chips a step further in), `SegmentedControl`, `Tag`, and a
+`ChipsInput` (its chips a step further in), `SegmentedControl`, `Chip`, and a
 `Switch` row (`layout="horizontal"`, its `inset` track a step further in). A
 field's shaded row and the field in it are flush, so both take the depth
 radius. For a hand-made box that holds Buttons or Selects, wrap its contents

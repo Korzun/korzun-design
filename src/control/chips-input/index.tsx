@@ -1,14 +1,11 @@
 import cx from 'classnames';
 import { useId, useRef, useState } from 'react';
 
+import type { ChipTone } from '../../component/chip/index.js';
 import { useDepthClassKey } from '../../component/surface/index.js';
 import { XIcon } from '../../icon/index.js';
-import type { Theme } from '../../theme/index.js';
 import { Popover } from '../popover/index.js';
 import { useStyle } from './style.js';
-
-/** A chip colour family: a key of `theme.color.chip` (`'subject'`, `'user'`, `'neutral'`, …). */
-export type ChipColor = keyof Theme['color']['chip'];
 
 export type ChipsInputProps = {
   /** The chips. Controlled: you own the array. */
@@ -29,8 +26,8 @@ export type ChipsInputProps = {
   layout?: 'horizontal' | 'vertical' | 'block';
   /** Set on the text input only: form data gets the half-typed text, not the chips. */
   name?: string;
-  /** Chip colour family from `theme.color.chip`. Pick the one that tags the same values elsewhere. */
-  chipColor?: ChipColor;
+  /** The chips' colour, a `ChipTone` (as on `Chip`). Pick the one that tags the same values elsewhere. */
+  tone?: ChipTone;
   /** Matches a standard input's height, so the field lines up with `TextInput` and `Select` rows. Leave it off for a roomy standalone tag box. */
   dense?: boolean;
 };
@@ -49,11 +46,11 @@ export const ChipsInput = ({
   label,
   layout = 'block',
   name,
-  chipColor = 'subject',
+  tone = 'subject',
   dense = false,
 }: ChipsInputProps) => {
   const depthKey = useDepthClassKey();
-  const style = useStyle({ chipColor, dense, onPage: depthKey === 'depth0' });
+  const style = useStyle({ tone, dense, onPage: depthKey === 'depth0' });
   // A per-instance DOM id keeps label/input association unique even when two
   // forms with the same `name` mount at once (e.g. the create form plus a row
   // being edited on the device list). `name` stays form-data only.

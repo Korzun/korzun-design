@@ -1,4 +1,4 @@
-import { Heading, Space, Page, Tag, Text } from '@korzun/design/component';
+import { Heading, Space, Page, Chip, Text } from '@korzun/design/component';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { Link } from 'react-router';
 
@@ -28,7 +28,7 @@ const useStyle = createUseStyles((theme: Theme) => ({
   chipLink: {
     display: 'inline-flex',
     textDecoration: 'none',
-    // The focus ring follows the Tag inside, which is on the page (depth 0).
+    // The focus ring follows the Chip inside, which is on the page (depth 0).
     borderRadius: theme.radius.lg,
     '&:focus-visible': { outline: `2px solid ${theme.color.border.focus}`, outlineOffset: 2 },
   },
@@ -44,9 +44,9 @@ const tagRoute = (tag: string): string | null => {
 const TagChip = ({ tag }: { tag: string }) => {
   const styles = useStyle();
   const chip = (
-    <Tag tone="neutral" size="sm">
+    <Chip tone="neutral" size="sm">
       {tag}
-    </Tag>
+    </Chip>
   );
   const to = tagRoute(tag);
   return to ? (

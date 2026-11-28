@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { renderWithProviders } from '../../test-utils.js';
 import { lightTheme } from '../../theme/theme.js';
-import { Tag } from './index.js';
+import { Chip } from './index.js';
 
 // jsdom normalises colours (`#8a5e00` → `rgb(138, 94, 0)`, spacing in rgba());
 // compare channel lists so a hex token and its computed rgb() form match.
@@ -20,12 +20,12 @@ const expectTone = (el: HTMLElement, chip: { text: string; bg: string; border: s
   expect(channels(computed.borderColor)).toEqual(channels(chip.border));
 };
 
-describe('Tag', () => {
+describe('Chip', () => {
   it('renders the compact variant only when size="sm"', () => {
     renderWithProviders(
       <>
-        <Tag>Default</Tag>
-        <Tag size="sm">Compact</Tag>
+        <Chip>Default</Chip>
+        <Chip size="sm">Compact</Chip>
       </>
     );
     // react-jss embeds the rule name in the generated class, so the compact
@@ -35,24 +35,24 @@ describe('Tag', () => {
   });
 
   it('defaults to the subject tone', () => {
-    renderWithProviders(<Tag>Default</Tag>);
+    renderWithProviders(<Chip>Default</Chip>);
     expectTone(screen.getByText('Default'), lightTheme.color.chip.subject);
   });
 
   it('colours from the given tone', () => {
-    renderWithProviders(<Tag tone="author">Published</Tag>);
+    renderWithProviders(<Chip tone="author">Published</Chip>);
     expectTone(screen.getByText('Published'), lightTheme.color.chip.author);
   });
 
   it('renders the neutral tone grey', () => {
-    renderWithProviders(<Tag tone="neutral">No change</Tag>);
+    renderWithProviders(<Chip tone="neutral">No change</Chip>);
     expectTone(screen.getByText('No change'), lightTheme.color.chip.neutral);
   });
 
   it.each(['success', 'warning', 'danger', 'info'] as const)(
     'renders the %s status tone',
     (tone) => {
-      renderWithProviders(<Tag tone={tone}>{tone}</Tag>);
+      renderWithProviders(<Chip tone={tone}>{tone}</Chip>);
       expectTone(screen.getByText(tone), lightTheme.color.chip[tone]);
     }
   );
@@ -60,9 +60,9 @@ describe('Tag', () => {
   it('keeps size and onClick working with a tone', () => {
     const onClick = vi.fn();
     renderWithProviders(
-      <Tag tone="neutral" size="sm" onClick={onClick}>
+      <Chip tone="neutral" size="sm" onClick={onClick}>
         Chip
-      </Tag>
+      </Chip>
     );
     const chip = screen.getByRole('button', { name: 'Chip' });
     expect(chip.className).toMatch(/sm/);

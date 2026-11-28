@@ -446,7 +446,7 @@
         "CollapsibleSectionProps"
       ],
       "importLine": "import { CollapsibleSection, type CollapsibleSectionProps } from '@korzun/design/component'",
-      "body": "A disclosure section with no card chrome: an uppercase, muted header row with a\ntext chevron (▶ / ▼), an optional count-style subtitle, optional trailing\nactions, and children shown only while open. The header is a\n`role=\"button\"` (`tabIndex=0`, Enter/Space).\n\nUse something else for: a collapsible feature on a screen (`Card` with\n`isCollapsible`, which also hides its footer while collapsed).\n\n## Usage\n\n### Controlled and uncontrolled\n\nOmit `open` and the section keeps its own state, always starting closed; there\nis no `defaultOpen`. Pass `open` and flip your own state in `onOpenToggle`,\nwhich receives no value.\n\nWhen controlled, `open` wins but the internal state still flips on every\nclick; if you later stop passing `open`, the section shows that stale internal\nstate.\n\n### Actions\n\n- Actions are rendered inside the header button, but clicks and key presses\n  inside an action stay with it: any action (a `Button`, a native `<button>`, a\n  link, a `Tag` with `onClick`) works without toggling the section, and Enter or\n  Space on it activates the action, not the header.\n- Actions in the array need their own `key`s (they are rendered as a bare\n  array).\n\n### Accessibility\n\nThe header has no `aria-expanded`.\n\n### Styling\n\nNo `className`.\n\n## Do / don't\n\n- Do pass `actions` as an array of keyed elements.\n- Don't use it as a screen's top-level feature container; that is `Card`.",
+      "body": "A disclosure section with no card chrome: an uppercase, muted header row with a\ntext chevron (▶ / ▼), an optional count-style subtitle, optional trailing\nactions, and children shown only while open. The header is a\n`role=\"button\"` (`tabIndex=0`, Enter/Space).\n\nUse something else for: a collapsible feature on a screen (`Card` with\n`isCollapsible`, which also hides its footer while collapsed).\n\n## Usage\n\n### Controlled and uncontrolled\n\nOmit `open` and the section keeps its own state, always starting closed; there\nis no `defaultOpen`. Pass `open` and flip your own state in `onOpenToggle`,\nwhich receives no value.\n\nWhen controlled, `open` wins but the internal state still flips on every\nclick; if you later stop passing `open`, the section shows that stale internal\nstate.\n\n### Actions\n\n- Actions are rendered inside the header button, but clicks and key presses\n  inside an action stay with it: any action (a `Button`, a native `<button>`, a\n  link, a `Chip` with `onClick`) works without toggling the section, and Enter or\n  Space on it activates the action, not the header.\n- Actions in the array need their own `key`s (they are rendered as a bare\n  array).\n\n### Accessibility\n\nThe header has no `aria-expanded`.\n\n### Styling\n\nNo `className`.\n\n## Do / don't\n\n- Do pass `actions` as an array of keyed elements.\n- Don't use it as a screen's top-level feature container; that is `Card`.",
       "examples": [
         {
           "file": "src/component/collapsible-section/examples/01-basic.tsx",
@@ -604,7 +604,7 @@
         "DividerProps"
       ],
       "importLine": "import { Divider, type DividerAlign, type DividerProps } from '@korzun/design/component'",
-      "body": "A horizontal rule that splits content into sections, optionally with a label\n(\"Devices\", \"Validation\") and/or actions sitting on the line. Directly inside a\n`Card` or `Modal` body it cancels the body's padding, so the line meets the\nbox's edges; anywhere else it spans its container. Renders `role=\"separator\"`.\n\nUse something else for: separating whole features (use separate `Card`s),\nseparating menu items (`PageActionItem.separatorBefore`).\n\n## Usage\n\n### Styling\n\nNo `className`.\n\n### Surprising behaviour\n\n- **The bleed only reaches the nearest body.** A divider bleeds when the Card\n  or Modal body is the nearest box around it. Inside a `CardRow`, `Alert`,\n  `Surface` or nested `Card` it spans that box instead. `bleed={false}` opts\n  out in a body; `bleed` does nothing outside one.\n- **A padded wrapper defeats it.** In a Card body but inside your own padded\n  `div`, the divider still cancels the Card's padding, not yours. Wrap the\n  box's contents in `Surface`, or pass `bleed={false}`.\n- It always reserves one label line of height, labelled or not, so swapping a\n  plain divider for a labelled one does not shift the layout.\n- The label does not wrap (`white-space: nowrap`); keep it to a word or two.\n\n## Do / don't\n\n- Do put it straight in a Card body, or in a `Space` there, not in a padded\n  `div`.\n- Do use `type=\"link\"` Buttons or small `Tag`s as `actions`; the line is one\n  text line tall.\n- Don't use it for the gap between Cards on a page; `Page` already spaces them.",
+      "body": "A horizontal rule that splits content into sections, optionally with a label\n(\"Devices\", \"Validation\") and/or actions sitting on the line. Directly inside a\n`Card` or `Modal` body it cancels the body's padding, so the line meets the\nbox's edges; anywhere else it spans its container. Renders `role=\"separator\"`.\n\nUse something else for: separating whole features (use separate `Card`s),\nseparating menu items (`PageActionItem.separatorBefore`).\n\n## Usage\n\n### Styling\n\nNo `className`.\n\n### Surprising behaviour\n\n- **The bleed only reaches the nearest body.** A divider bleeds when the Card\n  or Modal body is the nearest box around it. Inside a `CardRow`, `Alert`,\n  `Surface` or nested `Card` it spans that box instead. `bleed={false}` opts\n  out in a body; `bleed` does nothing outside one.\n- **A padded wrapper defeats it.** In a Card body but inside your own padded\n  `div`, the divider still cancels the Card's padding, not yours. Wrap the\n  box's contents in `Surface`, or pass `bleed={false}`.\n- It always reserves one label line of height, labelled or not, so swapping a\n  plain divider for a labelled one does not shift the layout.\n- The label does not wrap (`white-space: nowrap`); keep it to a word or two.\n\n## Do / don't\n\n- Do put it straight in a Card body, or in a `Space` there, not in a padded\n  `div`.\n- Do use `type=\"link\"` Buttons or small `Chip`s as `actions`; the line is one\n  text line tall.\n- Don't use it for the gap between Cards on a page; `Page` already spaces them.",
       "examples": [
         {
           "file": "src/component/divider/examples/01-basic.tsx",
@@ -1576,7 +1576,7 @@
           "order": 4,
           "title": "Wrap and justify",
           "description": "`justify=\"between\"` pushes the first and last child to opposite edges, as in\na title with an action. `wrap` lets a row of chips flow onto further lines\ninstead of overflowing.",
-          "code": "import { Heading, Space, Tag } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function WrapAndJustify() {\n  const [all, setAll] = useState(false);\n  return (\n    <Space direction=\"vertical\" gap=\"sm\">\n      <Space justify=\"between\">\n        <Heading level={3}>Currently reading</Heading>\n        <Button type=\"link\" onClick={() => setAll((value) => !value)}>\n          {all ? 'Show less' : 'See all'}\n        </Button>\n      </Space>\n      <Space wrap gap=\"xs\">\n        <Tag>Fiction</Tag>\n        <Tag tone=\"author\">George Eliot</Tag>\n        {all && <Tag>Classic</Tag>}\n        {all && <Tag>1871</Tag>}\n      </Space>\n    </Space>\n  );\n}\n"
+          "code": "import { Heading, Space, Chip } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function WrapAndJustify() {\n  const [all, setAll] = useState(false);\n  return (\n    <Space direction=\"vertical\" gap=\"sm\">\n      <Space justify=\"between\">\n        <Heading level={3}>Currently reading</Heading>\n        <Button type=\"link\" onClick={() => setAll((value) => !value)}>\n          {all ? 'Show less' : 'See all'}\n        </Button>\n      </Space>\n      <Space wrap gap=\"xs\">\n        <Chip>Fiction</Chip>\n        <Chip tone=\"author\">George Eliot</Chip>\n        {all && <Chip>Classic</Chip>}\n        {all && <Chip>1871</Chip>}\n      </Space>\n    </Space>\n  );\n}\n"
         }
       ],
       "preview": {
@@ -1904,7 +1904,7 @@
           "order": 1,
           "title": "Basic",
           "description": "A frosted band fixed to the top of the viewport that blurs content under the\ndevice status bar and fades to nothing below it. Render it only in the\ninstalled app: the switch stands in for the `useIsStandalone()` check. A browser\nhas no status-bar inset, so the band is only `space.md` tall here: the striped\nstrip pinned to the top stands in for content scrolled up under it, and its top\nedge blurs while the switch is on.",
-          "code": "import { Space, Tag, Text, TopFade } from '@korzun/design/component';\nimport { Switch } from '@korzun/design/control';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\nimport { useState } from 'react';\n\nconst useStyles = createUseStyles((theme: Theme) => ({\n  // Page content that has scrolled up under the status bar, pinned there for the demo.\n  scrolled: {\n    position: 'fixed',\n    top: 0,\n    left: 0,\n    right: 0,\n    zIndex: theme.zIndex.base,\n    display: 'flex',\n    gap: theme.space.xs,\n    padding: theme.space.xs,\n    backgroundImage: `repeating-linear-gradient(90deg, ${theme.color.brand.default} 0 ${theme.space.xl}, ${theme.color.chip.subject.bg} ${theme.space.xl} ${theme.space.xxxxxl})`,\n  },\n  // Clear of the pinned strip.\n  content: { paddingTop: theme.space.xxxxxl },\n}));\n\nexport default function Basic() {\n  const styles = useStyles();\n  const [installed, setInstalled] = useState(true);\n  return (\n    <>\n      <div className={styles.scrolled}>\n        <Tag tone=\"author\">George Eliot</Tag>\n        <Tag tone=\"subject\">Fiction</Tag>\n      </div>\n      {installed && <TopFade />}\n      <Space direction=\"vertical\" className={styles.content}>\n        <Text>Scrolled content under the band blurs, then fades to sharp below it.</Text>\n        <Switch\n          name=\"installed\"\n          label=\"Installed app\"\n          checked={installed}\n          onChange={setInstalled}\n        />\n      </Space>\n    </>\n  );\n}\n",
+          "code": "import { Space, Chip, Text, TopFade } from '@korzun/design/component';\nimport { Switch } from '@korzun/design/control';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\nimport { useState } from 'react';\n\nconst useStyles = createUseStyles((theme: Theme) => ({\n  // Page content that has scrolled up under the status bar, pinned there for the demo.\n  scrolled: {\n    position: 'fixed',\n    top: 0,\n    left: 0,\n    right: 0,\n    zIndex: theme.zIndex.base,\n    display: 'flex',\n    gap: theme.space.xs,\n    padding: theme.space.xs,\n    backgroundImage: `repeating-linear-gradient(90deg, ${theme.color.brand.default} 0 ${theme.space.xl}, ${theme.color.chip.subject.bg} ${theme.space.xl} ${theme.space.xxxxxl})`,\n  },\n  // Clear of the pinned strip.\n  content: { paddingTop: theme.space.xxxxxl },\n}));\n\nexport default function Basic() {\n  const styles = useStyles();\n  const [installed, setInstalled] = useState(true);\n  return (\n    <>\n      <div className={styles.scrolled}>\n        <Chip tone=\"author\">George Eliot</Chip>\n        <Chip tone=\"subject\">Fiction</Chip>\n      </div>\n      {installed && <TopFade />}\n      <Space direction=\"vertical\" className={styles.content}>\n        <Text>Scrolled content under the band blurs, then fades to sharp below it.</Text>\n        <Switch\n          name=\"installed\"\n          label=\"Installed app\"\n          checked={installed}\n          onChange={setInstalled}\n        />\n      </Space>\n    </>\n  );\n}\n",
           "viewport": "mobile"
         }
       ],
@@ -2669,7 +2669,7 @@
         "CodeProps"
       ],
       "importLine": "import { Code, type CodeProps } from '@korzun/design/component'",
-      "body": "Inline code in the mono font, sized to the surrounding text, for a prop name or\na short expression in a line of prose. It renders a `<code>` element at 0.875em\nof the text around it, so it scales in a heading, on a tinted chip with\n`space.xxs` side padding.\n\nUse something else for: a block of several lines or a snippet to copy\n(`CodeBlock`), a keyboard key or a status chip (`Tag`).\n\n## Usage\n\n### Styling\n\nTakes `className`, merged last. The look is fixed: it is the same\n`theme.recipe.inlineCode` that styles code in the docs' markdown.\n\n### Surprising behaviour\n\n- **Breaks only when it must.** A long name stays on its line and wraps\n  (`overflow-wrap: break-word`) only when it cannot fit the line.\n- **Dark mode adds an edge on the page only.** Directly on a `Page` in dark\n  mode, a 1px `border.default` hairline separates the chip from the page. Inside\n  a `Card`, `Modal` or other surface the tint reads on its own, so there is none.\n\n### Corners\n\nThe chip's corners are fixed at `radius.sm` at every depth: it is a glyph\nsmaller than a line of text. See [corners](../corners.md).\n\n## Do / don't\n\n- Do use it for names and short expressions inside a sentence or a heading.\n- Don't put a multi-line snippet in it; use `CodeBlock`.",
+      "body": "Inline code in the mono font, sized to the surrounding text, for a prop name or\na short expression in a line of prose. It renders a `<code>` element at 0.875em\nof the text around it, so it scales in a heading, on a tinted chip with\n`space.xxs` side padding.\n\nUse something else for: a block of several lines or a snippet to copy\n(`CodeBlock`), a keyboard key or a status chip (`Chip`).\n\n## Usage\n\n### Styling\n\nTakes `className`, merged last. The look is fixed: it is the same\n`theme.recipe.inlineCode` that styles code in the docs' markdown.\n\n### Surprising behaviour\n\n- **Breaks only when it must.** A long name stays on its line and wraps\n  (`overflow-wrap: break-word`) only when it cannot fit the line.\n- **Dark mode adds an edge on the page only.** Directly on a `Page` in dark\n  mode, a 1px `border.default` hairline separates the chip from the page. Inside\n  a `Card`, `Modal` or other surface the tint reads on its own, so there is none.\n\n### Corners\n\nThe chip's corners are fixed at `radius.sm` at every depth: it is a glyph\nsmaller than a line of text. See [corners](../corners.md).\n\n## Do / don't\n\n- Do use it for names and short expressions inside a sentence or a heading.\n- Don't put a multi-line snippet in it; use `CodeBlock`.",
       "examples": [
         {
           "file": "src/component/code/examples/01-in-text.tsx",
@@ -3062,7 +3062,7 @@
         "TextProps"
       ],
       "importLine": "import { Text, type TextProps } from '@korzun/design/component'",
-      "body": "A run of text with themed size, tone and weight. Use it to set text style by\nprop instead of a style file: a body line, a meta line, a caption, an inline\nerror.\n\n**Unset props inherit.** A bare `<Text>` adds no size, tone or weight, so it\nlooks exactly like the text around it. This keeps the look inside a `Tag`, a\n`Button` or an error block: set only what you want to change.\n\nUse something else for: a heading (`Heading`), a single chip (`Tag`), a line\nof small metadata (`MetaLine`), a boxed alert (`Alert`).\n\n## Usage\n\n### Behaviour\n\n- `tone` is not `Tag`'s `TagTone` union. `primary` to `description` map to the\n  theme's `color.text.*`; `danger` and `success` use the chip text colours.\n- `danger` and `success` are for inline error and confirmation text. For a\n  boxed message use `Alert`.\n- `truncate` adds `overflow: hidden`, an ellipsis, `white-space: nowrap`,\n  `min-width: 0` and `max-width: 100%`, so a truncated Text clips inside an\n  `Space` with any `align`, and a `Space` nested in a row shrinks too (its\n  root has `min-width: 0`).\n- On `span`, `strong`, `em` and `label`, `truncate` also makes the element\n  `inline-block`, because inline elements ignore overflow. `p` and `div` keep their block display.\n- `as=\"p\"` has its margin reset to 0; space paragraphs with `Space` `gap`.\n- Every other HTML attribute (`id`, `aria-*`, `data-*`, event handlers) passes\n  through. There is no `style` prop.\n- Override with `className` at `'&&'` specificity, never `!important`.\n\n## Do / don't\n\n- Do set only the props you need; leave the rest to inherit.\n- Do use the recipes: body `<Text>`, meta `size=\"sm\" tone=\"muted\"`, caption\n  `size=\"xs\" tone=\"faint\"`.\n- Do put `truncate` on the Text itself, not on a wrapper.\n- Don't use `Text` for headings; use `Heading`.\n- Don't set `tone=\"danger\"` to build a box; it only colours text.\n- Don't add margins to space text; use `Space`.",
+      "body": "A run of text with themed size, tone and weight. Use it to set text style by\nprop instead of a style file: a body line, a meta line, a caption, an inline\nerror.\n\n**Unset props inherit.** A bare `<Text>` adds no size, tone or weight, so it\nlooks exactly like the text around it. This keeps the look inside a `Chip`, a\n`Button` or an error block: set only what you want to change.\n\nUse something else for: a heading (`Heading`), a single chip (`Chip`), a line\nof small metadata (`MetaLine`), a boxed alert (`Alert`).\n\n## Usage\n\n### Behaviour\n\n- `tone` is not `Chip`'s `ChipTone` union. `primary` to `description` map to the\n  theme's `color.text.*`; `danger` and `success` use the chip text colours.\n- `danger` and `success` are for inline error and confirmation text. For a\n  boxed message use `Alert`.\n- `truncate` adds `overflow: hidden`, an ellipsis, `white-space: nowrap`,\n  `min-width: 0` and `max-width: 100%`, so a truncated Text clips inside an\n  `Space` with any `align`, and a `Space` nested in a row shrinks too (its\n  root has `min-width: 0`).\n- On `span`, `strong`, `em` and `label`, `truncate` also makes the element\n  `inline-block`, because inline elements ignore overflow. `p` and `div` keep their block display.\n- `as=\"p\"` has its margin reset to 0; space paragraphs with `Space` `gap`.\n- Every other HTML attribute (`id`, `aria-*`, `data-*`, event handlers) passes\n  through. There is no `style` prop.\n- Override with `className` at `'&&'` specificity, never `!important`.\n\n## Do / don't\n\n- Do set only the props you need; leave the rest to inherit.\n- Do use the recipes: body `<Text>`, meta `size=\"sm\" tone=\"muted\"`, caption\n  `size=\"xs\" tone=\"faint\"`.\n- Do put `truncate` on the Text itself, not on a wrapper.\n- Don't use `Text` for headings; use `Heading`.\n- Don't set `tone=\"danger\"` to build a box; it only colours text.\n- Don't add margins to space text; use `Space`.",
       "examples": [
         {
           "file": "src/component/text/examples/01-basic.tsx",
@@ -3905,11 +3905,10 @@
         "ChipsInput"
       ],
       "types": [
-        "ChipColor",
         "ChipsInputProps"
       ],
-      "importLine": "import { ChipsInput, type ChipColor, type ChipsInputProps } from '@korzun/design/control'",
-      "body": "A tag field: the current values render as coloured chips inside an input box,\ntyping filters a suggestion dropdown (a `Popover`), and Enter adds a chip. Fully\ncontrolled: you own the `string[]`.\n\nUse something else for: one value from a list (`Select`), one of a few fixed\noptions (`SegmentedControl`), free text (`TextInput`).\n\n## Usage\n\n### Keyboard\n\n- ArrowDown / ArrowUp move the highlight; Enter or Tab adds the highlighted\n  suggestion, else (with `allowCustom`) the trimmed typed text.\n- **Tab with text typed adds a chip and keeps focus in the field** (it calls\n  `preventDefault`); Tab on an empty field moves focus normally.\n- Enter never submits the surrounding form while text is typed, even when\n  nothing could be added.\n- Backspace on an empty field removes the last chip.\n- A value that matches an existing chip case-insensitively is not added.\n\n### Styling\n\nNo `className`. The label is linked to the input with a generated id.\n\n## Do / don't\n\n- Do set `layout=\"horizontal\"` and `dense` when it sits among other form fields\n  in a `Card`; otherwise the label silently disappears.\n- Do pick a `chipColor` that matches how the same values are tagged elsewhere.\n- Do use it inside a `Modal`: the dropdown opens inside the open dialog, so it\n  is not hidden behind it (see [popover](popover.md)).\n- Don't rely on `name` for form submission.",
+      "importLine": "import { ChipsInput, type ChipsInputProps } from '@korzun/design/control'",
+      "body": "A tag field: the current values render as coloured chips inside an input box,\ntyping filters a suggestion dropdown (a `Popover`), and Enter adds a chip. Fully\ncontrolled: you own the `string[]`.\n\nUse something else for: one value from a list (`Select`), one of a few fixed\noptions (`SegmentedControl`), free text (`TextInput`).\n\n## Usage\n\n### Keyboard\n\n- ArrowDown / ArrowUp move the highlight; Enter or Tab adds the highlighted\n  suggestion, else (with `allowCustom`) the trimmed typed text.\n- **Tab with text typed adds a chip and keeps focus in the field** (it calls\n  `preventDefault`); Tab on an empty field moves focus normally.\n- Enter never submits the surrounding form while text is typed, even when\n  nothing could be added.\n- Backspace on an empty field removes the last chip.\n- A value that matches an existing chip case-insensitively is not added.\n\n### Styling\n\nNo `className`. The label is linked to the input with a generated id.\n\n## Do / don't\n\n- Do set `layout=\"horizontal\"` and `dense` when it sits among other form fields\n  in a `Card`; otherwise the label silently disappears.\n- Do pick a `tone` that matches how the same values are tagged elsewhere.\n- Do use it inside a `Modal`: the dropdown opens inside the open dialog, so it\n  is not hidden behind it (see [popover](popover.md)).\n- Don't rely on `name` for form submission.",
       "examples": [
         {
           "file": "src/control/chips-input/examples/01-basic.tsx",
@@ -3936,12 +3935,12 @@
           "code": "import { Space, Text } from '@korzun/design/component';\nimport { ChipsInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nconst TAGS = ['Fiction', 'Memoir', 'Reference'];\n\nexport default function Layouts() {\n  const [block, setBlock] = useState(['Fiction']);\n  const [horizontal, setHorizontal] = useState(['Memoir']);\n  const [vertical, setVertical] = useState(['Reference']);\n  return (\n    <Space direction=\"vertical\" gap=\"xl\">\n      <Space direction=\"vertical\" gap=\"xs\">\n        <Text size=\"sm\" tone=\"muted\">\n          layout=\"block\"\n        </Text>\n        <ChipsInput label=\"Tags\" value={block} suggestions={TAGS} onChange={setBlock} />\n      </Space>\n      <Space direction=\"vertical\" gap=\"xs\">\n        <Text size=\"sm\" tone=\"muted\">\n          layout=\"horizontal\"\n        </Text>\n        <ChipsInput\n          label=\"Tags\"\n          layout=\"horizontal\"\n          value={horizontal}\n          suggestions={TAGS}\n          onChange={setHorizontal}\n        />\n      </Space>\n      <Space direction=\"vertical\" gap=\"xs\">\n        <Text size=\"sm\" tone=\"muted\">\n          layout=\"vertical\"\n        </Text>\n        <ChipsInput\n          label=\"Tags\"\n          layout=\"vertical\"\n          value={vertical}\n          suggestions={TAGS}\n          onChange={setVertical}\n        />\n      </Space>\n    </Space>\n  );\n}\n"
         },
         {
-          "file": "src/control/chips-input/examples/04-chip-colors.tsx",
-          "slug": "chip-colors",
+          "file": "src/control/chips-input/examples/04-tones.tsx",
+          "slug": "tones",
           "order": 4,
-          "title": "Chip colors",
-          "description": "`chipColor` picks the colour family for a field's chips. Use the one that\ntags the same values elsewhere in the app, so a subject looks like a subject\neverywhere.",
-          "code": "import { Space, Text } from '@korzun/design/component';\nimport { ChipsInput, type ChipColor } from '@korzun/design/control';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\nimport { useState } from 'react';\n\nconst COLORS: ChipColor[] = [\n  'status',\n  'author',\n  'series',\n  'subject',\n  'book',\n  'entryType',\n  'user',\n  'rating',\n  'neutral',\n  'success',\n  'warning',\n  'danger',\n  'info',\n];\n\n// A grid of small fields, as many to a row as fit, instead of one full-width field each.\nconst useStyles = createUseStyles((theme: Theme) => ({\n  grid: {\n    display: 'grid',\n    // Columns about ten rem wide: room for a chip and the typing area.\n    gridTemplateColumns: `repeat(auto-fill, minmax(calc(${theme.space.xxxxxl} * 5), 1fr))`,\n    gap: `${theme.space.lg} ${theme.space.md}`,\n  },\n}));\n\nfunction ColorField({ chipColor }: { chipColor: ChipColor }) {\n  const [value, setValue] = useState<string[]>([chipColor]);\n  return (\n    <Space direction=\"vertical\" gap=\"xs\">\n      <Text size=\"sm\" tone=\"muted\">\n        {chipColor}\n      </Text>\n      <ChipsInput value={value} suggestions={[]} onChange={setValue} chipColor={chipColor} />\n    </Space>\n  );\n}\n\nexport default function ChipColors() {\n  const styles = useStyles();\n  return (\n    <div className={styles.grid}>\n      {COLORS.map((chipColor) => (\n        <ColorField key={chipColor} chipColor={chipColor} />\n      ))}\n    </div>\n  );\n}\n"
+          "title": "Tones",
+          "description": "`tone` picks the colour family for a field's chips. Use the one that\ntags the same values elsewhere in the app, so a subject looks like a subject\neverywhere.",
+          "code": "import { Space, Text, type ChipTone } from '@korzun/design/component';\nimport { ChipsInput } from '@korzun/design/control';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\nimport { useState } from 'react';\n\nconst COLORS: ChipTone[] = [\n  'status',\n  'author',\n  'series',\n  'subject',\n  'book',\n  'entryType',\n  'user',\n  'rating',\n  'neutral',\n  'success',\n  'warning',\n  'danger',\n  'info',\n];\n\n// A grid of small fields, as many to a row as fit, instead of one full-width field each.\nconst useStyles = createUseStyles((theme: Theme) => ({\n  grid: {\n    display: 'grid',\n    // Columns about ten rem wide: room for a chip and the typing area.\n    gridTemplateColumns: `repeat(auto-fill, minmax(calc(${theme.space.xxxxxl} * 5), 1fr))`,\n    gap: `${theme.space.lg} ${theme.space.md}`,\n  },\n}));\n\nfunction ColorField({ tone }: { tone: ChipTone }) {\n  const [value, setValue] = useState<string[]>([tone]);\n  return (\n    <Space direction=\"vertical\" gap=\"xs\">\n      <Text size=\"sm\" tone=\"muted\">\n        {tone}\n      </Text>\n      <ChipsInput value={value} suggestions={[]} onChange={setValue} tone={tone} />\n    </Space>\n  );\n}\n\nexport default function ChipTones() {\n  const styles = useStyles();\n  return (\n    <div className={styles.grid}>\n      {COLORS.map((tone) => (\n        <ColorField key={tone} tone={tone} />\n      ))}\n    </div>\n  );\n}\n"
         },
         {
           "file": "src/control/chips-input/examples/05-disabled.tsx",
@@ -3956,8 +3955,8 @@
           "slug": "form-row",
           "order": 6,
           "title": "Form row",
-          "description": "Among other fields in a `Card`, set `layout=\"horizontal\"` and `dense` so the\nlabel shows and the height matches a `TextInput`. `allowCustom={false}`\nrestricts it to known users, `chipColor=\"user\"` matches how users are tagged\nelsewhere, and `placeholder` and `disabled` follow the loading state. `name`\nis set on the text input only: form data gets the half-typed text, so submit\nthe chips from state.",
-          "code": "import { Card, Space, Text } from '@korzun/design/component';\nimport { Button, ChipsInput, TextInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nconst USERS = ['Ada', 'Grace', 'Linus', 'Margaret'];\n\nexport default function FormRow() {\n  const [title, setTitle] = useState<string | undefined>('Reading group');\n  const [users, setUsers] = useState(['Ada']);\n  const [loading, setLoading] = useState(true);\n  return (\n    <Card\n      title=\"Share\"\n      footer={\n        <Button type=\"text\" onClick={() => setLoading((l) => !l)}>\n          {loading ? 'Finish loading' : 'Reload users'}\n        </Button>\n      }\n    >\n      <Space direction=\"vertical\">\n        <ChipsInput\n          name=\"users\"\n          label=\"Users\"\n          layout=\"horizontal\"\n          dense\n          value={users}\n          suggestions={USERS}\n          onChange={setUsers}\n          allowCustom={false}\n          chipColor=\"user\"\n          disabled={loading}\n          placeholder={loading ? 'Loading…' : 'Add users…'}\n        />\n        <TextInput\n          name=\"title\"\n          label=\"Title\"\n          layout=\"horizontal\"\n          value={title}\n          onChange={setTitle}\n        />\n        <Text tone=\"muted\">Shared with: {users.join(', ') || 'nobody'}</Text>\n      </Space>\n    </Card>\n  );\n}\n"
+          "description": "Among other fields in a `Card`, set `layout=\"horizontal\"` and `dense` so the\nlabel shows and the height matches a `TextInput`. `allowCustom={false}`\nrestricts it to known users, `tone=\"user\"` matches how users are tagged\nelsewhere, and `placeholder` and `disabled` follow the loading state. `name`\nis set on the text input only: form data gets the half-typed text, so submit\nthe chips from state.",
+          "code": "import { Card, Space, Text } from '@korzun/design/component';\nimport { Button, ChipsInput, TextInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nconst USERS = ['Ada', 'Grace', 'Linus', 'Margaret'];\n\nexport default function FormRow() {\n  const [title, setTitle] = useState<string | undefined>('Reading group');\n  const [users, setUsers] = useState(['Ada']);\n  const [loading, setLoading] = useState(true);\n  return (\n    <Card\n      title=\"Share\"\n      footer={\n        <Button type=\"text\" onClick={() => setLoading((l) => !l)}>\n          {loading ? 'Finish loading' : 'Reload users'}\n        </Button>\n      }\n    >\n      <Space direction=\"vertical\">\n        <ChipsInput\n          name=\"users\"\n          label=\"Users\"\n          layout=\"horizontal\"\n          dense\n          value={users}\n          suggestions={USERS}\n          onChange={setUsers}\n          allowCustom={false}\n          tone=\"user\"\n          disabled={loading}\n          placeholder={loading ? 'Loading…' : 'Add users…'}\n        />\n        <TextInput\n          name=\"title\"\n          label=\"Title\"\n          layout=\"horizontal\"\n          value={title}\n          onChange={setTitle}\n        />\n        <Text tone=\"muted\">Shared with: {users.join(', ') || 'nobody'}</Text>\n      </Space>\n    </Card>\n  );\n}\n"
         },
         {
           "file": "src/control/chips-input/examples/07-in-modal.tsx",
@@ -3987,13 +3986,6 @@
               "required": false,
               "description": "Enter or Tab adds the typed text as a chip. `false`: only suggestions can be added.",
               "default": "true"
-            },
-            {
-              "name": "chipColor",
-              "type": "'status' | 'author' | 'series' | 'subject' | 'book' | 'entryType' | 'user' | 'rating' | 'neutral' | 'success' | 'warning' | 'danger' | 'info'",
-              "required": false,
-              "description": "Chip colour family from `theme.color.chip`. Pick the one that tags the same values elsewhere.",
-              "default": "'subject'"
             },
             {
               "name": "dense",
@@ -4047,19 +4039,19 @@
               "description": "Suggestion pool; pass `[]` for none. Values already chosen are hidden, and matching is a case-insensitive substring."
             },
             {
+              "name": "tone",
+              "type": "'status' | 'author' | 'series' | 'subject' | 'book' | 'entryType' | 'user' | 'rating' | 'neutral' | 'success' | 'warning' | 'danger' | 'info'",
+              "required": false,
+              "description": "The chips' colour, a `ChipTone` (as on `Chip`). Pick the one that tags the same values elsewhere.",
+              "default": "'subject'"
+            },
+            {
               "name": "value",
               "type": "string[]",
               "required": true,
               "description": "The chips. Controlled: you own the array."
             }
           ]
-        },
-        {
-          "name": "ChipColor",
-          "kind": "alias",
-          "rows": [],
-          "text": "'status' | 'author' | 'series' | 'subject' | 'book' | 'entryType' | 'user' | 'rating' | 'neutral' | 'success' | 'warning' | 'danger' | 'info'",
-          "description": "A chip colour family: a key of `theme.color.chip` (`'subject'`, `'user'`, `'neutral'`, …)."
         }
       ],
       "tokens": [
@@ -4459,6 +4451,15 @@
           "version": "0.7.0",
           "date": "2026-11-26",
           "tags": [
+            "ChipsInput",
+            "Chip"
+          ],
+          "text": "**Breaking:** `chipColor` is renamed `tone` and takes a `ChipTone`, as `Chip` does; the `ChipColor` type is removed (use `ChipTone` from `@korzun/design/component`)."
+        },
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
             "ChipsInput"
           ],
           "text": "A `disabled` field hides its chips' remove (×) buttons instead of showing them dimmed, so the chips read as plain values."
@@ -4481,7 +4482,7 @@
             "DateTimeInput",
             "ChipsInput",
             "SegmentedControl",
-            "Tag",
+            "Chip",
             "Switch"
           ],
           "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.6.0 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px. A text field, `ChipsInput` box or field label directly on a Page also moves its text 16px in from the edge (8px elsewhere), the inset `Button` keeps, so it clears the deeper corner."
@@ -4490,7 +4491,7 @@
           "version": "0.7.0",
           "date": "2026-11-26",
           "tags": [
-            "Tag",
+            "Chip",
             "ChipsInput",
             "lightTheme",
             "darkTheme"
@@ -4716,7 +4717,7 @@
             "DateTimeInput",
             "ChipsInput",
             "SegmentedControl",
-            "Tag",
+            "Chip",
             "Switch"
           ],
           "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.6.0 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px. A text field, `ChipsInput` box or field label directly on a Page also moves its text 16px in from the edge (8px elsewhere), the inset `Button` keeps, so it clears the deeper corner."
@@ -5104,7 +5105,7 @@
             "DateTimeInput",
             "ChipsInput",
             "SegmentedControl",
-            "Tag",
+            "Chip",
             "Switch"
           ],
           "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.6.0 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px. A text field, `ChipsInput` box or field label directly on a Page also moves its text 16px in from the edge (8px elsewhere), the inset `Button` keeps, so it clears the deeper corner."
@@ -5411,7 +5412,7 @@
             "DateTimeInput",
             "ChipsInput",
             "SegmentedControl",
-            "Tag",
+            "Chip",
             "Switch"
           ],
           "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.6.0 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px. A text field, `ChipsInput` box or field label directly on a Page also moves its text 16px in from the edge (8px elsewhere), the inset `Button` keeps, so it clears the deeper corner."
@@ -6172,7 +6173,7 @@
             "DateTimeInput",
             "ChipsInput",
             "SegmentedControl",
-            "Tag",
+            "Chip",
             "Switch"
           ],
           "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.6.0 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px. A text field, `ChipsInput` box or field label directly on a Page also moves its text 16px in from the edge (8px elsewhere), the inset `Button` keeps, so it clears the deeper corner."
@@ -6491,7 +6492,7 @@
             "DateTimeInput",
             "ChipsInput",
             "SegmentedControl",
-            "Tag",
+            "Chip",
             "Switch"
           ],
           "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.6.0 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px. A text field, `ChipsInput` box or field label directly on a Page also moves its text 16px in from the edge (8px elsewhere), the inset `Button` keeps, so it clears the deeper corner."
@@ -6891,7 +6892,7 @@
             "DateTimeInput",
             "ChipsInput",
             "SegmentedControl",
-            "Tag",
+            "Chip",
             "Switch"
           ],
           "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.6.0 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px. A text field, `ChipsInput` box or field label directly on a Page also moves its text 16px in from the edge (8px elsewhere), the inset `Button` keeps, so it clears the deeper corner."
@@ -8205,746 +8206,83 @@
       ]
     },
     {
-      "id": "component/code-block",
-      "slug": "code-block",
+      "id": "component/chip",
+      "slug": "chip",
       "entry": "@korzun/design/component",
-      "docPath": "docs/component/code-block.md",
-      "title": "CodeBlock",
-      "description": "A block of code in mono type that scrolls or wraps, can show highlighted children, and can offer a Copy button.",
-      "category": "Data display",
-      "values": [
-        "CodeBlock"
-      ],
-      "types": [
-        "CodeBlockProps"
-      ],
-      "importLine": "import { CodeBlock, type CodeBlockProps } from '@korzun/design/component'",
-      "body": "A block of code in mono type on a tinted box, for a command, an import line or a\nsnippet a reader may copy. It scrolls sideways (or wraps), shows either plain\ntext or highlighted children, and can add a Copy button.\n\nUse something else for: a name or short expression inside a sentence (`Code`),\ndata in rows and columns (`Table`).\n\n## Usage\n\n### Plain and highlighted\n\nPass `code` alone for plain text. To colour it, pass highlighted spans as\n`children`: they replace what shows, and Copy still copies `code`, so keep the\ntwo the same text. Pass the inner `<code>` content (or its spans), not Shiki's whole\n`<pre>`: `CodeBlock` renders its own `pre`.\n\n### Code colours\n\n`CodeBlock` sets these CSS variables on its root from `theme.color.code`, the\nnames Shiki's css-variables theme emits with `variablePrefix: '--code-'`. A\nhighlighter that uses that theme follows the light and dark themes with no\ncolour work.\n\n| Variable | Theme token |\n| --- | --- |\n| `--code-foreground` | `color.code.foreground` |\n| `--code-token-keyword` | `color.code.keyword` |\n| `--code-token-string` | `color.code.string` |\n| `--code-token-string-expression` | `color.code.string` |\n| `--code-token-function` | `color.code.function` |\n| `--code-token-parameter` | `color.code.parameter` |\n| `--code-token-constant` | `color.code.constant` |\n| `--code-token-punctuation` | `color.code.punctuation` |\n| `--code-token-comment` | `color.code.comment` |\n| `--code-token-link` | `color.code.link` |\n\nShiki's other variables (`--code-background`, `--code-token-inserted`,\n`--code-token-deleted`, `--code-token-changed`, `--code-ansi-*`) are not set,\nso those tokens fall back to the inherited colour. For highlighted HTML rendered\noutside `CodeBlock`, such as markdown, spread `theme.recipe.codeColours` on its\nwrapper to set the same ten variables.\n\n### Copy\n\n`copyable` adds a text button that reads Copy. Pressed, it writes `code` to the\nclipboard and reads Copied with a check for 2 seconds; pressing again restarts\nthe 2 seconds. Where there is no clipboard (an insecure page) or the write is\nrefused, it reads Could not copy for 2 seconds and throws nothing. A visually\nhidden status region announces the result. `copyLabel` is the idle button's\naccessible name.\n\n### Scrolling and wrapping\n\nA long line scrolls inside the box and never widens the page; the right edge\nfades while more is hidden, since phones hide scrollbars. `wrap` breaks long\nlines instead.\n\n### Styling\n\nTakes `className` on the root, merged last. The look is fixed: it is the\n`theme.recipe.codeBlock` look, drawn by the component.\n\n### Corners\n\nThe box's corners follow where it sits: `lg` on a `Page`, `md` in a Card or\n`Surface`, `sm` two levels in. The Copy button sits one level deeper. In dark\nmode directly on a `Page` a 1px `border.default` edge separates the box from the\npage. See [corners](../corners.md).\n\n## Do / don't\n\n- Do pass the same text as `code` and as the highlighted `children`.\n- Don't use it inline in a sentence; use `Code`.",
-      "examples": [
-        {
-          "file": "src/component/code-block/examples/01-basic.tsx",
-          "slug": "basic",
-          "order": 1,
-          "title": "Basic",
-          "description": "Plain code in a mono box. A line longer than the box scrolls sideways inside it, with a fade at the edge while more is hidden.",
-          "code": "import { CodeBlock } from '@korzun/design/component';\n\nexport default function Basic() {\n  return <CodeBlock code=\"npm install @korzun/design react react-dom react-jss\" />;\n}\n"
-        },
-        {
-          "file": "src/component/code-block/examples/02-copyable.tsx",
-          "slug": "copyable",
-          "order": 2,
-          "title": "Copyable",
-          "description": "`copyable` adds a Copy button that turns into Copied for two seconds; `copyLabel` names it for screen readers.",
-          "code": "import { CodeBlock } from '@korzun/design/component';\n\nexport default function Copyable() {\n  return (\n    <CodeBlock\n      code=\"import { Button } from '@korzun/design/control';\"\n      copyable\n      copyLabel=\"Copy import\"\n    />\n  );\n}\n"
-        },
-        {
-          "file": "src/component/code-block/examples/03-highlighted.tsx",
-          "slug": "highlighted",
-          "order": 3,
-          "title": "Highlighted",
-          "description": "Children replace the plain text; Copy still copies `code`. `CodeBlock` sets the `--code-*` variables, so a highlighter that emits them, such as Shiki's css-variables theme with `variablePrefix: '--code-'`, follows the light and dark themes.",
-          "code": "import { CodeBlock } from '@korzun/design/component';\n\nconst code = \"const label = 'Copy';\";\n\nexport default function Highlighted() {\n  return (\n    <CodeBlock code={code} copyable>\n      <span style={{ color: 'var(--code-token-keyword)' }}>const</span>{' '}\n      <span style={{ color: 'var(--code-token-constant)' }}>label</span>\n      <span style={{ color: 'var(--code-token-punctuation)' }}> = </span>\n      <span style={{ color: 'var(--code-token-string)' }}>'Copy'</span>\n      <span style={{ color: 'var(--code-token-punctuation)' }}>;</span>\n    </CodeBlock>\n  );\n}\n"
-        },
-        {
-          "file": "src/component/code-block/examples/04-wrap.tsx",
-          "slug": "wrap",
-          "order": 4,
-          "title": "Wrap",
-          "description": "`wrap` breaks long lines inside the box instead of scrolling them, for output a reader should see whole.",
-          "code": "import { CodeBlock } from '@korzun/design/component';\n\nexport default function Wrap() {\n  return (\n    <CodeBlock\n      wrap\n      code=\"curl --fail --location --header 'Accept: application/json' https://example.com/api/v1/books?sort=title&order=asc&limit=100\"\n    />\n  );\n}\n"
-        }
-      ],
-      "preview": {
-        "file": "src/component/code-block/examples/preview.tsx",
-        "slug": "preview",
-        "order": 0,
-        "title": "Preview",
-        "description": "",
-        "code": "import { CodeBlock } from '@korzun/design/component';\n\nexport default function Preview() {\n  return <CodeBlock code={'npm install @korzun/design\\nnpm run build'} copyable />;\n}\n"
-      },
-      "tables": [
-        {
-          "name": "CodeBlockProps",
-          "kind": "props",
-          "rows": [
-            {
-              "name": "children",
-              "type": "ReactNode",
-              "required": false,
-              "description": "What to show in place of `code`, such as syntax-highlighted spans. Copy still copies `code`."
-            },
-            {
-              "name": "className",
-              "type": "string",
-              "required": false,
-              "description": "Extra class on the root, merged after the component's own."
-            },
-            {
-              "name": "code",
-              "type": "string",
-              "required": true,
-              "description": "The code as plain text. It is what Copy puts on the clipboard, and what shows when there are no `children`."
-            },
-            {
-              "name": "copyable",
-              "type": "boolean",
-              "required": false,
-              "description": "Adds a Copy button beside the code.",
-              "default": "false"
-            },
-            {
-              "name": "copyLabel",
-              "type": "string",
-              "required": false,
-              "description": "The Copy button's accessible name; it reads \"Copy\".",
-              "default": "'Copy code'"
-            },
-            {
-              "name": "wrap",
-              "type": "boolean",
-              "required": false,
-              "description": "Wraps long lines instead of scrolling them sideways.",
-              "default": "false"
-            }
-          ]
-        }
-      ],
-      "tokens": [
-        {
-          "path": "breakpoint.mobile",
-          "kind": "value",
-          "light": "@media (max-width: 640px)",
-          "dark": "@media (max-width: 640px)"
-        },
-        {
-          "path": "color.bg.cardHeader",
-          "kind": "color",
-          "light": "#EEEEEE",
-          "dark": "#232427"
-        },
-        {
-          "path": "color.border.default",
-          "kind": "color",
-          "light": "#D9D9D9",
-          "dark": "#3A3B40"
-        },
-        {
-          "path": "color.code.foreground",
-          "kind": "color",
-          "light": "#111",
-          "dark": "#F5F5F7"
-        },
-        {
-          "path": "colorScheme",
-          "kind": "value",
-          "light": "light",
-          "dark": "dark"
-        },
-        {
-          "path": "radius.lg",
-          "kind": "value",
-          "light": "16px",
-          "dark": "16px"
-        },
-        {
-          "path": "radius.md",
-          "kind": "value",
-          "light": "8px",
-          "dark": "8px"
-        },
-        {
-          "path": "radius.sm",
-          "kind": "value",
-          "light": "4px",
-          "dark": "4px"
-        },
-        {
-          "path": "recipe.codeBlock",
-          "kind": "recipe",
-          "light": null,
-          "dark": null
-        },
-        {
-          "path": "recipe.codeColours",
-          "kind": "recipe",
-          "light": null,
-          "dark": null
-        },
-        {
-          "path": "space.md",
-          "kind": "value",
-          "light": "0.5rem",
-          "dark": "0.5rem"
-        }
-      ],
-      "changelog": [
-        {
-          "version": "0.7.0",
-          "date": "2026-11-26",
-          "tags": [
-            "CodeBlock"
-          ],
-          "text": "New `CodeBlock` (component): a block of code in mono type on a `bg.cardHeader` box that scrolls sideways (with a fade at the edge while more is hidden) or wraps with `wrap`. `code` is the plain text; `children` replace what shows (highlighted spans) while Copy still copies `code`. `copyable` adds a Copy button that becomes Copied with a check, or Could not copy, for 2 seconds and announces it in a status region; `copyLabel` names it. It sets the `--code-*` variables Shiki's css-variables theme emits, from `color.code`. Corners follow surface depth, and in dark mode directly on a Page it gets a 1px `border.default` edge."
-        }
-      ]
-    },
-    {
-      "id": "component/meta-line",
-      "slug": "meta-line",
-      "entry": "@korzun/design/component",
-      "docPath": "docs/component/meta-line.md",
-      "title": "MetaLine",
-      "description": "A short run of data about one record, as a dotted line or labelled pairs, wrapping between data, never inside one.",
-      "category": "Data display",
-      "values": [
-        "MetaLine"
-      ],
-      "types": [
-        "MetaLineItem",
-        "MetaLinePair",
-        "MetaLineProps"
-      ],
-      "importLine": "import { MetaLine, type MetaLineItem, type MetaLinePair, type MetaLineProps } from '@korzun/design/component'",
-      "body": "A short run of data about one record. Two looks:\n\n- **A separated line**, a row's secondary line: \"Frank Herbert · Book 3 · 42%\".\n  Pass `separator`.\n- **Labelled facts**, a card's body: \"Format EPUB   Size 2.1 MB\". Pass\n  `{ label, value }` items and no separator; items are spaced by gaps.\n\nEither way it wraps *between* data, never inside one.\n\nUse something else for: many fields, or the same fields across records\n(`Table`), a row's primary title (`Text` or `Heading`).\n\n## Usage\n\n### Items and pairs\n\n`items` holds nodes and `{ label, value }` pairs, mixed freely. A pair shows\nits label in `text.faint`, capitalized by CSS (`'cover fit'` shows as \"Cover\nFit\"), then its value.\n\n- `null`, `undefined` and `false` items are skipped, and so is a pair whose\n  `value` is one of them, so pass optional data as `cond && value` or\n  `{ label, value: maybe }`.\n- `''` and `0` are kept; filter them yourself.\n- **Renders `null`** when every item is skipped: no empty line is left behind.\n- Items are keyed by position.\n\n### Separator\n\n`separator` takes one character (`'·'`, `'|'`, `'/'`); `''` counts as unset. It sits in a 1em\ncell before each item, drawn by CSS (`::before`), so screen readers read only\nthe data, and the one that would lead a line is clipped: none dangles at a line\nend or starts the next line. It is drawn in `text.muted`. Without\n`separator`, items are `space.lg` apart and lines `space.sm` apart.\n\nOne character means one grapheme (an emoji with a skin tone counts as one). A\nlonger string such as `' | '` or `'->'` overflows the 1em cell and overlaps the\nnext item, so in development MetaLine logs a `console.warn` once per such\nseparator. It works in right-to-left text too: the clip uses logical\nproperties, so the line start is clipped on whichever side it is.\n\n### Long data\n\nA datum never wraps inside itself. One wider than the whole line ellipsizes.\n\n### Typography\n\nMetaLine sets no font size or colour of its own except the label and\nseparator colours; wrap it in `Text` to set the rest (`size=\"sm\"` in a card\nbody, `tone=\"faint\"` for a row's secondary line).\n\n## Do / don't\n\n- Do pass conditional data as `cond && value`; `false` is skipped.\n- Do set typography by wrapping the line in `Text` (`size`, `tone`); the items inherit it.\n- Don't join data into one string with your own \" · \": wrapping then breaks\n  inside a datum and the dots are read aloud.\n- Don't pass empty strings; with a separator they leave a stray one.",
-      "examples": [
-        {
-          "file": "src/component/meta-line/examples/01-basic.tsx",
-          "slug": "basic",
-          "order": 1,
-          "title": "Basic",
-          "description": "A book row's secondary line: author, series and progress, separated by middots. Wrap it in `Text` to set the size and tone the items inherit.",
-          "code": "import { MetaLine, Space, Text } from '@korzun/design/component';\n\nexport default function Basic() {\n  return (\n    <Space direction=\"vertical\" gap=\"xs\">\n      <Text weight=\"semibold\">Children of Dune</Text>\n      <Text as=\"div\" size=\"sm\" tone=\"faint\">\n        <MetaLine separator=\"·\" items={['Frank Herbert', 'Dune #3', '42%']} />\n      </Text>\n    </Space>\n  );\n}\n"
-        },
-        {
-          "file": "src/component/meta-line/examples/02-conditional-data.tsx",
-          "slug": "conditional-data",
-          "order": 2,
-          "title": "Conditional data",
-          "description": "Pass optional data as `cond && value`: `false` is skipped and leaves no separator. When every item is skipped nothing renders, so the line leaves no gap behind.",
-          "code": "import { Space, MetaLine, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function ConditionalData() {\n  const [hasSeries, setHasSeries] = useState(true);\n  const [hasProgress, setHasProgress] = useState(true);\n  return (\n    <Space direction=\"vertical\" gap=\"md\">\n      <Space>\n        <Button onClick={() => setHasSeries((on) => !on)}>\n          {hasSeries ? 'Remove series' : 'Add series'}\n        </Button>\n        <Button onClick={() => setHasProgress((on) => !on)}>\n          {hasProgress ? 'Remove progress' : 'Add progress'}\n        </Button>\n      </Space>\n      <Space direction=\"vertical\" gap=\"xs\">\n        <Text weight=\"semibold\">Dune Messiah</Text>\n        <Text as=\"div\" size=\"sm\" tone=\"faint\">\n          <MetaLine separator=\"·\" items={[hasSeries && 'Dune #2', hasProgress && '42%']} />\n        </Text>\n      </Space>\n    </Space>\n  );\n}\n"
-        },
-        {
-          "file": "src/component/meta-line/examples/03-wrapping.tsx",
-          "slug": "wrapping",
-          "order": 3,
-          "title": "Wrapping",
-          "description": "When the line is too narrow it wraps between data, never inside one, and no separator is left at a line end or leading the next line.",
-          "code": "import { MetaLine, Text } from '@korzun/design/component';\n\nexport default function Wrapping() {\n  return (\n    <Text as=\"div\" size=\"sm\" tone=\"faint\">\n      <MetaLine\n        separator=\"·\"\n        items={[\n          'Frank Herbert',\n          'Dune Chronicles #3',\n          'Science fiction',\n          'Hardcover, first edition',\n          '612 pages',\n          'Added 12 March 2026',\n          'Last read on a Kindle Scribe',\n          'Finished in 9 days',\n          'Rated four stars',\n          'Lent to a friend in April',\n          'Recommended by the book club',\n        ]}\n      />\n    </Text>\n  );\n}\n"
-        },
-        {
-          "file": "src/component/meta-line/examples/04-element-items.tsx",
-          "slug": "element-items",
-          "order": 4,
-          "title": "Elements as items",
-          "description": "An item can be any node, such as a `time` element or a `Tag`.",
-          "code": "import { MetaLine, Tag, Text } from '@korzun/design/component';\n\nexport default function ElementItems() {\n  return (\n    <Text as=\"div\" size=\"sm\" tone=\"faint\">\n      <MetaLine\n        separator=\"·\"\n        items={[\n          <time key=\"added\" dateTime=\"2026-03-12\">\n            12 March 2026\n          </time>,\n          'Kindle Scribe',\n          <Tag key=\"sync\" size=\"sm\" tone=\"success\">\n            Synced\n          </Tag>,\n        ]}\n      />\n    </Text>\n  );\n}\n"
-        },
-        {
-          "file": "src/component/meta-line/examples/05-labelled-pairs.tsx",
-          "slug": "labelled-pairs",
-          "order": 5,
-          "title": "Labelled pairs",
-          "description": "A card describing one record: `{ label, value }` items with no `separator` are spaced by gaps, each label faint and capitalized by CSS (“cover size” shows as “Cover Size”). A value can be any node, such as a `Tag`. A pair whose value is `undefined` is skipped, so “Last sync” appears only once there is one.",
-          "code": "import { Card, MetaLine, Tag, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function LabelledPairs() {\n  const [lastSync, setLastSync] = useState<string | undefined>(undefined);\n  return (\n    <Card\n      title=\"Kindle Scribe\"\n      headerAction={\n        <Button type=\"link\" onClick={() => setLastSync(lastSync ? undefined : '12 March 2026')}>\n          {lastSync ? 'Forget sync' : 'Sync now'}\n        </Button>\n      }\n    >\n      <Text as=\"div\" size=\"sm\">\n        <MetaLine\n          items={[\n            { label: 'slug', value: 'my-kindle' },\n            { label: 'cover size', value: '1860×2480' },\n            { label: 'last sync', value: lastSync },\n            {\n              label: 'status',\n              value: (\n                <Tag size=\"sm\" tone=\"success\">\n                  Active\n                </Tag>\n              ),\n            },\n          ]}\n        />\n      </Text>\n    </Card>\n  );\n}\n"
-        },
-        {
-          "file": "src/component/meta-line/examples/06-separator-choices.tsx",
-          "slug": "separator-choices",
-          "order": 6,
-          "title": "Separator choices",
-          "description": "`separator` takes any one character, drawn between items by CSS. Pairs take a separator too.",
-          "code": "import { MetaLine, Space, Text } from '@korzun/design/component';\n\nconst data = ['Frank Herbert', 'Dune #3', '42%'];\n\nexport default function SeparatorChoices() {\n  return (\n    <Text as=\"div\" size=\"sm\" tone=\"muted\">\n      <Space direction=\"vertical\" gap=\"sm\">\n        <MetaLine separator=\"·\" items={data} />\n        <MetaLine separator=\"|\" items={data} />\n        <MetaLine separator=\"/\" items={data} />\n        <MetaLine\n          separator=\"·\"\n          items={[\n            { label: 'format', value: 'EPUB' },\n            { label: 'size', value: '2.1 MB' },\n          ]}\n        />\n      </Space>\n    </Text>\n  );\n}\n"
-        }
-      ],
-      "preview": {
-        "file": "src/component/meta-line/examples/preview.tsx",
-        "slug": "preview",
-        "order": 0,
-        "title": "Preview",
-        "description": "",
-        "code": "import { MetaLine, Space, Text } from '@korzun/design/component';\n\nexport default function Preview() {\n  return (\n    <Space direction=\"vertical\" gap=\"sm\">\n      <Text as=\"div\" tone=\"faint\">\n        <MetaLine separator=\"·\" items={['Frank Herbert', 'Dune #3', '42%']} />\n      </Text>\n      <Text as=\"div\" size=\"sm\">\n        <MetaLine\n          items={[\n            { label: 'format', value: 'EPUB' },\n            { label: 'size', value: '2.1 MB' },\n          ]}\n        />\n      </Text>\n    </Space>\n  );\n}\n"
-      },
-      "tables": [
-        {
-          "name": "MetaLineProps",
-          "kind": "props",
-          "rows": [
-            {
-              "name": "className",
-              "type": "string",
-              "required": false,
-              "description": "On the outer element. The font size and colour set here reach every item, and the separators scale with it. Override with `'&&'` specificity, never `!important`."
-            },
-            {
-              "name": "items",
-              "type": "MetaLineItem[]",
-              "required": true,
-              "description": "The data, in order: nodes and `{ label, value }` pairs, mixed freely. `null`, `undefined` and `false` items (and pairs with such a value) are skipped, and nothing renders when every item is. `''` and `0` are kept, so filter them yourself."
-            },
-            {
-              "name": "separator",
-              "type": "string",
-              "required": false,
-              "description": "One character (one grapheme) drawn between items (`'·'`, `'|'`, `'/'`). It never dangles at a line break, works in right-to-left text, and is not read by screen readers. Unset or `''`: items are spaced by gaps instead. A longer string overflows its one-character cell and overlaps the next item; in development it logs a console warning once."
-            }
-          ]
-        },
-        {
-          "name": "MetaLinePair",
-          "kind": "object",
-          "rows": [
-            {
-              "name": "label",
-              "type": "string",
-              "required": true,
-              "description": "Shown faint and capitalized by CSS: `'cover fit'` displays as “Cover Fit”."
-            },
-            {
-              "name": "value",
-              "type": "ReactNode",
-              "required": true,
-              "description": "The value. When it is `null`, `undefined` or `false` the whole pair is skipped; `''` and `0` are kept."
-            }
-          ],
-          "description": "A labelled datum: a faint, CSS-capitalized label followed by its value."
-        },
-        {
-          "name": "MetaLineItem",
-          "kind": "alias",
-          "rows": [],
-          "text": "ReactNode | MetaLinePair",
-          "description": "One datum: any node, or a labelled pair."
-        }
-      ],
-      "tokens": [
-        {
-          "path": "color.text.faint",
-          "kind": "color",
-          "light": "#9ca3af",
-          "dark": "#6E7480"
-        },
-        {
-          "path": "color.text.muted",
-          "kind": "color",
-          "light": "#6E6E6E",
-          "dark": "#9CA1AB"
-        },
-        {
-          "path": "space.lg",
-          "kind": "value",
-          "light": "0.625rem",
-          "dark": "0.625rem"
-        },
-        {
-          "path": "space.sm",
-          "kind": "value",
-          "light": "0.375rem",
-          "dark": "0.375rem"
-        }
-      ],
-      "changelog": [
-        {
-          "version": "0.7.0",
-          "date": "2026-11-26",
-          "tags": [
-            "MetaLine"
-          ],
-          "text": "`separator=\"\"` now counts as unset (gaps, no empty cells); a separator longer than one character logs a development-only console warning once, since it overflows its cell; the separator clip uses logical properties, so right-to-left lines clip and place the separator correctly."
-        },
-        {
-          "version": "0.7.0",
-          "date": "2026-11-26",
-          "tags": [
-            "MetaLine"
-          ],
-          "text": "**Breaking:** without `separator` the items are spaced by gaps (`space.lg`, lines `space.sm`), not dots; pass `separator=\"·\"` for the old look. `separator` takes any one character, drawn by CSS between items. Items can now be labelled pairs, `{ label, value }`, shown with a faint capitalized label, mixed with plain items; a pair whose value is `null`, `undefined` or `false` is skipped. New `MetaLineItem` and `MetaLinePair` types. MetaLine replaces `MetadataList`."
-        },
-        {
-          "version": "0.7.0",
-          "date": "2026-11-26",
-          "tags": [
-            "MetaLine"
-          ],
-          "text": "**Breaking:** `MetadataList` (and its `Metadata` and `MetadataListProps` types) is removed; use `MetaLine` with `{ label, value }` items and no `separator` for its gapped, labelled look, wrapped in `Text size=\"sm\"` for its size (MetaLine inherits font size and colour; MetadataList set `fontSize.sm` and `text.primary`). Its 15rem cap on each value is gone, and a pair with an empty value is skipped instead of showing its label alone."
-        }
-      ]
-    },
-    {
-      "id": "component/table",
-      "slug": "table",
-      "entry": "@korzun/design/component",
-      "docPath": "docs/component/table.md",
-      "title": "Table",
-      "description": "A generic data table that scrolls in its own box on a wide screen and stacks each row, labelled, on a phone.",
-      "category": "Data display",
-      "values": [
-        "Table"
-      ],
-      "types": [
-        "TableColumn",
-        "TableProps"
-      ],
-      "importLine": "import { Table, type TableColumn, type TableProps } from '@korzun/design/component'",
-      "body": "A generic data table: pass `columns` and `rows` and it draws a bordered box\nwith a header row and a row per item. On a wide screen it scrolls sideways\ninside its own box when it is too wide; on a phone each row stacks, with every\nvalue labelled by its column title.\n\nUse something else for: a short list of items with actions (`CardRow`), a\nlist of name and value pairs (`MetaLine`), a layout grid (`Space`). A table is for data with the same fields in every row.\n\n## Usage\n\n### Columns and rows\n\nEach column has a `key` and a `title`. By default a cell shows the row's field\nnamed by `key`; `render(row, index)` draws it instead, for a `Tag` or a\n`Button`. A missing value (`null` or `undefined`) shows a dash; `0`, `false`\nand `''` show as themselves. Type the table with its row type\n(`<Table<Book> … />`) to check `render` and `rowKey`.\n\n### `rowKey`\n\nName the field that identifies a row (`rowKey=\"id\"`), or pass a function that\nreturns a unique string (`rowKey={(row, i) => row.isbn}`). It must be unique\nand stable, as a React key is.\n\n### Phone layout, `label` and `wide`\n\nBelow the mobile breakpoint the header is hidden for sighted users and each\nrow becomes a block: short cells share a line, each prefixed by its column\n`title` and a colon. `label` renames that prefix, and `label: false` shows the\nvalue bare (for a button). `wide: true` gives a cell the full width of the\nstacked row, for a long description. Pass `ariaLabel` to name the table for\nscreen readers.\n\n### Empty\n\nWith no rows the header stays. `empty` fills one row across all columns; omit\nit and the table shows the header only.\n\n### Scrolling and `minWidth`\n\nThe table never widens the page: it scrolls inside its box. `minWidth`\n(`'40rem'`) keeps columns readable by making the table that wide on a wide\nscreen before it scrolls. A phone ignores it, because rows stack there.\n`width` on a column sets its heading's width, `nowrap` keeps a value on one\nline and `align: 'end'` right-aligns numbers.\n\n### Corners\n\nThe box's corners follow where it sits: `radius.lg` on the page, `md` in a\nCard, `sm` deeper, and a control in a cell sits one level deeper still. See\n[corners](../corners.md).\n\n## Do / don't\n\n- Do use one table per dataset, with the same fields in every row.\n- Do right-align numeric columns with `align: 'end'`.\n- Don't use a table for layout; use `Space`.",
-      "examples": [
-        {
-          "file": "src/component/table/examples/01-basic.tsx",
-          "slug": "basic",
-          "order": 1,
-          "title": "Basic",
-          "description": "Columns name a field of each row; `rowKey` names the field that identifies a row. Values show as text, and a missing one shows a dash.",
-          "code": "import { Table } from '@korzun/design/component';\n\nconst books = [\n  { id: 1, title: 'Middlemarch', author: 'George Eliot', year: 1871 },\n  { id: 2, title: 'Persuasion', author: 'Jane Austen', year: 1817 },\n  { id: 3, title: 'Villette', author: 'Charlotte Brontë', year: 1853 },\n  { id: 4, title: 'Anonymous pamphlet', author: null, year: 1790 },\n];\n\nexport default function Basic() {\n  return (\n    <Table\n      ariaLabel=\"Books\"\n      rowKey=\"id\"\n      rows={books}\n      columns={[\n        { key: 'title', title: 'Title' },\n        { key: 'author', title: 'Author' },\n        { key: 'year', title: 'Year' },\n      ]}\n    />\n  );\n}\n"
-        },
-        {
-          "file": "src/component/table/examples/02-custom-cells.tsx",
-          "slug": "custom-cells",
-          "order": 2,
-          "title": "Custom cells",
-          "description": "`render` draws a cell from its row. A `Tag` shows a status, and a link `Button` in a cell sits one surface level deeper than the table, so its corners step down.",
-          "code": "import { Table, Tag } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\n\ntype Book = { id: number; title: string; status: 'reading' | 'finished' | 'unread' };\n\nconst books: Book[] = [\n  { id: 1, title: 'Middlemarch', status: 'reading' },\n  { id: 2, title: 'Persuasion', status: 'finished' },\n  { id: 3, title: 'Villette', status: 'unread' },\n];\n\nexport default function CustomCells() {\n  return (\n    <Table<Book>\n      ariaLabel=\"Reading list\"\n      rowKey=\"id\"\n      rows={books}\n      columns={[\n        { key: 'title', title: 'Title', wide: true },\n        {\n          key: 'status',\n          title: 'Status',\n          render: (book) => (\n            <Tag tone={book.status === 'finished' ? 'success' : 'neutral'} size=\"sm\">\n              {book.status}\n            </Tag>\n          ),\n        },\n        {\n          key: 'open',\n          title: 'Open',\n          label: false,\n          render: (book) => (\n            <Button type=\"link\" onClick={() => undefined}>\n              {`Open ${book.title}`}\n            </Button>\n          ),\n        },\n      ]}\n    />\n  );\n}\n"
-        },
-        {
-          "file": "src/component/table/examples/03-empty.tsx",
-          "slug": "empty",
-          "order": 3,
-          "title": "Empty",
-          "description": "With no rows the header stays and `empty` fills one full-width row. Without `empty` the table shows its header only.",
-          "code": "import { Table } from '@korzun/design/component';\n\ntype Book = { id: number; title: string; author: string };\n\nexport default function Empty() {\n  return (\n    <Table<Book>\n      ariaLabel=\"Books\"\n      rowKey=\"id\"\n      rows={[]}\n      empty=\"No books yet. Upload an EPUB to start your library.\"\n      columns={[\n        { key: 'title', title: 'Title' },\n        { key: 'author', title: 'Author' },\n      ]}\n    />\n  );\n}\n"
-        },
-        {
-          "file": "src/component/table/examples/04-in-a-card.tsx",
-          "slug": "in-a-card",
-          "order": 4,
-          "title": "In a card",
-          "description": "A table inside a `Card` sits one level deeper than one on the page, so its corners are `md` (8px) instead of `lg` (16px).",
-          "code": "import { Card, Table } from '@korzun/design/component';\n\nconst books = [\n  { id: 1, title: 'Middlemarch', author: 'George Eliot' },\n  { id: 2, title: 'Persuasion', author: 'Jane Austen' },\n];\n\nexport default function InACard() {\n  return (\n    <Card title=\"Recently added\">\n      <Table\n        ariaLabel=\"Recently added\"\n        rowKey=\"id\"\n        rows={books}\n        columns={[\n          { key: 'title', title: 'Title' },\n          { key: 'author', title: 'Author' },\n        ]}\n      />\n    </Card>\n  );\n}\n"
-        },
-        {
-          "file": "src/component/table/examples/05-numbers.tsx",
-          "slug": "numbers",
-          "order": 5,
-          "title": "Numbers",
-          "description": "`align: 'end'` right-aligns a numeric column, header included, so digits line up. `nowrap` keeps a value on one line.",
-          "code": "import { Table } from '@korzun/design/component';\n\nconst books = [\n  { id: 1, title: 'Middlemarch', pages: 880, chapters: 86 },\n  { id: 2, title: 'Persuasion', pages: 249, chapters: 24 },\n  { id: 3, title: 'Villette', pages: 560, chapters: 42 },\n];\n\nexport default function Numbers() {\n  return (\n    <Table\n      ariaLabel=\"Book lengths\"\n      rowKey=\"id\"\n      rows={books}\n      columns={[\n        { key: 'title', title: 'Title', wide: true },\n        { key: 'pages', title: 'Pages', align: 'end', nowrap: true },\n        { key: 'chapters', title: 'Chapters', align: 'end', nowrap: true },\n      ]}\n    />\n  );\n}\n"
-        }
-      ],
-      "preview": {
-        "file": "src/component/table/examples/preview.tsx",
-        "slug": "preview",
-        "order": 0,
-        "title": "Preview",
-        "description": "",
-        "code": "import { Table } from '@korzun/design/component';\n\nconst books = [\n  { id: 1, title: 'Middlemarch', author: 'George Eliot', year: 1871 },\n  { id: 2, title: 'Persuasion', author: 'Jane Austen', year: 1817 },\n  { id: 3, title: 'Villette', author: 'Charlotte Brontë', year: 1853 },\n];\n\nexport default function Preview() {\n  return (\n    <div style={{ width: 320 }}>\n      <Table\n        ariaLabel=\"Books\"\n        rowKey=\"id\"\n        rows={books}\n        columns={[\n          { key: 'title', title: 'Title' },\n          { key: 'author', title: 'Author' },\n          { key: 'year', title: 'Year' },\n        ]}\n      />\n    </div>\n  );\n}\n"
-      },
-      "tables": [
-        {
-          "name": "TableProps",
-          "kind": "props",
-          "rows": [
-            {
-              "name": "ariaLabel",
-              "type": "string",
-              "required": false,
-              "description": "The table's accessible name, announced by screen readers."
-            },
-            {
-              "name": "className",
-              "type": "string",
-              "required": false,
-              "description": "Extra class on the scrolling box, merged after the component's own."
-            },
-            {
-              "name": "columns",
-              "type": "TableColumn<Row>[]",
-              "required": true,
-              "description": "The columns, in order."
-            },
-            {
-              "name": "empty",
-              "type": "ReactNode",
-              "required": false,
-              "description": "Shown in one full-width row when `rows` is empty. Without it the table shows its header only."
-            },
-            {
-              "name": "minWidth",
-              "type": "string",
-              "required": false,
-              "description": "A CSS minimum width for the table on a wide screen (`'40rem'`); it scrolls inside its box when narrower. A phone ignores it."
-            },
-            {
-              "name": "rowKey",
-              "type": "keyof Row | ((row: Row, index: number) => string)",
-              "required": true,
-              "description": "What identifies a row: one of its fields, or a function returning a unique string."
-            },
-            {
-              "name": "rows",
-              "type": "readonly Row[]",
-              "required": true,
-              "description": "The data, one row each."
-            }
-          ]
-        },
-        {
-          "name": "TableColumn",
-          "kind": "object",
-          "rows": [
-            {
-              "name": "align",
-              "type": "'start' | 'end'",
-              "required": false,
-              "description": "Where the cell's content sits; `'end'` right-aligns numbers. Defaults to `'start'`."
-            },
-            {
-              "name": "key",
-              "type": "string",
-              "required": true,
-              "description": "The field of the row this column shows by default, and the column's identity."
-            },
-            {
-              "name": "label",
-              "type": "string | false",
-              "required": false,
-              "description": "What names a value on a phone, where the headings are hidden. Defaults to `title`; `false` shows the value bare."
-            },
-            {
-              "name": "nowrap",
-              "type": "boolean",
-              "required": false,
-              "description": "Keeps the cell's text on one line."
-            },
-            {
-              "name": "render",
-              "type": "(row: Row, index: number) => ReactNode",
-              "required": false,
-              "description": "Draws the cell instead of the row's `key` field. Receives the row and its index."
-            },
-            {
-              "name": "title",
-              "type": "string",
-              "required": true,
-              "description": "The column heading. On a phone it also labels each value, unless `label` says otherwise."
-            },
-            {
-              "name": "wide",
-              "type": "boolean",
-              "required": false,
-              "description": "Takes a stacked row's full width on a phone, for a long description."
-            },
-            {
-              "name": "width",
-              "type": "string",
-              "required": false,
-              "description": "A CSS width for the heading cell (`'35%'`, `'8rem'`), on a wide screen."
-            }
-          ]
-        }
-      ],
-      "tokens": [
-        {
-          "path": "breakpoint.mobile",
-          "kind": "value",
-          "light": "@media (max-width: 640px)",
-          "dark": "@media (max-width: 640px)"
-        },
-        {
-          "path": "breakpoint.normal",
-          "kind": "value",
-          "light": "@media (min-width: 641px)",
-          "dark": "@media (min-width: 641px)"
-        },
-        {
-          "path": "color.bg.card",
-          "kind": "color",
-          "light": "#FCFCFC",
-          "dark": "#1A1B1E"
-        },
-        {
-          "path": "color.bg.cardHeader",
-          "kind": "color",
-          "light": "#EEEEEE",
-          "dark": "#232427"
-        },
-        {
-          "path": "color.border.default",
-          "kind": "color",
-          "light": "#D9D9D9",
-          "dark": "#3A3B40"
-        },
-        {
-          "path": "color.border.light",
-          "kind": "color",
-          "light": "#e5e7eb",
-          "dark": "#333439"
-        },
-        {
-          "path": "color.text.faint",
-          "kind": "color",
-          "light": "#9ca3af",
-          "dark": "#6E7480"
-        },
-        {
-          "path": "color.text.muted",
-          "kind": "color",
-          "light": "#6E6E6E",
-          "dark": "#9CA1AB"
-        },
-        {
-          "path": "color.text.secondary",
-          "kind": "color",
-          "light": "#5A6375",
-          "dark": "#C8CBD2"
-        },
-        {
-          "path": "fontSize.md",
-          "kind": "value",
-          "light": "0.875rem",
-          "dark": "0.875rem"
-        },
-        {
-          "path": "fontWeight.semibold",
-          "kind": "value",
-          "light": "600",
-          "dark": "600"
-        },
-        {
-          "path": "lineHeight.body",
-          "kind": "value",
-          "light": "1.3",
-          "dark": "1.3"
-        },
-        {
-          "path": "radius.lg",
-          "kind": "value",
-          "light": "16px",
-          "dark": "16px"
-        },
-        {
-          "path": "radius.md",
-          "kind": "value",
-          "light": "8px",
-          "dark": "8px"
-        },
-        {
-          "path": "radius.sm",
-          "kind": "value",
-          "light": "4px",
-          "dark": "4px"
-        },
-        {
-          "path": "space.lg",
-          "kind": "value",
-          "light": "0.625rem",
-          "dark": "0.625rem"
-        },
-        {
-          "path": "space.sm",
-          "kind": "value",
-          "light": "0.375rem",
-          "dark": "0.375rem"
-        },
-        {
-          "path": "space.xl",
-          "kind": "value",
-          "light": "0.75rem",
-          "dark": "0.75rem"
-        },
-        {
-          "path": "space.xs",
-          "kind": "value",
-          "light": "0.25rem",
-          "dark": "0.25rem"
-        }
-      ],
-      "changelog": [
-        {
-          "version": "0.7.0",
-          "date": "2026-11-26",
-          "tags": [
-            "Table"
-          ],
-          "text": "New `Table` (component): a generic data table. `columns` name a row field or `render` a cell, `rowKey` is a field name or a function, and `empty` shows one full-width row when there are no rows. It scrolls inside its own bordered box on a wide screen (`minWidth` sets a minimum width there only), and on a phone each row stacks with every value labelled by its column title (`label`, `wide`). `nowrap`, `align: 'end'` and `width` shape the cells. Its corners follow surface depth, and a control in a cell sits one level deeper. Falsy values (`0`, `false`, `''`) show as themselves; only `null` and `undefined` show a dash."
-        }
-      ]
-    },
-    {
-      "id": "component/tag",
-      "slug": "tag",
-      "entry": "@korzun/design/component",
-      "docPath": "docs/component/tag.md",
-      "title": "Tag",
+      "docPath": "docs/component/chip.md",
+      "title": "Chip",
       "description": "A small coloured chip for a category, status or value, optionally clickable.",
       "category": "Data display",
       "values": [
-        "Tag"
+        "Chip"
       ],
       "types": [
-        "TagProps",
-        "TagTone"
+        "ChipProps",
+        "ChipTone"
       ],
-      "importLine": "import { Tag, type TagProps, type TagTone } from '@korzun/design/component'",
-      "body": "A small coloured chip (an inline `<span>`) for a category, status, or value:\nan author, a subject, \"Read only\". Optionally clickable, in which case it\nbecomes `role=\"button\"` with `tabIndex=0` and Enter/Space.\n\nUse something else for: an editable list of chips (`ChipsInput` in\n`@korzun/design/control`), an action (`Button`), a count on a nav tab\n(`NavItem.badge`).\n\n## Usage\n\n### Choosing a tone\n\n`TagTone` is `keyof Theme['color']['chip']`. There are two groups: label tones\nare **domain names** (what kind of thing the tag names) and status tones are\n**meanings** (what state it reports). Neither group is a set of colour names:\nnever pick a tone for its colour. Pick by what the tag *is*:\n\nStatus tones report a state:\n\n| Tone | Use for |\n|---|---|\n| `success` | Something went well (Published, Paid). |\n| `warning` | Needs attention soon (Overdue, Expiring). |\n| `danger` | Something failed or is blocked (Failed, Rejected). |\n| `info` | Neutral news (Scheduled, New). |\n| `neutral` | A state with no category (\"no change\"): quiet grey. |\n\nLabel tones name a kind of thing:\n\n| Tone | Use for |\n|---|---|\n| `status` | Legacy; kept for Bookplate's existing chips. Don't pick it for new state tags. |\n| `author` | A person who wrote something. |\n| `series` | A series name. |\n| `subject` | A subject / genre / keyword. The default. |\n| `book` | A book or title. |\n| `entryType` | The kind of an entry or record. |\n| `user` | An app user / account. |\n| `rating` | A rating value. |\n\nNote the name clash: `status` is a legacy label tone despite its name; for a state use `success`/`warning`/`danger`/`info`, or `neutral` when it carries no meaning.\n\nEach tone has its own `text`, `bg`, and `border` in both light and dark themes.\nA consumer's theme can't add tones; the list is fixed by the `Theme` type.\n\n### Styling\n\nNo `className`, no `ariaLabel`.\n\n### Corners\n\nAt both sizes the corners follow surface depth: `md` in a Card or modal, `lg`\ndirectly on a `Page`, `sm` one more level in (a `CardRow` in a Card, a Popover);\nsee [corners](../corners.md).\n\n## Do / don't\n\n- Do choose `tone` by meaning, so the same kind of thing is the same colour\n  everywhere.\n- Do use `tone=\"warning\"` for \"Overdue\".\n- Do use `size=\"sm\"` inside text rows and lists.\n- Don't use `neutral` just to make a tag grey when it has a category.\n- Don't use `subject` or `author` to mean warning or success.\n- Don't use `info` to look like a link (it shares a hue with links; use\n  `Button type=\"link\"` for actions).\n- Don't use `status` for a new state tag; it is a legacy label tone.\n- Don't nest a clickable Tag inside another clickable element (Button, a\n  clickable Card); both would fire.",
+      "importLine": "import { Chip, type ChipProps, type ChipTone } from '@korzun/design/component'",
+      "body": "A small coloured chip (an inline `<span>`) for a category, status, or value:\nan author, a subject, \"Read only\". Optionally clickable, in which case it\nbecomes `role=\"button\"` with `tabIndex=0` and Enter/Space.\n\nUse something else for: an editable list of chips (`ChipsInput` in\n`@korzun/design/control`), an action (`Button`), a count on a nav tab\n(`NavItem.badge`).\n\n## Usage\n\n### Choosing a tone\n\n`ChipTone` is `keyof Theme['color']['chip']`. There are two groups: label tones\nare **domain names** (what kind of thing the tag names) and status tones are\n**meanings** (what state it reports). Neither group is a set of colour names:\nnever pick a tone for its colour. Pick by what the tag *is*:\n\nStatus tones report a state:\n\n| Tone | Use for |\n|---|---|\n| `success` | Something went well (Published, Paid). |\n| `warning` | Needs attention soon (Overdue, Expiring). |\n| `danger` | Something failed or is blocked (Failed, Rejected). |\n| `info` | Neutral news (Scheduled, New). |\n| `neutral` | A state with no category (\"no change\"): quiet grey. |\n\nLabel tones name a kind of thing:\n\n| Tone | Use for |\n|---|---|\n| `status` | Legacy; kept for Bookplate's existing chips. Don't pick it for new state tags. |\n| `author` | A person who wrote something. |\n| `series` | A series name. |\n| `subject` | A subject / genre / keyword. The default. |\n| `book` | A book or title. |\n| `entryType` | The kind of an entry or record. |\n| `user` | An app user / account. |\n| `rating` | A rating value. |\n\nNote the name clash: `status` is a legacy label tone despite its name; for a state use `success`/`warning`/`danger`/`info`, or `neutral` when it carries no meaning.\n\nEach tone has its own `text`, `bg`, and `border` in both light and dark themes.\nA consumer's theme can't add tones; the list is fixed by the `Theme` type.\n\n### Styling\n\nNo `className`, no `ariaLabel`.\n\n### Corners\n\nAt both sizes the corners follow surface depth: `md` in a Card or modal, `lg`\ndirectly on a `Page`, `sm` one more level in (a `CardRow` in a Card, a Popover);\nsee [corners](../corners.md).\n\n## Do / don't\n\n- Do choose `tone` by meaning, so the same kind of thing is the same colour\n  everywhere.\n- Do use `tone=\"warning\"` for \"Overdue\".\n- Do use `size=\"sm\"` inside text rows and lists.\n- Don't use `neutral` just to make a tag grey when it has a category.\n- Don't use `subject` or `author` to mean warning or success.\n- Don't use `info` to look like a link (it shares a hue with links; use\n  `Button type=\"link\"` for actions).\n- Don't use `status` for a new state tag; it is a legacy label tone.\n- Don't nest a clickable Chip inside another clickable element (Button, a\n  clickable Card); both would fire.",
       "examples": [
         {
-          "file": "src/component/tag/examples/01-basic.tsx",
+          "file": "src/component/chip/examples/01-basic.tsx",
           "slug": "basic",
           "order": 1,
           "title": "Basic",
           "description": "Chips beside a title: the label is the child. An author chip names a person; a subject or keyword chip needs no `tone`.",
-          "code": "import { Space, Tag, Text } from '@korzun/design/component';\n\nexport default function Basic() {\n  return (\n    <Space>\n      <Text weight=\"semibold\">Middlemarch</Text>\n      <Tag tone=\"author\">George Eliot</Tag>\n      <Tag>Fiction</Tag>\n    </Space>\n  );\n}\n"
+          "code": "import { Space, Chip, Text } from '@korzun/design/component';\n\nexport default function Basic() {\n  return (\n    <Space>\n      <Text weight=\"semibold\">Middlemarch</Text>\n      <Chip tone=\"author\">George Eliot</Chip>\n      <Chip>Fiction</Chip>\n    </Space>\n  );\n}\n"
         },
         {
-          "file": "src/component/tag/examples/02-status-tones.tsx",
+          "file": "src/component/chip/examples/02-status-tones.tsx",
           "slug": "status-tones",
           "order": 2,
           "title": "Status tones",
           "description": "Status tones report a state: `success`, `warning`, `danger`, `info`, and `neutral` for a state with no meaning to signal. Each tag is labelled with its tone.",
-          "code": "import { Tag, Text } from '@korzun/design/component';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\nimport { Fragment } from 'react';\n\n// Two columns, so every caption starts at the same x whatever its tag's width.\nconst useStyles = createUseStyles((theme: Theme) => ({\n  grid: {\n    display: 'grid',\n    gridTemplateColumns: 'max-content 1fr',\n    alignItems: 'center',\n    gap: `${theme.space.sm} ${theme.space.lg}`,\n  },\n}));\n\nconst TONES = [\n  { tone: 'success', label: 'Published', note: 'something went well' },\n  { tone: 'warning', label: 'Overdue', note: 'needs attention soon' },\n  { tone: 'danger', label: 'Failed', note: 'something failed or is blocked' },\n  { tone: 'info', label: 'Scheduled', note: 'neutral news' },\n  { tone: 'neutral', label: 'No change', note: 'a state with no category' },\n] as const;\n\nexport default function StatusTones() {\n  const styles = useStyles();\n  return (\n    <div className={styles.grid}>\n      {TONES.map(({ tone, label, note }) => (\n        <Fragment key={tone}>\n          <Tag tone={tone}>{label}</Tag>\n          <Text tone=\"muted\">\n            {tone}: {note}\n          </Text>\n        </Fragment>\n      ))}\n    </div>\n  );\n}\n"
+          "code": "import { Chip, Text } from '@korzun/design/component';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\nimport { Fragment } from 'react';\n\n// Two columns, so every caption starts at the same x whatever its tag's width.\nconst useStyles = createUseStyles((theme: Theme) => ({\n  grid: {\n    display: 'grid',\n    gridTemplateColumns: 'max-content 1fr',\n    alignItems: 'center',\n    gap: `${theme.space.sm} ${theme.space.lg}`,\n  },\n}));\n\nconst TONES = [\n  { tone: 'success', label: 'Published', note: 'something went well' },\n  { tone: 'warning', label: 'Overdue', note: 'needs attention soon' },\n  { tone: 'danger', label: 'Failed', note: 'something failed or is blocked' },\n  { tone: 'info', label: 'Scheduled', note: 'neutral news' },\n  { tone: 'neutral', label: 'No change', note: 'a state with no category' },\n] as const;\n\nexport default function StatusTones() {\n  const styles = useStyles();\n  return (\n    <div className={styles.grid}>\n      {TONES.map(({ tone, label, note }) => (\n        <Fragment key={tone}>\n          <Chip tone={tone}>{label}</Chip>\n          <Text tone=\"muted\">\n            {tone}: {note}\n          </Text>\n        </Fragment>\n      ))}\n    </div>\n  );\n}\n"
         },
         {
-          "file": "src/component/tag/examples/03-label-tones.tsx",
+          "file": "src/component/chip/examples/03-label-tones.tsx",
           "slug": "label-tones",
           "order": 3,
           "title": "Label tones",
           "description": "Label tones name a kind of thing, so the same kind of thing is the same colour everywhere. `status` is a legacy label tone despite its name: it is listed for completeness, and a new state tag uses a status tone. Each tag is labelled with its tone.",
-          "code": "import { Tag, Text } from '@korzun/design/component';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\nimport { Fragment } from 'react';\n\n// Two columns, so every caption starts at the same x whatever its tag's width.\nconst useStyles = createUseStyles((theme: Theme) => ({\n  grid: {\n    display: 'grid',\n    gridTemplateColumns: 'max-content 1fr',\n    alignItems: 'center',\n    gap: `${theme.space.sm} ${theme.space.lg}`,\n  },\n}));\n\nconst TONES = [\n  { tone: 'author', label: 'George Eliot', note: 'a person who wrote something' },\n  { tone: 'series', label: 'Discworld', note: 'a series name' },\n  { tone: 'subject', label: 'Fiction', note: 'a subject, genre or keyword' },\n  { tone: 'book', label: 'Middlemarch', note: 'a book or title' },\n  { tone: 'entryType', label: 'Essay', note: 'the kind of an entry or record' },\n  { tone: 'user', label: 'simon', note: 'an app user or account' },\n  { tone: 'rating', label: '4.5', note: 'a rating value' },\n  { tone: 'status', label: 'Legacy', note: 'legacy label tone' },\n] as const;\n\nexport default function LabelTones() {\n  const styles = useStyles();\n  return (\n    <div className={styles.grid}>\n      {TONES.map(({ tone, label, note }) => (\n        <Fragment key={tone}>\n          <Tag tone={tone}>{label}</Tag>\n          <Text tone=\"muted\">\n            {tone}: {note}\n          </Text>\n        </Fragment>\n      ))}\n    </div>\n  );\n}\n"
+          "code": "import { Chip, Text } from '@korzun/design/component';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\nimport { Fragment } from 'react';\n\n// Two columns, so every caption starts at the same x whatever its tag's width.\nconst useStyles = createUseStyles((theme: Theme) => ({\n  grid: {\n    display: 'grid',\n    gridTemplateColumns: 'max-content 1fr',\n    alignItems: 'center',\n    gap: `${theme.space.sm} ${theme.space.lg}`,\n  },\n}));\n\nconst TONES = [\n  { tone: 'author', label: 'George Eliot', note: 'a person who wrote something' },\n  { tone: 'series', label: 'Discworld', note: 'a series name' },\n  { tone: 'subject', label: 'Fiction', note: 'a subject, genre or keyword' },\n  { tone: 'book', label: 'Middlemarch', note: 'a book or title' },\n  { tone: 'entryType', label: 'Essay', note: 'the kind of an entry or record' },\n  { tone: 'user', label: 'simon', note: 'an app user or account' },\n  { tone: 'rating', label: '4.5', note: 'a rating value' },\n  { tone: 'status', label: 'Legacy', note: 'legacy label tone' },\n] as const;\n\nexport default function LabelTones() {\n  const styles = useStyles();\n  return (\n    <div className={styles.grid}>\n      {TONES.map(({ tone, label, note }) => (\n        <Fragment key={tone}>\n          <Chip tone={tone}>{label}</Chip>\n          <Text tone=\"muted\">\n            {tone}: {note}\n          </Text>\n        </Fragment>\n      ))}\n    </div>\n  );\n}\n"
         },
         {
-          "file": "src/component/tag/examples/04-sizes.tsx",
+          "file": "src/component/chip/examples/04-sizes.tsx",
           "slug": "sizes",
           "order": 4,
           "title": "Sizes",
           "description": "`md` is the regular chip and `sm` the compact one. `sm` sits inside a line of text without making the row taller.",
-          "code": "import { Space, Tag, Text } from '@korzun/design/component';\n\nexport default function Sizes() {\n  return (\n    <Space direction=\"vertical\" gap=\"sm\" align=\"start\">\n      <Space>\n        <Tag size=\"md\">Medium</Tag>\n        <Text tone=\"muted\">md</Text>\n      </Space>\n      <Space>\n        <Tag size=\"sm\">Small</Tag>\n        <Text tone=\"muted\">sm</Text>\n      </Space>\n      <Text>\n        Chapter 12 <Tag size=\"sm\">Fiction</Tag> <Tag size=\"sm\">Classic</Tag> in a line of text\n      </Text>\n    </Space>\n  );\n}\n"
+          "code": "import { Space, Chip, Text } from '@korzun/design/component';\n\nexport default function Sizes() {\n  return (\n    <Space direction=\"vertical\" gap=\"sm\" align=\"start\">\n      <Space>\n        <Chip size=\"md\">Medium</Chip>\n        <Text tone=\"muted\">md</Text>\n      </Space>\n      <Space>\n        <Chip size=\"sm\">Small</Chip>\n        <Text tone=\"muted\">sm</Text>\n      </Space>\n      <Text>\n        Chapter 12 <Chip size=\"sm\">Fiction</Chip> <Chip size=\"sm\">Classic</Chip> in a line of text\n      </Text>\n    </Space>\n  );\n}\n"
         },
         {
-          "file": "src/component/tag/examples/05-clickable.tsx",
+          "file": "src/component/chip/examples/05-clickable.tsx",
           "slug": "clickable",
           "order": 5,
           "title": "Clickable",
           "description": "`onClick` makes a tag a button: focusable, Enter and Space activate it, and hover deepens the tone. It receives no event. Here an author chip filters the list, and clearing the filter is an action, so it is a link `Button`.",
-          "code": "import { Space, Tag, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { useState } from 'react';\n\nconst authors = ['George Eliot', 'Terry Pratchett', 'Ursula K. Le Guin'];\n\nexport default function Clickable() {\n  const [author, setAuthor] = useState<string | undefined>(undefined);\n  return (\n    <Space direction=\"vertical\" gap=\"sm\" align=\"start\">\n      <Space wrap>\n        {authors.map((name) => (\n          <Tag key={name} tone=\"author\" onClick={() => setAuthor(name)}>\n            {name}\n          </Tag>\n        ))}\n        <Button type=\"link\" onClick={() => setAuthor(undefined)}>\n          Clear\n        </Button>\n      </Space>\n      <Text tone=\"muted\">Filter: {author ?? 'none'}</Text>\n    </Space>\n  );\n}\n"
+          "code": "import { Space, Chip, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { useState } from 'react';\n\nconst authors = ['George Eliot', 'Terry Pratchett', 'Ursula K. Le Guin'];\n\nexport default function Clickable() {\n  const [author, setAuthor] = useState<string | undefined>(undefined);\n  return (\n    <Space direction=\"vertical\" gap=\"sm\" align=\"start\">\n      <Space wrap>\n        {authors.map((name) => (\n          <Chip key={name} tone=\"author\" onClick={() => setAuthor(name)}>\n            {name}\n          </Chip>\n        ))}\n        <Button type=\"link\" onClick={() => setAuthor(undefined)}>\n          Clear\n        </Button>\n      </Space>\n      <Text tone=\"muted\">Filter: {author ?? 'none'}</Text>\n    </Space>\n  );\n}\n"
         },
         {
-          "file": "src/component/tag/examples/06-in-card.tsx",
+          "file": "src/component/chip/examples/06-in-card.tsx",
           "slug": "in-card",
           "order": 6,
           "title": "In a card",
           "description": "Compact `sm` chips in rows inside a `Card`. A kind of thing keeps its own tone; a state with no meaning to signal is `neutral`.",
-          "code": "import { Card, Space, Tag, Text } from '@korzun/design/component';\n\nexport default function InCard() {\n  return (\n    <Card title=\"Metadata fixes\">\n      <Space direction=\"vertical\" gap=\"sm\">\n        <Space wrap gap=\"xs\">\n          <Text>Middlemarch</Text>\n          <Tag size=\"sm\" tone=\"author\">\n            George Eliot\n          </Tag>\n          <Tag size=\"sm\">Fiction</Tag>\n          <Tag size=\"sm\">Classic</Tag>\n        </Space>\n        <Space gap=\"xs\">\n          <Text>Access</Text>\n          <Tag size=\"sm\" tone=\"neutral\">\n            Read only\n          </Tag>\n        </Space>\n      </Space>\n    </Card>\n  );\n}\n"
+          "code": "import { Card, Space, Chip, Text } from '@korzun/design/component';\n\nexport default function InCard() {\n  return (\n    <Card title=\"Metadata fixes\">\n      <Space direction=\"vertical\" gap=\"sm\">\n        <Space wrap gap=\"xs\">\n          <Text>Middlemarch</Text>\n          <Chip size=\"sm\" tone=\"author\">\n            George Eliot\n          </Chip>\n          <Chip size=\"sm\">Fiction</Chip>\n          <Chip size=\"sm\">Classic</Chip>\n        </Space>\n        <Space gap=\"xs\">\n          <Text>Access</Text>\n          <Chip size=\"sm\" tone=\"neutral\">\n            Read only\n          </Chip>\n        </Space>\n      </Space>\n    </Card>\n  );\n}\n"
         }
       ],
       "preview": {
-        "file": "src/component/tag/examples/preview.tsx",
+        "file": "src/component/chip/examples/preview.tsx",
         "slug": "preview",
         "order": 0,
         "title": "Preview",
         "description": "",
-        "code": "import { Space, Tag } from '@korzun/design/component';\n\nexport default function Preview() {\n  return (\n    <Space>\n      <Tag tone=\"success\">Published</Tag>\n      <Tag tone=\"author\">George Eliot</Tag>\n      <Tag tone=\"subject\">Fiction</Tag>\n    </Space>\n  );\n}\n"
+        "code": "import { Space, Chip } from '@korzun/design/component';\n\nexport default function Preview() {\n  return (\n    <Space>\n      <Chip tone=\"success\">Published</Chip>\n      <Chip tone=\"author\">George Eliot</Chip>\n      <Chip tone=\"subject\">Fiction</Chip>\n    </Space>\n  );\n}\n"
       },
       "tables": [
         {
-          "name": "TagProps",
+          "name": "ChipProps",
           "kind": "props",
           "rows": [
             {
@@ -8976,7 +8314,7 @@
           ]
         },
         {
-          "name": "TagTone",
+          "name": "ChipTone",
           "kind": "alias",
           "rows": [],
           "text": "'status' | 'author' | 'series' | 'subject' | 'book' | 'entryType' | 'user' | 'rating' | 'neutral' | 'success' | 'warning' | 'danger' | 'info'"
@@ -9289,13 +8627,30 @@
           "version": "0.7.0",
           "date": "2026-11-26",
           "tags": [
+            "Chip"
+          ],
+          "text": "**Breaking:** `Tag` is renamed `Chip` (`TagProps` → `ChipProps`, `TagTone` → `ChipTone`), so it shares a name with `ChipsInput` and the `color.chip` tokens it draws from. Props and look are unchanged."
+        },
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "ChipsInput",
+            "Chip"
+          ],
+          "text": "**Breaking:** `chipColor` is renamed `tone` and takes a `ChipTone`, as `Chip` does; the `ChipColor` type is removed (use `ChipTone` from `@korzun/design/component`)."
+        },
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
             "TextInput",
             "TextArea",
             "NumberInput",
             "DateTimeInput",
             "ChipsInput",
             "SegmentedControl",
-            "Tag",
+            "Chip",
             "Switch"
           ],
           "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.6.0 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px. A text field, `ChipsInput` box or field label directly on a Page also moves its text 16px in from the edge (8px elsewhere), the inset `Button` keeps, so it clears the deeper corner."
@@ -9304,7 +8659,7 @@
           "version": "0.7.0",
           "date": "2026-11-26",
           "tags": [
-            "Tag",
+            "Chip",
             "ChipsInput",
             "lightTheme",
             "darkTheme"
@@ -9315,7 +8670,7 @@
           "version": "0.1.0",
           "date": "2026-11-21",
           "tags": [
-            "Tag",
+            "Chip",
             "lightTheme",
             "darkTheme"
           ],
@@ -9325,7 +8680,7 @@
           "version": "0.0.3",
           "date": "2026-11-21",
           "tags": [
-            "Tag"
+            "Chip"
           ],
           "text": "`Tag` takes a `tone` prop that picks any `theme.color.chip` token (`status`, `author`, `series`, `subject`, `book`, `entryType`, `user`, `rating`, `neutral`) for text, background and border. It defaults to `subject`, so existing tags look the same. The clickable hover now comes from the tone too; with `subject` in light mode it matches the old amber."
         },
@@ -9333,7 +8688,7 @@
           "version": "0.0.3",
           "date": "2026-11-21",
           "tags": [
-            "Tag",
+            "Chip",
             "lightTheme",
             "darkTheme"
           ],
@@ -9343,9 +8698,672 @@
           "version": "0.0.3",
           "date": "2026-11-21",
           "tags": [
-            "Tag"
+            "Chip"
           ],
           "text": "`TagTone` type exported from the package root and `/component`."
+        }
+      ]
+    },
+    {
+      "id": "component/code-block",
+      "slug": "code-block",
+      "entry": "@korzun/design/component",
+      "docPath": "docs/component/code-block.md",
+      "title": "CodeBlock",
+      "description": "A block of code in mono type that scrolls or wraps, can show highlighted children, and can offer a Copy button.",
+      "category": "Data display",
+      "values": [
+        "CodeBlock"
+      ],
+      "types": [
+        "CodeBlockProps"
+      ],
+      "importLine": "import { CodeBlock, type CodeBlockProps } from '@korzun/design/component'",
+      "body": "A block of code in mono type on a tinted box, for a command, an import line or a\nsnippet a reader may copy. It scrolls sideways (or wraps), shows either plain\ntext or highlighted children, and can add a Copy button.\n\nUse something else for: a name or short expression inside a sentence (`Code`),\ndata in rows and columns (`Table`).\n\n## Usage\n\n### Plain and highlighted\n\nPass `code` alone for plain text. To colour it, pass highlighted spans as\n`children`: they replace what shows, and Copy still copies `code`, so keep the\ntwo the same text. Pass the inner `<code>` content (or its spans), not Shiki's whole\n`<pre>`: `CodeBlock` renders its own `pre`.\n\n### Code colours\n\n`CodeBlock` sets these CSS variables on its root from `theme.color.code`, the\nnames Shiki's css-variables theme emits with `variablePrefix: '--code-'`. A\nhighlighter that uses that theme follows the light and dark themes with no\ncolour work.\n\n| Variable | Theme token |\n| --- | --- |\n| `--code-foreground` | `color.code.foreground` |\n| `--code-token-keyword` | `color.code.keyword` |\n| `--code-token-string` | `color.code.string` |\n| `--code-token-string-expression` | `color.code.string` |\n| `--code-token-function` | `color.code.function` |\n| `--code-token-parameter` | `color.code.parameter` |\n| `--code-token-constant` | `color.code.constant` |\n| `--code-token-punctuation` | `color.code.punctuation` |\n| `--code-token-comment` | `color.code.comment` |\n| `--code-token-link` | `color.code.link` |\n\nShiki's other variables (`--code-background`, `--code-token-inserted`,\n`--code-token-deleted`, `--code-token-changed`, `--code-ansi-*`) are not set,\nso those tokens fall back to the inherited colour. For highlighted HTML rendered\noutside `CodeBlock`, such as markdown, spread `theme.recipe.codeColours` on its\nwrapper to set the same ten variables.\n\n### Copy\n\n`copyable` adds a text button that reads Copy. Pressed, it writes `code` to the\nclipboard and reads Copied with a check for 2 seconds; pressing again restarts\nthe 2 seconds. Where there is no clipboard (an insecure page) or the write is\nrefused, it reads Could not copy for 2 seconds and throws nothing. A visually\nhidden status region announces the result. `copyLabel` is the idle button's\naccessible name.\n\n### Scrolling and wrapping\n\nA long line scrolls inside the box and never widens the page; the right edge\nfades while more is hidden, since phones hide scrollbars. `wrap` breaks long\nlines instead.\n\n### Styling\n\nTakes `className` on the root, merged last. The look is fixed: it is the\n`theme.recipe.codeBlock` look, drawn by the component.\n\n### Corners\n\nThe box's corners follow where it sits: `lg` on a `Page`, `md` in a Card or\n`Surface`, `sm` two levels in. The Copy button sits one level deeper. In dark\nmode directly on a `Page` a 1px `border.default` edge separates the box from the\npage. See [corners](../corners.md).\n\n## Do / don't\n\n- Do pass the same text as `code` and as the highlighted `children`.\n- Don't use it inline in a sentence; use `Code`.",
+      "examples": [
+        {
+          "file": "src/component/code-block/examples/01-basic.tsx",
+          "slug": "basic",
+          "order": 1,
+          "title": "Basic",
+          "description": "Plain code in a mono box. A line longer than the box scrolls sideways inside it, with a fade at the edge while more is hidden.",
+          "code": "import { CodeBlock } from '@korzun/design/component';\n\nexport default function Basic() {\n  return <CodeBlock code=\"npm install @korzun/design react react-dom react-jss\" />;\n}\n"
+        },
+        {
+          "file": "src/component/code-block/examples/02-copyable.tsx",
+          "slug": "copyable",
+          "order": 2,
+          "title": "Copyable",
+          "description": "`copyable` adds a Copy button that turns into Copied for two seconds; `copyLabel` names it for screen readers.",
+          "code": "import { CodeBlock } from '@korzun/design/component';\n\nexport default function Copyable() {\n  return (\n    <CodeBlock\n      code=\"import { Button } from '@korzun/design/control';\"\n      copyable\n      copyLabel=\"Copy import\"\n    />\n  );\n}\n"
+        },
+        {
+          "file": "src/component/code-block/examples/03-highlighted.tsx",
+          "slug": "highlighted",
+          "order": 3,
+          "title": "Highlighted",
+          "description": "Children replace the plain text; Copy still copies `code`. `CodeBlock` sets the `--code-*` variables, so a highlighter that emits them, such as Shiki's css-variables theme with `variablePrefix: '--code-'`, follows the light and dark themes.",
+          "code": "import { CodeBlock } from '@korzun/design/component';\n\nconst code = \"const label = 'Copy';\";\n\nexport default function Highlighted() {\n  return (\n    <CodeBlock code={code} copyable>\n      <span style={{ color: 'var(--code-token-keyword)' }}>const</span>{' '}\n      <span style={{ color: 'var(--code-token-constant)' }}>label</span>\n      <span style={{ color: 'var(--code-token-punctuation)' }}> = </span>\n      <span style={{ color: 'var(--code-token-string)' }}>'Copy'</span>\n      <span style={{ color: 'var(--code-token-punctuation)' }}>;</span>\n    </CodeBlock>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/code-block/examples/04-wrap.tsx",
+          "slug": "wrap",
+          "order": 4,
+          "title": "Wrap",
+          "description": "`wrap` breaks long lines inside the box instead of scrolling them, for output a reader should see whole.",
+          "code": "import { CodeBlock } from '@korzun/design/component';\n\nexport default function Wrap() {\n  return (\n    <CodeBlock\n      wrap\n      code=\"curl --fail --location --header 'Accept: application/json' https://example.com/api/v1/books?sort=title&order=asc&limit=100\"\n    />\n  );\n}\n"
+        }
+      ],
+      "preview": {
+        "file": "src/component/code-block/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { CodeBlock } from '@korzun/design/component';\n\nexport default function Preview() {\n  return <CodeBlock code={'npm install @korzun/design\\nnpm run build'} copyable />;\n}\n"
+      },
+      "tables": [
+        {
+          "name": "CodeBlockProps",
+          "kind": "props",
+          "rows": [
+            {
+              "name": "children",
+              "type": "ReactNode",
+              "required": false,
+              "description": "What to show in place of `code`, such as syntax-highlighted spans. Copy still copies `code`."
+            },
+            {
+              "name": "className",
+              "type": "string",
+              "required": false,
+              "description": "Extra class on the root, merged after the component's own."
+            },
+            {
+              "name": "code",
+              "type": "string",
+              "required": true,
+              "description": "The code as plain text. It is what Copy puts on the clipboard, and what shows when there are no `children`."
+            },
+            {
+              "name": "copyable",
+              "type": "boolean",
+              "required": false,
+              "description": "Adds a Copy button beside the code.",
+              "default": "false"
+            },
+            {
+              "name": "copyLabel",
+              "type": "string",
+              "required": false,
+              "description": "The Copy button's accessible name; it reads \"Copy\".",
+              "default": "'Copy code'"
+            },
+            {
+              "name": "wrap",
+              "type": "boolean",
+              "required": false,
+              "description": "Wraps long lines instead of scrolling them sideways.",
+              "default": "false"
+            }
+          ]
+        }
+      ],
+      "tokens": [
+        {
+          "path": "breakpoint.mobile",
+          "kind": "value",
+          "light": "@media (max-width: 640px)",
+          "dark": "@media (max-width: 640px)"
+        },
+        {
+          "path": "color.bg.cardHeader",
+          "kind": "color",
+          "light": "#EEEEEE",
+          "dark": "#232427"
+        },
+        {
+          "path": "color.border.default",
+          "kind": "color",
+          "light": "#D9D9D9",
+          "dark": "#3A3B40"
+        },
+        {
+          "path": "color.code.foreground",
+          "kind": "color",
+          "light": "#111",
+          "dark": "#F5F5F7"
+        },
+        {
+          "path": "colorScheme",
+          "kind": "value",
+          "light": "light",
+          "dark": "dark"
+        },
+        {
+          "path": "radius.lg",
+          "kind": "value",
+          "light": "16px",
+          "dark": "16px"
+        },
+        {
+          "path": "radius.md",
+          "kind": "value",
+          "light": "8px",
+          "dark": "8px"
+        },
+        {
+          "path": "radius.sm",
+          "kind": "value",
+          "light": "4px",
+          "dark": "4px"
+        },
+        {
+          "path": "recipe.codeBlock",
+          "kind": "recipe",
+          "light": null,
+          "dark": null
+        },
+        {
+          "path": "recipe.codeColours",
+          "kind": "recipe",
+          "light": null,
+          "dark": null
+        },
+        {
+          "path": "space.md",
+          "kind": "value",
+          "light": "0.5rem",
+          "dark": "0.5rem"
+        }
+      ],
+      "changelog": [
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "CodeBlock"
+          ],
+          "text": "New `CodeBlock` (component): a block of code in mono type on a `bg.cardHeader` box that scrolls sideways (with a fade at the edge while more is hidden) or wraps with `wrap`. `code` is the plain text; `children` replace what shows (highlighted spans) while Copy still copies `code`. `copyable` adds a Copy button that becomes Copied with a check, or Could not copy, for 2 seconds and announces it in a status region; `copyLabel` names it. It sets the `--code-*` variables Shiki's css-variables theme emits, from `color.code`. Corners follow surface depth, and in dark mode directly on a Page it gets a 1px `border.default` edge."
+        }
+      ]
+    },
+    {
+      "id": "component/meta-line",
+      "slug": "meta-line",
+      "entry": "@korzun/design/component",
+      "docPath": "docs/component/meta-line.md",
+      "title": "MetaLine",
+      "description": "A short run of data about one record, as a dotted line or labelled pairs, wrapping between data, never inside one.",
+      "category": "Data display",
+      "values": [
+        "MetaLine"
+      ],
+      "types": [
+        "MetaLineItem",
+        "MetaLinePair",
+        "MetaLineProps"
+      ],
+      "importLine": "import { MetaLine, type MetaLineItem, type MetaLinePair, type MetaLineProps } from '@korzun/design/component'",
+      "body": "A short run of data about one record. Two looks:\n\n- **A separated line**, a row's secondary line: \"Frank Herbert · Book 3 · 42%\".\n  Pass `separator`.\n- **Labelled facts**, a card's body: \"Format EPUB   Size 2.1 MB\". Pass\n  `{ label, value }` items and no separator; items are spaced by gaps.\n\nEither way it wraps *between* data, never inside one.\n\nUse something else for: many fields, or the same fields across records\n(`Table`), a row's primary title (`Text` or `Heading`).\n\n## Usage\n\n### Items and pairs\n\n`items` holds nodes and `{ label, value }` pairs, mixed freely. A pair shows\nits label in `text.faint`, capitalized by CSS (`'cover fit'` shows as \"Cover\nFit\"), then its value.\n\n- `null`, `undefined` and `false` items are skipped, and so is a pair whose\n  `value` is one of them, so pass optional data as `cond && value` or\n  `{ label, value: maybe }`.\n- `''` and `0` are kept; filter them yourself.\n- **Renders `null`** when every item is skipped: no empty line is left behind.\n- Items are keyed by position.\n\n### Separator\n\n`separator` takes one character (`'·'`, `'|'`, `'/'`); `''` counts as unset. It sits in a 1em\ncell before each item, drawn by CSS (`::before`), so screen readers read only\nthe data, and the one that would lead a line is clipped: none dangles at a line\nend or starts the next line. It is drawn in `text.muted`. Without\n`separator`, items are `space.lg` apart and lines `space.sm` apart.\n\nOne character means one grapheme (an emoji with a skin tone counts as one). A\nlonger string such as `' | '` or `'->'` overflows the 1em cell and overlaps the\nnext item, so in development MetaLine logs a `console.warn` once per such\nseparator. It works in right-to-left text too: the clip uses logical\nproperties, so the line start is clipped on whichever side it is.\n\n### Long data\n\nA datum never wraps inside itself. One wider than the whole line ellipsizes.\n\n### Typography\n\nMetaLine sets no font size or colour of its own except the label and\nseparator colours; wrap it in `Text` to set the rest (`size=\"sm\"` in a card\nbody, `tone=\"faint\"` for a row's secondary line).\n\n## Do / don't\n\n- Do pass conditional data as `cond && value`; `false` is skipped.\n- Do set typography by wrapping the line in `Text` (`size`, `tone`); the items inherit it.\n- Don't join data into one string with your own \" · \": wrapping then breaks\n  inside a datum and the dots are read aloud.\n- Don't pass empty strings; with a separator they leave a stray one.",
+      "examples": [
+        {
+          "file": "src/component/meta-line/examples/01-basic.tsx",
+          "slug": "basic",
+          "order": 1,
+          "title": "Basic",
+          "description": "A book row's secondary line: author, series and progress, separated by middots. Wrap it in `Text` to set the size and tone the items inherit.",
+          "code": "import { MetaLine, Space, Text } from '@korzun/design/component';\n\nexport default function Basic() {\n  return (\n    <Space direction=\"vertical\" gap=\"xs\">\n      <Text weight=\"semibold\">Children of Dune</Text>\n      <Text as=\"div\" size=\"sm\" tone=\"faint\">\n        <MetaLine separator=\"·\" items={['Frank Herbert', 'Dune #3', '42%']} />\n      </Text>\n    </Space>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/meta-line/examples/02-conditional-data.tsx",
+          "slug": "conditional-data",
+          "order": 2,
+          "title": "Conditional data",
+          "description": "Pass optional data as `cond && value`: `false` is skipped and leaves no separator. When every item is skipped nothing renders, so the line leaves no gap behind.",
+          "code": "import { Space, MetaLine, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function ConditionalData() {\n  const [hasSeries, setHasSeries] = useState(true);\n  const [hasProgress, setHasProgress] = useState(true);\n  return (\n    <Space direction=\"vertical\" gap=\"md\">\n      <Space>\n        <Button onClick={() => setHasSeries((on) => !on)}>\n          {hasSeries ? 'Remove series' : 'Add series'}\n        </Button>\n        <Button onClick={() => setHasProgress((on) => !on)}>\n          {hasProgress ? 'Remove progress' : 'Add progress'}\n        </Button>\n      </Space>\n      <Space direction=\"vertical\" gap=\"xs\">\n        <Text weight=\"semibold\">Dune Messiah</Text>\n        <Text as=\"div\" size=\"sm\" tone=\"faint\">\n          <MetaLine separator=\"·\" items={[hasSeries && 'Dune #2', hasProgress && '42%']} />\n        </Text>\n      </Space>\n    </Space>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/meta-line/examples/03-wrapping.tsx",
+          "slug": "wrapping",
+          "order": 3,
+          "title": "Wrapping",
+          "description": "When the line is too narrow it wraps between data, never inside one, and no separator is left at a line end or leading the next line.",
+          "code": "import { MetaLine, Text } from '@korzun/design/component';\n\nexport default function Wrapping() {\n  return (\n    <Text as=\"div\" size=\"sm\" tone=\"faint\">\n      <MetaLine\n        separator=\"·\"\n        items={[\n          'Frank Herbert',\n          'Dune Chronicles #3',\n          'Science fiction',\n          'Hardcover, first edition',\n          '612 pages',\n          'Added 12 March 2026',\n          'Last read on a Kindle Scribe',\n          'Finished in 9 days',\n          'Rated four stars',\n          'Lent to a friend in April',\n          'Recommended by the book club',\n        ]}\n      />\n    </Text>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/meta-line/examples/04-element-items.tsx",
+          "slug": "element-items",
+          "order": 4,
+          "title": "Elements as items",
+          "description": "An item can be any node, such as a `time` element or a `Chip`.",
+          "code": "import { MetaLine, Chip, Text } from '@korzun/design/component';\n\nexport default function ElementItems() {\n  return (\n    <Text as=\"div\" size=\"sm\" tone=\"faint\">\n      <MetaLine\n        separator=\"·\"\n        items={[\n          <time key=\"added\" dateTime=\"2026-03-12\">\n            12 March 2026\n          </time>,\n          'Kindle Scribe',\n          <Chip key=\"sync\" size=\"sm\" tone=\"success\">\n            Synced\n          </Chip>,\n        ]}\n      />\n    </Text>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/meta-line/examples/05-labelled-pairs.tsx",
+          "slug": "labelled-pairs",
+          "order": 5,
+          "title": "Labelled pairs",
+          "description": "A card describing one record: `{ label, value }` items with no `separator` are spaced by gaps, each label faint and capitalized by CSS (“cover size” shows as “Cover Size”). A value can be any node, such as a `Chip`. A pair whose value is `undefined` is skipped, so “Last sync” appears only once there is one.",
+          "code": "import { Card, MetaLine, Chip, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function LabelledPairs() {\n  const [lastSync, setLastSync] = useState<string | undefined>(undefined);\n  return (\n    <Card\n      title=\"Kindle Scribe\"\n      headerAction={\n        <Button type=\"link\" onClick={() => setLastSync(lastSync ? undefined : '12 March 2026')}>\n          {lastSync ? 'Forget sync' : 'Sync now'}\n        </Button>\n      }\n    >\n      <Text as=\"div\" size=\"sm\">\n        <MetaLine\n          items={[\n            { label: 'slug', value: 'my-kindle' },\n            { label: 'cover size', value: '1860×2480' },\n            { label: 'last sync', value: lastSync },\n            {\n              label: 'status',\n              value: (\n                <Chip size=\"sm\" tone=\"success\">\n                  Active\n                </Chip>\n              ),\n            },\n          ]}\n        />\n      </Text>\n    </Card>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/meta-line/examples/06-separator-choices.tsx",
+          "slug": "separator-choices",
+          "order": 6,
+          "title": "Separator choices",
+          "description": "`separator` takes any one character, drawn between items by CSS. Pairs take a separator too.",
+          "code": "import { MetaLine, Space, Text } from '@korzun/design/component';\n\nconst data = ['Frank Herbert', 'Dune #3', '42%'];\n\nexport default function SeparatorChoices() {\n  return (\n    <Text as=\"div\" size=\"sm\" tone=\"muted\">\n      <Space direction=\"vertical\" gap=\"sm\">\n        <MetaLine separator=\"·\" items={data} />\n        <MetaLine separator=\"|\" items={data} />\n        <MetaLine separator=\"/\" items={data} />\n        <MetaLine\n          separator=\"·\"\n          items={[\n            { label: 'format', value: 'EPUB' },\n            { label: 'size', value: '2.1 MB' },\n          ]}\n        />\n      </Space>\n    </Text>\n  );\n}\n"
+        }
+      ],
+      "preview": {
+        "file": "src/component/meta-line/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { MetaLine, Space, Text } from '@korzun/design/component';\n\nexport default function Preview() {\n  return (\n    <Space direction=\"vertical\" gap=\"sm\">\n      <Text as=\"div\" tone=\"faint\">\n        <MetaLine separator=\"·\" items={['Frank Herbert', 'Dune #3', '42%']} />\n      </Text>\n      <Text as=\"div\" size=\"sm\">\n        <MetaLine\n          items={[\n            { label: 'format', value: 'EPUB' },\n            { label: 'size', value: '2.1 MB' },\n          ]}\n        />\n      </Text>\n    </Space>\n  );\n}\n"
+      },
+      "tables": [
+        {
+          "name": "MetaLineProps",
+          "kind": "props",
+          "rows": [
+            {
+              "name": "className",
+              "type": "string",
+              "required": false,
+              "description": "On the outer element. The font size and colour set here reach every item, and the separators scale with it. Override with `'&&'` specificity, never `!important`."
+            },
+            {
+              "name": "items",
+              "type": "MetaLineItem[]",
+              "required": true,
+              "description": "The data, in order: nodes and `{ label, value }` pairs, mixed freely. `null`, `undefined` and `false` items (and pairs with such a value) are skipped, and nothing renders when every item is. `''` and `0` are kept, so filter them yourself."
+            },
+            {
+              "name": "separator",
+              "type": "string",
+              "required": false,
+              "description": "One character (one grapheme) drawn between items (`'·'`, `'|'`, `'/'`). It never dangles at a line break, works in right-to-left text, and is not read by screen readers. Unset or `''`: items are spaced by gaps instead. A longer string overflows its one-character cell and overlaps the next item; in development it logs a console warning once."
+            }
+          ]
+        },
+        {
+          "name": "MetaLinePair",
+          "kind": "object",
+          "rows": [
+            {
+              "name": "label",
+              "type": "string",
+              "required": true,
+              "description": "Shown faint and capitalized by CSS: `'cover fit'` displays as “Cover Fit”."
+            },
+            {
+              "name": "value",
+              "type": "ReactNode",
+              "required": true,
+              "description": "The value. When it is `null`, `undefined` or `false` the whole pair is skipped; `''` and `0` are kept."
+            }
+          ],
+          "description": "A labelled datum: a faint, CSS-capitalized label followed by its value."
+        },
+        {
+          "name": "MetaLineItem",
+          "kind": "alias",
+          "rows": [],
+          "text": "ReactNode | MetaLinePair",
+          "description": "One datum: any node, or a labelled pair."
+        }
+      ],
+      "tokens": [
+        {
+          "path": "color.text.faint",
+          "kind": "color",
+          "light": "#9ca3af",
+          "dark": "#6E7480"
+        },
+        {
+          "path": "color.text.muted",
+          "kind": "color",
+          "light": "#6E6E6E",
+          "dark": "#9CA1AB"
+        },
+        {
+          "path": "space.lg",
+          "kind": "value",
+          "light": "0.625rem",
+          "dark": "0.625rem"
+        },
+        {
+          "path": "space.sm",
+          "kind": "value",
+          "light": "0.375rem",
+          "dark": "0.375rem"
+        }
+      ],
+      "changelog": [
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "MetaLine"
+          ],
+          "text": "`separator=\"\"` now counts as unset (gaps, no empty cells); a separator longer than one character logs a development-only console warning once, since it overflows its cell; the separator clip uses logical properties, so right-to-left lines clip and place the separator correctly."
+        },
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "MetaLine"
+          ],
+          "text": "**Breaking:** without `separator` the items are spaced by gaps (`space.lg`, lines `space.sm`), not dots; pass `separator=\"·\"` for the old look. `separator` takes any one character, drawn by CSS between items. Items can now be labelled pairs, `{ label, value }`, shown with a faint capitalized label, mixed with plain items; a pair whose value is `null`, `undefined` or `false` is skipped. New `MetaLineItem` and `MetaLinePair` types. MetaLine replaces `MetadataList`."
+        },
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "MetaLine"
+          ],
+          "text": "**Breaking:** `MetadataList` (and its `Metadata` and `MetadataListProps` types) is removed; use `MetaLine` with `{ label, value }` items and no `separator` for its gapped, labelled look, wrapped in `Text size=\"sm\"` for its size (MetaLine inherits font size and colour; MetadataList set `fontSize.sm` and `text.primary`). Its 15rem cap on each value is gone, and a pair with an empty value is skipped instead of showing its label alone."
+        }
+      ]
+    },
+    {
+      "id": "component/table",
+      "slug": "table",
+      "entry": "@korzun/design/component",
+      "docPath": "docs/component/table.md",
+      "title": "Table",
+      "description": "A generic data table that scrolls in its own box on a wide screen and stacks each row, labelled, on a phone.",
+      "category": "Data display",
+      "values": [
+        "Table"
+      ],
+      "types": [
+        "TableColumn",
+        "TableProps"
+      ],
+      "importLine": "import { Table, type TableColumn, type TableProps } from '@korzun/design/component'",
+      "body": "A generic data table: pass `columns` and `rows` and it draws a bordered box\nwith a header row and a row per item. On a wide screen it scrolls sideways\ninside its own box when it is too wide; on a phone each row stacks, with every\nvalue labelled by its column title.\n\nUse something else for: a short list of items with actions (`CardRow`), a\nlist of name and value pairs (`MetaLine`), a layout grid (`Space`). A table is for data with the same fields in every row.\n\n## Usage\n\n### Columns and rows\n\nEach column has a `key` and a `title`. By default a cell shows the row's field\nnamed by `key`; `render(row, index)` draws it instead, for a `Chip` or a\n`Button`. A missing value (`null` or `undefined`) shows a dash; `0`, `false`\nand `''` show as themselves. Type the table with its row type\n(`<Table<Book> … />`) to check `render` and `rowKey`.\n\n### `rowKey`\n\nName the field that identifies a row (`rowKey=\"id\"`), or pass a function that\nreturns a unique string (`rowKey={(row, i) => row.isbn}`). It must be unique\nand stable, as a React key is.\n\n### Phone layout, `label` and `wide`\n\nBelow the mobile breakpoint the header is hidden for sighted users and each\nrow becomes a block: short cells share a line, each prefixed by its column\n`title` and a colon. `label` renames that prefix, and `label: false` shows the\nvalue bare (for a button). `wide: true` gives a cell the full width of the\nstacked row, for a long description. Pass `ariaLabel` to name the table for\nscreen readers.\n\n### Empty\n\nWith no rows the header stays. `empty` fills one row across all columns; omit\nit and the table shows the header only.\n\n### Scrolling and `minWidth`\n\nThe table never widens the page: it scrolls inside its box. `minWidth`\n(`'40rem'`) keeps columns readable by making the table that wide on a wide\nscreen before it scrolls. A phone ignores it, because rows stack there.\n`width` on a column sets its heading's width, `nowrap` keeps a value on one\nline and `align: 'end'` right-aligns numbers.\n\n### Corners\n\nThe box's corners follow where it sits: `radius.lg` on the page, `md` in a\nCard, `sm` deeper, and a control in a cell sits one level deeper still. See\n[corners](../corners.md).\n\n## Do / don't\n\n- Do use one table per dataset, with the same fields in every row.\n- Do right-align numeric columns with `align: 'end'`.\n- Don't use a table for layout; use `Space`.",
+      "examples": [
+        {
+          "file": "src/component/table/examples/01-basic.tsx",
+          "slug": "basic",
+          "order": 1,
+          "title": "Basic",
+          "description": "Columns name a field of each row; `rowKey` names the field that identifies a row. Values show as text, and a missing one shows a dash.",
+          "code": "import { Table } from '@korzun/design/component';\n\nconst books = [\n  { id: 1, title: 'Middlemarch', author: 'George Eliot', year: 1871 },\n  { id: 2, title: 'Persuasion', author: 'Jane Austen', year: 1817 },\n  { id: 3, title: 'Villette', author: 'Charlotte Brontë', year: 1853 },\n  { id: 4, title: 'Anonymous pamphlet', author: null, year: 1790 },\n];\n\nexport default function Basic() {\n  return (\n    <Table\n      ariaLabel=\"Books\"\n      rowKey=\"id\"\n      rows={books}\n      columns={[\n        { key: 'title', title: 'Title' },\n        { key: 'author', title: 'Author' },\n        { key: 'year', title: 'Year' },\n      ]}\n    />\n  );\n}\n"
+        },
+        {
+          "file": "src/component/table/examples/02-custom-cells.tsx",
+          "slug": "custom-cells",
+          "order": 2,
+          "title": "Custom cells",
+          "description": "`render` draws a cell from its row. A `Chip` shows a status, and a link `Button` in a cell sits one surface level deeper than the table, so its corners step down.",
+          "code": "import { Table, Chip } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\n\ntype Book = { id: number; title: string; status: 'reading' | 'finished' | 'unread' };\n\nconst books: Book[] = [\n  { id: 1, title: 'Middlemarch', status: 'reading' },\n  { id: 2, title: 'Persuasion', status: 'finished' },\n  { id: 3, title: 'Villette', status: 'unread' },\n];\n\nexport default function CustomCells() {\n  return (\n    <Table<Book>\n      ariaLabel=\"Reading list\"\n      rowKey=\"id\"\n      rows={books}\n      columns={[\n        { key: 'title', title: 'Title', wide: true },\n        {\n          key: 'status',\n          title: 'Status',\n          render: (book) => (\n            <Chip tone={book.status === 'finished' ? 'success' : 'neutral'} size=\"sm\">\n              {book.status}\n            </Chip>\n          ),\n        },\n        {\n          key: 'open',\n          title: 'Open',\n          label: false,\n          render: (book) => (\n            <Button type=\"link\" onClick={() => undefined}>\n              {`Open ${book.title}`}\n            </Button>\n          ),\n        },\n      ]}\n    />\n  );\n}\n"
+        },
+        {
+          "file": "src/component/table/examples/03-empty.tsx",
+          "slug": "empty",
+          "order": 3,
+          "title": "Empty",
+          "description": "With no rows the header stays and `empty` fills one full-width row. Without `empty` the table shows its header only.",
+          "code": "import { Table } from '@korzun/design/component';\n\ntype Book = { id: number; title: string; author: string };\n\nexport default function Empty() {\n  return (\n    <Table<Book>\n      ariaLabel=\"Books\"\n      rowKey=\"id\"\n      rows={[]}\n      empty=\"No books yet. Upload an EPUB to start your library.\"\n      columns={[\n        { key: 'title', title: 'Title' },\n        { key: 'author', title: 'Author' },\n      ]}\n    />\n  );\n}\n"
+        },
+        {
+          "file": "src/component/table/examples/04-in-a-card.tsx",
+          "slug": "in-a-card",
+          "order": 4,
+          "title": "In a card",
+          "description": "A table inside a `Card` sits one level deeper than one on the page, so its corners are `md` (8px) instead of `lg` (16px).",
+          "code": "import { Card, Table } from '@korzun/design/component';\n\nconst books = [\n  { id: 1, title: 'Middlemarch', author: 'George Eliot' },\n  { id: 2, title: 'Persuasion', author: 'Jane Austen' },\n];\n\nexport default function InACard() {\n  return (\n    <Card title=\"Recently added\">\n      <Table\n        ariaLabel=\"Recently added\"\n        rowKey=\"id\"\n        rows={books}\n        columns={[\n          { key: 'title', title: 'Title' },\n          { key: 'author', title: 'Author' },\n        ]}\n      />\n    </Card>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/table/examples/05-numbers.tsx",
+          "slug": "numbers",
+          "order": 5,
+          "title": "Numbers",
+          "description": "`align: 'end'` right-aligns a numeric column, header included, so digits line up. `nowrap` keeps a value on one line.",
+          "code": "import { Table } from '@korzun/design/component';\n\nconst books = [\n  { id: 1, title: 'Middlemarch', pages: 880, chapters: 86 },\n  { id: 2, title: 'Persuasion', pages: 249, chapters: 24 },\n  { id: 3, title: 'Villette', pages: 560, chapters: 42 },\n];\n\nexport default function Numbers() {\n  return (\n    <Table\n      ariaLabel=\"Book lengths\"\n      rowKey=\"id\"\n      rows={books}\n      columns={[\n        { key: 'title', title: 'Title', wide: true },\n        { key: 'pages', title: 'Pages', align: 'end', nowrap: true },\n        { key: 'chapters', title: 'Chapters', align: 'end', nowrap: true },\n      ]}\n    />\n  );\n}\n"
+        }
+      ],
+      "preview": {
+        "file": "src/component/table/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { Table } from '@korzun/design/component';\n\nconst books = [\n  { id: 1, title: 'Middlemarch', author: 'George Eliot', year: 1871 },\n  { id: 2, title: 'Persuasion', author: 'Jane Austen', year: 1817 },\n  { id: 3, title: 'Villette', author: 'Charlotte Brontë', year: 1853 },\n];\n\nexport default function Preview() {\n  return (\n    <div style={{ width: 320 }}>\n      <Table\n        ariaLabel=\"Books\"\n        rowKey=\"id\"\n        rows={books}\n        columns={[\n          { key: 'title', title: 'Title' },\n          { key: 'author', title: 'Author' },\n          { key: 'year', title: 'Year' },\n        ]}\n      />\n    </div>\n  );\n}\n"
+      },
+      "tables": [
+        {
+          "name": "TableProps",
+          "kind": "props",
+          "rows": [
+            {
+              "name": "ariaLabel",
+              "type": "string",
+              "required": false,
+              "description": "The table's accessible name, announced by screen readers."
+            },
+            {
+              "name": "className",
+              "type": "string",
+              "required": false,
+              "description": "Extra class on the scrolling box, merged after the component's own."
+            },
+            {
+              "name": "columns",
+              "type": "TableColumn<Row>[]",
+              "required": true,
+              "description": "The columns, in order."
+            },
+            {
+              "name": "empty",
+              "type": "ReactNode",
+              "required": false,
+              "description": "Shown in one full-width row when `rows` is empty. Without it the table shows its header only."
+            },
+            {
+              "name": "minWidth",
+              "type": "string",
+              "required": false,
+              "description": "A CSS minimum width for the table on a wide screen (`'40rem'`); it scrolls inside its box when narrower. A phone ignores it."
+            },
+            {
+              "name": "rowKey",
+              "type": "keyof Row | ((row: Row, index: number) => string)",
+              "required": true,
+              "description": "What identifies a row: one of its fields, or a function returning a unique string."
+            },
+            {
+              "name": "rows",
+              "type": "readonly Row[]",
+              "required": true,
+              "description": "The data, one row each."
+            }
+          ]
+        },
+        {
+          "name": "TableColumn",
+          "kind": "object",
+          "rows": [
+            {
+              "name": "align",
+              "type": "'start' | 'end'",
+              "required": false,
+              "description": "Where the cell's content sits; `'end'` right-aligns numbers. Defaults to `'start'`."
+            },
+            {
+              "name": "key",
+              "type": "string",
+              "required": true,
+              "description": "The field of the row this column shows by default, and the column's identity."
+            },
+            {
+              "name": "label",
+              "type": "string | false",
+              "required": false,
+              "description": "What names a value on a phone, where the headings are hidden. Defaults to `title`; `false` shows the value bare."
+            },
+            {
+              "name": "nowrap",
+              "type": "boolean",
+              "required": false,
+              "description": "Keeps the cell's text on one line."
+            },
+            {
+              "name": "render",
+              "type": "(row: Row, index: number) => ReactNode",
+              "required": false,
+              "description": "Draws the cell instead of the row's `key` field. Receives the row and its index."
+            },
+            {
+              "name": "title",
+              "type": "string",
+              "required": true,
+              "description": "The column heading. On a phone it also labels each value, unless `label` says otherwise."
+            },
+            {
+              "name": "wide",
+              "type": "boolean",
+              "required": false,
+              "description": "Takes a stacked row's full width on a phone, for a long description."
+            },
+            {
+              "name": "width",
+              "type": "string",
+              "required": false,
+              "description": "A CSS width for the heading cell (`'35%'`, `'8rem'`), on a wide screen."
+            }
+          ]
+        }
+      ],
+      "tokens": [
+        {
+          "path": "breakpoint.mobile",
+          "kind": "value",
+          "light": "@media (max-width: 640px)",
+          "dark": "@media (max-width: 640px)"
+        },
+        {
+          "path": "breakpoint.normal",
+          "kind": "value",
+          "light": "@media (min-width: 641px)",
+          "dark": "@media (min-width: 641px)"
+        },
+        {
+          "path": "color.bg.card",
+          "kind": "color",
+          "light": "#FCFCFC",
+          "dark": "#1A1B1E"
+        },
+        {
+          "path": "color.bg.cardHeader",
+          "kind": "color",
+          "light": "#EEEEEE",
+          "dark": "#232427"
+        },
+        {
+          "path": "color.border.default",
+          "kind": "color",
+          "light": "#D9D9D9",
+          "dark": "#3A3B40"
+        },
+        {
+          "path": "color.border.light",
+          "kind": "color",
+          "light": "#e5e7eb",
+          "dark": "#333439"
+        },
+        {
+          "path": "color.text.faint",
+          "kind": "color",
+          "light": "#9ca3af",
+          "dark": "#6E7480"
+        },
+        {
+          "path": "color.text.muted",
+          "kind": "color",
+          "light": "#6E6E6E",
+          "dark": "#9CA1AB"
+        },
+        {
+          "path": "color.text.secondary",
+          "kind": "color",
+          "light": "#5A6375",
+          "dark": "#C8CBD2"
+        },
+        {
+          "path": "fontSize.md",
+          "kind": "value",
+          "light": "0.875rem",
+          "dark": "0.875rem"
+        },
+        {
+          "path": "fontWeight.semibold",
+          "kind": "value",
+          "light": "600",
+          "dark": "600"
+        },
+        {
+          "path": "lineHeight.body",
+          "kind": "value",
+          "light": "1.3",
+          "dark": "1.3"
+        },
+        {
+          "path": "radius.lg",
+          "kind": "value",
+          "light": "16px",
+          "dark": "16px"
+        },
+        {
+          "path": "radius.md",
+          "kind": "value",
+          "light": "8px",
+          "dark": "8px"
+        },
+        {
+          "path": "radius.sm",
+          "kind": "value",
+          "light": "4px",
+          "dark": "4px"
+        },
+        {
+          "path": "space.lg",
+          "kind": "value",
+          "light": "0.625rem",
+          "dark": "0.625rem"
+        },
+        {
+          "path": "space.sm",
+          "kind": "value",
+          "light": "0.375rem",
+          "dark": "0.375rem"
+        },
+        {
+          "path": "space.xl",
+          "kind": "value",
+          "light": "0.75rem",
+          "dark": "0.75rem"
+        },
+        {
+          "path": "space.xs",
+          "kind": "value",
+          "light": "0.25rem",
+          "dark": "0.25rem"
+        }
+      ],
+      "changelog": [
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "Table"
+          ],
+          "text": "New `Table` (component): a generic data table. `columns` name a row field or `render` a cell, `rowKey` is a field name or a function, and `empty` shows one full-width row when there are no rows. It scrolls inside its own bordered box on a wide screen (`minWidth` sets a minimum width there only), and on a phone each row stacks with every value labelled by its column title (`label`, `wide`). `nowrap`, `align: 'end'` and `width` shape the cells. Its corners follow surface depth, and a control in a cell sits one level deeper. Falsy values (`0`, `false`, `''`) show as themselves; only `null` and `undefined` show a dash."
         }
       ]
     },
@@ -9365,7 +9383,7 @@
         "AlertTone"
       ],
       "importLine": "import { Alert, type AlertProps, type AlertTone } from '@korzun/design/component'",
-      "body": "A tinted, bordered box for a status message that sits in the page flow: a tone,\nan optional title, body text, an optional icon and an optional action. The\ntone's `theme.color.chip[tone]` colours the background, border, title and icon;\nthe body text uses the normal text colour so a sentence stays readable.\n\nUse something else for: inline field or form failure text (`ErrorMessage`), or a\nsingle status word in a row (`Tag`). An Alert is for a message with weight that\nmay carry an action.\n\n## Usage\n\n### Choosing a tone\n\n- `warning`: needs attention (overdue, about to expire).\n- `danger`: something failed.\n- `success`: something finished.\n- `info`: neutral news.\n\n`warning` and `danger` render `role=\"alert\"` and are announced the moment they\nmount; `success` and `info` render `role=\"status\"` and are announced politely.\n\n### Behaviour\n\n- Corners follow surface depth (see [corners](../corners.md)): 16px on a Page,\n  8px in a Card. With no provider the Alert counts as depth 0.\n- Its contents, including `action`, sit one level deeper, so a Button in the\n  action is already one step smaller than the Alert. Do not pass `radius`.\n- There is no default icon per tone; pass `Icon` when you want one.\n- Spacing and font sizes come from theme tokens; there is no `style` prop.\n\n## Do / don't\n\n- Do pick the tone by meaning, not by colour.\n- Do put the one recovery action in `action`.\n- Don't use it for field errors; use `ErrorMessage`.\n- Don't mount a `danger` or `warning` Alert for static, always-visible copy:\n  it is announced as an alert when it appears.",
+      "body": "A tinted, bordered box for a status message that sits in the page flow: a tone,\nan optional title, body text, an optional icon and an optional action. The\ntone's `theme.color.chip[tone]` colours the background, border, title and icon;\nthe body text uses the normal text colour so a sentence stays readable.\n\nUse something else for: inline field or form failure text (`ErrorMessage`), or a\nsingle status word in a row (`Chip`). An Alert is for a message with weight that\nmay carry an action.\n\n## Usage\n\n### Choosing a tone\n\n- `warning`: needs attention (overdue, about to expire).\n- `danger`: something failed.\n- `success`: something finished.\n- `info`: neutral news.\n\n`warning` and `danger` render `role=\"alert\"` and are announced the moment they\nmount; `success` and `info` render `role=\"status\"` and are announced politely.\n\n### Behaviour\n\n- Corners follow surface depth (see [corners](../corners.md)): 16px on a Page,\n  8px in a Card. With no provider the Alert counts as depth 0.\n- Its contents, including `action`, sit one level deeper, so a Button in the\n  action is already one step smaller than the Alert. Do not pass `radius`.\n- There is no default icon per tone; pass `Icon` when you want one.\n- Spacing and font sizes come from theme tokens; there is no `style` prop.\n\n## Do / don't\n\n- Do pick the tone by meaning, not by colour.\n- Do put the one recovery action in `action`.\n- Don't use it for field errors; use `ErrorMessage`.\n- Don't mount a `danger` or `warning` Alert for static, always-visible copy:\n  it is announced as an alert when it appears.",
       "examples": [
         {
           "file": "src/component/alert/examples/01-basic.tsx",
@@ -10567,7 +10585,7 @@
         "ThemeSetting"
       ],
       "importLine": "import { GlobalStyles, ThemeProvider, createUseStyles, darkTheme, lightTheme, useTheme, useThemeGlobalStyles, useThemeSetting, type SpaceValue, type Theme, type ThemeMode, type ThemeProviderProps, type ThemeSetting } from '@korzun/design/theme'",
-      "body": "Every visual value comes from the theme. App styles use `createUseStyles` (the\nsame function react-jss exports, re-exported here) with a typed `theme`\nargument. Don't add another CSS-in-JS library, and don't write literal colours,\nspacing, font sizes, or radii.\n\nUse something else for: a ready-made light/dark/auto picker (`ThemeSetting`),\nthe full list of token keys ([tokens](tokens.md)).\n\n## Usage\n\n### Setup\n\n```tsx\n<ThemeProvider identity={userId /* or null when signed out */}>\n  <ToastProvider>{app}</ToastProvider>\n</ThemeProvider>\n```\n\n- `ThemeProvider` renders `GlobalStyles`: the page background, the body font,\n  a 16px input floor on iOS, scroll lock while a `<dialog>` is open, and the\n  `theme-rotation` and `theme-slide-*` keyframes. Don't render\n  `GlobalStyles` yourself, or `useThemeGlobalStyles()`, the hook it calls.\n- `lightTheme` / `darkTheme` are the two concrete themes (for tests).\n\n### `useThemeSetting()`\n\n```ts\nuseThemeSetting(): [ThemeSetting, (setting: ThemeSetting) => void]\n```\n\nReturns `[setting, setSetting]`, where `ThemeSetting` is `'light' | 'dark' |\n'auto'`. `'auto'` follows the OS `prefers-color-scheme` live. The\n`ThemeSetting` component is a ready-made picker for it. Without a\n`ThemeProvider` above it, the setter does nothing.\n\n### `useTheme()`\n\n```ts\nuseTheme(): Theme\n```\n\nReturns the current `Theme` object, for values needed outside a stylesheet.\n`theme.colorScheme` is the mode it resolved to, `'light'` or `'dark'`.\n\n### Writing styles\n\n```ts\n// style.ts, next to the component\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\nimport { applyTransparency } from '@korzun/design';\n\nexport const useStyle = createUseStyles((theme: Theme) => ({\n  root: {\n    padding: theme.space.md,\n    backgroundColor: theme.color.bg.card,\n  },\n  highlight: { backgroundColor: applyTransparency(theme.color.brand.default, 0.12) },\n  [theme.breakpoint.mobile]: { root: { padding: theme.space.sm } },\n}));\n```\n\n- Style files are for padding, borders, backgrounds, and one-offs (borders come from the border tokens). Lay out with\n  `Space` and set text with `Text`/`Heading`.\n- `applyTransparency(color, alpha)` turns a hex or rgb token into an `rgba()`\n  string. Use it for tints instead of writing an rgba literal.\n- Media queries: use the `theme.breakpoint.mobile` / `.normal` strings as keys.\n\n### Tokens\n\nThe token groups (`color`, `space`, `radius`, `fontSize`, `shadow`, `zIndex`,\n`breakpoint` and the rest) are listed key by key in [tokens](tokens.md). Use the\nsemantic tokens, never the primitive `gray`, `blue` and `red` scales. Radii are\nchosen by nesting depth; see [corners](corners.md).\n\n| Group | Keys | Notes |\n|---|---|---|\n| `color.text` | `primary`, `secondary`, `muted`, `faint`, `description`, `onPrimary`, `onDanger` | `muted` for labels and meta, `faint` for placeholders |\n| `color.bg` | `page`, `card`, `cardHeader`, `track`, `switchOff`, `input`, `footer`, `glass`, `glassFallback`, `glassActive`, `selected`, `hover`, `success`, `placeholder` | `cardHeader` is also the shaded-row and inset-box fill; `hover` is a translucent scrim |\n| `color.border` | `default`, `strong`, `light`, `focus`, `hover`, `danger`, `glass`, `glassActive`, `faint`, `loading`, `success`, `section` | Cards and dividers use `strong`; inputs use `default`; `light` is a hairline rule inside a card |\n| `color.brand` | `default`, `hover`, `active`, `light`, `outline`, `loading*`, `linkHover` | The primary action colour |\n| `color.danger` | `default`, `hover`, `active`, `light`, `outline`, `loading*` | Destructive actions and errors |\n| `color.success` | (a string) | Solid green |\n| `color.warning` | (a string) | Solid amber |\n| `color.info` | (a string) | Solid blue, the mode's `brand.default` |\n| `color.chip.<tone>` | `{ text, bg, border }` for 13 tones. Status tones: `success`, `warning`, `danger`, `info`, `neutral`. Label tones: `status`, `author`, `series`, `subject`, `book`, `entryType`, `user`, `rating` | Used by `Tag`; `neutral` text holds 4.5:1 on its tint |\n| `color.overlay` | `backdrop` | Modal backdrop |\n| `color.gray` / `blue` / `red` | primitive scales | Don't use these in app code; use the semantic tokens above |\n| `space` | `xxxs` 0.1rem, `xxs` 0.125, `xs` 0.25, `sm` 0.375, `md` 0.5, `lg` 0.625, `xl` 0.75, `xxl` 1, `xxxl` 1.25, `xxxxl` 1.5, `xxxxxl` 2rem | `md` is the default gap between stacked fields |\n| `radius` | `sm` 4px, `md` 8px, `lg` 16px, `circle`, `pill` | Chosen by nesting depth; see [corners](corners.md) |\n| `fontSize` | `xxs` 0.6rem, `xs` 0.7, `sm` 0.75, `md` 0.875, `lg` 1, `xl` 1.25, `xxl` 1.75rem | Control text is `'0.80rem'`, the one sanctioned literal (already applied by `recipe.input` and Button) |\n| `fontWeight` | `regular` 400, `medium` 500, `semibold` 600, `bold` 700, `extrabold` 800 | |\n| `lineHeight` | `tight` 1, `body` 1.3 | |\n| `fontFamily` | `body`, `mono` | |\n| `shadow` | `card`, `cardStack`, `hoverLift`, `dangerStack`, `brandStack`, `glass`, `glassActive` | Floating layers use `hoverLift` |\n| `transition` | `fast`, `medium`, `slide`, `slow`, `spring` | Values like `'0.2s ease-in'` |\n| `zIndex` | `behind`, `base`, `stack.{lo,md,hi}`, `header`, `sticky`, `toast` | |\n| `breakpoint` | `mobile` (≤640px), `normal` | Media query strings |\n| `layout` | `navHeightMobile`, `modalWidth`, `controlHeight`, `floatingControlTopBase` | Measured chrome sizes to lay out around |\n\n### Recipes\n\nRecipes are style fragments that you spread into a rule: `{ ...theme.recipe.input }`.\n\n| Recipe | Gives you |\n|---|---|\n| `recipe.input` | Text-input chrome: font, `md` radius, border, hover and focus colours, iOS 16px floor; `&$danger` turns the border red if your sheet declares a `danger: {}` class |\n| `recipe.label` | Field label: semibold, `md`, muted; `&$danger` |\n| `recipe.focusRing` | Transparent 2px outline; set `outlineColor: theme.color.brand.outline` on `'&:focus'` |\n| `recipe.spinner` | 1em rotating box. `Spinner` is the normal way to show a spinner; use the recipe only for a custom rotating element |\n| `recipe.glass` / `glassHighlight` | Frosted translucent surface (floating chrome) and its active state |\n| `recipe.row` | The shaded field row a control sits in inside a card: `bg.cardHeader`, `md` corners, padding `md lg md sm`. Use it for custom rows next to form fields |\n| `recipe.card.shell` / `header` / `footer` | The Card surface (`lg`), its header bar, and its footer bar |\n| `recipe.modal.dialog` / `header` / `footer` | A `<dialog>` surface (`lg`, shared width, backdrop), its title, and its button bar |\n\nRecipes that use `$name` references need an empty class with that name in the\nsame sheet (`danger: {}`).\n\n## Do / don't\n\n- Do style with `theme.*` tokens and `createUseStyles`.\n- Do use `applyTransparency` for a tint instead of an rgba literal.\n- Don't render `GlobalStyles` yourself; `ThemeProvider` does.\n- Don't use the primitive `gray`, `blue` and `red` scales in app code.",
+      "body": "Every visual value comes from the theme. App styles use `createUseStyles` (the\nsame function react-jss exports, re-exported here) with a typed `theme`\nargument. Don't add another CSS-in-JS library, and don't write literal colours,\nspacing, font sizes, or radii.\n\nUse something else for: a ready-made light/dark/auto picker (`ThemeSetting`),\nthe full list of token keys ([tokens](tokens.md)).\n\n## Usage\n\n### Setup\n\n```tsx\n<ThemeProvider identity={userId /* or null when signed out */}>\n  <ToastProvider>{app}</ToastProvider>\n</ThemeProvider>\n```\n\n- `ThemeProvider` renders `GlobalStyles`: the page background, the body font,\n  a 16px input floor on iOS, scroll lock while a `<dialog>` is open, and the\n  `theme-rotation` and `theme-slide-*` keyframes. Don't render\n  `GlobalStyles` yourself, or `useThemeGlobalStyles()`, the hook it calls.\n- `lightTheme` / `darkTheme` are the two concrete themes (for tests).\n\n### `useThemeSetting()`\n\n```ts\nuseThemeSetting(): [ThemeSetting, (setting: ThemeSetting) => void]\n```\n\nReturns `[setting, setSetting]`, where `ThemeSetting` is `'light' | 'dark' |\n'auto'`. `'auto'` follows the OS `prefers-color-scheme` live. The\n`ThemeSetting` component is a ready-made picker for it. Without a\n`ThemeProvider` above it, the setter does nothing.\n\n### `useTheme()`\n\n```ts\nuseTheme(): Theme\n```\n\nReturns the current `Theme` object, for values needed outside a stylesheet.\n`theme.colorScheme` is the mode it resolved to, `'light'` or `'dark'`.\n\n### Writing styles\n\n```ts\n// style.ts, next to the component\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\nimport { applyTransparency } from '@korzun/design';\n\nexport const useStyle = createUseStyles((theme: Theme) => ({\n  root: {\n    padding: theme.space.md,\n    backgroundColor: theme.color.bg.card,\n  },\n  highlight: { backgroundColor: applyTransparency(theme.color.brand.default, 0.12) },\n  [theme.breakpoint.mobile]: { root: { padding: theme.space.sm } },\n}));\n```\n\n- Style files are for padding, borders, backgrounds, and one-offs (borders come from the border tokens). Lay out with\n  `Space` and set text with `Text`/`Heading`.\n- `applyTransparency(color, alpha)` turns a hex or rgb token into an `rgba()`\n  string. Use it for tints instead of writing an rgba literal.\n- Media queries: use the `theme.breakpoint.mobile` / `.normal` strings as keys.\n\n### Tokens\n\nThe token groups (`color`, `space`, `radius`, `fontSize`, `shadow`, `zIndex`,\n`breakpoint` and the rest) are listed key by key in [tokens](tokens.md). Use the\nsemantic tokens, never the primitive `gray`, `blue` and `red` scales. Radii are\nchosen by nesting depth; see [corners](corners.md).\n\n| Group | Keys | Notes |\n|---|---|---|\n| `color.text` | `primary`, `secondary`, `muted`, `faint`, `description`, `onPrimary`, `onDanger` | `muted` for labels and meta, `faint` for placeholders |\n| `color.bg` | `page`, `card`, `cardHeader`, `track`, `switchOff`, `input`, `footer`, `glass`, `glassFallback`, `glassActive`, `selected`, `hover`, `success`, `placeholder` | `cardHeader` is also the shaded-row and inset-box fill; `hover` is a translucent scrim |\n| `color.border` | `default`, `strong`, `light`, `focus`, `hover`, `danger`, `glass`, `glassActive`, `faint`, `loading`, `success`, `section` | Cards and dividers use `strong`; inputs use `default`; `light` is a hairline rule inside a card |\n| `color.brand` | `default`, `hover`, `active`, `light`, `outline`, `loading*`, `linkHover` | The primary action colour |\n| `color.danger` | `default`, `hover`, `active`, `light`, `outline`, `loading*` | Destructive actions and errors |\n| `color.success` | (a string) | Solid green |\n| `color.warning` | (a string) | Solid amber |\n| `color.info` | (a string) | Solid blue, the mode's `brand.default` |\n| `color.chip.<tone>` | `{ text, bg, border }` for 13 tones. Status tones: `success`, `warning`, `danger`, `info`, `neutral`. Label tones: `status`, `author`, `series`, `subject`, `book`, `entryType`, `user`, `rating` | Used by `Chip`; `neutral` text holds 4.5:1 on its tint |\n| `color.overlay` | `backdrop` | Modal backdrop |\n| `color.gray` / `blue` / `red` | primitive scales | Don't use these in app code; use the semantic tokens above |\n| `space` | `xxxs` 0.1rem, `xxs` 0.125, `xs` 0.25, `sm` 0.375, `md` 0.5, `lg` 0.625, `xl` 0.75, `xxl` 1, `xxxl` 1.25, `xxxxl` 1.5, `xxxxxl` 2rem | `md` is the default gap between stacked fields |\n| `radius` | `sm` 4px, `md` 8px, `lg` 16px, `circle`, `pill` | Chosen by nesting depth; see [corners](corners.md) |\n| `fontSize` | `xxs` 0.6rem, `xs` 0.7, `sm` 0.75, `md` 0.875, `lg` 1, `xl` 1.25, `xxl` 1.75rem | Control text is `'0.80rem'`, the one sanctioned literal (already applied by `recipe.input` and Button) |\n| `fontWeight` | `regular` 400, `medium` 500, `semibold` 600, `bold` 700, `extrabold` 800 | |\n| `lineHeight` | `tight` 1, `body` 1.3 | |\n| `fontFamily` | `body`, `mono` | |\n| `shadow` | `card`, `cardStack`, `hoverLift`, `dangerStack`, `brandStack`, `glass`, `glassActive` | Floating layers use `hoverLift` |\n| `transition` | `fast`, `medium`, `slide`, `slow`, `spring` | Values like `'0.2s ease-in'` |\n| `zIndex` | `behind`, `base`, `stack.{lo,md,hi}`, `header`, `sticky`, `toast` | |\n| `breakpoint` | `mobile` (≤640px), `normal` | Media query strings |\n| `layout` | `navHeightMobile`, `modalWidth`, `controlHeight`, `floatingControlTopBase` | Measured chrome sizes to lay out around |\n\n### Recipes\n\nRecipes are style fragments that you spread into a rule: `{ ...theme.recipe.input }`.\n\n| Recipe | Gives you |\n|---|---|\n| `recipe.input` | Text-input chrome: font, `md` radius, border, hover and focus colours, iOS 16px floor; `&$danger` turns the border red if your sheet declares a `danger: {}` class |\n| `recipe.label` | Field label: semibold, `md`, muted; `&$danger` |\n| `recipe.focusRing` | Transparent 2px outline; set `outlineColor: theme.color.brand.outline` on `'&:focus'` |\n| `recipe.spinner` | 1em rotating box. `Spinner` is the normal way to show a spinner; use the recipe only for a custom rotating element |\n| `recipe.glass` / `glassHighlight` | Frosted translucent surface (floating chrome) and its active state |\n| `recipe.row` | The shaded field row a control sits in inside a card: `bg.cardHeader`, `md` corners, padding `md lg md sm`. Use it for custom rows next to form fields |\n| `recipe.card.shell` / `header` / `footer` | The Card surface (`lg`), its header bar, and its footer bar |\n| `recipe.modal.dialog` / `header` / `footer` | A `<dialog>` surface (`lg`, shared width, backdrop), its title, and its button bar |\n\nRecipes that use `$name` references need an empty class with that name in the\nsame sheet (`danger: {}`).\n\n## Do / don't\n\n- Do style with `theme.*` tokens and `createUseStyles`.\n- Do use `applyTransparency` for a tint instead of an rgba literal.\n- Don't render `GlobalStyles` yourself; `ThemeProvider` does.\n- Don't use the primitive `gray`, `blue` and `red` scales in app code.",
       "examples": [
         {
           "file": "src/theme/examples/01-styles.tsx",
@@ -10796,7 +10814,7 @@
           "version": "0.7.0",
           "date": "2026-11-26",
           "tags": [
-            "Tag",
+            "Chip",
             "ChipsInput",
             "lightTheme",
             "darkTheme"
@@ -10825,7 +10843,7 @@
           "version": "0.1.0",
           "date": "2026-11-21",
           "tags": [
-            "Tag",
+            "Chip",
             "lightTheme",
             "darkTheme"
           ],
@@ -10845,7 +10863,7 @@
           "version": "0.0.3",
           "date": "2026-11-21",
           "tags": [
-            "Tag",
+            "Chip",
             "lightTheme",
             "darkTheme"
           ],
@@ -11213,7 +11231,7 @@
       "docPath": "docs/corners.md",
       "title": "Corners",
       "description": "Corner radius by nesting depth, one radius step per level.",
-      "body": "Corner radius tracks **depth**, not size. Surfaces on the page background have\nthe roundest corners. Each surface nested inside another gets a squarer,\nconcentric corner, so the inner curve follows the outer one.\n\n## Tokens\n\n| Token | Value | Use |\n|---|---|---|\n| `theme.radius.lg` | 16px | Surfaces on the page background |\n| `theme.radius.md` | 8px | One level in: inside a card or modal; also floating layers |\n| `theme.radius.sm` | 4px | Two levels in: inside an input, inset box, row, or menu |\n| `theme.radius.pill` | 999px | Capsules: nav bar, a Switch with no nearby corner |\n| `theme.radius.circle` | 50% | Round glass buttons |\n\n## The rule\n\nFind where the element sits, then read its radius from this table:\n\n| Where the element sits | Radius | Examples |\n|---|---|---|\n| On the page background | `lg` | `Card`, modal dialog (`recipe.modal.dialog`), and any control directly on a `Page`: `Button`, `Select`, `CardRow`, text fields, `Tag` (automatic) |\n| Inside a card or modal | `md` | inputs and their shaded rows, Buttons, Selects, Tags and SegmentedControls in a Card or Modal (automatic), shaded rows (`recipe.row`), inset boxes |\n| Inside one of those | `sm` | a chip inside an input, controls in a nested Card, CardRow, inset box (`Surface`) or Popover (automatic), a menu item, a Switch track in a shaded row |\n| Flush with its parent (zero inset, edges touch) | the parent's radius | an unlabelled Select's trigger, an input filling its row |\n| Inset 4px or less from its parent | `calc(parent − inset)` | a Switch thumb 2px inside a 4px track is 2px |\n| A small control with no nearby corner | `pill` / `circle` | a Switch in a full-width card header |\n| A floating layer (popover, menu, dropdown, toast) | `md`, plus `shadow.hoverLift` or `recipe.glass` | its items are `sm` |\n\n**Step down one token per level** (`lg` → `md` → `sm`). Do not subtract the\npadding: a Card has 13px of inset, but the inputs inside it are `md` (8px), not\n16 − 13 = 3px. Exact subtraction applies only to tight insets of 4px or less.\n\n## It's automatic\n\nComponents read their corners from the **surface depth** they sit at, so you\npass no radius prop:\n\n| Depth | Radius | Where |\n|---|---|---|\n| 0 | `lg` (16px) | On the page background, inside a `Page` |\n| 1 | `md` (8px) | Inside a `Card`, `CardRow`, `Alert` or `Modal` on the page |\n| 2+ | `sm` (4px) | One more level in; deeper levels stay `sm` |\n| none | each component's old default | No `Page`, `Modal`, `Card`, `CardRow`, `Alert` or `Surface` above it (tests, a component rendered on its own) |\n\nWho provides depth:\n\n- `Page` provides 0, to its header, content and footer actions.\n- `Modal` provides 1 to its header, body and footer.\n- `Card`, `CardRow` and `Alert` each provide one level deeper than where\n  they sit, so a Card in a Card steps down.\n- `Popover` (and so `Menu` and the `Select` list) provides a fixed 2: a\n  floating layer is `md` and its items `sm`, whatever opened it.\n\nWhat follows depth with no prop: `Button`, `Select`, `Card`, `CardRow`,\n`Alert`, `TextInput`, `TextArea`, `NumberInput`, `DateTimeInput`,\n`ChipsInput` (its chips a step further in), `SegmentedControl`, `Tag`, and a\n`Switch` row (`layout=\"horizontal\"`, its `inset` track a step further in). A\nfield's shaded row and the field in it are flush, so both take the depth\nradius. For a hand-made box that holds Buttons or Selects, wrap its contents\nin `<Surface>` and read its own radius with `useSurfaceRadius()`; see\n[surface](component/surface.md).\n\nHand-drawn boxes (your own `recipe.card.shell` or `recipe.row` styles, a `useModal` modal) are invisible to depth: wrap their contents in `Surface`.\n\nAn explicit prop (`Button radius`, `Select surface`) is an **override** and\nalways wins over depth. It pins that radius even where depth would step down,\nwhich breaks concentricity, so set it only when the surface really is different\n(`radius=\"background\"` on a Button that must stay round inside a Card).\n\n`Switch` still takes `radius` (`inset` or `pill`) by hand for its track;\n`inset` follows the row as above, `pill` stays a capsule. `type=\"link\"`\nbuttons have no padding or background, so radius doesn't apply. Floating\nlayers (`Toast`, a `Popover` surface, the `ChipsInput` suggestion list) stay\n`md` wherever they open.\n\n## In your own styles\n\n```ts\nconst useStyles = createUseStyles((theme: Theme) => ({\n  panel: { ...theme.recipe.card.shell },  // already lg\n  inset: {\n    backgroundColor: theme.color.bg.cardHeader,\n    borderRadius: theme.radius.md,        // one level in\n    padding: theme.space.md,\n  },\n  chip: { borderRadius: theme.radius.sm }, // two levels in\n  knob: { borderRadius: `calc(${theme.radius.sm} - 2px)` }, // 2px inset\n}));\n```\n\n- Never write a literal `borderRadius` (`'12px'`, `'50%'`). The only\n  non-token form allowed is `calc(theme.radius.X ± Npx)` for tight insets.\n- A 1px inset works the other way too: `Card size=\"small\"` is\n  `calc(radius.md + 1px)` so its flush `md` children stay concentric."
+      "body": "Corner radius tracks **depth**, not size. Surfaces on the page background have\nthe roundest corners. Each surface nested inside another gets a squarer,\nconcentric corner, so the inner curve follows the outer one.\n\n## Tokens\n\n| Token | Value | Use |\n|---|---|---|\n| `theme.radius.lg` | 16px | Surfaces on the page background |\n| `theme.radius.md` | 8px | One level in: inside a card or modal; also floating layers |\n| `theme.radius.sm` | 4px | Two levels in: inside an input, inset box, row, or menu |\n| `theme.radius.pill` | 999px | Capsules: nav bar, a Switch with no nearby corner |\n| `theme.radius.circle` | 50% | Round glass buttons |\n\n## The rule\n\nFind where the element sits, then read its radius from this table:\n\n| Where the element sits | Radius | Examples |\n|---|---|---|\n| On the page background | `lg` | `Card`, modal dialog (`recipe.modal.dialog`), and any control directly on a `Page`: `Button`, `Select`, `CardRow`, text fields, `Chip` (automatic) |\n| Inside a card or modal | `md` | inputs and their shaded rows, Buttons, Selects, Tags and SegmentedControls in a Card or Modal (automatic), shaded rows (`recipe.row`), inset boxes |\n| Inside one of those | `sm` | a chip inside an input, controls in a nested Card, CardRow, inset box (`Surface`) or Popover (automatic), a menu item, a Switch track in a shaded row |\n| Flush with its parent (zero inset, edges touch) | the parent's radius | an unlabelled Select's trigger, an input filling its row |\n| Inset 4px or less from its parent | `calc(parent − inset)` | a Switch thumb 2px inside a 4px track is 2px |\n| A small control with no nearby corner | `pill` / `circle` | a Switch in a full-width card header |\n| A floating layer (popover, menu, dropdown, toast) | `md`, plus `shadow.hoverLift` or `recipe.glass` | its items are `sm` |\n\n**Step down one token per level** (`lg` → `md` → `sm`). Do not subtract the\npadding: a Card has 13px of inset, but the inputs inside it are `md` (8px), not\n16 − 13 = 3px. Exact subtraction applies only to tight insets of 4px or less.\n\n## It's automatic\n\nComponents read their corners from the **surface depth** they sit at, so you\npass no radius prop:\n\n| Depth | Radius | Where |\n|---|---|---|\n| 0 | `lg` (16px) | On the page background, inside a `Page` |\n| 1 | `md` (8px) | Inside a `Card`, `CardRow`, `Alert` or `Modal` on the page |\n| 2+ | `sm` (4px) | One more level in; deeper levels stay `sm` |\n| none | each component's old default | No `Page`, `Modal`, `Card`, `CardRow`, `Alert` or `Surface` above it (tests, a component rendered on its own) |\n\nWho provides depth:\n\n- `Page` provides 0, to its header, content and footer actions.\n- `Modal` provides 1 to its header, body and footer.\n- `Card`, `CardRow` and `Alert` each provide one level deeper than where\n  they sit, so a Card in a Card steps down.\n- `Popover` (and so `Menu` and the `Select` list) provides a fixed 2: a\n  floating layer is `md` and its items `sm`, whatever opened it.\n\nWhat follows depth with no prop: `Button`, `Select`, `Card`, `CardRow`,\n`Alert`, `TextInput`, `TextArea`, `NumberInput`, `DateTimeInput`,\n`ChipsInput` (its chips a step further in), `SegmentedControl`, `Chip`, and a\n`Switch` row (`layout=\"horizontal\"`, its `inset` track a step further in). A\nfield's shaded row and the field in it are flush, so both take the depth\nradius. For a hand-made box that holds Buttons or Selects, wrap its contents\nin `<Surface>` and read its own radius with `useSurfaceRadius()`; see\n[surface](component/surface.md).\n\nHand-drawn boxes (your own `recipe.card.shell` or `recipe.row` styles, a `useModal` modal) are invisible to depth: wrap their contents in `Surface`.\n\nAn explicit prop (`Button radius`, `Select surface`) is an **override** and\nalways wins over depth. It pins that radius even where depth would step down,\nwhich breaks concentricity, so set it only when the surface really is different\n(`radius=\"background\"` on a Button that must stay round inside a Card).\n\n`Switch` still takes `radius` (`inset` or `pill`) by hand for its track;\n`inset` follows the row as above, `pill` stays a capsule. `type=\"link\"`\nbuttons have no padding or background, so radius doesn't apply. Floating\nlayers (`Toast`, a `Popover` surface, the `ChipsInput` suggestion list) stay\n`md` wherever they open.\n\n## In your own styles\n\n```ts\nconst useStyles = createUseStyles((theme: Theme) => ({\n  panel: { ...theme.recipe.card.shell },  // already lg\n  inset: {\n    backgroundColor: theme.color.bg.cardHeader,\n    borderRadius: theme.radius.md,        // one level in\n    padding: theme.space.md,\n  },\n  chip: { borderRadius: theme.radius.sm }, // two levels in\n  knob: { borderRadius: `calc(${theme.radius.sm} - 2px)` }, // 2px inset\n}));\n```\n\n- Never write a literal `borderRadius` (`'12px'`, `'50%'`). The only\n  non-token form allowed is `calc(theme.radius.X ± Npx)` for tight insets.\n- A 1px inset works the other way too: `Card size=\"small\"` is\n  `calc(radius.md + 1px)` so its flush `md` children stay concentric."
     },
     {
       "slug": "patterns",
@@ -11310,6 +11328,23 @@
             "Switch"
           ],
           "text": "While loading, an `inset` (squared) switch shows a rounded-square ring with an arc travelling around it in the thumb's place, instead of the round spinner, which clashed with its square corners. A `pill` switch keeps the round spinner."
+        },
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "Chip"
+          ],
+          "text": "**Breaking:** `Tag` is renamed `Chip` (`TagProps` → `ChipProps`, `TagTone` → `ChipTone`), so it shares a name with `ChipsInput` and the `color.chip` tokens it draws from. Props and look are unchanged."
+        },
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "ChipsInput",
+            "Chip"
+          ],
+          "text": "**Breaking:** `chipColor` is renamed `tone` and takes a `ChipTone`, as `Chip` does; the `ChipColor` type is removed (use `ChipTone` from `@korzun/design/component`)."
         },
         {
           "version": "0.7.0",
@@ -11468,7 +11503,7 @@
             "DateTimeInput",
             "ChipsInput",
             "SegmentedControl",
-            "Tag",
+            "Chip",
             "Switch"
           ],
           "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.6.0 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px. A text field, `ChipsInput` box or field label directly on a Page also moves its text 16px in from the edge (8px elsewhere), the inset `Button` keeps, so it clears the deeper corner."
@@ -11578,7 +11613,7 @@
           "version": "0.7.0",
           "date": "2026-11-26",
           "tags": [
-            "Tag",
+            "Chip",
             "ChipsInput",
             "lightTheme",
             "darkTheme"
@@ -12021,7 +12056,7 @@
           "version": "0.1.0",
           "date": "2026-11-21",
           "tags": [
-            "Tag",
+            "Chip",
             "lightTheme",
             "darkTheme"
           ],
@@ -12133,7 +12168,7 @@
           "version": "0.0.3",
           "date": "2026-11-21",
           "tags": [
-            "Tag"
+            "Chip"
           ],
           "text": "`Tag` takes a `tone` prop that picks any `theme.color.chip` token (`status`, `author`, `series`, `subject`, `book`, `entryType`, `user`, `rating`, `neutral`) for text, background and border. It defaults to `subject`, so existing tags look the same. The clickable hover now comes from the tone too; with `subject` in light mode it matches the old amber."
         },
@@ -12141,7 +12176,7 @@
           "version": "0.0.3",
           "date": "2026-11-21",
           "tags": [
-            "Tag",
+            "Chip",
             "lightTheme",
             "darkTheme"
           ],
@@ -12151,7 +12186,7 @@
           "version": "0.0.3",
           "date": "2026-11-21",
           "tags": [
-            "Tag"
+            "Chip"
           ],
           "text": "`TagTone` type exported from the package root and `/component`."
         }
@@ -12287,7 +12322,6 @@
     "ButtonRadiusValue": "button",
     "ButtonTypeValue": "button",
     "ChipsInputProps": "chips-input",
-    "ChipColor": "chips-input",
     "DateTimeInputProps": "date-time-input",
     "FieldListProps": "field-list",
     "ColumnDescriptor": "field-list",
@@ -12314,14 +12348,14 @@
     "PopoverAlign": "popover",
     "PopoverGap": "popover",
     "PopoverSide": "popover",
+    "ChipProps": "chip",
+    "ChipTone": "chip",
     "CodeBlockProps": "code-block",
     "MetaLineProps": "meta-line",
     "MetaLinePair": "meta-line",
     "MetaLineItem": "meta-line",
     "TableProps": "table",
     "TableColumn": "table",
-    "TagProps": "tag",
-    "TagTone": "tag",
     "AlertProps": "alert",
     "AlertTone": "alert",
     "EmptyStateProps": "empty-state",

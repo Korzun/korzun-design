@@ -42,7 +42,7 @@ No `className`.
 
 - Do put it straight in a Card body, or in a `Space` there, not in a padded
   `div`.
-- Do use `type="link"` Buttons or small `Tag`s as `actions`; the line is one
+- Do use `type="link"` Buttons or small `Chip`s as `actions`; the line is one
   text line tall.
 - Don't use it for the gap between Cards on a page; `Page` already spaces them.
 

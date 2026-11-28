@@ -4,6 +4,7 @@ export { Divider, type DividerAlign, type DividerProps } from './divider/index.j
 export { Code, type CodeProps } from './code/index.js';
 export { CodeBlock, type CodeBlockProps } from './code-block/index.js';
 export { CardRow, type CardRowProps } from './card-row/index.js';
+export { Chip, type ChipProps, type ChipTone } from './chip/index.js';
 export { CollapsibleSection, type CollapsibleSectionProps } from './collapsible-section/index.js';
 export { EmptyState, type EmptyStateProps } from './empty-state/index.js';
 export { ErrorMessage, type ErrorMessageProps } from './error-message/index.js';
@@ -23,7 +24,6 @@ export { Spinner, type SpinnerProps } from './spinner/index.js';
 export { Space, type SpaceProps, type Gap } from './space/index.js';
 export { Surface, useSurfaceRadius, type SurfaceProps } from './surface/index.js';
 export { Table, type TableColumn, type TableProps } from './table/index.js';
-export { Tag, type TagProps, type TagTone } from './tag/index.js';
 export { Text, type TextProps } from './text/index.js';
 export { ThemeSetting, type ThemeSettingProps } from './theme-setting/index.js';
 export { TopFade, type TopFadeProps } from './top-fade/index.js';

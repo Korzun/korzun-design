@@ -35,7 +35,7 @@ state.
 
 - Actions are rendered inside the header button, but clicks and key presses
   inside an action stay with it: any action (a `Button`, a native `<button>`, a
-  link, a `Tag` with `onClick`) works without toggling the section, and Enter or
+  link, a `Chip` with `onClick`) works without toggling the section, and Enter or
   Space on it activates the action, not the header.
 - Actions in the array need their own `key`s (they are rendered as a bare
   array).

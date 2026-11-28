@@ -1,14 +1,14 @@
-/** Chip colors
- * `chipColor` picks the colour family for a field's chips. Use the one that
+/** Tones
+ * `tone` picks the colour family for a field's chips. Use the one that
  * tags the same values elsewhere in the app, so a subject looks like a subject
  * everywhere.
  */
-import { Space, Text } from '@korzun/design/component';
-import { ChipsInput, type ChipColor } from '@korzun/design/control';
+import { Space, Text, type ChipTone } from '@korzun/design/component';
+import { ChipsInput } from '@korzun/design/control';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { useState } from 'react';
 
-const COLORS: ChipColor[] = [
+const COLORS: ChipTone[] = [
   'status',
   'author',
   'series',
@@ -34,24 +34,24 @@ const useStyles = createUseStyles((theme: Theme) => ({
   },
 }));
 
-function ColorField({ chipColor }: { chipColor: ChipColor }) {
-  const [value, setValue] = useState<string[]>([chipColor]);
+function ColorField({ tone }: { tone: ChipTone }) {
+  const [value, setValue] = useState<string[]>([tone]);
   return (
     <Space direction="vertical" gap="xs">
       <Text size="sm" tone="muted">
-        {chipColor}
+        {tone}
       </Text>
-      <ChipsInput value={value} suggestions={[]} onChange={setValue} chipColor={chipColor} />
+      <ChipsInput value={value} suggestions={[]} onChange={setValue} tone={tone} />
     </Space>
   );
 }
 
-export default function ChipColors() {
+export default function ChipTones() {
   const styles = useStyles();
   return (
     <div className={styles.grid}>
-      {COLORS.map((chipColor) => (
-        <ColorField key={chipColor} chipColor={chipColor} />
+      {COLORS.map((tone) => (
+        <ColorField key={tone} tone={tone} />
       ))}
     </div>
   );

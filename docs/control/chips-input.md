@@ -7,7 +7,7 @@ category: Inputs
 
 <!-- generated:import -->
 
-`import { ChipsInput, type ChipColor, type ChipsInputProps } from '@korzun/design/control'`
+`import { ChipsInput, type ChipsInputProps } from '@korzun/design/control'`
 
 <!-- /generated:import -->
 
@@ -39,7 +39,7 @@ No `className`. The label is linked to the input with a generated id.
 
 - Do set `layout="horizontal"` and `dense` when it sits among other form fields
   in a `Card`; otherwise the label silently disappears.
-- Do pick a `chipColor` that matches how the same values are tagged elsewhere.
+- Do pick a `tone` that matches how the same values are tagged elsewhere.
 - Do use it inside a `Modal`: the dropdown opens inside the open dialog, so it
   is not hidden behind it (see [popover](popover.md)).
 - Don't rely on `name` for form submission.
@@ -179,19 +179,19 @@ export default function Layouts() {
 }
 ```
 
-### Chip colors
+### Tones
 
-`chipColor` picks the colour family for a field's chips. Use the one that
+`tone` picks the colour family for a field's chips. Use the one that
 tags the same values elsewhere in the app, so a subject looks like a subject
 everywhere.
 
 ```tsx
-import { Space, Text } from '@korzun/design/component';
-import { ChipsInput, type ChipColor } from '@korzun/design/control';
+import { Space, Text, type ChipTone } from '@korzun/design/component';
+import { ChipsInput } from '@korzun/design/control';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { useState } from 'react';
 
-const COLORS: ChipColor[] = [
+const COLORS: ChipTone[] = [
   'status',
   'author',
   'series',
@@ -217,24 +217,24 @@ const useStyles = createUseStyles((theme: Theme) => ({
   },
 }));
 
-function ColorField({ chipColor }: { chipColor: ChipColor }) {
-  const [value, setValue] = useState<string[]>([chipColor]);
+function ColorField({ tone }: { tone: ChipTone }) {
+  const [value, setValue] = useState<string[]>([tone]);
   return (
     <Space direction="vertical" gap="xs">
       <Text size="sm" tone="muted">
-        {chipColor}
+        {tone}
       </Text>
-      <ChipsInput value={value} suggestions={[]} onChange={setValue} chipColor={chipColor} />
+      <ChipsInput value={value} suggestions={[]} onChange={setValue} tone={tone} />
     </Space>
   );
 }
 
-export default function ChipColors() {
+export default function ChipTones() {
   const styles = useStyles();
   return (
     <div className={styles.grid}>
-      {COLORS.map((chipColor) => (
-        <ColorField key={chipColor} chipColor={chipColor} />
+      {COLORS.map((tone) => (
+        <ColorField key={tone} tone={tone} />
       ))}
     </div>
   );
@@ -273,7 +273,7 @@ export default function Disabled() {
 
 Among other fields in a `Card`, set `layout="horizontal"` and `dense` so the
 label shows and the height matches a `TextInput`. `allowCustom={false}`
-restricts it to known users, `chipColor="user"` matches how users are tagged
+restricts it to known users, `tone="user"` matches how users are tagged
 elsewhere, and `placeholder` and `disabled` follow the loading state. `name`
 is set on the text input only: form data gets the half-typed text, so submit
 the chips from state.
@@ -308,7 +308,7 @@ export default function FormRow() {
           suggestions={USERS}
           onChange={setUsers}
           allowCustom={false}
-          chipColor="user"
+          tone="user"
           disabled={loading}
           placeholder={loading ? 'Loading…' : 'Add users…'}
         />
@@ -376,7 +376,6 @@ export default function InDialog() {
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `allowCustom` | `boolean` | `true` | Enter or Tab adds the typed text as a chip. `false`: only suggestions can be added. |
-| `chipColor` | `'status' \| 'author' \| 'series' \| 'subject' \| 'book' \| 'entryType' \| 'user' \| 'rating' \| 'neutral' \| 'success' \| 'warning' \| 'danger' \| 'info'` | `'subject'` | Chip colour family from `theme.color.chip`. Pick the one that tags the same values elsewhere. |
 | `dense` | `boolean` | `false` | Matches a standard input's height, so the field lines up with `TextInput` and `Select` rows. Leave it off for a roomy standalone tag box. |
 | `disabled` | `boolean` | `false` | Disables typing and hides the chips' remove buttons, so the chips read as plain values. |
 | `label` | `string` |  | Field label. Ignored in the `block` layout; set `layout` to show it. |
@@ -385,14 +384,8 @@ export default function InDialog() {
 | `onChange` (required) | `(values: string[]) => void` |  | Receives the whole new array, not an event. |
 | `placeholder` | `string` |  | Shown only while there are no chips. |
 | `suggestions` (required) | `string[]` |  | Suggestion pool; pass `[]` for none. Values already chosen are hidden, and matching is a case-insensitive substring. |
+| `tone` | `'status' \| 'author' \| 'series' \| 'subject' \| 'book' \| 'entryType' \| 'user' \| 'rating' \| 'neutral' \| 'success' \| 'warning' \| 'danger' \| 'info'` | `'subject'` | The chips' colour, a `ChipTone` (as on `Chip`). Pick the one that tags the same values elsewhere. |
 | `value` (required) | `string[]` |  | The chips. Controlled: you own the array. |
-
-### Types
-
-```ts
-/** A chip colour family: a key of `theme.color.chip` (`'subject'`, `'user'`, `'neutral'`, …). */
-type ChipColor = 'status' | 'author' | 'series' | 'subject' | 'book' | 'entryType' | 'user' | 'rating' | 'neutral' | 'success' | 'warning' | 'danger' | 'info';
-```
 
 <!-- /generated:props -->
 
@@ -474,6 +467,7 @@ type ChipColor = 'status' | 'author' | 'series' | 'subject' | 'book' | 'entryTyp
 
 ## Changelog
 
+- **0.7.0** (2026-11-26): **Breaking:** `chipColor` is renamed `tone` and takes a `ChipTone`, as `Chip` does; the `ChipColor` type is removed (use `ChipTone` from `@korzun/design/component`).
 - **0.7.0** (2026-11-26): A `disabled` field hides its chips' remove (×) buttons instead of showing them dimmed, so the chips read as plain values.
 - **0.7.0** (2026-11-26): The text field shares a line with the chips whenever 8rem is free. Before, it sized from an input's natural width (about 20 characters, ~200px at the 16px phone size) and dropped to its own empty line, making the box a line taller than its chips need.
 - **0.7.0** (2026-11-26): Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.6.0 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px. A text field, `ChipsInput` box or field label directly on a Page also moves its text 16px in from the edge (8px elsewhere), the inset `Button` keeps, so it clears the deeper corner.

@@ -1,14 +1,14 @@
 import { createUseStyles, type Theme } from '../../theme/index.js';
 import { applyTransparency } from '../../utils.js';
 
-export type TagTone = keyof Theme['color']['chip'];
+export type ChipTone = keyof Theme['color']['chip'];
 
 // One static rule per chip token, so a tone is a class swap rather than a
 // dynamic (per-instance) style sheet. Hover deepens the tone's own colour: for
 // `subject` in light mode this reproduces the old hard-coded amber exactly.
 const toneRules = (theme: Theme) =>
   Object.fromEntries(
-    (Object.keys(theme.color.chip) as TagTone[]).map((tone) => {
+    (Object.keys(theme.color.chip) as ChipTone[]).map((tone) => {
       const chip = theme.color.chip[tone];
       return [
         `tone-${tone}`,
@@ -23,7 +23,7 @@ const toneRules = (theme: Theme) =>
         },
       ];
     })
-  ) as Record<`tone-${TagTone}`, object>;
+  ) as Record<`tone-${ChipTone}`, object>;
 
 export const useStyle = createUseStyles((theme: Theme) => ({
   root: {

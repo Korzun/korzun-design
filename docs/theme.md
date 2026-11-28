@@ -111,7 +111,7 @@ chosen by nesting depth; see [corners](corners.md).
 | `color.success` | (a string) | Solid green |
 | `color.warning` | (a string) | Solid amber |
 | `color.info` | (a string) | Solid blue, the mode's `brand.default` |
-| `color.chip.<tone>` | `{ text, bg, border }` for 13 tones. Status tones: `success`, `warning`, `danger`, `info`, `neutral`. Label tones: `status`, `author`, `series`, `subject`, `book`, `entryType`, `user`, `rating` | Used by `Tag`; `neutral` text holds 4.5:1 on its tint |
+| `color.chip.<tone>` | `{ text, bg, border }` for 13 tones. Status tones: `success`, `warning`, `danger`, `info`, `neutral`. Label tones: `status`, `author`, `series`, `subject`, `book`, `entryType`, `user`, `rating` | Used by `Chip`; `neutral` text holds 4.5:1 on its tint |
 | `color.overlay` | `backdrop` | Modal backdrop |
 | `color.gray` / `blue` / `red` | primitive scales | Don't use these in app code; use the semantic tokens above |
 | `space` | `xxxs` 0.1rem, `xxs` 0.125, `xs` 0.25, `sm` 0.375, `md` 0.5, `lg` 0.625, `xl` 0.75, `xxl` 1, `xxxl` 1.25, `xxxxl` 1.5, `xxxxxl` 2rem | `md` is the default gap between stacked fields |

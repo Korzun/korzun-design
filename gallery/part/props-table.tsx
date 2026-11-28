@@ -4,7 +4,7 @@ import {
   Space,
   Table,
   type TableColumn,
-  Tag,
+  Chip,
   Text,
 } from '@korzun/design/component';
 import { createUseStyles, type Theme, useTheme } from '@korzun/design/theme';
@@ -202,14 +202,14 @@ export const PropsTable = ({ table, tables, typePages = NO_PAGES, from }: PropsT
             {row.name}
           </code>
           {row.required && (
-            <Tag tone="warning" size="sm">
+            <Chip tone="warning" size="sm">
               required
-            </Tag>
+            </Chip>
           )}
           {row.deprecated && (
-            <Tag tone="neutral" size="sm">
+            <Chip tone="neutral" size="sm">
               deprecated
-            </Tag>
+            </Chip>
           )}
         </Space>
       ),

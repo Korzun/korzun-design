@@ -1,6 +1,7 @@
+import type { ChipTone } from '../../component/chip/index.js';
 import { createUseStyles, Theme } from '../../theme/index.js';
 
-type StyleProps = { chipColor: keyof Theme['color']['chip']; dense: boolean; onPage: boolean };
+type StyleProps = { tone: ChipTone; dense: boolean; onPage: boolean };
 
 export const useStyle = createUseStyles((theme: Theme) => ({
   root: {
@@ -85,12 +86,9 @@ export const useStyle = createUseStyles((theme: Theme) => ({
     lineHeight: theme.lineHeight.tight,
     borderStyle: 'solid',
     borderWidth: '1px',
-    background: ({ chipColor }: { chipColor: keyof Theme['color']['chip'] }) =>
-      theme.color.chip[chipColor].bg,
-    color: ({ chipColor }: { chipColor: keyof Theme['color']['chip'] }) =>
-      theme.color.chip[chipColor].text,
-    borderColor: ({ chipColor }: { chipColor: keyof Theme['color']['chip'] }) =>
-      theme.color.chip[chipColor].border,
+    background: ({ tone }: StyleProps) => theme.color.chip[tone].bg,
+    color: ({ tone }: StyleProps) => theme.color.chip[tone].text,
+    borderColor: ({ tone }: StyleProps) => theme.color.chip[tone].border,
     // Dense pulls the first chip toward the field's left border so chips hug the
     // edge (tag-input style) while the empty input keeps its standard padding.
     '&:first-child': {

@@ -128,11 +128,11 @@ it('disabled: chips show no remove button, only their text', () => {
   expect(screen.queryByRole('button')).not.toBeInTheDocument();
 });
 
-it('chipColor="user": still renders chip text and a working remove button', async () => {
+it('tone="user": still renders chip text and a working remove button', async () => {
   const user = userEvent.setup();
   const onChange = vi.fn();
   renderWithProviders(
-    <ChipsInput value={['alice']} suggestions={[]} onChange={onChange} chipColor="user" />
+    <ChipsInput value={['alice']} suggestions={[]} onChange={onChange} tone="user" />
   );
   expect(screen.getByText('alice')).toBeInTheDocument();
   const removeButton = screen.getByRole('button', { name: 'Remove alice' });

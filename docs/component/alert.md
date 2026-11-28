@@ -17,7 +17,7 @@ tone's `theme.color.chip[tone]` colours the background, border, title and icon;
 the body text uses the normal text colour so a sentence stays readable.
 
 Use something else for: inline field or form failure text (`ErrorMessage`), or a
-single status word in a row (`Tag`). An Alert is for a message with weight that
+single status word in a row (`Chip`). An Alert is for a message with weight that
 may carry an action.
 
 ## Usage

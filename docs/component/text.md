@@ -16,17 +16,17 @@ prop instead of a style file: a body line, a meta line, a caption, an inline
 error.
 
 **Unset props inherit.** A bare `<Text>` adds no size, tone or weight, so it
-looks exactly like the text around it. This keeps the look inside a `Tag`, a
+looks exactly like the text around it. This keeps the look inside a `Chip`, a
 `Button` or an error block: set only what you want to change.
 
-Use something else for: a heading (`Heading`), a single chip (`Tag`), a line
+Use something else for: a heading (`Heading`), a single chip (`Chip`), a line
 of small metadata (`MetaLine`), a boxed alert (`Alert`).
 
 ## Usage
 
 ### Behaviour
 
-- `tone` is not `Tag`'s `TagTone` union. `primary` to `description` map to the
+- `tone` is not `Chip`'s `ChipTone` union. `primary` to `description` map to the
   theme's `color.text.*`; `danger` and `success` use the chip text colours.
 - `danger` and `success` are for inline error and confirmation text. For a
   boxed message use `Alert`.

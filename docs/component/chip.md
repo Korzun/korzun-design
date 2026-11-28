@@ -1,13 +1,13 @@
 ---
-title: Tag
+title: Chip
 description: A small coloured chip for a category, status or value, optionally clickable.
 category: Data display
 ---
-# Tag
+# Chip
 
 <!-- generated:import -->
 
-`import { Tag, type TagProps, type TagTone } from '@korzun/design/component'`
+`import { Chip, type ChipProps, type ChipTone } from '@korzun/design/component'`
 
 <!-- /generated:import -->
 
@@ -23,7 +23,7 @@ Use something else for: an editable list of chips (`ChipsInput` in
 
 ### Choosing a tone
 
-`TagTone` is `keyof Theme['color']['chip']`. There are two groups: label tones
+`ChipTone` is `keyof Theme['color']['chip']`. There are two groups: label tones
 are **domain names** (what kind of thing the tag names) and status tones are
 **meanings** (what state it reports). Neither group is a set of colour names:
 never pick a tone for its colour. Pick by what the tag *is*:
@@ -77,7 +77,7 @@ see [corners](../corners.md).
 - Don't use `info` to look like a link (it shares a hue with links; use
   `Button type="link"` for actions).
 - Don't use `status` for a new state tag; it is a legacy label tone.
-- Don't nest a clickable Tag inside another clickable element (Button, a
+- Don't nest a clickable Chip inside another clickable element (Button, a
   clickable Card); both would fire.
 
 <!-- generated:examples -->
@@ -89,14 +89,14 @@ see [corners](../corners.md).
 Chips beside a title: the label is the child. An author chip names a person; a subject or keyword chip needs no `tone`.
 
 ```tsx
-import { Space, Tag, Text } from '@korzun/design/component';
+import { Space, Chip, Text } from '@korzun/design/component';
 
 export default function Basic() {
   return (
     <Space>
       <Text weight="semibold">Middlemarch</Text>
-      <Tag tone="author">George Eliot</Tag>
-      <Tag>Fiction</Tag>
+      <Chip tone="author">George Eliot</Chip>
+      <Chip>Fiction</Chip>
     </Space>
   );
 }
@@ -107,7 +107,7 @@ export default function Basic() {
 Status tones report a state: `success`, `warning`, `danger`, `info`, and `neutral` for a state with no meaning to signal. Each tag is labelled with its tone.
 
 ```tsx
-import { Tag, Text } from '@korzun/design/component';
+import { Chip, Text } from '@korzun/design/component';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { Fragment } from 'react';
 
@@ -135,7 +135,7 @@ export default function StatusTones() {
     <div className={styles.grid}>
       {TONES.map(({ tone, label, note }) => (
         <Fragment key={tone}>
-          <Tag tone={tone}>{label}</Tag>
+          <Chip tone={tone}>{label}</Chip>
           <Text tone="muted">
             {tone}: {note}
           </Text>
@@ -151,7 +151,7 @@ export default function StatusTones() {
 Label tones name a kind of thing, so the same kind of thing is the same colour everywhere. `status` is a legacy label tone despite its name: it is listed for completeness, and a new state tag uses a status tone. Each tag is labelled with its tone.
 
 ```tsx
-import { Tag, Text } from '@korzun/design/component';
+import { Chip, Text } from '@korzun/design/component';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { Fragment } from 'react';
 
@@ -182,7 +182,7 @@ export default function LabelTones() {
     <div className={styles.grid}>
       {TONES.map(({ tone, label, note }) => (
         <Fragment key={tone}>
-          <Tag tone={tone}>{label}</Tag>
+          <Chip tone={tone}>{label}</Chip>
           <Text tone="muted">
             {tone}: {note}
           </Text>
@@ -198,21 +198,21 @@ export default function LabelTones() {
 `md` is the regular chip and `sm` the compact one. `sm` sits inside a line of text without making the row taller.
 
 ```tsx
-import { Space, Tag, Text } from '@korzun/design/component';
+import { Space, Chip, Text } from '@korzun/design/component';
 
 export default function Sizes() {
   return (
     <Space direction="vertical" gap="sm" align="start">
       <Space>
-        <Tag size="md">Medium</Tag>
+        <Chip size="md">Medium</Chip>
         <Text tone="muted">md</Text>
       </Space>
       <Space>
-        <Tag size="sm">Small</Tag>
+        <Chip size="sm">Small</Chip>
         <Text tone="muted">sm</Text>
       </Space>
       <Text>
-        Chapter 12 <Tag size="sm">Fiction</Tag> <Tag size="sm">Classic</Tag> in a line of text
+        Chapter 12 <Chip size="sm">Fiction</Chip> <Chip size="sm">Classic</Chip> in a line of text
       </Text>
     </Space>
   );
@@ -224,7 +224,7 @@ export default function Sizes() {
 `onClick` makes a tag a button: focusable, Enter and Space activate it, and hover deepens the tone. It receives no event. Here an author chip filters the list, and clearing the filter is an action, so it is a link `Button`.
 
 ```tsx
-import { Space, Tag, Text } from '@korzun/design/component';
+import { Space, Chip, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -236,9 +236,9 @@ export default function Clickable() {
     <Space direction="vertical" gap="sm" align="start">
       <Space wrap>
         {authors.map((name) => (
-          <Tag key={name} tone="author" onClick={() => setAuthor(name)}>
+          <Chip key={name} tone="author" onClick={() => setAuthor(name)}>
             {name}
-          </Tag>
+          </Chip>
         ))}
         <Button type="link" onClick={() => setAuthor(undefined)}>
           Clear
@@ -255,7 +255,7 @@ export default function Clickable() {
 Compact `sm` chips in rows inside a `Card`. A kind of thing keeps its own tone; a state with no meaning to signal is `neutral`.
 
 ```tsx
-import { Card, Space, Tag, Text } from '@korzun/design/component';
+import { Card, Space, Chip, Text } from '@korzun/design/component';
 
 export default function InCard() {
   return (
@@ -263,17 +263,17 @@ export default function InCard() {
       <Space direction="vertical" gap="sm">
         <Space wrap gap="xs">
           <Text>Middlemarch</Text>
-          <Tag size="sm" tone="author">
+          <Chip size="sm" tone="author">
             George Eliot
-          </Tag>
-          <Tag size="sm">Fiction</Tag>
-          <Tag size="sm">Classic</Tag>
+          </Chip>
+          <Chip size="sm">Fiction</Chip>
+          <Chip size="sm">Classic</Chip>
         </Space>
         <Space gap="xs">
           <Text>Access</Text>
-          <Tag size="sm" tone="neutral">
+          <Chip size="sm" tone="neutral">
             Read only
-          </Tag>
+          </Chip>
         </Space>
       </Space>
     </Card>
@@ -297,7 +297,7 @@ export default function InCard() {
 ### Types
 
 ```ts
-type TagTone = 'status' | 'author' | 'series' | 'subject' | 'book' | 'entryType' | 'user' | 'rating' | 'neutral' | 'success' | 'warning' | 'danger' | 'info';
+type ChipTone = 'status' | 'author' | 'series' | 'subject' | 'book' | 'entryType' | 'user' | 'rating' | 'neutral' | 'success' | 'warning' | 'danger' | 'info';
 ```
 
 <!-- /generated:props -->
@@ -365,6 +365,8 @@ type TagTone = 'status' | 'author' | 'series' | 'subject' | 'book' | 'entryType'
 
 ## Changelog
 
+- **0.7.0** (2026-11-26): **Breaking:** `Tag` is renamed `Chip` (`TagProps` → `ChipProps`, `TagTone` → `ChipTone`), so it shares a name with `ChipsInput` and the `color.chip` tokens it draws from. Props and look are unchanged.
+- **0.7.0** (2026-11-26): **Breaking:** `chipColor` is renamed `tone` and takes a `ChipTone`, as `Chip` does; the `ChipColor` type is removed (use `ChipTone` from `@korzun/design/component`).
 - **0.7.0** (2026-11-26): Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.6.0 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px. A text field, `ChipsInput` box or field label directly on a Page also moves its text 16px in from the edge (8px elsewhere), the inset `Button` keeps, so it clears the deeper corner.
 - **0.7.0** (2026-11-26): `color.chip.neutral` text is a step stronger, so a neutral Tag or chip holds 4.5:1 on its tint over `bg.page`, `bg.card` and `bg.cardHeader`: light `#5E5E5E` (was `#6E6E6E`, 4.0:1 over `cardHeader`), dark `#A8ADB6`, the mode's `text.description` (was `#9CA1AB`, 4.47:1 over `page`). Fill and border are unchanged.
 - **0.1.0** (2026-11-21): `Tag` status tones: `success`, `warning` (yellow, stronger fill), `danger`, `info` (brand blue). New `color.warning` and `color.info` solid colours. Status tones report state; label tones name things. No visual change to existing tags.

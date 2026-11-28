@@ -7,7 +7,7 @@
  * edge blurs while the switch is on.
  * @viewport mobile
  */
-import { Space, Tag, Text, TopFade } from '@korzun/design/component';
+import { Space, Chip, Text, TopFade } from '@korzun/design/component';
 import { Switch } from '@korzun/design/control';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { useState } from 'react';
@@ -35,8 +35,8 @@ export default function Basic() {
   return (
     <>
       <div className={styles.scrolled}>
-        <Tag tone="author">George Eliot</Tag>
-        <Tag tone="subject">Fiction</Tag>
+        <Chip tone="author">George Eliot</Chip>
+        <Chip tone="subject">Fiction</Chip>
       </div>
       {installed && <TopFade />}
       <Space direction="vertical" className={styles.content}>
