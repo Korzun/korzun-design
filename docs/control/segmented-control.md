@@ -79,7 +79,7 @@ const SORTS = [
 export default function Basic() {
   const [sort, setSort] = useState<(typeof SORTS)[number]['value']>('title');
   return (
-    <Stack>
+    <Stack align="start">
       <Text tone="muted">Sort by</Text>
       <SegmentedControl label="Sort by" options={SORTS} value={sort} onChange={setSort} />
       <Text tone="muted">Sorted by: {sort}</Text>
@@ -110,7 +110,7 @@ const RATINGS = [
 export default function Icons() {
   const [rating, setRating] = useState<(typeof RATINGS)[number]['value']>('ok');
   return (
-    <Stack>
+    <Stack align="start">
       <Text tone="muted">With captions</Text>
       <SegmentedControl label="Rating" options={RATINGS} value={rating} onChange={setRating} />
       <Text tone="muted">showLabels off</Text>
@@ -148,7 +148,7 @@ const RATINGS = [
 export default function Clearable() {
   const [rating, setRating] = useState<(typeof RATINGS)[number]['value'] | null>('great');
   return (
-    <Stack>
+    <Stack align="start">
       <SegmentedControl
         label="Rating"
         options={RATINGS}
@@ -181,7 +181,7 @@ const OPTIONS = [
 
 export default function ReadOnly() {
   return (
-    <Stack>
+    <Stack align="start">
       <Text tone="muted">Value review</Text>
       <SegmentedControl label="Status" options={OPTIONS} value="review" />
       <Text tone="muted">Value null</Text>

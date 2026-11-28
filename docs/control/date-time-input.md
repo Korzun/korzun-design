@@ -125,7 +125,7 @@ changes. A year or year-month shows as the 1st of the period, a timestamp shows 
 Pick a sample, then edit the date to see what `onChange` sends back.
 
 ```tsx
-import { Stack, Text } from '@korzun/design/component';
+import { Inline, Stack, Text } from '@korzun/design/component';
 import { DateTimeInput, SegmentedControl } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -142,12 +142,14 @@ export default function StoredValues() {
   const [value, setValue] = useState<string | undefined>('2023-06');
   return (
     <Stack>
-      <SegmentedControl
-        label="Stored value"
-        options={SAMPLES}
-        value={value ?? null}
-        onChange={setValue}
-      />
+      <Inline>
+        <SegmentedControl
+          label="Stored value"
+          options={SAMPLES}
+          value={value ?? null}
+          onChange={setValue}
+        />
+      </Inline>
       <DateTimeInput name="stored" label="Publish date" value={value} onChange={setValue} />
       <Text tone="muted">Value: {value === undefined ? 'undefined' : `'${value}'`}</Text>
     </Stack>

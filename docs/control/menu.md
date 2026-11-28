@@ -104,7 +104,7 @@ import { useState } from 'react';
 export default function Basic() {
   const [chosen, setChosen] = useState('nothing yet');
   return (
-    <Stack>
+    <Stack align="start">
       <Menu
         trigger={(p) => <Button {...p}>Sort by</Button>}
         items={[
@@ -134,7 +134,7 @@ import { useState } from 'react';
 export default function LinksAndIcons() {
   const [chosen, setChosen] = useState('nothing yet');
   return (
-    <Stack>
+    <Stack align="start">
       <Menu
         trigger={(p) => <Button {...p}>Go to</Button>}
         items={[
@@ -163,7 +163,7 @@ import { useState } from 'react';
 export default function DangerAndSeparator() {
   const [chosen, setChosen] = useState('nothing yet');
   return (
-    <Stack>
+    <Stack align="start">
       <Menu
         trigger={(p) => <Button {...p}>Book</Button>}
         items={[
@@ -276,7 +276,7 @@ export default function Align() {
     { label: 'Close', onClick: () => setChosen(`Close (${align})`) },
   ];
   return (
-    <Stack>
+    <Stack align="start">
       <Text tone="muted">Chosen: {chosen}</Text>
       <Menu
         align="start"
@@ -311,7 +311,7 @@ import { useState } from 'react';
 export default function Side() {
   const [chosen, setChosen] = useState('nothing yet');
   return (
-    <Stack>
+    <Stack align="start">
       <Text tone="muted">Chosen: {chosen}</Text>
       <Menu
         side="top"
@@ -431,7 +431,7 @@ export default function IntentProps() {
   const [prefetches, setPrefetches] = useState(0);
   const count = () => setPrefetches((n) => n + 1);
   return (
-    <Stack>
+    <Stack align="start">
       <Menu
         trigger={(p) => <Button {...p}>Book</Button>}
         items={[
@@ -498,10 +498,10 @@ export default function InDialog() {
   const [open, setOpen] = useState(false);
   const [chosen, setChosen] = useState('nothing yet');
   return (
-    <>
+    <Stack align="start">
       <Button onClick={() => setOpen(true)}>Open dialog</Button>
       <Dialog open={open} onClose={() => setOpen(false)} title="Edit book">
-        <Stack>
+        <Stack align="start">
           <Menu
             trigger={(p) => <Button {...p}>Actions</Button>}
             items={[
@@ -513,7 +513,7 @@ export default function InDialog() {
           <Text tone="muted">Chosen: {chosen}</Text>
         </Stack>
       </Dialog>
-    </>
+    </Stack>
   );
 }
 ```

@@ -11,7 +11,7 @@ import { useState } from 'react';
 export default function LinksAndIcons() {
   const [chosen, setChosen] = useState('nothing yet');
   return (
-    <Stack>
+    <Stack align="start">
       <Menu
         trigger={(p) => <Button {...p}>Go to</Button>}
         items={[

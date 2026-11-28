@@ -308,7 +308,7 @@ export default function InDialog() {
   const [open, setOpen] = useState(false);
   const [subjects, setSubjects] = useState<string[]>([]);
   return (
-    <Stack>
+    <Stack align="start">
       <Button onClick={() => setOpen(true)}>Edit subjects</Button>
       <Text tone="muted">Subjects: {subjects.join(', ') || 'none'}</Text>
       <Dialog

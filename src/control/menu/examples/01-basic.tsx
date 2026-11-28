@@ -10,7 +10,7 @@ import { useState } from 'react';
 export default function Basic() {
   const [chosen, setChosen] = useState('nothing yet');
   return (
-    <Stack>
+    <Stack align="start">
       <Menu
         trigger={(p) => <Button {...p}>Sort by</Button>}
         items={[

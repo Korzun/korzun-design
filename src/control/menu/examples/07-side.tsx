@@ -9,7 +9,7 @@ import { useState } from 'react';
 export default function Side() {
   const [chosen, setChosen] = useState('nothing yet');
   return (
-    <Stack>
+    <Stack align="start">
       <Text tone="muted">Chosen: {chosen}</Text>
       <Menu
         side="top"

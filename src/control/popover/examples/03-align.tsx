@@ -28,7 +28,7 @@ export default function Align() {
   const toggle = (align: Align) => setOpen((current) => (current === align ? null : align));
   const anchors = { start: startAnchor, center: centerAnchor, end: endAnchor };
   return (
-    <Stack>
+    <Stack align="start">
       <Text tone="muted">Open: {open ?? 'none'}</Text>
       <Button ref={startAnchor} onClick={() => toggle('start')}>
         align start: popover at the left edge

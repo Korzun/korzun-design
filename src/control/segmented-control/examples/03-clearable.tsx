@@ -17,7 +17,7 @@ const RATINGS = [
 export default function Clearable() {
   const [rating, setRating] = useState<(typeof RATINGS)[number]['value'] | null>('great');
   return (
-    <Stack>
+    <Stack align="start">
       <SegmentedControl
         label="Rating"
         options={RATINGS}

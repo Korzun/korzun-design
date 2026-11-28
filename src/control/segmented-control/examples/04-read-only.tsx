@@ -14,7 +14,7 @@ const OPTIONS = [
 
 export default function ReadOnly() {
   return (
-    <Stack>
+    <Stack align="start">
       <Text tone="muted">Value review</Text>
       <SegmentedControl label="Status" options={OPTIONS} value="review" />
       <Text tone="muted">Value null</Text>

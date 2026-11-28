@@ -272,7 +272,7 @@ export default function Align() {
   const toggle = (align: Align) => setOpen((current) => (current === align ? null : align));
   const anchors = { start: startAnchor, center: centerAnchor, end: endAnchor };
   return (
-    <Stack>
+    <Stack align="start">
       <Text tone="muted">Open: {open ?? 'none'}</Text>
       <Button ref={startAnchor} onClick={() => toggle('start')}>
         align start: popover at the left edge
@@ -331,7 +331,7 @@ export default function Width() {
   const toggle = (name: 'matched' | 'content') =>
     setOpen((current) => (current === name ? null : name));
   return (
-    <Stack>
+    <Stack align="start">
       <Text tone="muted">Open: {open ?? 'none'}</Text>
       <Button ref={matchedAnchor} onClick={() => toggle('matched')}>
         matchWidth: as wide as this button
@@ -568,7 +568,7 @@ export default function InDialog() {
     setOpen(false);
   };
   return (
-    <>
+    <Stack align="start">
       <Button onClick={() => setDialogOpen(true)}>Open dialog</Button>
       <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} title="Edit book">
         <Stack align="start">
@@ -590,7 +590,7 @@ export default function InDialog() {
           <Text tone="muted">Chosen: {chosen}</Text>
         </Stack>
       </Dialog>
-    </>
+    </Stack>
   );
 }
 ```

@@ -137,7 +137,7 @@ export default function NotDismissable() {
   const [open, setOpen] = useState(false);
   const [saving, setSaving] = useState(true);
   return (
-    <>
+    <Stack align="start">
       <Button onClick={() => setOpen(true)}>Open busy dialog</Button>
       <Dialog
         open={open}
@@ -160,7 +160,7 @@ export default function NotDismissable() {
           <Switch name="saving" label="Request in flight" checked={saving} onChange={setSaving} />
         </Stack>
       </Dialog>
-    </>
+    </Stack>
   );
 }
 ```
