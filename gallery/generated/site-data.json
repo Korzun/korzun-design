@@ -3948,7 +3948,7 @@
           "slug": "disabled",
           "order": 5,
           "title": "Disabled",
-          "description": "`disabled` blocks typing and turns the chips' remove buttons off. A switch\ntoggles it so both states can be tried.",
+          "description": "`disabled` blocks typing and hides the chips' remove buttons. A switch\ntoggles it so both states can be tried.",
           "code": "import { Space } from '@korzun/design/component';\nimport { ChipsInput, Switch } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Disabled() {\n  const [disabled, setDisabled] = useState(true);\n  const [value, setValue] = useState(['Cherry', 'Date']);\n  return (\n    <Space direction=\"vertical\">\n      <Switch name=\"disabled\" label=\"Disabled\" checked={disabled} onChange={setDisabled} />\n      <ChipsInput\n        value={value}\n        suggestions={['Apple', 'Banana']}\n        onChange={setValue}\n        disabled={disabled}\n        placeholder=\"Add fruit…\"\n      />\n    </Space>\n  );\n}\n"
         },
         {
@@ -4006,7 +4006,7 @@
               "name": "disabled",
               "type": "boolean",
               "required": false,
-              "description": "Disables typing and the chip remove buttons.",
+              "description": "Disables typing and hides the chips' remove buttons, so the chips read as plain values.",
               "default": "false"
             },
             {
@@ -4455,6 +4455,14 @@
         }
       ],
       "changelog": [
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "ChipsInput"
+          ],
+          "text": "A `disabled` field hides its chips' remove (×) buttons instead of showing them dimmed, so the chips read as plain values."
+        },
         {
           "version": "0.7.0",
           "date": "2026-11-26",
@@ -11302,6 +11310,14 @@
             "Switch"
           ],
           "text": "While loading, an `inset` (squared) switch shows a rounded-square ring with an arc travelling around it in the thumb's place, instead of the round spinner, which clashed with its square corners. A `pill` switch keeps the round spinner."
+        },
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "ChipsInput"
+          ],
+          "text": "A `disabled` field hides its chips' remove (×) buttons instead of showing them dimmed, so the chips read as plain values."
         },
         {
           "version": "0.7.0",

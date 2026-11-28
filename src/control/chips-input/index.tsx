@@ -21,7 +21,7 @@ export type ChipsInputProps = {
   placeholder?: string;
   /** Enter or Tab adds the typed text as a chip. `false`: only suggestions can be added. */
   allowCustom?: boolean;
-  /** Disables typing and the chip remove buttons. */
+  /** Disables typing and hides the chips' remove buttons, so the chips read as plain values. */
   disabled?: boolean;
   /** Field label. Ignored in the `block` layout; set `layout` to show it. */
   label?: string;
@@ -119,16 +119,17 @@ export const ChipsInput = ({
         {value.map((chip) => (
           <span key={chip} className={style.chip}>
             {chip}
-            <button
-              type="button"
-              className={style.chipRemove}
-              aria-label={`Remove ${chip}`}
-              disabled={disabled}
-              tabIndex={disabled ? -1 : 0}
-              onClick={disabled ? undefined : () => removeChip(chip)}
-            >
-              <XIcon />
-            </button>
+            {/* Disabled chips are read-only text: no remove button to show or reach. */}
+            {!disabled && (
+              <button
+                type="button"
+                className={style.chipRemove}
+                aria-label={`Remove ${chip}`}
+                onClick={() => removeChip(chip)}
+              >
+                <XIcon />
+              </button>
+            )}
           </span>
         ))}
         <input

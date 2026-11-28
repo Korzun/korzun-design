@@ -243,7 +243,7 @@ export default function ChipColors() {
 
 ### Disabled
 
-`disabled` blocks typing and turns the chips' remove buttons off. A switch
+`disabled` blocks typing and hides the chips' remove buttons. A switch
 toggles it so both states can be tried.
 
 ```tsx
@@ -378,7 +378,7 @@ export default function InDialog() {
 | `allowCustom` | `boolean` | `true` | Enter or Tab adds the typed text as a chip. `false`: only suggestions can be added. |
 | `chipColor` | `'status' \| 'author' \| 'series' \| 'subject' \| 'book' \| 'entryType' \| 'user' \| 'rating' \| 'neutral' \| 'success' \| 'warning' \| 'danger' \| 'info'` | `'subject'` | Chip colour family from `theme.color.chip`. Pick the one that tags the same values elsewhere. |
 | `dense` | `boolean` | `false` | Matches a standard input's height, so the field lines up with `TextInput` and `Select` rows. Leave it off for a roomy standalone tag box. |
-| `disabled` | `boolean` | `false` | Disables typing and the chip remove buttons. |
+| `disabled` | `boolean` | `false` | Disables typing and hides the chips' remove buttons, so the chips read as plain values. |
 | `label` | `string` |  | Field label. Ignored in the `block` layout; set `layout` to show it. |
 | `layout` | `'horizontal' \| 'vertical' \| 'block'` | `'block'` | `'block'` is the bare box, with no label. `'horizontal'` and `'vertical'` add a label on a `bg.cardHeader` row, like the other fields. Corners follow surface depth ([corners](../corners.md)); chips are a step squarer than the box. |
 | `name` | `string` |  | Set on the text input only: form data gets the half-typed text, not the chips. |
@@ -474,6 +474,7 @@ type ChipColor = 'status' | 'author' | 'series' | 'subject' | 'book' | 'entryTyp
 
 ## Changelog
 
+- **0.7.0** (2026-11-26): A `disabled` field hides its chips' remove (×) buttons instead of showing them dimmed, so the chips read as plain values.
 - **0.7.0** (2026-11-26): The text field shares a line with the chips whenever 8rem is free. Before, it sized from an input's natural width (about 20 characters, ~200px at the 16px phone size) and dropped to its own empty line, making the box a line taller than its chips need.
 - **0.7.0** (2026-11-26): Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.6.0 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px. A text field, `ChipsInput` box or field label directly on a Page also moves its text 16px in from the edge (8px elsewhere), the inset `Button` keeps, so it clears the deeper corner.
 - **0.7.0** (2026-11-26): `color.chip.neutral` text is a step stronger, so a neutral Tag or chip holds 4.5:1 on its tint over `bg.page`, `bg.card` and `bg.cardHeader`: light `#5E5E5E` (was `#6E6E6E`, 4.0:1 over `cardHeader`), dark `#A8ADB6`, the mode's `text.description` (was `#9CA1AB`, 4.47:1 over `page`). Fill and border are unchanged.

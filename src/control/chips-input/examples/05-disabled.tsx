@@ -1,5 +1,5 @@
 /** Disabled
- * `disabled` blocks typing and turns the chips' remove buttons off. A switch
+ * `disabled` blocks typing and hides the chips' remove buttons. A switch
  * toggles it so both states can be tried.
  */
 import { Space } from '@korzun/design/component';
