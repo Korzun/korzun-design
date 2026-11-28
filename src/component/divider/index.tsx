@@ -7,9 +7,6 @@ import { useStyle } from './style.js';
 /** Where a divider's label or actions sit on the line. */
 export type DividerAlign = 'left' | 'center' | 'right';
 
-/** @deprecated Renamed `DividerAlign`. */
-export type CardDividerAlign = DividerAlign;
-
 export type DividerProps = {
   /** Optional label, one word or two: it does not wrap. Without a label and without actions the divider is a plain full-width line. `null`, `undefined` and `false` count as absent. */
   children?: ReactNode;
@@ -22,9 +19,6 @@ export type DividerProps = {
   /** Reach the edges of the Card or Modal body the divider sits in, cancelling the body's padding. Defaults to `true` directly inside a Card or Modal body and `false` anywhere else, where the line spans its container. `true` does nothing outside a Card or Modal. */
   bleed?: boolean;
 };
-
-/** @deprecated Renamed `DividerProps`. */
-export type CardDividerProps = DividerProps;
 
 /** The padding a body puts around its content, and the surface depth inside it. */
 type Body = { padding: string; depth: number | undefined };
@@ -109,6 +103,3 @@ export const Divider = ({
     </div>
   );
 };
-
-/** @deprecated Renamed `Divider`, which works outside a Card too. */
-export const CardDivider = Divider;

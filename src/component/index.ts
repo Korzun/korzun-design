@@ -1,13 +1,6 @@
 export { Alert, type AlertProps, type AlertTone } from './alert/index.js';
 export { Card, type CardProps } from './card/index.js';
-export {
-  CardDivider,
-  Divider,
-  type CardDividerAlign,
-  type CardDividerProps,
-  type DividerAlign,
-  type DividerProps,
-} from './divider/index.js';
+export { Divider, type DividerAlign, type DividerProps } from './divider/index.js';
 export { Code, type CodeProps } from './code/index.js';
 export { CodeBlock, type CodeBlockProps } from './code-block/index.js';
 export { CardRow, type CardRowProps } from './card-row/index.js';

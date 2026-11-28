@@ -7,7 +7,7 @@ import { lightTheme } from '../../theme/index.js';
 import { CardRow } from '../card-row/index.js';
 import { Card } from '../card/index.js';
 import { Surface } from '../surface/index.js';
-import { CardDivider, Divider } from './index.js';
+import { Divider } from './index.js';
 
 describe('Divider', () => {
   it('renders a separator with no label by default', () => {
@@ -113,9 +113,5 @@ describe('Divider bleed', () => {
     const [inCard, outside] = screen.getAllByRole('separator');
     expect(margin(inCard)).toBe('0px');
     expect(margin(outside)).toBe('0px');
-  });
-
-  it('CardDivider is the same component', () => {
-    expect(CardDivider).toBe(Divider);
   });
 });

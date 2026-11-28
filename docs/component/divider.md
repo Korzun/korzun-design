@@ -7,16 +7,7 @@ category: Layout
 
 <!-- generated:import -->
 
-```ts
-import {
-  CardDivider,
-  Divider,
-  type CardDividerAlign,
-  type CardDividerProps,
-  type DividerAlign,
-  type DividerProps,
-} from '@korzun/design/component';
-```
+`import { Divider, type DividerAlign, type DividerProps } from '@korzun/design/component'`
 
 <!-- /generated:import -->
 
@@ -24,9 +15,6 @@ A horizontal rule that splits content into sections, optionally with a label
 ("Devices", "Validation") and/or actions sitting on the line. Directly inside a
 `Card` or `Modal` body it cancels the body's padding, so the line meets the
 box's edges; anywhere else it spans its container. Renders `role="separator"`.
-
-`CardDivider`, `CardDividerProps` and `CardDividerAlign` are the old names,
-kept as deprecated aliases.
 
 Use something else for: separating whole features (use separate `Card`s),
 separating menu items (`PageActionItem.separatorBefore`).
@@ -258,10 +246,6 @@ export default function Anywhere() {
 ### Types
 
 ```ts
-/** Deprecated: use DividerAlign. */
-type CardDividerAlign = DividerAlign;
-/** Deprecated: use DividerProps. */
-type CardDividerProps = DividerProps;
 /** Where a divider's label or actions sit on the line. */
 type DividerAlign = 'left' | 'center' | 'right';
 ```
@@ -286,6 +270,6 @@ type DividerAlign = 'left' | 'center' | 'right';
 
 ## Changelog
 
-- **0.7.0** (2026-11-26): `CardDivider` is now `Divider` and works anywhere: directly in a Card or Dialog body it reaches the edges as before (cancelling `space.xl` in a large Card, 1px in a small one, `space.xxl` in a Dialog, where it used to overhang everything but a large Card), and on the page, in a `CardRow`, `Alert`, `Surface` or nested Card it spans its container. The new `bleed` prop overrides that. `CardDivider`, `CardDividerProps` and `CardDividerAlign` stay as deprecated aliases of `Divider`, `DividerProps` and `DividerAlign`.
+- **0.7.0** (2026-11-26): `CardDivider` is now `Divider` and works anywhere: directly in a Card or Dialog body it reaches the edges as before (cancelling `space.xl` in a large Card, 1px in a small one, `space.xxl` in a Dialog, where it used to overhang everything but a large Card), and on the page, in a `CardRow`, `Alert`, `Surface` or nested Card it spans its container. The new `bleed` prop overrides that. **Breaking:** the old names `CardDivider`, `CardDividerProps` and `CardDividerAlign` are removed; import `Divider`, `DividerProps` and `DividerAlign`.
 
 <!-- /generated:changelog -->

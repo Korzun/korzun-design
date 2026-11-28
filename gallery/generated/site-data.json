@@ -450,17 +450,14 @@
       "description": "A horizontal rule that splits content into sections, optionally labelled and with actions; in a Card or Modal body it reaches the edges.",
       "category": "Layout",
       "values": [
-        "CardDivider",
         "Divider"
       ],
       "types": [
-        "CardDividerAlign",
-        "CardDividerProps",
         "DividerAlign",
         "DividerProps"
       ],
-      "importLine": "import { CardDivider, Divider, type CardDividerAlign, type CardDividerProps, type DividerAlign, type DividerProps } from '@korzun/design/component'",
-      "body": "A horizontal rule that splits content into sections, optionally with a label\n(\"Devices\", \"Validation\") and/or actions sitting on the line. Directly inside a\n`Card` or `Modal` body it cancels the body's padding, so the line meets the\nbox's edges; anywhere else it spans its container. Renders `role=\"separator\"`.\n\n`CardDivider`, `CardDividerProps` and `CardDividerAlign` are the old names,\nkept as deprecated aliases.\n\nUse something else for: separating whole features (use separate `Card`s),\nseparating menu items (`PageActionItem.separatorBefore`).\n\n## Usage\n\n### Styling\n\nNo `className`.\n\n### Surprising behaviour\n\n- **The bleed only reaches the nearest body.** A divider bleeds when the Card\n  or Modal body is the nearest box around it. Inside a `CardRow`, `Alert`,\n  `Surface` or nested `Card` it spans that box instead. `bleed={false}` opts\n  out in a body; `bleed` does nothing outside one.\n- **A padded wrapper defeats it.** In a Card body but inside your own padded\n  `div`, the divider still cancels the Card's padding, not yours. Wrap the\n  box's contents in `Surface`, or pass `bleed={false}`.\n- It always reserves one label line of height, labelled or not, so swapping a\n  plain divider for a labelled one does not shift the layout.\n- The label does not wrap (`white-space: nowrap`); keep it to a word or two.\n\n## Do / don't\n\n- Do put it straight in a Card body, or in a `Stack` there, not in a padded\n  `div`.\n- Do use `type=\"link\"` Buttons or small `Tag`s as `actions`; the line is one\n  text line tall.\n- Don't use it for the gap between Cards on a page; `Page` already spaces them.",
+      "importLine": "import { Divider, type DividerAlign, type DividerProps } from '@korzun/design/component'",
+      "body": "A horizontal rule that splits content into sections, optionally with a label\n(\"Devices\", \"Validation\") and/or actions sitting on the line. Directly inside a\n`Card` or `Modal` body it cancels the body's padding, so the line meets the\nbox's edges; anywhere else it spans its container. Renders `role=\"separator\"`.\n\nUse something else for: separating whole features (use separate `Card`s),\nseparating menu items (`PageActionItem.separatorBefore`).\n\n## Usage\n\n### Styling\n\nNo `className`.\n\n### Surprising behaviour\n\n- **The bleed only reaches the nearest body.** A divider bleeds when the Card\n  or Modal body is the nearest box around it. Inside a `CardRow`, `Alert`,\n  `Surface` or nested `Card` it spans that box instead. `bleed={false}` opts\n  out in a body; `bleed` does nothing outside one.\n- **A padded wrapper defeats it.** In a Card body but inside your own padded\n  `div`, the divider still cancels the Card's padding, not yours. Wrap the\n  box's contents in `Surface`, or pass `bleed={false}`.\n- It always reserves one label line of height, labelled or not, so swapping a\n  plain divider for a labelled one does not shift the layout.\n- The label does not wrap (`white-space: nowrap`); keep it to a word or two.\n\n## Do / don't\n\n- Do put it straight in a Card body, or in a `Stack` there, not in a padded\n  `div`.\n- Do use `type=\"link\"` Buttons or small `Tag`s as `actions`; the line is one\n  text line tall.\n- Don't use it for the gap between Cards on a page; `Page` already spaces them.",
       "examples": [
         {
           "file": "src/component/divider/examples/01-basic.tsx",
@@ -543,20 +540,6 @@
           ]
         },
         {
-          "name": "CardDividerAlign",
-          "kind": "alias",
-          "rows": [],
-          "text": "DividerAlign",
-          "description": "Deprecated: use DividerAlign."
-        },
-        {
-          "name": "CardDividerProps",
-          "kind": "alias",
-          "rows": [],
-          "text": "DividerProps",
-          "description": "Deprecated: use DividerProps."
-        },
-        {
           "name": "DividerAlign",
           "kind": "alias",
           "rows": [],
@@ -602,11 +585,10 @@
           "date": "2026-11-26",
           "tags": [
             "Divider",
-            "CardDivider",
             "Card",
             "Dialog"
           ],
-          "text": "`CardDivider` is now `Divider` and works anywhere: directly in a Card or Dialog body it reaches the edges as before (cancelling `space.xl` in a large Card, 1px in a small one, `space.xxl` in a Dialog, where it used to overhang everything but a large Card), and on the page, in a `CardRow`, `Alert`, `Surface` or nested Card it spans its container. The new `bleed` prop overrides that. `CardDivider`, `CardDividerProps` and `CardDividerAlign` stay as deprecated aliases of `Divider`, `DividerProps` and `DividerAlign`."
+          "text": "`CardDivider` is now `Divider` and works anywhere: directly in a Card or Dialog body it reaches the edges as before (cancelling `space.xl` in a large Card, 1px in a small one, `space.xxl` in a Dialog, where it used to overhang everything but a large Card), and on the page, in a `CardRow`, `Alert`, `Surface` or nested Card it spans its container. The new `bleed` prop overrides that. **Breaking:** the old names `CardDivider`, `CardDividerProps` and `CardDividerAlign` are removed; import `Divider`, `DividerProps` and `DividerAlign`."
         }
       ]
     },
@@ -1746,11 +1728,10 @@
           "date": "2026-11-26",
           "tags": [
             "Divider",
-            "CardDivider",
             "Card",
             "Dialog"
           ],
-          "text": "`CardDivider` is now `Divider` and works anywhere: directly in a Card or Dialog body it reaches the edges as before (cancelling `space.xl` in a large Card, 1px in a small one, `space.xxl` in a Dialog, where it used to overhang everything but a large Card), and on the page, in a `CardRow`, `Alert`, `Surface` or nested Card it spans its container. The new `bleed` prop overrides that. `CardDivider`, `CardDividerProps` and `CardDividerAlign` stay as deprecated aliases of `Divider`, `DividerProps` and `DividerAlign`."
+          "text": "`CardDivider` is now `Divider` and works anywhere: directly in a Card or Dialog body it reaches the edges as before (cancelling `space.xl` in a large Card, 1px in a small one, `space.xxl` in a Dialog, where it used to overhang everything but a large Card), and on the page, in a `CardRow`, `Alert`, `Surface` or nested Card it spans its container. The new `bleed` prop overrides that. **Breaking:** the old names `CardDivider`, `CardDividerProps` and `CardDividerAlign` are removed; import `Divider`, `DividerProps` and `DividerAlign`."
         },
         {
           "version": "0.5.0",
@@ -7891,11 +7872,10 @@
           "date": "2026-11-26",
           "tags": [
             "Divider",
-            "CardDivider",
             "Card",
             "Dialog"
           ],
-          "text": "`CardDivider` is now `Divider` and works anywhere: directly in a Card or Dialog body it reaches the edges as before (cancelling `space.xl` in a large Card, 1px in a small one, `space.xxl` in a Dialog, where it used to overhang everything but a large Card), and on the page, in a `CardRow`, `Alert`, `Surface` or nested Card it spans its container. The new `bleed` prop overrides that. `CardDivider`, `CardDividerProps` and `CardDividerAlign` stay as deprecated aliases of `Divider`, `DividerProps` and `DividerAlign`."
+          "text": "`CardDivider` is now `Divider` and works anywhere: directly in a Card or Dialog body it reaches the edges as before (cancelling `space.xl` in a large Card, 1px in a small one, `space.xxl` in a Dialog, where it used to overhang everything but a large Card), and on the page, in a `CardRow`, `Alert`, `Surface` or nested Card it spans its container. The new `bleed` prop overrides that. **Breaking:** the old names `CardDivider`, `CardDividerProps` and `CardDividerAlign` are removed; import `Divider`, `DividerProps` and `DividerAlign`."
         },
         {
           "version": "0.7.0",
@@ -11483,11 +11463,10 @@
           "date": "2026-11-26",
           "tags": [
             "Divider",
-            "CardDivider",
             "Card",
             "Dialog"
           ],
-          "text": "`CardDivider` is now `Divider` and works anywhere: directly in a Card or Dialog body it reaches the edges as before (cancelling `space.xl` in a large Card, 1px in a small one, `space.xxl` in a Dialog, where it used to overhang everything but a large Card), and on the page, in a `CardRow`, `Alert`, `Surface` or nested Card it spans its container. The new `bleed` prop overrides that. `CardDivider`, `CardDividerProps` and `CardDividerAlign` stay as deprecated aliases of `Divider`, `DividerProps` and `DividerAlign`."
+          "text": "`CardDivider` is now `Divider` and works anywhere: directly in a Card or Dialog body it reaches the edges as before (cancelling `space.xl` in a large Card, 1px in a small one, `space.xxl` in a Dialog, where it used to overhang everything but a large Card), and on the page, in a `CardRow`, `Alert`, `Surface` or nested Card it spans its container. The new `bleed` prop overrides that. **Breaking:** the old names `CardDivider`, `CardDividerProps` and `CardDividerAlign` are removed; import `Divider`, `DividerProps` and `DividerAlign`."
         },
         {
           "version": "0.7.0",
@@ -12141,8 +12120,6 @@
     "StackProps": "stack",
     "InlineProps": "inline",
     "DividerProps": "divider",
-    "CardDividerAlign": "divider",
-    "CardDividerProps": "divider",
     "DividerAlign": "divider",
     "SurfaceProps": "surface",
     "PageProps": "page",
