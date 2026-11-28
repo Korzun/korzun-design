@@ -8901,6 +8901,304 @@
       "changelog": []
     },
     {
+      "id": "component/table",
+      "slug": "table",
+      "entry": "@korzun/design/component",
+      "docPath": "docs/component/table.md",
+      "title": "Table",
+      "description": "A generic data table that scrolls in its own box on a wide screen and stacks each row, labelled, on a phone.",
+      "category": "Data display",
+      "values": [
+        "Table"
+      ],
+      "types": [
+        "TableColumn",
+        "TableProps"
+      ],
+      "importLine": "import { Table, type TableColumn, type TableProps } from '@korzun/design/component'",
+      "body": "A generic data table: pass `columns` and `rows` and it draws a bordered box\nwith a header row and a row per item. On a wide screen it scrolls sideways\ninside its own box when it is too wide; on a phone each row stacks, with every\nvalue labelled by its column title.\n\nUse something else for: a short list of items with actions (`CardRow`), a\nlist of name and value pairs (`MetadataList`), a layout grid (`Stack`,\n`Inline`). A table is for data with the same fields in every row.\n\n## Usage\n\n### Columns and rows\n\nEach column has a `key` and a `title`. By default a cell shows the row's field\nnamed by `key`; `render(row, index)` draws it instead, for a `Tag` or a\n`Button`. A missing value (`null` or `undefined`) shows a dash; `0`, `false`\nand `''` show as themselves. Type the table with its row type\n(`<Table<Book> … />`) to check `render` and `rowKey`.\n\n### `rowKey`\n\nName the field that identifies a row (`rowKey=\"id\"`), or pass a function that\nreturns a unique string (`rowKey={(row, i) => row.isbn}`). It must be unique\nand stable, as a React key is.\n\n### Phone layout, `label` and `wide`\n\nBelow the mobile breakpoint the header is hidden for sighted users and each\nrow becomes a block: short cells share a line, each prefixed by its column\n`title` and a colon. `label` renames that prefix, and `label: false` shows the\nvalue bare (for a button). `wide: true` gives a cell the full width of the\nstacked row, for a long description. Pass `ariaLabel` to name the table for\nscreen readers.\n\n### Empty\n\nWith no rows the header stays. `empty` fills one row across all columns; omit\nit and the table shows the header only.\n\n### Scrolling and `minWidth`\n\nThe table never widens the page: it scrolls inside its box. `minWidth`\n(`'40rem'`) keeps columns readable by making the table that wide on a wide\nscreen before it scrolls. A phone ignores it, because rows stack there.\n`width` on a column sets its heading's width, `nowrap` keeps a value on one\nline and `align: 'end'` right-aligns numbers.\n\n### Corners\n\nThe box's corners follow where it sits: `radius.lg` on the page, `md` in a\nCard, `sm` deeper, and a control in a cell sits one level deeper still. See\n[corners](../corners.md).\n\n## Do / don't\n\n- Do use one table per dataset, with the same fields in every row.\n- Do right-align numeric columns with `align: 'end'`.\n- Don't use a table for layout; use `Stack` or `Inline`.",
+      "examples": [
+        {
+          "file": "src/component/table/examples/01-basic.tsx",
+          "slug": "basic",
+          "order": 1,
+          "title": "Basic",
+          "description": "Columns name a field of each row; `rowKey` names the field that identifies a row. Values show as text, and a missing one shows a dash.",
+          "code": "import { Table } from '@korzun/design/component';\n\nconst books = [\n  { id: 1, title: 'Middlemarch', author: 'George Eliot', year: 1871 },\n  { id: 2, title: 'Persuasion', author: 'Jane Austen', year: 1817 },\n  { id: 3, title: 'Villette', author: 'Charlotte Brontë', year: 1853 },\n  { id: 4, title: 'Anonymous pamphlet', author: null, year: 1790 },\n];\n\nexport default function Basic() {\n  return (\n    <Table\n      ariaLabel=\"Books\"\n      rowKey=\"id\"\n      rows={books}\n      columns={[\n        { key: 'title', title: 'Title' },\n        { key: 'author', title: 'Author' },\n        { key: 'year', title: 'Year' },\n      ]}\n    />\n  );\n}\n"
+        },
+        {
+          "file": "src/component/table/examples/02-custom-cells.tsx",
+          "slug": "custom-cells",
+          "order": 2,
+          "title": "Custom cells",
+          "description": "`render` draws a cell from its row. A `Tag` shows a status, and a link `Button` in a cell sits one surface level deeper than the table, so its corners step down.",
+          "code": "import { Table, Tag } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\n\ntype Book = { id: number; title: string; status: 'reading' | 'finished' | 'unread' };\n\nconst books: Book[] = [\n  { id: 1, title: 'Middlemarch', status: 'reading' },\n  { id: 2, title: 'Persuasion', status: 'finished' },\n  { id: 3, title: 'Villette', status: 'unread' },\n];\n\nexport default function CustomCells() {\n  return (\n    <Table<Book>\n      ariaLabel=\"Reading list\"\n      rowKey=\"id\"\n      rows={books}\n      columns={[\n        { key: 'title', title: 'Title', wide: true },\n        {\n          key: 'status',\n          title: 'Status',\n          render: (book) => (\n            <Tag tone={book.status === 'finished' ? 'success' : 'neutral'} size=\"sm\">\n              {book.status}\n            </Tag>\n          ),\n        },\n        {\n          key: 'open',\n          title: 'Open',\n          label: false,\n          render: (book) => (\n            <Button type=\"link\" onClick={() => undefined}>\n              {`Open ${book.title}`}\n            </Button>\n          ),\n        },\n      ]}\n    />\n  );\n}\n"
+        },
+        {
+          "file": "src/component/table/examples/03-empty.tsx",
+          "slug": "empty",
+          "order": 3,
+          "title": "Empty",
+          "description": "With no rows the header stays and `empty` fills one full-width row. Without `empty` the table shows its header only.",
+          "code": "import { Table } from '@korzun/design/component';\n\ntype Book = { id: number; title: string; author: string };\n\nexport default function Empty() {\n  return (\n    <Table<Book>\n      ariaLabel=\"Books\"\n      rowKey=\"id\"\n      rows={[]}\n      empty=\"No books yet. Upload an EPUB to start your library.\"\n      columns={[\n        { key: 'title', title: 'Title' },\n        { key: 'author', title: 'Author' },\n      ]}\n    />\n  );\n}\n"
+        },
+        {
+          "file": "src/component/table/examples/04-in-a-card.tsx",
+          "slug": "in-a-card",
+          "order": 4,
+          "title": "In a card",
+          "description": "A table inside a `Card` sits one level deeper than one on the page, so its corners are `md` (8px) instead of `lg` (16px).",
+          "code": "import { Card, Table } from '@korzun/design/component';\n\nconst books = [\n  { id: 1, title: 'Middlemarch', author: 'George Eliot' },\n  { id: 2, title: 'Persuasion', author: 'Jane Austen' },\n];\n\nexport default function InACard() {\n  return (\n    <Card title=\"Recently added\">\n      <Table\n        ariaLabel=\"Recently added\"\n        rowKey=\"id\"\n        rows={books}\n        columns={[\n          { key: 'title', title: 'Title' },\n          { key: 'author', title: 'Author' },\n        ]}\n      />\n    </Card>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/table/examples/05-numbers.tsx",
+          "slug": "numbers",
+          "order": 5,
+          "title": "Numbers",
+          "description": "`align: 'end'` right-aligns a numeric column, header included, so digits line up. `nowrap` keeps a value on one line.",
+          "code": "import { Table } from '@korzun/design/component';\n\nconst books = [\n  { id: 1, title: 'Middlemarch', pages: 880, chapters: 86 },\n  { id: 2, title: 'Persuasion', pages: 249, chapters: 24 },\n  { id: 3, title: 'Villette', pages: 560, chapters: 42 },\n];\n\nexport default function Numbers() {\n  return (\n    <Table\n      ariaLabel=\"Book lengths\"\n      rowKey=\"id\"\n      rows={books}\n      columns={[\n        { key: 'title', title: 'Title', wide: true },\n        { key: 'pages', title: 'Pages', align: 'end', nowrap: true },\n        { key: 'chapters', title: 'Chapters', align: 'end', nowrap: true },\n      ]}\n    />\n  );\n}\n"
+        }
+      ],
+      "preview": {
+        "file": "src/component/table/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { Table } from '@korzun/design/component';\n\nconst books = [\n  { id: 1, title: 'Middlemarch', author: 'George Eliot', year: 1871 },\n  { id: 2, title: 'Persuasion', author: 'Jane Austen', year: 1817 },\n  { id: 3, title: 'Villette', author: 'Charlotte Brontë', year: 1853 },\n];\n\nexport default function Preview() {\n  return (\n    <div style={{ width: 320 }}>\n      <Table\n        ariaLabel=\"Books\"\n        rowKey=\"id\"\n        rows={books}\n        columns={[\n          { key: 'title', title: 'Title' },\n          { key: 'author', title: 'Author' },\n          { key: 'year', title: 'Year' },\n        ]}\n      />\n    </div>\n  );\n}\n"
+      },
+      "tables": [
+        {
+          "name": "TableProps",
+          "kind": "props",
+          "rows": [
+            {
+              "name": "ariaLabel",
+              "type": "string",
+              "required": false,
+              "description": "The table's accessible name, announced by screen readers."
+            },
+            {
+              "name": "className",
+              "type": "string",
+              "required": false,
+              "description": "Extra class on the scrolling box, merged after the component's own."
+            },
+            {
+              "name": "columns",
+              "type": "TableColumn<Row>[]",
+              "required": true,
+              "description": "The columns, in order."
+            },
+            {
+              "name": "empty",
+              "type": "ReactNode",
+              "required": false,
+              "description": "Shown in one full-width row when `rows` is empty. Without it the table shows its header only."
+            },
+            {
+              "name": "minWidth",
+              "type": "string",
+              "required": false,
+              "description": "A CSS minimum width for the table on a wide screen (`'40rem'`); it scrolls inside its box when narrower. A phone ignores it."
+            },
+            {
+              "name": "rowKey",
+              "type": "keyof Row | ((row: Row, index: number) => string)",
+              "required": true,
+              "description": "What identifies a row: one of its fields, or a function returning a unique string."
+            },
+            {
+              "name": "rows",
+              "type": "readonly Row[]",
+              "required": true,
+              "description": "The data, one row each."
+            }
+          ]
+        },
+        {
+          "name": "TableColumn",
+          "kind": "object",
+          "rows": [
+            {
+              "name": "align",
+              "type": "'start' | 'end'",
+              "required": false,
+              "description": "Where the cell's content sits; `'end'` right-aligns numbers. Defaults to `'start'`."
+            },
+            {
+              "name": "key",
+              "type": "string",
+              "required": true,
+              "description": "The field of the row this column shows by default, and the column's identity."
+            },
+            {
+              "name": "label",
+              "type": "string | false",
+              "required": false,
+              "description": "What names a value on a phone, where the headings are hidden. Defaults to `title`; `false` shows the value bare."
+            },
+            {
+              "name": "nowrap",
+              "type": "boolean",
+              "required": false,
+              "description": "Keeps the cell's text on one line."
+            },
+            {
+              "name": "render",
+              "type": "(row: Row, index: number) => ReactNode",
+              "required": false,
+              "description": "Draws the cell instead of the row's `key` field. Receives the row and its index."
+            },
+            {
+              "name": "title",
+              "type": "string",
+              "required": true,
+              "description": "The column heading. On a phone it also labels each value, unless `label` says otherwise."
+            },
+            {
+              "name": "wide",
+              "type": "boolean",
+              "required": false,
+              "description": "Takes a stacked row's full width on a phone, for a long description."
+            },
+            {
+              "name": "width",
+              "type": "string",
+              "required": false,
+              "description": "A CSS width for the heading cell (`'35%'`, `'8rem'`), on a wide screen."
+            }
+          ]
+        }
+      ],
+      "tokens": [
+        {
+          "path": "breakpoint.mobile",
+          "kind": "value",
+          "light": "@media (max-width: 640px)",
+          "dark": "@media (max-width: 640px)"
+        },
+        {
+          "path": "breakpoint.normal",
+          "kind": "value",
+          "light": "@media (min-width: 641px)",
+          "dark": "@media (min-width: 641px)"
+        },
+        {
+          "path": "color.bg.card",
+          "kind": "color",
+          "light": "#FCFCFC",
+          "dark": "#1A1B1E"
+        },
+        {
+          "path": "color.bg.cardHeader",
+          "kind": "color",
+          "light": "#EEEEEE",
+          "dark": "#232427"
+        },
+        {
+          "path": "color.border.default",
+          "kind": "color",
+          "light": "#D9D9D9",
+          "dark": "#3A3B40"
+        },
+        {
+          "path": "color.border.light",
+          "kind": "color",
+          "light": "#e5e7eb",
+          "dark": "#333439"
+        },
+        {
+          "path": "color.text.faint",
+          "kind": "color",
+          "light": "#9ca3af",
+          "dark": "#6E7480"
+        },
+        {
+          "path": "color.text.muted",
+          "kind": "color",
+          "light": "#6E6E6E",
+          "dark": "#9CA1AB"
+        },
+        {
+          "path": "color.text.secondary",
+          "kind": "color",
+          "light": "#5A6375",
+          "dark": "#C8CBD2"
+        },
+        {
+          "path": "fontSize.md",
+          "kind": "value",
+          "light": "0.875rem",
+          "dark": "0.875rem"
+        },
+        {
+          "path": "fontWeight.semibold",
+          "kind": "value",
+          "light": "600",
+          "dark": "600"
+        },
+        {
+          "path": "lineHeight.body",
+          "kind": "value",
+          "light": "1.3",
+          "dark": "1.3"
+        },
+        {
+          "path": "radius.lg",
+          "kind": "value",
+          "light": "16px",
+          "dark": "16px"
+        },
+        {
+          "path": "radius.md",
+          "kind": "value",
+          "light": "8px",
+          "dark": "8px"
+        },
+        {
+          "path": "radius.sm",
+          "kind": "value",
+          "light": "4px",
+          "dark": "4px"
+        },
+        {
+          "path": "space.lg",
+          "kind": "value",
+          "light": "0.625rem",
+          "dark": "0.625rem"
+        },
+        {
+          "path": "space.sm",
+          "kind": "value",
+          "light": "0.375rem",
+          "dark": "0.375rem"
+        },
+        {
+          "path": "space.xl",
+          "kind": "value",
+          "light": "0.75rem",
+          "dark": "0.75rem"
+        },
+        {
+          "path": "space.xs",
+          "kind": "value",
+          "light": "0.25rem",
+          "dark": "0.25rem"
+        }
+      ],
+      "changelog": [
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "Table"
+          ],
+          "text": "New `Table` (component): a generic data table. `columns` name a row field or `render` a cell, `rowKey` is a field name or a function, and `empty` shows one full-width row when there are no rows. It scrolls inside its own bordered box on a wide screen (`minWidth` sets a minimum width there only), and on a phone each row stacks with every value labelled by its column title (`label`, `wide`). `nowrap`, `align: 'end'` and `width` shape the cells. Its corners follow surface depth, and a control in a cell sits one level deeper. Falsy values (`0`, `false`, `''`) show as themselves; only `null` and `undefined` show a dash."
+        }
+      ]
+    },
+    {
       "id": "component/alert",
       "slug": "alert",
       "entry": "@korzun/design/component",
@@ -10643,6 +10941,14 @@
           "version": "0.7.0",
           "date": "2026-11-26",
           "tags": [
+            "Table"
+          ],
+          "text": "New `Table` (component): a generic data table. `columns` name a row field or `render` a cell, `rowKey` is a field name or a function, and `empty` shows one full-width row when there are no rows. It scrolls inside its own bordered box on a wide screen (`minWidth` sets a minimum width there only), and on a phone each row stacks with every value labelled by its column title (`label`, `wide`). `nowrap`, `align: 'end'` and `width` shape the cells. Its corners follow surface depth, and a control in a cell sits one level deeper. Falsy values (`0`, `false`, `''`) show as themselves; only `null` and `undefined` show a dash."
+        },
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
             "Code"
           ],
           "text": "New `Code` (component): inline `<code>` in the mono font at 0.875em of the surrounding text (so it scales in a heading), on a `bg.cardHeader` chip with `sm` corners; a long name breaks only when it cannot fit. In dark mode directly on a Page it gets a 1px `border.default` edge. Takes `children` and `className`."
@@ -11510,6 +11816,8 @@
     "MetaLineProps": "meta-line",
     "MetadataListProps": "metadata-list",
     "Metadata": "metadata-list",
+    "TableProps": "table",
+    "TableColumn": "table",
     "AlertProps": "alert",
     "AlertTone": "alert",
     "ErrorMessageProps": "error-message",
