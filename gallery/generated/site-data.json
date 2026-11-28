@@ -706,7 +706,7 @@
               "name": "layout",
               "type": "'horizontal' | 'vertical' | 'block'",
               "required": false,
-              "description": "`'block'` is the bare box, with no label. `'horizontal'` and `'vertical'` add a label on a `bg.cardHeader` row (`radius.md`), like the other fields.",
+              "description": "`'block'` is the bare box, with no label. `'horizontal'` and `'vertical'` add a label on a `bg.cardHeader` row, like the other fields. Corners follow surface depth ([corners](../corners.md)); chips are a step squarer than the box.",
               "default": "'block'"
             },
             {
@@ -1075,6 +1075,12 @@
           "dark": "1"
         },
         {
+          "path": "radius.lg",
+          "kind": "value",
+          "light": "16px",
+          "dark": "16px"
+        },
+        {
           "path": "radius.md",
           "kind": "value",
           "light": "8px",
@@ -1123,6 +1129,12 @@
           "dark": "0.25rem"
         },
         {
+          "path": "space.xxl",
+          "kind": "value",
+          "light": "1rem",
+          "dark": "1rem"
+        },
+        {
           "path": "space.xxs",
           "kind": "value",
           "light": "0.125rem",
@@ -1130,6 +1142,21 @@
         }
       ],
       "changelog": [
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "TextInput",
+            "TextArea",
+            "NumberInput",
+            "DateTimeInput",
+            "ChipsInput",
+            "SegmentedControl",
+            "Tag",
+            "Switch"
+          ],
+          "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.6.0 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px. A text field, `ChipsInput` box or field label directly on a Page also moves its text 16px in from the edge (8px elsewhere), the inset `Button` keeps, so it clears the deeper corner."
+        },
         {
           "version": "0.3.0",
           "date": "2026-11-22",
@@ -1378,7 +1405,7 @@
               "name": "layout",
               "type": "'horizontal' | 'vertical' | 'inline'",
               "required": false,
-              "description": "`'horizontal'` and `'vertical'` paint a shaded row (`bg.cardHeader`, `radius.md`); `'inline'` paints none.",
+              "description": "`'horizontal'` and `'vertical'` paint a shaded row (`bg.cardHeader`) with corners that follow surface depth ([corners](../corners.md)); `'inline'` paints none.",
               "default": "'horizontal'"
             },
             {
@@ -1429,10 +1456,22 @@
           "dark": "2.0625rem"
         },
         {
+          "path": "radius.lg",
+          "kind": "value",
+          "light": "16px",
+          "dark": "16px"
+        },
+        {
           "path": "radius.md",
           "kind": "value",
           "light": "8px",
           "dark": "8px"
+        },
+        {
+          "path": "radius.sm",
+          "kind": "value",
+          "light": "4px",
+          "dark": "4px"
         },
         {
           "path": "recipe.input",
@@ -1465,13 +1504,35 @@
           "dark": "0.25rem"
         },
         {
+          "path": "space.xxl",
+          "kind": "value",
+          "light": "1rem",
+          "dark": "1rem"
+        },
+        {
           "path": "zIndex.base",
           "kind": "value",
           "light": "1",
           "dark": "1"
         }
       ],
-      "changelog": []
+      "changelog": [
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "TextInput",
+            "TextArea",
+            "NumberInput",
+            "DateTimeInput",
+            "ChipsInput",
+            "SegmentedControl",
+            "Tag",
+            "Switch"
+          ],
+          "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.6.0 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px. A text field, `ChipsInput` box or field label directly on a Page also moves its text 16px in from the edge (8px elsewhere), the inset `Button` keeps, so it clears the deeper corner."
+        }
+      ]
     },
     {
       "id": "control/dialog",
@@ -2511,7 +2572,7 @@
               "name": "layout",
               "type": "'horizontal' | 'vertical' | 'inline'",
               "required": false,
-              "description": "`horizontal` and `vertical` paint a shaded card-header row with `md` corners; `inline` paints nothing.",
+              "description": "`horizontal` and `vertical` paint a shaded card-header row with corners that follow surface depth ([corners](../corners.md)); `inline` paints nothing.",
               "default": "'horizontal'"
             },
             {
@@ -2571,10 +2632,22 @@
           "dark": "2.0625rem"
         },
         {
+          "path": "radius.lg",
+          "kind": "value",
+          "light": "16px",
+          "dark": "16px"
+        },
+        {
           "path": "radius.md",
           "kind": "value",
           "light": "8px",
           "dark": "8px"
+        },
+        {
+          "path": "radius.sm",
+          "kind": "value",
+          "light": "4px",
+          "dark": "4px"
         },
         {
           "path": "recipe.input",
@@ -2605,9 +2678,30 @@
           "kind": "value",
           "light": "0.25rem",
           "dark": "0.25rem"
+        },
+        {
+          "path": "space.xxl",
+          "kind": "value",
+          "light": "1rem",
+          "dark": "1rem"
         }
       ],
       "changelog": [
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "TextInput",
+            "TextArea",
+            "NumberInput",
+            "DateTimeInput",
+            "ChipsInput",
+            "SegmentedControl",
+            "Tag",
+            "Switch"
+          ],
+          "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.6.0 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px. A text field, `ChipsInput` box or field label directly on a Page also moves its text 16px in from the edge (8px elsewhere), the inset `Button` keeps, so it clears the deeper corner."
+        },
         {
           "version": "0.5.2",
           "date": "2026-11-26",
@@ -3854,7 +3948,7 @@
         "SegmentedOption"
       ],
       "importLine": "import { SegmentedControl, type SegmentedControlProps, type SegmentedOption } from '@korzun/design/control'",
-      "body": "A row of equal-width radio segments in a track, with a lens that slides to the\nchecked one. Options can be text, or an icon over a small caption. Optionally\nclearable, and read-only when `onChange` is omitted. Generic over the value\ntype: `V extends string`.\n\nUse something else for: many options or long labels (`Select`), on/off\n(`Switch`), actions (`Button`).\n\n## Usage\n\n### Behaviour\n\nNo `className`, no `name` (not a form field). Type options with the exported\n`SegmentedOption<V>` (and props with `SegmentedControlProps<V>`).\n\n### Keyboard\n\nOn the group: ArrowRight/ArrowUp and ArrowLeft/ArrowDown step one option and do\nnot wrap; Home/End jump to the ends; digits 1–9 pick that option; Backspace and\nDelete clear when `clearable`. Modified keys (Ctrl/Cmd/Alt) are left alone.\n\n### Choosing a surface\n\nThe track and lens are always `radius.md` (see [corners](../corners.md)), so the\ncontrol belongs inside a card or modal.\n\n- Directly in a `Card` body: omit `surface` (`'card'`).\n- Inside a shaded `bg.cardHeader` row you built (label left, control right):\n  `surface=\"row\"`, so the row itself is the track and the lens is flush with it.\n\n## Do / don't\n\n- Do keep it to a handful of short options; segments are equal columns.\n- Do pass `clearable` whenever `null` is a valid answer, or the user can never\n  get back to it.\n- Don't pass `onChange={() => {}}` to show a value; omit `onChange` for read-only.",
+      "body": "A row of equal-width radio segments in a track, with a lens that slides to the\nchecked one. Options can be text, or an icon over a small caption. Optionally\nclearable, and read-only when `onChange` is omitted. Generic over the value\ntype: `V extends string`.\n\nUse something else for: many options or long labels (`Select`), on/off\n(`Switch`), actions (`Button`).\n\n## Usage\n\n### Behaviour\n\nNo `className`, no `name` (not a form field). Type options with the exported\n`SegmentedOption<V>` (and props with `SegmentedControlProps<V>`).\n\n### Keyboard\n\nOn the group: ArrowRight/ArrowUp and ArrowLeft/ArrowDown step one option and do\nnot wrap; Home/End jump to the ends; digits 1–9 pick that option; Backspace and\nDelete clear when `clearable`. Modified keys (Ctrl/Cmd/Alt) are left alone.\n\n### Choosing a surface\n\nThe track and lens take the radius of the surface depth they sit at (see\n[corners](../corners.md)): `md` in a card or modal, `lg` directly on a `Page`,\n`sm` two or more levels in.\n\n- Directly in a `Card` body: omit `surface` (`'card'`).\n- Inside a shaded `bg.cardHeader` row you built (label left, control right):\n  `surface=\"row\"`, so the row itself is the track and the lens is flush with it.\n\n## Do / don't\n\n- Do keep it to a handful of short options; segments are equal columns.\n- Do pass `clearable` whenever `null` is a valid answer, or the user can never\n  get back to it.\n- Don't pass `onChange={() => {}}` to show a value; omit `onChange` for read-only.",
       "examples": [
         {
           "file": "src/control/segmented-control/examples/01-basic.tsx",
@@ -4049,10 +4143,22 @@
           "dark": "500"
         },
         {
+          "path": "radius.lg",
+          "kind": "value",
+          "light": "16px",
+          "dark": "16px"
+        },
+        {
           "path": "radius.md",
           "kind": "value",
           "light": "8px",
           "dark": "8px"
+        },
+        {
+          "path": "radius.sm",
+          "kind": "value",
+          "light": "4px",
+          "dark": "4px"
         },
         {
           "path": "recipe.focusRing",
@@ -4097,7 +4203,23 @@
           "dark": "0.35s cubic-bezier(0.4, 0, 0.2, 1)"
         }
       ],
-      "changelog": []
+      "changelog": [
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "TextInput",
+            "TextArea",
+            "NumberInput",
+            "DateTimeInput",
+            "ChipsInput",
+            "SegmentedControl",
+            "Tag",
+            "Switch"
+          ],
+          "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.6.0 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px. A text field, `ChipsInput` box or field label directly on a Page also moves its text 16px in from the edge (8px elsewhere), the inset `Button` keeps, so it clears the deeper corner."
+        }
+      ]
     },
     {
       "id": "control/switch",
@@ -4115,7 +4237,7 @@
         "SwitchRadiusValue"
       ],
       "importLine": "import { Switch, type SwitchProps, type SwitchRadiusValue } from '@korzun/design/control'",
-      "body": "An on/off toggle (`role=\"switch\"`) with an optional label and description, a\nfull-row `horizontal` layout for forms, and a `loading` state for saves in\nflight. Controlled: you own `checked`.\n\nUse something else for: one of several options (`SegmentedControl`, `Select`),\nan action that happens on click (`Button`).\n\n## Usage\n\n### Behaviour\n\nNo `className`. Keyboard: Enter and Space toggle. Clicks and those keys stop\npropagation, so a switch inside a clickable card row won't trigger the row.\n\n### Choosing a radius\n\nSee [corners](../corners.md).\n\n- In a shaded row (`layout=\"horizontal\"`, or inside any field row): omit it\n  (`inset`, a 4px track concentric with the row's 8px corner).\n- In a `Card` header (`headerAction`), or anywhere with no nearby corner to\n  echo: `radius=\"pill\"`.\n\n## Do / don't\n\n- Do pass `loading` while the save runs instead of `disabled`; `disabled` means\n  \"you may not change this\".\n- Do give a label-less switch an `ariaLabel`; `name` is a machine key.\n- Don't expect a switch to submit with a `<form>`; send `checked` from state.\n- Don't put an interactive element in `description` of a `horizontal` switch:\n  clicking it toggles the switch.",
+      "body": "An on/off toggle (`role=\"switch\"`) with an optional label and description, a\nfull-row `horizontal` layout for forms, and a `loading` state for saves in\nflight. Controlled: you own `checked`.\n\nUse something else for: one of several options (`SegmentedControl`, `Select`),\nan action that happens on click (`Button`).\n\n## Usage\n\n### Behaviour\n\nNo `className`. Keyboard: Enter and Space toggle. Clicks and those keys stop\npropagation, so a switch inside a clickable card row won't trigger the row.\n\n### Choosing a radius\n\nSee [corners](../corners.md).\n\n- In a shaded row (`layout=\"horizontal\"`, or inside any field row): omit it\n  (`inset`, a track one radius step squarer than the row: 4px in a Card's 8px\n  row, 8px in a Page's 16px row).\n- In a `Card` header (`headerAction`), or anywhere with no nearby corner to\n  echo: `radius=\"pill\"`.\n\n## Do / don't\n\n- Do pass `loading` while the save runs instead of `disabled`; `disabled` means\n  \"you may not change this\".\n- Do give a label-less switch an `ariaLabel`; `name` is a machine key.\n- Don't expect a switch to submit with a `<form>`; send `checked` from state.\n- Don't put an interactive element in `description` of a `horizontal` switch:\n  clicking it toggles the switch.",
       "examples": [
         {
           "file": "src/control/switch/examples/01-basic.tsx",
@@ -4198,7 +4320,7 @@
               "name": "layout",
               "type": "'default' | 'horizontal'",
               "required": false,
-              "description": "`'default'`: track then label, inline. `'horizontal'`: a full-width shaded row (`bg.cardHeader`, `radius.md`) with label and description on the left and the track on the right; the whole row toggles, description included.",
+              "description": "`'default'`: track then label, inline. `'horizontal'`: a full-width shaded row (`bg.cardHeader`, corners by surface depth) with label and description on the left and the track on the right; the whole row toggles, description included.",
               "default": "'default'"
             },
             {
@@ -4287,6 +4409,18 @@
           "dark": "50%"
         },
         {
+          "path": "radius.lg",
+          "kind": "value",
+          "light": "16px",
+          "dark": "16px"
+        },
+        {
+          "path": "radius.md",
+          "kind": "value",
+          "light": "8px",
+          "dark": "8px"
+        },
+        {
           "path": "radius.pill",
           "kind": "value",
           "light": "999px",
@@ -4336,6 +4470,21 @@
         }
       ],
       "changelog": [
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "TextInput",
+            "TextArea",
+            "NumberInput",
+            "DateTimeInput",
+            "ChipsInput",
+            "SegmentedControl",
+            "Tag",
+            "Switch"
+          ],
+          "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.6.0 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px. A text field, `ChipsInput` box or field label directly on a Page also moves its text 16px in from the edge (8px elsewhere), the inset `Button` keeps, so it clears the deeper corner."
+        },
         {
           "version": "0.0.6",
           "date": "2026-11-21",
@@ -4458,7 +4607,7 @@
               "name": "layout",
               "type": "'horizontal' | 'vertical' | 'inline'",
               "required": false,
-              "description": "`horizontal` and `vertical` paint a shaded card-header row with `md` corners; `inline` paints nothing.",
+              "description": "`horizontal` and `vertical` paint a shaded card-header row with corners that follow surface depth ([corners](../corners.md)); `inline` paints nothing.",
               "default": "'horizontal'"
             },
             {
@@ -4511,7 +4660,7 @@
               "name": "variant",
               "type": "'outlined' | 'borderless'",
               "required": false,
-              "description": "`'outlined'` has a border and the input background; `'borderless'` drops both and keeps its `md` corners, so the browser's default textarea background shows (check it in dark mode).",
+              "description": "`'outlined'` has a border and the input background; `'borderless'` drops both and keeps its depth corners, so the browser's default textarea background shows (check it in dark mode).",
               "default": "'outlined'"
             }
           ]
@@ -4561,10 +4710,22 @@
           "dark": "1"
         },
         {
+          "path": "radius.lg",
+          "kind": "value",
+          "light": "16px",
+          "dark": "16px"
+        },
+        {
           "path": "radius.md",
           "kind": "value",
           "light": "8px",
           "dark": "8px"
+        },
+        {
+          "path": "radius.sm",
+          "kind": "value",
+          "light": "4px",
+          "dark": "4px"
         },
         {
           "path": "recipe.input",
@@ -4597,6 +4758,12 @@
           "dark": "0.25rem"
         },
         {
+          "path": "space.xxl",
+          "kind": "value",
+          "light": "1rem",
+          "dark": "1rem"
+        },
+        {
           "path": "space.xxs",
           "kind": "value",
           "light": "0.125rem",
@@ -4604,6 +4771,21 @@
         }
       ],
       "changelog": [
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "TextInput",
+            "TextArea",
+            "NumberInput",
+            "DateTimeInput",
+            "ChipsInput",
+            "SegmentedControl",
+            "Tag",
+            "Switch"
+          ],
+          "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.6.0 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px. A text field, `ChipsInput` box or field label directly on a Page also moves its text 16px in from the edge (8px elsewhere), the inset `Button` keeps, so it clears the deeper corner."
+        },
         {
           "version": "0.5.2",
           "date": "2026-11-26",
@@ -4746,7 +4928,7 @@
               "name": "layout",
               "type": "'horizontal' | 'vertical' | 'inline'",
               "required": false,
-              "description": "`horizontal` and `vertical` paint a shaded card-header row with `md` corners; `inline` paints nothing.",
+              "description": "`horizontal` and `vertical` paint a shaded card-header row with corners that follow surface depth ([corners](../corners.md)); `inline` paints nothing.",
               "default": "'horizontal'"
             },
             {
@@ -4880,10 +5062,22 @@
           "dark": "1"
         },
         {
+          "path": "radius.lg",
+          "kind": "value",
+          "light": "16px",
+          "dark": "16px"
+        },
+        {
           "path": "radius.md",
           "kind": "value",
           "light": "8px",
           "dark": "8px"
+        },
+        {
+          "path": "radius.sm",
+          "kind": "value",
+          "light": "4px",
+          "dark": "4px"
         },
         {
           "path": "recipe.input",
@@ -4910,10 +5104,22 @@
           "dark": "0.375rem"
         },
         {
+          "path": "space.xl",
+          "kind": "value",
+          "light": "0.75rem",
+          "dark": "0.75rem"
+        },
+        {
           "path": "space.xs",
           "kind": "value",
           "light": "0.25rem",
           "dark": "0.25rem"
+        },
+        {
+          "path": "space.xxl",
+          "kind": "value",
+          "light": "1rem",
+          "dark": "1rem"
         },
         {
           "path": "space.xxxxxl",
@@ -4929,6 +5135,21 @@
         }
       ],
       "changelog": [
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "TextInput",
+            "TextArea",
+            "NumberInput",
+            "DateTimeInput",
+            "ChipsInput",
+            "SegmentedControl",
+            "Tag",
+            "Switch"
+          ],
+          "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.6.0 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px. A text field, `ChipsInput` box or field label directly on a Page also moves its text 16px in from the edge (8px elsewhere), the inset `Button` keeps, so it clears the deeper corner."
+        },
         {
           "version": "0.5.2",
           "date": "2026-11-26",
@@ -8133,7 +8354,7 @@
         "TagTone"
       ],
       "importLine": "import { Tag, type TagProps, type TagTone } from '@korzun/design/component'",
-      "body": "A small coloured chip (an inline `<span>`) for a category, status, or value:\nan author, a subject, \"Read only\". Optionally clickable, in which case it\nbecomes `role=\"button\"` with `tabIndex=0` and Enter/Space.\n\nUse something else for: an editable list of chips (`ChipsInput` in\n`@korzun/design/control`), an action (`Button`), a count on a nav tab\n(`NavItem.badge`).\n\n## Usage\n\n### Choosing a tone\n\n`TagTone` is `keyof Theme['color']['chip']`. There are two groups: label tones\nare **domain names** (what kind of thing the tag names) and status tones are\n**meanings** (what state it reports). Neither group is a set of colour names:\nnever pick a tone for its colour. Pick by what the tag *is*:\n\nStatus tones report a state:\n\n| Tone | Use for |\n|---|---|\n| `success` | Something went well (Published, Paid). |\n| `warning` | Needs attention soon (Overdue, Expiring). |\n| `danger` | Something failed or is blocked (Failed, Rejected). |\n| `info` | Neutral news (Scheduled, New). |\n| `neutral` | A state with no category (\"no change\"): quiet grey. |\n\nLabel tones name a kind of thing:\n\n| Tone | Use for |\n|---|---|\n| `status` | Legacy; kept for Bookplate's existing chips. Don't pick it for new state tags. |\n| `author` | A person who wrote something. |\n| `series` | A series name. |\n| `subject` | A subject / genre / keyword. The default. |\n| `book` | A book or title. |\n| `entryType` | The kind of an entry or record. |\n| `user` | An app user / account. |\n| `rating` | A rating value. |\n\nNote the name clash: `status` is a legacy label tone despite its name; for a state use `success`/`warning`/`danger`/`info`, or `neutral` when it carries no meaning.\n\nEach tone has its own `text`, `bg`, and `border` in both light and dark themes.\nA consumer's theme can't add tones; the list is fixed by the `Theme` type.\n\n### Styling\n\nNo `className`, no `ariaLabel`.\n\n### Corners\n\n`radius.md` at both sizes, which is right inside a Card or modal; see\n[corners](../corners.md).\n\n## Do / don't\n\n- Do choose `tone` by meaning, so the same kind of thing is the same colour\n  everywhere.\n- Do use `tone=\"warning\"` for \"Overdue\".\n- Do use `size=\"sm\"` inside text rows and lists.\n- Don't use `neutral` just to make a tag grey when it has a category.\n- Don't use `subject` or `author` to mean warning or success.\n- Don't use `info` to look like a link (it shares a hue with links; use\n  `Button type=\"link\"` for actions).\n- Don't use `status` for a new state tag; it is a legacy label tone.\n- Don't nest a clickable Tag inside another clickable element (Button, a\n  clickable Card); both would fire.",
+      "body": "A small coloured chip (an inline `<span>`) for a category, status, or value:\nan author, a subject, \"Read only\". Optionally clickable, in which case it\nbecomes `role=\"button\"` with `tabIndex=0` and Enter/Space.\n\nUse something else for: an editable list of chips (`ChipsInput` in\n`@korzun/design/control`), an action (`Button`), a count on a nav tab\n(`NavItem.badge`).\n\n## Usage\n\n### Choosing a tone\n\n`TagTone` is `keyof Theme['color']['chip']`. There are two groups: label tones\nare **domain names** (what kind of thing the tag names) and status tones are\n**meanings** (what state it reports). Neither group is a set of colour names:\nnever pick a tone for its colour. Pick by what the tag *is*:\n\nStatus tones report a state:\n\n| Tone | Use for |\n|---|---|\n| `success` | Something went well (Published, Paid). |\n| `warning` | Needs attention soon (Overdue, Expiring). |\n| `danger` | Something failed or is blocked (Failed, Rejected). |\n| `info` | Neutral news (Scheduled, New). |\n| `neutral` | A state with no category (\"no change\"): quiet grey. |\n\nLabel tones name a kind of thing:\n\n| Tone | Use for |\n|---|---|\n| `status` | Legacy; kept for Bookplate's existing chips. Don't pick it for new state tags. |\n| `author` | A person who wrote something. |\n| `series` | A series name. |\n| `subject` | A subject / genre / keyword. The default. |\n| `book` | A book or title. |\n| `entryType` | The kind of an entry or record. |\n| `user` | An app user / account. |\n| `rating` | A rating value. |\n\nNote the name clash: `status` is a legacy label tone despite its name; for a state use `success`/`warning`/`danger`/`info`, or `neutral` when it carries no meaning.\n\nEach tone has its own `text`, `bg`, and `border` in both light and dark themes.\nA consumer's theme can't add tones; the list is fixed by the `Theme` type.\n\n### Styling\n\nNo `className`, no `ariaLabel`.\n\n### Corners\n\nAt both sizes the corners follow surface depth: `md` in a Card or modal, `lg`\ndirectly on a `Page`, `sm` one more level in (a `CardRow` in a Card, a Popover);\nsee [corners](../corners.md).\n\n## Do / don't\n\n- Do choose `tone` by meaning, so the same kind of thing is the same colour\n  everywhere.\n- Do use `tone=\"warning\"` for \"Overdue\".\n- Do use `size=\"sm\"` inside text rows and lists.\n- Don't use `neutral` just to make a tag grey when it has a category.\n- Don't use `subject` or `author` to mean warning or success.\n- Don't use `info` to look like a link (it shares a hue with links; use\n  `Button type=\"link\"` for actions).\n- Don't use `status` for a new state tag; it is a legacy label tone.\n- Don't nest a clickable Tag inside another clickable element (Button, a\n  clickable Card); both would fire.",
       "examples": [
         {
           "file": "src/component/tag/examples/01-basic.tsx",
@@ -8484,10 +8705,22 @@
           "dark": "1"
         },
         {
+          "path": "radius.lg",
+          "kind": "value",
+          "light": "16px",
+          "dark": "16px"
+        },
+        {
           "path": "radius.md",
           "kind": "value",
           "light": "8px",
           "dark": "8px"
+        },
+        {
+          "path": "radius.sm",
+          "kind": "value",
+          "light": "4px",
+          "dark": "4px"
         },
         {
           "path": "space.md",
@@ -8515,6 +8748,21 @@
         }
       ],
       "changelog": [
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "TextInput",
+            "TextArea",
+            "NumberInput",
+            "DateTimeInput",
+            "ChipsInput",
+            "SegmentedControl",
+            "Tag",
+            "Switch"
+          ],
+          "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.6.0 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px. A text field, `ChipsInput` box or field label directly on a Page also moves its text 16px in from the edge (8px elsewhere), the inset `Button` keeps, so it clears the deeper corner."
+        },
         {
           "version": "0.1.0",
           "date": "2026-11-21",
@@ -9576,7 +9824,7 @@
       "docPath": "docs/corners.md",
       "title": "Corners",
       "description": "Corner radius by nesting depth, one radius step per level.",
-      "body": "Corner radius tracks **depth**, not size. Surfaces on the page background have\nthe roundest corners. Each surface nested inside another gets a squarer,\nconcentric corner, so the inner curve follows the outer one.\n\n## Tokens\n\n| Token | Value | Use |\n|---|---|---|\n| `theme.radius.lg` | 16px | Surfaces on the page background |\n| `theme.radius.md` | 8px | One level in: inside a card or modal; also floating layers |\n| `theme.radius.sm` | 4px | Two levels in: inside an input, inset box, row, or menu |\n| `theme.radius.pill` | 999px | Capsules: nav bar, a Switch with no nearby corner |\n| `theme.radius.circle` | 50% | Round glass buttons |\n\n## The rule\n\nFind where the element sits, then read its radius from this table:\n\n| Where the element sits | Radius | Examples |\n|---|---|---|\n| On the page background | `lg` | `Card`, modal dialog (`recipe.modal.dialog`), `Button`, `Select` and `CardRow` directly on a `Page` (automatic) |\n| Inside a card or modal | `md` | inputs (`recipe.input`), Buttons and Selects in a Card or Dialog (automatic), `Tag`, shaded rows (`recipe.row`), inset boxes |\n| Inside one of those | `sm` | a chip inside an input, Buttons and Selects in a nested Card, inset box (`Surface`) or Popover (automatic), a menu item, a Switch track in a shaded row |\n| Flush with its parent (zero inset, edges touch) | the parent's radius | an unlabelled Select's trigger, an input filling its row |\n| Inset 4px or less from its parent | `calc(parent − inset)` | a Switch thumb 2px inside a 4px track is 2px |\n| A small control with no nearby corner | `pill` / `circle` | a Switch in a full-width card header |\n| A floating layer (popover, menu, dropdown, toast) | `md`, plus `shadow.hoverLift` or `recipe.glass` | its items are `sm` |\n\n**Step down one token per level** (`lg` → `md` → `sm`). Do not subtract the\npadding: a Card has 13px of inset, but the inputs inside it are `md` (8px), not\n16 − 13 = 3px. Exact subtraction applies only to tight insets of 4px or less.\n\n## It's automatic\n\nComponents read their corners from the **surface depth** they sit at, so you\npass no radius prop:\n\n| Depth | Radius | Where |\n|---|---|---|\n| 0 | `lg` (16px) | On the page background, inside a `Page` |\n| 1 | `md` (8px) | Inside a `Card`, `CardRow`, `Alert` or `Dialog` on the page |\n| 2+ | `sm` (4px) | One more level in; deeper levels stay `sm` |\n| none | each component's old default | No `Page`, `Dialog`, `Card`, `CardRow`, `Alert` or `Surface` above it (tests, a component rendered on its own) |\n\nWho provides depth:\n\n- `Page` provides 0, to its header, content and footer actions.\n- `Dialog` provides 1 to its header, body and footer.\n- `Card`, `CardRow` and `Alert` each provide one level deeper than where\n  they sit, so a Card in a Card steps down.\n- `Popover` (and so `Menu` and the `Select` list) provides a fixed 2: a\n  floating layer is `md` and its items `sm`, whatever opened it.\n\nWhat follows depth with no prop: `Button`, `Select`, `Card`, `CardRow`,\n`Alert`. For a hand-made box that holds Buttons or Selects, wrap its contents\nin `<Surface>` and read its own radius with `useSurfaceRadius()`; see\n[surface](component/surface.md).\n\nHand-drawn boxes (your own `recipe.card.shell` or `recipe.row` styles, a `useModalDialog` modal) are invisible to depth: wrap their contents in `Surface`.\n\nAn explicit prop (`Button radius`, `Select surface`) is an **override** and\nalways wins over depth. It pins that radius even where depth would step down,\nwhich breaks concentricity, so set it only when the surface really is different\n(`radius=\"background\"` on a Button that must stay round inside a Card).\n\n`Switch` still takes `radius` (`inset` or `pill`) by hand, and `type=\"link\"`\nbuttons have no padding or background, so radius doesn't apply.\n\n## In your own styles\n\n```ts\nconst useStyles = createUseStyles((theme: Theme) => ({\n  panel: { ...theme.recipe.card.shell },  // already lg\n  inset: {\n    backgroundColor: theme.color.bg.cardHeader,\n    borderRadius: theme.radius.md,        // one level in\n    padding: theme.space.md,\n  },\n  chip: { borderRadius: theme.radius.sm }, // two levels in\n  knob: { borderRadius: `calc(${theme.radius.sm} - 2px)` }, // 2px inset\n}));\n```\n\n- Never write a literal `borderRadius` (`'12px'`, `'50%'`). The only\n  non-token form allowed is `calc(theme.radius.X ± Npx)` for tight insets.\n- A 1px inset works the other way too: `Card size=\"small\"` is\n  `calc(radius.md + 1px)` so its flush `md` children stay concentric."
+      "body": "Corner radius tracks **depth**, not size. Surfaces on the page background have\nthe roundest corners. Each surface nested inside another gets a squarer,\nconcentric corner, so the inner curve follows the outer one.\n\n## Tokens\n\n| Token | Value | Use |\n|---|---|---|\n| `theme.radius.lg` | 16px | Surfaces on the page background |\n| `theme.radius.md` | 8px | One level in: inside a card or modal; also floating layers |\n| `theme.radius.sm` | 4px | Two levels in: inside an input, inset box, row, or menu |\n| `theme.radius.pill` | 999px | Capsules: nav bar, a Switch with no nearby corner |\n| `theme.radius.circle` | 50% | Round glass buttons |\n\n## The rule\n\nFind where the element sits, then read its radius from this table:\n\n| Where the element sits | Radius | Examples |\n|---|---|---|\n| On the page background | `lg` | `Card`, modal dialog (`recipe.modal.dialog`), and any control directly on a `Page`: `Button`, `Select`, `CardRow`, text fields, `Tag` (automatic) |\n| Inside a card or modal | `md` | inputs and their shaded rows, Buttons, Selects, Tags and SegmentedControls in a Card or Dialog (automatic), shaded rows (`recipe.row`), inset boxes |\n| Inside one of those | `sm` | a chip inside an input, controls in a nested Card, CardRow, inset box (`Surface`) or Popover (automatic), a menu item, a Switch track in a shaded row |\n| Flush with its parent (zero inset, edges touch) | the parent's radius | an unlabelled Select's trigger, an input filling its row |\n| Inset 4px or less from its parent | `calc(parent − inset)` | a Switch thumb 2px inside a 4px track is 2px |\n| A small control with no nearby corner | `pill` / `circle` | a Switch in a full-width card header |\n| A floating layer (popover, menu, dropdown, toast) | `md`, plus `shadow.hoverLift` or `recipe.glass` | its items are `sm` |\n\n**Step down one token per level** (`lg` → `md` → `sm`). Do not subtract the\npadding: a Card has 13px of inset, but the inputs inside it are `md` (8px), not\n16 − 13 = 3px. Exact subtraction applies only to tight insets of 4px or less.\n\n## It's automatic\n\nComponents read their corners from the **surface depth** they sit at, so you\npass no radius prop:\n\n| Depth | Radius | Where |\n|---|---|---|\n| 0 | `lg` (16px) | On the page background, inside a `Page` |\n| 1 | `md` (8px) | Inside a `Card`, `CardRow`, `Alert` or `Dialog` on the page |\n| 2+ | `sm` (4px) | One more level in; deeper levels stay `sm` |\n| none | each component's old default | No `Page`, `Dialog`, `Card`, `CardRow`, `Alert` or `Surface` above it (tests, a component rendered on its own) |\n\nWho provides depth:\n\n- `Page` provides 0, to its header, content and footer actions.\n- `Dialog` provides 1 to its header, body and footer.\n- `Card`, `CardRow` and `Alert` each provide one level deeper than where\n  they sit, so a Card in a Card steps down.\n- `Popover` (and so `Menu` and the `Select` list) provides a fixed 2: a\n  floating layer is `md` and its items `sm`, whatever opened it.\n\nWhat follows depth with no prop: `Button`, `Select`, `Card`, `CardRow`,\n`Alert`, `TextInput`, `TextArea`, `NumberInput`, `DateTimeInput`,\n`ChipsInput` (its chips a step further in), `SegmentedControl`, `Tag`, and a\n`Switch` row (`layout=\"horizontal\"`, its `inset` track a step further in). A\nfield's shaded row and the field in it are flush, so both take the depth\nradius. For a hand-made box that holds Buttons or Selects, wrap its contents\nin `<Surface>` and read its own radius with `useSurfaceRadius()`; see\n[surface](component/surface.md).\n\nHand-drawn boxes (your own `recipe.card.shell` or `recipe.row` styles, a `useModalDialog` modal) are invisible to depth: wrap their contents in `Surface`.\n\nAn explicit prop (`Button radius`, `Select surface`) is an **override** and\nalways wins over depth. It pins that radius even where depth would step down,\nwhich breaks concentricity, so set it only when the surface really is different\n(`radius=\"background\"` on a Button that must stay round inside a Card).\n\n`Switch` still takes `radius` (`inset` or `pill`) by hand for its track;\n`inset` follows the row as above, `pill` stays a capsule. `type=\"link\"`\nbuttons have no padding or background, so radius doesn't apply. Floating\nlayers (`Toast`, a `Popover` surface, the `ChipsInput` suggestion list) stay\n`md` wherever they open.\n\n## In your own styles\n\n```ts\nconst useStyles = createUseStyles((theme: Theme) => ({\n  panel: { ...theme.recipe.card.shell },  // already lg\n  inset: {\n    backgroundColor: theme.color.bg.cardHeader,\n    borderRadius: theme.radius.md,        // one level in\n    padding: theme.space.md,\n  },\n  chip: { borderRadius: theme.radius.sm }, // two levels in\n  knob: { borderRadius: `calc(${theme.radius.sm} - 2px)` }, // 2px inset\n}));\n```\n\n- Never write a literal `borderRadius` (`'12px'`, `'50%'`). The only\n  non-token form allowed is `calc(theme.radius.X ± Npx)` for tight insets.\n- A 1px inset works the other way too: `Card size=\"small\"` is\n  `calc(radius.md + 1px)` so its flush `md` children stay concentric."
     },
     {
       "slug": "hooks",
@@ -9640,6 +9888,21 @@
             "GlobalStyles"
           ],
           "text": "`GlobalStyles` (rendered by `ThemeProvider`) ships the reset the components are drawn against: every element is `box-sizing: border-box` with no default margin or padding, as in Bookplate's and Scribe's `index.html`. Without it a text field was 51px tall instead of `layout.controlHeight` (33px). An app that already carries this reset sees no change; one that relied on browser default margins (`p`, `h1`, `ul`) loses them."
+        },
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "TextInput",
+            "TextArea",
+            "NumberInput",
+            "DateTimeInput",
+            "ChipsInput",
+            "SegmentedControl",
+            "Tag",
+            "Switch"
+          ],
+          "text": "Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.6.0 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px. A text field, `ChipsInput` box or field label directly on a Page also moves its text 16px in from the edge (8px elsewhere), the inset `Button` keeps, so it clears the deeper corner."
         }
       ]
     },

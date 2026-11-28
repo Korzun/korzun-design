@@ -346,7 +346,7 @@ export default function InDialog() {
 | `dense` | `boolean` | `false` | Matches a standard input's height, so the field lines up with `TextInput` and `Select` rows. Leave it off for a roomy standalone tag box. |
 | `disabled` | `boolean` | `false` | Disables typing and the chip remove buttons. |
 | `label` | `string` |  | Field label. Ignored in the `block` layout; set `layout` to show it. |
-| `layout` | `'horizontal' \| 'vertical' \| 'block'` | `'block'` | `'block'` is the bare box, with no label. `'horizontal'` and `'vertical'` add a label on a `bg.cardHeader` row (`radius.md`), like the other fields. |
+| `layout` | `'horizontal' \| 'vertical' \| 'block'` | `'block'` | `'block'` is the bare box, with no label. `'horizontal'` and `'vertical'` add a label on a `bg.cardHeader` row, like the other fields. Corners follow surface depth ([corners](../corners.md)); chips are a step squarer than the box. |
 | `name` | `string` |  | Set on the text input only: form data gets the half-typed text, not the chips. |
 | `onChange` (required) | `(values: string[]) => void` |  | Receives the whole new array, not an event. |
 | `placeholder` | `string` |  | Shown only while there are no chips. |
@@ -422,6 +422,7 @@ type ChipColor = 'status' | 'author' | 'series' | 'subject' | 'book' | 'entryTyp
 | `theme.fontWeight.medium` | `500` | `500` |
 | `theme.layout.controlHeight` | `2.0625rem` | `2.0625rem` |
 | `theme.lineHeight.tight` | `1` | `1` |
+| `theme.radius.lg` | `16px` | `16px` |
 | `theme.radius.md` | `8px` | `8px` |
 | `theme.radius.sm` | `4px` | `4px` |
 | `theme.recipe.label` | [recipe](../tokens.md#recipe) | [recipe](../tokens.md#recipe) |
@@ -430,6 +431,7 @@ type ChipColor = 'status' | 'author' | 'series' | 'subject' | 'book' | 'entryTyp
 | `theme.space.sm` | `0.375rem` | `0.375rem` |
 | `theme.space.xl` | `0.75rem` | `0.75rem` |
 | `theme.space.xs` | `0.25rem` | `0.25rem` |
+| `theme.space.xxl` | `1rem` | `1rem` |
 | `theme.space.xxs` | `0.125rem` | `0.125rem` |
 
 <!-- /generated:tokens -->
@@ -438,6 +440,7 @@ type ChipColor = 'status' | 'author' | 'series' | 'subject' | 'book' | 'entryTyp
 
 ## Changelog
 
+- **0.7.0** (2026-11-26): Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.6.0 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px. A text field, `ChipsInput` box or field label directly on a Page also moves its text 16px in from the edge (8px elsewhere), the inset `Button` keeps, so it clears the deeper corner.
 - **0.3.0** (2026-11-22): `Popover` renders inside an open `<dialog>` that contains its anchor, so `Select` and `ChipsInput` work in modals.
 - **0.1.0** (2026-11-21): `Popover`:
   - `side` (`bottom`/`top`) and `align` (`start`/`center`/`end`).

@@ -45,4 +45,9 @@ export const useStyle = createUseStyles((theme: Theme) => ({
     cursor: 'pointer',
   },
   ...toneRules(theme),
+  // Corners follow surface depth: md (the default) in a card, a step rounder
+  // on the page, a step squarer inside a row, inset box or popover.
+  depth0: { borderRadius: theme.radius.lg },
+  depth1: {},
+  depth2: { borderRadius: theme.radius.sm },
 }));

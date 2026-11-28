@@ -166,4 +166,15 @@ export const useStyle = createUseStyles((theme: Theme) => ({
   checked: {},
   disabled: {},
   danger: {},
+  // The horizontal row's corners follow surface depth (md, from recipe.row, is
+  // depth 1), and an 'inset' track stays one step squarer than its row.
+  depth0: {
+    '&$horizontal': { borderRadius: theme.radius.lg },
+    '&$horizontal $inset': {
+      borderRadius: theme.radius.md,
+      '& $thumb': { borderRadius: `calc(${theme.radius.md} - 2px)` },
+    },
+  },
+  depth1: {},
+  depth2: { '&$horizontal': { borderRadius: theme.radius.sm } },
 }));

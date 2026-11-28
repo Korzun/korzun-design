@@ -126,7 +126,8 @@ const useStyle = createUseStyles((theme: Theme) => ({
       margin: `0 0 ${theme.space.lg}`,
       padding: theme.space.xl,
       overflowX: 'auto',
-      borderRadius: theme.radius.md,
+      // A box on the page background.
+      borderRadius: theme.radius.lg,
       backgroundColor: theme.color.bg.cardHeader,
     },
     '& pre code': { padding: 0, backgroundColor: 'transparent' },

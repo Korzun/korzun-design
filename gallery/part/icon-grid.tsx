@@ -26,7 +26,8 @@ const useStyle = createUseStyles((theme: Theme) => ({
     gap: theme.space.sm,
     padding: `${theme.space.xl} ${theme.space.md} ${theme.space.sm}`,
     border: `1px solid ${theme.color.border.default}`,
-    borderRadius: theme.radius.md,
+    // A tile on the page background.
+    borderRadius: theme.radius.lg,
     backgroundColor: theme.color.bg.card,
     color: theme.color.text.primary,
   },

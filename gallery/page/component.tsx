@@ -1,4 +1,4 @@
-import { Heading, Inline, Page, Stack, Text } from '@korzun/design/component';
+import { Heading, Inline, Page, Stack, Surface, Text } from '@korzun/design/component';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import cx from 'classnames';
 import type { ReactNode } from 'react';
@@ -120,7 +120,10 @@ export const ComponentPage = () => {
                 // highlight() escapes the line; the spans are its own.
                 dangerouslySetInnerHTML={{ __html: highlight(mod.importLine) }}
               />
-              <CopyButton text={mod.importLine} label="Copy import" />
+              {/* A hand-drawn box on the page: its Copy button sits one level in. */}
+              <Surface>
+                <CopyButton text={mod.importLine} label="Copy import" />
+              </Surface>
             </Inline>
             <Text size="sm" tone="description">
               {'Agents: read the '}

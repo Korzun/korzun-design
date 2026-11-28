@@ -1,6 +1,6 @@
 import { createUseStyles, Theme } from '../../theme/index.js';
 
-type StyleProps = { chipColor: keyof Theme['color']['chip']; dense: boolean };
+type StyleProps = { chipColor: keyof Theme['color']['chip']; dense: boolean; onPage: boolean };
 
 export const useStyle = createUseStyles((theme: Theme) => ({
   root: {
@@ -42,8 +42,11 @@ export const useStyle = createUseStyles((theme: Theme) => ({
     gap: theme.space.xs,
     // Dense trims the vertical padding (chips stay full-size) so the row height
     // matches a standard input; the roomier default keeps the Subjects card look.
-    padding: ({ dense }: StyleProps) =>
-      dense ? `${theme.space.xs} ${theme.space.md}` : theme.space.md,
+    // Directly on a page (lg corners) the chips and text move in to clear the
+    // deeper curve: the 16px inset a Button keeps at the same radius. A function,
+    // like the dense padding, because a dynamic value outranks a static class.
+    padding: ({ dense, onPage }: StyleProps) =>
+      `${dense ? theme.space.xs : theme.space.md} ${onPage ? theme.space.xxl : theme.space.md}`,
     // Dense matches a standard input's text size so the field lines up in height.
     fontSize: ({ dense }: StyleProps) => (dense ? '0.80rem' : theme.fontSize.sm),
     backgroundColor: theme.color.bg.input,
@@ -155,4 +158,15 @@ export const useStyle = createUseStyles((theme: Theme) => ({
   disabled: {},
   horizontal: {},
   vertical: {},
+  // Corners follow surface depth (md, the default, is depth 1). The class sits
+  // on the field box's wrapper and, with a label, on the shaded row too: the
+  // row and the box are flush, so both take the depth radius, and the chips
+  // inside the box take one step down.
+  depth0: {
+    '&$root, & $chipsContainer': { borderRadius: theme.radius.lg },
+    '& $chip': { borderRadius: theme.radius.md },
+    '&& $label': { marginLeft: theme.space.xxl },
+  },
+  depth1: {},
+  depth2: { '&$root, & $chipsContainer': { borderRadius: theme.radius.sm } },
 }));

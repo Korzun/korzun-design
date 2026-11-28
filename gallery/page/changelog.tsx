@@ -19,7 +19,8 @@ const useStyle = createUseStyles((theme: Theme) => ({
   chipLink: {
     display: 'inline-flex',
     textDecoration: 'none',
-    borderRadius: theme.radius.sm,
+    // The focus ring follows the Tag inside, which is on the page (depth 0).
+    borderRadius: theme.radius.lg,
     '&:focus-visible': { outline: `2px solid ${theme.color.border.focus}`, outlineOffset: 2 },
   },
 }));
