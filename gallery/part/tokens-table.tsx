@@ -104,19 +104,19 @@ export const TokensTable = ({ tokens }: TokensTableProps) => {
         <tbody>
           {tokens.map((token) => (
             <tr key={token.path}>
-              <td>
+              <td className={table.wide}>
                 <code className={table.code}>{`theme.${token.path}`}</code>
               </td>
               {token.kind === 'recipe' ? (
-                <td colSpan={2}>
+                <td colSpan={2} className={table.wide}>
                   <Recipe path={token.path} />
                 </td>
               ) : (
                 <>
-                  <td>
+                  <td data-label="Light">
                     <Value value={token.light} color={token.kind === 'color'} mode="light" />
                   </td>
-                  <td>
+                  <td data-label="Dark">
                     <Value value={token.dark} color={token.kind === 'color'} mode="dark" />
                   </td>
                 </>
