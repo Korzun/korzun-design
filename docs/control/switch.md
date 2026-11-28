@@ -86,24 +86,32 @@ export default function Layouts() {
   const [inline, setInline] = useState(true);
   const [row, setRow] = useState(false);
   return (
-    <Stack>
-      <Text tone="muted">layout default</Text>
-      <Switch
-        name="sync"
-        label="Sync over Wi-Fi only"
-        description="Large downloads wait for a Wi-Fi connection."
-        checked={inline}
-        onChange={setInline}
-      />
-      <Text tone="muted">layout horizontal</Text>
-      <Switch
-        name="grayscale"
-        label="Grayscale"
-        layout="horizontal"
-        description="Convert covers to grayscale for monochrome screens."
-        checked={row}
-        onChange={setRow}
-      />
+    <Stack gap="xl">
+      <Stack gap="xs">
+        <Text size="sm" tone="muted">
+          layout="default"
+        </Text>
+        <Switch
+          name="sync"
+          label="Sync over Wi-Fi only"
+          description="Large downloads wait for a Wi-Fi connection."
+          checked={inline}
+          onChange={setInline}
+        />
+      </Stack>
+      <Stack gap="xs">
+        <Text size="sm" tone="muted">
+          layout="horizontal"
+        </Text>
+        <Switch
+          name="grayscale"
+          label="Grayscale"
+          layout="horizontal"
+          description="Convert covers to grayscale for monochrome screens."
+          checked={row}
+          onChange={setRow}
+        />
+      </Stack>
     </Stack>
   );
 }
@@ -124,18 +132,26 @@ export default function Radius() {
   const [inset, setInset] = useState(true);
   const [pill, setPill] = useState(true);
   return (
-    <Stack>
-      <Text tone="muted">radius inset, in a shaded row</Text>
-      <Switch
-        name="inset"
-        label="Inset track"
-        layout="horizontal"
-        radius="inset"
-        checked={inset}
-        onChange={setInset}
-      />
-      <Text tone="muted">radius pill, no corner nearby</Text>
-      <Switch name="pill" label="Pill track" radius="pill" checked={pill} onChange={setPill} />
+    <Stack gap="xl">
+      <Stack gap="xs">
+        <Text size="sm" tone="muted">
+          radius="inset", in a shaded row
+        </Text>
+        <Switch
+          name="inset"
+          label="Inset track"
+          layout="horizontal"
+          radius="inset"
+          checked={inset}
+          onChange={setInset}
+        />
+      </Stack>
+      <Stack gap="xs">
+        <Text size="sm" tone="muted">
+          radius="pill", no corner nearby
+        </Text>
+        <Switch name="pill" label="Pill track" radius="pill" checked={pill} onChange={setPill} />
+      </Stack>
     </Stack>
   );
 }
@@ -217,8 +233,8 @@ export default function LoadingAndDisabled() {
         <Button onClick={() => setSaving((s) => !s)}>
           {saving ? 'Finish save' : 'Start save'}
         </Button>
-        <Text tone="muted">Changes made: {changes}</Text>
       </Inline>
+      <Text tone="muted">Changes made: {changes}</Text>
       <Switch
         name="push-email"
         label="Email (not available)"

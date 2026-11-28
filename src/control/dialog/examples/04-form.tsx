@@ -3,7 +3,7 @@
  * and Escape closes the list before the dialog. `canDismiss={!saving}` and a
  * `loading` Save keep it open until the request finishes.
  */
-import { Inline, Stack, Text } from '@korzun/design/component';
+import { Stack, Text } from '@korzun/design/component';
 import { Button, Dialog, Select, TextInput } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -24,11 +24,9 @@ export default function Form() {
     }, 1000);
   };
   return (
-    <Stack>
-      <Inline>
-        <Button onClick={() => setOpen(true)}>Edit book</Button>
-        <Text tone="muted">Saved: {saved}</Text>
-      </Inline>
+    <Stack align="start">
+      <Button onClick={() => setOpen(true)}>Edit book</Button>
+      <Text tone="muted">Saved: {saved}</Text>
       <Dialog
         open={open}
         onClose={() => setOpen(false)}

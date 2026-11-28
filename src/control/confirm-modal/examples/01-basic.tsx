@@ -4,7 +4,7 @@
  * modal: it sets `isOpen` to `false` itself. `onCancel` also runs for Escape and a
  * click on the backdrop.
  */
-import { Inline, Stack, Text } from '@korzun/design/component';
+import { Stack, Text } from '@korzun/design/component';
 import { Button, ConfirmModal } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -16,11 +16,9 @@ export default function Basic() {
     setIsOpen(false);
   };
   return (
-    <Stack>
-      <Inline>
-        <Button onClick={() => setIsOpen(true)}>Sync library</Button>
-        <Text tone="muted">Answer: {answer}</Text>
-      </Inline>
+    <Stack align="start">
+      <Button onClick={() => setIsOpen(true)}>Sync library</Button>
+      <Text tone="muted">Answer: {answer}</Text>
       <ConfirmModal
         isOpen={isOpen}
         title="Sync library?"

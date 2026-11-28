@@ -3,7 +3,7 @@
  * controlled and `onClose` takes no arguments: it runs for Escape and a click on the
  * backdrop, and closes nothing by itself, so it sets `open` to `false`.
  */
-import { Inline, Stack, Text } from '@korzun/design/component';
+import { Stack, Text } from '@korzun/design/component';
 import { Button, Dialog } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -15,11 +15,9 @@ export default function Basic() {
     setOpen(false);
   };
   return (
-    <Stack>
-      <Inline>
-        <Button onClick={() => setOpen(true)}>Review fixes</Button>
-        <Text tone="muted">Saved: {saves}</Text>
-      </Inline>
+    <Stack align="start">
+      <Button onClick={() => setOpen(true)}>Review fixes</Button>
+      <Text tone="muted">Saved: {saves}</Text>
       <Dialog
         open={open}
         onClose={() => setOpen(false)}

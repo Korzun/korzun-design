@@ -37,7 +37,6 @@ export default function Gap() {
   );
   return (
     <Stack>
-      <Text tone="muted">Open: {open ?? 'none'}</Text>
       <Inline>
         <Button ref={pixelsAnchor} onClick={() => toggle('pixels')}>
           {'gap={24}'}
@@ -52,6 +51,7 @@ export default function Gap() {
           {'gap={theme.space.xl}'}
         </Button>
       </Inline>
+      <Text tone="muted">Open: {open ?? 'none'}</Text>
       <Popover
         anchorRef={pixelsAnchor}
         open={open === 'pixels'}

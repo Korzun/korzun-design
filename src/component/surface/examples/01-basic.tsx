@@ -34,8 +34,8 @@ export default function Basic() {
           </Text>
           <Inline>
             <Button onClick={() => setSaves((n) => n + 1)}>Save</Button>
-            <Text tone="muted">Saves: {saves}</Text>
           </Inline>
+          <Text tone="muted">Saves: {saves}</Text>
         </Stack>
       </InsetBox>
     </Card>

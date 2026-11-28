@@ -108,14 +108,30 @@ export default function Surfaces() {
   const [nested, setNested] = useState<string | undefined>('Cherry');
   return (
     <Page type="minimal">
-      <Stack>
-        <Text tone="muted">On a Page: page</Text>
-        <Select name="on-page" value={onPage} options={FRUITS} onChange={setOnPage} />
-        <Card title="In a Card: card">
-          <Select name="in-card" value={inCard} options={FRUITS} onChange={setInCard} />
-          <Card title="In a Card in a Card: inset">
-            <Select name="nested" value={nested} options={FRUITS} onChange={setNested} />
-          </Card>
+      <Stack gap="xl">
+        <Stack gap="xs">
+          <Text size="sm" tone="muted">
+            On a Page: 'page'
+          </Text>
+          <Select name="on-page" value={onPage} options={FRUITS} onChange={setOnPage} />
+        </Stack>
+        <Card title="In a Card">
+          <Stack gap="xl">
+            <Stack gap="xs">
+              <Text size="sm" tone="muted">
+                In a Card: 'card'
+              </Text>
+              <Select name="in-card" value={inCard} options={FRUITS} onChange={setInCard} />
+            </Stack>
+            <Card title="In a Card in a Card">
+              <Stack gap="xs">
+                <Text size="sm" tone="muted">
+                  In a Card in a Card: 'inset'
+                </Text>
+                <Select name="nested" value={nested} options={FRUITS} onChange={setNested} />
+              </Stack>
+            </Card>
+          </Stack>
         </Card>
       </Stack>
     </Page>
@@ -130,7 +146,7 @@ stacks the label above the trigger in that row, and `inline` is just the
 trigger with the label beside it.
 
 ```tsx
-import { Stack } from '@korzun/design/component';
+import { Stack, Text } from '@korzun/design/component';
 import { Select } from '@korzun/design/control';
 import { useState } from 'react';
 
@@ -141,31 +157,46 @@ export default function Layouts() {
   const [vertical, setVertical] = useState<string | undefined>('Medium');
   const [inline, setInline] = useState<string | undefined>('Large');
   return (
-    <Stack>
-      <Select
-        name="horizontal"
-        layout="horizontal"
-        label="Horizontal"
-        value={horizontal}
-        options={SIZES}
-        onChange={setHorizontal}
-      />
-      <Select
-        name="vertical"
-        layout="vertical"
-        label="Vertical"
-        value={vertical}
-        options={SIZES}
-        onChange={setVertical}
-      />
-      <Select
-        name="inline"
-        layout="inline"
-        label="Inline"
-        value={inline}
-        options={SIZES}
-        onChange={setInline}
-      />
+    <Stack gap="xl">
+      <Stack gap="xs">
+        <Text size="sm" tone="muted">
+          layout="horizontal"
+        </Text>
+        <Select
+          name="horizontal"
+          layout="horizontal"
+          label="Size"
+          value={horizontal}
+          options={SIZES}
+          onChange={setHorizontal}
+        />
+      </Stack>
+      <Stack gap="xs">
+        <Text size="sm" tone="muted">
+          layout="vertical"
+        </Text>
+        <Select
+          name="vertical"
+          layout="vertical"
+          label="Size"
+          value={vertical}
+          options={SIZES}
+          onChange={setVertical}
+        />
+      </Stack>
+      <Stack gap="xs">
+        <Text size="sm" tone="muted">
+          layout="inline"
+        </Text>
+        <Select
+          name="inline"
+          layout="inline"
+          label="Size"
+          value={inline}
+          options={SIZES}
+          onChange={setInline}
+        />
+      </Stack>
     </Stack>
   );
 }

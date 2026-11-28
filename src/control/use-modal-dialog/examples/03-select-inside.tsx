@@ -3,7 +3,7 @@
  * hook gives no surface depth, so the contents are wrapped in `Surface` and the
  * `Select` gets card corners.
  */
-import { Inline, Surface, Text } from '@korzun/design/component';
+import { Stack, Surface, Text } from '@korzun/design/component';
 import { Button, Select, useModalDialog } from '@korzun/design/control';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { useState } from 'react';
@@ -26,7 +26,7 @@ export default function SelectInside() {
   const close = () => setIsOpen(false);
   const ref = useModalDialog(isOpen, close);
   return (
-    <Inline>
+    <Stack align="start">
       <Button onClick={() => setIsOpen(true)}>Move book</Button>
       <Text tone="muted">Shelf: {shelf ?? 'none'}</Text>
       <dialog ref={ref} className={styles.dialog}>
@@ -49,6 +49,6 @@ export default function SelectInside() {
           </div>
         </Surface>
       </dialog>
-    </Inline>
+    </Stack>
   );
 }

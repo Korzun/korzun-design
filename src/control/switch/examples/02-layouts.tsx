@@ -12,24 +12,32 @@ export default function Layouts() {
   const [inline, setInline] = useState(true);
   const [row, setRow] = useState(false);
   return (
-    <Stack>
-      <Text tone="muted">layout default</Text>
-      <Switch
-        name="sync"
-        label="Sync over Wi-Fi only"
-        description="Large downloads wait for a Wi-Fi connection."
-        checked={inline}
-        onChange={setInline}
-      />
-      <Text tone="muted">layout horizontal</Text>
-      <Switch
-        name="grayscale"
-        label="Grayscale"
-        layout="horizontal"
-        description="Convert covers to grayscale for monochrome screens."
-        checked={row}
-        onChange={setRow}
-      />
+    <Stack gap="xl">
+      <Stack gap="xs">
+        <Text size="sm" tone="muted">
+          layout="default"
+        </Text>
+        <Switch
+          name="sync"
+          label="Sync over Wi-Fi only"
+          description="Large downloads wait for a Wi-Fi connection."
+          checked={inline}
+          onChange={setInline}
+        />
+      </Stack>
+      <Stack gap="xs">
+        <Text size="sm" tone="muted">
+          layout="horizontal"
+        </Text>
+        <Switch
+          name="grayscale"
+          label="Grayscale"
+          layout="horizontal"
+          description="Convert covers to grayscale for monochrome screens."
+          checked={row}
+          onChange={setRow}
+        />
+      </Stack>
     </Stack>
   );
 }

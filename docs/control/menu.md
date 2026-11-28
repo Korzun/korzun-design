@@ -277,7 +277,6 @@ export default function Align() {
   ];
   return (
     <Stack align="start">
-      <Text tone="muted">Chosen: {chosen}</Text>
       <Menu
         align="start"
         trigger={(p) => <Button {...p}>align start: menu at the left edge</Button>}
@@ -293,6 +292,7 @@ export default function Align() {
         trigger={(p) => <Button {...p}>align end: menu at the right edge</Button>}
         items={items('end')}
       />
+      <Text tone="muted">Chosen: {chosen}</Text>
     </Stack>
   );
 }

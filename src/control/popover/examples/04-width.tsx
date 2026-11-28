@@ -26,13 +26,13 @@ export default function Width() {
     setOpen((current) => (current === name ? null : name));
   return (
     <Stack align="start">
-      <Text tone="muted">Open: {open ?? 'none'}</Text>
       <Button ref={matchedAnchor} onClick={() => toggle('matched')}>
         matchWidth: as wide as this button
       </Button>
       <Button ref={contentAnchor} onClick={() => toggle('content')}>
         matchWidth false: as wide as its content
       </Button>
+      <Text tone="muted">Open: {open ?? 'none'}</Text>
       <Popover
         anchorRef={matchedAnchor}
         open={open === 'matched'}

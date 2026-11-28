@@ -17,8 +17,8 @@ export default function Basic() {
         <Button onClick={() => setValue((v) => Math.min(1, Math.round((v + 0.1) * 10) / 10))}>
           More
         </Button>
-        <Text tone="muted">value: {value}</Text>
       </Inline>
+      <Text tone="muted">value: {value}</Text>
     </Stack>
   );
 }

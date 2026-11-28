@@ -128,20 +128,22 @@ Each example is `src/<area>/<module>/examples/NN-slug.tsx`:
  * One `primary` action for the main step and a `default` button beside it.
  * `onClick` takes no arguments: the button passes no event.
  */
-import { Inline, Text } from '@korzun/design/component';
+import { Inline, Stack, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';
 import { useState } from 'react';
 
 export default function Basic() {
   const [saves, setSaves] = useState(0);
   return (
-    <Inline>
-      <Button onClick={() => setSaves(0)}>Reset</Button>
-      <Button type="primary" onClick={() => setSaves((n) => n + 1)}>
-        Save
-      </Button>
+    <Stack align="start">
+      <Inline>
+        <Button onClick={() => setSaves(0)}>Reset</Button>
+        <Button type="primary" onClick={() => setSaves((n) => n + 1)}>
+          Save
+        </Button>
+      </Inline>
       <Text tone="muted">Saves: {saves}</Text>
-    </Inline>
+    </Stack>
   );
 }
 ```
@@ -168,8 +170,10 @@ A phone-width frame is still a browser tab: `env(safe-area-inset-*)` is 0 there,
 - Each description sentence is shown by the demo. "Set `ariaLabel` when the trigger is an icon" means the demo's trigger is an icon `Button` with `ariaLabel`.
 - Examples follow the Usage and Do / don't of this doc and of every component they use (read `docs/component/surface.md` before using `Surface`). An example never demonstrates a use those docs advise against (a `Surface` with no drawn box around it).
 - `01` is the canonical compact usage, the first demo on the component page. The overview thumbnail is the preview below, not `01`.
-- A lone trigger (a `Button` that opens a `Dialog`, a fragment root `<>`) goes in an `Inline`: at the root of the frame it stretches to the full width.
-- An example with an overlay places its trigger so the overlay opens on the side the example is about (a `side="top"` trigger sits below other content). The frame adds room above for a `side="top"` overlay, and room below for a list that flipped upward for lack of room, so it opens downward as it would on a page.
+- A lone trigger (a `Button` that opens a `Dialog`, a fragment root `<>`) goes in an `Inline` or a `Stack align="start"`: at the root of the frame it stretches to the full width.
+- A readout ("Chosen: …", "Saved: …") goes under the trigger or row of buttons, never beside or above it (except over a `side="top"` trigger, below): `<Stack align="start">`, the controls (several in an `Inline`), then `<Text tone="muted">`.
+- Groups that show one value each (layouts, surfaces, radii) get a caption naming it: `<Stack gap="xl">` of groups, each a `<Stack gap="xs">` with `<Text size="sm" tone="muted">` (`layout="horizontal"`) above its demo. Labels in a `horizontal` form stay short (under about 6rem, "Index", "Width") so the fields line up.
+- An example with an overlay places its trigger so the overlay opens on the side the example is about (a `side="top"` trigger sits below other content, its readout included, or the overlay flips down before the frame can make room). The frame adds room above for a `side="top"` overlay, and room below for a list that flipped upward for lack of room, so it opens downward as it would on a page.
 - A description talks about the component, never the demo frame (no "to stay inside the demo"). No prop (`side`, a large `gap`) is set only to fit the frame. When the frame clips an overlay and the example is as it should be, report a gallery defect.
 - Link items and `to` props stay real links. Clicking one in a demo shows the frame's "The example navigated to…" page; that is expected.
 

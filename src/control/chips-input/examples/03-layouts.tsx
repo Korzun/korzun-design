@@ -14,25 +14,37 @@ export default function Layouts() {
   const [horizontal, setHorizontal] = useState(['Memoir']);
   const [vertical, setVertical] = useState(['Reference']);
   return (
-    <Stack>
-      <Text>block</Text>
-      <ChipsInput label="Tags" value={block} suggestions={TAGS} onChange={setBlock} />
-      <Text>horizontal</Text>
-      <ChipsInput
-        label="Tags"
-        layout="horizontal"
-        value={horizontal}
-        suggestions={TAGS}
-        onChange={setHorizontal}
-      />
-      <Text>vertical</Text>
-      <ChipsInput
-        label="Tags"
-        layout="vertical"
-        value={vertical}
-        suggestions={TAGS}
-        onChange={setVertical}
-      />
+    <Stack gap="xl">
+      <Stack gap="xs">
+        <Text size="sm" tone="muted">
+          layout="block"
+        </Text>
+        <ChipsInput label="Tags" value={block} suggestions={TAGS} onChange={setBlock} />
+      </Stack>
+      <Stack gap="xs">
+        <Text size="sm" tone="muted">
+          layout="horizontal"
+        </Text>
+        <ChipsInput
+          label="Tags"
+          layout="horizontal"
+          value={horizontal}
+          suggestions={TAGS}
+          onChange={setHorizontal}
+        />
+      </Stack>
+      <Stack gap="xs">
+        <Text size="sm" tone="muted">
+          layout="vertical"
+        </Text>
+        <ChipsInput
+          label="Tags"
+          layout="vertical"
+          value={vertical}
+          suggestions={TAGS}
+          onChange={setVertical}
+        />
+      </Stack>
     </Stack>
   );
 }

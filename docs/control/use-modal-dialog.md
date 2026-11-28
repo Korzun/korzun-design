@@ -91,7 +91,7 @@ the `theme.recipe.modal.*` styles, and its contents are wrapped in `Surface` so 
 Buttons get the corners they would have in a `Dialog`.
 
 ```tsx
-import { Inline, Surface, Text } from '@korzun/design/component';
+import { Stack, Surface, Text } from '@korzun/design/component';
 import { Button, useModalDialog } from '@korzun/design/control';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { useState } from 'react';
@@ -113,7 +113,7 @@ export default function Basic() {
   const close = () => setIsOpen(false);
   const ref = useModalDialog(isOpen, close);
   return (
-    <Inline>
+    <Stack align="start">
       <Button onClick={() => setIsOpen(true)}>Edit progress</Button>
       <Text tone="muted">Saved: {saves}</Text>
       <dialog ref={ref} className={styles.dialog}>
@@ -136,7 +136,7 @@ export default function Basic() {
           </div>
         </Surface>
       </dialog>
-    </Inline>
+    </Stack>
   );
 }
 ```
@@ -149,7 +149,7 @@ The switch holds the busy state on. The `onClick` that stops propagation keeps a
 click in the dialog from reaching a clickable ancestor; dismissal is the hook's job.
 
 ```tsx
-import { Inline, Stack, Surface } from '@korzun/design/component';
+import { Stack, Surface } from '@korzun/design/component';
 import { Button, Switch, useModalDialog } from '@korzun/design/control';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { useState } from 'react';
@@ -171,7 +171,7 @@ export default function GatedDismissal() {
   const close = () => setIsOpen(false);
   const ref = useModalDialog(isOpen, close, !saving);
   return (
-    <Inline>
+    <Stack align="start">
       <Button onClick={() => setIsOpen(true)}>Open busy modal</Button>
       <dialog ref={ref} className={styles.dialog} onClick={(event) => event.stopPropagation()}>
         <Surface>
@@ -197,7 +197,7 @@ export default function GatedDismissal() {
           </div>
         </Surface>
       </dialog>
-    </Inline>
+    </Stack>
   );
 }
 ```
@@ -209,7 +209,7 @@ hook gives no surface depth, so the contents are wrapped in `Surface` and the
 `Select` gets card corners.
 
 ```tsx
-import { Inline, Surface, Text } from '@korzun/design/component';
+import { Stack, Surface, Text } from '@korzun/design/component';
 import { Button, Select, useModalDialog } from '@korzun/design/control';
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import { useState } from 'react';
@@ -232,7 +232,7 @@ export default function SelectInside() {
   const close = () => setIsOpen(false);
   const ref = useModalDialog(isOpen, close);
   return (
-    <Inline>
+    <Stack align="start">
       <Button onClick={() => setIsOpen(true)}>Move book</Button>
       <Text tone="muted">Shelf: {shelf ?? 'none'}</Text>
       <dialog ref={ref} className={styles.dialog}>
@@ -255,7 +255,7 @@ export default function SelectInside() {
           </div>
         </Surface>
       </dialog>
-    </Inline>
+    </Stack>
   );
 }
 ```

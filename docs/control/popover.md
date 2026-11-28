@@ -273,7 +273,6 @@ export default function Align() {
   const anchors = { start: startAnchor, center: centerAnchor, end: endAnchor };
   return (
     <Stack align="start">
-      <Text tone="muted">Open: {open ?? 'none'}</Text>
       <Button ref={startAnchor} onClick={() => toggle('start')}>
         align start: popover at the left edge
       </Button>
@@ -283,6 +282,7 @@ export default function Align() {
       <Button ref={endAnchor} onClick={() => toggle('end')}>
         align end: popover at the right edge
       </Button>
+      <Text tone="muted">Open: {open ?? 'none'}</Text>
       {(['start', 'center', 'end'] as const).map((align) => (
         <Popover
           key={align}
@@ -332,13 +332,13 @@ export default function Width() {
     setOpen((current) => (current === name ? null : name));
   return (
     <Stack align="start">
-      <Text tone="muted">Open: {open ?? 'none'}</Text>
       <Button ref={matchedAnchor} onClick={() => toggle('matched')}>
         matchWidth: as wide as this button
       </Button>
       <Button ref={contentAnchor} onClick={() => toggle('content')}>
         matchWidth false: as wide as its content
       </Button>
+      <Text tone="muted">Open: {open ?? 'none'}</Text>
       <Popover
         anchorRef={matchedAnchor}
         open={open === 'matched'}
@@ -405,7 +405,6 @@ export default function Gap() {
   );
   return (
     <Stack>
-      <Text tone="muted">Open: {open ?? 'none'}</Text>
       <Inline>
         <Button ref={pixelsAnchor} onClick={() => toggle('pixels')}>
           {'gap={24}'}
@@ -420,6 +419,7 @@ export default function Gap() {
           {'gap={theme.space.xl}'}
         </Button>
       </Inline>
+      <Text tone="muted">Open: {open ?? 'none'}</Text>
       <Popover
         anchorRef={pixelsAnchor}
         open={open === 'pixels'}

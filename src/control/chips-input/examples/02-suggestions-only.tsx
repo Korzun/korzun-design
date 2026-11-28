@@ -13,22 +13,30 @@ export default function SuggestionsOnly() {
   const [anything, setAnything] = useState<string[]>([]);
   const [listed, setListed] = useState<string[]>([]);
   return (
-    <Stack>
-      <Text>Custom values allowed</Text>
-      <ChipsInput
-        value={anything}
-        suggestions={COLOURS}
-        onChange={setAnything}
-        placeholder="Type any colour…"
-      />
-      <Text>Suggestions only</Text>
-      <ChipsInput
-        value={listed}
-        suggestions={COLOURS}
-        onChange={setListed}
-        allowCustom={false}
-        placeholder="Pick a listed colour…"
-      />
+    <Stack gap="xl">
+      <Stack gap="xs">
+        <Text size="sm" tone="muted">
+          Custom values allowed
+        </Text>
+        <ChipsInput
+          value={anything}
+          suggestions={COLOURS}
+          onChange={setAnything}
+          placeholder="Type any colour…"
+        />
+      </Stack>
+      <Stack gap="xs">
+        <Text size="sm" tone="muted">
+          {'allowCustom={false}: suggestions only'}
+        </Text>
+        <ChipsInput
+          value={listed}
+          suggestions={COLOURS}
+          onChange={setListed}
+          allowCustom={false}
+          placeholder="Pick a listed colour…"
+        />
+      </Stack>
     </Stack>
   );
 }
