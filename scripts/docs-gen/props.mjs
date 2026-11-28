@@ -589,8 +589,18 @@ export function extractTypeTables(dtsPath, names, readFile = defaultRead) {
   }
   const { flatten, aliasText } = createFlattener(loader, exported);
   return resolved.map(({ name, decl, file }) => {
+    const doc = readDoc(file, decl, true);
+    // A deprecated rename (`/** @deprecated */ type OldProps = NewProps`) is one
+    // line in the Types block, not a second copy of the table it points at.
+    const ann = decl.type === 'TSTypeAliasDeclaration' ? decl.typeAnnotation : null;
+    const renamed =
+      ann?.type === 'TSTypeReference' && ann.typeName.type === 'Identifier' && !ann.typeArguments;
+    if (doc.deprecated && renamed) {
+      const to = ann.typeName.name;
+      return { name, kind: 'alias', rows: [], text: to, description: `Deprecated: use ${to}.` };
+    }
     const { rows, skipped } = flatten(decl, file);
-    const { description, members } = readDoc(file, decl, true);
+    const { description, members } = doc;
     for (const note of members) {
       const target = rows?.get(note.name);
       if (!target) throw new Error(`${name}: @member ${note.name}: no such member`);
