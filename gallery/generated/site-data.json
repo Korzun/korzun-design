@@ -1760,6 +1760,225 @@
       "changelog": []
     },
     {
+      "id": "component/space",
+      "slug": "space",
+      "entry": "@korzun/design/component",
+      "docPath": "docs/component/space.md",
+      "title": "Space",
+      "description": "One layout primitive: a row or a column with a themed gap between children and an optional separator.",
+      "category": "Layout",
+      "values": [
+        "Space"
+      ],
+      "types": [
+        "Gap",
+        "SpaceProps"
+      ],
+      "importLine": "import { Space, type Gap, type SpaceProps } from '@korzun/design/component'",
+      "body": "A flex row or column with a themed gap between children. Use it to space\nthings on a screen instead of writing a style file: a button group, a form's\nfields, a header with an action on the right, a line of items split by dots.\n\nUse something else for: a bordered surface (`Card`), a divider line between\nitems (`Divider`), text styling (`Text`, `Heading`).\n\n## Usage\n\n### Direction and defaults\n\n`direction` is `'horizontal'` (a row, the default) or `'vertical'` (a column).\nEach direction has its own defaults:\n\n| | `gap` | `align` |\n| --- | --- | --- |\n| `horizontal` | `sm` | `center` |\n| `vertical` | `md` | `stretch` |\n\n### Choosing a gap\n\nPick `gap` from the theme's `space` scale so spacing is the same everywhere:\n`xs` for tight groups such as chips, `sm` for most rows, `md` for most\ncolumns, `xxl` between sections. `gap=\"none\"` emits `gap: 0`, for children\nthat supply their own spacing.\n\n### Split\n\n`split` draws a separator between each pair of children, never before the\nfirst or after the last. Children that render nothing (`null`, `false`, `''`, an\nempty fragment) get no separator, and a fragment's children count as separate\nitems. The separator is hidden from screen readers. Inside `as=\"ul\"` or\n`as=\"ol\"` it is an `li` with `role=\"presentation\"`, so the list stays valid.\n\n### Wrap and justify\n\n- `wrap` lets children flow onto further lines. Without it they stay on one\n  line and may overflow or shrink.\n- `justify=\"between\"` pushes the first and last child to opposite edges: a\n  title with an action on the right.\n\n### Behaviour\n\n- `as=\"ul\"` and `as=\"ol\"` also reset the list's margin, padding and bullets.\n  Children should be `li`.\n- `align` is the cross axis: vertical placement in a row, horizontal in a\n  column. `start` keeps buttons and tags at their own width in a column.\n- Every other HTML attribute (`id`, `aria-*`, `data-*`, event handlers) passes\n  through. There is no `style` prop: spacing comes from tokens only.\n- Override with `className` at `'&&'` specificity, never `!important`.\n- `as=\"form\"` is not offered. Put a `<form>` around the Space instead.\n\n### Coming from Stack or Inline\n\n`<Stack …>` is `<Space direction=\"vertical\" …>`, and `<Inline …>` is\n`<Space …>`. Every other prop and default is the same.\n\n## Do / don't\n\n- Do use `direction=\"vertical\"` for a form's fields or a page's sections.\n- Do use `justify=\"between\"` for a title-and-action row.\n- Do add `wrap` for rows of chips or buttons that may not fit on a phone.\n- Do use `split` for separators instead of inserting your own between items.\n- Don't add margins to children to space them; use `gap`.\n- Don't nest a row just to push one child right; use `justify=\"between\"`.",
+      "examples": [
+        {
+          "file": "src/component/space/examples/01-basic.tsx",
+          "slug": "basic",
+          "order": 1,
+          "title": "Basic",
+          "description": "A row of buttons, spaced with no `gap` prop. Children sit on one line and\nare centred vertically.",
+          "code": "import { Space } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Basic() {\n  const [saved, setSaved] = useState(0);\n  return (\n    <Space>\n      <Button type=\"primary\" onClick={() => setSaved((n) => n + 1)}>\n        Save\n      </Button>\n      <Button onClick={() => setSaved(0)}>Reset</Button>\n      <span>Saved: {saved}</span>\n    </Space>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/space/examples/02-vertical.tsx",
+          "slug": "vertical",
+          "order": 2,
+          "title": "Vertical",
+          "description": "`direction=\"vertical\"` stacks children in a column. The gap defaults to\n`md` and children stretch to the full width; put the `<form>` around the\nSpace.",
+          "code": "import { Space } from '@korzun/design/component';\nimport { TextInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Vertical() {\n  const [title, setTitle] = useState<string | undefined>('Middlemarch');\n  const [author, setAuthor] = useState<string | undefined>('George Eliot');\n  return (\n    <form noValidate onSubmit={(event) => event.preventDefault()}>\n      <Space direction=\"vertical\">\n        <TextInput name=\"title\" label=\"Title\" value={title} onChange={setTitle} />\n        <TextInput name=\"author\" label=\"Author\" value={author} onChange={setAuthor} />\n      </Space>\n    </form>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/space/examples/03-split.tsx",
+          "slug": "split",
+          "order": 3,
+          "title": "Split",
+          "description": "`split` draws a separator between each pair of children, never at the ends,\nand hides it from screen readers. Items that render nothing (`false`,\n`null`) get no separator. In a list (`as=\"ul\"`) the separator is an `li`.",
+          "code": "import { Space, Text } from '@korzun/design/component';\nimport { useState } from 'react';\n\nexport default function Split() {\n  const [year, setYear] = useState(false);\n  return (\n    <Space direction=\"vertical\">\n      <Space split=\"·\" wrap>\n        <Text tone=\"muted\">George Eliot</Text>\n        <Text tone=\"muted\">Fiction</Text>\n        {year && <Text tone=\"muted\">1871</Text>}\n        <Text tone=\"muted\">Classic</Text>\n      </Space>\n      <Space as=\"ul\" split=\"|\" gap=\"xs\">\n        <li>Reading</li>\n        <li>Up next</li>\n        <li>Finished</li>\n      </Space>\n      <label>\n        <input type=\"checkbox\" checked={year} onChange={(e) => setYear(e.target.checked)} /> Show\n        the year\n      </label>\n    </Space>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/space/examples/04-wrap-and-justify.tsx",
+          "slug": "wrap-and-justify",
+          "order": 4,
+          "title": "Wrap and justify",
+          "description": "`justify=\"between\"` pushes the first and last child to opposite edges, as in\na title with an action. `wrap` lets a row of chips flow onto further lines\ninstead of overflowing.",
+          "code": "import { Heading, Space, Tag } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function WrapAndJustify() {\n  const [all, setAll] = useState(false);\n  return (\n    <Space direction=\"vertical\" gap=\"sm\">\n      <Space justify=\"between\">\n        <Heading level={3}>Currently reading</Heading>\n        <Button type=\"link\" onClick={() => setAll((value) => !value)}>\n          {all ? 'Show less' : 'See all'}\n        </Button>\n      </Space>\n      <Space wrap gap=\"xs\">\n        <Tag>Fiction</Tag>\n        <Tag tone=\"author\">George Eliot</Tag>\n        {all && <Tag>Classic</Tag>}\n        {all && <Tag>1871</Tag>}\n      </Space>\n    </Space>\n  );\n}\n"
+        }
+      ],
+      "preview": {
+        "file": "src/component/space/examples/preview.tsx",
+        "slug": "preview",
+        "order": 0,
+        "title": "Preview",
+        "description": "",
+        "code": "import { Space } from '@korzun/design/component';\nimport { createUseStyles, type Theme } from '@korzun/design/theme';\n\nconst useStyle = createUseStyles((theme: Theme) => ({\n  block: {\n    width: 64,\n    height: 28,\n    backgroundColor: theme.color.brand.light,\n    border: `1px solid ${theme.color.brand.outline}`,\n    borderRadius: theme.radius.md,\n  },\n}));\n\nexport default function Preview() {\n  const styles = useStyle();\n  return (\n    <Space align=\"start\" gap=\"xxl\">\n      <Space>\n        <div className={styles.block} />\n        <div className={styles.block} />\n        <div className={styles.block} />\n      </Space>\n      <Space direction=\"vertical\">\n        <div className={styles.block} />\n        <div className={styles.block} />\n        <div className={styles.block} />\n      </Space>\n    </Space>\n  );\n}\n"
+      },
+      "tables": [
+        {
+          "name": "SpaceProps",
+          "kind": "props",
+          "rows": [
+            {
+              "name": "children",
+              "type": "ReactNode",
+              "required": false,
+              "description": "The children, laid out along `direction`."
+            },
+            {
+              "name": "align",
+              "type": "'start' | 'center' | 'end' | 'baseline' | 'stretch'",
+              "required": false,
+              "description": "Cross-axis alignment of children; `start`/`end` map to `flex-start`/`flex-end`. The default is `'center'` in a row and `'stretch'` in a column."
+            },
+            {
+              "name": "as",
+              "type": "'div' | 'section' | 'span' | 'nav' | 'ul' | 'ol' | 'li'",
+              "required": false,
+              "description": "The element to render. `ul`/`ol` also reset list margin, padding and bullets.",
+              "default": "'div'"
+            },
+            {
+              "name": "className",
+              "type": "string",
+              "required": false,
+              "description": "Extra class, added last on the root. Override with `'&&'` specificity, never `!important`."
+            },
+            {
+              "name": "direction",
+              "type": "'horizontal' | 'vertical'",
+              "required": false,
+              "description": "The axis children are laid along: `'horizontal'` is a row, `'vertical'` a column.",
+              "default": "'horizontal'"
+            },
+            {
+              "name": "gap",
+              "type": "'xxxs' | 'xxs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl' | 'xxxxl' | 'xxxxxl' | 'none'",
+              "required": false,
+              "description": "Space between children, from the theme's `space` tokens, or `'none'`. The default is `'sm'` in a row and `'md'` in a column."
+            },
+            {
+              "name": "justify",
+              "type": "'start' | 'center' | 'end' | 'between'",
+              "required": false,
+              "description": "Main-axis distribution of children. `'between'` is `space-between`: it pushes the first and last child to opposite edges.",
+              "default": "'start'"
+            },
+            {
+              "name": "ref",
+              "type": "Ref<HTMLElement>",
+              "required": false,
+              "description": "Ref to the root element."
+            },
+            {
+              "name": "split",
+              "type": "ReactNode",
+              "required": false,
+              "description": "Drawn between each pair of children, never before the first or after the last. Fragments are unwrapped; `null`, `false`, `''` and empty fragments get none. Hidden from screen readers; inside a `ul`/`ol` it is an `li`."
+            },
+            {
+              "name": "wrap",
+              "type": "boolean",
+              "required": false,
+              "description": "Lets children wrap onto further lines. Without it they stay on one line and may overflow or shrink.",
+              "default": "false"
+            }
+          ],
+          "extends": [
+            "HTMLAttributes"
+          ]
+        },
+        {
+          "name": "Gap",
+          "kind": "alias",
+          "rows": [],
+          "text": "'xxxs' | 'xxs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl' | 'xxxxl' | 'xxxxxl' | 'none'"
+        }
+      ],
+      "tokens": [
+        {
+          "path": "space.lg",
+          "kind": "value",
+          "light": "0.625rem",
+          "dark": "0.625rem"
+        },
+        {
+          "path": "space.md",
+          "kind": "value",
+          "light": "0.5rem",
+          "dark": "0.5rem"
+        },
+        {
+          "path": "space.sm",
+          "kind": "value",
+          "light": "0.375rem",
+          "dark": "0.375rem"
+        },
+        {
+          "path": "space.xl",
+          "kind": "value",
+          "light": "0.75rem",
+          "dark": "0.75rem"
+        },
+        {
+          "path": "space.xs",
+          "kind": "value",
+          "light": "0.25rem",
+          "dark": "0.25rem"
+        },
+        {
+          "path": "space.xxl",
+          "kind": "value",
+          "light": "1rem",
+          "dark": "1rem"
+        },
+        {
+          "path": "space.xxs",
+          "kind": "value",
+          "light": "0.125rem",
+          "dark": "0.125rem"
+        },
+        {
+          "path": "space.xxxl",
+          "kind": "value",
+          "light": "1.25rem",
+          "dark": "1.25rem"
+        },
+        {
+          "path": "space.xxxs",
+          "kind": "value",
+          "light": "0.1rem",
+          "dark": "0.1rem"
+        },
+        {
+          "path": "space.xxxxl",
+          "kind": "value",
+          "light": "1.5rem",
+          "dark": "1.5rem"
+        },
+        {
+          "path": "space.xxxxxl",
+          "kind": "value",
+          "light": "2rem",
+          "dark": "2rem"
+        }
+      ],
+      "changelog": [
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "Space"
+          ],
+          "text": "New `Space`: one layout primitive with a `direction` (default `'horizontal'`), `gap`, `align`, `justify`, `wrap`, `as` and a `split` separator drawn between items (hidden from screen readers, an `li` inside a list). Each direction keeps Stack's or Inline's defaults."
+        }
+      ]
+    },
+    {
       "id": "component/stack",
       "slug": "stack",
       "entry": "@korzun/design/component",
@@ -11222,6 +11441,14 @@
           "version": "0.7.0",
           "date": "2026-11-26",
           "tags": [
+            "Space"
+          ],
+          "text": "New `Space`: one layout primitive with a `direction` (default `'horizontal'`), `gap`, `align`, `justify`, `wrap`, `as` and a `split` separator drawn between items (hidden from screen readers, an `li` inside a list). Each direction keeps Stack's or Inline's defaults."
+        },
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
             "Switch"
           ],
           "text": "While loading, an `inset` (squared) switch shows a rounded-square ring with an arc travelling around it in the thumb's place, instead of the round spinner, which clashed with its square corners. A `pill` switch keeps the round spinner."
@@ -12171,6 +12398,8 @@
     "PageActionItem": "page-actions-menu",
     "PageFooterActionsProps": "page-footer-actions",
     "FooterAction": "page-footer-actions",
+    "SpaceProps": "space",
+    "Gap": "space",
     "StackProps": "stack",
     "SurfaceProps": "surface",
     "TopFadeProps": "top-fade",

@@ -21,6 +21,7 @@ export type { NavItem } from './nav-types.js';
 export { Page, type PageProps, type PageTypeValue } from './page/index.js';
 export { ProgressIndicator, type ProgressIndicatorProps } from './progress-indicator/index.js';
 export { Spinner, type SpinnerProps } from './spinner/index.js';
+export { Space, type SpaceProps, type Gap } from './space/index.js';
 export { Stack, type StackProps } from './stack/index.js';
 export { Surface, useSurfaceRadius, type SurfaceProps } from './surface/index.js';
 export { Table, type TableColumn, type TableProps } from './table/index.js';

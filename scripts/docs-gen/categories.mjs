@@ -17,6 +17,7 @@ export const SECTIONS = Object.freeze([
       'divider',
       'inline',
       ['page', ['page-actions-bar', 'page-actions-menu', 'page-footer-actions']],
+      'space',
       'stack',
       'surface',
       'top-fade',

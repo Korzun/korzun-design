@@ -2,6 +2,7 @@
 
 ## 0.7.0 — 2026-11-26
 
+- [Space] New `Space`: one layout primitive with a `direction` (default `'horizontal'`), `gap`, `align`, `justify`, `wrap`, `as` and a `split` separator drawn between items (hidden from screen readers, an `li` inside a list). Each direction keeps Stack's or Inline's defaults.
 - [Switch] While loading, an `inset` (squared) switch shows a rounded-square ring with an arc travelling around it in the thumb's place, instead of the round spinner, which clashed with its square corners. A `pill` switch keeps the round spinner.
 - [General] Docs site: the overview thumbnails for `Page`, `Surface`, `TopFade` and every hook are drawn with plain blocks, like `Stack` and `Inline`, instead of sample content.
 - [General] Docs site: each section lists its modules alphabetically by name, on the overview and in `llms.txt`.
