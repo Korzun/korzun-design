@@ -45,3 +45,15 @@ export const pageCodeEdge = (theme: Theme) =>
   theme.colorScheme === 'dark'
     ? { boxShadow: `inset 0 0 0 1px ${theme.color.border.default}` }
     : {};
+
+/**
+ * A code block that scrolls sideways fades out at its right edge while more
+ * of it is hidden there (`useScrollHint` sets `data-scroll-more`): phones
+ * hide scrollbars, and a cut-off line otherwise reads as truncated.
+ */
+export const scrollHint = {
+  '&[data-scroll-more]': {
+    maskImage: 'linear-gradient(to left, transparent, #000 3rem)',
+    WebkitMaskImage: 'linear-gradient(to left, transparent, #000 3rem)',
+  },
+};

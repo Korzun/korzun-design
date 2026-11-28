@@ -1,11 +1,12 @@
 import { createUseStyles, type Theme } from '@korzun/design/theme';
 import cx from 'classnames';
 import { Marked, type Token, type Tokens } from 'marked';
-import { useMemo, type MouseEvent } from 'react';
+import { useMemo, useRef, type MouseEvent } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 
 import { anchor } from '../../scripts/docs-gen/slug.mjs';
-import { codeBlock, inlineCode, pageCodeEdge, PROSE_WIDTH } from '../layout/type.js';
+import { useScrollHint } from '../layout/scroll-hint.js';
+import { codeBlock, inlineCode, pageCodeEdge, PROSE_WIDTH, scrollHint } from '../layout/type.js';
 import { highlight, useHighlightStyle } from './highlight.js';
 
 // Schemes a rendered link may use; any other (`javascript:`, `data:`) becomes `#`.
@@ -159,6 +160,7 @@ const useStyle = createUseStyles((theme: Theme) => ({
       borderRadius: theme.radius.lg,
       backgroundColor: theme.color.bg.cardHeader,
       ...pageCodeEdge(theme),
+      ...scrollHint,
     },
     // Inline code here sits on the page too, so it takes the same edge.
     '& :not(pre) > code': pageCodeEdge(theme),
@@ -227,10 +229,13 @@ export const Markdown = ({
   const tokens = useHighlightStyle();
   const { pathname } = useLocation();
   const navigate = useNavigate();
+  // A div or a span (`inline`); the hook only needs an element.
+  const ref = useRef<HTMLDivElement & HTMLSpanElement>(null);
   const html = useMemo(
     () => render(source, from, inline, pathname, links),
     [source, from, inline, pathname, links]
   );
+  useScrollHint(ref, html);
 
   // A link to a section of this page scrolls there and records the fragment;
   // the browser would otherwise route the whole hash. Modified clicks stay native.
@@ -250,6 +255,7 @@ export const Markdown = ({
   const Tag = inline ? 'span' : 'div';
   return (
     <Tag
+      ref={ref}
       className={cx(styles.text, !inline && styles.root, tokens.tokens, className)}
       onClick={onClick}
       // Repo docs and JSDoc, with raw HTML escaped and link schemes allowlisted above.
