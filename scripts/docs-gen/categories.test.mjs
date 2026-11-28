@@ -28,7 +28,8 @@ test("each doc's front matter category is its section in categories.mjs", () => 
 test('Hooks is the last section and a parent is never itself nested', () => {
   assert.equal(CATEGORIES.at(-1), 'Hooks');
   const children = new Set(order.filter((m) => m.parent).map((m) => m.slug));
-  for (const child of order.filter((m) => m.parent)) assert.ok(!children.has(child.parent), child.slug);
+  for (const child of order.filter((m) => m.parent))
+    assert.ok(!children.has(child.parent), child.slug);
 });
 
 test('moduleOrder puts nested modules right after their parent', () => {
@@ -40,4 +41,23 @@ test('moduleOrder puts nested modules right after their parent', () => {
     { slug: 'page-actions-menu', category: 'Layout', parent: 'page' },
     { slug: 'page-footer-actions', category: 'Layout', parent: 'page' },
   ]);
+});
+
+test('each section lists its modules alphabetically by doc title', () => {
+  const title = new Map(
+    modules.map((m) => [
+      m.slug,
+      parseFrontMatter(readFileSync(join(repo, m.docPath), 'utf8')).data.title,
+    ])
+  );
+  for (const category of CATEGORIES) {
+    // Top-level modules (the overview cards), then each parent's children.
+    const groups = [order.filter((m) => m.category === category && !m.parent)];
+    for (const parent of groups[0]) groups.push(order.filter((m) => m.parent === parent.slug));
+    for (const group of groups) {
+      const titles = group.map((m) => title.get(m.slug));
+      const sorted = [...titles].sort((a, b) => a.localeCompare(b, 'en', { sensitivity: 'base' }));
+      assert.deepEqual(titles, sorted, category);
+    }
+  }
 });
