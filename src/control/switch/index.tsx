@@ -145,9 +145,12 @@ export const Switch = ({
         [style.loading]: showSpinner,
       })}
     >
-      {showSpinner ? (
-        // `aria-hidden` because `aria-busy` on the switch itself already
-        // carries this to assistive tech, and from the undelayed prop.
+      {showSpinner && radius === SwitchRadius.Inset ? (
+        // A squared switch gets a squared ring: the round spinner clashed with
+        // its corners. `aria-hidden` because `aria-busy` on the switch itself
+        // already carries this to assistive tech, and from the undelayed prop.
+        <div aria-hidden className={cx(style.thumb, style.ring)} data-testid="switch-ring" />
+      ) : showSpinner ? (
         <SpinnerIcon aria-hidden={true} className={style.spinner} />
       ) : (
         <div className={style.thumb} />

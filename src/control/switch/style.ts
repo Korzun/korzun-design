@@ -120,6 +120,41 @@ export const useStyle = createUseStyles((theme: Theme) => ({
     left: '2px',
     '$checked &': { left: '14px' },
   },
+  /**
+   * The inset switch's loading stand-in for the thumb: a rounded-square ring
+   * (the thumb's own box and corners, via `$thumb`) with an arc travelling
+   * around it. Only the `::before` conic arc rotates; the square stays put.
+   * The mask cuts the 2px ring out of the box, so the middle shows the track.
+   */
+  ring: {
+    backgroundColor: 'transparent',
+    padding: '2px',
+    boxSizing: 'border-box',
+    overflow: 'hidden',
+    mask: 'linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)',
+    maskComposite: 'exclude',
+    '-webkit-mask': 'linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)',
+    '-webkit-mask-composite': 'xor',
+    // Base ring, faint, so the path the arc travels reads as a whole square.
+    '&::after': {
+      content: '""',
+      position: 'absolute',
+      inset: 0,
+      backgroundColor: 'currentColor',
+      opacity: 0.35,
+    },
+    '&::before': {
+      content: '""',
+      position: 'absolute',
+      top: '-50%',
+      left: '-50%',
+      width: '200%',
+      height: '200%',
+      background: 'conic-gradient(currentColor 0 25%, transparent 25%)',
+      animation: 'theme-rotation 1s infinite linear',
+      zIndex: 1,
+    },
+  },
   loading: {
     // The track keeps its colour — this is "working", not "unavailable",
     // which `disabled` already says by fading to 40%. Only the cursor and the

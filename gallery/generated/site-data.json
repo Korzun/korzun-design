@@ -5897,8 +5897,8 @@
           "slug": "loading-and-disabled",
           "order": 5,
           "title": "Loading and disabled",
-          "description": "`loading` marks a save in flight: clicks are ignored and the thumb turns into\na spinner after a short delay, while the switch keeps its colour. `disabled`\nfades the whole control and means \"you may not change this\". The button holds\nthe save open; the count shows that clicks during it do nothing.",
-          "code": "import { Inline, Stack, Text } from '@korzun/design/component';\nimport { Button, Switch } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function LoadingAndDisabled() {\n  const [subscribed, setSubscribed] = useState(false);\n  const [email, setEmail] = useState(false);\n  const [saving, setSaving] = useState(true);\n  const [changes, setChanges] = useState(0);\n  return (\n    <Stack>\n      <Switch\n        name=\"push-device\"\n        label=\"This device\"\n        checked={subscribed}\n        loading={saving}\n        onChange={(next) => {\n          setSubscribed(next);\n          setChanges((n) => n + 1);\n        }}\n      />\n      <Inline>\n        <Button onClick={() => setSaving((s) => !s)}>\n          {saving ? 'Finish save' : 'Start save'}\n        </Button>\n      </Inline>\n      <Text tone=\"muted\">Changes made: {changes}</Text>\n      <Switch\n        name=\"push-email\"\n        label=\"Email (not available)\"\n        disabled\n        checked={email}\n        onChange={setEmail}\n      />\n    </Stack>\n  );\n}\n"
+          "description": "`loading` marks a save in flight: clicks are ignored and the thumb turns into\na loading mark after a short delay (a squared ring on the default `inset` radius,\na round spinner on `pill`), while the switch keeps its colour. `disabled`\nfades the whole control and means \"you may not change this\". The button holds\nthe save open; the count shows that clicks during it do nothing.",
+          "code": "import { Inline, Stack, Text } from '@korzun/design/component';\nimport { Button, Switch } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function LoadingAndDisabled() {\n  const [subscribed, setSubscribed] = useState(false);\n  const [email, setEmail] = useState(false);\n  const [saving, setSaving] = useState(true);\n  const [changes, setChanges] = useState(0);\n  return (\n    <Stack>\n      <Switch\n        name=\"push-device\"\n        label=\"This device\"\n        checked={subscribed}\n        loading={saving}\n        onChange={(next) => {\n          setSubscribed(next);\n          setChanges((n) => n + 1);\n        }}\n      />\n      <Switch\n        name=\"push-device-pill\"\n        label=\"This device (pill)\"\n        radius=\"pill\"\n        checked={subscribed}\n        loading={saving}\n        onChange={setSubscribed}\n      />\n      <Inline>\n        <Button onClick={() => setSaving((s) => !s)}>\n          {saving ? 'Finish save' : 'Start save'}\n        </Button>\n      </Inline>\n      <Text tone=\"muted\">Changes made: {changes}</Text>\n      <Switch\n        name=\"push-email\"\n        label=\"Email (not available)\"\n        disabled\n        checked={email}\n        onChange={setEmail}\n      />\n    </Stack>\n  );\n}\n"
         }
       ],
       "preview": {
@@ -6093,6 +6093,14 @@
         }
       ],
       "changelog": [
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "Switch"
+          ],
+          "text": "While loading, an `inset` (squared) switch shows a rounded-square ring with an arc travelling around it in the thumb's place, instead of the round spinner, which clashed with its square corners. A `pill` switch keeps the round spinner."
+        },
         {
           "version": "0.7.0",
           "date": "2026-11-26",
@@ -11210,6 +11218,14 @@
       "version": "0.7.0",
       "date": "2026-11-26",
       "entries": [
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "Switch"
+          ],
+          "text": "While loading, an `inset` (squared) switch shows a rounded-square ring with an arc travelling around it in the thumb's place, instead of the round spinner, which clashed with its square corners. A `pill` switch keeps the round spinner."
+        },
         {
           "version": "0.7.0",
           "date": "2026-11-26",

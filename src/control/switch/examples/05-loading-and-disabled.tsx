@@ -1,6 +1,7 @@
 /** Loading and disabled
  * `loading` marks a save in flight: clicks are ignored and the thumb turns into
- * a spinner after a short delay, while the switch keeps its colour. `disabled`
+ * a loading mark after a short delay (a squared ring on the default `inset` radius,
+ * a round spinner on `pill`), while the switch keeps its colour. `disabled`
  * fades the whole control and means "you may not change this". The button holds
  * the save open; the count shows that clicks during it do nothing.
  */
@@ -24,6 +25,14 @@ export default function LoadingAndDisabled() {
           setSubscribed(next);
           setChanges((n) => n + 1);
         }}
+      />
+      <Switch
+        name="push-device-pill"
+        label="This device (pill)"
+        radius="pill"
+        checked={subscribed}
+        loading={saving}
+        onChange={setSubscribed}
       />
       <Inline>
         <Button onClick={() => setSaving((s) => !s)}>

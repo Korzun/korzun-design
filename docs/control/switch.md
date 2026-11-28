@@ -203,7 +203,8 @@ export default function InACard() {
 ### Loading and disabled
 
 `loading` marks a save in flight: clicks are ignored and the thumb turns into
-a spinner after a short delay, while the switch keeps its colour. `disabled`
+a loading mark after a short delay (a squared ring on the default `inset` radius,
+a round spinner on `pill`), while the switch keeps its colour. `disabled`
 fades the whole control and means "you may not change this". The button holds
 the save open; the count shows that clicks during it do nothing.
 
@@ -228,6 +229,14 @@ export default function LoadingAndDisabled() {
           setSubscribed(next);
           setChanges((n) => n + 1);
         }}
+      />
+      <Switch
+        name="push-device-pill"
+        label="This device (pill)"
+        radius="pill"
+        checked={subscribed}
+        loading={saving}
+        onChange={setSubscribed}
       />
       <Inline>
         <Button onClick={() => setSaving((s) => !s)}>
@@ -305,6 +314,7 @@ type SwitchRadiusValue = 'inset' | 'pill';
 
 ## Changelog
 
+- **0.7.0** (2026-11-26): While loading, an `inset` (squared) switch shows a rounded-square ring with an arc travelling around it in the thumb's place, instead of the round spinner, which clashed with its square corners. A `pill` switch keeps the round spinner.
 - **0.7.0** (2026-11-26): Corners follow surface depth, like `Button` and `Select`: `lg` directly on a `Page`, `md` in a Card or Dialog (unchanged), `sm` two or more levels in (a nested Card, a `CardRow` or `Surface` in a Card, a Popover). A field's shaded row and the field in it take the same radius; `ChipsInput` chips and a horizontal `Switch`'s `inset` track are a step squarer than their box. With no surface above, each keeps its 0.6.0 look. **Visible changes:** fields and Tags placed directly on a Page get 16px corners, and Tags inside a `CardRow` in a Card get 4px. A text field, `ChipsInput` box or field label directly on a Page also moves its text 16px in from the edge (8px elsewhere), the inset `Button` keeps, so it clears the deeper corner.
 - **0.7.0** (2026-11-26): The unchecked track is the new `color.bg.switchOff` token (`#868686` light, `#6E7480` dark), about 3:1 on `bg.page`, `bg.card` and `bg.cardHeader`; it was `border.default` (1.16:1 on a shaded row). The loading spinner on an unchecked track is now the thumb colour.
 - **0.0.6** (2026-11-21): New `theme.recipe.row`: the shaded field row (`bg.cardHeader`, `radius.md`, padding `md lg md sm`), for custom rows beside form fields. `Switch`'s horizontal layout now uses it and looks the same.

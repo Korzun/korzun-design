@@ -58,6 +58,53 @@ describe('Switch', () => {
   describe('loading', () => {
     const hasSpinner = (container: HTMLElement): boolean => container.querySelector('svg') !== null;
 
+    const loadAfterDelay = (props: Partial<React.ComponentProps<typeof Switch>>) => {
+      const result = renderWithProviders(
+        <Switch name="dark-mode" checked={true} onChange={vi.fn()} loading={true} {...props} />
+      );
+      act(() => {
+        vi.advanceTimersByTime(150);
+      });
+      return result;
+    };
+
+    it('an inset switch shows a squared ring, not the round spinner, while loading', () => {
+      vi.useFakeTimers();
+      try {
+        const { container } = loadAfterDelay({});
+        expect(screen.getByTestId('switch-ring')).toBeInTheDocument();
+        expect(hasSpinner(container)).toBe(false);
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+
+    it('a pill switch keeps the round spinner while loading', () => {
+      vi.useFakeTimers();
+      try {
+        const { container } = loadAfterDelay({ radius: 'pill' });
+        expect(hasSpinner(container)).toBe(true);
+        expect(screen.queryByTestId('switch-ring')).toBeNull();
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+
+    it('the ring sits where the thumb would', () => {
+      const idle = renderWithProviders(<Switch name="a" checked={true} onChange={vi.fn()} />);
+      const thumbClass = idle.container.querySelector(
+        '[role="switch"] > div > div > div'
+      )!.className;
+      idle.unmount();
+      vi.useFakeTimers();
+      try {
+        loadAfterDelay({});
+        expect(screen.getByTestId('switch-ring').className).toContain(thumbClass);
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+
     it('shows nothing for the first moments, so a fast save never flashes', () => {
       vi.useFakeTimers();
       try {
@@ -78,7 +125,7 @@ describe('Switch', () => {
       vi.useFakeTimers();
       try {
         const { container } = renderWithProviders(
-          <Switch name="dark-mode" checked={true} onChange={vi.fn()} loading={true} />
+          <Switch name="dark-mode" checked={true} onChange={vi.fn()} loading={true} radius="pill" />
         );
         act(() => {
           vi.advanceTimersByTime(150);
