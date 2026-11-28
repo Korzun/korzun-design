@@ -1,4 +1,12 @@
-import { Heading, Stack, Table, type TableColumn, Tag, Text } from '@korzun/design/component';
+import {
+  CodeBlock,
+  Heading,
+  Stack,
+  Table,
+  type TableColumn,
+  Tag,
+  Text,
+} from '@korzun/design/component';
 import { createUseStyles, type Theme, useTheme } from '@korzun/design/theme';
 import cx from 'classnames';
 import type { MouseEvent, ReactNode } from 'react';
@@ -6,7 +14,6 @@ import { useLocation } from 'react-router';
 
 import { anchor } from '../../scripts/docs-gen/slug.mjs';
 import type { PropRow, TypeTable } from '../../scripts/docs-gen/types.js';
-import { codeBlock } from '../layout/type.js';
 import { Markdown } from './markdown.js';
 
 /** The anchor id of a type's table on its component page: the generator's, so doc links land on it. */
@@ -34,15 +41,12 @@ export const useTableStyle = createUseStyles((theme: Theme) => ({
     textDecoration: 'none',
     '&:hover': { textDecoration: 'underline' },
   },
+  // An alias box keeps its hairline in both modes, as the import line does.
   alias: {
-    margin: 0,
-    padding: theme.space.xl,
-    overflowX: 'auto',
-    ...codeBlock(theme),
-    border: `1px solid ${theme.color.border.default}`,
-    borderRadius: theme.radius.lg,
-    backgroundColor: theme.color.bg.cardHeader,
-    whiteSpace: 'pre-wrap',
+    '&&': {
+      border: `1px solid ${theme.color.border.default}`,
+      boxShadow: 'none',
+    },
   },
 }));
 
@@ -259,7 +263,7 @@ export const PropsTable = ({ table, tables, typePages = NO_PAGES, from }: PropsT
     return (
       <Stack gap="md">
         {caption}
-        <pre className={styles.alias}>
+        <CodeBlock code={`type ${table.name} = ${table.text ?? ''}`} wrap className={styles.alias}>
           <code>
             {`type ${table.name} = `}
             <TypeText
@@ -270,7 +274,7 @@ export const PropsTable = ({ table, tables, typePages = NO_PAGES, from }: PropsT
               bare
             />
           </code>
-        </pre>
+        </CodeBlock>
       </Stack>
     );
 
