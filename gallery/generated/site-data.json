@@ -1763,6 +1763,16 @@
       ],
       "changelog": [
         {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "Divider",
+            "Card",
+            "Dialog"
+          ],
+          "text": "`CardDivider` is now `Divider` and works anywhere: directly in a Card or Dialog body it reaches the edges as before (cancelling `space.xl` in a large Card, 1px in a small one, `space.xxl` in a Dialog, where it used to overhang everything but a large Card), and on the page, in a `CardRow`, `Alert`, `Surface` or nested Card it spans its container. The new `bleed` prop overrides that. **Breaking:** the old names `CardDivider`, `CardDividerProps` and `CardDividerAlign` are removed; import `Divider`, `DividerProps` and `DividerAlign`."
+        },
+        {
           "version": "0.5.0",
           "date": "2026-11-24",
           "tags": [
@@ -5770,7 +5780,7 @@
         "CardProps"
       ],
       "importLine": "import { Card, type CardProps } from '@korzun/design/component'",
-      "body": "The bordered surface every feature on a screen lives in: an optional header\n(title, subtitle, header actions), a padded body, and an optional footer. A\nscreen is a `<Page>` holding a vertical stack of Cards, one per feature. It can\nalso be a whole clickable list row (`size=\"small\"` with `onClick`).\n\nUse something else for: a \"nothing here\" block on the bare page (`EmptyState`),\na disclosure section with no card chrome (`CollapsibleSection`), a modal\n(`Dialog` / `ConfirmModal` in `@korzun/design/control`).\n\n## Usage\n\nThe header renders only if one of `title`, `subTitle`, `headerAction`,\n`onClickHeader`, or `isCollapsible` is set.\n\n### Surprising behaviour\n\n- **Keyboard on `onClick` is incomplete.** The root gets no `role` or\n  `tabIndex`, so it is not focusable; its `onKeyDown` fires `onClick` on\n  Enter/Space bubbling up from *any* focused child (an input inside a clickable\n  card triggers it). Don't put form fields inside a clickable card.\n- A header click on a collapsible card bubbles to the root, so `isCollapsible`\n  together with `onClick` fires both.\n- Collapsed content is unmounted, not hidden: child state resets on reopen.\n\n### Corners\n\nThe corner follows depth: `radius.lg` on the page, `md` for a Card inside a\nCard, `sm` deeper. A Card provides the next depth to its header, body and\nfooter, so nested Cards step down and Buttons inside take the matching radius\nautomatically (8px in a Card on a Page). See [corners](../corners.md).\n`size=\"small\"` insets its body by only 1px, so its corner is `calc(radius.md + 1px)`\n(9px) on a page and `calc(radius.sm + 1px)` (5px) inside a Card: concentric with the `md`-cornered covers and rows flush inside it.\n\n## Do / don't\n\n- Do give each feature on a screen its own Card, stacked directly in `<Page>`.\n- Do put row actions that must not fire by accident in `footer` of a\n  collapsible card; they are unreachable while it is collapsed.\n- Don't nest Cards just to group content; use `CardDivider`. When you do nest, corners step down automatically.\n- Don't set `radius` on Buttons inside a Card: it follows depth, and an explicit `radius=\"card\"` would stay 8px inside a nested Card, breaking the concentric corners.\n- Don't expect `isCollapsible` cards to start open; pass `defaultCollapsed={false}`.\n- Do use the exported `CardProps` type when wrapping Card.",
+      "body": "The bordered surface every feature on a screen lives in: an optional header\n(title, subtitle, header actions), a padded body, and an optional footer. A\nscreen is a `<Page>` holding a vertical stack of Cards, one per feature. It can\nalso be a whole clickable list row (`size=\"small\"` with `onClick`).\n\nUse something else for: a \"nothing here\" block on the bare page (`EmptyState`),\na disclosure section with no card chrome (`CollapsibleSection`), a modal\n(`Dialog` / `ConfirmModal` in `@korzun/design/control`).\n\n## Usage\n\nThe header renders only if one of `title`, `subTitle`, `headerAction`,\n`onClickHeader`, or `isCollapsible` is set.\n\n### Surprising behaviour\n\n- **Keyboard on `onClick` is incomplete.** The root gets no `role` or\n  `tabIndex`, so it is not focusable; its `onKeyDown` fires `onClick` on\n  Enter/Space bubbling up from *any* focused child (an input inside a clickable\n  card triggers it). Don't put form fields inside a clickable card.\n- A header click on a collapsible card bubbles to the root, so `isCollapsible`\n  together with `onClick` fires both.\n- Collapsed content is unmounted, not hidden: child state resets on reopen.\n\n### Corners\n\nThe corner follows depth: `radius.lg` on the page, `md` for a Card inside a\nCard, `sm` deeper. A Card provides the next depth to its header, body and\nfooter, so nested Cards step down and Buttons inside take the matching radius\nautomatically (8px in a Card on a Page). See [corners](../corners.md).\n`size=\"small\"` insets its body by only 1px, so its corner is `calc(radius.md + 1px)`\n(9px) on a page and `calc(radius.sm + 1px)` (5px) inside a Card: concentric with the `md`-cornered covers and rows flush inside it.\n\n## Do / don't\n\n- Do give each feature on a screen its own Card, stacked directly in `<Page>`.\n- Do put row actions that must not fire by accident in `footer` of a\n  collapsible card; they are unreachable while it is collapsed.\n- Don't nest Cards just to group content; use `Divider`. When you do nest, corners step down automatically.\n- Don't set `radius` on Buttons inside a Card: it follows depth, and an explicit `radius=\"card\"` would stay 8px inside a nested Card, breaking the concentric corners.\n- Don't expect `isCollapsible` cards to start open; pass `defaultCollapsed={false}`.\n- Do use the exported `CardProps` type when wrapping Card.",
       "examples": [
         {
           "file": "src/component/card/examples/01-basic.tsx",
@@ -5809,7 +5819,7 @@
           "slug": "nested",
           "order": 5,
           "title": "Nested cards",
-          "description": "A Card inside a Card steps its corner down one level: `lg` on the page, `md` inside a Card,\n`sm` one level deeper. Each Card's Button follows the same depth, so pass no `radius`. Nest\nfor a group that is itself a feature; to split one body into sections use `CardDivider`.",
+          "description": "A Card inside a Card steps its corner down one level: `lg` on the page, `md` inside a Card,\n`sm` one level deeper. Each Card's Button follows the same depth, so pass no `radius`. Nest\nfor a group that is itself a feature; to split one body into sections use `Divider`.",
           "code": "import { Card, Stack, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Nested() {\n  const [pressed, setPressed] = useState<string | undefined>();\n  return (\n    <Card\n      title=\"Library (16px)\"\n      footer={<Button onClick={() => setPressed('Sync library')}>Sync library</Button>}\n    >\n      <Stack>\n        <Text>The feature sits on the page.</Text>\n        <Card\n          title=\"Devices (8px)\"\n          footer={<Button onClick={() => setPressed('Pair device')}>Pair device</Button>}\n        >\n          <Stack>\n            <Text>A group inside the feature, one level in.</Text>\n            <Card title=\"Kitchen frame (4px)\">\n              <Text>Deeper Cards stay at the smallest step.</Text>\n            </Card>\n          </Stack>\n        </Card>\n        <Text tone=\"muted\">Pressed: {pressed ?? 'nothing yet'}</Text>\n      </Stack>\n    </Card>\n  );\n}\n"
         }
       ],
@@ -5992,6 +6002,16 @@
       ],
       "changelog": [
         {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "Divider",
+            "Card",
+            "Dialog"
+          ],
+          "text": "`CardDivider` is now `Divider` and works anywhere: directly in a Card or Dialog body it reaches the edges as before (cancelling `space.xl` in a large Card, 1px in a small one, `space.xxl` in a Dialog, where it used to overhang everything but a large Card), and on the page, in a `CardRow`, `Alert`, `Surface` or nested Card it spans its container. The new `bleed` prop overrides that. **Breaking:** the old names `CardDivider`, `CardDividerProps` and `CardDividerAlign` are removed; import `Divider`, `DividerProps` and `DividerAlign`."
+        },
+        {
           "version": "0.5.0",
           "date": "2026-11-24",
           "tags": [
@@ -6043,59 +6063,67 @@
       ]
     },
     {
-      "id": "component/card-divider",
-      "slug": "card-divider",
+      "id": "component/divider",
+      "slug": "divider",
       "entry": "@korzun/design/component",
-      "docPath": "docs/component/card-divider.md",
-      "title": "CardDivider",
-      "description": "A horizontal rule that splits a Card body into sections, optionally labelled and with actions.",
+      "docPath": "docs/component/divider.md",
+      "title": "Divider",
+      "description": "A horizontal rule that splits content into sections, optionally labelled and with actions; in a Card or Dialog body it reaches the edges.",
       "category": "Layout",
       "values": [
-        "CardDivider"
+        "Divider"
       ],
       "types": [
-        "CardDividerAlign",
-        "CardDividerProps"
+        "DividerAlign",
+        "DividerProps"
       ],
-      "importLine": "import { CardDivider, type CardDividerAlign, type CardDividerProps } from '@korzun/design/component'",
-      "body": "A horizontal rule that splits one `Card` body into sections, optionally with a\nlabel (\"Devices\", \"Validation\") and/or actions sitting on the line. It is\nfull-bleed: it cancels the card body's padding so the line meets the card\nborders. Renders `role=\"separator\"`.\n\nUse something else for: separating whole features (use separate `Card`s),\nseparating menu items (`PageActionItem.separatorBefore`).\n\n## Usage\n\n### Styling\n\nNo `className`.\n\n### Surprising behaviour\n\n- **Assumes a `space.xl` parent padding.** The full-bleed is a fixed\n  `margin: 0 -space.xl`, which matches a `size=\"large\"` Card body. Inside\n  `Card size=\"small\"` (1px padding) or any other container it overhangs.\n- It always reserves one label line of height, labelled or not, so swapping a\n  plain divider for a labelled one does not shift the layout.\n- The label does not wrap (`white-space: nowrap`); keep it to a word or two.\n\n## Do / don't\n\n- Do use it directly inside a large Card body, not wrapped in a padded `div`\n  (the negative margin would then overshoot your wrapper instead).\n- Do use `type=\"link\"` Buttons or small `Tag`s as `actions`; the line is one\n  text line tall.\n- Don't use it for the gap between Cards on a page; `Page` already spaces them.",
+      "importLine": "import { Divider, type DividerAlign, type DividerProps } from '@korzun/design/component'",
+      "body": "A horizontal rule that splits content into sections, optionally with a label\n(\"Devices\", \"Validation\") and/or actions sitting on the line. Directly inside a\n`Card` or `Dialog` body it cancels the body's padding, so the line meets the\nbox's edges; anywhere else it spans its container. Renders `role=\"separator\"`.\n\nUse something else for: separating whole features (use separate `Card`s),\nseparating menu items (`PageActionItem.separatorBefore`).\n\n## Usage\n\n### Styling\n\nNo `className`.\n\n### Surprising behaviour\n\n- **The bleed only reaches the nearest body.** A divider bleeds when the Card\n  or Dialog body is the nearest box around it. Inside a `CardRow`, `Alert`,\n  `Surface` or nested `Card` it spans that box instead. `bleed={false}` opts\n  out in a body; `bleed` does nothing outside one.\n- **A padded wrapper defeats it.** In a Card body but inside your own padded\n  `div`, the divider still cancels the Card's padding, not yours. Wrap the\n  box's contents in `Surface`, or pass `bleed={false}`.\n- It always reserves one label line of height, labelled or not, so swapping a\n  plain divider for a labelled one does not shift the layout.\n- The label does not wrap (`white-space: nowrap`); keep it to a word or two.\n\n## Do / don't\n\n- Do put it straight in a Card body, or in a `Stack` there, not in a padded\n  `div`.\n- Do use `type=\"link\"` Buttons or small `Tag`s as `actions`; the line is one\n  text line tall.\n- Don't use it for the gap between Cards on a page; `Page` already spaces them.",
       "examples": [
         {
-          "file": "src/component/card-divider/examples/01-basic.tsx",
+          "file": "src/component/divider/examples/01-basic.tsx",
           "slug": "basic",
           "order": 1,
           "title": "Basic",
-          "description": "A plain rule between a form's fields and its submit button. It is full-bleed: it cancels the\nCard body's padding, so the line meets the Card's borders.",
-          "code": "import { Card, CardDivider, Inline, Stack, Text } from '@korzun/design/component';\nimport { Button, TextInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Basic() {\n  const [title, setTitle] = useState<string | undefined>('Middlemarch');\n  const [requested, setRequested] = useState<string | undefined>();\n  return (\n    <Card title=\"New request\">\n      <form\n        noValidate\n        onSubmit={(event) => {\n          event.preventDefault();\n          setRequested(title);\n        }}\n      >\n        <Stack>\n          <TextInput name=\"title\" label=\"Title\" value={title} onChange={setTitle} />\n          <CardDivider />\n          <Inline>\n            <Button type=\"primary\" submit>\n              Request\n            </Button>\n          </Inline>\n          <Text tone=\"muted\">Requested: {requested ?? 'nothing yet'}</Text>\n        </Stack>\n      </form>\n    </Card>\n  );\n}\n"
+          "description": "A plain rule between a form's fields and its submit button. Directly in a Card body it cancels\nthe body's padding, so the line meets the Card's borders.",
+          "code": "import { Card, Divider, Inline, Stack, Text } from '@korzun/design/component';\nimport { Button, TextInput } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Basic() {\n  const [title, setTitle] = useState<string | undefined>('Middlemarch');\n  const [requested, setRequested] = useState<string | undefined>();\n  return (\n    <Card title=\"New request\">\n      <form\n        noValidate\n        onSubmit={(event) => {\n          event.preventDefault();\n          setRequested(title);\n        }}\n      >\n        <Stack>\n          <TextInput name=\"title\" label=\"Title\" value={title} onChange={setTitle} />\n          <Divider />\n          <Inline>\n            <Button type=\"primary\" submit>\n              Request\n            </Button>\n          </Inline>\n          <Text tone=\"muted\">Requested: {requested ?? 'nothing yet'}</Text>\n        </Stack>\n      </form>\n    </Card>\n  );\n}\n"
         },
         {
-          "file": "src/component/card-divider/examples/02-labelled.tsx",
+          "file": "src/component/divider/examples/02-labelled.tsx",
           "slug": "labelled",
           "order": 2,
           "title": "Labelled",
           "description": "A label names the section below the line. `align` places it: `left` and `right` hug that edge\nwith a short stub of line past it, `center` leaves equal line on both sides.",
-          "code": "import { Card, CardDivider, Stack, Text } from '@korzun/design/component';\n\nexport default function Labelled() {\n  return (\n    <Card title=\"Notifications\">\n      <Stack>\n        <Text>Email me when a book is ready.</Text>\n        <CardDivider>Devices (left)</CardDivider>\n        <Text>Kitchen frame, Hallway frame</Text>\n        <CardDivider align=\"center\">Validation (center)</CardDivider>\n        <Text>Check files for errors on upload.</Text>\n        <CardDivider align=\"right\">History (right)</CardDivider>\n        <Text>Keep notifications for 30 days.</Text>\n      </Stack>\n    </Card>\n  );\n}\n"
+          "code": "import { Card, Divider, Stack, Text } from '@korzun/design/component';\n\nexport default function Labelled() {\n  return (\n    <Card title=\"Notifications\">\n      <Stack>\n        <Text>Email me when a book is ready.</Text>\n        <Divider>Devices (left)</Divider>\n        <Text>Kitchen frame, Hallway frame</Text>\n        <Divider align=\"center\">Validation (center)</Divider>\n        <Text>Check files for errors on upload.</Text>\n        <Divider align=\"right\">History (right)</Divider>\n        <Text>Keep notifications for 30 days.</Text>\n      </Stack>\n    </Card>\n  );\n}\n"
         },
         {
-          "file": "src/component/card-divider/examples/03-actions.tsx",
+          "file": "src/component/divider/examples/03-actions.tsx",
           "slug": "actions",
           "order": 3,
           "title": "Actions",
           "description": "`actions` puts controls on the line: use link Buttons, the line is one text line tall.\n`actionsAlign` places them on the `left`, `center` or `right`. When it equals `align` the label\nand the actions share one group, label first. Each divider is captioned with its props.",
-          "code": "import { Card, CardDivider, Stack, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Actions() {\n  const [pending, setPending] = useState(['Middlemarch', 'Persuasion']);\n  const [last, setLast] = useState('nothing yet');\n  return (\n    <Card title=\"Requests\">\n      <Stack gap=\"xl\">\n        <Stack gap=\"xs\">\n          <Text size=\"sm\" tone=\"muted\">\n            Unset: label left, actions right\n          </Text>\n          <CardDivider\n            actions={\n              <Button type=\"link\" onClick={() => setPending([])}>\n                Clear all\n              </Button>\n            }\n          >\n            Pending\n          </CardDivider>\n          <Text>{pending.length > 0 ? pending.join(', ') : 'Nothing pending'}</Text>\n        </Stack>\n        <Stack gap=\"xs\">\n          <Text size=\"sm\" tone=\"muted\">\n            {'align=\"center\" actionsAlign=\"left\"'}\n          </Text>\n          <CardDivider\n            align=\"center\"\n            actionsAlign=\"left\"\n            actions={\n              <Button type=\"link\" onClick={() => setLast('Archive')}>\n                Archive\n              </Button>\n            }\n          >\n            Finished\n          </CardDivider>\n        </Stack>\n        <Stack gap=\"xs\">\n          <Text size=\"sm\" tone=\"muted\">\n            {'align=\"right\" actionsAlign=\"right\": one group, label first'}\n          </Text>\n          <CardDivider\n            align=\"right\"\n            actionsAlign=\"right\"\n            actions={\n              <Button type=\"link\" onClick={() => setLast('Share')}>\n                Share\n              </Button>\n            }\n          >\n            Shared\n          </CardDivider>\n        </Stack>\n        <Text tone=\"muted\">Last action: {last}</Text>\n      </Stack>\n    </Card>\n  );\n}\n"
+          "code": "import { Card, Divider, Stack, Text } from '@korzun/design/component';\nimport { Button } from '@korzun/design/control';\nimport { useState } from 'react';\n\nexport default function Actions() {\n  const [pending, setPending] = useState(['Middlemarch', 'Persuasion']);\n  const [last, setLast] = useState('nothing yet');\n  return (\n    <Card title=\"Requests\">\n      <Stack gap=\"xl\">\n        <Stack gap=\"xs\">\n          <Text size=\"sm\" tone=\"muted\">\n            Unset: label left, actions right\n          </Text>\n          <Divider\n            actions={\n              <Button type=\"link\" onClick={() => setPending([])}>\n                Clear all\n              </Button>\n            }\n          >\n            Pending\n          </Divider>\n          <Text>{pending.length > 0 ? pending.join(', ') : 'Nothing pending'}</Text>\n        </Stack>\n        <Stack gap=\"xs\">\n          <Text size=\"sm\" tone=\"muted\">\n            {'align=\"center\" actionsAlign=\"left\"'}\n          </Text>\n          <Divider\n            align=\"center\"\n            actionsAlign=\"left\"\n            actions={\n              <Button type=\"link\" onClick={() => setLast('Archive')}>\n                Archive\n              </Button>\n            }\n          >\n            Finished\n          </Divider>\n        </Stack>\n        <Stack gap=\"xs\">\n          <Text size=\"sm\" tone=\"muted\">\n            {'align=\"right\" actionsAlign=\"right\": one group, label first'}\n          </Text>\n          <Divider\n            align=\"right\"\n            actionsAlign=\"right\"\n            actions={\n              <Button type=\"link\" onClick={() => setLast('Share')}>\n                Share\n              </Button>\n            }\n          >\n            Shared\n          </Divider>\n        </Stack>\n        <Text tone=\"muted\">Last action: {last}</Text>\n      </Stack>\n    </Card>\n  );\n}\n"
+        },
+        {
+          "file": "src/component/divider/examples/04-anywhere.tsx",
+          "slug": "anywhere",
+          "order": 4,
+          "title": "Outside a Card",
+          "description": "Anywhere but directly in a Card or Dialog body (on the page, in a CardRow, a hand-made\n`Surface` box or a Popover) the line spans its container. In a Card body it reaches the\nborders; `bleed={false}` keeps it inside the padding there.",
+          "code": "import { Card, CardRow, Divider, Stack, Text } from '@korzun/design/component';\n\nexport default function Anywhere() {\n  return (\n    <Stack gap=\"xl\">\n      <Stack gap=\"xs\">\n        <Text size=\"sm\" tone=\"muted\">\n          On the page: spans the column\n        </Text>\n        <Divider>Devices</Divider>\n        <Text>Kitchen frame, Hallway frame</Text>\n      </Stack>\n      <Card title=\"Notifications\">\n        <Stack>\n          <Text size=\"sm\" tone=\"muted\">\n            In the Card body: meets the borders\n          </Text>\n          <Divider />\n          <Text size=\"sm\" tone=\"muted\">\n            {'bleed={false}: inside the padding'}\n          </Text>\n          <Divider bleed={false} />\n          <CardRow>\n            <Stack gap=\"xs\">\n              <Text size=\"sm\" tone=\"muted\">\n                In a CardRow: spans the row\n              </Text>\n              <Divider />\n              <Text>Keep notifications for 30 days.</Text>\n            </Stack>\n          </CardRow>\n        </Stack>\n      </Card>\n    </Stack>\n  );\n}\n"
         }
       ],
       "preview": {
-        "file": "src/component/card-divider/examples/preview.tsx",
+        "file": "src/component/divider/examples/preview.tsx",
         "slug": "preview",
         "order": 0,
         "title": "Preview",
         "description": "",
-        "code": "import { Card, CardDivider, Stack, Text } from '@korzun/design/component';\n\nexport default function Preview() {\n  return (\n    <Card title=\"Notifications\">\n      <Stack>\n        <Text>Email me when a book is ready.</Text>\n        <CardDivider />\n        <Text>Keep notifications for 30 days.</Text>\n      </Stack>\n    </Card>\n  );\n}\n"
+        "code": "import { Divider, Stack, Text } from '@korzun/design/component';\n\nexport default function Preview() {\n  return (\n    <Stack>\n      <Text>Email me when a book is ready.</Text>\n      <Divider>Devices</Divider>\n      <Text>Kitchen frame, Hallway frame</Text>\n    </Stack>\n  );\n}\n"
       },
       "tables": [
         {
-          "name": "CardDividerProps",
+          "name": "DividerProps",
           "kind": "props",
           "rows": [
             {
@@ -6123,11 +6151,17 @@
               "required": false,
               "description": "Where the label sits. `'left'` and `'right'` hug that edge with a short stub of line poking past; `'center'` leaves equal line on both sides.",
               "default": "'left'"
+            },
+            {
+              "name": "bleed",
+              "type": "boolean",
+              "required": false,
+              "description": "Reach the edges of the Card or Dialog body the divider sits in, cancelling the body's padding. Defaults to `true` directly inside a Card or Dialog body and `false` anywhere else, where the line spans its container. `true` does nothing outside a Card or Dialog."
             }
           ]
         },
         {
-          "name": "CardDividerAlign",
+          "name": "DividerAlign",
           "kind": "alias",
           "rows": [],
           "text": "'left' | 'center' | 'right'",
@@ -6164,15 +6198,20 @@
           "kind": "value",
           "light": "0.5rem",
           "dark": "0.5rem"
-        },
-        {
-          "path": "space.xl",
-          "kind": "value",
-          "light": "0.75rem",
-          "dark": "0.75rem"
         }
       ],
-      "changelog": []
+      "changelog": [
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "Divider",
+            "Card",
+            "Dialog"
+          ],
+          "text": "`CardDivider` is now `Divider` and works anywhere: directly in a Card or Dialog body it reaches the edges as before (cancelling `space.xl` in a large Card, 1px in a small one, `space.xxl` in a Dialog, where it used to overhang everything but a large Card), and on the page, in a `CardRow`, `Alert`, `Surface` or nested Card it spans its container. The new `bleed` prop overrides that. **Breaking:** the old names `CardDivider`, `CardDividerProps` and `CardDividerAlign` are removed; import `Divider`, `DividerProps` and `DividerAlign`."
+        }
+      ]
     },
     {
       "id": "component/card-row",
@@ -6189,7 +6228,7 @@
         "CardRowProps"
       ],
       "importLine": "import { CardRow, type CardRowProps } from '@korzun/design/component'",
-      "body": "A compact card-shell row (card background, border, stacked shadow, 6px\npadding) that sits on the page or in a Card, for a stack of list items. Optionally\nclickable.\n\nUse something else for: a shaded row inside a `Card` body (a row built on\n`theme.recipe.row`), a section split (`CardDivider`), a key/value line\n(`MetadataList`). Bookplate itself lists items with `<Card size=\"small\" onClick>`.\n\n## Usage\n\n### Styling\n\nNo `className`, no `ariaLabel`, no `role`.\n\n### Surprising behaviour\n\n- **Not keyboard-reachable.** With `onClick` it still gets no `role=\"button\"`\n  and no `tabIndex`, so it cannot be focused; the Enter/Space handler only\n  fires for keys bubbling from a focused child, and Space is not\n  `preventDefault`ed (the page scrolls). For a keyboard-accessible clickable\n  row, put a real control (`Button type=\"link\"`) inside it.\n- Bookplate itself does not use `CardRow`; it is the least-exercised layout\n  primitive here.\n\n### Corners\n\nFollows depth: 16px (`radius.lg`) on the page, 8px (`md`) in a Card, `sm`\ndeeper. Content inside it steps down one level. See [corners](../corners.md).\n\n## Do / don't\n\n- Place it on the page or inside a `Card`; its corners follow.\n- Don't rely on `onClick` as the only way to reach an action from the keyboard.",
+      "body": "A compact card-shell row (card background, border, stacked shadow, 6px\npadding) that sits on the page or in a Card, for a stack of list items. Optionally\nclickable.\n\nUse something else for: a shaded row inside a `Card` body (a row built on\n`theme.recipe.row`), a section split (`Divider`), a key/value line\n(`MetadataList`). Bookplate itself lists items with `<Card size=\"small\" onClick>`.\n\n## Usage\n\n### Styling\n\nNo `className`, no `ariaLabel`, no `role`.\n\n### Surprising behaviour\n\n- **Not keyboard-reachable.** With `onClick` it still gets no `role=\"button\"`\n  and no `tabIndex`, so it cannot be focused; the Enter/Space handler only\n  fires for keys bubbling from a focused child, and Space is not\n  `preventDefault`ed (the page scrolls). For a keyboard-accessible clickable\n  row, put a real control (`Button type=\"link\"`) inside it.\n- Bookplate itself does not use `CardRow`; it is the least-exercised layout\n  primitive here.\n\n### Corners\n\nFollows depth: 16px (`radius.lg`) on the page, 8px (`md`) in a Card, `sm`\ndeeper. Content inside it steps down one level. See [corners](../corners.md).\n\n## Do / don't\n\n- Place it on the page or inside a `Card`; its corners follow.\n- Don't rely on `onClick` as the only way to reach an action from the keyboard.",
       "examples": [
         {
           "file": "src/component/card-row/examples/01-basic.tsx",
@@ -8408,7 +8447,7 @@
         "StackProps"
       ],
       "importLine": "import { Stack, type StackProps } from '@korzun/design/component'",
-      "body": "A vertical flex column with a themed gap between children. Use it to space\nthings on a screen instead of writing a style file: a form's fields, the\nsections of a page, the rows of a list.\n\nUse something else for: a horizontal row (`Inline`), a bordered surface\n(`Card`), a divider line between items (`CardDivider`), text styling (`Text`,\n`Heading`).\n\n## Usage\n\n### Choosing a gap\n\nPick `gap` from the theme's `space` scale so spacing is the same everywhere:\n`xs` for tight groups, `md` for most content, `xxl` between sections.\n`gap=\"none\"` emits `gap: 0`, for children that supply their own spacing.\n\n### Behaviour\n\n- `align` is the horizontal (cross-axis) alignment. `stretch` makes children\n  full width; `start` keeps buttons and tags at their own width.\n- `as=\"ul\"` and `as=\"ol\"` also reset the list's margin, padding and bullets.\n  Children should be `li` (`<Stack as=\"li\">` works).\n- Every other HTML attribute (`id`, `aria-*`, `data-*`, event handlers) passes\n  through. There is no `style` prop: spacing comes from tokens only.\n- Override with `className` at `'&&'` specificity, never `!important`.\n- `as=\"form\"` is not offered. Put a `<form>` around the Stack instead.\n\n## Do / don't\n\n- Do nest a Stack in a Stack for sections with different gaps.\n- Do use `align=\"start\"` when children (buttons, tags) should not stretch.\n- Don't add margins to children to space them; use `gap`.\n- Don't reach for `className` to set a gap; use the prop.\n- Don't use a Stack for a row; use `Inline`.",
+      "body": "A vertical flex column with a themed gap between children. Use it to space\nthings on a screen instead of writing a style file: a form's fields, the\nsections of a page, the rows of a list.\n\nUse something else for: a horizontal row (`Inline`), a bordered surface\n(`Card`), a divider line between items (`Divider`), text styling (`Text`,\n`Heading`).\n\n## Usage\n\n### Choosing a gap\n\nPick `gap` from the theme's `space` scale so spacing is the same everywhere:\n`xs` for tight groups, `md` for most content, `xxl` between sections.\n`gap=\"none\"` emits `gap: 0`, for children that supply their own spacing.\n\n### Behaviour\n\n- `align` is the horizontal (cross-axis) alignment. `stretch` makes children\n  full width; `start` keeps buttons and tags at their own width.\n- `as=\"ul\"` and `as=\"ol\"` also reset the list's margin, padding and bullets.\n  Children should be `li` (`<Stack as=\"li\">` works).\n- Every other HTML attribute (`id`, `aria-*`, `data-*`, event handlers) passes\n  through. There is no `style` prop: spacing comes from tokens only.\n- Override with `className` at `'&&'` specificity, never `!important`.\n- `as=\"form\"` is not offered. Put a `<form>` around the Stack instead.\n\n## Do / don't\n\n- Do nest a Stack in a Stack for sections with different gaps.\n- Do use `align=\"start\"` when children (buttons, tags) should not stretch.\n- Don't add margins to children to space them; use `gap`.\n- Don't reach for `className` to set a gap; use the prop.\n- Don't use a Stack for a row; use `Inline`.",
       "examples": [
         {
           "file": "src/component/stack/examples/01-basic.tsx",
@@ -10493,6 +10532,16 @@
             "General"
           ],
           "text": "Docs site: the first Dialog, ConfirmModal, useModalDialog, Popover, Menu and Select example starts open, without taking the page's keyboard focus; readouts sit under their triggers on every page; layout, surface and radius examples share one muted caption style; horizontal-form labels line up; the TextInput and TextArea validation examples open invalid; the Inline wrap, TopFade, ChipsInput chip colours, Divider actions, Inline gaps and Tag tone examples show their point at a glance, and native elements in examples are styled from tokens; an empty overview search offers Clear search; the not-found page uses the site column and link style; changelog entries drop their bullets for a hairline between entries."
+        },
+        {
+          "version": "0.7.0",
+          "date": "2026-11-26",
+          "tags": [
+            "Divider",
+            "Card",
+            "Dialog"
+          ],
+          "text": "`CardDivider` is now `Divider` and works anywhere: directly in a Card or Dialog body it reaches the edges as before (cancelling `space.xl` in a large Card, 1px in a small one, `space.xxl` in a Dialog, where it used to overhang everything but a large Card), and on the page, in a `CardRow`, `Alert`, `Surface` or nested Card it spans its container. The new `bleed` prop overrides that. **Breaking:** the old names `CardDivider`, `CardDividerProps` and `CardDividerAlign` are removed; import `Divider`, `DividerProps` and `DividerAlign`."
         }
       ]
     },
@@ -11149,8 +11198,8 @@
     "AlertProps": "alert",
     "AlertTone": "alert",
     "CardProps": "card",
-    "CardDividerProps": "card-divider",
-    "CardDividerAlign": "card-divider",
+    "DividerProps": "divider",
+    "DividerAlign": "divider",
     "CardRowProps": "card-row",
     "CollapsibleSectionProps": "collapsible-section",
     "EmptyStateProps": "empty-state",

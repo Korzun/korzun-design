@@ -1,7 +1,7 @@
 /** Nested cards
  * A Card inside a Card steps its corner down one level: `lg` on the page, `md` inside a Card,
  * `sm` one level deeper. Each Card's Button follows the same depth, so pass no `radius`. Nest
- * for a group that is itself a feature; to split one body into sections use `CardDivider`.
+ * for a group that is itself a feature; to split one body into sections use `Divider`.
  */
 import { Card, Stack, Text } from '@korzun/design/component';
 import { Button } from '@korzun/design/control';

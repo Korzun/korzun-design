@@ -16,7 +16,7 @@ things on a screen instead of writing a style file: a form's fields, the
 sections of a page, the rows of a list.
 
 Use something else for: a horizontal row (`Inline`), a bordered surface
-(`Card`), a divider line between items (`CardDivider`), text styling (`Text`,
+(`Card`), a divider line between items (`Divider`), text styling (`Text`,
 `Heading`).
 
 ## Usage

@@ -1,7 +1,9 @@
 import cx from 'classnames';
 import { type ReactNode, useCallback, useId } from 'react';
 
+import { DividerBodyProvider } from '../../component/divider/index.js';
 import { SurfaceDepthProvider } from '../../component/surface/index.js';
+import { useTheme } from '../../theme/index.js';
 import { useModalDialog } from '../use-modal-dialog/index.js';
 import { useStyle } from './style.js';
 
@@ -36,6 +38,7 @@ export function Dialog({
   className,
 }: DialogProps) {
   const styles = useStyle();
+  const theme = useTheme();
   const titleId = useId();
   const ref = useModalDialog(open, onClose, canDismiss);
   const stopClick = useCallback((event: React.MouseEvent) => {
@@ -54,7 +57,11 @@ export function Dialog({
           <div id={titleId} className={styles.header}>
             {title}
           </div>
-          <div className={styles.body}>{children}</div>
+          <div className={styles.body}>
+            <DividerBodyProvider padding={theme.space.xxl} depth={1}>
+              {children}
+            </DividerBodyProvider>
+          </div>
           {footer != null && footer !== false && footer !== '' && (
             <div className={styles.footer} data-dialog-footer="">
               {footer}

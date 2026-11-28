@@ -197,7 +197,7 @@ export default function Preview() {
 }
 ```
 
-- Show the component and nothing else, like an Ant Design overview card: one instance or a tight row of variants. No `Text` readouts or explanations, no wrapper `Card` unless the module only exists inside one (CardDivider), no buttons that drive a demo.
+- Show the component and nothing else, like an Ant Design overview card: one instance or a tight row of variants. No `Text` readouts or explanations, no wrapper `Card` unless the module only exists inside one (CardRow), no buttons that drive a demo.
 - An overlay (Dialog, Menu, Popover) is shown open. A phone-only module takes `@viewport mobile` as in its `01`. The thumbnail frame is about 430px wide, under the 640px mobile breakpoint, so a module hidden on phones (PageActionsBar, NavDesktop) takes `@viewport desktop`: the thumbnail lays it out at 680px and scales it to fit. Never override a module's own breakpoint styles to show it.
 - It is not interactive, so the wiring rule above does not apply: a required handler may be `() => {}` (the grep check excludes `preview.tsx`).
 - Check it: `http://localhost:<port>/#/frame/<slug>/preview?fit=center&theme=light` at a 430×240 viewport, in both themes.

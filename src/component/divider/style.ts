@@ -1,10 +1,13 @@
 import { createUseStyles, type Theme } from '../../theme/index.js';
 
+/** The body padding to cancel, or null to stay inside the container. */
+type StyleProps = { bleed: string | null };
+
 export const useStyle = createUseStyles((theme: Theme) => ({
   root: {
-    // Full-bleed: cancel the card body padding so the rule meets the card borders.
-    marginLeft: `-${theme.space.xl}`,
-    marginRight: `-${theme.space.xl}`,
+    // Bleed: cancel the Card or Dialog body padding so the rule meets the box edges.
+    marginLeft: ({ bleed }: StyleProps) => (bleed ? `-${bleed}` : 0),
+    marginRight: ({ bleed }: StyleProps) => (bleed ? `-${bleed}` : 0),
     display: 'flex',
     alignItems: 'center',
     // Reserve the label's line height so the divider takes the same vertical space

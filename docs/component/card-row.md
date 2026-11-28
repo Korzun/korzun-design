@@ -16,7 +16,7 @@ padding) that sits on the page or in a Card, for a stack of list items. Optional
 clickable.
 
 Use something else for: a shaded row inside a `Card` body (a row built on
-`theme.recipe.row`), a section split (`CardDivider`), a key/value line
+`theme.recipe.row`), a section split (`Divider`), a key/value line
 (`MetadataList`). Bookplate itself lists items with `<Card size="small" onClick>`.
 
 ## Usage

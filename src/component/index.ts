@@ -1,6 +1,6 @@
 export { Alert, type AlertProps, type AlertTone } from './alert/index.js';
 export { Card, type CardProps } from './card/index.js';
-export { CardDivider, type CardDividerAlign, type CardDividerProps } from './card-divider/index.js';
+export { Divider, type DividerAlign, type DividerProps } from './divider/index.js';
 export { CardRow, type CardRowProps } from './card-row/index.js';
 export { CollapsibleSection, type CollapsibleSectionProps } from './collapsible-section/index.js';
 export { EmptyState, type EmptyStateProps } from './empty-state/index.js';
