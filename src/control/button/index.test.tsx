@@ -6,6 +6,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { Page } from '../../component/page/index.js';
 import { Surface } from '../../component/surface/index.js';
 import { renderWithProviders } from '../../test-utils.js';
+import { lightTheme } from '../../theme/theme.js';
 import { Button } from './index.js';
 
 describe('Button', () => {
@@ -237,4 +238,31 @@ describe('radius follows surface depth', () => {
     );
     expect(radiusOf()).toBe('16px');
   });
+});
+
+// The JSS rules whose selector names one of `el`'s classes with `pseudo`,
+// as `selector { body }` text. jsdom does not match `:focus-visible`, so the
+// focus ring is checked in the sheet rather than through getComputedStyle.
+const rulesFor = (el: Element, pseudo: string): string[] => {
+  const css = Array.from(document.querySelectorAll('style'))
+    .map((style) => style.textContent ?? '')
+    .join('\n');
+  return [...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)]
+    .filter(([, selector]) =>
+      Array.from(el.classList).some((cls) => selector.trim() === `.${cls}${pseudo}`)
+    )
+    .map(([, selector, body]) => `${selector.trim()} {${body}}`);
+};
+
+describe('keyboard focus on borderless variants', () => {
+  it.each(['text', 'link'] as const)(
+    'a %s button shows a solid border.focus ring on :focus-visible',
+    (type) => {
+      renderWithProviders(<Button type={type}>Go</Button>);
+      const rules = rulesFor(screen.getByRole('button', { name: 'Go' }), ':focus-visible');
+      expect(rules).toHaveLength(1);
+      expect(rules[0]).toContain(`outline-color: ${lightTheme.color.border.focus}`);
+      if (type === 'link') expect(rules[0]).toContain('outline-style: solid');
+    }
+  );
 });
