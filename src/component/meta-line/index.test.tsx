@@ -179,9 +179,11 @@ describe('MetaLine', () => {
 
     it('never throws when there is no process global', () => {
       const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      // Mount first: the theme provider reads `process` itself, outside this component.
+      const { rerender } = renderLine(<MetaLine items={['a', 'b']} separator="·" />);
       vi.stubGlobal('process', undefined);
       try {
-        expect(() => renderLine(<MetaLine items={['a', 'b']} separator="=>" />)).not.toThrow();
+        expect(() => rerender(<MetaLine items={['a', 'b']} separator="=>" />)).not.toThrow();
       } finally {
         vi.unstubAllGlobals();
       }
